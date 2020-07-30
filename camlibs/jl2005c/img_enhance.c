@@ -159,17 +159,17 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 		{
 			d = (data[x + 0] << 8) * r_factor + 8;
 			d >>= 8;
-			if (d > 0xff) 
+			if (d > 0xff)
 				d = 0xff;
 			data[x + 0] = d;
 			d = (data[x + 1] << 8) * g_factor + 8;
 			d >>= 8;
-			if (d > 0xff) 
+			if (d > 0xff)
 				d = 0xff;
 			data[x + 1] = d;
 			d = (data[x + 2] << 8) * b_factor + 8;
 			d >>= 8;
-			if (d > 0xff) 
+			if (d > 0xff)
 				d = 0xff;
 			data[x + 2] = d;
 		}

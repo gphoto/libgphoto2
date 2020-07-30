@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -36,7 +36,7 @@
 /* this one should work */
 #define USB_PRODUCT_SX330Z	0x3300
 
-/* very experimental !!! 
+/* very experimental !!!
  * Please report if this works
  */
 #define USB_PRODUCT_SX410Z	0x4100
@@ -72,7 +72,7 @@ struct traveler_toc_page
  struct traveler_toc_entry entries[25]; /* entries */
 };
 
-struct _CameraPrivateLibrary 
+struct _CameraPrivateLibrary
 {
  int usb_product;		/* different Thumbnail size */
 };
@@ -94,7 +94,7 @@ struct traveler_req
 struct traveler_ack
 {
  int32_t always3;	/* 3 */
- int32_t timestamp;	/* not sure */ 
+ int32_t timestamp;	/* not sure */
  int32_t size;		/* for TOC and other transfers */
  int32_t dontknow;	/* always 0 */
 };
@@ -108,13 +108,13 @@ int sx330z_init(Camera *camera,GPContext *context);
 
 
 /*
- * Get number of TOC pages 
+ * Get number of TOC pages
  */
 int sx330z_get_toc_num_pages(Camera *camera,GPContext *context, int32_t *pages);
 
 
 /*
- * Get TOC 
+ * Get TOC
  */
 int sx330z_get_toc_page(Camera *camera,GPContext *context,struct traveler_toc_page *toc,int page);
 
@@ -127,7 +127,7 @@ int sx330z_get_data(Camera *camera,GPContext *context, const char* filename,
 
 
 /*
- *  Delete image 
+ *  Delete image
  */
 int sx330z_delete_file(Camera *camera,GPContext *context,const char *filename);
 

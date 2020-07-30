@@ -1,6 +1,6 @@
 /* ADC-65(s) camera driver
- * Released under the GPL version 2   
- * 
+ * Released under the GPL version 2
+ *
  * Copyright 2001
  * Benjamin Moos
  * <benjamin@psnw.com>
@@ -126,7 +126,7 @@ adc65_read_data (Camera *camera, unsigned char *cmd, int cmd_size, int data_type
 			 */
 			strcpy(s, ppmhead);
 			z = strlen(s);
-			
+
 			for (y=0; y<256; y++) {
 			  if (y == 255) {
 				y1 = y - 1;
@@ -143,24 +143,24 @@ adc65_read_data (Camera *camera, unsigned char *cmd, int cmd_size, int data_type
 				bl = (unsigned char)us[y1 * 256 + x];
 				ur = (unsigned char)us[y * 256 + x1];
 				br = (unsigned char)us[y1 * 256 + x1];
-				  
-				  switch ( ((y & 1) << 1) | (x & 1) ) {	
-				  case 0: /* even row, even col, B */		
+
+				  switch ( ((y & 1) << 1) | (x & 1) ) {
+				  case 0: /* even row, even col, B */
 					rgb.R = br;
 					rgb.G = (ur + bl) / 2;
 					rgb.B = ul;
 					break;
-				  case 1: /* even row, odd col, G */		
+				  case 1: /* even row, odd col, G */
 					rgb.R = bl;
 					rgb.G = ul;
 					rgb.B = ur;
 					break;
-				  case 2:	/* odd row, even col, G */		
+				  case 2:	/* odd row, even col, G */
 					rgb.R = ur;
 					rgb.G = ul;
 					rgb.B = bl;
 					break;
-				  case 3:	/* odd row, odd col, R */		
+				  case 3:	/* odd row, odd col, R */
 				  default:
 					rgb.R = ul;
 					rgb.G = (ur + bl) / 2;

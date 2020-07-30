@@ -190,7 +190,7 @@ camera_manual_focus (Camera *camera, int xx, GPContext *context) {
 			fprintf (stderr, "could not get widget value: %d\n", ret);
 			goto out;
 		}
-	
+
 		switch (xx) { /* Range is on Nikon from -32768 <-> 32768 */
 		case -3:	rval = -1024;break;
 		case -2:	rval =  -512;break;

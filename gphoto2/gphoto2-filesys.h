@@ -15,10 +15,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \note
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \note
  * You should have received a copy of the GNU Lesser General Public
@@ -41,12 +41,12 @@
 extern "C" {
 #endif /* __cplusplus */
 
-/** 
+/**
  * \brief Bitmask on what fields are set in the CameraFileInfo structure.
  *
  * Bitmask to mark up which fields are set in the CameraFileInfo
  * structure. The other fields might be uninitialized.
- * If you set information via gp_camera_file_set_info() you 
+ * If you set information via gp_camera_file_set_info() you
  * need to set those flags. If you retrieve information via
  * gp_camera_file_get_info() you need to check those flags.
  * They are separate for both "normal" and "preview" parts
@@ -132,7 +132,7 @@ typedef struct _CameraFileInfoAudio {
 	char type[64];			/**< \brief MIME type of the audio file. */
 } CameraFileInfoAudio;
 
-/** 
+/**
  * \brief File information structure.
  *
  * Contains the normal, preview and audio file information structures
@@ -144,14 +144,14 @@ typedef struct _CameraFileInfo {
 	CameraFileInfoAudio   audio;
 } CameraFileInfo;
 
-/** 
+/**
  * \brief Storage information flags.
  *
  * Bitmask to specify which entries of the filesystem
  * storage information is set.
  */
 typedef enum {
-	GP_STORAGEINFO_BASE		= (1<<0),	/**< \brief The base directory. 
+	GP_STORAGEINFO_BASE		= (1<<0),	/**< \brief The base directory.
 							 * Usually / if just 1 storage is attached.
 							 */
 	GP_STORAGEINFO_LABEL		= (1<<1),	/**< \brief Label of the filesystem.
@@ -168,7 +168,7 @@ typedef enum {
 
 /**
  * \brief Hardware storage types.
- * 
+ *
  * Type of hardware this storage is on. The types and values
  * are the same as the PTP standard uses (PTP_ST_xxx).
  */
@@ -182,7 +182,7 @@ typedef enum {
 
 /**
  * \brief Storage access modes.
- * 
+ *
  * The modes we can access the storage with. Uses the same
  * types and values as the PTP standard (PTP_AC_xxx).
  */
@@ -194,7 +194,7 @@ typedef enum {
 
 /**
  * \brief Filesystem hierarchy types.
- * 
+ *
  * The type of the filesystem hierarchy the devices uses.
  * Same types and values as the PTP standard defines (PTP_FST_xxx).
  */
@@ -224,7 +224,7 @@ typedef struct _CameraStorageInformation {
 	uint64_t			freeimages;	/**< \brief Free space in images (guessed by camera). */
 } CameraStorageInformation;
 
-/** 
+/**
  * \brief Filesystem structure, only exposed to camera drivers.
  *
  * Internal structure, contents not exposed to frontends. Camera

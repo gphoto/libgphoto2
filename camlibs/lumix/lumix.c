@@ -10,10 +10,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -87,7 +87,7 @@
 char* CDS_Control  = ":60606/Server0/CDS_control";
 int ReadoutMode = 2; // this should be picked up from the settings.... 0-> JPG; 1->RAW; 2 -> Thumbnails
 char* cameraShutterSpeed = "B"; // //placeholder to store the value of the shutterspeed set in camera; "B" is for bulb.
-int captureDuration = 10; //placeholder to store the value of the bulb shot this should be taken as input. note that my primary goal is in fact to perform bulb captures. but this should be extended for sure to take Shutter Speed capture as set in camera 
+int captureDuration = 10; //placeholder to store the value of the bulb shot this should be taken as input. note that my primary goal is in fact to perform bulb captures. but this should be extended for sure to take Shutter Speed capture as set in camera
 
 static int NumberPix(Camera *camera);
 static char* loadCmd (Camera *camera,char* cmd);
@@ -120,7 +120,7 @@ struct _CameraPrivateLibrary {
 
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl->udpsocket > 0) {
 		close (camera->pl->udpsocket);
@@ -265,7 +265,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 
 /**
  * Get the file info here and write it to space provided by caller.
- * 
+ *
  * \param info Space provided by caller in which file info is written.
  *
  * This function is a CameraFilesystem method.
@@ -351,7 +351,7 @@ int
 storage_info_func (CameraFilesystem *fs,
 		CameraStorageInformation **storageinformations,
 		int *nrofstorageinformations, void *data,
-		GPContext *context) 
+		GPContext *context)
 {
 	/*Camera *camera = data;*/
 
@@ -419,7 +419,7 @@ loadCmd (Camera *camera,char* cmd) {
 		fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
 		return NULL;
 	} else {
-		/* read the XML that is now in Buffer*/ 
+		/* read the XML that is now in Buffer*/
 		GP_LOG_D("result %s\n", lmb.data);
 
 		/* <?xml version="1.0" encoding="UTF-8"?> <camrply><result>ok</result></camrply> */
@@ -657,7 +657,7 @@ static void focusOut(Camera *camera) {
 
 /*
 
-this is the XML sample to be parsed by the function below   NumberPix() 
+this is the XML sample to be parsed by the function below   NumberPix()
 <?xml version="1.0" encoding="UTF-8"?>
 <camrply><result>ok</result><current_position>341</current_position><total_content_number>372</total_content_number><content_number>342</content_number></camrply>
 
@@ -682,9 +682,9 @@ NumberPix(Camera *camera) {
 	int		numpics = 0;
 	char		*temp = loadCmd(camera,"cam.cgi?mode=get_content_info");
 	xmlDocPtr	doc = xmlParseDoc((unsigned char*) temp);
-	xmlNodePtr	cur = NULL; 
+	xmlNodePtr	cur = NULL;
 
-	cur = xmlDocGetRootElement(doc);   
+	cur = xmlDocGetRootElement(doc);
 
 	if (cur == NULL) {
 		GP_LOG_E("empty xml result document");
@@ -724,7 +724,7 @@ NumberPix(Camera *camera) {
 	return numpics;
 }
 
-/*utility function to creat a SOAP envelope for the lumix cam */  
+/*utility function to creat a SOAP envelope for the lumix cam */
 static char*
 SoapEnvelop(int start, int num){
 	static char  Envelop[1000];
@@ -833,7 +833,7 @@ GetPixRange(Camera *camera, int start, int num) {
 		}
 		xchar = xmlNodeGetContent (output);
 		GP_LOG_D("content of %s is %s", output->name, xchar);
-	/* 
+	/*
 
 	<DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/">
 		<item id="1030822" parentID="0" restricted="0">
@@ -1103,7 +1103,7 @@ static struct aperturemap {
 };
 
 static int
-camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
+camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 {
         CameraWidget	*widget,*section;
         int		ret, i, valset;
@@ -1266,7 +1266,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 }
 
 static int
-camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
+camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget	*widget;
 	char		*val;
@@ -1380,13 +1380,13 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 
 static char*
 processNode(xmlTextReaderPtr reader) {
-	char* ret =""; 
+	char* ret ="";
 	char* lookupImgtag="";
 
 	switch (ReadoutMode) {
 	case 0 : //'jpg
 		lookupImgtag = "CAM_RAW_JPG";
-	break; 
+	break;
 	case 1 :// 'raw
 		lookupImgtag = "CAM_RAW";
 	break;
@@ -1540,16 +1540,16 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 
 	switchToPlayMode (camera);
 
-	reader = xmlReaderForDoc((xmlChar*)GetPixRange(camera,NumberPix(camera)-1,1), NULL,"noname.xml", XML_PARSE_DTDATTR |  /* default DTD attributes */ XML_PARSE_NOENT); 
+	reader = xmlReaderForDoc((xmlChar*)GetPixRange(camera,NumberPix(camera)-1,1), NULL,"noname.xml", XML_PARSE_DTDATTR |  /* default DTD attributes */ XML_PARSE_NOENT);
 	ret = xmlTextReaderRead(reader);
 	while (ret == 1) {
-	    imageURL = processNode(reader); 
+	    imageURL = processNode(reader);
             if (strlen(imageURL))
-		break; 
+		break;
             ret = xmlTextReaderRead(reader);
 	}
 
-	GP_DEBUG("the image URL is  %s\n",imageURL); 
+	GP_DEBUG("the image URL is  %s\n",imageURL);
 	image = strdup(imageURL);
 	nRead = 0;
 	CURL* imageUrl;
@@ -1635,8 +1635,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GP
 		return ret;
 
 
-	if (strcmp(cameraShutterSpeed, "B")!=0) {  
-		sleep(captureDuration); // Sleep for the duration to simulate exposure, if this is in Bulb mode 
+	if (strcmp(cameraShutterSpeed, "B")!=0) {
+		sleep(captureDuration); // Sleep for the duration to simulate exposure, if this is in Bulb mode
 	} else {
 		sleep(3);
 	}
@@ -1668,7 +1668,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GP
 }
 
 /**
-* Fill out the summary with textual information about the current 
+* Fill out the summary with textual information about the current
 * state of the camera (like pictures taken, etc.).
 *
 * This function is a method of the Camera object.
@@ -1682,7 +1682,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 /**
 * Return the camera drivers manual.
-* If you would like to tell the user some information about how 
+* If you would like to tell the user some information about how
 * to use the camera or the driver, this is the place to do.
 *
 * This function is a method of the Camera object.
@@ -1829,8 +1829,8 @@ int camera_abilities (CameraAbilitiesList *list) {
 	a.status	= GP_DRIVER_STATUS_EXPERIMENTAL;
 	a.port		= GP_PORT_IP;
 	a.operations	= GP_CAPTURE_IMAGE| GP_OPERATION_CAPTURE_VIDEO | GP_OPERATION_CONFIG;
-	a.file_operations = GP_FILE_OPERATION_PREVIEW  ; 
-	/* it should be possible to browse and DL images the files using the ReadImageFromCamera() function but for now lets keep it simple*/ 
+	a.file_operations = GP_FILE_OPERATION_PREVIEW  ;
+	/* it should be possible to browse and DL images the files using the ReadImageFromCamera() function but for now lets keep it simple*/
 	a.folder_operations = GP_FOLDER_OPERATION_NONE;
 	return gp_abilities_list_append(list, a);
 }
@@ -1865,7 +1865,7 @@ CameraFilesystemFuncs fsfuncs = {
 * This is a camlib API function.
 */
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	GPPortInfo      info;
 	int		ret;
@@ -1920,7 +1920,7 @@ camera_init (Camera *camera, GPContext *context)
 
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "Lumix Wifi");
 

@@ -73,7 +73,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		free(p);
 		return GP_ERROR_IO;
 	}
-		
+
 	free(p);
 
 	switch ( char_buffer ) {
@@ -90,7 +90,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 			return GP_ERROR_IO;
 	}
 
-	
+
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 		GP_DEBUG( "dimagev_delete_picture::unable to read packet");
 		return GP_ERROR_IO;
@@ -101,7 +101,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		free(p);
 		return GP_ERROR;
 	}
-	
+
 	free(p);
 
 	if ( raw->buffer[0] != (unsigned char) 0 ) {
@@ -121,7 +121,7 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number) {
 		GP_DEBUG( "dimagev_delete_picture::no response from camera");
 		return GP_ERROR_IO;
 	}
-		
+
 	switch ( char_buffer ) {
 		case DIMAGEV_ACK:
 			break;
@@ -183,7 +183,7 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 		free(p);
 		return GP_ERROR_IO;
 	}
-		
+
 	free(p);
 
 	switch ( char_buffer ) {
@@ -200,7 +200,7 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 			return GP_ERROR_IO;
 	}
 
-	
+
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 		GP_DEBUG( "dimagev_delete_all::unable to read packet");
 		return GP_ERROR_IO;
@@ -211,7 +211,7 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 		free(p);
 		return GP_ERROR_NO_MEMORY;
 	}
-	
+
 	free(p);
 
 	if ( raw->buffer[0] != (unsigned char) 0 ) {
@@ -231,7 +231,7 @@ int dimagev_delete_all(dimagev_t *dimagev) {
 		GP_DEBUG( "dimagev_delete_all::no response from camera");
 		return GP_ERROR_IO;
 	}
-		
+
 	switch ( char_buffer ) {
 		case DIMAGEV_ACK:
 			break;

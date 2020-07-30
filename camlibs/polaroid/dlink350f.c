@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -58,17 +58,17 @@ int dlink_dsc350f_postprocessing_and_flip_both (int width, int height, unsigned 
 	int whichcolor = 0;
 	int lowred=255, lowgreen=255, lowblue=255;
 	int hired=0, higreen=0, hiblue=0;
-	
+
 	GP_DEBUG("flipping byte order");
-	
+
 	/* flip image left/right and top/bottom (actually reverse byte order) */
 	start = rgb;
 	end = start + ((width * height) * 3);
-	
+
 	while (start < end) {
 		c = *start;
-		
-		/* validation - debugging info - collect the color range info 
+
+		/* validation - debugging info - collect the color range info
 		 * for first half of image.
 		 */
 		switch (whichcolor % 3) {
@@ -82,26 +82,26 @@ int dlink_dsc350f_postprocessing_and_flip_both (int width, int height, unsigned 
 				MINMAX((int)c,lowred,hired);
 				break;
 		}
-		
+
 		/* adjust color magnitude, since it appears that the 350f only had 7 bits of color info */
 		*start++ = *--end << 1;
 		*end = c << 1;
-		
+
 		whichcolor++;
 	}
-	
+
 	/* could do more color processing here
 	GP_DEBUG("adjusting color");
-	
+
 	// adjust image colours
 	start = rgb;
 	end = start + ((width * height) * 3);
-	
+
 	while (start < end) {
 		c = *start++;
 	}
 	*/
-	
+
 	/* show the color range of image in debug mode. */
 	GP_DEBUG("\nred low = %d high = %d\ngreen low = %d high = %d\nblue low = %d high = %d\n", lowred,hired, lowgreen,higreen, lowblue,hiblue);
 	return GP_OK;

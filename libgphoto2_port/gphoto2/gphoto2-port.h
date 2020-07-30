@@ -1,4 +1,4 @@
-/** \file 
+/** \file
  *
  * \author Copyright 2001 Lutz Mueller <lutz@users.sf.net>
  *
@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -47,7 +47,7 @@ extern "C" {
 
 /**
  * \brief Serial parity
- * 
+ *
  * Parity of the serial port.
  */
 typedef enum _GPPortSerialParity
@@ -58,7 +58,7 @@ typedef enum _GPPortSerialParity
 } GPPortSerialParity;
 
 /** \brief Maximum length of receive buffer */
-#define GP_PORT_MAX_BUF_LEN 4096             
+#define GP_PORT_MAX_BUF_LEN 4096
 
 /**
  * \brief Port settings for serial ports.
@@ -67,7 +67,7 @@ typedef struct _GPPortSettingsSerial {
 	char port[128];		/**< The portname (/dev/ttyX)*/
 	int speed;		/**< The baudrate of the device. */
 	int bits;		/**< How many bits data. */
-	GPPortSerialParity parity;	/**< parity data, see GP_PORT_SERIAL_PARITY_ 
+	GPPortSerialParity parity;	/**< parity data, see GP_PORT_SERIAL_PARITY_
 				  defines */
 	int stopbits;		/**< How many stop bits are used. */
 } GPPortSettingsSerial;
@@ -86,7 +86,7 @@ typedef struct _GPPortSettingsUSB {
 	int maxpacketsize;	/**< \brief Maximum USB packetsize of the IN endpoint. (r/o) */
 
 	/* must be last to avoid binary incompatibility.
-	 * luckily we just need to make sure this struct does not 
+	 * luckily we just need to make sure this struct does not
 	 * get larger than _GPPortSettingsSerial. */
 	char port[64];		/**< \brief USB Portname. Specific to lowlevel USB. */
 } GPPortSettingsUSB;
@@ -177,7 +177,7 @@ int gp_port_get_settings (GPPort *port, GPPortSettings *settings);
 
 /**
  * \brief Serial pins.
- * 
+ *
  * A number of serial pins to trigger and pull. This is necessary
  * for some devices that have more than just the regular 3 or 4 wires.
  */
@@ -192,7 +192,7 @@ typedef enum _GPPin {
 
 /**
  * \brief Level to pull specific lines.
- * 
+ *
  * The level on which to pull some of the serial lines.
  */
 typedef enum _GPLevel {
@@ -213,13 +213,13 @@ int gp_port_usb_msg_write   (GPPort *port, int request, int value,
 			     int index, char *bytes, int size);
 int gp_port_usb_msg_read    (GPPort *port, int request, int value,
 			     int index, char *bytes, int size);
-int gp_port_usb_msg_interface_write    (GPPort *port, int request, 
+int gp_port_usb_msg_interface_write    (GPPort *port, int request,
 			    int value, int index, char *bytes, int size);
-int gp_port_usb_msg_interface_read    (GPPort *port, int request, 
+int gp_port_usb_msg_interface_read    (GPPort *port, int request,
 			    int value, int index, char *bytes, int size);
-int gp_port_usb_msg_class_write    (GPPort *port, int request, 
+int gp_port_usb_msg_class_write    (GPPort *port, int request,
 			    int value, int index, char *bytes, int size);
-int gp_port_usb_msg_class_read    (GPPort *port, int request, 
+int gp_port_usb_msg_class_read    (GPPort *port, int request,
 			    int value, int index, char *bytes, int size);
 
 int gp_port_seek (GPPort *port, int offset, int whence);

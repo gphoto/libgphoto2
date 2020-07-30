@@ -53,7 +53,7 @@
 #endif
 
 /*
- *waits until the status value is 0 or 8. 
+ *waits until the status value is 0 or 8.
  *if status == 0xb0 or 0x40 we will wait some more
  */
 static int pccam600_wait_for_status(GPPort *port){
@@ -92,12 +92,12 @@ int pccam600_delete_file(GPPort *port, GPContext *context, int index){
   return GP_OK;
 }
 
-int pccam600_get_mem_info(GPPort *port, GPContext *context, int *totalmem, 
+int pccam600_get_mem_info(GPPort *port, GPContext *context, int *totalmem,
 			    int *freemem)
 {
   unsigned char response[4];
   gp_port_set_timeout(port, 400000);
-  CHECK(gp_port_usb_msg_read(port,0x60,0x00,0x03,(char*)response,0x04)); 
+  CHECK(gp_port_usb_msg_read(port,0x60,0x00,0x03,(char*)response,0x04));
   *totalmem = response[2]*65536+response[1]*256+response[0];
   CHECK(pccam600_wait_for_status(port));
   CHECK(gp_port_usb_msg_read(port,0x60,0x00,0x04,(char*)response,0x04));
@@ -124,7 +124,7 @@ int pccam600_get_file_list(GPPort *port, GPContext *context){
     gp_log(GP_LOG_DEBUG,"pccam600 library: pccam600_get_file_list",
 	   "nr_of_blocks is 0");
     gp_context_error(context,_("pccam600_init: Expected > %d blocks got %d"),
-		 0,nr_of_blocks); 
+		 0,nr_of_blocks);
     return GP_ERROR;
   }
   return nr_of_blocks / 2;
@@ -153,7 +153,7 @@ int pccam600_get_file(GPPort *port, GPContext *context, int index){
     gp_log(GP_LOG_DEBUG,
 	   "pccam600 library: pccam600_get_file","nr_of_msg is 0");
     gp_context_error(context,_("pccam600_init: Expected > %d blocks got %d"),
-		 0,nr_of_blocks); 
+		 0,nr_of_blocks);
     return GP_ERROR;
   }
   return nr_of_blocks / 2;
@@ -209,14 +209,14 @@ int pccam600_init(GPPort *port, GPContext *context){
   nr_of_blocks = response[2]*256+response[1];
 
   if (nr_of_blocks == 0) {
-    gp_context_error(context,_("pccam600_init: Expected %d blocks got %d"),64,nr_of_blocks); 
+    gp_context_error(context,_("pccam600_init: Expected %d blocks got %d"),64,nr_of_blocks);
     return GP_ERROR;
   }
 
   nr_of_blocks = 512 / nr_of_blocks;
   gp_log(GP_LOG_DEBUG,"pccam600 library: init","nr_of_blocks %d",nr_of_blocks);
   if (nr_of_blocks == 0) {
-    gp_context_error(context,_("pccam600_init: Expected %d blocks got %d"),64,nr_of_blocks); 
+    gp_context_error(context,_("pccam600_init: Expected %d blocks got %d"),64,nr_of_blocks);
     return GP_ERROR;
   }
   gp_port_set_timeout(port,500);
@@ -233,5 +233,5 @@ int pccam600_init(GPPort *port, GPContext *context){
     }
   }
   return GP_OK;
-  
+
 }

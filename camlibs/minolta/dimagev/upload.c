@@ -69,7 +69,7 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 		free(p);
 		return GP_ERROR_IO;
 	}
-		
+
 	free(p);
 
 	switch ( char_buffer ) {
@@ -118,7 +118,7 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 		free(p);
 		return GP_ERROR_IO;
 	}
-		
+
 	free(p);
 
 	switch ( char_buffer ) {
@@ -163,7 +163,7 @@ int dimagev_put_file(dimagev_t* dimagev, CameraFile *file) {
 			free(p);
 			return GP_ERROR_IO;
 		}
-			
+
 		free(p);
 
 		switch ( char_buffer ) {

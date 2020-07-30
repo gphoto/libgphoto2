@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -50,7 +50,7 @@ static const char BMPheader[54]={
 static struct largan_baud_rate {
 	int baud;
 	char value;	/* value to be sent in the protocol */
-} bauds [] = { 
+} bauds [] = {
 	{19200, 0x02 },	/* default */
 	{38400, 0x03 },
 	{ 9600, 0x01 },
@@ -69,9 +69,9 @@ enum {
 
 static int purge_camera (Camera * camera);
 static int wakeup_camera (Camera * camera);
-static int largan_send_command (Camera * camera, uint8_t cmd, 
+static int largan_send_command (Camera * camera, uint8_t cmd,
 		uint8_t param1, uint8_t param2);
-static int largan_recv_reply (Camera * camera, uint8_t *reply, 
+static int largan_recv_reply (Camera * camera, uint8_t *reply,
 		uint8_t *code, uint8_t * code2);
 static int set_serial_speed (Camera * camera, int speed);
 
@@ -108,7 +108,7 @@ largan_pict_alloc_data (largan_pict_info * ptr, uint32_t size)
 int largan_open (Camera * camera)
 {
 	int ret;
-	
+
         ret = largan_get_num_pict (camera);
         if (ret < 0){
                 ret = purge_camera (camera);
@@ -175,7 +175,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 		return ret;
 	}
         ret = largan_recv_reply (camera, &reply, &code, NULL);
-/* here we have to receive 7 bytes back 
+/* here we have to receive 7 bytes back
  the 2nd contains 00 for thumbnail or 01 for original picture
  the 3rd contains the picturenumber for an original picture
  or 00 for an thumbnail for an lowres picture
@@ -205,7 +205,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
                 GP_DEBUG ("largan_get_pict(): code != 0x01 && 0x00\n");
 		return GP_ERROR;
 	}
-	
+
 	/* the remaining 5 bytes are read here */
 
 	ret = gp_port_read (camera->port, (char *)buf, sizeof(buf));
@@ -231,7 +231,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 	pict->type = type;
 	pict_size = be32atoh (&buf[1]);
 	switch (type) {
-	case LARGAN_PICT: 
+	case LARGAN_PICT:
 		largan_pict_alloc_data (pict, pict_size);
 		ret = gp_port_read (camera->port, pict->data, pict->data_size);
 		if (ret < GP_OK) {
@@ -243,7 +243,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 		}
 		pict->quality = 0xff;	/* this is not a thumbnail */
 		break;
-	case LARGAN_THUMBNAIL: 
+	case LARGAN_THUMBNAIL:
 		{
 			char * buffer = (char*)malloc(pict_size);
 
@@ -258,7 +258,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 			memcpy (pict->data, BMPheader, sizeof(BMPheader));
 			/*this is the segfaulty function */
 			largan_ccd2dib (buffer, pict->data + sizeof(BMPheader), 240, 1);
-			
+
 			free (buffer);
 			pict->quality = buf[0];
 			break;
@@ -416,7 +416,7 @@ static int largan_recv_reply (Camera * camera, uint8_t *reply,
 		packet_size = 2;
 		break;
 	case LARGAN_GET_PICT_CMD:
-		packet_size = 2;  
+		packet_size = 2;
 		break;
 	case LARGAN_BAUD_ERASE_CMD:
 		packet_size = 2;
@@ -507,18 +507,18 @@ static int set_serial_speed (Camera * camera, int speed)
 	int ret;
 	GPPortSettings settings;
 	GP_DEBUG ("set_serial_speed() called ***************\n");
-	
+
 	if (camera->port->type != GP_PORT_SERIAL) {
 		GP_DEBUG ("set_serial_speed() called on non serial port\n");
 		return GP_ERROR;
 	}
-	
+
 	ret = gp_port_get_settings (camera->port, &settings);
 	if (ret < 0) {
 		return ret;
 	}
 	settings.serial.speed    = speed;
-	
+
 	ret = gp_port_set_settings (camera->port, settings);
 	return ret;
 }
@@ -537,7 +537,7 @@ static int purge_camera (Camera * camera)
 	while (1)
 	{
 		count = gp_port_read (camera->port, (char *)buffer, 1);
-		if (count < GP_OK) 
+		if (count < GP_OK)
 			return count;
 
 		if (count)
@@ -567,7 +567,7 @@ static int wakeup_camera (Camera * camera)
 {
 	int num_pix;
 	/*	int i;*/
-	
+
 	if (camera->port->type == GP_PORT_SERIAL) {
 		set_serial_speed (camera, 4800);	/*wakes camera best*/
 		num_pix = largan_get_num_pict (camera);	/*this wakes*/

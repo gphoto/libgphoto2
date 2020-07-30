@@ -27,7 +27,7 @@
 
 #define DC120_ACTION_IMAGE      0
 #define DC120_ACTION_PREVIEW    1
-#define DC120_ACTION_DELETE     2   
+#define DC120_ACTION_DELETE     2
 
 /* Status structure. Copied from dc210, thus may not fit. */
 typedef struct {
@@ -65,7 +65,7 @@ int   dc120_set_speed    (Camera *camera, int speed);
 int   dc120_get_status   (Camera *camera, Kodak_dc120_status *status, GPContext *context);
 int   dc120_get_albums	 (Camera *camera, int from_card, CameraList *list, GPContext *context);
 int   dc120_get_filenames(Camera *camera, int from_card, int album_number, CameraList *list, GPContext *context);
-int   dc120_file_action	 (Camera *camera, int action, int from_card, int album_number, 
+int   dc120_file_action	 (Camera *camera, int action, int from_card, int album_number,
 			  int file_number, CameraFile *file, GPContext *context);
 int dc120_capture (Camera *camera, CameraFilePath *path, GPContext *context);
 

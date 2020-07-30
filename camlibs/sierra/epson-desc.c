@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -36,13 +36,13 @@
  */
 
 /*
- * Notes: 
+ * Notes:
  *
  * The variable "value" in a ValueNameType is the first element of
  * the name/value union, and so it is the default value initialized.
  *
  * To init to a range, use:
- *	{ .range = { 100.1, 2000.0, 10 } }, NULL 
+ *	{ .range = { 100.1, 2000.0, 10 } }, NULL
  *
  * Casts are used to avoid warnings about using a const.
  *
@@ -79,9 +79,9 @@ static const ValueNameType ep3000z_reg_01_val_names[] = {
 	{ { 0x03 }, "SuperFine 2048x1536" },
 	{ { 0x04 }, "HyPict 2544x1904" },
 };
-static const RegisterDescriptorType ep3000z_reg_01[] = { 
+static const RegisterDescriptorType ep3000z_reg_01[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"resolution", N_("Resolution plus Size"),
 		VAL_NAME_INIT (ep3000z_reg_01_val_names)
 	}
@@ -91,15 +91,15 @@ static const RegisterDescriptorType ep3000z_reg_01[] = {
  * Register 2: Date and time.
  */
 static const ValueNameType ep3000z_reg_02_val_names[] = {
-	/* 
+	/*
 	 * Dummy value, since we need at least one of these to
 	 * display anything.
 	 */
 	{ { 0x00 }, "Dummy" },
 };
-static const RegisterDescriptorType ep3000z_reg_02[] = { 
+static const RegisterDescriptorType ep3000z_reg_02[] = {
 	{
-		GP_WIDGET_DATE, GP_REG_NO_MASK, 
+		GP_WIDGET_DATE, GP_REG_NO_MASK,
 		"date-time", N_("Date and time (GMT)"),
 		VAL_NAME_INIT (ep3000z_reg_02_val_names)
 	}
@@ -110,7 +110,7 @@ static const RegisterDescriptorType ep3000z_reg_02[] = {
  */
 
 /*
- * Register 5: aperture settings. 
+ * Register 5: aperture settings.
  */
 static const ValueNameType ep3000z_reg_05_val_names[] = {
 	{ { 6 }, N_("auto") },
@@ -121,9 +121,9 @@ static const ValueNameType ep3000z_reg_05_val_names[] = {
 	{ { 4 }, "F5.6" },
 	{ { 5 }, "F8.0" },
 };
-static const RegisterDescriptorType ep3000z_reg_05[] = { 
+static const RegisterDescriptorType ep3000z_reg_05[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (ep3000z_reg_05_val_names)
 	}
@@ -136,9 +136,9 @@ static const ValueNameType ep3000z_reg_06_val_names[] = {
 	{ { 1 }, N_("Color") },
 	{ { 2 }, N_("Black & White") },
 };
-static const RegisterDescriptorType ep3000z_reg_06[] = { 
+static const RegisterDescriptorType ep3000z_reg_06[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"color", N_("Color Mode"),
 		VAL_NAME_INIT (ep3000z_reg_06_val_names)
 	}
@@ -154,10 +154,10 @@ static const ValueNameType ep3000z_reg_07_val_names[] = {
 	{ { 3 }, N_("Red-eye Reduction") },
 	{ { 4 }, N_("Slow Sync") },
 };
-static const RegisterDescriptorType ep3000z_reg_07[] = { 
+static const RegisterDescriptorType ep3000z_reg_07[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
-		"flash", N_("Flash Settings"), 
+		"flash", N_("Flash Settings"),
 		VAL_NAME_INIT (ep3000z_reg_07_val_names)
 	}
 };
@@ -170,7 +170,7 @@ static const ValueNameType ep3000z_reg_20_val_names[] = {
 	{ { 0x01 }, N_("Fixed") },
 	{ { 0xFF }, N_("Custom") },
 };
-static const RegisterDescriptorType ep3000z_reg_20[] = { 
+static const RegisterDescriptorType ep3000z_reg_20[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"whitebalance", N_("White Balance"),
@@ -187,7 +187,7 @@ static const RegisterDescriptorType ep3000z_reg_20[] = {
 static const ValueNameType ep3000z_reg_23_val_names[] = {
 	{ { .range = { 30, 600, 30  } }, NULL },
 };
-static const RegisterDescriptorType ep3000z_reg_23[] = { 
+static const RegisterDescriptorType ep3000z_reg_23[] = {
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"host-power-save", N_("Host power save (seconds)"),
@@ -203,7 +203,7 @@ static const RegisterDescriptorType ep3000z_reg_23[] = {
 static const ValueNameType ep3000z_reg_24_val_names[] = {
 	{ { .range = { 30, 600, 30  } }, NULL },
 };
-static const RegisterDescriptorType ep3000z_reg_24[] = { 
+static const RegisterDescriptorType ep3000z_reg_24[] = {
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"camera-power-save", N_("Camera power save (seconds)"),
@@ -218,7 +218,7 @@ static const ValueNameType ep3000z_reg_33_val_names[] = {
 	{ { 0x01 }, N_("Macro") },
 	{ { 0x02 }, N_("Normal") },
 };
-static const RegisterDescriptorType ep3000z_reg_33[] = { 
+static const RegisterDescriptorType ep3000z_reg_33[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"lens-mode", N_("Lens Mode"),
@@ -274,12 +274,12 @@ static CameraRegisterType ep3000z_cam_regs[] = {
 };
 
 static const CameraRegisterSetType ep3000z_desc[] = {
-		{ 
-			N_("Picture Settings"), 
+		{
+			N_("Picture Settings"),
 			SIZE_ADDR (CameraRegisterType, ep3000z_pic_regs)
 		},
-		{ 
-			N_("Camera Settings"), 
+		{
+			N_("Camera Settings"),
 			SIZE_ADDR (CameraRegisterType, ep3000z_cam_regs)
 		},
 };

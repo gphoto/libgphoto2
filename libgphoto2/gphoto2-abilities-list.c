@@ -10,10 +10,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -77,7 +77,7 @@ static int gp_abilities_list_sort      (CameraAbilitiesList *);
  * \param codeset New codeset for the messages. For instance "utf-8".
  * \return old codeset as returned from bind_textdomain_codeset().
  *
- * You would then call gp_abilities_list_load() in order to 
+ * You would then call gp_abilities_list_load() in order to
  * populate it.
  */
 const char*
@@ -94,7 +94,7 @@ gp_message_codeset (const char *codeset)
  * \param list CameraAbilitiesList object to initialize
  * \return gphoto2 error code
  *
- * You would then call gp_abilities_list_load() in order to 
+ * You would then call gp_abilities_list_load() in order to
  * populate it.
  */
 int
@@ -235,7 +235,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		if (gp_abilities_list_lookup_id (list, text.text) >= 0) {
 			lt_dlclose (lh);
 			continue;
-		} 
+		}
 
 		/* camera_abilities */
 		ab = lt_dlsym (lh, "camera_abilities");
@@ -259,7 +259,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		}
 
 		/* do not free the library in valgrind mode */
-#if !defined(VALGRIND) 
+#if !defined(VALGRIND)
 		lt_dlclose (lh);
 #endif
 
@@ -277,7 +277,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 			lt_dlexit ();
 			gp_list_free (flist);
-			return (GP_ERROR_CANCEL); 
+			return (GP_ERROR_CANCEL);
 		}
 	}
 	gp_context_progress_stop (context, p);
@@ -338,7 +338,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 					list->abilities[i].model, v, p);
 				*ability = i;
 			} else if (res < 0 && res != GP_ERROR_IO_USB_FIND) {
-				/* another error occurred. 
+				/* another error occurred.
 				 * perhaps we should better
 				 * report this to the calling
 				 * method?
@@ -363,7 +363,7 @@ gp_abilities_list_detect_usb (CameraAbilitiesList *list,
 					list->abilities[i].model, c, s, p);
 				*ability = i;
 			} else if (res < 0 && res != GP_ERROR_IO_USB_FIND) {
-				/* another error occurred. 
+				/* another error occurred.
 				 * perhaps we should better
 				 * report this to the calling
 				 * method?
@@ -428,7 +428,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 		case GP_PORT_USB_SCSI:
 		case GP_PORT_USB_DISK_DIRECT: {
 			int ability;
-			
+
 			res = gp_abilities_list_detect_usb (list, &ability, port);
 			if (res == GP_OK) {
 				gp_list_append(l,
@@ -442,7 +442,7 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 		case GP_PORT_DISK: {
 			char	*s, path[1024];
 			struct stat stbuf;
-		
+
 			s = strchr (xpath, ':');
 			if (!s)
 				break;

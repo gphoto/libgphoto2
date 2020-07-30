@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \note
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \note
  * You should have received a copy of the GNU Lesser General Public
@@ -53,7 +53,7 @@ extern "C" {
  * \brief Specified camera model was not found
  *
  * The specified model could not be found. This error is reported when
- * the user specified a model that does not seem to be supported by 
+ * the user specified a model that does not seem to be supported by
  * any driver.
  **/
 #define GP_ERROR_MODEL_NOT_FOUND     -105
@@ -77,13 +77,13 @@ extern "C" {
 /**
  * \brief Specified directory already exists
  *
- * The specified directory already exists. This error is reported for example 
+ * The specified directory already exists. This error is reported for example
  * when the user wants to create a directory that already exists.
  **/
 #define GP_ERROR_DIRECTORY_EXISTS    -109
 
 /**
- * \brief The camera is already busy 
+ * \brief The camera is already busy
  *
  * Camera I/O or a command is in progress.
  **/
@@ -91,7 +91,7 @@ extern "C" {
 
 /**
  * \brief Path is not absolute
- * 
+ *
  * The specified path is not absolute. This error is reported when the user
  * specifies paths that are not absolute, i.e. paths like "path/to/directory".
  * As a rule of thumb, in gphoto2, there is nothing like relative paths.

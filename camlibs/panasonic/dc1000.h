@@ -9,15 +9,15 @@
 	and distributed under the terms of the gPhoto project license,  COPYING.
 	By continuing to use, modify, or distribute  this file you indicate that
 	you have read the license, understand and accept it fully.
-	
+
 	THIS  SOFTWARE IS PROVIDED AS IS AND COME WITH NO WARRANTY  OF ANY KIND,
 	EITHER  EXPRESSED OR IMPLIED.  IN NO EVENT WILL THE COPYRIGHT  HOLDER BE
 	LIABLE FOR ANY DAMAGES RESULTING FROM THE USE OF THIS SOFTWARE.
 
 	Note:
-	
+
 	This is a Panasonic DC1000 camera gPhoto library header file.
-*/	
+*/
 
 /* DC1000 command codes */
 

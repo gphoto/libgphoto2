@@ -26,7 +26,7 @@ void main (int argc, char **argv)
     }
 
     for (i=1; i<argc; i++)
-    {    
+    {
         if ((jpgfile = fopen (argv[i], "rb")) == NULL)
         {
           fprintf (stderr, "File could not be opened. Aborted.\n\n");
@@ -64,7 +64,7 @@ void main (int argc, char **argv)
 	    snprintf(newname, 200, "%s-%d.jpg", tempstring, newnamecounter);
 	}
 
-	printf("File %s, size %ld, %s -> %s\n", argv[i], statbuf.st_size, 
+	printf("File %s, size %ld, %s -> %s\n", argv[i], statbuf.st_size,
                timestring, newname);
 
         fclose(jpgfile);

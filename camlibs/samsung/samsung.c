@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -107,7 +107,7 @@ static int
 is_null (unsigned char *buf)
 {
 	int n = 128;
-	
+
 	while (n--)
 		if (*(buf++))
 			return (0);
@@ -129,7 +129,7 @@ SDSC_initialize (GPPort *port)
 }
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy (id->text, "samsung");
 
@@ -147,7 +147,7 @@ static const struct {
 };
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	int i;
 	CameraAbilities a;
@@ -235,7 +235,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-camera_about (Camera *camera, CameraText *about, GPContext *context) 
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	/* Translators: please write 'M"uller' and 'Mei"sner' (that
 	   is, with u-umlaut and eszett resp.) if your charset
@@ -259,7 +259,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera *camera = data;
 
 	/* Rewind */
-	CHECK_RESULT (SDSC_initialize (camera->port)); 
+	CHECK_RESULT (SDSC_initialize (camera->port));
 
 	/* Count the pictures */
 	while (1) {
@@ -284,7 +284,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	info->file.fields	= GP_FILE_INFO_NONE;
 	/* Don't rewind, just go forward until we find it.
-	 * Works way better for linear queries. 
+	 * Works way better for linear queries.
 	 */
 	while (1) {
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_NEXT));
@@ -318,7 +318,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 

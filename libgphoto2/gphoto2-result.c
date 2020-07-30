@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -63,7 +63,7 @@ static struct {
  * \brief Translate a gphoto error code into a localized string
  * \param result a gphoto2 error code
  *
- * Translates a gphoto2 error code into a human readable string. If the 
+ * Translates a gphoto2 error code into a human readable string. If the
  * error occurred in combination with a camera,
  * gp_camera_get_result_as_string() should be used instead.
  *
@@ -80,7 +80,7 @@ gp_result_as_string (int result)
 
 	/* Camlib error? */
 	if (result <= -1000)
-		return (N_("Unknown camera library error")); 
+		return (N_("Unknown camera library error"));
 
 	for (i = 0; result_descriptions[i].description; i++)
 		if (result_descriptions[i].result == result)

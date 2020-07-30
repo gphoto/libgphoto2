@@ -4,7 +4,7 @@
  * *** NOTE: This is a modified version to deal with the ax203 "JPEG" fmt
  * *** This version can not decompress regular JPEG files, see
  * *** README.ax203-compression for details
- * 
+ *
  * Copyright (c) 2006, Luc Saillard <luc@saillard.org>
  *
  * ax203 modifications:
@@ -815,7 +815,7 @@ int tinyjpeg_parse_header(struct jdec_private *priv, const unsigned char *buf, u
   stream += 16;
 
   /* Skip MCU info blocks (we don't need them) */
-  stream += (priv->width  / (8 * priv->component_infos[cY].Hfactor)) * 
+  stream += (priv->width  / (8 * priv->component_infos[cY].Hfactor)) *
             (priv->height / (8 * priv->component_infos[cY].Vfactor)) * 8;
 
   /* Parse DQT table */

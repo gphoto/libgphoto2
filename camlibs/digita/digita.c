@@ -97,7 +97,7 @@ int camera_abilities(CameraAbilitiesList *list)
 		a.speed[5]	= 0;
 		a.operations		= GP_OPERATION_NONE;
 		a.folder_operations	= GP_FOLDER_OPERATION_NONE;
-		a.file_operations	= GP_FILE_OPERATION_PREVIEW | 
+		a.file_operations	= GP_FILE_OPERATION_PREVIEW |
 					  GP_FILE_OPERATION_DELETE;
 		a.usb_vendor  = models[i].usb_vendor;
 		a.usb_product = models[i].usb_product;
@@ -208,7 +208,7 @@ static int file_list_func(CameraFilesystem *fs, const char *folder,
 }
 
 #define GFD_BUFSIZE 19432
-static unsigned char *digita_file_get(Camera *camera, const char *folder, 
+static unsigned char *digita_file_get(Camera *camera, const char *folder,
 			     const char *filename, int thumbnail, int *size,
 			     GPContext *context)
 {
@@ -318,7 +318,7 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 	Camera *camera = user_data;
 	unsigned char *data;
 	unsigned int width, height;
-	char ppmhead[64]; 
+	char ppmhead[64];
 	int buflen;
 
 	if (folder[0] == '/')
@@ -403,7 +403,7 @@ static int camera_about(Camera *camera, CameraText *about, GPContext *context)
 	return GP_OK;
 }
 
-static int digita_file_delete(Camera *camera, const char *folder, 
+static int digita_file_delete(Camera *camera, const char *folder,
 			     const char *filename, GPContext *context)
 {
 	struct filename fn;

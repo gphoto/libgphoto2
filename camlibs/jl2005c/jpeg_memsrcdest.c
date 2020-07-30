@@ -273,7 +273,7 @@ jpeg_mem_dest (j_compress_ptr cinfo, unsigned char ** outbuffer,
 {
 	my_dest_ptr dest;
 
-	/* The destination object is made permanent so that multiple JPEG 
+	/* The destination object is made permanent so that multiple JPEG
 	 * images can be written to the same file without re-executing
 	 * jpeg_stdio_dest.
 	 * This makes it dangerous to use this manager and a different

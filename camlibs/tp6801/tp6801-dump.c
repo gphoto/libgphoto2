@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the 
+ * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
@@ -36,7 +36,7 @@ void tp6801_send_cmd(int fd, int rw, int cmd, int offset, unsigned char *data, i
     unsigned char cmd_buffer[16];
 
     memset(cmd_buffer, 0, sizeof(cmd_buffer));
-    cmd_buffer[0] = cmd; 
+    cmd_buffer[0] = cmd;
     cmd_buffer[1] = 0x11;
     cmd_buffer[2] = 0x31;
     cmd_buffer[3] = 0x0f;
@@ -120,6 +120,6 @@ int main(int argc, char* argv[])
 #endif
     fclose(f);
     close(fd);
-    
+
     return 0;
 }

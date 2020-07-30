@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -53,10 +53,10 @@ QVping (Camera *camera)
 			switch (c) {
 			case ACK:
 			case ENQ:
-				
+
 				/*
 				 * According to gphoto, we need to wait
-				 * for ACK. But the camera of 
+				 * for ACK. But the camera of
 				 * David Wolfskill <david@catwhisker.org>
 				 * seems to return ENQ after some NAK.
 				 */
@@ -70,12 +70,12 @@ QVping (Camera *camera)
 			case UNKNOWN1:
 			case UNKNOWN2:
 
-				/* 
+				/*
 				 * David Wolfskill <david@catwhisker.org>
 				 * has seen those two bytes if one sends
 				 * only ENQs to the camera. The camera first
 				 * answers with some NAKs, then with some
-				 * ACKs, and finally with UNKNOWN1 and 
+				 * ACKs, and finally with UNKNOWN1 and
 				 * UNKNOWN2.
 				 */
 				while (gp_port_read (camera->port, (char *)&c, 1) >= 0);
@@ -197,7 +197,7 @@ QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 				return (GP_ERROR_CORRUPTED_DATA);
 			else
 				continue;
-		}	
+		}
 
 		/* Acknowledge and prepare for next packet */
 		c = ACK;
@@ -387,7 +387,7 @@ int
 QVstatus (Camera *camera, char *status)
 {
         unsigned char cmd[3];
-        
+
         cmd[0] = 'D';
         cmd[1] = 'S';
         cmd[2] = STX;
@@ -400,7 +400,7 @@ int
 QVreset (Camera *camera)
 {
         unsigned char cmd[2];
-        
+
 	cmd[0] = 'Q';
 	cmd[1] = 'R';
 	CR (QVsend (camera, cmd, 2, NULL, 0));

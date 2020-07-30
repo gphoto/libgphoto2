@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 		ret = set_config_value_string (camera, "artist", argv[1], context);
 		if (ret < GP_OK) {
 			fprintf (stderr, "Failed to set camera owner to %s; %d\n", argv[1], ret);
-		} else 
+		} else
 			printf("New owner: %s\n", argv[1]);
 	}
 out:

@@ -14,7 +14,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the 
+ * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
@@ -63,7 +63,7 @@ ax203_decode_component_values(char *src, char *dest)
 	int i, table, corr;
 	dest[0] = src[0] & ~0x07;
        	table = (src[0] >> 1) & 3;
-       	
+
 	for (i = 1; i < 4; i++) {
 		switch (i) {
 		case 1:
@@ -99,7 +99,7 @@ ax203_decode_block_yuv_delta(char *src, int **dest, int dest_x, int dest_y)
 	/* The Y components are stored 4 at a time in a pattern like this:
 	   1 2  1 2
 	   3 4  3 4
-	   
+
 	   1 2  1 2
 	   3 4  3 4 */
 	for (y = 0; y < 4; y += 2) {
@@ -221,7 +221,7 @@ ax203_encode_signed_component_values(int8_t *src, char *dest)
 		}
 		/* If we did not break out the above loop the min / max
 		   correction in the current table is enough */
-		if (j == 4) 
+		if (j == 4)
 			break;
 	}
 	table = i;
@@ -271,7 +271,7 @@ ax203_encode_unsigned_component_values(uint8_t *src, char *dest)
 		}
 		/* If we did not break out the above loop the min / max
 		   correction in the current table is enough */
-		if (j == 4) 
+		if (j == 4)
 			break;
 	}
 	table = i;
@@ -352,7 +352,7 @@ ax203_encode_block_yuv_delta(int **src, int src_x, int src_y, char *dest)
 	/* The Y components are stored 4 at a time in a pattern like this:
 	   1 2  1 2
 	   3 4  3 4
-	   
+
 	   1 2  1 2
 	   3 4  3 4 */
 	for (y = 0; y < 4; y += 2) {

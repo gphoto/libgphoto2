@@ -1,17 +1,17 @@
 /*
  * STV0680 Vision Camera Chipset Driver
- * Copyright 2000 Adam Harrison <adam@antispin.org> 
- * 
+ * Copyright 2000 Adam Harrison <adam@antispin.org>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
@@ -123,7 +123,7 @@ struct stv680_image_header { /* For all upload and get image header */
     unsigned char flags;
 #define IMAGE_IS_VALID		0x01
 #define IMAGE_FROM_STREAM	0x04
-#define IMAGE_FIRST_OF_MOVIE	0x10 
+#define IMAGE_FIRST_OF_MOVIE	0x10
 };
 
 #define CMDID_GRAB_UPLOAD			0x89

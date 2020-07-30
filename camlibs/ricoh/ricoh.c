@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -45,7 +45,7 @@
 #    define N_(String) gettext_noop (String)
 #  else
 #    define N_(String) (String)
-#  endif 
+#  endif
 #else
 #  define textdomain(String) (String)
 #  define gettext(String) (String)
@@ -287,7 +287,7 @@ ricoh_transmit (Camera *camera, GPContext *context, unsigned char cmd,
         unsigned char ret_cmd;
 	unsigned int r = 0;
 	int result;
- 
+
         while (1) {
                 CR (ricoh_send (camera, context, cmd, 0, data, len));
                 result = ricoh_recv (camera, context, &ret_cmd, NULL,
@@ -417,7 +417,7 @@ ricoh_get_pic_date (Camera *camera, GPContext *context, unsigned int n,
 	if (date) {
 		time.tm_year = B2H (buf[1]);
 		/* correct for Y2K in case older images are read */
-		if (time.tm_year < 90) time.tm_year += 100;			
+		if (time.tm_year < 90) time.tm_year += 100;
 		time.tm_mon  = B2H (buf[2]) - 1;
 		time.tm_mday = B2H (buf[3]);
 		time.tm_hour = B2H (buf[4]);
@@ -588,9 +588,9 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	unsigned int r, header_len;
 	RicohMode mode;
 
-	GP_DEBUG ("Getting image %i as %s...", n, 
+	GP_DEBUG ("Getting image %i as %s...", n,
 							(type==RICOH_FILE_TYPE_PREVIEW ? "thumbnail":"image"));
-	
+
 	/* Put camera into play mode, if not already */
 	CR (ricoh_get_mode (camera, context, &mode));
 	if (mode != RICOH_MODE_PLAY)
@@ -675,9 +675,9 @@ ricoh_set_date (Camera *camera, GPContext *context, time_t time)
 	t = localtime (&time);
 #ifdef HAVE_TM_GMTOFF
 	time += t->tm_gmtoff;
-#else  
+#else
 	time += timezone;
-#endif 
+#endif
 	t = localtime (&time);
 	GP_DEBUG ("ricoh_set_date: converted time to localtime %s "
 		  "(timezone is %ld)", asctime (t), timezone);
@@ -845,7 +845,7 @@ ricoh_put_file (Camera *camera, GPContext *context, const char *name,
 	C_LEN (context, len, 2);
 
 	/*
-	 * We just received the picture number of the new file. We don't 
+	 * We just received the picture number of the new file. We don't
 	 * need it.
 	 */
 
@@ -854,7 +854,7 @@ ricoh_put_file (Camera *camera, GPContext *context, const char *name,
 	for (i = 0; i < size; i += 128) {
 		memset (block, 0, sizeof (buf));
 		memcpy (block, data + i, MIN (128, size - i));
-		CR (ricoh_transmit (camera, context, 0xa2, block, 128, 
+		CR (ricoh_transmit (camera, context, 0xa2, block, 128,
 				    buf, &len));
 		C_LEN (context, len, 0);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)

@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -127,7 +127,7 @@ int sierra_get_string_register	  (Camera *camera, int reg, int file_number,
 int sierra_delete		  (Camera *camera, int picture_number,
 				   GPContext *context);
 int sierra_delete_all             (Camera *camera, GPContext *context);
-int sierra_capture		  (Camera *camera, CameraCaptureType type, 
+int sierra_capture		  (Camera *camera, CameraCaptureType type,
 				   CameraFilePath *filepath,
 				   GPContext *context);
 int sierra_capture_preview 	  (Camera *camera, CameraFile *file,
@@ -147,8 +147,8 @@ int sierra_upload_file        (Camera *camera, CameraFile *file,
 			       GPContext *context);
 
 /* Camera desc functions in sierra-desc.c */
-int camera_set_config_cam_desc	  (Camera *camera, CameraWidget *window, 
+int camera_set_config_cam_desc	  (Camera *camera, CameraWidget *window,
 				   GPContext *context);
-int camera_get_config_cam_desc	  (Camera *camera, CameraWidget **window, 
+int camera_get_config_cam_desc	  (Camera *camera, CameraWidget **window,
 				   GPContext *context);
 #endif /* __LIBRARY_H__ */

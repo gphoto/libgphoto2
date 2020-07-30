@@ -15,13 +15,13 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
- 
+
 /*
- * gphoto driver for the Mustek MDC800 Digital Camera. The driver 
+ * gphoto driver for the Mustek MDC800 Digital Camera. The driver
  * supports rs232 and USB. It automatically detects which Kernelnode
  * is used.
  */
- 
+
 /*
  * Implements cummunication-core :
  *
@@ -53,7 +53,7 @@ int mdc800_io_sendCommand_with_retry (GPPort *port,unsigned char* command, unsig
 {
 	int try=0;
 	int ret=GP_OK;
-	
+
 	while (try < maxtries)
 	{
 	        usleep(MDC800_DEFAULT_COMMAND_RETRY_DELAY*1000);
@@ -106,7 +106,7 @@ int mdc800_io_getCommandTimeout (unsigned char command)
 		case COMMAND_SET_CAMERA_MODE:
 		case COMMAND_DELETE_IMAGE:
 			return MDC800_LONG_TIMEOUT;
-			
+
 		case COMMAND_TAKE_PICTURE:
 		case COMMAND_PLAYBACK_IMAGE:
 		case COMMAND_SET_PLAYBACK_MODE:

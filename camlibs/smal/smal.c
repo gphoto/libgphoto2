@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -45,7 +45,7 @@
 #endif
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "smal");
 	return (GP_OK);
@@ -67,11 +67,11 @@ static const struct smal_cameras {
 };
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
    CameraAbilities a;
    int i;
-   
+
    memset(&a, 0, sizeof(a));
    a.status = GP_DRIVER_STATUS_EXPERIMENTAL; /* highly! */
    a.port     		= GP_PORT_USB;
@@ -89,7 +89,7 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
     if (camera->pl) {
 	free(camera->pl);
@@ -106,7 +106,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
    Camera *camera = user_data;
    int size,image_no,result;
    unsigned char *data;
-   
+
    image_no = gp_filesystem_number(fs, folder, filename, context);
    if (image_no < GP_OK)
      return image_no;
@@ -117,7 +117,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
       gp_file_set_mime_type (file, GP_MIME_PPM);
       break;
     case GP_FILE_TYPE_RAW:
-      result = ultrapocket_getrawpicture(camera, context, 
+      result = ultrapocket_getrawpicture(camera, context,
 		      &data, &size, filename);
       gp_file_set_mime_type (file, GP_MIME_PPM);
       break;
@@ -127,9 +127,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
    }
    if (result < 0)
      return result;
-   
+
    CHECK_RESULT(gp_file_set_data_and_size (file, (char *)data, size));
-   
+
    return (GP_OK);
 }
 
@@ -139,13 +139,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 {
    Camera *camera = data;
    int image_no;
-   
+
    image_no = gp_filesystem_number(fs, folder, filename, context);
    if (image_no < GP_OK)
      return image_no;
 
    CHECK_RESULT(ultrapocket_deletefile(camera, filename));
-   
+
    return (GP_OK);
 }
 
@@ -165,7 +165,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
    strcpy (about->text, _("Smal Ultrapocket\n"
 			  "Lee Benfield <lee@benf.org>\n"
 			  "Driver for accessing the Smal Ultrapocket camera, and OEM versions (slimshot)"));
-   
+
    return (GP_OK);
 }
 
@@ -175,11 +175,11 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 {
    Camera *camera = data;
    int count, result;
-   
+
    result =  ultrapocket_getpicsoverview(camera, context, &count, list);
    if (result != GP_OK)
      return result;
-   
+
    return (GP_OK);
 }
 
@@ -191,11 +191,11 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
     CameraAbilities cab;
     up_badge_type badge;
-    
+
     camera->functions->exit                 = camera_exit;
     camera->functions->about                = camera_about;
     gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
@@ -206,8 +206,8 @@ camera_init (Camera *camera, GPContext *context)
      case USB_VENDOR_ID_CREATIVE:
 	switch (cab.usb_product) {
 	 case USB_DEVICE_ID_ULTRAPOCKET:
-	    /* could be an axia eyeplate or a slimshot 
-	     * figure it out later, when we get the image 
+	    /* could be an axia eyeplate or a slimshot
+	     * figure it out later, when we get the image
 	     * catalogue.
 	     */
 	    badge = BADGE_GENERIC;
@@ -234,12 +234,12 @@ camera_init (Camera *camera, GPContext *context)
      default:
 	break;
     }
-    
+
     if (badge == BADGE_UNKNOWN) {
 	/* can't happen.  Otherwise, how'd we get to camera_init, neh? */
 	return GP_ERROR;
     }
-    
+
     camera->pl = malloc (sizeof (CameraPrivateLibrary));
     camera->pl->up_type = badge;
     /* don't need to do any exciting init stuff until we get pic numbers */

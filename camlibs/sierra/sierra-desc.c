@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -59,14 +59,14 @@
  */
 extern double round(double x);
 
-static int 
-camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge, 
-			   uint32_t reg_len, void *buff, int mask, 
+static int
+camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge,
+			   uint32_t reg_len, void *buff, int mask,
 			   CameraWidget *child)
 {
 	if ((widge == GP_WIDGET_RADIO) || (widge == GP_WIDGET_MENU)) {
 		gp_widget_add_choice (child, _(val_name_p->name));
-		GP_DEBUG ("get value %15s:\t%lld (0x%04llx)", 
+		GP_DEBUG ("get value %15s:\t%lld (0x%04llx)",
 			  val_name_p->name, (long long)val_name_p->u.value,
 			  (long long unsigned) val_name_p->u.value);
 		/* XXX where is endian handled? */
@@ -81,15 +81,15 @@ camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge,
 
 		increment = val_name_p->u.range[2];
 		if (increment == 0.0) {
-			/* 
+			/*
 			 * Use a default value.
 			 */
 			increment = 1.0;
 		}
-		GP_DEBUG ("get value range:\t%08g:%08g increment %g (via %g)", 
+		GP_DEBUG ("get value range:\t%08g:%08g increment %g (via %g)",
 		       val_name_p->u.range[0], val_name_p->u.range[1],
 		       increment, val_name_p->u.range[2]);
-		gp_widget_set_range (child, val_name_p->u.range[0], 
+		gp_widget_set_range (child, val_name_p->u.range[0],
 				     val_name_p->u.range[1], increment);
 		/*
 		 * Kluge: store the value in buff as a 4 byte int, even
@@ -109,7 +109,7 @@ camera_cam_desc_get_value (ValueNameType *val_name_p, CameraWidgetType widge,
 }
 
 static int
-camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p, 
+camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 			    CameraWidget *section, GPContext *context)
 {
 	int ind, vind, ret, value;
@@ -138,7 +138,7 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		 * value, change the reg_value size, or allocate space on
 		 * the fly and make a union with reg_value and a void*.
 		 */
-		ret = sierra_get_string_register (camera, reg_p->reg_number, 
+		ret = sierra_get_string_register (camera, reg_p->reg_number,
 					  -1, NULL, (unsigned char *)buff, (unsigned int *)&value, context);
 		if ((ret == GP_OK) && value != reg_p->reg_len) {
 			GP_DEBUG ("Bad length result %d", value);
@@ -158,7 +158,7 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		reg_desc_p = &reg_p->reg_desc[ind];
 		mask = reg_desc_p->regs_mask;
 		GP_DEBUG ("window name is %s", reg_desc_p->regs_long_name);
-		gp_widget_new (reg_desc_p->reg_widget_type, 
+		gp_widget_new (reg_desc_p->reg_widget_type,
 			       _(reg_desc_p->regs_long_name), &child);
 		gp_widget_set_name (child, reg_desc_p->regs_short_name);
 		/*
@@ -180,8 +180,8 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		 * For radio and menu values: if there has been no change, it
 		 * means the value was not set, and so it is unknown.
 		 */
-		if (((reg_desc_p->reg_widget_type == GP_WIDGET_RADIO) || 
-		     (reg_desc_p->reg_widget_type == GP_WIDGET_MENU)) && 
+		if (((reg_desc_p->reg_widget_type == GP_WIDGET_RADIO) ||
+		     (reg_desc_p->reg_widget_type == GP_WIDGET_MENU)) &&
 		      !gp_widget_changed (child)) {
 	                gp_widget_set_changed (child, FALSE);
 			sprintf (buff, _("%lld (unknown)"), (long long)reg_p->reg_value);
@@ -251,7 +251,7 @@ cam_desc_set_register (Camera *camera, CameraRegisterType *reg_p,
 		 * protection mode. Just make sure the LCD mode setting
 		 * works.
 		 */
-		CHECK_STOP (camera, sierra_sub_action (camera, 
+		CHECK_STOP (camera, sierra_sub_action (camera,
 			reg_p->reg_get_set.action, *(int*) value,
 			context));
 	} else {
@@ -262,7 +262,7 @@ cam_desc_set_register (Camera *camera, CameraRegisterType *reg_p,
 	return (GP_OK);
 }
 
-static int 
+static int
 camera_cam_desc_set_value (Camera *camera, CameraRegisterType *reg_p,
 			   RegisterDescriptorType *reg_desc_p,
 			   ValueNameType *val_name_p, void *data,
@@ -271,7 +271,7 @@ camera_cam_desc_set_value (Camera *camera, CameraRegisterType *reg_p,
 	/*
 	 * Return GP_OK if match and OK, 1 if no match, or < 0 on error.
 	 */
-	if ((reg_desc_p->reg_widget_type == GP_WIDGET_RADIO) || 
+	if ((reg_desc_p->reg_widget_type == GP_WIDGET_RADIO) ||
 	    (reg_desc_p->reg_widget_type == GP_WIDGET_MENU)) {
 		uint32_t new_value;
 
@@ -284,7 +284,7 @@ camera_cam_desc_set_value (Camera *camera, CameraRegisterType *reg_p,
 		 * For masking, we might actually set the same register
 		 * twice - once for each change in the mask, so we have to
 		 * reset reg_value to the new value.
-		 * 
+		 *
 		 * If we must to mask u.value, that is really a bug - the
 		 * u.value should already be masked.
 		 *
@@ -332,8 +332,8 @@ camera_cam_desc_set_value (Camera *camera, CameraRegisterType *reg_p,
 			  increment);
 		val[0] = round ((*(float*) data) / increment);
 		if (reg_p->reg_len == 4) {
-			/* 
-			 * not used but set it anyway 
+			/*
+			 * not used but set it anyway
 			 */
 			val[1] = 0;
 		} else if (reg_p->reg_len == 8) {
@@ -346,10 +346,10 @@ camera_cam_desc_set_value (Camera *camera, CameraRegisterType *reg_p,
 		}
 		GP_DEBUG ("set value range to %d (0x%x and 0x%x)", val[0],
 			  val[0], val[1]);
-		CHECK_STOP (camera, cam_desc_set_register (camera, reg_p, 
+		CHECK_STOP (camera, cam_desc_set_register (camera, reg_p,
 							   &val, context));
 	} else {
-		GP_DEBUG ("bad reg_widget_type type %d", 
+		GP_DEBUG ("bad reg_widget_type type %d",
 			reg_desc_p->reg_widget_type);
 		return (GP_ERROR);
 	}
@@ -419,7 +419,7 @@ camera_cam_desc_set_widget (Camera *camera, CameraRegisterType *reg_p,
 	return (GP_OK);
 }
 
-int 
+int
 camera_set_config_cam_desc (Camera *camera, CameraWidget *window,
 			    GPContext *context)
 {

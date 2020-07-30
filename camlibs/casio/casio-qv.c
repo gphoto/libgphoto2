@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -53,7 +53,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo *info, void *data, GPContext *context);
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy (id->text, "Casio QV");
 
@@ -77,7 +77,7 @@ static struct {
 };
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	int i;
 	CameraAbilities a;
@@ -104,7 +104,7 @@ camera_abilities (CameraAbilitiesList *list)
 
 		CHECK_RESULT (gp_abilities_list_append (list, a));
 	}
-	
+
 	return (GP_OK);
 }
 
@@ -182,7 +182,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 }
 
 static int
-camera_about (Camera *camera, CameraText *about, GPContext *context) 
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, _("Driver framework written by Lutz Mueller "
 		"<lutz@users.sf.net>.\n"
@@ -278,7 +278,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
         gp_widget_add_choice (child, _("OK"));
         if (status[0]&0x80) strcpy (t, _("Too bright"));
         else if (status[0]&0x40) strcpy (t, _("Too dark"));
-	else strcpy (t, _("OK"));                
+	else strcpy (t, _("OK"));
         gp_widget_set_value (child, t);
         gp_widget_append (*window, child);
 
@@ -327,7 +327,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	gp_port_settings settings;
 	int selected_speed;

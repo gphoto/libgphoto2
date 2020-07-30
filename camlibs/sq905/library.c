@@ -186,7 +186,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-	Camera *camera = data; 
+	Camera *camera = data;
 	int i,n;
 	GP_DEBUG ("List files in %s\n", folder);
 	if (0==strcmp(folder, "/")) {
@@ -260,8 +260,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-	
-	
+
+
 	/* Get the entry number of the photo on the camera */
 	entry = -1;
 	if (0==strcmp(folder, "/")) {
@@ -271,7 +271,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			while (sq_is_clip(camera->pl, entry)
 					&& entry<camera->pl->nb_entries);
 			i--;
-		} 
+		}
 		while (i>0);
 		if (entry == camera->pl->nb_entries)
 			return GP_ERROR_FILE_NOT_FOUND;
@@ -280,7 +280,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	} else {
 		i = atoi(folder+1+4);
 		do {
-			do entry++; 
+			do entry++;
 			while (!sq_is_clip(camera->pl, entry) &&
 						entry<camera->pl->nb_entries);
 			i--;
@@ -306,7 +306,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_DEBUG ("last entry was %d\n", camera->pl->last_fetched_entry);
 
 	/* Change register to DATA, but only if necessary */
-	if ((camera->pl->last_fetched_entry == -1) 
+	if ((camera->pl->last_fetched_entry == -1)
 	|| ((is_in_clip) && (frame == 0)) )
 
 	sq_access_reg(camera->port, DATA);
@@ -345,13 +345,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return GP_ERROR_NO_MEMORY;
 		}
 		GP_DEBUG("Fetch entry %i\n", to_fetch);
-		sq_read_picture_data 
+		sq_read_picture_data
 			    (camera->port, camera->pl->last_fetched_data, b);
 		camera->pl->last_fetched_entry = to_fetch;
 	} while (camera->pl->last_fetched_entry<entry);
 
 	frame_data = camera->pl->last_fetched_data+(w*h)*frame/comp_ratio;
-	/* sq_preprocess ( ) turns the photo right-side-up and for some 
+	/* sq_preprocess ( ) turns the photo right-side-up and for some
 	 * models must also de-mirror the photo
 	 */
 
@@ -361,9 +361,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			sq_preprocess(camera->pl->model, comp_ratio,
 					is_in_clip, frame_data, w, h);
 		}
-		
+
 		/*
-		 * Now put the data into a PPM image file. 
+		 * Now put the data into a PPM image file.
 		 */
 		ppm = malloc (w * h * 3 + 256); /* room for data + header */
 		if (!ppm) { return GP_ERROR_NO_MEMORY; }
@@ -394,7 +394,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 			sq_decompress (camera->pl->model, rawdata,
 						frame_data, w, h);
-			gp_gamma_fill_table (gtable, .65); 
+			gp_gamma_fill_table (gtable, .65);
 		} else {
 			rawdata = frame_data;
 			gp_gamma_fill_table (gtable, .55);
@@ -478,7 +478,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		break;
 	}
 
-	/* TO DO: 
+	/* TO DO:
 	 * Adapt some postprocessing routine to work here, because results
 	 * can vary greatly, depending both on lighting conditions and on
 	 * camera model.
@@ -539,7 +539,7 @@ camera_init(Camera *camera, GPContext *context)
 
 	ret = gp_port_get_settings(camera->port,&settings);
 	if (ret < 0) return ret;
- 
+
 	ret = gp_port_set_settings(camera->port,settings);
 	if (ret < 0) return ret;
 

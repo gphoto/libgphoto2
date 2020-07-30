@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -95,7 +95,7 @@ typedef struct
       unsigned char flags;	/* in / out flag mostly */
       unsigned char lun;	/* 0 here */
       unsigned char length;	/* of the CDB... but 0x0c is used here in the traces */
-      unsigned char cdb[16];	
+      unsigned char cdb[16];
 } uw_header_t;
 
 /*
@@ -455,7 +455,7 @@ olympus_xml_transfer (PTPParams *params,
 			oi.Filename 		= "HRSPONSE.X3C";
 			oi.ObjectCompressedSize	= strlen(evxml);
 			size = ptp_pack_OI(params, &oi, &oidata);
-			res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
+			res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL);
 			if (res != PTP_RC_OK)
 				return res;
 			free(oidata);
@@ -482,13 +482,13 @@ olympus_xml_transfer (PTPParams *params,
 		oi.Filename 		= "HREQUEST.X3C";
 		oi.ObjectCompressedSize	= strlen(cmdxml);
 
-/* 
-"HRSPONSE.X3C" ... sent back to camera after receiving an event. 
+/*
+"HRSPONSE.X3C" ... sent back to camera after receiving an event.
 <output><result>2001</result><ec102/></output
  */
 
 		size = ptp_pack_OI(params, &oi, &oidata);
-		res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
+		res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL);
 		if (res != PTP_RC_OK)
 			return res;
 		free(oidata);
@@ -726,7 +726,7 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 		if (!sscanf(str,"%02x", &x)) {
 			ptp_debug( params, "could not parse int8 %s", str);
 			return PTP_RC_GeneralError;
-		} 
+		}
 		ptp_debug( params, "\t%d", x);
 		propval->i8 = x;
 		break;
@@ -886,7 +886,7 @@ traverse_output_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 			GP_LOG_E ("failed scanning result from %s", xchar);
 		resp->Code = result;
 		GP_LOG_D ("ptp result is 0x%04x", result);
-	
+
 	}
 	next = xmlNextElementSibling (next);
 	if (!sscanf ((char*)next->name, "c%04x", &cmd)) {
@@ -1128,8 +1128,8 @@ generate_event_OK_xml(PTPParams *params, PTPContainer *ptp) {
 	xmlNodePtr	x3cnode, inputnode;
 	char		buf[10];
 
-	/* 
-	"HRSPONSE.X3C" ... sent back to camera after receiving an event. 
+	/*
+	"HRSPONSE.X3C" ... sent back to camera after receiving an event.
 	<output><result>2001</result><ec102/></output
 	 */
 
@@ -1276,7 +1276,7 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 		oi.Filename 		= "HRSPONSE.X3C";
 		oi.ObjectCompressedSize	= strlen(evxml);
 		size = ptp_pack_OI(params, &oi, &oidata);
-		res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL); 
+		res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL);
 		if (res != PTP_RC_OK)
 			return res;
 		free(oidata);

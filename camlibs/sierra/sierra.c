@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -74,7 +74,7 @@ static struct {
 } sierra_cameras[] = {
 	/* Manufacturer, Camera Model, Sierra Model,
 	   USBvendor id, USB product id,
-	   USB wrapper protocol, CameraDesc) */ 
+	   USB wrapper protocol, CameraDesc) */
 	{"Agfa", "ePhoto 307", 	SIERRA_MODEL_DEFAULT, 	0, 0,
 		SIERRA_NO_51, NULL},
 	{"Agfa", "ePhoto 780", 	SIERRA_MODEL_DEFAULT, 	0, 0, 0, NULL },
@@ -169,7 +169,7 @@ static struct {
 	{"Olympus", "C-900 Zoom", 	SIERRA_MODEL_OLYMPUS,	0, 0, 0, NULL },
 	{"Olympus", "C-900L Zoom", SIERRA_MODEL_OLYMPUS,	0, 0, 0, NULL },
 
-	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1082569&group_id=8874&atid=358874 
+	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1082569&group_id=8874&atid=358874
 	 * strangely only works with low speed
 	 */
 	{"Olympus", "C-990 Zoom", 	SIERRA_MODEL_OLYMPUS,	0, 0, SIERRA_LOW_SPEED, NULL },
@@ -261,14 +261,14 @@ static struct {
 	{0, 0}
 };
 
-int camera_id (CameraText *id) 
+int camera_id (CameraText *id)
 {
 	strcpy(id->text, "sierra");
 
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilitiesList *list) 
+int camera_abilities (CameraAbilitiesList *list)
 {
 	int x;
 	CameraAbilities a;
@@ -295,7 +295,7 @@ int camera_abilities (CameraAbilitiesList *list)
 		a.speed[2] = 38400;
 		if (sierra_cameras[x].flags & SIERRA_LOW_SPEED) {
 			/*
-			 * Camera supports 9600 -> 38400 
+			 * Camera supports 9600 -> 38400
 			 */
 			a.speed[3] = 0;
 		} else {
@@ -313,7 +313,7 @@ int camera_abilities (CameraAbilitiesList *list)
 		a.operations        = 	GP_OPERATION_CAPTURE_IMAGE |
 					GP_OPERATION_CAPTURE_PREVIEW |
 					GP_OPERATION_CONFIG;
-		a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
+		a.file_operations   = 	GP_FILE_OPERATION_DELETE |
 					GP_FILE_OPERATION_PREVIEW |
 					GP_FILE_OPERATION_AUDIO;
 		a.folder_operations = 	GP_FOLDER_OPERATION_DELETE_ALL |
@@ -502,7 +502,7 @@ camera_start (Camera *camera, GPContext *context)
 }
 
 int
-camera_stop (Camera *camera, GPContext *context) 
+camera_stop (Camera *camera, GPContext *context)
 {
 	GP_DEBUG ("Closing connection");
 
@@ -518,7 +518,7 @@ camera_stop (Camera *camera, GPContext *context)
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
 	GP_DEBUG ("sierra camera_exit");
 
@@ -592,7 +592,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_AUDIO:
 		CHECK_STOP (camera, sierra_get_string_register (camera, 43, n, NULL,
 			(unsigned char *) &audio_info, &transferred, context));
-		if (transferred == 0) 
+		if (transferred == 0)
 			download_size = 0;
 		else
 			download_size = audio_info[0];
@@ -621,7 +621,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		/* * Thumbnails are always JPEG files (as far as we know...) */
 		CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
-		/* 
+		/*
 		 * Some camera (e.g. Epson 3000z) send the EXIF application
 		 * data as thumbnail of a picture. The JPEG file need to be
 		 * extracted. Equally for movies, the JPEG thumbnail is
@@ -649,7 +649,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (!strcmp (mime_type, GP_MIME_RAW))
 			CHECK (gp_file_set_mime_type (file, GP_MIME_QUICKTIME));
 		break;
-	
+
 	case GP_FILE_TYPE_AUDIO:
 		CHECK (gp_file_set_mime_type (file, GP_MIME_WAV));
 		break;
@@ -681,8 +681,8 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	 * Mick Grant <mickgr@drahthaar.clara.net> found out that his
 	 * Nicon CoolPix 880 won't have deleted any picture at this point.
 	 * It seems that those cameras just acknowledge the command but do
-	 * nothing in the end. Therefore, we have to count the number of 
-	 * pictures that are now on the camera. If there indeed are any 
+	 * nothing in the end. Therefore, we have to count the number of
+	 * pictures that are now on the camera. If there indeed are any
 	 * pictures, return an error. libgphoto2 will then try to manually
 	 * delete them one-by-one.
 	 */
@@ -695,7 +695,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 
 static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
-		  const char *filename, void *data, GPContext *context) 
+		  const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int n;
@@ -718,7 +718,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	/*
 	 * The following command takes a while, and there is no way to add
 	 * a nice progress bar, since it is a single sierra_action call.
-	 * so multiple gp_context_progress_update () calls can not add 
+	 * so multiple gp_context_progress_update () calls can not add
 	 * anything.
 	 */
 	CHECK_STOP (camera, sierra_delete (camera, n + 1, context));
@@ -729,7 +729,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
-		GPContext *context) 
+		GPContext *context)
 {
 	CHECK (camera_start (camera, context));
 	CHECK_STOP (camera, sierra_capture (camera, type, path, context));
@@ -765,7 +765,7 @@ put_file_func (CameraFilesystem * fs, const char *folder, const char *filename,
 
 	if (type != GP_FILE_TYPE_NORMAL)
 		return GP_ERROR_BAD_PARAMETERS;
-	
+
 	/* Check the size */
 	CHECK (gp_file_get_data_and_size (file, &data_file, &data_size));
 	if ( data_size == 0 ) {
@@ -869,7 +869,7 @@ static void dump_register (Camera *camera, GPContext *context)
 		"spot metering mode",		/* 70 */
 		"?",
 		"zoom",
-		"?", "?", "?", "?", "?", "?", 
+		"?", "?", "?", "?", "?", "?",
 		"current filename",
 		"?",				/* 80 */
 		"?", "?",
@@ -886,14 +886,14 @@ static void dump_register (Camera *camera, GPContext *context)
 		"?", "?", "?", "?", "?", "?", "?", "?", "?",
 		"?"				/* 130 */
 	};
-		
+
 
 	GP_DEBUG ("*** Register:");
 	for (i = 0; i < 128; i++) {
 		ret = sierra_get_int_register (camera, i, &value, context);
 		if (ret >= 0)
 			GP_DEBUG (
-					 "***  %3i: %12i (%s)", i, value, 
+					 "***  %3i: %12i (%s)", i, value,
 					 description [i]);
 	}
 }
@@ -927,7 +927,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 		gp_widget_add_choice (child, _("Standard"));
 		gp_widget_add_choice (child, _("High"));
 		gp_widget_add_choice (child, _("Best"));
-		
+
                 switch (value) {
 		case 0: strcpy (t, _("Auto"));
 			break;
@@ -948,9 +948,9 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	/* Shutter Speed */
         ret = sierra_get_int_register (camera, 3, &value, context);
         if (ret >= 0) {
-		
-		gp_widget_new (GP_WIDGET_RANGE, 
-			       _("Shutter Speed (microseconds, 0 auto)"), 
+
+		gp_widget_new (GP_WIDGET_RANGE,
+			       _("Shutter Speed (microseconds, 0 auto)"),
 			       &child);
 		gp_widget_set_range (child, 0, 2000000, 1);
 		float_value = value;
@@ -1052,7 +1052,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
         ret = sierra_get_int_register (camera, 19, &value, context);
         if (ret >= 0) {
 
-		gp_widget_new (GP_WIDGET_RADIO, _("Brightness/Contrast"), 
+		gp_widget_new (GP_WIDGET_RADIO, _("Brightness/Contrast"),
 			       &child);
 		gp_widget_add_choice (child, _("Normal"));
 		gp_widget_add_choice (child, _("Bright+"));
@@ -1082,7 +1082,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	/* White Balance */
         ret = sierra_get_int_register (camera, 20, &value, context);
         if (ret >= 0) {
-		
+
 		gp_widget_new (GP_WIDGET_RADIO, _("White Balance"), &child);
 		gp_widget_add_choice (child, _("Auto"));
 		gp_widget_add_choice (child, _("Skylight"));
@@ -1137,8 +1137,8 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	/* Spot Metering Mode */
 	ret = sierra_get_int_register (camera, 70, &value, context);
 	if (ret >= 0) {
-		
-		gp_widget_new (GP_WIDGET_RADIO, _("Spot Metering Mode"), 
+
+		gp_widget_new (GP_WIDGET_RADIO, _("Spot Metering Mode"),
 			       &child);
 		gp_widget_add_choice (child, _("On"));
 		gp_widget_add_choice (child, _("Off"));
@@ -1191,7 +1191,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	/* Auto Off (host) */
 	ret = sierra_get_int_register (camera, 23, &value, context);
 	if (ret >= 0) {
-		
+
 		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (host) "
 				       "(in seconds)"), &child);
 		gp_widget_set_info (child, _("How long will it take until the "
@@ -1219,7 +1219,7 @@ camera_get_config_olympus (Camera *camera, CameraWidget **window, GPContext *con
 	/* LCD Brightness */
 	ret = sierra_get_int_register (camera, 35, &value, context);
 	if (ret >= 0) {
-		
+
 		gp_widget_new (GP_WIDGET_RANGE, _("LCD Brightness"), &child);
 		gp_widget_set_range (child, 1, 7, 1);
 		gp_widget_set_value (child, &value);
@@ -1271,10 +1271,10 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			return (GP_ERROR_NOT_SUPPORTED);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 1, i, context));
 	}
-	
+
 	/* Shutter Speed */
 	GP_DEBUG ("*** setting shutter speed");
-	if ((gp_widget_get_child_by_label (window, 
+	if ((gp_widget_get_child_by_label (window,
 		_("Shutter Speed (microseconds, 0 auto)"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
 	        gp_widget_set_changed (child, FALSE);
@@ -1285,7 +1285,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 
 	/* Aperture */
 	GP_DEBUG ("*** setting aperture");
-	if ((gp_widget_get_child_by_label (window, _("Aperture"), &child) 
+	if ((gp_widget_get_child_by_label (window, _("Aperture"), &child)
 		>= 0) &&
 	    gp_widget_changed (child)) {
 	        gp_widget_set_changed (child, FALSE);
@@ -1350,7 +1350,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	/* Brightness/Contrast */
 	GP_DEBUG (
 			 "*** setting brightness/contrast");
-	if ((gp_widget_get_child_by_label (window, _("Brightness/Contrast"), 
+	if ((gp_widget_get_child_by_label (window, _("Brightness/Contrast"),
 		&child) >= 0) &&
 	    gp_widget_changed (child)) {
 	        gp_widget_set_changed (child, FALSE);
@@ -1413,7 +1413,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 	/* Spot Metering Mode */
 	GP_DEBUG (
 			 "*** setting spot metering mode");
-	if ((gp_widget_get_child_by_label (window, _("Spot Metering Mode"), 
+	if ((gp_widget_get_child_by_label (window, _("Spot Metering Mode"),
 		&child) >= 0) &&
 	    gp_widget_changed (child)) {
 	        gp_widget_set_changed (child, FALSE);
@@ -1429,7 +1429,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 
 	/* Zoom */
 	GP_DEBUG ("*** setting zoom");
-	if ((gp_widget_get_child_by_label (window, _("Zoom"), &child) 
+	if ((gp_widget_get_child_by_label (window, _("Zoom"), &child)
 		>= 0) &&
 	    gp_widget_changed (child)) {
 	        gp_widget_set_changed (child, FALSE);
@@ -1442,7 +1442,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 			i = 520;
 		} else if (strcmp (value, "2.5x") == 0) {
 			i = 1032;
-		} else 
+		} else
 			return (GP_ERROR_NOT_SUPPORTED);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 72, i, context));
 	}
@@ -1470,7 +1470,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 
         /* LCD Brightness */
 	GP_DEBUG ("*** setting lcd brightness");
-	if ((gp_widget_get_child_by_label (window, 
+	if ((gp_widget_get_child_by_label (window,
 		_("LCD Brightness"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
 	        gp_widget_set_changed (child, FALSE);
@@ -1480,7 +1480,7 @@ camera_set_config_olympus (Camera *camera, CameraWidget *window, GPContext *cont
 
         /* LCD Auto Off */
 	GP_DEBUG ("*** setting lcd auto off");
-	if ((gp_widget_get_child_by_label (window, 
+	if ((gp_widget_get_child_by_label (window,
 		_("LCD Auto Off (in seconds)"), &child) >= 0) &&
 	    gp_widget_changed (child)) {
 	        gp_widget_set_changed (child, FALSE);
@@ -1527,13 +1527,13 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 			break;
                 case 2: strcpy (t, _("F2.8"));
 			break;
-                case 3: strcpy (t, _("F4"));    
+                case 3: strcpy (t, _("F4"));
 			break;
-		case 4: strcpy (t, _("F5.6"));  
+		case 4: strcpy (t, _("F5.6"));
 			break;
-		case 5: strcpy (t, _("F8"));    
+		case 5: strcpy (t, _("F8"));
 			break;
-		case 6: strcpy (t, _("auto"));  
+		case 6: strcpy (t, _("auto"));
 			break;
                 default:
 			sprintf(t, _("%i (unknown)"), value);
@@ -1624,7 +1624,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 		gp_widget_add_choice (child, _("fine"));
 		gp_widget_add_choice (child, _("superfine"));
 		gp_widget_add_choice (child, _("HyPict"));
-		
+
                 switch (value) {
 		case 1: strcpy (t, _("standard"));
 			break;
@@ -1667,7 +1667,7 @@ camera_get_config_epson (Camera *camera, CameraWidget **window, GPContext *conte
 	/* Auto Off (host) */
 	ret = sierra_get_int_register (camera, 23, &value, context);
 	if (ret >= 0) {
-		
+
 		gp_widget_new (GP_WIDGET_RANGE, _("Auto Off (host) "
 				       "(in seconds)"), &child);
 		gp_widget_set_info (child, _("How long will it take until the "
@@ -1753,7 +1753,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 
 	/* Aperture */
 	GP_DEBUG ("*** setting aperture");
-	if ((gp_widget_get_child_by_label (window, _("Aperture"), &child) 
+	if ((gp_widget_get_child_by_label (window, _("Aperture"), &child)
 	     >= 0) && gp_widget_changed (child)) {
 	        gp_widget_set_changed (child, FALSE);
 		gp_widget_get_value (child, &value);
@@ -1770,7 +1770,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 		} else if (strcmp (value, _("F8")) == 0) {
 			i = 5;
 		} else if (strcmp (value, _("auto")) == 0) {
-			i = 6;			
+			i = 6;
 		} else
 			return (GP_ERROR_NOT_SUPPORTED);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 5, i, context));
@@ -1848,7 +1848,7 @@ camera_set_config_epson (Camera *camera, CameraWidget *window, GPContext *contex
 			return (GP_ERROR_NOT_SUPPORTED);
 		CHECK_STOP (camera, sierra_set_int_register (camera, 1, i, context));
 	}
-	
+
 	/* Color Mode */
 	GP_DEBUG ("*** setting color mode");
 	if ((gp_widget_get_child_by_label (window, _("Color Mode"), &child)
@@ -1941,7 +1941,7 @@ camera_set_config_default (Camera *camera, CameraWidget *window, GPContext *cont
 
 
 static int
-camera_summary (Camera *camera, CameraText *summary, GPContext *c) 
+camera_summary (Camera *camera, CameraText *summary, GPContext *c)
 {
 	char buf[1024*32];
 	int v, r;
@@ -2058,7 +2058,7 @@ storage_info_func (CameraFilesystem *fs,
 }
 
 static int
-camera_manual (Camera *camera, CameraText *manual, GPContext *context) 
+camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	GP_DEBUG ("*** sierra camera_manual");
 
@@ -2083,7 +2083,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 		break;
 	case SIERRA_MODEL_OLYMPUS:
 	default:
-		strcpy (manual->text, 
+		strcpy (manual->text,
 		  _("Some notes about Olympus cameras (and others?):\n"
 		    "(1) Camera Configuration:\n"
 		    "    A value of 0 will take the default one (auto).\n"
@@ -2106,11 +2106,11 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 }
 
 static int
-camera_about (Camera *camera, CameraText *about, GPContext *context) 
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	GP_DEBUG ("*** sierra camera_about");
-	
-	strcpy (about->text, 
+
+	strcpy (about->text,
 		_("sierra SPARClite library\n"
 		"Scott Fritzinger <scottf@unr.edu>\n"
 		"Support for sierra-based digital cameras\n"
@@ -2147,7 +2147,7 @@ int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int *jpeg_s
 		if (memcmp(data+i, JPEG_SOF_MARKER, 2) == 0)
 			sof_marker = data + i;
 	}
-   
+
 	if (soi_marker && sof_marker) {
 		/* Valid JPEG data has been found: build the output table */
 		*jpeg_size = sof_marker - soi_marker + 2;
@@ -2178,7 +2178,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
         int x = 0, ret, value;
         int vendor=0;

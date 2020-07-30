@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -135,7 +135,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-	Camera *camera = user_data; 
+	Camera *camera = user_data;
 
         int k;
 	char *data;
@@ -196,11 +196,11 @@ camera_init(Camera *camera, GPContext *context)
 	camera->functions->summary      = camera_summary;
 	camera->functions->about        = camera_about;
 	camera->functions->exit	    = camera_exit;
-   
+
 	GP_DEBUG ("Initializing the camera\n");
 	ret = gp_port_get_settings(camera->port,&settings);
-	if (ret < 0) 
-		return ret; 
+	if (ret < 0)
+		return ret;
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
@@ -217,18 +217,18 @@ camera_init(Camera *camera, GPContext *context)
 	}
 
 	ret = gp_port_set_settings(camera->port,settings);
-	if (ret < 0) 
-		return ret; 
+	if (ret < 0)
+		return ret;
 
 	GP_DEBUG("interface = %i\n", settings.usb.interface);
-	GP_DEBUG("inep = %x\n", settings.usb.inep);	
+	GP_DEBUG("inep = %x\n", settings.usb.inep);
 	GP_DEBUG("outep = %x\n", settings.usb.outep);
 
         /* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
-	if (!camera->pl) 
+	if (!camera->pl)
 		return GP_ERROR_NO_MEMORY;
 	memset (camera->pl, 0, sizeof (CameraPrivateLibrary));
 

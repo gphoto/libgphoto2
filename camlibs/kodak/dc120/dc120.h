@@ -46,27 +46,27 @@
 
   List albums (folders)
 	Packet: 44 00 00 00 00 00 00 1A
-	
+
 	Response:
 	ALBUMNAME1\0\0\0\0\0ALBUMNAME2\0\0\0\0\0ALBUMNAME3\0\0\0\0\0 [...] CS
 
 	(258 bytes, 15 byte fixed-with fields in multiple packets)
-	CS (checksum)	
+	CS (checksum)
 
   Picture count in album
 	Packet: 45 LOC 00 00 AN 00 00 1A
-	
+
 		LOC (location): 00 (memory), 01 (card)
 		AN (album #)
 
 	Response: NP4 NP3 NP2 NP1 [11 reserved bytes] CS
-	
+
 		NP4 - NP1 (number of pictures): MSB to LSB number of pictures
 		CS (checksum)
 
   Set Active album for next taken picture
 	Packet: 49 00 AN 00 00 00 00 1A
-	
+
 		AN (album #)
 
   Set Image Quality

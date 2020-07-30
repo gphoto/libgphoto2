@@ -349,8 +349,8 @@ canon_serial_recv_frame (Camera *camera, int *len)
 /**
  * canon_serial_send_packet
  * @camera: Camera object to work with
- * @type: 
- * @seq: 
+ * @type:
+ * @seq:
  * @pkt: data to send to camera
  * @len: length of data
  *
@@ -691,7 +691,7 @@ canon_serial_recv_msg (Camera *camera, unsigned char mtype, unsigned char dir, u
 		if (type == PKT_ACK && mtype == 0x3 && dir == 0x21) {
 			GP_DEBUG("ignoring ACK received while waiting for MSG");
 			return frag;
-		} 
+		}
 */
 		if (len < MSG_HDR_LEN || frag[MSG_02] != 2) {
 			GP_DEBUG ("ERROR: message format error");
@@ -1368,11 +1368,11 @@ canon_serial_ready (Camera *camera, GPContext *context)
 	 * don't actually use id_str, but serial_id_string.
 	 */
 	for (i = 0; models[i].id_str != NULL; i++) {
-		if ((models[i].serial_id_string != NULL) && 
+		if ((models[i].serial_id_string != NULL) &&
 		    !strcmp (models[i].serial_id_string, cam_id_str)) {
 			GP_DEBUG ("canon_serial_ready: Serial ID string matches '%s'",
 				  models[i].serial_id_string);
-			gp_context_status (context, _("Detected a \"%s\" aka \"%s\""), 
+			gp_context_status (context, _("Detected a \"%s\" aka \"%s\""),
 					   models[i].id_str, models[i].serial_id_string);
 			camera->pl->md = (struct canonCamModelData *) &models[i];
 			break;
@@ -1478,7 +1478,7 @@ canon_serial_ready (Camera *camera, GPContext *context)
  * @context: context for error reporting
  *
  * This is just the serial specific part extracted from the older
- * canon_get_thumbnail() routine. 
+ * canon_get_thumbnail() routine.
  *
  * Returns: gphoto2 error code
  *

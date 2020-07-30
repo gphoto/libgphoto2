@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -29,7 +29,7 @@
 
 /**
  * \brief The port operations
- * 
+ *
  * These operations are to be implemented and set by the port library,
  * which drives the lowlevel protocol (serial, usb, etc.).
  *
@@ -63,13 +63,13 @@ typedef struct _GPPortOperations {
                                 char *bytes, int size);
         int (*msg_read)   (GPPort * dev, int request, int value, int index,
                                 char *bytes, int size);
-        int (*msg_interface_write)  (GPPort * dev, int request, 
+        int (*msg_interface_write)  (GPPort * dev, int request,
                                 int value, int index, char *bytes, int size);
-        int (*msg_interface_read)  (GPPort * dev, int request, 
+        int (*msg_interface_read)  (GPPort * dev, int request,
                                 int value, int index, char *bytes, int size);
-        int (*msg_class_write) (GPPort * dev, int request, 
+        int (*msg_class_write) (GPPort * dev, int request,
                                 int value, int index, char *bytes, int size);
-        int (*msg_class_read) (GPPort * dev, int request, 
+        int (*msg_class_read) (GPPort * dev, int request,
                                 int value, int index, char *bytes, int size);
 
 	/* For USB disk direct IO devices */

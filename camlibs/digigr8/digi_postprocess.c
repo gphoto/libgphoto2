@@ -1,18 +1,18 @@
 /*
  * postprocess.c
  *
- * Here are the decompression function  for the compressed photos and the 
- * postprocessing for uncompressed photos. 
+ * Here are the decompression function  for the compressed photos and the
+ * postprocessing for uncompressed photos.
  *
  * Copyright (c) 2005 and 2007 Theodore Kilgore <kilgota@auburn.edu>
- * Camera library support under libgphoto2.1.1 for camera(s) 
- * with chipset from Service & Quality Technologies, Taiwan. 
- * The chip supported by this driver is presumed to be the SQ905,  
+ * Camera library support under libgphoto2.1.1 for camera(s)
+ * with chipset from Service & Quality Technologies, Taiwan.
+ * The chip supported by this driver is presumed to be the SQ905,
  *
  * Licensed under GNU Lesser General Public License, as part of Gphoto
- * camera support project. For a copy of the license, see the file 
+ * camera support project. For a copy of the license, see the file
  * COPYING in the main source tree of libgphoto2.
- */    
+ */
 
 #include <config.h>
 
@@ -32,7 +32,7 @@
 #include <gamma.h>
 #include "digigr8.h"
 
-#define GP_MODULE "digigr8" 
+#define GP_MODULE "digigr8"
 
 #ifndef MAX
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -59,7 +59,7 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
 	unsigned char lookup_table[16]
 		     ={0, 2, 6, 0x0e, 0xf0, 0xf1, 0xf2, 0xf3, 0xf4,
 		           0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb};
-	unsigned char translator[16] = 
+	unsigned char translator[16] =
 		    {8, 7, 9, 6, 10, 11, 12, 13, 14, 15, 5, 4, 3, 2, 1, 0};
 
 	GP_DEBUG ("Running first_decompress.\n");
@@ -84,7 +84,7 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
 				cycles ++ ;
 				if (cycles > 8) {
 					GP_DEBUG ("Too many cycles?\n");
-					return GP_ERROR; 
+					return GP_ERROR;
 				}
 				lookup = temp2 & 0xff;
 			}
@@ -97,12 +97,12 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
 				}
 				if (lookup == lookup_table[i] ) {
 					nibble_to_keep[parity] = translator[i];
-					break;	
+					break;
 				}
 			}
 			cycles = 0;
 			parity ++ ;
-		} 
+		}
 		output[bytes_done] = (nibble_to_keep[0] << 4)
 						| nibble_to_keep[1];
 		bytes_done++;
@@ -141,7 +141,7 @@ digi_second_decompress (unsigned char *uncomp, unsigned char *in,
 	}
 	for(i=0; i < width; i++)
 		templine_green[i] = 0x80;
-	
+
 	templine_blue = malloc(width);
 	if (!templine_blue) {
 		free (templine_red);
@@ -333,7 +333,7 @@ digi_postprocess(int width, int height,
 	===================================================================== */
 
 static int
-histogram (unsigned char *data, unsigned int size, int *htable_r, 
+histogram (unsigned char *data, unsigned int size, int *htable_r,
 					    int *htable_g, int *htable_b)
 {
 	int x;
@@ -428,7 +428,7 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 		{
 			d = (data[x + 0] << 8) * r_factor + 8;
 			d >>= 8;
-			if (d > 0xff) 
+			if (d > 0xff)
 				d = 0xff;
 			data[x + 0] = d;
 			d = (data[x + 1] << 8) * g_factor + 8;
@@ -437,7 +437,7 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 			data[x + 1] = d;
 			d = (data[x + 2] << 8) * b_factor + 8;
 			d >>= 8;
-			if (d > 0xff) 
+			if (d > 0xff)
 				d = 0xff;
 			data[x + 2] = d;
 		}
@@ -503,7 +503,7 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 			if (b > d)
 				b = b + (int) ((b - d) * (0xff - b)
 						/(0x100 - d) * saturation);
-			else 
+			else
 				b = b + (int) ((b - d) * (0xff - d)
 						/(0x100 - b) * saturation);
 			data[x+0] = CLAMP(r);

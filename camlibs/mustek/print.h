@@ -25,7 +25,7 @@
 #include <stdio.h>
 
 /* Message or Errors from the gphoto API */
-#define printAPINote			if (1) printf 
+#define printAPINote			if (1) printf
 #define printAPIError		if (1) printf
 
 /* only for debugging : The FunktionCall */

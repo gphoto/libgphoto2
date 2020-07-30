@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -31,7 +31,7 @@
  * The enum is providing bitmasks, but most code uses it as
  * just the one specific values.
  */
-typedef enum { 
+typedef enum {
 	GP_PORT_NONE        =      0,	/**< \brief No specific type associated. */
 	GP_PORT_SERIAL      = 1 << 0,	/**< \brief Serial port. */
 	GP_PORT_USB         = 1 << 2,	/**< \brief USB port. */
@@ -44,7 +44,7 @@ typedef enum {
 
 /**
  * \brief Information about the current port.
- * 
+ *
  * Specific information about the current port. Usually taken from the
  * "--port=XXXX" setting from the frontend.
  *

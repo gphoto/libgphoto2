@@ -4,10 +4,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -21,7 +21,7 @@
 
 #define SOUNDVISION_START_TRANSACTION 0x0001
 
-#define SOUNDVISION_SETPC2            0x0004          
+#define SOUNDVISION_SETPC2            0x0004
 
 #define SOUNDVISION_GET_MEM_TOTAL     0x0065
 
@@ -80,10 +80,10 @@ int soundvision_get_file_list(CameraPrivateLibrary *dev);
 int soundvision_delete_picture(CameraPrivateLibrary *dev, const char *filename);
 
 int soundvision_get_thumb_size(CameraPrivateLibrary *dev, const char *filename);
-int soundvision_get_thumb(CameraPrivateLibrary *dev, const char *filename, 
+int soundvision_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size);
 int soundvision_get_pic_size(CameraPrivateLibrary *dev, const char *filename);
-int soundvision_get_pic(CameraPrivateLibrary *dev, const char *filename, 
+int soundvision_get_pic(CameraPrivateLibrary *dev, const char *filename,
 		   unsigned char *data,int size);
 
 /* agfa_cl18.c */
@@ -96,26 +96,26 @@ int agfa_get_pic(CameraPrivateLibrary *dev, const char *filename,
 int agfa_get_pic_size(CameraPrivateLibrary *dev, const char *filename);
 int agfa_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 		                      unsigned char *data,int size);
-int agfa_get_thumb_size(CameraPrivateLibrary *dev, const char *filename); 
-   
-   
-   
-   
-   
+int agfa_get_thumb_size(CameraPrivateLibrary *dev, const char *filename);
+
+
+
+
+
 
 /* tiger_fastflicks.c */
 int tiger_set_pc_mode(CameraPrivateLibrary *dev);
 int tiger_upload_file(CameraPrivateLibrary *dev, const char *filename,
 		      const char *data, long data_size);
-int tiger_delete_picture(CameraPrivateLibrary *dev, const char *filename);   
-int tiger_capture(CameraPrivateLibrary *dev, CameraFilePath *path);   
-int tiger_get_mem(CameraPrivateLibrary *dev, int *num_pics, int *mem_total, int *mem_free);   
+int tiger_delete_picture(CameraPrivateLibrary *dev, const char *filename);
+int tiger_capture(CameraPrivateLibrary *dev, CameraFilePath *path);
+int tiger_get_mem(CameraPrivateLibrary *dev, int *num_pics, int *mem_total, int *mem_free);
 int tiger_get_file_list(CameraPrivateLibrary *dev);
 int tiger_get_pic(CameraPrivateLibrary *dev, const char *filename,
 		                    unsigned char *data,int size);
 int tiger_get_pic_size(CameraPrivateLibrary *dev, const char *filename);
 int tiger_get_thumb(CameraPrivateLibrary *dev, const char *filename,
-		                      unsigned char *data,int size);   
-int tiger_get_thumb_size(CameraPrivateLibrary *dev, const char *filename); 
+		                      unsigned char *data,int size);
+int tiger_get_thumb_size(CameraPrivateLibrary *dev, const char *filename);
 #endif
 

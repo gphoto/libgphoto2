@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -37,13 +37,13 @@
 
 #include "mars.h"
 
-#define GP_MODULE "mars" 
+#define GP_MODULE "mars"
 
 #define INIT 		0xb5
 #define GET_DATA 	0x0f
 
-static int 
-m_read (GPPort *port, char *data, int size) 
+static int
+m_read (GPPort *port, char *data, int size)
 {
 	int ret;
 	ret = gp_port_write(port, "\x21", 1);
@@ -52,8 +52,8 @@ m_read (GPPort *port, char *data, int size)
     	return gp_port_read(port, data, 16);
 }
 
-static int 
-m_command (GPPort *port, char *command, int size, char *response) 
+static int
+m_command (GPPort *port, char *command, int size, char *response)
 {
 	gp_port_write(port, command, size);
     	return m_read(port, response, 16);
@@ -61,34 +61,34 @@ m_command (GPPort *port, char *command, int size, char *response)
 
 static int mars_routine (Info *info, GPPort *port, char param, int n);
 
-int 
-mars_init (Camera *camera, GPPort *port, Info *info) 
+int
+mars_init (Camera *camera, GPPort *port, Info *info)
 {
 	char c[16];
 	unsigned char status = 0;
-	memset(info,0, sizeof(*info)); 
+	memset(info,0, sizeof(*info));
 	memset(c,0,sizeof(c));
 	GP_DEBUG("Running mars_init\n");
 
-	/* Init routine done twice, usually. First time is a dry run. But if 
+	/* Init routine done twice, usually. First time is a dry run. But if
 	 * camera reports 0x02 it is "jammed" and we must clear it.
-	 */ 
+	 */
 
-    	m_read(port, c, 16); 	
+    	m_read(port, c, 16);
 	if (c[0] == 0x02) {
 		gp_port_write(port, "\x19", 1);
 		gp_port_read(port, c, 16);
 	}
 	else {
-		status = mars_routine (info, port, INIT, 0);    
+		status = mars_routine (info, port, INIT, 0);
 		GP_DEBUG("status = 0x%x\n", status);
 	}
 
 	/* Not a typo. This _will_ download the config data ;) */
-	mars_read_picture_data (camera, info, port, (char *)info, 0x2000, 0); 
+	mars_read_picture_data (camera, info, port, (char *)info, 0x2000, 0);
 
 	/* Removing extraneous line(s) of data. See "protocol.txt" */
-	 
+
 	if ((info[0] == 0xff)&& (info[1] == 0)&&(info[2]==0xff))
 		memmove(info, info + 16, 0x1ff0); /* Saving config */
 	else
@@ -98,12 +98,12 @@ mars_init (Camera *camera, GPPort *port, Info *info)
         return GP_OK;
 }
 
-int 
-mars_get_num_pics      (Info *info) 
+int
+mars_get_num_pics      (Info *info)
 {
 	unsigned int i = 0;
 
-	for (i = 0; i < 0x3fe; i++) 
+	for (i = 0; i < 0x3fe; i++)
 		if ( !(0xff - info[8*i]) )  {
 			GP_DEBUG ( "i is %i\n", i);
 			memcpy(info+0x1ff0, "i", 1);
@@ -120,25 +120,25 @@ mars_get_pic_data_size (Info *info, int n)
 	return (info[8*n+6]*0x100 + info[8*n+5])*0x100 + info[8*n+4];
 }
 
-static int 
-set_usb_in_endpoint	(Camera *camera, int inep) 
+static int
+set_usb_in_endpoint	(Camera *camera, int inep)
 {
 	GPPortSettings settings;
 	gp_port_get_settings ( camera ->port, &settings);
 	settings.usb.inep = inep;
 	GP_DEBUG("inep reset to %02X\n", inep);
 	return gp_port_set_settings ( camera ->port, settings);
-}	
+}
 
 
-static int 
-mars_read_data         (GPPort *port, char *data, int size) 
-{ 
+static int
+mars_read_data         (GPPort *port, char *data, int size)
+{
 	int MAX_BULK = 0x2000;
 	int len = 0;
 	while(size > 0) {
 		len = (size>MAX_BULK)?MAX_BULK:size;
-	        gp_port_read  (port, data, len); 
+	        gp_port_read  (port, data, len);
     		data += len;
 		size -= len;
 	}
@@ -146,22 +146,22 @@ mars_read_data         (GPPort *port, char *data, int size)
         return 1;
 }
 
-int 
-mars_read_picture_data (Camera *camera, Info *info, GPPort *port, 
-					char *data, int size, int n) 
+int
+mars_read_picture_data (Camera *camera, Info *info, GPPort *port,
+					char *data, int size, int n)
 
 {
 	unsigned char c[16];
-	
+
 	memset(c,0,sizeof(c));
 	/*Initialization routine for download. */
 	mars_routine (info, port, GET_DATA, n);
 	/*Data transfer begins*/
-	set_usb_in_endpoint (camera, 0x82); 
-	mars_read_data (port, data, size); 
-	set_usb_in_endpoint (camera, 0x83); 
+	set_usb_in_endpoint (camera, 0x82);
+	mars_read_data (port, data, size);
+	set_usb_in_endpoint (camera, 0x83);
     	return GP_OK;
-} 
+}
 
 int
 mars_reset (GPPort *port)
@@ -286,7 +286,7 @@ int mars_decompress (unsigned char *inp, unsigned char *outp, int width,
     				}else if (col < 2) {
         				/* left column: relative to top pixel */
         				/* initial estimate */
-        				val += (tp + trp)/2; 
+        				val += (tp + trp)/2;
     				}else if (col > width - 3) {
         				/* left column: relative to top pixel */
         				val += (tp + lp + tlp +1)/3;
@@ -306,12 +306,12 @@ int mars_decompress (unsigned char *inp, unsigned char *outp, int width,
 	return GP_OK;
 }
 
-static int 
-mars_routine (Info *info, GPPort *port, char param, int n) 
+static int
+mars_routine (Info *info, GPPort *port, char param, int n)
 {
 	char c[16];
 	char start[2] = {0x19, 0x51};
-	char do_something[2]; 
+	char do_something[2];
 	char address1[2];
 	char address2[2];
 	char address3[2];
@@ -319,7 +319,7 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	char address5[2];
 	char address6[2];
 
-	do_something[0]= 0x19; 
+	do_something[0]= 0x19;
 	do_something[1]=param;
 
 	/* See protocol.txt for my theories about what these mean. */
@@ -340,19 +340,19 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	memset(c,0,sizeof(c));
 
 	/*Routine used in initialization, photo download, and reset. */
-    	m_read(port, c, 16); 	
+    	m_read(port, c, 16);
 	m_command(port, start, 2, c);
 	m_command(port, do_something, 2, c);
 	m_command(port, address1, 2, c);
 
 	c[0] = 0;
-	gp_port_write(port, address2, 2);	
+	gp_port_write(port, address2, 2);
 	/* Moving the memory cursor to the given address? */
-	while (( c[0] != 0xa) ) {	
+	while (( c[0] != 0xa) ) {
     		if (m_read(port, c, 16) < 16)
 			break;
 	}
-	
+
 	m_command(port, address3, 2, c);
 	m_command(port, address4, 2, c);
 	m_command(port, address5, 2, c);
@@ -360,7 +360,7 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	gp_port_write(port, "\x19", 1);
 	gp_port_read(port, c , 16);
 	/* Next thing is to switch the inep. Some cameras need a pause here */
-	usleep (MARS_SLEEP); 
+	usleep (MARS_SLEEP);
 
 	return(c[0]);
 }
@@ -389,10 +389,10 @@ histogram (unsigned char *data, unsigned int size, int *htable_r, int *htable_g,
 {
 	int x;
 	/* Initializations */
-	for (x = 0; x < 0x100; x++) { 
-		htable_r[x] = 0; 
-		htable_g[x] = 0; 
-		htable_b[x] = 0; 
+	for (x = 0; x < 0x100; x++) {
+		htable_r[x] = 0;
+		htable_g[x] = 0;
+		htable_b[x] = 0;
 	}
 	/* Building the histograms */
 	for (x = 0; x < (size * 3); x += 3)
@@ -420,9 +420,9 @@ mars_white_balance (unsigned char *data, unsigned int size, float saturation,
 	x = 1;
 	for (r = 48; r < 208; r++)
 	{
-		x += htable_r[r]; 
+		x += htable_r[r];
 		x += htable_g[r];
-		x += htable_r[r]; 
+		x += htable_r[r];
 	}
 	new_gamma = sqrt((double) (x * 1.5) / (double) (size * 3));
 	x=0;
@@ -439,14 +439,14 @@ mars_white_balance (unsigned char *data, unsigned int size, float saturation,
 	gp_gamma_fill_table(gtable, gamma);
 
 	/* ---------------- BRIGHT DOTS ------------------- */
-	max = size / 200; 
+	max = size / 200;
 	histogram(data, size, htable_r, htable_g, htable_b);
 
-	for (r=0xfe, x=0; (r > 32) && (x < max); r--)  
-		x += htable_r[r]; 
-	for (g=0xfe, x=0; (g > 32) && (x < max); g--) 
+	for (r=0xfe, x=0; (r > 32) && (x < max); r--)
+		x += htable_r[r];
+	for (g=0xfe, x=0; (g > 32) && (x < max); g--)
 		x += htable_g[g];
-	for (b=0xfe, x=0; (b > 32) && (x < max); b--) 
+	for (b=0xfe, x=0; (b > 32) && (x < max); b--)
 		x += htable_b[b];
 	r_factor = (double) 0xfd / r;
 	g_factor = (double) 0xfd / g;
@@ -483,11 +483,11 @@ mars_white_balance (unsigned char *data, unsigned int size, float saturation,
 	max = size / 200;  /*  1/200 = 0.5%  */
 	histogram(data, size, htable_r, htable_g, htable_b);
 
-	for (r=0, x=0; (r < 96) && (x < max); r++)  
-		x += htable_r[r]; 
-	for (g=0, x=0; (g < 96) && (x < max); g++) 
+	for (r=0, x=0; (r < 96) && (x < max); r++)
+		x += htable_r[r];
+	for (g=0, x=0; (g < 96) && (x < max); g++)
 		x += htable_g[g];
-	for (b=0, x=0; (b < 96) && (x < max); b++) 
+	for (b=0, x=0; (b < 96) && (x < max); b++)
 		x += htable_b[b];
 
 	r_factor = (double) 0xfe / (0xff-r);
@@ -504,7 +504,7 @@ mars_white_balance (unsigned char *data, unsigned int size, float saturation,
 		b_factor = (b_factor / max_factor) * 1.15;
 	}
 	GP_DEBUG(
-	"White balance (dark): r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n", 
+	"White balance (dark): r=%1d, g=%1d, b=%1d, fr=%1.3f, fg=%1.3f, fb=%1.3f\n",
 				r, g, b, r_factor, g_factor, b_factor);
 
 	for (x = 0; x < (size * 3); x += 3)
@@ -532,15 +532,15 @@ mars_white_balance (unsigned char *data, unsigned int size, float saturation,
 			d = (int) (r + g + b) /3.;
 			if ( r > d )
 				r = r + (int) ((r - d) * (0xff-r)/(0x100-d) * saturation);
-			else 
+			else
 				r = r + (int) ((r - d) * (0xff-d)/(0x100-r) * saturation);
 			if (g > d)
 				g = g + (int) ((g - d) * (0xff-g)/(0x100-d) * saturation);
-			else 
+			else
 				g = g + (int) ((g - d) * (0xff-d)/(0x100-g) * saturation);
 			if (b > d)
 				b = b + (int) ((b - d) * (0xff-b)/(0x100-d) * saturation);
-			else 
+			else
 				b = b + (int) ((b - d) * (0xff-d)/(0x100-b) * saturation);
 			data[x+0] = CLAMP(r);
 			data[x+1] = CLAMP(g);

@@ -12,10 +12,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -37,13 +37,13 @@
  */
 
 /*
- * Notes: 
+ * Notes:
  *
  * The variable "value" in a ValueNameType is the first element of
  * the name/value union, and so it is the default value initialized.
  *
  * To init to a range, use:
- *	{ .range = { 100.1, 2000.0, 10 } }, NULL 
+ *	{ .range = { 100.1, 2000.0, 10 } }, NULL
  *
  * Casts are used to avoid warnings about using a const.
  *
@@ -100,9 +100,9 @@ static const ValueNameType oly3040_reg_01_val_names[] = {
 	{ { 0x25 }, "2048x1536-TIFF" },
 	{ { 0x26 }, "1360x1024-TIFF" },
 };
-static const RegisterDescriptorType oly3040_reg_01[] = { 
+static const RegisterDescriptorType oly3040_reg_01[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"resolution", N_("Resolution plus Size"),
 		VAL_NAME_INIT (oly3040_reg_01_val_names)
 	}
@@ -130,9 +130,9 @@ static const ValueNameType oly750uz_reg_01_val_names[] = {
 	{ { 0x26 }, "TIFF-2218x1712" },
 	{ { 0x27 }, "3:2-TIFF-2218x1712" },
 };
-static const RegisterDescriptorType oly750uz_reg_01[] = { 
+static const RegisterDescriptorType oly750uz_reg_01[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"resolution", N_("Resolution plus Size"),
 		VAL_NAME_INIT (oly750uz_reg_01_val_names)
 	}
@@ -159,9 +159,9 @@ static const ValueNameType olysp500uz_reg_01_val_names[] = {
 	{ { 0x10107 }, "HQ?-2816x1880-3:2" },
 	{ { 0x107 }, "HQ?-2816x2112-3:2" },
 };
-static const RegisterDescriptorType olysp500uz_reg_01[] = { 
+static const RegisterDescriptorType olysp500uz_reg_01[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"resolution", N_("Resolution plus Size"),
 		VAL_NAME_INIT (olysp500uz_reg_01_val_names)
 	}
@@ -171,15 +171,15 @@ static const RegisterDescriptorType olysp500uz_reg_01[] = {
  * Register 2: Date and time.
  */
 static const ValueNameType oly3040_reg_02_val_names[] = {
-	/* 
+	/*
 	 * Dummy value, since we need at least one of these to
 	 * display anything.
 	 */
 	{ { 0x00 }, "Dummy" },
 };
-static const RegisterDescriptorType oly3040_reg_02[] = { 
+static const RegisterDescriptorType oly3040_reg_02[] = {
 	{
-		GP_WIDGET_DATE, GP_REG_NO_MASK, 
+		GP_WIDGET_DATE, GP_REG_NO_MASK,
 		"date-time", N_("Date and time (GMT)"),
 		VAL_NAME_INIT (oly3040_reg_02_val_names)
 	}
@@ -192,7 +192,7 @@ static const RegisterDescriptorType oly3040_reg_02[] = {
  *
  * Possibly could be any other value in the range of 1250 and 16M
  */
-static const ValueNameType oly3040_reg_03_val_names[] = { 
+static const ValueNameType oly3040_reg_03_val_names[] = {
 	{ {       0 }, N_("Auto") },
 	{ {    1250 }, "1/800" },
 	{ {    2000 }, "1/500" },
@@ -223,15 +223,15 @@ static const ValueNameType oly3040_reg_03_val_names[] = {
 	{ {16000000 }, "16" },
 
 };
-static const RegisterDescriptorType oly3040_reg_03[] = { 
+static const RegisterDescriptorType oly3040_reg_03[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"shutter", N_("Shutter Speed (in seconds)"),
 		VAL_NAME_INIT (oly3040_reg_03_val_names)
 	}
 };
 
-static const ValueNameType oly750uz_reg_03_val_names[] = { 
+static const ValueNameType oly750uz_reg_03_val_names[] = {
 	{ {       0 }, N_("Auto") },
 	{ {    1000 }, "1/1000" },
 	{ {    1250 }, "1/800" },
@@ -277,21 +277,21 @@ static const ValueNameType oly750uz_reg_03_val_names[] = {
 	{ {13000000 }, "13" },
 	{ {16000000 }, "16" },
 };
-static const RegisterDescriptorType oly750uz_reg_03[] = { 
+static const RegisterDescriptorType oly750uz_reg_03[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"shutter", N_("Shutter Speed (in seconds)"),
 		VAL_NAME_INIT (oly750uz_reg_03_val_names)
 	}
 };
 
-static const ValueNameType olysp500uz_reg_03_val_names[] = { 
+static const ValueNameType olysp500uz_reg_03_val_names[] = {
 	{ {       0 }, N_("Auto") },
 	{ {     250 }, "1/4000" },
-	{ {     313 }, "1/3200" },	
+	{ {     313 }, "1/3200" },
 	{ {     400 }, "1/2500" },
 	{ {     500 }, "1/2000" },
-	{ {     625 }, "1/1600" },	
+	{ {     625 }, "1/1600" },
 	{ {     800 }, "1/1250" },
 	{ {    1000 }, "1/1000" },
 	{ {    1250 }, "1/800" },
@@ -337,9 +337,9 @@ static const ValueNameType olysp500uz_reg_03_val_names[] = {
 	{ {13000000 }, "13" },
 	{ {16000000 }, "16" },
 };
-static const RegisterDescriptorType olysp500uz_reg_03[] = { 
+static const RegisterDescriptorType olysp500uz_reg_03[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"shutter", N_("Shutter Speed (in seconds)"),
 		VAL_NAME_INIT (olysp500uz_reg_03_val_names)
 	}
@@ -350,14 +350,14 @@ static const RegisterDescriptorType olysp500uz_reg_03[] = {
  * does not work well, since only about 30 of some 16 million values are
  * valid.
  */
-static const ValueNameType olyrange_reg_03_val_names[] = { 
+static const ValueNameType olyrange_reg_03_val_names[] = {
 	{
-		{ .range = { 0, 16000000, 100 } }, NULL 
+		{ .range = { 0, 16000000, 100 } }, NULL
 	}
 };
-static const RegisterDescriptorType olyrange_reg_03[] = { 
+static const RegisterDescriptorType olyrange_reg_03[] = {
 	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"shutter", N_("Shutter Speed microseconds (0 auto)"),
 		VAL_NAME_INIT (olyrange_reg_03_val_names)
 	}
@@ -386,9 +386,9 @@ static const ValueNameType oly3040_reg_05_val_names[] = {
 	{ { 15 }, "F9" },
 	{ { 16 }, "F10" },
 };
-static const RegisterDescriptorType oly3040_reg_05[] = { 
+static const RegisterDescriptorType oly3040_reg_05[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (oly3040_reg_05_val_names)
 	}
@@ -418,9 +418,9 @@ static const ValueNameType oly3000z_reg_05_val_names[] = {
 	{ { 15 }, "F11.0" },
 	{ { 16 }, "F2.0" }, /* Odd */
 };
-static const RegisterDescriptorType oly3000z_reg_05[] = { 
+static const RegisterDescriptorType oly3000z_reg_05[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (oly3000z_reg_05_val_names)
 	}
@@ -442,9 +442,9 @@ static const ValueNameType oly750uz_reg_05_val_names[] = {
 	{ { 11 }, "F7.0" },
 	{ { 12 }, "F8.0" },
 };
-static const RegisterDescriptorType oly750uz_reg_05[] = { 
+static const RegisterDescriptorType oly750uz_reg_05[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (oly750uz_reg_05_val_names)
 	}
@@ -466,9 +466,9 @@ static const ValueNameType olysp500uz_reg_05_val_names[] = {
 	{ { 80 }, "F8.0" },
 	{ { 90 }, "F9.0" },
 };
-static const RegisterDescriptorType olysp500uz_reg_05[] = { 
+static const RegisterDescriptorType olysp500uz_reg_05[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (olysp500uz_reg_05_val_names)
 	}
@@ -483,9 +483,9 @@ static const ValueNameType oly3040_reg_06_val_names[] = {
 	{ { 3 }, N_("White board") },
 	{ { 4 }, N_("Black board") },
 };
-static const RegisterDescriptorType oly3040_reg_06[] = { 
+static const RegisterDescriptorType oly3040_reg_06[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"color", N_("Color or Function Mode"),
 		VAL_NAME_INIT (oly3040_reg_06_val_names)
 	}
@@ -500,10 +500,10 @@ static const ValueNameType oly3040_reg_07_val_names[] = {
 	{ { 2 }, N_("Off") },
 	{ { 3 }, N_("Anti-redeye") },
 };
-static const RegisterDescriptorType oly3040_reg_07[] = { 
+static const RegisterDescriptorType oly3040_reg_07[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
-		"flash", N_("Flash Settings"), 
+		"flash", N_("Flash Settings"),
 		VAL_NAME_INIT (oly3040_reg_07_val_names)
 	}
 };
@@ -516,13 +516,13 @@ static const ValueNameType oly750uz_reg_07_val_names[] = {
 	{ { 1 }, N_("Force") },
 	{ { 2 }, N_("Off") },
 	{ { 3 }, N_("Anti-redeye") },
-	{ { 4 }, N_("Slow") }, 
+	{ { 4 }, N_("Slow") },
 	/* This is always 4 for slow 1, 2, or slow with redeye */
 };
-static const RegisterDescriptorType oly750uz_reg_07[] = { 
+static const RegisterDescriptorType oly750uz_reg_07[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
-		"flash", N_("Flash Settings"), 
+		"flash", N_("Flash Settings"),
 		VAL_NAME_INIT (oly750uz_reg_07_val_names)
 	}
 };
@@ -535,15 +535,15 @@ static const ValueNameType olysp500uz_reg_07_val_names[] = {
 	{ { 1 }, N_("Force") },
 	{ { 2 }, N_("Off") },
 	{ { 3 }, N_("Anti-redeye") },
-	{ { 4 }, N_("Slow") }, 
+	{ { 4 }, N_("Slow") },
 	/* This is always 4 for slow 1, 2, or slow with redeye */
-	{ { 6 }, N_("Anti-redeye Fill") }, 
+	{ { 6 }, N_("Anti-redeye Fill") },
 };
 
-static const RegisterDescriptorType olysp500uz_reg_07[] = { 
+static const RegisterDescriptorType olysp500uz_reg_07[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
-		"flash", N_("Flash Settings"), 
+		"flash", N_("Flash Settings"),
 		VAL_NAME_INIT (olysp500uz_reg_07_val_names)
 	}
 };
@@ -558,7 +558,7 @@ static const ValueNameType oly3040_reg_20_val_names[] = {
 	{ { 0x03 }, N_("Tungsten") },
 	{ { 0xff }, N_("Cloudy") },
 };
-static const RegisterDescriptorType oly3040_reg_20[] = { 
+static const RegisterDescriptorType oly3040_reg_20[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"whitebalance", N_("White Balance"),
@@ -577,7 +577,7 @@ static const ValueNameType oly3000z_reg_20_val_names[] = {
 	{ { 0x03 }, N_("Tungsten") },
 	{ { 0x04 }, N_("Cloudy") },
 };
-static const RegisterDescriptorType oly3000z_reg_20[] = { 
+static const RegisterDescriptorType oly3000z_reg_20[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"whitebalance", N_("White Balance"),
@@ -598,7 +598,7 @@ static const ValueNameType oly750uz_reg_20_val_names[] = {
 	{ { 0x06 }, N_("Fluorescent-3-office-4200K") },
 	{ { 0xff }, N_("Cloudy") },
 };
-static const RegisterDescriptorType oly750uz_reg_20[] = { 
+static const RegisterDescriptorType oly750uz_reg_20[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"whitebalance", N_("White Balance"),
@@ -622,7 +622,7 @@ static const ValueNameType olysp500uz_reg_20_val_names[] = {
 	{ { 0xff }, N_("Cloudy") },
 };
 
-static const RegisterDescriptorType olysp500uz_reg_20[] = { 
+static const RegisterDescriptorType olysp500uz_reg_20[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"whitebalance", N_("White Balance"),
@@ -638,7 +638,7 @@ static const ValueNameType oly3040_reg_33_val_names[] = {
 	{ { 0x02 }, N_("Auto") },
 	{ { 0x03 }, N_("Manual") },
 };
-static const RegisterDescriptorType oly3040_reg_33[] = { 
+static const RegisterDescriptorType oly3040_reg_33[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"focus-mode", N_("Focus Mode"),
@@ -659,9 +659,9 @@ static const ValueNameType oly3040_reg_34_val_names[] = {
 	{ { 0x02 }, N_("Monitor") },
 	{ { 0x03 }, N_("Normal") },
 };
-static const RegisterDescriptorType oly3040_reg_34[] = { 
+static const RegisterDescriptorType oly3040_reg_34[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"lcd-mode", N_("LCD Mode"),
 		VAL_NAME_INIT (oly3040_reg_34_val_names)
 	}
@@ -674,7 +674,7 @@ static const RegisterDescriptorType oly3040_reg_34[] = {
 static const ValueNameType oly3040_reg_35_val_names[] = {
 	{ { .range = { 0, 7 } }, NULL },
 };
-static const RegisterDescriptorType oly3040_reg_35[] = { 
+static const RegisterDescriptorType oly3040_reg_35[] = {
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"lcd-brightness", N_("LCD Brightness"),
@@ -688,7 +688,7 @@ static const RegisterDescriptorType oly3040_reg_35[] = {
 static const ValueNameType oly3040_reg_24_val_names[] = {
 	{ { .range = { 30, 600, 30  } }, NULL },
 };
-static const RegisterDescriptorType oly3040_reg_24[] = { 
+static const RegisterDescriptorType oly3040_reg_24[] = {
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"camera-power-save", N_("Camera power save (seconds)"),
@@ -703,7 +703,7 @@ static const RegisterDescriptorType oly3040_reg_24[] = {
 static const ValueNameType oly3040_reg_23_val_names[] = {
 	{ { .range = { 30, 600, 30  } }, NULL },
 };
-static const RegisterDescriptorType oly3040_reg_23[] = { 
+static const RegisterDescriptorType oly3040_reg_23[] = {
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"host-power-save", N_("Host power save (seconds)"),
@@ -716,7 +716,7 @@ static const RegisterDescriptorType oly3040_reg_23[] = {
 static const ValueNameType oly3040_reg_38_val_names[] = {
 	{ { .range = { 30, 600, 30  } }, NULL },
 };
-static const RegisterDescriptorType oly3040_reg_38[] = { 
+static const RegisterDescriptorType oly3040_reg_38[] = {
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"lcd-auto-shutoff", N_("LCD Auto Shut Off (seconds)"),
@@ -733,7 +733,7 @@ static const ValueNameType oly3040_reg_53_val_names[] = {
 	{ { 0x04 }, N_("French") },
 	{ { 0x05 }, N_("German") },
 };
-static const RegisterDescriptorType oly3040_reg_53[] = { 
+static const RegisterDescriptorType oly3040_reg_53[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"language", N_("Language"),
@@ -760,9 +760,9 @@ static const ValueNameType oly3040_reg_69_val_names[] = {
 	{ { +17 }, "+1.7" },
 	{ { +20 }, "+2.0" },
 };
-static const RegisterDescriptorType oly3040_reg_69[] = { 
+static const RegisterDescriptorType oly3040_reg_69[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"exp", N_("Exposure Compensation"),
 		VAL_NAME_INIT (oly3040_reg_69_val_names)
 	}
@@ -775,10 +775,10 @@ static const ValueNameType oly3040_reg_70_val_names[] = {
 	{ { 0x03 }, N_("Spot") },
 	{ { 0x05 }, N_("Matrix") },
 };
-static const RegisterDescriptorType oly3040_reg_70[] = { 
+static const RegisterDescriptorType oly3040_reg_70[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
-		"exp-meter", N_("Exposure Metering"), 
+		"exp-meter", N_("Exposure Metering"),
 		VAL_NAME_INIT (oly3040_reg_70_val_names)
 	}
 };
@@ -793,10 +793,10 @@ static const ValueNameType olysp500uz_reg_70_val_names[] = {
 	{ { 0x05 }, N_("Matrix") },
 };
 
-static const RegisterDescriptorType olysp500uz_reg_70[] = { 
+static const RegisterDescriptorType olysp500uz_reg_70[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
-		"exp-meter", N_("Exposure Metering"), 
+		"exp-meter", N_("Exposure Metering"),
 		VAL_NAME_INIT (olysp500uz_reg_70_val_names)
 	}
 };
@@ -809,9 +809,9 @@ static const ValueNameType oly750uz_reg_71_val_names[] = {
 		{ .range = { 6.3, 63.0, .1 } }, NULL
 	}
 };
-static const RegisterDescriptorType oly750uz_reg_71[] = { 
+static const RegisterDescriptorType oly750uz_reg_71[] = {
 	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"zoom", N_("Zoom (in millimeters)"),
 		VAL_NAME_INIT (oly750uz_reg_71_val_names)
 	}
@@ -825,9 +825,9 @@ static const ValueNameType olysp500uz_reg_71_val_names[] = {
 		{ .range = { 6.3, 63.0, .3 } }, NULL
 	}
 };
-static const RegisterDescriptorType olysp500uz_reg_71[] = { 
+static const RegisterDescriptorType olysp500uz_reg_71[] = {
 	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"zoom", N_("Zoom (in millimeters)"),
 		VAL_NAME_INIT (olysp500uz_reg_71_val_names)
 	}
@@ -841,9 +841,9 @@ static const ValueNameType oly3040_reg_71_val_names[] = {
 		{ .range = { 7.3, 21.0, .1 } }, NULL
 	}
 };
-static const RegisterDescriptorType oly3040_reg_71[] = { 
+static const RegisterDescriptorType oly3040_reg_71[] = {
 	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"zoom", N_("Zoom (in millimeters)"),
 		VAL_NAME_INIT (oly3040_reg_71_val_names)
 	}
@@ -858,9 +858,9 @@ static const ValueNameType oly3040_reg_72_val_names[] = {
 	{ { 0x0008 }, "2x" },
 	{ { 0x0408 }, "2.5x" },
 };
-static const RegisterDescriptorType oly3040_reg_72[] = { 
+static const RegisterDescriptorType oly3040_reg_72[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"dzoom", N_("Digital zoom"),
 		VAL_NAME_INIT (oly3040_reg_72_val_names)
 	}
@@ -875,9 +875,9 @@ static const ValueNameType oly3040_reg_85_val_names[] = {
 	{ { 2 }, "200" },
 	{ { 3 }, "400" },
 };
-static const RegisterDescriptorType oly3040_reg_85[] = { 
+static const RegisterDescriptorType oly3040_reg_85[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"iso", N_("ISO Speed"),
 		VAL_NAME_INIT (oly3040_reg_85_val_names)
 	}
@@ -893,9 +893,9 @@ static const ValueNameType oly750uz_reg_85_val_names[] = {
 	{ { 3 }, "400" },
 	{ { 4 }, "50" },
 };
-static const RegisterDescriptorType oly750uz_reg_85[] = { 
+static const RegisterDescriptorType oly750uz_reg_85[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"iso", N_("ISO Speed"),
 		VAL_NAME_INIT (oly750uz_reg_85_val_names)
 	}
@@ -909,9 +909,9 @@ static const RegisterDescriptorType oly750uz_reg_85[] = {
 static const ValueNameType oly3040_reg_103_val_names[] = {
 	{ { .range = { 1, 240, 1 } }, NULL },
 };
-static const RegisterDescriptorType oly3040_reg_103[] = { 
+static const RegisterDescriptorType oly3040_reg_103[] = {
 	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"focus-pos", N_("Focus position"),
 		VAL_NAME_INIT (oly3040_reg_103_val_names)
 	}
@@ -925,9 +925,9 @@ static const RegisterDescriptorType oly3040_reg_103[] = {
 static const ValueNameType oly750uz_reg_103_val_names[] = {
 	{ { .range = { 1, 120, 1 } }, NULL },
 };
-static const RegisterDescriptorType oly750uz_reg_103[] = { 
+static const RegisterDescriptorType oly750uz_reg_103[] = {
 	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"focus-pos", N_("Focus position"),
 		VAL_NAME_INIT (oly750uz_reg_103_val_names)
 	}
@@ -942,9 +942,9 @@ static const ValueNameType oly3040_reg_41_val_names[] = {
 	{ { 2 }, "mmddyy" },
 	{ { 3 }, "ddmmyy" },
 };
-static const RegisterDescriptorType oly3040_reg_41[] = { 
+static const RegisterDescriptorType oly3040_reg_41[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"timefmt", N_("Time format"),
 		VAL_NAME_INIT (oly3040_reg_41_val_names)
 	}
@@ -999,7 +999,7 @@ static CameraRegisterType oly3000z_pic_regs[] =  {
  */
 static CameraRegisterType oly3040_cam_regs[] = {
 	CAM_REG_TYPE_INIT (oly3040, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
-	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION, 
+	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION,
 			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
 	CAM_REG_TYPE_INIT (oly3040, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
 	CAM_REG_TYPE_INIT (oly3040, 38, 4, CAM_DESC_DEFAULT, 0), /* LCD auto shutoff */
@@ -1009,12 +1009,12 @@ static CameraRegisterType oly3040_cam_regs[] = {
 };
 
 static const CameraRegisterSetType oly3040_desc[] = {
-		{ 
-			N_("Picture Settings"), 
+		{
+			N_("Picture Settings"),
 			SIZE_ADDR (CameraRegisterType, oly3040_pic_regs)
 		},
-		{ 
-			N_("Camera Settings"), 
+		{
+			N_("Camera Settings"),
 			SIZE_ADDR (CameraRegisterType, oly3040_cam_regs)
 		},
 };
@@ -1054,7 +1054,7 @@ static CameraRegisterType oly750uz_pic_regs[] =  {
  */
 static CameraRegisterType oly750uz_cam_regs[] = {
 	CAM_REG_TYPE_INIT (oly3040, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
-	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION, 
+	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION,
 			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
 	CAM_REG_TYPE_INIT (oly3040, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
 	CAM_REG_TYPE_INIT (oly3040, 38, 4, CAM_DESC_DEFAULT, 0), /* LCD auto shutoff */
@@ -1098,7 +1098,7 @@ static CameraRegisterType olysp500uz_pic_regs[] =  {
  */
 static CameraRegisterType olysp500uz_cam_regs[] = {
 	CAM_REG_TYPE_INIT (oly3040, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
-	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION, 
+	CAM_REG_TYPE_INIT (oly3040, 34, 4, CAM_DESC_SUBACTION,
 			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
 	CAM_REG_TYPE_INIT (oly3040, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
 	CAM_REG_TYPE_INIT (oly3040, 38, 4, CAM_DESC_DEFAULT, 0), /* LCD auto shutoff */
@@ -1108,36 +1108,36 @@ static CameraRegisterType olysp500uz_cam_regs[] = {
 };
 
 static const CameraRegisterSetType olysp500uz_desc[] = {
-		{ 
-			N_("Picture Settings"), 
+		{
+			N_("Picture Settings"),
 			SIZE_ADDR (CameraRegisterType, olysp500uz_pic_regs)
 		},
-		{ 
-			N_("Camera Settings"), 
+		{
+			N_("Camera Settings"),
 			SIZE_ADDR (CameraRegisterType, olysp500uz_cam_regs)
 		},
 };
 
 static const CameraRegisterSetType oly750uz_desc[] = {
-		{ 
-			N_("Picture Settings"), 
+		{
+			N_("Picture Settings"),
 			SIZE_ADDR (CameraRegisterType, oly750uz_pic_regs)
 		},
-		{ 
-			N_("Camera Settings"), 
+		{
+			N_("Camera Settings"),
 			SIZE_ADDR (CameraRegisterType, oly750uz_cam_regs)
 		},
 };
 static const CameraRegisterSetType oly3000z_desc[] = {
-		{ 
-			N_("Picture Settings"), 
+		{
+			N_("Picture Settings"),
 			SIZE_ADDR (CameraRegisterType, oly3000z_pic_regs)
 		},
-		{ 
+		{
 			/*
 			 * Assumed that these are all the same as the 3040
 			 */
-			N_("Camera Settings"), 
+			N_("Camera Settings"),
 			SIZE_ADDR (CameraRegisterType, oly3040_cam_regs)
 		},
 };
@@ -1177,7 +1177,7 @@ N_(
 "    PC, then switch LCD to 'Off'."
 );
 
-static const char default_manual[] = 
+static const char default_manual[] =
 N_(
 "Default sierra driver:\n\n"
 "    This is the default sierra driver, it\n"

@@ -1,17 +1,17 @@
 /*
  * sq905.c
  *
- * Here, the functions which are needed to get data from the camera.  
+ * Here, the functions which are needed to get data from the camera.
  *
  * Copyright (c) 2003 Theodore Kilgore <kilgota@auburn.edu>
- * Camera library support under libgphoto2.1.1 for camera(s) 
- * with chipset from Service & Quality Technologies, Taiwan. 
- * The chip supported by this driver is presumed to be the SQ905,  
+ * Camera library support under libgphoto2.1.1 for camera(s)
+ * with chipset from Service & Quality Technologies, Taiwan.
+ * The chip supported by this driver is presumed to be the SQ905,
  *
  * Licensed under GNU Lesser General Public License, as part of Gphoto
- * camera support project. For a copy of the license, see the file 
+ * camera support project. For a copy of the license, see the file
  * COPYING in the main source tree of libgphoto2.
- */    
+ */
 
 #include <config.h>
 
@@ -30,7 +30,7 @@
 #include <gphoto2/gphoto2-port.h>
 #include "sq905.h"
 
-#define GP_MODULE "sq905" 
+#define GP_MODULE "sq905"
 
 #define SQWRITE gp_port_usb_msg_write
 #define SQREAD  gp_port_usb_msg_read
@@ -40,13 +40,13 @@
 static int
 sq_read_data (GPPort *port, unsigned char *data, int size)
 {
-	SQWRITE (port, 0x0c, 0x03, size, zero, 1); 
-	gp_port_read (port, (char *)data, size); 
+	SQWRITE (port, 0x0c, 0x03, size, zero, 1);
+	gp_port_read (port, (char *)data, size);
 	return GP_OK;
 }
 
 
-int sq_access_reg (GPPort *port, int reg) 
+int sq_access_reg (GPPort *port, int reg)
 {
 	char c;
 	SQWRITE (port, 0x0c, 0x06, reg, zero, 1);	/* Access a register */
@@ -54,7 +54,7 @@ int sq_access_reg (GPPort *port, int reg)
 	return GP_OK;
 }
 
-int 
+int
 sq_init (GPPort *port, CameraPrivateLibrary *priv)
 {
 	unsigned char c[0x4];
@@ -115,7 +115,7 @@ int
 sq_get_num_frames (CameraPrivateLibrary *priv, int entry)
 {
 	if (sq_is_clip(priv, entry)) {
-		GP_DEBUG(" Number of frames in clip %i is %i\n", entry, priv->catalog[16*entry+7]);	
+		GP_DEBUG(" Number of frames in clip %i is %i\n", entry, priv->catalog[16*entry+7]);
 		return priv->catalog[16*entry+7];
 	} else {
 		return 1;
@@ -136,7 +136,7 @@ sq_get_comp_ratio (CameraPrivateLibrary *priv, int entry)
 	case 0x43:
 	case 0x52:
 	case 0x53:
-	case 0x56: 
+	case 0x56:
 	case 0x72: return 1;
 	default:
 		GP_DEBUG ("Your camera has unknown resolution settings.\n");
@@ -147,7 +147,7 @@ sq_get_comp_ratio (CameraPrivateLibrary *priv, int entry)
 int
 sq_get_picture_width (CameraPrivateLibrary *priv, int entry)
 {
-	switch (priv->catalog[16*entry]) {  
+	switch (priv->catalog[16*entry]) {
 	case 0x41:
 	case 0x52:
 	case 0x61: return 352;
@@ -168,7 +168,7 @@ sq_get_picture_width (CameraPrivateLibrary *priv, int entry)
 int
 sq_is_clip (CameraPrivateLibrary *priv, int entry)
 {
-	switch (priv->catalog[16*entry]) {  
+	switch (priv->catalog[16*entry]) {
 	case 0x52:
 	case 0x53:
 	case 0x72: return 1;
@@ -180,8 +180,8 @@ int
 sq_rewind (GPPort *port, CameraPrivateLibrary *priv)
 {
 	static unsigned char dummy_buf[0x4000];
-	
-	
+
+
 	GP_DEBUG("REWIND cam's data pointer");
 
 	/* One has to read the catalog to rewind the data stream...
@@ -222,17 +222,17 @@ sq_read_picture_data (GPPort *port, unsigned char *data, int size )
 	}
  	sq_read_data (port, data + offset, remainder);
 
-    	SQWRITE (port, 0x0c, 0xc0, 0x00, &c, 1);  
+    	SQWRITE (port, 0x0c, 0xc0, 0x00, &c, 1);
     	return GP_OK;
-} 
+}
 
 int
 sq_delete_all (GPPort *port, CameraPrivateLibrary *priv)
 {
-	/* This will work on the Argus DC-1510, perhaps some others. 
+	/* This will work on the Argus DC-1510, perhaps some others.
 	 * Will not successfully delete on all SQ905 cameras!
-	 */  
-	 
+	 */
+
 	switch (priv->catalog[2]) {
 	case 0xd0: 				/* Searches for DC-1510 */
 		sq_access_reg(port, CAPTURE);	/* used here to delete */
@@ -240,13 +240,13 @@ sq_delete_all (GPPort *port, CameraPrivateLibrary *priv)
 		sq_reset(port);
 		break;
 	default:
-		return (GP_ERROR_NOT_SUPPORTED);	
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
     	return GP_OK;
 }
 
-int 
-sq_preprocess (SQModel model, int comp_ratio, unsigned char is_in_clip,  
+int
+sq_preprocess (SQModel model, int comp_ratio, unsigned char is_in_clip,
 				    unsigned char *data, int w, int h)
 {
 	int i, m, b;
@@ -261,23 +261,23 @@ sq_preprocess (SQModel model, int comp_ratio, unsigned char is_in_clip,
         		temp = data[i];
         		data[i] = data[b -1 -i];
         		data[b - 1 - i] = temp;
-    		}    	
+    		}
 		/* But clip frames are already right-side-up */
     	}
 	/*
-	 * POCK_CAM needs de-mirror-imaging, too. But if a photo is 
-	 * compressed we de-mirror after decompression, so not here. 
+	 * POCK_CAM needs de-mirror-imaging, too. But if a photo is
+	 * compressed we de-mirror after decompression, so not here.
 	 */
 	if ((model == SQ_MODEL_POCK_CAM) && (comp_ratio == 1)) {
     		for (i = 0; i < h; i++) {
-			for (m = 0 ; m < w/2; m++) { 
+			for (m = 0 ; m < w/2; m++) {
         			temp = data[w*i +m];
 				data[w*i + m] = data[w*i + w -1 -m];
 				data[w*i + w - 1 - m] = temp;
 			}
-    		} 
+    		}
 	}
 	return GP_OK;
-}	
+}
 
 

@@ -8,10 +8,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -19,7 +19,7 @@
  * Boston, MA  02110-1301  USA
  *
  * Modified by Aurélien Croc (AP²C) <programming@ap2c.com>
- * In particular : fix some bugs, and implementation of advanced 
+ * In particular : fix some bugs, and implementation of advanced
  * functions : delete some images, delete all images, capture new image,
  * update an image to the camera, get thumbnails, get information, get
  * summary, get configuration, get manual, get about, get EXIF informations
@@ -27,7 +27,7 @@
  */
 
 /* NOTES :
- * Becareful, image information number starts at 1 and finish at the 
+ * Becareful, image information number starts at 1 and finish at the
  * max image number. But when you want to work on the images, you must
  * read image informations, and check the real image number in the image
  * information header and use this number with all functions !!
@@ -136,7 +136,7 @@
 
 /** Local functions **********************************************************/
 
-/* 
+/*
  * Check the integrity of datas
  */
 static unsigned char
@@ -149,17 +149,17 @@ k_calculate_checksum (unsigned char *buf, unsigned long int len)
 	return result;
 }
 
-/* 
+/*
  * Check the connection and the camera
  */
 static int
 k_ping (GPPort *port) {
 	char	cmd[2], buf[1];
 	int	ret;
-		
+
 	cmd[0] = ESC;
 	cmd[1] = PING;
-	ret = gp_port_write (port, cmd, 2); 
+	ret = gp_port_write (port, cmd, 2);
 	if (ret<GP_OK) return ret;
 	ret = gp_port_read (port, buf, 1);
 	if (ret<GP_OK) return ret;
@@ -167,11 +167,11 @@ k_ping (GPPort *port) {
 	return GP_OK;
 }
 
-/* 
- * Read image informations 
+/*
+ * Read image informations
  */
 static int
-k_info_img (unsigned int image_no, void *data, CameraFileInfo* info, 
+k_info_img (unsigned int image_no, void *data, CameraFileInfo* info,
 		int *data_number)
 {
 	unsigned char	cmd[6], buf[INFO_BUFFER];
@@ -185,7 +185,7 @@ k_info_img (unsigned int image_no, void *data, CameraFileInfo* info,
 	cmd[3] = 0x30 + ((image_no/100 )%10);
 	cmd[4] = 0x30 + ((image_no/10  )%10);
 	cmd[5] = 0x30 + ( image_no      %10);
-	ret = gp_port_write (camera->port, (char*)cmd, sizeof(cmd)); 
+	ret = gp_port_write (camera->port, (char*)cmd, sizeof(cmd));
 	if (ret<GP_OK) return ret;
 	ret = gp_port_read (camera->port, (char*)buf, INFO_BUFFER);
 	if (ret<GP_OK) return ret;
@@ -199,10 +199,10 @@ k_info_img (unsigned int image_no, void *data, CameraFileInfo* info,
 	/* There is no audio support with this camera */
 	info->audio.fields = GP_FILE_INFO_NONE;
 	/* Preview informations */
-	info->preview.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE 
+	info->preview.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE
 		| GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
 	strcpy (info->preview.type, GP_MIME_JPEG);
-	info->preview.size = ((buf[PREVIEW_SIZE_PTR] << 24) | 
+	info->preview.size = ((buf[PREVIEW_SIZE_PTR] << 24) |
 		(buf[PREVIEW_SIZE_PTR+1] << 16) | (buf[PREVIEW_SIZE_PTR+2] << 8)
 		| buf[PREVIEW_SIZE_PTR+3]);
 	info->preview.width = PREVIEW_WIDTH;
@@ -230,7 +230,7 @@ k_info_img (unsigned int image_no, void *data, CameraFileInfo* info,
  * type = GP_FILE_TYPE_NORMAL, GP_FILE_TYPE_PREVIEW or GP_FILE_TYPE_EXIF
  */
 static int
-k_getdata (int image_no, int type, unsigned int len, void *data, 
+k_getdata (int image_no, int type, unsigned int len, void *data,
 		unsigned char *d, GPContext *context)
 {
 	Camera *camera = data;
@@ -259,7 +259,7 @@ k_getdata (int image_no, int type, unsigned int len, void *data,
 
 	/* Download the required image */
 	if (type == GP_FILE_TYPE_NORMAL)
-		id = gp_context_progress_start (context, len, 
+		id = gp_context_progress_start (context, len,
 			_("Downloading image..."));
 	for (i=0; i <= (len+DATA_BUFFER-1)/DATA_BUFFER ; i++) {
 		unsigned char csum;
@@ -269,7 +269,7 @@ k_getdata (int image_no, int type, unsigned int len, void *data,
 		if (xret < GP_OK) {
 			if (type == GP_FILE_TYPE_NORMAL)
 				gp_context_progress_stop (context, id);
-			return xret; 
+			return xret;
 		}
 		ret = gp_port_read (camera->port, (char*)&csum, CSUM_LEN);
 		if (ret < GP_OK) {
@@ -297,7 +297,7 @@ k_getdata (int image_no, int type, unsigned int len, void *data,
 		}
 
 		/* acknowledge the packet */
-		ack = ACK; 
+		ack = ACK;
 		ret = gp_port_write (camera->port, (char*)&ack, ACK_LEN);
 		if (ret < GP_OK) {
 			if (type == GP_FILE_TYPE_NORMAL)
@@ -317,7 +317,7 @@ k_getdata (int image_no, int type, unsigned int len, void *data,
 			gp_context_progress_update (context, id, bytes_read);
 	}
 	/* acknowledge the packet */
-	ack = ACK; 
+	ack = ACK;
 	ret = gp_port_write (camera->port, (char*)&ack, ACK_LEN);
 	if (ret < GP_OK) {
 		if (type == GP_FILE_TYPE_NORMAL)
@@ -354,7 +354,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* Search the image informations */
 	image_no++;
-	ret = k_info_img (image_no, data, (CameraFileInfo *)&file_info, 
+	ret = k_info_img (image_no, data, (CameraFileInfo *)&file_info,
 		&image_number);
 	image_no = image_number;
 	if (ret < GP_OK)
@@ -369,14 +369,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				data, d, context);
 			if (ret < GP_OK) {
 				free(d);
-				return ret; 
+				return ret;
 			}
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 			len = file_info.preview.size;
 			if (!(d = (unsigned char *)malloc(len)))
 				return (GP_ERROR_NO_MEMORY);
-			ret = k_getdata(image_no, GP_FILE_TYPE_PREVIEW, len, 
+			ret = k_getdata(image_no, GP_FILE_TYPE_PREVIEW, len,
 				data, d, context);
 			if (ret < GP_OK) {
 				free(d);
@@ -403,7 +403,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			len = file_info.preview.size;
 			if (!(d = (unsigned char *)malloc(len)))
 				return (GP_ERROR_NO_MEMORY);
-			ret = k_getdata(image_no, GP_FILE_TYPE_EXIF, len, 
+			ret = k_getdata(image_no, GP_FILE_TYPE_EXIF, len,
 				data, d, context);
 			if (ret < GP_OK) {
 				free(d);
@@ -411,7 +411,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 			break;
 		default:
-			gp_context_error(context, 
+			gp_context_error(context,
 				_("Image type %d is not supported by this camera !"), type);
 			return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -426,7 +426,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
  * The image mustn't be protected
  */
 static int
-delete_file_func (CameraFilesystem *fs, const char *folder, 
+delete_file_func (CameraFilesystem *fs, const char *folder,
 		const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
@@ -441,7 +441,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (image_no < 0) return image_no;
 
 	image_no++;
-	ret = k_info_img (image_no, data, (CameraFileInfo *)&file_info, 
+	ret = k_info_img (image_no, data, (CameraFileInfo *)&file_info,
 		&image_no);
 	if (ret < GP_OK)
 		return ret;
@@ -468,7 +468,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (ack != ACK) {
 		gp_context_error(context, _("Can't delete image %s."),filename);
 		return (GP_ERROR);
-	}	
+	}
 	return (GP_OK);
 }
 
@@ -499,7 +499,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	if (ack != ACK) {
 		gp_context_error(context, _("Can't delete all images."));
 		return (GP_ERROR);
-	}	
+	}
 	return (GP_OK);
 }
 
@@ -511,7 +511,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
  */
 static int
 put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
-		CameraFileType type, CameraFile *file, 
+		CameraFileType type, CameraFile *file,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
@@ -520,14 +520,14 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	unsigned long int len, len_sent=0;
 	unsigned int id;
 	int ret,i;
-	
+
 	GP_DEBUG ("*** ENTER: put_file_func ***");
 
 	/* Send function */
 	cmd[0] = ESC;
 	cmd[1] = UPLOADDATA;
-	ret = gp_port_write (camera->port, (char*)cmd, sizeof(cmd)); 
-	if (ret<GP_OK) 
+	ret = gp_port_write (camera->port, (char*)cmd, sizeof(cmd));
+	if (ret<GP_OK)
 		return ret;
 	gp_file_get_data_and_size(file, &d, &len);
 	id = gp_context_progress_start (context, len, _("Uploading image..."));
@@ -539,13 +539,13 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 		}
 		if (ack != ACK) {
 			gp_context_progress_stop (context, id);
-			gp_context_error(context, 
+			gp_context_error(context,
 				_("Can't upload this image to the camera. "
 				"An error has occurred."));
 			return (GP_ERROR);
 		}
 		state = NEXTFRAME;
-		ret = gp_port_write (camera->port, (char*)&state, STATE_LEN); 
+		ret = gp_port_write (camera->port, (char*)&state, STATE_LEN);
 		if (ret<GP_OK) {
 			gp_context_progress_stop (context, id);
 			return ret;
@@ -560,7 +560,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 			}
 			/* and complete with zeros */
 			memset(buf,0,DATA_BUFFER);
-			ret = gp_port_write (camera->port, (char*)buf, (DATA_BUFFER - 
+			ret = gp_port_write (camera->port, (char*)buf, (DATA_BUFFER -
 				(len - len_sent)));
 			if (ret<GP_OK) {
 				gp_context_progress_stop (context, id);
@@ -585,7 +585,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 				(unsigned char *)&d[i*DATA_BUFFER],
 				DATA_BUFFER);
 		}
-		ret = gp_port_write (camera->port, (char*)&sum, CSUM_LEN); 
+		ret = gp_port_write (camera->port, (char*)&sum, CSUM_LEN);
 		if (ret<GP_OK) {
 			gp_context_progress_stop (context, id);
 			return ret;
@@ -593,7 +593,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 		gp_context_progress_update (context, id, len_sent);
 	}
 	state = EOT;
-	ret = gp_port_write (camera->port, (char*)&state, STATE_LEN); 
+	ret = gp_port_write (camera->port, (char*)&state, STATE_LEN);
 	if (ret<GP_OK) {
 		gp_context_progress_stop (context, id);
 		return ret;
@@ -628,7 +628,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 	/* Just check if there is space available yet */
 	cmd[0] = ESC;
 	cmd[1] = GETCAMINFO;
-	ret = gp_port_write (camera->port, (char*)cmd, 2); 
+	ret = gp_port_write (camera->port, (char*)cmd, 2);
 	if (ret<GP_OK)
 		return ret;
 	ret = gp_port_read (camera->port, (char*)buf, INFO_BUFFER);
@@ -755,7 +755,7 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
 	timestamp = (buf[TIMESTAMP_PTR] << 24) + (buf[TIMESTAMP_PTR+1] << 16)
 		+ (buf[TIMESTAMP_PTR+2] << 8) + buf[TIMESTAMP_PTR+3];
 	/*
-	 * This timestamp start the 1 January 1980 at 00:00 
+	 * This timestamp start the 1 January 1980 at 00:00
 	 * but UNIX timestamp start the 1 January 1970 at 00:00
 	 * so we calculate the UNIX timestamp with the camera's one
 	 */
@@ -874,14 +874,14 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
                 	break;
 	        case 1:
 			if (buf[RED_EYE_STATE_PTR] == 1)
-	        	        gp_widget_set_value (widget, 
+	        	        gp_widget_set_value (widget,
 					_("On, red-eye reduction"));
 			else
 				gp_widget_set_value (widget, _("On"));
                 	break;
 	        case 0:
 			if (buf[RED_EYE_STATE_PTR] == 1)
-	        	        gp_widget_set_value (widget, 
+	        	        gp_widget_set_value (widget,
 					_("Auto, red-eye reduction"));
 			else
 				gp_widget_set_value (widget, _("Auto"));
@@ -1177,7 +1177,7 @@ camera_summary (Camera *camera, CameraText *text, GPContext *context)
 			snprintf(date_disp,sizeof(date_disp),_("MM/DD/YYYY"));
 			break;
 	}
-	snprintf(text->text, sizeof(text->text), 
+	snprintf(text->text, sizeof(text->text),
 			_("Model: %s\n"
 			"Capacity: %i Mb\n"
 			"Power: %s\n"
@@ -1230,7 +1230,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
  * Camera's identification
  */
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "konica qm150");
 	return (GP_OK);
@@ -1240,7 +1240,7 @@ camera_id (CameraText *id)
  * List all camera's abilities
  */
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -1250,11 +1250,11 @@ camera_abilities (CameraAbilitiesList *list)
 	a.port = GP_PORT_SERIAL;
 	a.speed[0] = 115200;
 	a.speed[1] = 0;
-	a.operations = GP_OPERATION_CAPTURE_IMAGE | 
+	a.operations = GP_OPERATION_CAPTURE_IMAGE |
 		GP_OPERATION_CAPTURE_PREVIEW | GP_OPERATION_CONFIG;
-	a.file_operations = GP_FILE_OPERATION_DELETE | 
+	a.file_operations = GP_FILE_OPERATION_DELETE |
 		GP_FILE_OPERATION_EXIF | GP_FILE_OPERATION_PREVIEW;
-	a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL | 
+	a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL |
 		GP_FOLDER_OPERATION_PUT_FILE;
 	gp_abilities_list_append(list, a);
 	return (GP_OK);
@@ -1274,7 +1274,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.delete_all_func = delete_all_func,
 };
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 	int speeds[] = { 115200, 9600, 19200, 38400, 57600, 115200 };
@@ -1305,7 +1305,7 @@ camera_init (Camera *camera, GPContext *context)
 	settings.serial.parity	= 0;
 	gp_port_set_settings (camera->port, settings);
 	/*
-	 * Once you have configured the port, you should check if a 
+	 * Once you have configured the port, you should check if a
 	 * connection to the camera can be established.
 	 */
 	for (i=0;i<sizeof(speeds)/sizeof(speeds[0]);i++) {
@@ -1320,7 +1320,7 @@ camera_init (Camera *camera, GPContext *context)
 	cmd[0] = ESC;
 	cmd[1] = SETSPEED;
 	cmd[2] = 0x30 + 4; /* speed nr 4:(9600, 19200, 38400, 57600, 115200) */
-	ret = gp_port_write (camera->port, cmd, 3); 
+	ret = gp_port_write (camera->port, cmd, 3);
 	if (ret<GP_OK) return ret;
 	ret = gp_port_read (camera->port, buf, 1);
 	if (ret<GP_OK) return ret;

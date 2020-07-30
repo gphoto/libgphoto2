@@ -1,4 +1,4 @@
-/* 
+/*
  * This program does the equivalent of:
  * gphoto2 --wait-event-and-download
  *

@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \note
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \note
  * You should have received a copy of the GNU Lesser General Public
@@ -149,7 +149,7 @@ int gp_file_free (CameraFile *file)
 	C_PARAMS (file);
 
 	CHECK_RESULT (gp_file_clean (file));
-	
+
 	if (file->accesstype == GP_FILE_ACCESSTYPE_FD)
 		close (file->fd);
 
@@ -169,7 +169,7 @@ gp_file_ref (CameraFile *file)
 	C_PARAMS (file);
 
 	file->ref_count += 1;
-	
+
 	return (GP_OK);
 }
 
@@ -184,7 +184,7 @@ int
 gp_file_unref (CameraFile *file)
 {
 	C_PARAMS (file);
-	
+
 	file->ref_count -= 1;
 
 	if (file->ref_count == 0)
@@ -202,7 +202,7 @@ gp_file_unref (CameraFile *file)
  *
  **/
 int
-gp_file_append (CameraFile *file, const char *data, 
+gp_file_append (CameraFile *file, const char *data,
 		unsigned long int size)
 {
 	C_PARAMS (file);
@@ -214,7 +214,7 @@ gp_file_append (CameraFile *file, const char *data,
 		file->size += size;
 		break;
 	case GP_FILE_ACCESSTYPE_FD: {
-		unsigned long int curwritten = 0; 
+		unsigned long int curwritten = 0;
 		while (curwritten < size) {
 			ssize_t	res = write (file->fd, data+curwritten, size-curwritten);
 			if (res == -1) {
@@ -251,7 +251,7 @@ gp_file_append (CameraFile *file, const char *data,
  * Internal.
  **/
 int
-gp_file_slurp (CameraFile *file, char *data, 
+gp_file_slurp (CameraFile *file, char *data,
 	size_t size, size_t *readlen
 ) {
 	C_PARAMS (file);
@@ -265,7 +265,7 @@ gp_file_slurp (CameraFile *file, char *data,
 		if (readlen) *readlen = size;
 		break;
 	case GP_FILE_ACCESSTYPE_FD: {
-		unsigned long int curread = 0; 
+		unsigned long int curread = 0;
 		while (curread < size) {
 			ssize_t	res = read (file->fd, data+curread, size-curread);
 			if (res == -1) {
@@ -388,8 +388,8 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
  *
  * For regular CameraFiles, the pointer to data that is returned is
  * still owned by libgphoto2 and its lifetime is the same as the #file.
- * 
- * For filedescriptor or handler based CameraFile types, the returned 
+ *
+ * For filedescriptor or handler based CameraFile types, the returned
  * data pointer is owned by the caller and needs to be free()d to avoid
  * memory leaks.
  *
@@ -698,7 +698,7 @@ gp_file_open (CameraFile *file, const char *filename)
 int
 gp_file_clean (CameraFile *file)
 {
-        /* 
+        /*
 	 * Frees a CameraFile's components, not the CameraFile itself.
 	 * This is used to prep a CameraFile struct to be filled.
          */
@@ -1115,7 +1115,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 			break;
 		}
 	GP_LOG_D ("Name adjusted to '%s'.", file->name);
-	
+
 	return (GP_OK);
 }
 

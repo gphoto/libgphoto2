@@ -202,7 +202,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	}
 
 	/*
-	 * Get the file number from the CameraFileSystem (and increment 
+	 * Get the file number from the CameraFileSystem (and increment
 	 * because we need numbers starting with 1)
 	 */
 	CHECK (n = gp_filesystem_number (camera->fs, folder, filename,

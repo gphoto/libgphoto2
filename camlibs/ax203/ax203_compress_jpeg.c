@@ -14,7 +14,7 @@
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, write to the 
+ * along with this program; if not, write to the
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
@@ -47,7 +47,7 @@ locate_tables_n_write(JOCTET *jpeg, int jpeg_size, JOCTET table_type,
 		if (jpeg[i] != 0xff) {
 			gp_log (GP_LOG_ERROR, "ax203",
 				"marker does not start with ff?");
-			return GP_ERROR_CORRUPTED_DATA;	
+			return GP_ERROR_CORRUPTED_DATA;
 		}
 		if (jpeg[i + 1] == 0xda)
 			break;
@@ -94,7 +94,7 @@ add_mcu_info(uint8_t *outbuf, int block_nr, int last_Y, int last_Cb,
 {
 	int info_addr = block_nr * 8;
 
-	/* skip header */	
+	/* skip header */
 	huffman_addr -= 16;
 	info_addr += 16;
 
@@ -185,7 +185,7 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	ret = locate_tables_n_write (regular_jpeg, regular_jpeg_size, 0xdb,
 				     outbuf, &outc);
 	if (ret < 0) return ret;
-	
+
 	/* Locate huffman tables and write them to outbuf */
 	ret = locate_tables_n_write (regular_jpeg, regular_jpeg_size, 0xc4,
 				     outbuf, &outc);
@@ -195,7 +195,7 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	   DCT coefficients:
 	   1) It wants the MCU huffman data for each new MCU to start on a byte
 	      boundary
-	   2) The component order in an MCU is Cb Cr Y, rather then Y Cb Cr 
+	   2) The component order in an MCU is Cb Cr Y, rather then Y Cb Cr
 
 	   We solve both these issues by decompressing the regular jpeg we've
 	   just created into its raw coefficients, following by creating
@@ -228,7 +228,7 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 #endif
 	jpeg_set_defaults (&cinfo);
 	/* We will write Cb values as comp. 0, so give it chroma settings */
-	cinfo.comp_info[0].h_samp_factor = 1; 
+	cinfo.comp_info[0].h_samp_factor = 1;
 	cinfo.comp_info[0].v_samp_factor = 1;
 	cinfo.comp_info[0].quant_tbl_no = 1;
 	cinfo.comp_info[0].dc_tbl_no = 1;
@@ -329,14 +329,14 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 			if (i >= buf_size) {
 				gp_log (GP_LOG_ERROR, "ax203",
 					"missing in ff da marker?");
-				return GP_ERROR_CORRUPTED_DATA;	
+				return GP_ERROR_CORRUPTED_DATA;
 			}
 
 			size = buf_size - i - 2;
 			if ((outc + size) > out_size) {
 				gp_log (GP_LOG_ERROR, "ax203",
 					"jpeg output buffer overflow");
-				return GP_ERROR_FIXED_LIMIT_EXCEEDED;	
+				return GP_ERROR_FIXED_LIMIT_EXCEEDED;
 			}
 			outc += copy_huffman(outbuf + outc, buf + i, size);
 

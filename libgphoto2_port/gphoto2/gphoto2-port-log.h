@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -36,10 +36,10 @@ typedef enum {
 
 /**
  * GP_LOG_ALL:
- * 
- * Used by frontends if they want to be sure their 
- * callback function receives all messages. Defined 
- * as the highest debug level. Can make frontend code 
+ *
+ * Used by frontends if they want to be sure their
+ * callback function receives all messages. Defined
+ * as the highest debug level. Can make frontend code
  * more understandable and extension of log levels
  * easier.
  **/
@@ -47,9 +47,9 @@ typedef enum {
 
 /**
  * \brief Logging function hook
- * 
+ *
  * This is the function frontends can use to receive logging information
- * from the libgphoto2 framework. It is set using gp_log_add_func() and 
+ * from the libgphoto2 framework. It is set using gp_log_add_func() and
  * removed using gp_log_remove_func() and will then receive the logging
  * messages of the level specified.
  *
@@ -133,7 +133,7 @@ __attribute__((__format__(printf,4,5)))
 # ifdef __GNUC__
 #  warning Disabling GP_DEBUG because variadic macros are not allowed
 # endif
-#define GP_DEBUG (void) 
+#define GP_DEBUG (void)
 #define GP_LOG_D(...) /* no-op */
 #define GP_LOG_E(...) /* no-op */
 #define GP_LOG_DATA(DATA, SIZE, ...) /* no-op */
@@ -181,8 +181,8 @@ __attribute__((__format__(printf,4,5)))
 
   typedef void (*string_item_func) (const char *str, void *data);
 
-  const char * 
-  gpi_enum_to_string(const unsigned int _enum, 
+  const char *
+  gpi_enum_to_string(const unsigned int _enum,
 		     const StringFlagItem *map);
 
   int
@@ -190,22 +190,22 @@ __attribute__((__format__(printf,4,5)))
 		     unsigned int *result,
 		     const StringFlagItem *map);
 
-  void 
-  gpi_flags_to_string_list(const unsigned int flags, 
+  void
+  gpi_flags_to_string_list(const unsigned int flags,
 			   const StringFlagItem *map,
 			   string_item_func func, void *data);
-  
-  int 
-  gpi_string_or_to_flags(const char *str, 
+
+  int
+  gpi_string_or_to_flags(const char *str,
 			 unsigned int *flags,
 			 const StringFlagItem *map);
 
-  unsigned int 
-  gpi_string_to_flag(const char *str, 
+  unsigned int
+  gpi_string_to_flag(const char *str,
 		     const StringFlagItem *map);
 
-  unsigned int 
-  gpi_string_list_to_flags(const char *str[], 
+  unsigned int
+  gpi_string_list_to_flags(const char *str[],
 			   const StringFlagItem *map);
 
   /* Allocates a sufficiently large buffer and interpolates the format

@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -20,7 +20,7 @@
 /*
  * This is working, but unfinished!
  * - Event handling not finished.
- * - Some configure checking magic missing for the special header files 
+ * - Some configure checking magic missing for the special header files
  *   and functions.
  * - Not everything implementation correctly cross checked.
  * - Coolpix P3 does not give transfer status (image 000x/000y), and reports an
@@ -439,7 +439,7 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	unsigned int	i;
 	int 		len, ret;
 	unsigned char	guid[16];
-	
+
 	ptp_nikon_getptpipguid(guid);
 #if !defined (WIN32)
 	if (gethostname (hostname, sizeof(hostname)))
@@ -650,7 +650,7 @@ ptp_ptpip_event_wait (PTPParams* params, PTPContainer* event) {
  *
  * This command gets the GUID of this machine. If it does not exists, it creates
  * one.
- *  
+ *
  * params:	PTPParams*
  *
  * Return values: Some PTP_RC_* code.
@@ -664,9 +664,9 @@ ptp_nikon_getptpipguid (unsigned char* guid) {
 	int valid;
 	char* endptr;
 	char* pos;
-	
+
 	gp_setting_get("ptp2_ip","guid",buffer);
-	
+
 	if (strlen(buffer) == 47) { /* 47 = 16*2 (numbers) + 15 (semi-colons) */
 		pos = buffer;
 		valid = 1;
@@ -687,9 +687,9 @@ ptp_nikon_getptpipguid (unsigned char* guid) {
 		if (valid)
 			return;
 	}
-	
+
 	/*fprintf(stderr, "Invalid GUID\n");*/
-	
+
 	/* Generate an ID */
 	srand(time(NULL));
 	buffer[0] = 0;
@@ -699,9 +699,9 @@ ptp_nikon_getptpipguid (unsigned char* guid) {
 		pos += sprintf(pos, "%02x:", guid[i]);
 	}
 	buffer[47] = 0;
-	
+
 	/*printf("New GUID: %s\n", buffer);*/
-	
+
 	gp_setting_set("ptp2_ip","guid",buffer);
 }
 

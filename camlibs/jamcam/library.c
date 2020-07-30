@@ -148,7 +148,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 
 				jamcam_set_int_at_pos( buf, 4, position );
 				jamcam_write_packet( camera, buf, 8 );
-			
+
 				jamcam_read_packet( camera, reply, 16 );
 			}
 			break;
@@ -268,7 +268,7 @@ int jamcam_file_count (Camera *camera) {
 
 				jamcam_set_int_at_pos( buf, 4, position );
 				jamcam_write_packet( camera, buf, 8 );
-			
+
 				jamcam_read_packet( camera, reply, 16 );
 			}
 
@@ -385,7 +385,7 @@ static int jamcam_fetch_memory( Camera *camera, CameraFile *file,
 
 				break;
 		}
-				
+
 		bytes_left -= bytes_to_read;
 		bytes_read += bytes_to_read;
 

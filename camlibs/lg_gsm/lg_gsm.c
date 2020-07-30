@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -30,7 +30,7 @@
 
 #include "lg_gsm.h"
 
-#define GP_MODULE "lg_gsm" 
+#define GP_MODULE "lg_gsm"
 
 #define MSGWRITE gp_port_usb_msg_write
 #define WRITE gp_port_write
@@ -42,7 +42,7 @@ static char get_firmware[] = "\x1\x0\x0\x0\x0\x0";
 static char list_all_photo[]= "\x04\x0\x08\x0\x0\x0\x40\x0\x0\x0\xff\xff\xff\xff";
 static char get_photo_cmd[]="\x0b\x0\x8a\x0\x0\x0\x40\x0\x0\x0";
 
-int lg_gsm_init (GPPort *port, Model *model, Info *info) 
+int lg_gsm_init (GPPort *port, Model *model, Info *info)
 {
 	char firmware[54];
 	char oknok[6];
@@ -75,7 +75,7 @@ int lg_gsm_init (GPPort *port, Model *model, Info *info)
         return GP_OK;
 }
 
-unsigned int lg_gsm_get_picture_size  (GPPort *port, int pic) 
+unsigned int lg_gsm_get_picture_size  (GPPort *port, int pic)
 {
 
         unsigned int size;
@@ -108,7 +108,7 @@ unsigned int lg_gsm_get_picture_size  (GPPort *port, int pic)
 	size = (unsigned int)photodesc[138] + (unsigned int)photodesc[139]*0x100 + (unsigned int)photodesc[140]*0x10000+(unsigned int)photodesc[141]*0x1000000;
 	GP_DEBUG(" size of picture %i is 0x%x\n", pic, size);
 	/* max. 1280x960x24bits ? */
-	if ( (size >= 0x384000 ) ) {return GP_ERROR;} 
+	if ( (size >= 0x384000 ) ) {return GP_ERROR;}
 	MSGWRITE(port, 0x13, 0x6, 0x0, "", 0);
 	WRITE(port, sync_stop, 6);
 	READ(port, oknok, 6);
@@ -116,7 +116,7 @@ unsigned int lg_gsm_get_picture_size  (GPPort *port, int pic)
 	return size;
 }
 
-int lg_gsm_read_picture_data (GPPort *port, char *data, unsigned int datasize, unsigned int n) 
+int lg_gsm_read_picture_data (GPPort *port, char *data, unsigned int datasize, unsigned int n)
 {
 	char listphotos[] = "\x04\x0\x08\x0\x0\x0\x40\x0\x0\x0\x0\x0\x0\x0";
 
@@ -197,7 +197,7 @@ int lg_gsm_read_picture_data (GPPort *port, char *data, unsigned int datasize, u
 			memcpy(data+pos,&block[header_size],remain);
 			pos=pos+remain;
 		}
-		
+
 	}
 	/*port->timeout=5000;*/
 	/* syncstop */
@@ -209,10 +209,10 @@ int lg_gsm_read_picture_data (GPPort *port, char *data, unsigned int datasize, u
         return GP_OK;
 }
 
-int lg_gsm_list_files (GPPort *port, CameraList *list) 
+int lg_gsm_list_files (GPPort *port, CameraList *list)
 {
 	unsigned int num_pics;
-	int i;	
+	int i;
 
 	char oknok[6];
 	unsigned char photonumber[22];

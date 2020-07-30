@@ -9,10 +9,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -106,7 +106,7 @@ gp_context_free (GPContext *context)
 
 /**
  * \brief Decrements reference count of a context.
- * 
+ *
  * Decrement the reference count of a context and free if it goes to 0.
  *
  * \param context The context to drop the reference count.
@@ -124,7 +124,7 @@ gp_context_unref (GPContext *context)
 
 /**
  * \brief Notify frontend of a brief idle time.
- * 
+ *
  * Tells the frontend that it can do other processing at this moment, like refresh
  * the UI. Backends should call this function every time when an
  * interruption of the transfer is possible.
@@ -143,7 +143,7 @@ gp_context_idle (GPContext *context)
 
 /**
  * \brief Start progress tracking.
- * 
+ *
  * This function starts up a new progress tracking for a specified context.
  * Several nested progress reports can happen at once, depending on the backend.
  *
@@ -246,7 +246,7 @@ gp_context_status (GPContext *context, const char *format, ...)
  *
  * This sends a message to the passed context, to be printed by
  * it in some kind of way, but do no other action.
- * 
+ *
  * To be used by camera drivers.
  *
  * \param context A GPContext

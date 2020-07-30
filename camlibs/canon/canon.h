@@ -415,7 +415,7 @@ struct canonExposureBiasStateStruct {
 #define SELF_TIMER_1_INDEX  0x04 /* Currently not used */
 #define SELF_TIMER_2_INDEX  0x05 /* Currently not used */
 #define FLASH_INDEX         0x06
-#define BEEP_INDEX          0x07 
+#define BEEP_INDEX          0x07
 #define FOCUS_MODE_INDEX    0x12
 #define ISO_INDEX           0x1a
 #define APERTURE_INDEX      0x1c
@@ -426,15 +426,15 @@ struct canonExposureBiasStateStruct {
 /**
  * canonCaptureSizeClass:
  * @CAPTURE_COMPATIBILITY: operate in the traditional gphoto2 mode
- * @CAPTURE_THUMB: capture thumbnails 
+ * @CAPTURE_THUMB: capture thumbnails
  * @CAPTURE_FULL_IMAGES: capture full-sized images
  *
  * By default (CAPTURE_COMPATIBILITY mode), the driver will capture
  * thumbnails to the host computer in capture_preview, and full-sized
- * images to the camera's drive in capture_image.  
- * CAPTURE_FULL_IMAGE will capture a full-sized image to the host 
+ * images to the camera's drive in capture_image.
+ * CAPTURE_FULL_IMAGE will capture a full-sized image to the host
  * computer in capture_preview, or to the camera's drive in capture_image.
- * CAPTURE_THUMB is likewise intended to capture thumbnails to either 
+ * CAPTURE_THUMB is likewise intended to capture thumbnails to either
  * the host computer or to the camera's drive, although these modes do not
  * seem to work right now.
  *
@@ -478,8 +478,8 @@ struct _CameraPrivateLibrary
 	int receive_error; /* status of transfer on serial connection */
 	int first_init;  /* first use of camera   1 = yes 0 = no */
 	int uploading;   /* 1 = yes ; 0 = no */
-	int slow_send;   /* to send data via serial with a usleep(1) 
-			  * between each byte 1 = yes ; 0 = no */ 
+	int slow_send;   /* to send data via serial with a usleep(1)
+			  * between each byte 1 = yes ; 0 = no */
 
 	unsigned char seq_tx;
 	unsigned char seq_rx;
@@ -489,7 +489,7 @@ struct _CameraPrivateLibrary
 	 */
 	int list_all_files; /* whether to list all files, not just know types */
 
-	int upload_keep_filename; /* 0=DCIF compatible filenames (AUT_*), 
+	int upload_keep_filename; /* 0=DCIF compatible filenames (AUT_*),
 				     1=keep original filename */
 
 	char *cached_drive;	/* usually something like C: */
@@ -516,12 +516,12 @@ struct _CameraPrivateLibrary
 
 	unsigned int body_id;	/* hardware serial number for some cameras */
 
-	unsigned char release_params[RELEASE_PARAMS_LEN]; /* "Release 
+	unsigned char release_params[RELEASE_PARAMS_LEN]; /* "Release
 							     parameters:"
-							     ISO, aperture, 
+							     ISO, aperture,
 							     etc */
 
-	int secondary_image; /* Should we attempt to download a 
+	int secondary_image; /* Should we attempt to download a
 				secondary image? (e.g., RAW + JPEG) */
 
 /*
@@ -565,14 +565,14 @@ typedef enum {
 /**
  * canonDirentAttributeBits:
  * @CANON_ATTR_WRITE_PROTECTED: File is write-protected
- * @CANON_ATTR_UNKNOWN_2: 
- * @CANON_ATTR_UNKNOWN_4: 
- * @CANON_ATTR_UNKNOWN_8: 
+ * @CANON_ATTR_UNKNOWN_2:
+ * @CANON_ATTR_UNKNOWN_4:
+ * @CANON_ATTR_UNKNOWN_8:
  * @CANON_ATTR_NON_RECURS_ENT_DIR: This entry represents a directory
  *   that was not entered in this listing.
  * @CANON_ATTR_NOT_DOWNLOADED: This file has not yet been downloaded
  *   (the bit is cleared by the host software).
- * @CANON_ATTR_UNKNOWN_40: 
+ * @CANON_ATTR_UNKNOWN_40:
  * @CANON_ATTR_RECURS_ENT_DIR: This entry represents a directory
  *   that was entered in this listing; look for its contents
  *   later in the listing.
@@ -621,7 +621,7 @@ typedef enum {
 	DIR_REMOVE = 1
 } canonDirFunctionCode;
 
-/* These macros contain the default label for all the 
+/* These macros contain the default label for all the
  * switch (camera->port->type) statements
  */
 

@@ -31,7 +31,7 @@
 /*
  * Gets the thumbnail of an EXIF image.
  * The thumbnail size is provided
- * 
+ *
  * No longer provided, use libexif directly please.
  */
 unsigned char *gpi_exif_get_thumbnail_and_size(void *exifdat, long *size) { return NULL; }

@@ -57,7 +57,7 @@
 #include "library.h"
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "kodak-dc240");
 
@@ -82,7 +82,7 @@ static const struct camera_to_usb {
   currently supported.
  */
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
         int i;
@@ -102,26 +102,26 @@ camera_abilities (CameraAbilitiesList *list)
             a.usb_vendor  = camera_to_usb[i].idVendor;
             a.usb_product = camera_to_usb[i].idProduct;
             a.operations        = 	GP_OPERATION_CAPTURE_IMAGE;
-            a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
+            a.file_operations   = 	GP_FILE_OPERATION_DELETE |
                                         GP_FILE_OPERATION_PREVIEW;
             a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
-            
+
             gp_abilities_list_append(list, a);
         }
 	return (GP_OK);
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
 	dc240_close (camera, context);
-	
+
 	return (GP_OK);
 }
 
 static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		  void *data, GPContext *context) 
+		  void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -130,7 +130,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data, GPContext *context) 
+		void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -140,7 +140,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *data,
-	       GPContext *context) 
+	       GPContext *context)
 {
 	Camera *camera = data;
 
@@ -163,13 +163,13 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = data;
 
-	return (dc240_file_action (camera, DC240_ACTION_DELETE, NULL, folder, 
+	return (dc240_file_action (camera, DC240_ACTION_DELETE, NULL, folder,
     				   filename, context));
 }
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type,
-		CameraFilePath *path, GPContext *context) 
+		CameraFilePath *path, GPContext *context)
 {
 	int result;
 
@@ -190,46 +190,46 @@ camera_capture (Camera *camera, CameraCaptureType type,
 }
 
 static int
-camera_summary (Camera *camera, CameraText *summary, GPContext *context) 
+camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
     char buf [32 * 1024];
     char temp [1024];
     int retval;
     DC240StatusTable table;
-    
+
     retval = dc240_get_status (camera, &table, context);
     if (retval == GP_OK) {
 	sprintf (buf, _("Model: Kodak %s\n"), dc240_convert_type_to_camera(table.cameraType));
 	sprintf (temp, _("Firmware version: %d.%02d\n"), table.fwVersInt, table.fwVersDec);
 	strcat (buf, temp);
-	sprintf (temp, _("Battery status: %s, AC Adapter: %s\n"), 
-		 dc240_get_battery_status_str(table.battStatus), 
+	sprintf (temp, _("Battery status: %s, AC Adapter: %s\n"),
+		 dc240_get_battery_status_str(table.battStatus),
 		 dc240_get_ac_status_str(table.acAdapter));
 	strcat (buf, temp);
 	sprintf (temp, _("Number of pictures: %d\n"), table.numPict);
 	strcat (buf, temp);
-	sprintf (temp, _("Space remaining: High: %d, Medium: %d, Low: %d\n"), 
+	sprintf (temp, _("Space remaining: High: %d, Medium: %d, Low: %d\n"),
 		 table.remPictHigh, table.remPictMed, table.remPictLow);
 	strcat (buf, temp);
-	
+
 	sprintf (temp, _("Memory card status (%d): %s\n"), table.memCardStatus,
 		 dc240_get_memcard_status_str(table.memCardStatus));
 	strcat (buf, temp);
 
-	sprintf (temp, _("Total pictures captured: %d, Flashes fired: %d\n"), 
-		 table.totalPictTaken, table.totalStrobeFired); 
+	sprintf (temp, _("Total pictures captured: %d, Flashes fired: %d\n"),
+		 table.totalPictTaken, table.totalStrobeFired);
 	strcat (buf, temp);
-	
-	
+
+
 	strcpy(summary->text, buf);
     }
     return retval;
 }
 
 static int
-camera_about (Camera *camera, CameraText *about, GPContext *context) 
+camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy (about->text, 
+	strcpy (about->text,
 		_("Kodak DC240 Camera Library\n"
 		"Scott Fritzinger <scottf@gphoto.net> and Hubert Figuiere <hfiguiere@teaser.fr>\n"
 		"Camera Library for the Kodak DC240, DC280, DC3400 and DC5000 cameras.\n"
@@ -246,11 +246,11 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	int ret, selected_speed = 0;
 	GPPortSettings settings;
-	
+
 	/* First, set up all the function pointers */
 	camera->functions->exit             = camera_exit;
 	camera->functions->capture          = camera_capture;
@@ -284,7 +284,7 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		return (GP_ERROR_UNKNOWN_PORT);
 	}
-	
+
 	ret = gp_port_set_settings (camera->port, settings);
 	if (ret < 0)
 		return (ret);
@@ -294,16 +294,16 @@ camera_init (Camera *camera, GPContext *context)
 		return (ret);
 
 	if (camera->port->type == GP_PORT_SERIAL) {
-		char buf[8];	
+		char buf[8];
 		/* Reset the camera to 9600 */
 		gp_port_send_break(camera->port, 1);
 
 		/* Used to have a 1500 msec pause here to give
 		 * the camera time to reset - but, since
 		 * the serial port sometimes returns a garbage
-		 * character or two after the break, we do 
+		 * character or two after the break, we do
 		 * a couple of TIMEOUT (750 msec) pauses here
-		 * force the delay as well as flush the port 
+		 * force the delay as well as flush the port
 		 */
 		gp_port_read(camera->port, buf, 8);
 		gp_port_read(camera->port, buf, 8);
@@ -317,7 +317,7 @@ camera_init (Camera *camera, GPContext *context)
 	ret = dc240_open (camera);
 	if (ret < 0)
 		return (ret);
-	
+
 	ret = dc240_packet_set_size (camera, HPBS+2);
 	if (ret < 0)
 		return (ret);

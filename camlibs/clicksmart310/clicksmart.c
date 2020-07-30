@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -34,7 +34,7 @@
 #include "clicksmart.h"
 #include "spca50x-jpeg-header.h"
 
-#define GP_MODULE "clicksmart310" 
+#define GP_MODULE "clicksmart310"
 
 #define CS_INIT 	0x8000
 #define CS_INIT2 	0xd41
@@ -43,16 +43,16 @@
 #define CS_CH_CLEAR	0xd05
 #define CS_READCLOSE	0x8303
 
-static int 
-CLICKSMART_READ (GPPort *port, int index, char *data) 
+static int
+CLICKSMART_READ (GPPort *port, int index, char *data)
 {
 	gp_port_usb_msg_interface_read(port, 0, 0, index, data, 1);
 	return GP_OK;
 }
 
-static int 
-CLICKSMART_READ_STATUS (GPPort *port, char *data) 
-{		
+static int
+CLICKSMART_READ_STATUS (GPPort *port, char *data)
+{
 	return gp_port_usb_msg_interface_read(port, 0, 0, CS_CH_READY, data, 1);
 }
 
@@ -72,17 +72,17 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 	CLICKSMART_READ(port, CS_INIT2, &c);
 	CLICKSMART_READ(port, CS_NUM_PICS, &c);
 
-	priv->num_pics =  (unsigned)c; 
+	priv->num_pics =  (unsigned)c;
 	full_reads = (unsigned)c/2;
 	short_read = (unsigned)c%2;
 	cat_size = (unsigned)c*0x10;
 	temp_catalog = malloc(cat_size);
-	if (!temp_catalog) 
+	if (!temp_catalog)
 		return GP_ERROR_NO_MEMORY;
 	memset (temp_catalog, 0, cat_size);
 
 	/* now we need to get and put away the catalog data. */
-	
+
 	CLICKSMART_READ_STATUS (port, &c);
 	gp_port_usb_msg_interface_write(port, 6, 0, 9, NULL, 0);
 	while (c != 1) {
@@ -96,18 +96,18 @@ int clicksmart_init (GPPort *port, CameraPrivateLibrary *priv)
 		return GP_ERROR_NO_MEMORY;
 	}
 	/*
-	 * The catalog data is downloaded in reverse order, which needs to be 
+	 * The catalog data is downloaded in reverse order, which needs to be
 	 * straightened out.
-	 */    
+	 */
 	for (i=0; i < full_reads; i++) {
 		memset (buffer, 0, 0x200);
 		gp_port_read(port, (char *)buffer, 0x200);
 		memcpy (temp_catalog + cat_size - (2*i+1)*0x10, buffer, 0x10);
-		memcpy (temp_catalog + cat_size - (2*i+2)*0x10, buffer+0x100, 
+		memcpy (temp_catalog + cat_size - (2*i+2)*0x10, buffer+0x100,
 									0x10);
 	}
 	if (short_read) {
-		memset (buffer, 0, 0x200);		
+		memset (buffer, 0, 0x200);
 		gp_port_read(port, (char *)buffer, 0x100);
 		memcpy (temp_catalog, buffer, 0x10);
 	}
@@ -125,15 +125,15 @@ int clicksmart_get_res_setting (CameraPrivateLibrary *priv, int n)
 {
 	GP_DEBUG("running clicksmart_get_res_setting for picture %i\n", n+1);
 	/*
-	 * QCIF (176x144) returns 1, or if the entry is a clip frame, then 3 
-	 * and CIF (352x288) returns 0. 
+	 * QCIF (176x144) returns 1, or if the entry is a clip frame, then 3
+	 * and CIF (352x288) returns 0.
 	 */
 	return priv->catalog[16*n];
 }
 
-int 
-clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port, 
-					unsigned char **data, int n) 
+int
+clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
+					unsigned char **data, int n)
 {
 	int offset=0;
 	char c;
@@ -154,8 +154,8 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 		return r;
 	}
 	/* Get the size of the data and calculate the size to download, which
-	 * is the next multiple of 0x100. Only for the hi-res photos is the 
-	 * true data size actually given.  
+	 * is the next multiple of 0x100. Only for the hi-res photos is the
+	 * true data size actually given.
 	 */
 
 	size=(priv->catalog[16*n + 12] * 0x100)+(priv->catalog[16*n + 11]);
@@ -179,18 +179,18 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 
 	remainder=((remainder+0xff)/0x100)*0x100;
 	GP_DEBUG("Second remainder: %x\n", remainder);
-	if (remainder) 
+	if (remainder)
 		gp_port_read(port, (char *)*data + offset, remainder);
 
 	gp_port_usb_msg_interface_read(port, 0, 0, CS_READCLOSE, &c, 1);
 	gp_port_usb_msg_interface_write(port, 0, 2, CS_CH_READY, NULL, 0);
 
-	/* 
-	 * For lo-res photos the camera does not tell us the true size, but 
+	/*
+	 * For lo-res photos the camera does not tell us the true size, but
 	 * when the data has ended the excess bytes downloaded are all
 	 * 00. The photo processing works better if these are suppressed.
 	 */
-	
+
 	if (priv->catalog[16*n]) {
 		while ((size > 1) && (*data)[size-1] == 0)
 			size--;
@@ -198,8 +198,8 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	return size;
 }
 
-int 
-clicksmart_delete_all_pics      (GPPort *port) 
+int
+clicksmart_delete_all_pics      (GPPort *port)
 {
 	gp_port_usb_msg_interface_write(port, 0, 2, CS_CH_READY, NULL, 0);
 	gp_port_usb_msg_interface_write(port, 2, 0, 5, NULL, 0);
@@ -211,17 +211,17 @@ clicksmart_reset (GPPort *port)
 {
 	char c;
 	/* Release current register */
-	CLICKSMART_READ (port, CS_READCLOSE, &c); 
+	CLICKSMART_READ (port, CS_READCLOSE, &c);
 	gp_port_usb_msg_interface_write(port, 0, 2, CS_CH_READY, NULL, 0);
-	CLICKSMART_READ (port, CS_CH_CLEAR, &c); 	
-	CLICKSMART_READ (port, CS_CH_CLEAR, &c); 	
+	CLICKSMART_READ (port, CS_CH_CLEAR, &c);
+	CLICKSMART_READ (port, CS_CH_CLEAR, &c);
     	return GP_OK;
 }
 
 /* create_jpeg_from_data adapted from camlibs/spca50x */
 
-int create_jpeg_from_data (unsigned char * dst, unsigned char * src, 
-			int qIndex, int w, int h, unsigned char format, 
+int create_jpeg_from_data (unsigned char * dst, unsigned char * src,
+			int qIndex, int w, int h, unsigned char format,
 			int o_size, int *size,
 		        int omit_huffman_table, int omit_escape)
 {

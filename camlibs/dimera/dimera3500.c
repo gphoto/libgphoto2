@@ -1,4 +1,4 @@
-/* 
+/*
  * Program:	gPhoto2 driver for Mustek VDC 3500/Relisys Dimera 3500
  *
  * Note:
@@ -69,7 +69,7 @@
 static const char Dimera_thumbhdr[] =
 "P5\n# Dimera 3500 Thumbnail written by gphoto2\n64 48\n255\n";
 
-static const char Dimera_viewhdr[] = 
+static const char Dimera_viewhdr[] =
 "P5\n# Dimera 3500 Viewfinder written by gphoto2\n128 96\n15\n";
 
 static const char Dimera_finehdr[] =
@@ -93,9 +93,9 @@ Dimera_Preview( long *size, Camera *camera, GPContext *context );
 /* Gphoto2 */
 
 struct _CameraPrivateLibrary {
-        unsigned exposure; 
-        int auto_exposure; 
-        int auto_flash; 
+        unsigned exposure;
+        int auto_exposure;
+        int auto_flash;
 };
 
 
@@ -196,7 +196,7 @@ conversion_chuck (const unsigned int width, const unsigned int height,
 	 *
 	 * Convert the 4 cells into a single RGB pixel.
 	 * Colors are encoded as follows:
-	 * 
+	 *
 	 * 		000000000000000000........33
 	 * 		000000000011111111........11
 	 * 		012345678901234567........89
@@ -216,7 +216,7 @@ conversion_chuck (const unsigned int width, const unsigned int height,
 	 * The exception is when x or y are zero then the neighors used are
 	 * the +1 cells.
 	 */
-	
+
 	for (y = 0;y < height; y++)
 		for (x = 0;x < width; x++) {
 			p1 = ((y==0?y+1:y-1)*width) + (x==0?x+1:x-1);
@@ -306,7 +306,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (!data)
 			return GP_ERROR;
 		gp_file_set_data_and_size (file, (char *)data, size); /* will take over data ptr ownership */
-		gp_file_set_mime_type (file, GP_MIME_RAW); 
+		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_adjust_name_for_mime_type (file);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
@@ -441,7 +441,7 @@ static int camera_summary (Camera *camera, CameraText *summary, GPContext *conte
 			eeprom_capacity = eeprom_size_table[eeprom_info[11]];
 	}
 	/* Estimate the number of pictures that this size of flash can hold */
-	hi_pics_max = eeprom_capacity / 2; 
+	hi_pics_max = eeprom_capacity / 2;
 	lo_pics_max = (eeprom_capacity * 13) / 8;
 
 	if (features.feature_bits_lo & AC_PRESENT)
@@ -645,7 +645,7 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 
 			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
 			{
-				GP_DEBUG( "Dimera_Get_Full_Image: retrans"); 
+				GP_DEBUG( "Dimera_Get_Full_Image: retrans");
 				continue;
 			}
 			GP_DEBUG(
@@ -681,7 +681,7 @@ Dimera_Get_Full_Image (int picnum, long *size, int *width, int *height,
 
 			if ( (s == GP_ERROR_TIMEOUT || s == GP_ERROR_CORRUPTED_DATA) && --retry > 0)
 			{
-				GP_DEBUG("Dimera_Get_Full_Image: retrans"); 
+				GP_DEBUG("Dimera_Get_Full_Image: retrans");
 				continue;
 			}
 			GP_DEBUG(
@@ -744,7 +744,7 @@ static unsigned calc_new_exposure(unsigned exposure, unsigned brightness) {
 
 	/* Choose the correct curve for this camera scene */
 	for (i=0; exposure_tables[i].M; ++i) {
-		GP_DEBUG( "brightness %d, %f ", 
+		GP_DEBUG( "brightness %d, %f ",
 			brightness,
 			exp((double)((brightness/16.0) - exposure_tables[i].b) / exposure_tables[i].M));
 		if (exp((double)((brightness/16.0) - exposure_tables[i].b) / exposure_tables[i].M) > exposure)

@@ -85,7 +85,7 @@ int dsc1_retrcmd(Camera *camera) {
         if (0 < s)
                 dsc_dumpmem(camera->pl->buf, s);
 */
-                
+
         if (s != 17 ||  memcmp(camera->pl->buf, r_prefix, 12) != 0 )
                 RETURN_ERROR(EDSCBADRSP)
                 /* bad response */

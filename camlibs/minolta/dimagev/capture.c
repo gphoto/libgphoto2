@@ -73,23 +73,23 @@ int dimagev_shutter(dimagev_t *dimagev) {
 
 	if ( gp_port_write(dimagev->dev, (char *)p->buffer, p->length) < GP_OK ) {
 		GP_DEBUG( "dimagev_shutter::unable to write packet");
-		
+
 		if ( p != NULL ) {
 			free(p);
 		}
-		
+
 		return GP_ERROR_IO;
 	}
 
 	if ( p != NULL ) {
 		free(p);
 	}
-		
+
 
 	if ( sleep(1) != 0 ) {
 		GP_DEBUG( "dimagev_shutter::sleep() returned non-zero value");
 	}
-	
+
 	if ( gp_port_read(dimagev->dev, (char *)&char_buffer, 1) < GP_OK ) {
 		GP_DEBUG( "dimagev_shutter::no response from camera");
 		return GP_ERROR_IO;
@@ -116,7 +116,7 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	if ( sleep(1) != 0 ) {
 		GP_DEBUG( "dimagev_shutter::sleep() returned non-zero value");
 	}
-		
+
 
 	if ( ( p = dimagev_read_packet(dimagev) ) == NULL ) {
 		GP_DEBUG( "dimagev_shutter::unable to read packet");
@@ -148,7 +148,7 @@ int dimagev_shutter(dimagev_t *dimagev) {
 		GP_DEBUG( "dimagev_shutter::unable to send EOT");
 		return GP_ERROR_IO;
 	}
-		
+
 	if ( gp_port_read(dimagev->dev, (char *)&char_buffer, 1) < GP_OK ) {
 		GP_DEBUG( "dimagev_shutter::no response from camera");
 		return GP_ERROR_IO;

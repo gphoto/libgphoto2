@@ -8,10 +8,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -234,11 +234,11 @@ gp_port_vusb_clear_halt_lib(GPPort *port, int ep)
         return GP_OK;
 }
 
-/* The next two functions support the nonstandard request types 0x41 (write) 
- * and 0xc1 (read), which are occasionally needed. 
+/* The next two functions support the nonstandard request types 0x41 (write)
+ * and 0xc1 (read), which are occasionally needed.
  */
 static int
-gp_port_vusb_msg_interface_write_lib(GPPort *port, int request, 
+gp_port_vusb_msg_interface_write_lib(GPPort *port, int request,
         int value, int index, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
@@ -247,7 +247,7 @@ gp_port_vusb_msg_interface_write_lib(GPPort *port, int request,
 
 
 static int
-gp_port_vusb_msg_interface_read_lib(GPPort *port, int request, 
+gp_port_vusb_msg_interface_read_lib(GPPort *port, int request,
         int value, int index, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(req=%x, value=%x, index=%d, size=%d)", request, value, index, size);
@@ -255,11 +255,11 @@ gp_port_vusb_msg_interface_read_lib(GPPort *port, int request,
 }
 
 
-/* The next two functions support the nonstandard request types 0x21 (write) 
- * and 0xa1 (read), which are occasionally needed. 
+/* The next two functions support the nonstandard request types 0x21 (write)
+ * and 0xa1 (read), which are occasionally needed.
  */
 static int
-gp_port_vusb_msg_class_write_lib(GPPort *port, int request, 
+gp_port_vusb_msg_class_write_lib(GPPort *port, int request,
         int value, int index, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
@@ -269,7 +269,7 @@ gp_port_vusb_msg_class_write_lib(GPPort *port, int request,
 
 
 static int
-gp_port_vusb_msg_class_read_lib(GPPort *port, int request, 
+gp_port_vusb_msg_class_read_lib(GPPort *port, int request,
         int value, int index, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
@@ -310,7 +310,7 @@ gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 	gp_port_info_get_path (info, &path);
 
 	if (!lastpath || strcmp(path, lastpath)) {
-		gp_log(GP_LOG_DEBUG,__FUNCTION__,"(path=%s)", path); 
+		gp_log(GP_LOG_DEBUG,__FUNCTION__,"(path=%s)", path);
 		if (lastpath) {
 			free(lastpath);
 		}
@@ -321,9 +321,9 @@ gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 		vendor = product = 0;
 		if (fd != -1) {
 			if (-1 == read( fd, &vendor, 2))
-				gp_log(GP_LOG_DEBUG,__FUNCTION__,"could not read vendor"); 
+				gp_log(GP_LOG_DEBUG,__FUNCTION__,"could not read vendor");
 			if (-1 == read( fd, &product, 2))
-				gp_log(GP_LOG_DEBUG,__FUNCTION__,"could not read product"); 
+				gp_log(GP_LOG_DEBUG,__FUNCTION__,"could not read product");
 			close(fd);
 		}
 	}
@@ -340,7 +340,7 @@ gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
                 port->settings.usb.maxpacketsize = 512;
 		return GP_OK;
 	}
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%04x,0x%04x)", idvendor, idproduct); 
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%04x,0x%04x)", idvendor, idproduct);
         return GP_ERROR_IO_USB_FIND;
 }
 

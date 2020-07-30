@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -58,7 +58,7 @@
 static uint8_t convert_name_to_index (const char * name);
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "largan-lmini");
 
@@ -83,7 +83,7 @@ static const struct largan_cameras {
 };
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 	int i;
@@ -107,10 +107,10 @@ camera_abilities (CameraAbilitiesList *list)
 
 		}
 		a.operations        = 	GP_OPERATION_CAPTURE_IMAGE;
-		a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
+		a.file_operations   = 	GP_FILE_OPERATION_DELETE |
 					GP_FILE_OPERATION_PREVIEW;
 		a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
-	
+
 		if (a.port) {
 			/* only append if port is defined.*/
 			gp_abilities_list_append(list, a);
@@ -120,7 +120,7 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 static int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
 	return (GP_OK);
 }
@@ -142,7 +142,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	largan_pict_type pict_type;
 
 	index = convert_name_to_index (filename);
-	
+
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		pict_type = LARGAN_PICT;
@@ -153,7 +153,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	default:
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-		
+
 	pict = largan_pict_new ();
 	ret = largan_get_pict (camera, pict_type, (uint8_t)index, pict);
 	if (ret == GP_OK) {
@@ -171,7 +171,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 
-static uint8_t 
+static uint8_t
 convert_name_to_index (const char * name)
 {
 	long index;
@@ -192,10 +192,10 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 {
 	Camera *camera = data;
 	int index;
-	
-	/* Delete one file from the camera. 
+
+	/* Delete one file from the camera.
 	(only the last file can be deleted)*/
-	
+
 	index = convert_name_to_index (filename);
 	return largan_erase (camera, index);
 }
@@ -262,7 +262,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	int ret;
 	GPPortSettings settings;
@@ -307,13 +307,13 @@ camera_init (Camera *camera, GPContext *context)
 	default:
 		return (GP_ERROR_UNKNOWN_PORT);
 	}
-	
+
 	ret = gp_port_set_settings (camera->port, settings);
 	if (ret < 0)
 		return (ret);
 
 	/*
-	 * Once you have configured the port, you should check if a 
+	 * Once you have configured the port, you should check if a
 	 * connection to the camera can be established.
 	 */
 	return largan_open (camera);

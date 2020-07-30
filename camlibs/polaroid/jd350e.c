@@ -1,6 +1,6 @@
 /* jd350e.c
  *
- * White balancing and brightness correction for the Jenoptik 
+ * White balancing and brightness correction for the Jenoptik
  * JD350 entrance camera
  *
  * Copyright 2001 Michael Trawny <trawny99@users.sourceforge.net>
@@ -10,10 +10,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -55,8 +55,8 @@
 int jd350e_postprocessing(int width, int height, unsigned char* rgb){
 	int
 		x,y,
-		red_min=255, red_max=0, 
-		blue_min=255, blue_max=0, 
+		red_min=255, red_max=0,
+		blue_min=255, blue_max=0,
 		green_min=255, green_max=0;
 	double
 		min, max, amplify;
@@ -157,7 +157,7 @@ int trust350fs_postprocessing(int width, int height, unsigned char* rgb) {
 	double		amplify;
 	unsigned char	*buf;
 	const int	brightness_adjust = 16;
-	
+
 	/* flip horizontal */
 #define RED(p,x,y,w) *((p)+3*((y)*(w)+(x))  )
 #define GREEN(p,x,y,w) *((p)+3*((y)*(w)+(x))+1)
@@ -172,7 +172,7 @@ int trust350fs_postprocessing(int width, int height, unsigned char* rgb) {
 			SWAP( BLUE(rgb,x,y,width), BLUE(rgb,width-x-1,y,width));
 		}
 	}
-	
+
 	/* flip vertical */
 	buf = malloc(width*3);
 	if (!buf) return GP_ERROR_NO_MEMORY;
@@ -182,7 +182,7 @@ int trust350fs_postprocessing(int width, int height, unsigned char* rgb) {
 		memcpy(rgb+(height-i-1)*width*3,buf,width*3);
 	}
 	free(buf);
-	
+
 	/* Normalize & adjust brightness ... */
 #define MINMAX(a,min,max) { (min)=MIN(min,a); (max)=MAX(max,a); }
 
@@ -201,7 +201,7 @@ int trust350fs_postprocessing(int width, int height, unsigned char* rgb) {
 	for(i=0; i<(width*height*3); i++)
 	{
 		int val = amplify * (rgb[i] - min);
-		
+
 		if(val < brightness_adjust)
 		   rgb[i] = val * 2;
 		else if (val > (255 - brightness_adjust))
@@ -209,6 +209,6 @@ int trust350fs_postprocessing(int width, int height, unsigned char* rgb) {
 		else
 		   rgb[i] = val + brightness_adjust;
 	}
-	
+
 	return GP_OK;
 }

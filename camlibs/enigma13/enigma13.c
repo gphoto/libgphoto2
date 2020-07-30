@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -63,7 +63,7 @@
 
 
 /* the table of content of the camera
-   it's filled in enigma_get_toc, and used in enigma_download_img */    
+   it's filled in enigma_get_toc, and used in enigma_download_img */
 static char* enigma13_static_toc=NULL;
 
 
@@ -93,7 +93,7 @@ static int enigma13_detect_storage_type (Camera *camera)
         for (i=0;i<3;i++)
         {
                 CHECK (gp_port_usb_msg_read (camera->port, 0x28, 0x0000,
-                                        i, &buf[i], 0x01));           
+                                        i, &buf[i], 0x01));
         }
         gp_log(GP_LOG_DEBUG, "enigma13","Camera storage information sdram: 0x%x flash 0x%x card: 0x%x\n"
                         , buf[0], buf[1], buf[2]);
@@ -109,7 +109,7 @@ static int enigma13_detect_storage_type (Camera *camera)
  * This function deletes all the images
  * supported (sdram, flash, card)
  *
- * Status: not verified 
+ * Status: not verified
  */
 static int
 enigma13_flash_delete_all(CameraFilesystem *fs, const char *folder, void *data,
@@ -119,7 +119,7 @@ enigma13_flash_delete_all(CameraFilesystem *fs, const char *folder, void *data,
    gp_log(GP_LOG_DEBUG, "enigma13","Delete all files");
    cam = data;
    CHECK (gp_port_usb_msg_write (cam->port, 0x52, 0x0, 0x0, NULL, 0x0) );
-   return GP_OK;                             
+   return GP_OK;
 }
 
 
@@ -151,7 +151,7 @@ static int enigma13_wait_for_ready(Camera *camera)
 #if 0
 /*
  * Get the number of images in cam
- * 
+ *
  * Status: Should work, but not used as enigma13_get_TOC does all.
  *
  */
@@ -172,7 +172,7 @@ static int enigma13_get_filecount (Camera *camera, int *filecount)
 
 
 /*
- * Get the table of contents (directory) from the cam 
+ * Get the table of contents (directory) from the cam
  *
  * Verified: Yes
  */
@@ -235,14 +235,14 @@ static int enigma13_get_toc(Camera *camera, int *filecount, char** toc)
  * int    index   : image index ( in gphoto point of view) -1 for real index
  * char*  toc     : pointer to toc
  * char** img_buf : returned image data
- * int* img_size      : returned image data size  
+ * int* img_size      : returned image data size
  *
  */
 static int enigma13_download_img(Camera *camera, char *toc, int index, char **img_data, int *img_size)
 {
 	uint8_t *p;
 	uint32_t file_size = 0, aligned_size = 0;
-	char* buf=NULL; 
+	char* buf=NULL;
 	int align=0;
 	char  retbuf[2];
 
@@ -336,7 +336,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 
 
 /*
- * File operations 
+ * File operations
  */
 static int
 get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
@@ -360,7 +360,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
                 CHECK(enigma13_download_img(camera, enigma13_static_toc, image_no, &img_data, &img_size));
                 result = gp_file_append( file, img_data, img_size);
- 
+
 		break;
 	}
 	default:
@@ -373,7 +373,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -392,7 +392,7 @@ camera_abilities (CameraAbilitiesList *list)
 }
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "Digital Dream Enigma 1.3");
 	return (GP_OK);
@@ -405,7 +405,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 

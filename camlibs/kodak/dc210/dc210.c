@@ -84,16 +84,16 @@ int camera_abilities (CameraAbilitiesList *list) {
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
-			   CameraList *list, void *data, GPContext *context) 
+			   CameraList *list, void *data, GPContext *context)
 {
     Camera *camera = data;
-    
+
     return dc210_get_filenames(camera, list, context);
 }
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *data, GPContext *context) 
+			  CameraFile *file, void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -109,9 +109,9 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 	return GP_OK;
 }
 
-static int delete_file_func (CameraFilesystem *fs, const char *folder, 
+static int delete_file_func (CameraFilesystem *fs, const char *folder,
 			     const char *filename, void *data,
-			     GPContext *context) 
+			     GPContext *context)
 {
 	Camera *camera = data;
 
@@ -124,7 +124,7 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 {
         Camera *camera = data;
 	dc210_picture_info picinfo;
-	
+
 	if (dc210_get_picture_info_by_name(camera, &picinfo, file) == GP_ERROR)
 		return GP_ERROR;
 
@@ -176,7 +176,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	int i;
 	char * wvalue;
 	char stringbuffer[12];
-	
+
 	dc210_status status;
 
 	if (dc210_get_status(camera, &status) == GP_ERROR) return GP_ERROR;
@@ -192,9 +192,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
         gp_widget_add_choice (widget, _("FlashPix"));
 
 	switch (status.file_type){
-	case DC210_FILE_TYPE_JPEG:  
+	case DC210_FILE_TYPE_JPEG:
 	  gp_widget_set_value (widget, _("JPEG")); break;
-	case DC210_FILE_TYPE_FPX:  
+	case DC210_FILE_TYPE_FPX:
 	  gp_widget_set_value (widget, _("FlashPix")); break;
 	};
 	gp_widget_get_value (widget, &wvalue);
@@ -205,9 +205,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
         gp_widget_add_choice (widget, _("1152 x 864"));
 
 	switch (status.resolution){
-	case DC210_FILE_640:  
+	case DC210_FILE_640:
 	  gp_widget_set_value (widget, _("640 x 480")); break;
-	case DC210_FILE_1152:  
+	case DC210_FILE_1152:
 	  gp_widget_set_value (widget, _("1152 x 864")); break;
 	default:
 	  DC210_DEBUG("Undefined value for file resolution.\n"); break;
@@ -221,11 +221,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
         gp_widget_add_choice (widget, _("High (good quality)"));
 
 	switch (status.compression_type){
-	case DC210_LOW_COMPRESSION:  
+	case DC210_LOW_COMPRESSION:
 	  gp_widget_set_value (widget, _("Low (best quality)")); break;
-	case DC210_MEDIUM_COMPRESSION:  
+	case DC210_MEDIUM_COMPRESSION:
 	  gp_widget_set_value (widget, _("Medium (better quality)")); break;
-	case DC210_HIGH_COMPRESSION:  
+	case DC210_HIGH_COMPRESSION:
 	  gp_widget_set_value (widget, _("High (good quality)")); break;
 	};
 	gp_widget_get_value (widget, &wvalue);
@@ -243,17 +243,17 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
         gp_widget_add_choice (widget, _("Macro"));
 
 	switch (status.zoom){
-	case DC210_ZOOM_58:  
+	case DC210_ZOOM_58:
 	  gp_widget_set_value (widget, _("58 mm")); break;
-	case DC210_ZOOM_51:  
+	case DC210_ZOOM_51:
 	  gp_widget_set_value (widget, _("51 mm")); break;
-	case DC210_ZOOM_41:  
+	case DC210_ZOOM_41:
 	  gp_widget_set_value (widget, _("41 mm")); break;
-	case DC210_ZOOM_34:  
+	case DC210_ZOOM_34:
 	  gp_widget_set_value (widget, _("34 mm")); break;
-	case DC210_ZOOM_29:  
+	case DC210_ZOOM_29:
 	  gp_widget_set_value (widget, _("29 mm")); break;
-	case DC210_ZOOM_MACRO:  
+	case DC210_ZOOM_MACRO:
 	  gp_widget_set_value (widget, _("Macro")); break;
 	};
 	gp_widget_get_value (widget, &wvalue);
@@ -273,11 +273,11 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
         gp_widget_add_choice (widget, _("None"));
 
 	switch (status.flash){
-	case DC210_FLASH_AUTO:  
+	case DC210_FLASH_AUTO:
 	  gp_widget_set_value (widget, _("Auto")); break;
-	case DC210_FLASH_FORCE:  
+	case DC210_FLASH_FORCE:
 	  gp_widget_set_value (widget, _("Force")); break;
-	case DC210_FLASH_NONE:  
+	case DC210_FLASH_NONE:
 	  gp_widget_set_value (widget, _("None")); break;
 	};
 	gp_widget_get_value (widget, &wvalue);
@@ -300,7 +300,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
         gp_widget_append (section, widget);
 	gp_widget_set_value (widget, dc210_system_time_callback);
 	gp_widget_set_info (widget, _("Set clock in camera"));
-	
+
 	gp_camera_get_abilities(camera, &abilities);
 	gp_port_get_settings (camera->port, &settings);
         gp_widget_new (GP_WIDGET_MENU, _("Port speed"), &widget);
@@ -449,11 +449,11 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		gp_widget_get_value (w2, &w2value);
 		switch(wvalue[0]){
 		case 'A':
-			dc210_set_flash(camera, DC210_FLASH_AUTO, 
+			dc210_set_flash(camera, DC210_FLASH_AUTO,
 					w2value[1] == 'n' ? 1 : 0);
 			break;
 		case 'F':
-			dc210_set_flash(camera, DC210_FLASH_FORCE, 
+			dc210_set_flash(camera, DC210_FLASH_FORCE,
 					w2value[1] == 'n' ? 1 : 0);
 			break;
 		case 'N':
@@ -472,7 +472,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 		return (GP_ERROR_NOT_SUPPORTED);
 	};
 
-	if (dc210_capture(camera, path, context) == GP_ERROR) 
+	if (dc210_capture(camera, path, context) == GP_ERROR)
 		return GP_ERROR;
 
 	return gp_filesystem_append (camera->fs, path->folder, path->name, context);
@@ -493,7 +493,7 @@ static int camera_capture_preview (Camera* camera, CameraFile* file, GPContext *
 };
 
 static int camera_summary (Camera *camera, CameraText *summary,
-			   GPContext *context) 
+			   GPContext *context)
 {
     static char summary_string[2048] = "";
     char buff[1024];
@@ -502,7 +502,7 @@ static int camera_summary (Camera *camera, CameraText *summary,
     if (GP_OK == dc210_get_status (camera, &status))
     {
         strcpy(summary_string,"Kodak DC210\n");
-        
+
         snprintf(buff,1024,_("Pictures in camera: %d\n"),
 		 status.numPicturesInCamera);
         strcat(summary_string,buff);
@@ -523,35 +523,35 @@ static int camera_summary (Camera *camera, CameraText *summary,
         strcat(summary_string,buff);
 
 	switch (status.file_type){
-	case DC210_FILE_TYPE_JPEG: 
+	case DC210_FILE_TYPE_JPEG:
 		snprintf(buff, 1024, _("Filetype: JPEG (")); break;
-	case DC210_FILE_TYPE_FPX: 
+	case DC210_FILE_TYPE_FPX:
 		snprintf(buff, 1024, _("Filetype: FlashPix (")); break;
 	};
 	strcat(summary_string, buff);
-        
+
 	switch (status.compression_type){
-	case DC210_LOW_COMPRESSION:    
+	case DC210_LOW_COMPRESSION:
 		snprintf(buff, 1024, _("low compression, ")); break;
-	case DC210_MEDIUM_COMPRESSION: 
+	case DC210_MEDIUM_COMPRESSION:
 		snprintf(buff, 1024, _("medium compression, ")); break;
-	case DC210_HIGH_COMPRESSION:   
+	case DC210_HIGH_COMPRESSION:
 		snprintf(buff, 1024, _("high compression, ")); break;
-	default:                       
+	default:
 		snprintf(buff, 1024, _("unknown compression %d, "), status.compression_type); break;
 	};
 	strcat(summary_string, buff);
-        
+
 	switch (status.resolution){
-	case DC210_FILE_640: 
+	case DC210_FILE_640:
 		snprintf(buff, 1024, "640x480 pixel)\n"); break;
-	case DC210_FILE_1152: 
+	case DC210_FILE_1152:
 		snprintf(buff, 1024, "1152x864 pixel)\n"); break;
-	default: 
+	default:
 		snprintf(buff, 1024, _("unknown resolution %d)\n"), status.resolution); break;
 	};
 	strcat(summary_string, buff);
-        
+
 	/* battery check still doesn't work */
 	/* switch (status.battery){
 	case 0: snprintf(buff,1024,"Battery charge is good\n"); break;
@@ -559,37 +559,37 @@ static int camera_summary (Camera *camera, CameraText *summary,
 	case 2: snprintf(buff,1024,"Battery is not charged\n"); break;
 	};
         strcat(summary_string,buff);*/
-        
+
 	if (status.acstatus)
 		snprintf(buff,1024,_("AC adapter is connected.\n"));
 	else
 		snprintf(buff,1024,_("AC adapter is not connected.\n"));
         strcat(summary_string,buff);
-        
+
 	/* time string, do not change the % escapes */
         strftime(buff,1024,_("Time: %a, %d %b %Y %T\n"),
 		 localtime((time_t *)&status.time));
         strcat(summary_string,buff);
-        
+
 	switch (status.zoom){
-	case DC210_ZOOM_58: 
+	case DC210_ZOOM_58:
 		snprintf(buff, 1024, _("Zoom: 58 mm\n")); break;
-	case DC210_ZOOM_51: 
+	case DC210_ZOOM_51:
 		snprintf(buff, 1024, _("Zoom: 51 mm\n")); break;
-	case DC210_ZOOM_41: 
+	case DC210_ZOOM_41:
 		snprintf(buff, 1024, _("Zoom: 41 mm\n")); break;
-	case DC210_ZOOM_34: 
+	case DC210_ZOOM_34:
 		snprintf(buff, 1024, _("Zoom: 34 mm\n")); break;
-	case DC210_ZOOM_29: 
+	case DC210_ZOOM_29:
 		snprintf(buff, 1024, _("Zoom: 29 mm\n")); break;
-	case DC210_ZOOM_MACRO: 
+	case DC210_ZOOM_MACRO:
 		snprintf(buff, 1024, _("Zoom: macro\n")); break;
-	default: 
-		snprintf(buff, 1024, _("Unknown zoom mode %d\n"), 
+	default:
+		snprintf(buff, 1024, _("Unknown zoom mode %d\n"),
 			 status.zoom); break;
 	};
         strcat(summary_string,buff);
-        
+
 	if (status.exp_compensation > -5 && status.exp_compensation < 4)
 		snprintf(buff, 1024, _("Exposure compensation: %s\n"), exp_comp[status.exp_compensation + 4]);
 	else
@@ -597,14 +597,14 @@ static int camera_summary (Camera *camera, CameraText *summary,
         strcat(summary_string,buff);
 
 	switch (status.flash){
-	case DC210_FLASH_AUTO: 
+	case DC210_FLASH_AUTO:
 		snprintf(buff, 1024, _("Flash mode: auto, ")); break;
-	case DC210_FLASH_FORCE: 
+	case DC210_FLASH_FORCE:
 		snprintf(buff, 1024, _("Flash mode: force, ")); break;
-	case DC210_FLASH_NONE: 
+	case DC210_FLASH_NONE:
 		snprintf(buff, 1024, _("Flash mode: off\n")); break;
-	default: 
-		snprintf(buff, 1024, _("Unknown flash mode %d, "), 
+	default:
+		snprintf(buff, 1024, _("Unknown flash mode %d, "),
 			 status.flash); break;
 	};
         strcat(summary_string,buff);
@@ -625,22 +625,22 @@ static int camera_summary (Camera *camera, CameraText *summary,
 		snprintf(buff,1024, _("Card name: %s\nFree space on card: %d kB\n"),
 			 status.album_name,
 			 status.card_status.space);
-	
+
         strcat(summary_string,buff);
 
     }
     else{
 	    DC210_DEBUG("Couldn't get summary for camera\n");
     };
-    
+
     strcpy(summary->text, summary_string);
-    
+
     return (GP_OK);
 }
 
 
 static int camera_manual (Camera *camera, CameraText *manual,
-			  GPContext *context) 
+			  GPContext *context)
 {
 	strcpy (manual->text, _("This library has been tested with a Kodak DC 215 Zoom camera. "
 				"It might work also with DC 200 and DC 210 cameras. "
@@ -651,9 +651,9 @@ static int camera_manual (Camera *camera, CameraText *manual,
 	return (GP_OK);
 }
 
-static int camera_about (Camera *camera, CameraText *about, GPContext *context) 
+static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy(about->text, 
+	strcpy(about->text,
 		_("Camera Library for the Kodak DC215 Zoom camera.\n"
 		  "Michael Koltan <koltan@gmx.de>\n"));
 

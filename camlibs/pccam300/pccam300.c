@@ -52,7 +52,7 @@
 #endif
 
 /*
- * waits until the status value is 0 or 8. 
+ * waits until the status value is 0 or 8.
  * if status == 0xb0 or 0x40 we will wait some more
  */
 static int
@@ -161,7 +161,7 @@ pccam300_get_file (GPPort *port, GPContext *context, int index,
 	 * download of the file. */
 	CHECK (pccam300_get_filesize (port, index, &data_size));
 	CHECK (pccam300_get_filesize (port, index, &data_size));
-	
+
 	/* The jpeg header we will download after the data itself is 623
 	 * bytes long. The first 0x200 bytes of the data appear to be
 	 * garbage, they are overwritten by the header. */

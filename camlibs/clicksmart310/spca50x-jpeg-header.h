@@ -1,19 +1,19 @@
-/* spca50x-jpeg-header.h 
+/* spca50x-jpeg-header.h
  *
  * part of libgphoto2/camlibs/clicksmart310
  *
- * This file is essentially identical to the file of the same name, 
- * found in libgphoto2/camlibs/spca50x. 
+ * This file is essentially identical to the file of the same name,
+ * found in libgphoto2/camlibs/spca50x.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -35,7 +35,7 @@
 #define SPCA50X_JPG_DEFAULT_HEADER_PART3_LENGTH 33
 #define SPCA50X_JPG_DEFAULT_HEADER_LENGTH	589
 
-static unsigned 
+static unsigned
 char SPCA50xJPGDefaultHeaderPart1[SPCA50X_JPG_DEFAULT_HEADER_PART1_LENGTH] = {
 	/* SOI(Start of Image) */
 	0xFF,0xD8,
@@ -53,7 +53,7 @@ char SPCA50xJPGDefaultHeaderPart1[SPCA50X_JPG_DEFAULT_HEADER_PART1_LENGTH] = {
 	0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,
 	0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22,0x22
 };
-static unsigned 
+static unsigned
 char SPCA50xJPGDefaultHeaderPart2[SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH] = {
 	/* DHT(Define Huffman Table) */
 	0xFF,0xC4,
@@ -89,7 +89,7 @@ char SPCA50xJPGDefaultHeaderPart2[SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH] = {
  *  5 - 6 : Image Height(H Byte,L Byte)
  *  7 - 8 : Image Width(H Byte,L Byte)
  */
-static unsigned 
+static unsigned
 char  SPCA50xJPGDefaultHeaderPart3[SPCA50X_JPG_DEFAULT_HEADER_PART3_LENGTH] = {
 	/* SOFn(Start of Frame) */
 	0xFF,0xC0,

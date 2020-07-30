@@ -10,10 +10,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -35,30 +35,30 @@
 
 
 #include "sonix.h"
-#define GP_MODULE "sonix" 
+#define GP_MODULE "sonix"
 
 
 /* Three often-used generic commands */
 
 /* This reads a one-byte "status" response */
 static int
-SONIX_READ (GPPort *port, char *data) 
+SONIX_READ (GPPort *port, char *data)
 {
 	return gp_port_usb_msg_interface_read(port, 0, 1, 0, data, 1);
 }
 
 /* This reads a 4-byte response to a command */
 static int
-SONIX_READ4 (GPPort *port, char *data) 
+SONIX_READ4 (GPPort *port, char *data)
 {
 	return gp_port_usb_msg_interface_read(port, 0, 4, 0, data, 4);
 }
 
 /* A command to the camera is a 6-byte string, and this sends it. */
 static int
-SONIX_COMMAND (GPPort *port, char *command) 
+SONIX_COMMAND (GPPort *port, char *command)
 {
-	return gp_port_usb_msg_interface_write(port, 8, 2, 0, command ,6);	
+	return gp_port_usb_msg_interface_write(port, 8, 2, 0, command ,6);
 }
 
 
@@ -76,14 +76,14 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 
 	SONIX_READ(port, &status);
 
-	if (status == 0x02) goto skip_a_step; 
+	if (status == 0x02) goto skip_a_step;
 	/* If status is 2 we can skip several steps. Otherwise, status
-	 * needs to be reset to 0 and massaged until it is 2. 
+	 * needs to be reset to 0 and massaged until it is 2.
 	*/
-	
+
 	if ((unsigned)status) {
 		i = 0;
-		
+
 		while ((unsigned)status > 0)  {
 			if (SONIX_READ(port, &status) < GP_OK)
 				break;
@@ -91,7 +91,7 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 			if (i==1000) break;
 		}
 	}
-		
+
 	SONIX_COMMAND ( port, c);
 
 
@@ -99,12 +99,12 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 		if (SONIX_READ(port, &status) < GP_OK)
 			break;
 	}
-		
+
 	/* FIXME(Marcus): was indented at above level, unclear if it is needed this way ... */
 	SONIX_READ(port, &status);
 
 	skip_a_step:
-	
+
 	/*
 	 * We are supposed to get c[0]=0x8c here; in general the reply
 	 * string ought to start with the command byte c[0], plus 0x80
@@ -116,19 +116,19 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	memset (c, 0, 6);
 
 	while (!reading[1]&&!reading[2]&&!reading[3]) {
-		c[0]=0x16; 
+		c[0]=0x16;
 		if (SONIX_COMMAND ( port, c ) < GP_OK)
 			break;
 		/*
 		 * For the Vivicam 3350b this always gives
-		 * 96 0a 76 07. This is apparently the firmware version. 
-		 * The webcam-osx comments that the 0x0a gives the sensor 
-		 * type, which is OV7630. For the Sakar Digital Keychain 
-		 * 11199 the string is 96 03 31 08, instead. For the 
-		 * Mini-Shotz ms350 it is 96 08 26 09. For the Genius 
+		 * 96 0a 76 07. This is apparently the firmware version.
+		 * The webcam-osx comments that the 0x0a gives the sensor
+		 * type, which is OV7630. For the Sakar Digital Keychain
+		 * 11199 the string is 96 03 31 08, instead. For the
+		 * Mini-Shotz ms350 it is 96 08 26 09. For the Genius
 		 * Smart 300 it is 96 00 67 09 and for the Digital
 		 * Spy Camera 70137 it is 96 01 31 09.  Since the cameras
-		 * have different abilities, we ought to distinguish. 
+		 * have different abilities, we ought to distinguish.
 		 */
 		if (SONIX_READ4 (port, (char *)reading) < GP_OK)
 			break;
@@ -179,21 +179,21 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	}
 
 	/*
-	 * This sequence gives the photos in the camera and sets a flag 
-	 * in reading[3] if the camera is full. Alas, clip frames are 
-	 * not counted; the AVI constructor will need to count them 
+	 * This sequence gives the photos in the camera and sets a flag
+	 * in reading[3] if the camera is full. Alas, clip frames are
+	 * not counted; the AVI constructor will need to count them
 	 */
 	memset (c,0,6);
 	c[0]=0x18;
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
-	SONIX_READ4 (port, (char *)reading);		
+	SONIX_READ4 (port, (char *)reading);
 	if (reading[0] != 0x98)
-		return GP_ERROR_CAMERA_ERROR;	
+		return GP_ERROR_CAMERA_ERROR;
 	GP_DEBUG ("number of photos is %d\n", reading[1]+ 256*reading[2]);
-	/* 
-	 * If reading[3] = 0x01, it means the camera is full of data. 
+	/*
+	 * If reading[3] = 0x01, it means the camera is full of data.
 	 * The capture_image() function must then be disabled.
 	 */
 	if (!(reading[3])) priv->full = 0;
@@ -220,8 +220,8 @@ int sonix_init (GPPort *port, CameraPrivateLibrary *priv)
 	return GP_OK;
 }
 
-int 
-sonix_read_data_size (GPPort *port, int n) 
+int
+sonix_read_data_size (GPPort *port, int n)
 {
 	char status;
 	unsigned char c[6];
@@ -239,14 +239,14 @@ sonix_read_data_size (GPPort *port, int n)
 	return (reading[1] + reading[2]*0x100 + reading[3] *0x10000);
 }
 
-int 
-sonix_delete_all_pics      (GPPort *port) 
+int
+sonix_delete_all_pics      (GPPort *port)
 {
 	char status;
 	char c[6];
 	unsigned char reading[4];
 	memset (c,0,6);
-	c[0]=0x05; 
+	c[0]=0x05;
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
@@ -256,8 +256,8 @@ sonix_delete_all_pics      (GPPort *port)
 	return GP_OK;
 }
 
-int 
-sonix_delete_last      (GPPort *port) 
+int
+sonix_delete_last      (GPPort *port)
 {
 	char status;
 	char c[6];
@@ -273,7 +273,7 @@ sonix_delete_last      (GPPort *port)
 	return GP_OK;
 	}
 
-int 
+int
 sonix_capture_image      (GPPort *port)
 {
 	char status;
@@ -281,7 +281,7 @@ sonix_capture_image      (GPPort *port)
 	unsigned char reading[4];
 	GP_DEBUG("Running sonix_capture_image\n");
 	memset (c,0,6);
-	c[0]=0x0e; 
+	c[0]=0x0e;
 	SONIX_READ(port, &status);
 	SONIX_COMMAND ( port, c );
 	SONIX_READ(port, &status);
@@ -291,8 +291,8 @@ sonix_capture_image      (GPPort *port)
 	return GP_OK;
 }
 
-int 
-sonix_exit      (GPPort *port) 
+int
+sonix_exit      (GPPort *port)
 {
 	char status;
 	char c[6];
@@ -305,7 +305,7 @@ sonix_exit      (GPPort *port)
 	return GP_OK;
 }
 
-/* 
+/*
  * The decoding algorithm originates with Bertrik Sikken. This version adapted
  * from the webcam-osx (macam) project. See README for details.
  */
@@ -324,19 +324,19 @@ sonix_exit      (GPPort *port)
 }
 
 /*
- * PEEK_BITS puts the next <num> bits into the low bits of <to>. 
- * when the buffer is empty, it is completely refilled. 
- * This strategy tries to reduce memory access. Note that the high bits 
+ * PEEK_BITS puts the next <num> bits into the low bits of <to>.
+ * when the buffer is empty, it is completely refilled.
+ * This strategy tries to reduce memory access. Note that the high bits
  * are NOT set to zero!
  */
 
 #define EAT_BITS(num) { bitBufCount-=num; }
 
 /*
- * EAT_BITS consumes <num> bits (PEEK_BITS does not consume anything, 
+ * EAT_BITS consumes <num> bits (PEEK_BITS does not consume anything,
  * it just peeks)
  */
-  
+
 #define PARSE_PIXEL(val) {\
 	PEEK_BITS(10,bits);\
 	if ((bits&0x200)==0) { \
@@ -388,13 +388,13 @@ sonix_exit      (GPPort *port)
 /* Now the decode function itself */
 
 
-int 
-sonix_decode(unsigned char * dst, unsigned char * src, int width, int height) 
+int
+sonix_decode(unsigned char * dst, unsigned char * src, int width, int height)
 {
 	long dst_index = 0;
 	int starting_row = 0;
 	unsigned short bits;
-	short c1val, c2val; 
+	short c1val, c2val;
 	int x, y;
 	unsigned long bitBuf = 0;
 	unsigned long bitBufCount = 0;
@@ -416,7 +416,7 @@ sonix_decode(unsigned char * dst, unsigned char * src, int width, int height)
 	return GP_OK;
 }
 
-int sonix_byte_reverse (unsigned char *imagedata, int datasize) 
+int sonix_byte_reverse (unsigned char *imagedata, int datasize)
 {
 	int i;
 	unsigned char temp;
@@ -428,28 +428,28 @@ int sonix_byte_reverse (unsigned char *imagedata, int datasize)
 	return GP_OK;
 }
 
-int sonix_rows_reverse (unsigned char *imagedata, int width, int height) 
+int sonix_rows_reverse (unsigned char *imagedata, int width, int height)
 {
 	int col, row;
 	unsigned char temp;
 	for (col = 0; col < width; col++)
 		for (row=0; row< height /2 ; row++) {
 			temp = imagedata[row*width+col];
-			imagedata[row*width+col] = 
+			imagedata[row*width+col] =
 			imagedata[(height-row-1)*width +col];
-			imagedata[(height-row-1)*width + col] = temp; 
+			imagedata[(height-row-1)*width + col] = temp;
 	}
 	return GP_OK;
 }
 
-int sonix_cols_reverse (unsigned char *imagedata, int width, int height) 
+int sonix_cols_reverse (unsigned char *imagedata, int width, int height)
 {
 	int col, row;
 	unsigned char temp;
 	for (row=0; row < height ; row++) {
 		for (col =0; col< width/2 ; col++) {
 			temp = imagedata[row*width + col];
-			imagedata[row*width + col] = 
+			imagedata[row*width + col] =
 			    imagedata[row*width + width - 1 - col];
 			imagedata[row*width + width - 1 - col] = temp;
 		}
@@ -474,15 +474,15 @@ int sonix_cols_reverse (unsigned char *imagedata, int width, int height)
  */
 
 static int
-histogram (unsigned char *data, unsigned int size, int *htable_r, 
+histogram (unsigned char *data, unsigned int size, int *htable_r,
 						int *htable_g, int *htable_b)
 {
 	int x;
 	/* Initializations */
-	for (x = 0; x < 256; x++) { 
-		htable_r[x] = 0; 
-		htable_g[x] = 0; 
-		htable_b[x] = 0; 
+	for (x = 0; x < 256; x++) {
+		htable_r[x] = 0;
+		htable_g[x] = 0;
+		htable_b[x] = 0;
 	}
 	/* Building the histograms */
 	for (x = 0; x < (size * 3); x += 3)
@@ -510,7 +510,7 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 	x = 1;
 	for (r = 64; r < 192; r++)
 	{
-		x += htable_r[r]; 
+		x += htable_r[r];
 		x += htable_g[r];
 		x += htable_b[r];
 	}
@@ -521,7 +521,7 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 		new_gamma = .50;
 		MAX_FACTOR=1.2;
 	}
-	else if (gamma < 0.60) 
+	else if (gamma < 0.60)
 		new_gamma = 0.60;
 	else
 		new_gamma = gamma;
@@ -531,14 +531,14 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 	gp_gamma_correct_single(gtable,data,size);
 
 	/* ---------------- BRIGHT DOTS ------------------- */
-	max = size / 200; 
+	max = size / 200;
 	histogram(data, size, htable_r, htable_g, htable_b);
 
-	for (r=254, x=0; (r > 64) && (x < max); r--)  
-		x += htable_r[r]; 
-	for (g=254, x=0; (g > 64) && (x < max); g--) 
+	for (r=254, x=0; (r > 64) && (x < max); r--)
+		x += htable_r[r];
+	for (g=254, x=0; (g > 64) && (x < max); g--)
 		x += htable_g[g];
-	for (b=254, x=0; (b > 64) && (x < max); b--) 
+	for (b=254, x=0; (b > 64) && (x < max); b--)
 		x += htable_b[b];
 
 	r_factor = (double) 254 / r;
@@ -576,11 +576,11 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 
 	histogram(data, size, htable_r, htable_g, htable_b);
 
-	for (r=0, x=0; (r < 64) && (x < max); r++)  
-		x += htable_r[r]; 
-	for (g=0, x=0; (g < 64) && (x < max); g++) 
+	for (r=0, x=0; (r < 64) && (x < max); r++)
+		x += htable_r[r];
+	for (g=0, x=0; (g < 64) && (x < max); g++)
 		x += htable_g[g];
-	for (b=0, x=0; (b < 64) && (x < max); b++) 
+	for (b=0, x=0; (b < 64) && (x < max); b++)
 		x += htable_b[b];
 
 	r_factor = (double) 254 / (255-r);
@@ -611,15 +611,15 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 		d = (int) (r + 2*g + b) / 4.;
 		if ( r > d )
 			r = r + (int) ((r - d) * (255-r)/(256-d) * saturation);
-		else 
+		else
 			r = r + (int) ((r - d) * (255-d)/(256-r) * saturation);
 		if (g > d)
 			g = g + (int) ((g - d) * (255-g)/(256-d) * saturation);
-		else 
+		else
 			g = g + (int) ((g - d) * (255-d)/(256-g) * saturation);
 		if (b > d)
 			b = b + (int) ((b - d) * (255-b)/(256-d) * saturation);
-		else 
+		else
 			b = b + (int) ((b - d) * (255-d)/(256-b) * saturation);
 
 		if (r < 0) { r = 0; }
@@ -633,6 +633,6 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 		data[x+2] = b;
 	}
 
-	
+
 	return 0;
 }

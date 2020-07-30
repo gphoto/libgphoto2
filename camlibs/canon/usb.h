@@ -102,7 +102,7 @@
  * to select which command to issue to the camera. See the protocol
  * document for details.
  */
- 
+
 typedef enum {
 	CANON_USB_FUNCTION_GET_FILE = 1,
 	CANON_USB_FUNCTION_IDENTIFY_CAMERA,
@@ -203,7 +203,7 @@ typedef enum {
 } canonSubcommandIndex;
 
 
-struct canon_usb_control_cmdstruct 
+struct canon_usb_control_cmdstruct
 {
 	canonSubcommandIndex num;
 	char *description;
@@ -223,7 +223,7 @@ struct canon_usb_control_cmdstruct
 
 
 
-struct canon_usb_cmdstruct 
+struct canon_usb_cmdstruct
 {
 	canonCommandIndex num;
 	char *description;
@@ -253,14 +253,14 @@ struct canon_usb_status {
 
 int canon_usb_init (Camera *camera, GPContext *context);
 int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time, GPContext *context);
-int canon_usb_put_file (Camera *camera, CameraFile *file, const char *filename, const char *destname, const char *destpath, 
+int canon_usb_put_file (Camera *camera, CameraFile *file, const char *filename, const char *destname, const char *destpath,
 	        GPContext *context);
 unsigned char *canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *photo_status, GPContext *context );
 unsigned char *canon_usb_dialogue_full (Camera *camera, canonCommandIndex canon_funct,
 				   unsigned int *return_length, const unsigned char *payload, unsigned int payload_length);
 unsigned char *canon_usb_dialogue (Camera *camera, canonCommandIndex canon_funct,
 				   unsigned int *return_length, const unsigned char *payload, unsigned int payload_length);
-int canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned char **data, 
+int canon_usb_long_dialogue (Camera *camera, canonCommandIndex canon_funct, unsigned char **data,
 		unsigned int *data_length, unsigned int max_data_size, const unsigned char *payload,
 		unsigned int payload_length, int display_status, GPContext *context);
 int canon_usb_get_file (Camera *camera, const char *name, unsigned char **data, unsigned int *length, GPContext *context);

@@ -1,7 +1,7 @@
 #ifndef __LIVE_VIEW_H
 #define __LIVE_VIEW_H
 
-// Note: used in modules and platform independent code. 
+// Note: used in modules and platform independent code.
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
 
 /*
@@ -9,12 +9,12 @@ Protocol notes:
 - Unless otherwise specified, all structure values are packed in camera native (little
   endian) byte order
 - Frame buffer and palette data are in native camera formats
-  Some documentation may be found at http://chdk.wikia.com/wiki/Frame_buffers 
+  Some documentation may be found at http://chdk.wikia.com/wiki/Frame_buffers
 - The frame buffer descriptions returned may not be correct depending on the
   camera model and various camera settings (shooting mode, digital zoom, aspect ratio)
   This may result in partial images, garbage in the "valid" area or incorrect position
 - In some cases, the requested data may not be available. If this happens, the framebuffer
-  or palette data offset will be zero. 
+  or palette data offset will be zero.
 - The frame buffer descriptions are returned regardless of whether the data is available
 - New enum values (e.g. aspect ratio, framebuffer type, palette type) may be added in minor
   versions.

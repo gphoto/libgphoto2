@@ -527,7 +527,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		}
 	}
 
-	gp_file_set_mime_type (file, GP_MIME_JPEG); 
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
 	GP_DEBUG ("Camera Get File Done");
 	return (GP_OK);
 }

@@ -120,7 +120,7 @@ static void rgb_filter (int    width,	/* I - Width of line in pixels */
 
 /** 'sharpen()' - Sharpen an image using a convolution filter. **/
 void  sharpen(int width, int height,
-	unsigned char *src_region, unsigned char *dest_region, 
+	unsigned char *src_region, unsigned char *dest_region,
 	int sharpen_percent
 ) {
     unsigned char   *src_rows[4],	/* Source pixel rows */
@@ -157,7 +157,7 @@ void  sharpen(int width, int height,
 
     row   = 1;
     count = 1;
-  
+
     /** Sharpen...  **/
 
     for (y = 0; y < height; y ++)
@@ -205,7 +205,7 @@ void  sharpen(int width, int height,
 		memcpy((dest_region + pitch*(y)), src_rows[(height-1)&3], pitch);
 	}
     } /* for */
-    
+
     /** OK, we're done.  Free all memory used...  **/
     for (row = 0; row < 4; row ++)
     {

@@ -11,10 +11,10 @@
  * version 2 of the License, or (at your option) any later version.
  *
  * \par
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * \par
  * You should have received a copy of the GNU Lesser General Public
@@ -32,13 +32,13 @@
  *
  * We implement the camlib API functions last in this file because
  * camera_init() must reference all the object member functions and by
- * making camera_init() the last function in this file, we can avoid 
+ * making camera_init() the last function in this file, we can avoid
  * the need for forward declarations of the object member functions.
  *
  * \section linknote Note about "static" functions and exporting symbols
  *
  * The build system uses libtool to explicitly specify the list of
- * exported symbols. Only the three functions of the camlib API 
+ * exported symbols. Only the three functions of the camlib API
  * (camera_init(), camera_id(), and camera_abilities()) are exported.
  *
  * Therefore it doesn't matter whether you declare your other
@@ -100,7 +100,7 @@
  */
 int camera_exit (Camera *camera, GPContext *context);
 int
-camera_exit (Camera *camera, GPContext *context) 
+camera_exit (Camera *camera, GPContext *context)
 {
 	return GP_OK;
 }
@@ -113,7 +113,7 @@ camera_exit (Camera *camera, GPContext *context)
  */
 int camera_config_get (Camera *camera, CameraWidget **window, GPContext *context);
 int
-camera_config_get (Camera *camera, CameraWidget **window, GPContext *context) 
+camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 {
 	gp_widget_new (GP_WIDGET_WINDOW, "Camera Configuration", window);
 
@@ -132,7 +132,7 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
  */
 int camera_config_set (Camera *camera, CameraWidget *window, GPContext *context);
 int
-camera_config_set (Camera *camera, CameraWidget *window, GPContext *context) 
+camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	/*
 	 * Check if the widgets' values have changed. If yes, tell the camera.
@@ -145,7 +145,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 /**
  * Capture a preview and return the data in the given file (again,
  * use gp_file_set_data_and_size, gp_file_set_mime_type, etc.).
- * libgphoto2 assumes that previews are NOT stored on the camera's 
+ * libgphoto2 assumes that previews are NOT stored on the camera's
  * disk. If your camera does, please delete it from the camera.
  *
  * This function is a method of the Camera object.
@@ -176,7 +176,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 
 
 /**
- * Fill out the summary with textual information about the current 
+ * Fill out the summary with textual information about the current
  * state of the camera (like pictures taken, etc.).
  *
  * This function is a method of the Camera object.
@@ -192,7 +192,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 /**
  * Return the camera drivers manual.
- * If you would like to tell the user some information about how 
+ * If you would like to tell the user some information about how
  * to use the camera or the driver, this is the place to do.
  *
  * This function is a method of the Camera object.
@@ -329,7 +329,7 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 
 /**
  * Get the file info here and write it to space provided by caller.
- * 
+ *
  * \param info Space provided by caller in which file info is written.
  *
  * This function is a CameraFilesystem method.
@@ -420,7 +420,7 @@ int
 storage_info_func (CameraFilesystem *fs,
 		CameraStorageInformation **storageinformations,
 		int *nrofstorageinformations, void *data,
-		GPContext *context) 
+		GPContext *context)
 {
 	/*Camera *camera = data;*/
 
@@ -450,7 +450,7 @@ storage_info_func (CameraFilesystem *fs,
  * This is a camlib API function.
  */
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "REPLACE WITH UNIQUE LIBRARY ID");
 
@@ -473,7 +473,7 @@ camera_id (CameraText *id)
  * This is a camlib API function.
  */
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -482,9 +482,9 @@ camera_abilities (CameraAbilitiesList *list)
 	a.status = GP_DRIVER_STATUS_PRODUCTION;
 	a.port     = GP_PORT_SERIAL | GP_PORT_USB;
 	a.speed[0] = 0;
-	a.operations        = 	GP_OPERATION_CAPTURE_PREVIEW | 
+	a.operations        = 	GP_OPERATION_CAPTURE_PREVIEW |
 				GP_CAPTURE_IMAGE;
-	a.file_operations   = 	GP_FILE_OPERATION_DELETE | 
+	a.file_operations   = 	GP_FILE_OPERATION_DELETE |
 				GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
@@ -523,7 +523,7 @@ CameraFilesystemFuncs fsfuncs = {
  * This is a camlib API function.
  */
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
         /* First, set up all the function pointers */
         camera->functions->exit                 = camera_exit;
@@ -543,9 +543,9 @@ camera_init (Camera *camera, GPContext *context)
 	 * already open). You just have to use functions like
 	 * gp_port_timeout_set, gp_port_settings_get, gp_port_settings_set.
 	 */
-	
+
 	/*
-	 * Once you have configured the port, you should check if a 
+	 * Once you have configured the port, you should check if a
 	 * connection to the camera can be established.
 	 */
 

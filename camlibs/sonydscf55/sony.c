@@ -478,7 +478,7 @@ sony_baud_set(Camera * camera, long baud)
 	if (camera->pl->current_baud_rate != baud) {
 		/* FIXME */
 		SetTransferRate[3] = sony_baud_to_id(baud);
-	
+
 		rc = sony_converse(camera, &dp, SetTransferRate, 4);
 		if (rc == GP_OK) {
 			sony_baud_port_set(camera, baud);
@@ -700,7 +700,7 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 	int sc;			/* count of bytes to skip at start of packet */
 	Packet dp;
 	int rc;
-	char buffer[128];                                                 
+	char buffer[128];
 
 	GP_DEBUG( "sony_file_get()");
 
@@ -708,7 +708,7 @@ sony_file_get(Camera * camera, int imageid, int file_type,
 	if (rc != GP_OK) {
 		return rc;
 	}
-	
+
 	if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 		return GP_ERROR_CANCEL;
 	}
@@ -862,7 +862,7 @@ sony_image_info(Camera * camera, int imageid, SonyFileType file_type,
 	if (rc != GP_OK) {
 		return rc;
 	}
-	
+
 	if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 		return GP_ERROR_CANCEL;
 	}

@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * File: util.c 
+ * File: util.c
  *
  * Utility functions for the gphoto2 camlibs/canon driver.
  *

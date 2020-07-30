@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -42,11 +42,11 @@
 #  define N_(String) (String)
 #endif
 
-/* channel header: 
+/* channel header:
  *
  * channel  host/client  length       data     checksum padding
  * 01 01    00 00        07 00 00 00  <7 byte> <1 byte> <fill to next 4>
- * 
+ *
  */
 
 static int
@@ -57,7 +57,7 @@ g3_channel_read(GPPort *port, int *channel, char **buffer, unsigned int *len)
 	int ret;
 
 	ret = gp_port_read(port, (char *)xbuf, 0x800);
-	if (ret < GP_OK) { 
+	if (ret < GP_OK) {
 		gp_log(GP_LOG_ERROR, "g3", "read error in g3_channel_read\n");
 		return ret;
 	}
@@ -70,7 +70,7 @@ g3_channel_read(GPPort *port, int *channel, char **buffer, unsigned int *len)
 	*channel = xbuf[1];
 	*len = xbuf[4] + (xbuf[5]<<8) + (xbuf[6]<<16) + (xbuf[7]<<24);
 	if (*len >= 0xffffffff-0x800-1) return GP_ERROR_CORRUPTED_DATA;
-	/* Safety buffer of 0x800 ... we can only read in 0x800 chunks, 
+	/* Safety buffer of 0x800 ... we can only read in 0x800 chunks,
 	 * otherwise the communication gets hickups. However *len might be
 	 * less.
 	 */
@@ -171,7 +171,7 @@ g3_channel_write(GPPort *port, int channel, char *buffer, int len)
 
 	while (len > 0) {
 		int sendlen = len;
-		
+
 		if (sendlen>65536) sendlen = 65536;
 		nlen = (4 + 4 + sendlen + 1 +  3) & ~3;
 		xbuf = calloc(nlen,1);
@@ -223,14 +223,14 @@ g3_ftp_command_and_reply(GPPort *port, char *cmd, char **reply) {
 }
 
 int
-camera_id (CameraText *id) 
+camera_id (CameraText *id)
 {
 	strcpy(id->text, "ricoh_g3");
 	return (GP_OK);
 }
 
 int
-camera_abilities (CameraAbilitiesList *list) 
+camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -744,7 +744,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 		if (!strcmp("/EXT0",buf))
 			gp_list_append (list, "EXT0", NULL);
-		
+
 		/* always add internal memory */
 		gp_list_append (list, "IROM", NULL);
 		return GP_OK;
@@ -777,7 +777,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	} else {
 		if (buf[0] == '4')
 			ret = GP_OK;
-		else	
+		else
 			ret = GP_ERROR_IO;
 	}
 out:
@@ -870,13 +870,13 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 					3653);
 
 				ret = gp_filesystem_set_info_noop(fs, folder, xfn, info, context);
- 
+
 			}
 		}
 	} else {
 		if (buf[0] == '4') /* 450 Open Error ... like dir not there */
 			ret = GP_OK;
-		else		
+		else
 			ret = GP_ERROR_IO;
 	}
 out:
@@ -896,7 +896,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 int
-camera_init (Camera *camera, GPContext *context) 
+camera_init (Camera *camera, GPContext *context)
 {
 	/*char *buf;*/
 	GPPortSettings settings;
@@ -918,13 +918,13 @@ camera_init (Camera *camera, GPContext *context)
 	 * already open). You just have to use functions like
 	 * gp_port_timeout_set, gp_port_settings_get, gp_port_settings_set.
 	 */
-	
+
 	/*
-	 * Once you have configured the port, you should check if a 
+	 * Once you have configured the port, you should check if a
 	 * connection to the camera can be established.
 	 */
 
-	/* testing code ... 
+	/* testing code ...
 	buf = NULL;
 	g3_ftp_command_and_reply(camera->port, "-PWOF STDBY", &buf);
 	*/

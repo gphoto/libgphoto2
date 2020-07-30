@@ -371,7 +371,7 @@
    *   that time it will not respond. Thus GUI programs work fine.
    * - Seems also to be used with Galaxy Nexus debug mode and on
    *   US markets for some weird reason.
-   * - has a weird USB bug if it reads exactly 512byte (usb 2 packetsize) 
+   * - has a weird USB bug if it reads exactly 512byte (usb 2 packetsize)
    *   the device will hang. this is one of the reasons we need to disable
    *   DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST as it can hit this size :/
    *
@@ -865,7 +865,7 @@
   { "iRiver", 0x4102, "AK380", 0x1195,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
-  /* https://sourceforge.net/p/libmtp/bugs/1634/ 
+  /* https://sourceforge.net/p/libmtp/bugs/1634/
    * copying flags from above */
   { "iRiver", 0x4102, "AK70", 0x1200,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |

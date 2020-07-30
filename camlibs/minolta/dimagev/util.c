@@ -89,7 +89,7 @@ unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 		rgb_current[2] = (unsigned char) ( magic_b > 255 ? 0 : magic_b );
 		magic_r = ( ( ycrcb_current[3] > (unsigned char) 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 * Y_COEFF ) ) + ycrcb_current[0];
 		rgb_current[0] = (unsigned char) ( magic_r > 255 ? 0 : magic_r );
-		magic_g = (( ycrcb_current[0] - ( CR_COEFF * rgb_current[2] ) ) - ( Y_COEFF * rgb_current[0])) / CB_COEFF ; 
+		magic_g = (( ycrcb_current[0] - ( CR_COEFF * rgb_current[2] ) ) - ( Y_COEFF * rgb_current[0])) / CB_COEFF ;
 		rgb_current[1] = (unsigned char) ( magic_g > 255 ? 0 : magic_g );
 
 		/* Wipe everything clean. */
@@ -99,7 +99,7 @@ unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 		rgb_current[5] = (unsigned char) ( magic_b > 255 ? 0 : magic_b );
 		magic_r = ( ( ycrcb_current[3] > (unsigned char) 128 ? 128 : ycrcb_current[3] ) - 128 ) * ( 2 - ( 2 * Y_COEFF ) ) + ycrcb_current[1];
 		rgb_current[3] = (unsigned char) ( magic_r > 255 ? 0 : magic_r );
-		magic_g = (( ycrcb_current[1] - ( CR_COEFF * rgb_current[5] ) ) - ( Y_COEFF * rgb_current[3])) / CB_COEFF ; 
+		magic_g = (( ycrcb_current[1] - ( CR_COEFF * rgb_current[5] ) ) - ( Y_COEFF * rgb_current[3])) / CB_COEFF ;
 		rgb_current[4] = (unsigned char) ( magic_g > 255 ? 0 : magic_g );
 
 		/* Wipe everything clean. */

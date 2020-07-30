@@ -459,7 +459,7 @@ camera_init(Camera *camera, GPContext *context)
 	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs(camera->fs, &fsfuncs, camera);
 	camera->pl = malloc(sizeof (CameraPrivateLibrary));
-	if (!camera->pl) 
+	if (!camera->pl)
 		return GP_ERROR_NO_MEMORY;
 	camera->pl->catalog = NULL;
 	camera->pl->nb_entries = 0;

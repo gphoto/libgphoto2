@@ -1,13 +1,13 @@
 /*
    dimeratab.h -- Color conversion values for the Dimera 3500
-   
+
    These tables were deduced by analyzing the output of the Windows Dimera
    driver.  Many of the values are probably wrong, but this produces a
    decent image.  My analysis was done using several outdoor pictures in
    sunlight.  In other lighting conditions, your mileage may vary.
-   
+
    Comments or suggestions?  Email me.
-   
+
     -- Chuck Homic <chuck@vvisions.com>
 
    $Id$

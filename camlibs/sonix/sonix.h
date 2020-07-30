@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -48,12 +48,12 @@ int sonix_delete_all_pics      	(GPPort *port);
 int sonix_delete_last      	(GPPort *port);
 int sonix_capture_image      	(GPPort *port);
 int sonix_exit		      	(GPPort *port);
-int sonix_decode		(unsigned char * dst, unsigned char * src, 
+int sonix_decode		(unsigned char * dst, unsigned char * src,
 				    int width, int height);
 int sonix_byte_reverse (unsigned char *imagedata, int datasize);
 int sonix_rows_reverse (unsigned char *imagedata, int width, int height);
 int sonix_cols_reverse (unsigned char *imagedata, int width, int height);
 int white_balance (unsigned char *data, unsigned int size, float saturation);
 
-#endif 
+#endif
 

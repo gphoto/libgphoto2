@@ -15,10 +15,10 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
- 
+
 /*
- * gphoto driver for the Mustek MDC800 Digital Camera. The driver 
- * supports rs232 and USB. 
+ * gphoto driver for the Mustek MDC800 Digital Camera. The driver
+ * supports rs232 and USB.
  */
 
 #define _DEFAULT_SOURCE
@@ -67,7 +67,7 @@ static int mdc800_usb_isReady (unsigned char *ch)
 
 
 /*
- * Waits for the camera 
+ * Waits for the camera
  * type: 0:  Wait until the camera gets ready
  *       1:  Read data from irq
  * The function stores the readen 8 Bytes in data.
@@ -134,7 +134,7 @@ int mdc800_usb_sendCommand(GPPort*port,unsigned char*command,unsigned char*buffe
 	GPPortSettings settings;
 	int ret;
 
-	printf ("(mdc800_usb_sendCommand) id:%i (%i,%i,%i,%i,%i,%i),answer:%i\n",command[1],command[2],command[3],command[4],command[5],command[6],command[7],length);		
+	printf ("(mdc800_usb_sendCommand) id:%i (%i,%i,%i,%i,%i,%i),answer:%i\n",command[1],command[2],command[3],command[4],command[5],command[6],command[7],length);
 	/* Send the Command */
 	gp_port_set_timeout(port,MDC800_DEFAULT_TIMEOUT);
 
@@ -146,7 +146,7 @@ int mdc800_usb_sendCommand(GPPort*port,unsigned char*command,unsigned char*buffe
 	if (ret != GP_OK) {
 	    fprintf(stderr,"Camera did not get ready before mdc800_usb_sendCommand!\n");
 	}
-	
+
 	if ((ret=gp_port_write(port,(char*)command,8)) != 8)
 	{
 		printCError ("(mdc800_usb_sendCommand) sending Command fails (%d)!\n",ret);

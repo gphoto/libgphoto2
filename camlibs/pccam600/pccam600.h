@@ -1,5 +1,5 @@
 /* pccam600.h
- *  
+ *
  *  This library is free software; you can redistribute and/or
  *  modify it inder the terms of the GNU Lesser Genreral Public
  *  License as publiced by the Free Software Foundation; either

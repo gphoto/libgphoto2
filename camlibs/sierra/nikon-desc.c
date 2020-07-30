@@ -7,10 +7,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -32,13 +32,13 @@
  */
 
 /*
- * Notes: 
+ * Notes:
  *
  * The variable "value" in a ValueNameType is the first element of
  * the name/value union, and so it is the default value initialized.
  *
  * To init to a range, use:
- *	{ .range = { 100.1, 2000.0, 10 } }, NULL 
+ *	{ .range = { 100.1, 2000.0, 10 } }, NULL
  *
  * Casts are used to avoid warnings about using a const.
  *
@@ -70,7 +70,7 @@
  * Register 1: resolution/size.
  */
 static const ValueNameType cp880_reg_01_val_names[] = {
-	/* 
+	/*
 	 * These values suck. why didn't they make these maskable, or use
 	 * a nibble for each part?  Just use a the combined resolution + size.
 	 * It would be good to try and break these into two selections.
@@ -86,9 +86,9 @@ static const ValueNameType cp880_reg_01_val_names[] = {
 	{ { 0x13 }, "Fine-Full" },
 	{ { 0x23 }, "Hi-Full" },
 };
-static const RegisterDescriptorType cp880_reg_01[] = { 
+static const RegisterDescriptorType cp880_reg_01[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"resolution", N_("Resolution plus Size"),
 		VAL_NAME_INIT (cp880_reg_01_val_names)
 	}
@@ -98,7 +98,7 @@ static const RegisterDescriptorType cp880_reg_01[] = {
  * Register 1: resolution/size.
  */
 static const ValueNameType cp2500_reg_01_val_names[] = {
-	/* 
+	/*
 	 * These values suck. why didn't they make these maskable, or use
 	 * a nibble for each part?  Just use a the combined resolution + size.
 	 * It would be good to try and break these into two selections.
@@ -120,9 +120,9 @@ static const ValueNameType cp2500_reg_01_val_names[] = {
 	{ { 0x0c }, "Fine-UXGA" },
 
 };
-static const RegisterDescriptorType cp2500_reg_01[] = { 
+static const RegisterDescriptorType cp2500_reg_01[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"resolution", N_("Resolution plus Size"),
 		VAL_NAME_INIT (cp2500_reg_01_val_names)
 	}
@@ -132,15 +132,15 @@ static const RegisterDescriptorType cp2500_reg_01[] = {
  * Register 2: Date and time.
  */
 static const ValueNameType cp880_reg_02_val_names[] = {
-	/* 
+	/*
 	 * Dummy value, since we need at least one of these to
 	 * display anything.
 	 */
 	{ { 0x00 }, "Dummy" },
 };
-static const RegisterDescriptorType cp880_reg_02[] = { 
+static const RegisterDescriptorType cp880_reg_02[] = {
 	{
-		GP_WIDGET_DATE, GP_REG_NO_MASK, 
+		GP_WIDGET_DATE, GP_REG_NO_MASK,
 		"date-time", N_("Date and time (GMT)"),
 		VAL_NAME_INIT (cp880_reg_02_val_names)
 	}
@@ -151,20 +151,20 @@ static const RegisterDescriptorType cp880_reg_02[] = {
  * work.
  */
 #ifdef RANGE_FOR_SHUTTER
-static const ValueNameType cp880_reg_03_val_names[] = { 
+static const ValueNameType cp880_reg_03_val_names[] = {
 	{
-		{ .range = { 0, 8000000 } }, NULL 
+		{ .range = { 0, 8000000 } }, NULL
 	}
 };
-static const RegisterDescriptorType cp880_reg_03[] = { 
+static const RegisterDescriptorType cp880_reg_03[] = {
 	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"shutter", N_("Shutter Speed microseconds (0 auto)"),
 		VAL_NAME_INIT (cp880_reg_03_val_names)
 	}
 };
 #endif
-static const ValueNameType cp880_reg_03_val_names[] = { 
+static const ValueNameType cp880_reg_03_val_names[] = {
 	{ {       0 }, N_("Auto") },
 	{ {    1000 }, "1/1000" },
 	{ {    2000 }, "1/500" },
@@ -187,9 +187,9 @@ static const ValueNameType cp880_reg_03_val_names[] = {
 	/* { { -20 }, "bulb?" }, */
 
 };
-static const RegisterDescriptorType cp880_reg_03[] = { 
+static const RegisterDescriptorType cp880_reg_03[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"shutter", N_("Shutter Speed (in seconds)"),
 		VAL_NAME_INIT (cp880_reg_03_val_names)
 	}
@@ -204,9 +204,9 @@ static const ValueNameType cp880_reg_05_val_names[] = {
 	{ { 2 }, N_("Medium") },
 	/* { { 4 }, N_("High") }, not on a cp880 */
 };
-static const RegisterDescriptorType cp880_reg_05[] = { 
+static const RegisterDescriptorType cp880_reg_05[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"aperture", N_("Aperture Settings"),
 		VAL_NAME_INIT (cp880_reg_05_val_names)
 	}
@@ -219,9 +219,9 @@ static const ValueNameType cp880_reg_06_val_names[] = {
 	{ { 1 }, N_("Color") },
 	{ { 2 }, N_("B/W") },
 };
-static const RegisterDescriptorType cp880_reg_06[] = { 
+static const RegisterDescriptorType cp880_reg_06[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"color", N_("Color Mode"),
 		VAL_NAME_INIT (cp880_reg_06_val_names)
 	}
@@ -237,10 +237,10 @@ static const ValueNameType cp880_reg_07_val_names[] = {
 	{ { 3 }, N_("Anti-redeye") },
 	{ { 4 }, N_("Slow-sync") },
 };
-static const RegisterDescriptorType cp880_reg_07[] = { 
+static const RegisterDescriptorType cp880_reg_07[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
-		"flash", N_("Flash Settings"), 
+		"flash", N_("Flash Settings"),
 		VAL_NAME_INIT (cp880_reg_07_val_names)
 	}
 };
@@ -256,7 +256,7 @@ static const ValueNameType cp880_reg_19_val_names[] = {
 	{ { 3 }, N_("Brightness+") },	/* cp880 lighten image */
 	{ { 4 }, N_("Brightness-") },	/* cp880 darken image */
 };
-static const RegisterDescriptorType cp880_reg_19[] = { 
+static const RegisterDescriptorType cp880_reg_19[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"image-adj", N_("Image Adjustment"), /* brightness/contrast */
@@ -269,7 +269,7 @@ static const RegisterDescriptorType cp880_reg_19[] = {
  *
  * Could not determine how the camera does the gradation in settings -
  * such as fine +-1,2,3, and FL1 FL2 FL3. Dumping all registers (1 to 90)
- * shows no changes when going (for example) from fine +3 to -3. 
+ * shows no changes when going (for example) from fine +3 to -3.
  *
  * Setting these via the camera to a +3/2/1 etc, and then changing them
  * via gphoto2 to another value changes the "type" but the value +3/2/1 is
@@ -287,7 +287,7 @@ static const ValueNameType cp880_reg_20_val_names[] = {
 	{ { 0x06 }, N_("Preset") },	/* preset automatically by camera, prob range */
 	{ { 0xff }, N_("Cloudy") }, /* cloudy +3 ... -3 */
 };
-static const RegisterDescriptorType cp880_reg_20[] = { 
+static const RegisterDescriptorType cp880_reg_20[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"whitebalance", N_("White Balance"),
@@ -305,7 +305,7 @@ static const ValueNameType cp880_reg_30_val_names[] = {
 	{ { 0x01 }, N_("On") },
 	{ { 0x02 }, N_("Blink") },
 };
-static const RegisterDescriptorType cp880_reg_30[] = { 
+static const RegisterDescriptorType cp880_reg_30[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"led", N_("LED Mode"),
@@ -325,7 +325,7 @@ static const ValueNameType cp880_reg_33_val_names[] = {
 	{ { 0x02 }, N_("Normal") },
 	{ { 0x03 }, N_("Infinity") },
 };
-static const RegisterDescriptorType cp880_reg_33[] = { 
+static const RegisterDescriptorType cp880_reg_33[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"focus-mode", N_("Focus Mode"),
@@ -335,7 +335,7 @@ static const RegisterDescriptorType cp880_reg_33[] = {
 
 /*
  * Register 34: operation mode. This is only readable, an action with
- * subaction is required to change the mode. 
+ * subaction is required to change the mode.
  *
  * Note that on a cp880, sometimes the play mode ends up with a messed up
  * display or an error message, powering the camera off and on seems to
@@ -352,7 +352,7 @@ static const RegisterDescriptorType cp880_reg_33[] = {
  * secondary action for this. The register 34 values match those needed to
  * change the mode.
  *
- * Using a register get/set method of CAM_DESC_SUBACTION enables the 
+ * Using a register get/set method of CAM_DESC_SUBACTION enables the
  * above kluge.
  */
 static const ValueNameType cp880_reg_34_val_names[] = {
@@ -372,9 +372,9 @@ static const ValueNameType cp880_reg_34_val_names[] = {
 	{ { 0x0c }, "unknown 0x0c" },
 	*/
 };
-static const RegisterDescriptorType cp880_reg_34[] = { 
+static const RegisterDescriptorType cp880_reg_34[] = {
 	{
-		GP_WIDGET_RADIO, GP_REG_NO_MASK, 
+		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"op-mode", N_("Operation Mode"),
 		VAL_NAME_INIT (cp880_reg_34_val_names)
 	}
@@ -386,7 +386,7 @@ static const RegisterDescriptorType cp880_reg_34[] = {
 static const ValueNameType cp880_reg_35_val_names[] = {
 	{ { .range = { 0, 7 } }, NULL },
 };
-static const RegisterDescriptorType cp880_reg_35[] = { 
+static const RegisterDescriptorType cp880_reg_35[] = {
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"lcd-brightness", N_("LCD Brightness"),
@@ -401,7 +401,7 @@ static const RegisterDescriptorType cp880_reg_35[] = {
 static const ValueNameType cp880_reg_38_val_names[] = {
 	{ { .range = { 0, 255 /* XXX? */ } }, NULL },
 };
-static const RegisterDescriptorType cp880_reg_38[] = { 
+static const RegisterDescriptorType cp880_reg_38[] = {
 	{
 		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"lcd-auto-shutoff", N_("LCD Auto Shut Off (seconds)"),
@@ -422,13 +422,13 @@ static const ValueNameType cp880_reg_53_val_names[] = {
 	/* { { 0x06 }, "Italian" },	not on cp880 */
 	/* { { 0x08 }, "Spanish" },	not on cp880 */
 	/* { { 0x0a }, "Dutch" },	not on cp880 */
-	/* { { 0xnn }, "Japanese" }, 
+	/* { { 0xnn }, "Japanese" },
 	 *
 	 * weird, can set to japanese, but can't see any change in any
 	 * registers; reg 53 is 3 wether it is english or japanese.
 	 */
 };
-static const RegisterDescriptorType cp880_reg_53[] = { 
+static const RegisterDescriptorType cp880_reg_53[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
 		"language", N_("Language"),
@@ -453,9 +453,9 @@ static const ValueNameType cp880_reg_69_val_names[] = {
 		{ .range = { -2.0, 2.0, .1 } }, NULL,
 	}
 };
-static const RegisterDescriptorType cp880_reg_69[] = { 
+static const RegisterDescriptorType cp880_reg_69[] = {
 	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"exp", N_("Exposure Compensation"),
 		VAL_NAME_INIT (cp880_reg_69_val_names)
 	}
@@ -476,9 +476,9 @@ static const ValueNameType cp880_reg_69_val_names[] = {
 	{ { +17 }, "+1.7" },
 	{ { +20 }, "+2.0" },
 };
-static const RegisterDescriptorType cp880_reg_69[] = { 
+static const RegisterDescriptorType cp880_reg_69[] = {
 	{
-		GP_WIDGET_MENU, GP_REG_NO_MASK, 
+		GP_WIDGET_MENU, GP_REG_NO_MASK,
 		"exp", N_("Exposure Compensation"),
 		VAL_NAME_INIT (cp880_reg_69_val_names)
 	}
@@ -493,10 +493,10 @@ static const ValueNameType cp880_reg_70_val_names[] = {
 	{ { 0x05 }, N_("Matrix") },
 	{ { 0x06 }, N_("Spot-AF") },
 };
-static const RegisterDescriptorType cp880_reg_70[] = { 
+static const RegisterDescriptorType cp880_reg_70[] = {
 	{
 		GP_WIDGET_RADIO, GP_REG_NO_MASK,
-		"exp-meter", N_("Exposure Metering"), 
+		"exp-meter", N_("Exposure Metering"),
 		VAL_NAME_INIT (cp880_reg_70_val_names)
 	}
 };
@@ -511,9 +511,9 @@ static const ValueNameType cp880_reg_71_val_names[] = {
 		{ .range = { 8.0, 20.0, .1 } }, NULL
 	}
 };
-static const RegisterDescriptorType cp880_reg_71[] = { 
+static const RegisterDescriptorType cp880_reg_71[] = {
 	{
-		GP_WIDGET_RANGE, GP_REG_NO_MASK, 
+		GP_WIDGET_RANGE, GP_REG_NO_MASK,
 		"zoom", N_("Zoom (in millimeters)"),
 		VAL_NAME_INIT (cp880_reg_71_val_names)
 	}
@@ -547,15 +547,15 @@ static const ValueNameType cp880_reg_72_mask_lo_val_names[] = {
 	{ { 0x0002 }, N_("Fisheye") },
 	{ { 0x0004 }, N_("Wide") },
 };
-static const RegisterDescriptorType cp880_reg_72[] = { 
-	{ 
-		GP_WIDGET_RADIO, 0xff00, 
+static const RegisterDescriptorType cp880_reg_72[] = {
+	{
+		GP_WIDGET_RADIO, 0xff00,
 		"dzoom", N_("Digital Zoom"),
 		VAL_NAME_INIT (cp880_reg_72_mask_hi_val_names)
 	},
-	{ 
-		GP_WIDGET_RADIO, 0x00ff, 
-		"misc-exp-lenses", N_("Misc exposure/lens settings"), 
+	{
+		GP_WIDGET_RADIO, 0x00ff,
+		"misc-exp-lenses", N_("Misc exposure/lens settings"),
 		VAL_NAME_INIT (cp880_reg_72_mask_lo_val_names)
 	},
 };
@@ -570,14 +570,14 @@ static const ValueNameType cp880_reg_72_mask_lo_val_names[] = {
 	{ { 0x01 }, N_("on") },
 };
 
-static const RegisterDescriptorType cp880_reg_72[] = { 
-	{ 
-		GP_WIDGET_RADIO, 0x08, 
+static const RegisterDescriptorType cp880_reg_72[] = {
+	{
+		GP_WIDGET_RADIO, 0x08,
 		"dzoom", N_("Digital Zoom"),
 		VAL_NAME_INIT (cp880_reg_72_mask_hi_val_names)
 	},
-	{ 
-		GP_WIDGET_RADIO, 0x01, 
+	{
+		GP_WIDGET_RADIO, 0x01,
 		"ael", N_("Auto exposure lock"),
 		VAL_NAME_INIT (cp880_reg_72_mask_lo_val_names)
 	},
@@ -612,7 +612,7 @@ static CameraRegisterType cp880_pic_regs[] =  {
  */
 static CameraRegisterType cp880_cam_regs[] = {
 	CAM_REG_TYPE_INIT (cp880, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
-	CAM_REG_TYPE_INIT (cp880, 34, 4, CAM_DESC_SUBACTION, 
+	CAM_REG_TYPE_INIT (cp880, 34, 4, CAM_DESC_SUBACTION,
 			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
 	CAM_REG_TYPE_INIT (cp880, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
 	CAM_REG_TYPE_INIT (cp880, 38, 4, CAM_DESC_DEFAULT, 0), /* LCD auto shutoff */
@@ -646,7 +646,7 @@ static CameraRegisterType cp2500_pic_regs[] =  {
  */
 static CameraRegisterType cp2500_cam_regs[] = {
 	CAM_REG_TYPE_INIT (cp880, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
-	CAM_REG_TYPE_INIT (cp880, 34, 4, CAM_DESC_SUBACTION, 
+	CAM_REG_TYPE_INIT (cp880, 34, 4, CAM_DESC_SUBACTION,
 			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
 	CAM_REG_TYPE_INIT (cp880, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
 	CAM_REG_TYPE_INIT (cp880, 53, 4, CAM_DESC_DEFAULT, 0), /* language */
@@ -679,7 +679,7 @@ static CameraRegisterType cp4300_pic_regs[] =  {
  */
 static CameraRegisterType cp4300_cam_regs[] = {
 	CAM_REG_TYPE_INIT (cp880, 02, 4, CAM_DESC_DEFAULT, 0), /* date-time */
-	CAM_REG_TYPE_INIT (cp880, 34, 4, CAM_DESC_SUBACTION, 
+	CAM_REG_TYPE_INIT (cp880, 34, 4, CAM_DESC_SUBACTION,
 			  SIERRA_ACTION_LCD_MODE), /* lcd mode */
 	CAM_REG_TYPE_INIT (cp880, 35, 4, CAM_DESC_DEFAULT, 0), /* LCD brightness */
 	CAM_REG_TYPE_INIT (cp880, 53, 4, CAM_DESC_DEFAULT, 0), /* language */
@@ -687,39 +687,39 @@ static CameraRegisterType cp4300_cam_regs[] = {
 
 
 static const CameraRegisterSetType cp880_desc[] = {
-	{ 
-		N_("Picture Settings"), 
+	{
+		N_("Picture Settings"),
 		SIZE_ADDR (CameraRegisterType, cp880_pic_regs)
 	},
-	{ 
-		N_("Camera Settings"), 
+	{
+		N_("Camera Settings"),
 		SIZE_ADDR (CameraRegisterType, cp880_cam_regs)
 	},
 };
 
 static const CameraRegisterSetType cp2500_desc[] = {
-	{ 
-		N_("Picture Settings"), 
+	{
+		N_("Picture Settings"),
 		SIZE_ADDR (CameraRegisterType, cp2500_pic_regs)
 	},
-	{ 
-		N_("Camera Settings"), 
+	{
+		N_("Camera Settings"),
 		SIZE_ADDR (CameraRegisterType, cp2500_cam_regs)
 	},
 };
 
 static const CameraRegisterSetType cp4300_desc[] = {
-	{ 
-		N_("Picture Settings"), 
+	{
+		N_("Picture Settings"),
 		SIZE_ADDR (CameraRegisterType, cp4300_pic_regs)
 	},
-	{ 
-		N_("Camera Settings"), 
+	{
+		N_("Camera Settings"),
 		SIZE_ADDR (CameraRegisterType, cp4300_cam_regs)
 	},
 };
 
-static const char cp880_manual[] = 
+static const char cp880_manual[] =
 N_(
 "Nikon Coolpix 880:\n"
 "    Camera configuration (or preferences):\n\n"
@@ -738,7 +738,7 @@ N_(
  *  possible to control the camera via the USB port since it reportedly
  *  appears as a USB mass storage device.
  */
-static const char cp995_manual[] = 
+static const char cp995_manual[] =
 N_(
 "Nikon Coolpix 995:\n"
 "    Camera configuration (preferences) for this\n"

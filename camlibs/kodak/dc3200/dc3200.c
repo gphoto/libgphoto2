@@ -65,14 +65,14 @@ This camera only supports one operation \
 at a time. Please wait until the current \
 operation has finished.")
 
-int camera_id (CameraText *id) 
+int camera_id (CameraText *id)
 {
 	strcpy(id->text, "kodak-dc3200");
 
 	return (GP_OK);
 }
 
-int camera_abilities (CameraAbilitiesList *list) 
+int camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
 
@@ -136,7 +136,7 @@ int init(Camera *camera)
 
 	/* setup the camera */
 	if (dc3200_setup(camera) == GP_ERROR)
-		return GP_ERROR;		
+		return GP_ERROR;
 
 	return GP_OK;
 }
@@ -160,7 +160,7 @@ int check_last_use(Camera *camera)
 	time_t t;
 
 	time(&t);
-	
+
 	if(t - camera->pl->last > 9) {
 		/* we have to re-init the camera */
 		printf(_("camera inactive for > 9 seconds, re-initing.\n"));
@@ -205,7 +205,7 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 	{
 		return GP_ERROR;
 	}
-	
+
 	if (data == NULL)
 	{
 		return GP_ERROR;
@@ -222,14 +222,14 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 			i += 20;
 			continue;
 		}
-		
+
 		/* skip directories starting with . */
 		if(ptr_data_buff[0] == '.') {
 			ptr_data_buff += 20;
 			i += 20;
 			continue;
 		}
-		
+
 		/* copy the filename */
 		strncpy(filename, (char *)ptr_data_buff, sizeof(filename));
 
@@ -239,10 +239,10 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 
 		/* in case of long directory */
 		filename[12] = 0;
-		
+
 		/* append dir to the list */
 		gp_list_append(list, filename, NULL);
-		
+
 		ptr_data_buff += 20;
 		i += 20;
 	}
@@ -272,7 +272,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	{
 		return GP_ERROR;
 	}
-	
+
 	/* get file list data */
 	res = dc3200_get_data (camera, &data, &data_len, CMD_LIST_FILES, folder,
 			       NULL);
@@ -280,7 +280,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	{
 		return GP_ERROR;
 	}
-	
+
 	/* check the data length */
 	if(data_len%20 != 0 || data_len < 1)
 	{
@@ -295,7 +295,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	/* add files to the list */
 	ptr_data_buff = data;
 	i = 0;
-	
+
 	while(i < data_len) {
 		/* files don't have 0x10 in their attribute */
 		if(ptr_data_buff[11] & 0x10) {
@@ -303,7 +303,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 			i += 20;
 			continue;
 		}
-		
+
 		/* copy the first 8 bytes of filename */
 		strncpy(filename, (char *)ptr_data_buff, 8);
 		filename[8] = 0;
@@ -311,7 +311,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 		strcat(filename, ".");
 		/* copy extension, last 3 bytes*/
 		strncat(filename, (char *)ptr_data_buff+8, 3);
-		
+
 		if(!strstr(filename, ".JPG") && !strstr(filename, ".jpg")) {
 			ptr_data_buff += 20;
 			i += 20;
@@ -320,7 +320,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 		/* append file to the list */
 		gp_list_append(list, filename, NULL);
-		
+
 		ptr_data_buff += 20;
 		i += 20;
 	}
@@ -331,7 +331,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,
 			  const char *filename, CameraFileType type,
-			  CameraFile *file, void *user_data, 
+			  CameraFile *file, void *user_data,
 			  GPContext *context)
 {
 	Camera		*camera = user_data;
@@ -359,7 +359,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 				       CMD_GET_PREVIEW, folder, filename);
 		break;
 	case GP_FILE_TYPE_NORMAL:
-		res = dc3200_get_data (camera, &data, &data_len, 
+		res = dc3200_get_data (camera, &data, &data_len,
 				       CMD_GET_FILE, folder, filename);
 		break;
 	default:
@@ -411,11 +411,11 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	{
 		return GP_ERROR;
 	}
-	
+
 	strcpy(file, folder);
 	if(folder[strlen(folder)-1] != '\\' || folder[strlen(folder)-1] != '/')
 		strcat(file, "\\");
-	strcat(file, filename);	
+	strcat(file, filename);
 
 	/* get file list data */
 	res = dc3200_get_data (camera, &data, &data_len, CMD_LIST_FILES, file,
@@ -441,7 +441,7 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	info->file.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info->file.size = bytes_to_l(data[19], data[18], data[17], data[16]);
 	strcpy (info->file.type, GP_MIME_JPEG);
-	
+
 	info->preview.fields = GP_FILE_INFO_TYPE;
 	strcpy (info->preview.type, GP_MIME_JPEG);
 
@@ -451,7 +451,7 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 
 static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-	strcpy (manual->text, 
+	strcpy (manual->text,
 		_("Known problems:\n"
 		"\n"
 		"1. If the Kodak DC3200 does not receive a command at least "
@@ -464,7 +464,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 
 static int camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-	strcpy	(about->text, 
+	strcpy	(about->text,
 		_("Kodak DC3200 Driver\n"
 		"Donn Morrison <dmorriso@gulf.uvic.ca>\n"
 		"\n"
@@ -479,7 +479,7 @@ static CameraFilesystemFuncs fsfuncs = {
 	.folder_list_func = folder_list_func
 };
 
-int camera_init (Camera *camera, GPContext *context) 
+int camera_init (Camera *camera, GPContext *context)
 {
 	int ret;
 

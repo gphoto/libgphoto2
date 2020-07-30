@@ -16,7 +16,7 @@ static void errordumper(GPLogLevel level, const char *domain, const char *str,
 	fprintf(stderr, "%s:%s\n", domain, str);
 }
 
-static int 
+static int
 recursive_directory(Camera *camera, const char *folder, GPContext *context, int *foundfile) {
 	int		i, ret;
 	CameraList	*list;

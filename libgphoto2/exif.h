@@ -10,7 +10,7 @@
  */
 
 #ifndef _gphoto_exif_
-#define _gphoto_exif_ 
+#define _gphoto_exif_
 
 /*
  * Not used anymore, use libexif if necessary.

@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -92,7 +92,7 @@ typedef int (* begin_func_t)  (const func_params_t *params,
 			       void **data);
 typedef int (* middle_func_t)  (const func_params_t *params,
 			       void **data);
-typedef int (* camera_func_t) (const func_params_t *params, 
+typedef int (* camera_func_t) (const func_params_t *params,
 			       const int i,
 			       const int total,
 			       const CameraAbilities *ca,
@@ -204,7 +204,7 @@ hotplug_begin_func (const func_params_t *params, void **data)
 
 /* print_usb_usermap
  *
- * Print out lines that can be included into usb.usermap 
+ * Print out lines that can be included into usb.usermap
  * - for all cams supported by our instance of libgphoto2.
  *
  * usb.usermap is a file used by
@@ -212,7 +212,7 @@ hotplug_begin_func (const func_params_t *params, void **data)
  */
 
 static int
-hotplug_camera_func (const func_params_t *params, 
+hotplug_camera_func (const func_params_t *params,
 		     const int i,
 		     const int total,
 		     const CameraAbilities *a,
@@ -220,7 +220,7 @@ hotplug_camera_func (const func_params_t *params,
 {
 	int flags = 0;
 	int class = 0, subclass = 0, proto = 0;
-	const char *usermap_script = 
+	const char *usermap_script =
 		((*params->argv)[0] != NULL)
 		?((*params->argv)[0])
 		:(GP_USB_HOTPLUG_SCRIPT);
@@ -230,7 +230,7 @@ hotplug_camera_func (const func_params_t *params,
 			class = 0;
 			subclass = 0;
 			proto = 0;
-			flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
+			flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID
 				 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
 		} else if ((a->usb_class) && (a->usb_class != 666)) {
 			class = a->usb_class;
@@ -252,7 +252,7 @@ hotplug_camera_func (const func_params_t *params,
 	}
 
 	if (params->add_comments) {
-		printf ("# %s\n", 
+		printf ("# %s\n",
 			a->model);
 	}
 	/* The first 3 lone bytes are the device class.
@@ -264,7 +264,7 @@ hotplug_camera_func (const func_params_t *params,
 		"0x0000      0x00         0x00            "
 		"0x00            0x%02x            0x%02x               "
 		"0x%02x               0x00000000\n",
-		usermap_script, flags, 
+		usermap_script, flags,
 		a->usb_vendor, a->usb_product,
 		class, subclass, proto);
 	return 0;
@@ -317,7 +317,7 @@ path_basename (const char *pathname)
 	char *result, *tmp;
 	/* remove path part from camlib name */
 	for (result=tmp=(char *)pathname; (*tmp!='\0'); tmp++) {
-		if ((*tmp == gp_system_dir_delim) 
+		if ((*tmp == gp_system_dir_delim)
 		    && (*(tmp+1) != '\0')) {
 			result = tmp+1;
 		}
@@ -327,8 +327,8 @@ path_basename (const char *pathname)
 
 
 static int
-human_camera_func (const func_params_t *params, 
-		   const int i, 
+human_camera_func (const func_params_t *params,
+		   const int i,
 		   const int total,
 		   const CameraAbilities *a,
 		   void *data)
@@ -336,7 +336,7 @@ human_camera_func (const func_params_t *params,
 	const char *camlib_basename;
 	camlib_basename = path_basename(a->library);
 	printf("%3d|%-20s|%-20s|%s\n",
-	       i+1, 
+	       i+1,
 	       camlib_basename,
 	       a->id,
 	       a->model);
@@ -345,8 +345,8 @@ human_camera_func (const func_params_t *params,
 
 
 static int
-idlist_camera_func (const func_params_t *params, 
-		    const int i, 
+idlist_camera_func (const func_params_t *params,
+		    const int i,
 		    const int total,
 		    const CameraAbilities *a,
 		    void *data)
@@ -465,7 +465,7 @@ udev_parse_params (const func_params_t *params, void **data)
 	if (1) {
 		int i;
 		char *key = NULL, *val = NULL;
-		for (i=0; ((key=(*params->argv)[i])   != NULL) && 
+		for (i=0; ((key=(*params->argv)[i])   != NULL) &&
 			  ((val=(*params->argv)[i+1]) != NULL); i+=2) {
 			if (0) {
 				/* nothing */
@@ -499,8 +499,8 @@ udev_parse_params (const func_params_t *params, void **data)
 	    && (pdata->version <= UDEV_0_98)) {
 		FATAL("Either <script> or <mode,group,owner> parameters must be given.");
 	}
-	if ((pdata->script != NULL) && (pdata->mode != NULL 
-					|| pdata->group != NULL 
+	if ((pdata->script != NULL) && (pdata->mode != NULL
+					|| pdata->group != NULL
 					|| pdata->owner != NULL)) {
 		FATAL("The <script> parameter conflicts with the <mode,group,owner> parameters.");
 	}
@@ -577,7 +577,7 @@ udev_end_func (const func_params_t *params, void *data)
 
 
 static int
-udev_camera_func (const func_params_t *params, 
+udev_camera_func (const func_params_t *params,
 		  const int i,
 		  const int total,
 		  const CameraAbilities *a,
@@ -598,7 +598,7 @@ udev_camera_func (const func_params_t *params,
 		class = 0;
 		subclass = 0;
 		proto = 0;
-		flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
+		flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID
 			 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
 	} else {
 		if (a->usb_class) {
@@ -684,7 +684,7 @@ udev_camera_func (const func_params_t *params,
 
 
 static int
-udev_camera_func2 (const func_params_t *params, 
+udev_camera_func2 (const func_params_t *params,
 		   const int i,
 		   const int total,
 		   const CameraAbilities *a,
@@ -750,7 +750,7 @@ hwdb_begin_func (const func_params_t *params, void **data)
 
 
 static int
-hwdb_camera_func (const func_params_t *params, 
+hwdb_camera_func (const func_params_t *params,
 		  const int i,
 		  const int total,
 		  const CameraAbilities *a,
@@ -765,7 +765,7 @@ hwdb_camera_func (const func_params_t *params,
 		return 0;
 
 	if (a->usb_vendor) { /* usb product id may be zero! */
-		flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID 
+		flags = (GP_USB_HOTPLUG_MATCH_VENDOR_ID
 			 | GP_USB_HOTPLUG_MATCH_PRODUCT_ID);
 		usb_vendor = a->usb_vendor;
 		usb_product = a->usb_product;
@@ -866,7 +866,7 @@ ddb_list_out_func(const char *str, void *data)
 
 
 static void
-ddb_delayed_head(const func_params_t *params, 
+ddb_delayed_head(const func_params_t *params,
 		 const int i,
 		 const int total,
 		 const CameraAbilities *a,
@@ -894,7 +894,7 @@ ddb_delayed_head(const func_params_t *params,
 
 	printf("    operations");
 	first = 1;
-	gpi_flags_to_string_list(a->operations, 
+	gpi_flags_to_string_list(a->operations,
 				 gpi_camera_operation_map,
 				 ddb_list_out_func,
 				 (void *) &first);
@@ -902,7 +902,7 @@ ddb_delayed_head(const func_params_t *params,
 
 	printf("    file_operations");
 	first = 1;
-	gpi_flags_to_string_list(a->file_operations, 
+	gpi_flags_to_string_list(a->file_operations,
 				 gpi_file_operation_map,
 				 ddb_list_out_func,
 				 (void *) &first);
@@ -910,7 +910,7 @@ ddb_delayed_head(const func_params_t *params,
 
 	printf("    folder_operations");
 	first = 1;
-	gpi_flags_to_string_list(a->folder_operations, 
+	gpi_flags_to_string_list(a->folder_operations,
 				 gpi_folder_operation_map,
 				 ddb_list_out_func,
 				 (void *) &first);
@@ -919,7 +919,7 @@ ddb_delayed_head(const func_params_t *params,
 
 
 static int
-ddb_camera_func (const func_params_t *params, 
+ddb_camera_func (const func_params_t *params,
 		 const int i,
 		 const int total,
 		 const CameraAbilities *a,
@@ -943,7 +943,7 @@ ddb_camera_func (const func_params_t *params,
 		if (a->speed[0] != 0) {
 			unsigned int i;
 			printf("        speeds");
-			for (i=0; 
+			for (i=0;
 			     ((i < (sizeof(a->speed)/sizeof(a->speed[0]))) &&
 			      (a->speed[i] != 0)); i++) {
 				printf("%s %d", (first)?"":",", a->speed[i]);
@@ -955,7 +955,7 @@ ddb_camera_func (const func_params_t *params,
 	}
 
 	if ((a->port & GP_PORT_USB)) {
-		if (a->usb_vendor) { 
+		if (a->usb_vendor) {
 			/* usb product id may have the legal value zero! */
 			DELAYED_HEAD();
 			printf("    interface usb {\n");
@@ -1002,7 +1002,7 @@ ddb_camera_func (const func_params_t *params,
 
 /* print_fdi_map
  *
- * Print FDI Device Information file for HAL with information on 
+ * Print FDI Device Information file for HAL with information on
  * all cams supported by our instance of libgphoto2.
  *
  * For specs, look around on http://freedesktop.org/ and search
@@ -1026,7 +1026,7 @@ fdi_begin_func (const func_params_t *params, void **data)
 
 
 static int
-fdi_camera_func (const func_params_t *params, 
+fdi_camera_func (const func_params_t *params,
 		 const int i,
 		 const int total,
 		 const CameraAbilities *a,
@@ -1072,7 +1072,7 @@ fdi_camera_func (const func_params_t *params,
 				printf("      <addset key=\"info.capabilities\" type=\"strlist\">portable_audio_player</addset>\n");
 				printf("      <merge key=\"portable_audio_player.access_method\" type=\"string\">user</merge>\n");
 				printf("      <merge key=\"portable_audio_player.type\" type=\"string\">mtp</merge>\n");
-				
+
 				/* FIXME: needs true formats ... But all of them can do MP3 */
 				printf("      <append key=\"portable_audio_player.output_formats\" type=\"strlist\">audio/mpeg</append>\n");
 			} else {
@@ -1095,7 +1095,7 @@ fdi_camera_func (const func_params_t *params,
 			}
 			printf("     </match>\n");
 			printf("    </match>\n");
-			
+
 		} else if ((a->usb_class) && (a->usb_class != 666)) {
 			printf("    <match key=\"usb.interface.class\" int=\"%d\">\n", a->usb_class);
 			printf("     <match key=\"usb.interface.subclass\" int=\"%d\">\n", a->usb_subclass);
@@ -1134,7 +1134,7 @@ fdi_end_func (const func_params_t *params, void *data)
 
 /* print_fdi_device_map
  *
- * Print FDI Device Information file for HAL with information on 
+ * Print FDI Device Information file for HAL with information on
  * all cams supported by our instance of libgphoto2.
  *
  * For specs, look around on http://freedesktop.org/ and search
@@ -1158,7 +1158,7 @@ fdi_device_begin_func (const func_params_t *params, void **data)
 
 
 static int
-fdi_device_camera_func (const func_params_t *params, 
+fdi_device_camera_func (const func_params_t *params,
 		 	const int i,
 			const int total,
 		 	const CameraAbilities *a,
@@ -1322,7 +1322,7 @@ escape_html(const char *str) {
 
 static int
 html_camera_func (
-	const func_params_t *params, 
+	const func_params_t *params,
 	const int i,
 	const int total,
 	const CameraAbilities *a,
@@ -1400,7 +1400,7 @@ static int html_middle_func (
 
 static int
 html_camera2_func (
-	const func_params_t *params, 
+	const func_params_t *params,
 	const int i,
 	const int total,
 	const CameraAbilities *a,
@@ -1436,8 +1436,8 @@ debug_func (GPLogLevel level, const char *domain, const char *str,
 {
 	struct timeval tv;
 	gettimeofday (&tv,NULL);
-	fprintf (stderr, "%li.%06li %s(%i): %s\n", 
-		 (long) (tv.tv_sec - glob_tv_zero.tv_sec), 
+	fprintf (stderr, "%li.%06li %s(%i): %s\n",
+		 (long) (tv.tv_sec - glob_tv_zero.tv_sec),
 		 (1000000L + tv.tv_usec - glob_tv_zero.tv_usec) % 1000000L,
 		 domain, level, str);
 }
@@ -1457,8 +1457,8 @@ typedef struct {
 
 
 static int
-iterate_camera_list (const int add_comments, 
-		     const output_format_t *format, 
+iterate_camera_list (const int add_comments,
+		     const output_format_t *format,
 		     string_array_p argv)
 {
 	int number_of_cameras;
@@ -1579,7 +1579,7 @@ static const output_format_t formats[] = {
 	 "        is to use udev-extras for dynamic access permissions.\n"
 	"	  Available versions of the rule generator: 0.98, 136, 175, 201.\n",
 	 "[script <PATH_TO_SCRIPT>|version <version>|mode <mode>|owner <owner>|group <group>]*",
-	 udev_begin_func, 
+	 udev_begin_func,
 	 udev_camera_func,
 	 udev_middle_func,
 	 udev_camera_func2,
@@ -1609,7 +1609,7 @@ static const output_format_t formats[] = {
 	 "list of IDs and names",
 	 "grep for an ID to find the device name",
 	 NULL,
-	 empty_begin_func, 
+	 empty_begin_func,
 	 idlist_camera_func,
 	 NULL,
 	 NULL,
@@ -1640,12 +1640,12 @@ static int print_format_list(const output_format_t *formats)
 	printf("List of output formats:\n");
 	for (i=0; formats[i].name != NULL; ++i) {
 		if (formats[i].paramdescr != NULL) {
-			printf("    %s %s\n        %s\n", 
+			printf("    %s %s\n        %s\n",
 			       formats[i].name,
 			       formats[i].paramdescr,
 			       formats[i].descr);
 		} else {
-			printf("    %s\n        %s\n", 
+			printf("    %s\n        %s\n",
 			       formats[i].name, formats[i].descr);
 		}
 		if (formats[i].help != NULL) {
@@ -1721,14 +1721,14 @@ int main(int argc, char *argv[])
 		}
 		format_index++;
 	}
-	if ((formats[format_index].name == NULL) || 
+	if ((formats[format_index].name == NULL) ||
 	    (strcmp(formats[format_index].name, format_name) != 0)) {
 		return print_help();
 	}
 
 	/* copy remaining arguments */
-	for (j=i; 
-	     (j<argc) && ((j-i)<(int)((sizeof(fmt_argv)/sizeof(fmt_argv[0]))-1)); 
+	for (j=i;
+	     (j<argc) && ((j-i)<(int)((sizeof(fmt_argv)/sizeof(fmt_argv[0]))-1));
 	     j++) {
 		fmt_argv[j-i] = argv[j];
 	}

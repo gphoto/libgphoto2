@@ -31,7 +31,7 @@
 
 #define HP215_OK	0xe0e0
 
-typedef struct 
+typedef struct
 {
   unsigned int hour;
   unsigned int min;

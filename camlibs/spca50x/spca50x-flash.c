@@ -324,7 +324,7 @@ spca500_flash_capture (CameraPrivateLibrary *pl)
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		sleep(3);
 #endif
-		
+
 		/* invalidate TOC/info cache */
 		pl->dirty_flash = 1;
 		return GP_OK;

@@ -9,10 +9,10 @@
  * License as published by the Free Software Foundation; either
  * version 2 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details. 
+ * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the
@@ -41,12 +41,12 @@ int clicksmart_delete_all_pics  (GPPort *port);
 
 int clicksmart_reset      	(GPPort *port);
 
-int create_jpeg_from_data 	(unsigned char * dst, unsigned char * src, 
-					int qIndex, int w, int h, 
-					unsigned char format, 
+int create_jpeg_from_data 	(unsigned char * dst, unsigned char * src,
+					int qIndex, int w, int h,
+					unsigned char format,
 					int o_size, int *size,
-					int omit_huffman_table, 
+					int omit_huffman_table,
 					int omit_escape);
 
 
-#endif 
+#endif
