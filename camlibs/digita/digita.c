@@ -81,7 +81,7 @@ static const struct {
 
 int camera_abilities(CameraAbilitiesList *list)
 {
-	int i;
+	unsigned int i;
 	CameraAbilities a;
 
 	for (i = 0; i < sizeof(models) / sizeof(models[0]); i++) {
