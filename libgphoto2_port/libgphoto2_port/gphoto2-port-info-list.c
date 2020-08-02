@@ -176,7 +176,7 @@ gp_port_info_list_free (GPPortInfoList *list)
 int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 {
-	int generic, i;
+	unsigned int generic, i;
 
 	C_PARAMS (list);
 
@@ -465,13 +465,13 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 
 	GP_LOG_D ("Getting info of entry %i (%i available)...", n, list->count);
 
-	C_PARAMS (n >= 0 && n < list->count);
+	C_PARAMS (n >= 0 && (unsigned int)n < list->count);
 
 	/* Ignore generic entries */
 	for (i = 0; i <= n; i++)
 		if (!strlen (list->info[i]->name)) {
 			n++;
-			C_PARAMS (n < list->count);
+			C_PARAMS ((unsigned int)n < list->count);
 		}
 
 	*info = list->info[n];
