@@ -153,7 +153,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = privdata;
 	int n = -1;
-	int size = -1;
+	unsigned int size = -1;
 	unsigned char hb, lb;
 	unsigned long j;
 	unsigned int app1len = -1;
