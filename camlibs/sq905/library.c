@@ -88,7 +88,7 @@ static const struct {
 	                      GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"Global Point Splash Mini (underwater camera)",
 	                      GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
-	{NULL,0,0}
+	{NULL,0,0,0}
 };
 
 int
