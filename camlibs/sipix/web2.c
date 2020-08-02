@@ -181,7 +181,7 @@ web2_getpicture(GPPort *port, GPContext *context, CameraFile *file)
 
     while (curread < size) {
 	int toread = size-curread;
-	if (toread > sizeof(xbuf))
+	if ((unsigned int)toread > sizeof(xbuf))
 	    toread = sizeof(xbuf);
 	ret = gp_port_read(port, xbuf, toread);
 	if (ret < GP_OK)
