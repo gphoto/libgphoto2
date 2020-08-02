@@ -336,7 +336,7 @@ gsmart300_reset (CameraPrivateLibrary * lib)
 	GP_DEBUG ("* gsmart300_reset");
 	CHECK (gp_port_usb_msg_write (lib->gpdev, 0x02, 0x0000, 0x0003,
 				      NULL, 0));
-	sleep (1.5);
+	sleep (1);
 	return GP_OK;
 }
 
@@ -348,7 +348,7 @@ static int gsmart300_download_data (CameraPrivateLibrary * lib, int data_type,
 				 uint16_t index, unsigned int size, uint8_t * buf)
 {
 	uint16_t fat_index = 0x1fff - index;
-	int i;
+	unsigned int i;
 
 	if (data_type == __GS300_FAT)
 		CHECK (gp_port_usb_msg_write (lib->gpdev, 0x03,
@@ -376,7 +376,7 @@ static int
 gsmart300_get_FATs (CameraPrivateLibrary * lib)
 {
 	uint8_t type;
-	unsigned int index = 0;
+	int index = 0;
 	unsigned int file_index = 0;
 	uint8_t *p = NULL;
 	char buf[14];
