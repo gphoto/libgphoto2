@@ -627,8 +627,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			uint16_t  	*xprops;
 			unsigned int	xsize;
 
-			C_PTP (ptp_sony_qx_connect (&camera->pl->params,1, 0xda01, 0xda01));
-			/*C_PTP (ptp_sony_qx_connect (&camera->pl->params,1, 0xda01, 0xda01)); */
+			C_PTP (ptp_sony_qx_connect (&camera->pl->params, 1, 0xda01, 0xda01));
+			C_PTP (ptp_sony_qx_connect (&camera->pl->params, 2, 0xda01, 0xda01));
 
 			C_PTP (ptp_sony_qx_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize));
 
