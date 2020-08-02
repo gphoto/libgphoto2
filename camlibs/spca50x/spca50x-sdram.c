@@ -447,7 +447,7 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 			/* jpeg starts here */
 			if ((data - mybuf) + frame_size > size) {
 				free (mybuf);
-				GP_DEBUG("BAD: accessing more than we read (%d vs total %d)", (data-mybuf)+frame_size , size);
+				GP_DEBUG("BAD: accessing more than we read (%u vs total %d)", (unsigned int)((data-mybuf)+frame_size), size);
 				return GP_ERROR_CORRUPTED_DATA;
 			}
 			create_jpeg_from_data (avi, data, qIndex, frame_width,
@@ -696,7 +696,7 @@ spca50x_get_image_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 int
 spca50x_sdram_get_info (CameraPrivateLibrary * lib)
 {
-	unsigned int index;
+	int index;
 	uint8_t dramtype = 0;
 	uint8_t *p;
 	uint32_t start_page, end_page;
@@ -859,7 +859,7 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 	unsigned int index = 0;
 	unsigned int file_index = 0;
 	uint8_t *p = NULL;
-	uint8_t buf[30];
+	char buf[30];
 
 	/* Reset image and movie counter */
 	lib->num_images = lib->num_movies = 0;
@@ -879,7 +879,7 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 
 	p = lib->fats;
 	if (lib->bridge == BRIDGE_SPCA504) {
-		while (index < lib->num_fats) {
+		while (index < (unsigned int)lib->num_fats) {
 			CHECK (spca50x_sdram_get_fat_page (lib, index,
 						dramtype, p));
 			if (p[0] == 0xFF)
@@ -904,8 +904,8 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 	p = lib->fats;
 	index = 0;
 
-	while (index < lib->num_fats) {
-		if (file_index >= lib->num_files_on_sdram) {
+	while (index < (unsigned int)lib->num_fats) {
+		if (file_index >= (unsigned int)lib->num_files_on_sdram) {
 			free (lib->fats); lib->fats = NULL;
 			free (lib->sdram_files); lib->sdram_files = NULL;
 			return GP_ERROR;
@@ -940,7 +940,7 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 			lib->sdram_files[file_index].fat = p;
 			lib->sdram_files[file_index].fat_start = index;
 			lib->sdram_files[file_index].fat_end = index;
-			lib->sdram_files[file_index].name = strdup ((char*)buf);
+			lib->sdram_files[file_index].name = strdup (buf);
 			if (lib->bridge == BRIDGE_SPCA504) {
 				lib->sdram_files[file_index].width =
 					(p[8] & 0xFF) * 16;
