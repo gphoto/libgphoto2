@@ -113,7 +113,7 @@ struct mesa_image_info {
 
 void
 mesa_flush( GPPort *port, int timeout );
-int
+unsigned int
 mesa_read( GPPort *port, uint8_t *b, int s, int timeout2, int timeout1 );
 int
 mesa_send_command( GPPort *port, uint8_t *cmd, int n, int ackTimeout );

@@ -186,7 +186,7 @@ static int
 conversion_chuck (const unsigned int width, const unsigned int height,
 	const unsigned char *src,unsigned char *dst
 ) {
-	int x, y;
+	unsigned int x, y;
 	int p1, p2, p3, p4;
 	int red, green, blue;
 
