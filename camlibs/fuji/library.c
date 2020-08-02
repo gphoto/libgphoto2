@@ -165,7 +165,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera *camera = data;
-	int i;
+	unsigned int i;
 	unsigned int n;
 	const char *name;
 

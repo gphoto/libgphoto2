@@ -178,7 +178,7 @@ fuji_recv (Camera *camera, unsigned char *buf, unsigned int *buf_len,
 	   unsigned char *last, GPContext *context)
 {
 	unsigned char b[1024], check = 0;
-	int i;
+	unsigned int i;
 
 	/*
 	 * Read the header. The checksum covers all bytes between
