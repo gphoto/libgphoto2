@@ -137,10 +137,10 @@ gpi_vsnprintf (const char* format, va_list args)
 int
 gp_log_remove_func (int id)
 {
-	int i;
+	unsigned int i;
 
 	for (i=0;i<log_funcs_count;i++) {
-		if (log_funcs[i].id == id) {
+		if (log_funcs[i].id == (unsigned int)id) {
 			memmove (log_funcs + i, log_funcs + i + 1, sizeof(LogFunc) * (log_funcs_count - i - 1));
 			log_funcs_count--;
 			return GP_OK;
