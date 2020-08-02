@@ -55,7 +55,7 @@
 #define GP_MODULE
 
 static struct jamcam_file jamcam_files[1024];
-static int jamcam_count = 0;
+static unsigned int jamcam_count = 0;
 static int jamcam_mmc_card_size = 0;
 
 static int jamcam_read_packet (Camera *camera, unsigned char *packet, int length);
@@ -219,7 +219,7 @@ static int jamcam_mmc_card_file_count (Camera *camera) {
 			break;
 	}
 
-	GP_DEBUG (		"*** returning with jamcam_count = %d", jamcam_count);
+	GP_DEBUG (		"*** returning with jamcam_count = %u", jamcam_count);
 	return( 0 );
 }
 
@@ -321,7 +321,7 @@ int jamcam_file_count (Camera *camera) {
 		jamcam_count += jamcam_mmc_card_file_count( camera );
 	}
 
-	GP_DEBUG (		"*** returning jamcam_count = %d", jamcam_count);
+	GP_DEBUG (		"*** returning jamcam_count = %u", jamcam_count);
 	return( jamcam_count );
 }
 
