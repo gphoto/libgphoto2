@@ -106,11 +106,11 @@ strdup_to_latin1 (const char *str) {
 		dst = dest = calloc (dstlen,1);
 		if (!dst) return NULL;
 		ret = iconv (cd_locale_to_latin1, &src, &srclen, &dst, &dstlen);
-		if ((ret == -1) && (errno == E2BIG)) {
+		if ((ret == (size_t)(-1)) && (errno == E2BIG)) {
 			ndstlen *= 2;
 			continue;
 		}
-		if (ret == -1) {
+		if (ret == (size_t)(-1)) {
 			perror("iconv");
 			free (dest);
 			dest = NULL;
@@ -136,11 +136,11 @@ strdup_to_locale (char *str) {
 		dst = dest = malloc (dstlen);
 		if (!dst) return NULL;
 		ret = iconv (cd_latin1_to_locale, &src, &srclen, &dst, &dstlen);
-		if ((ret == -1) && (errno == E2BIG)) {
+		if ((ret == (size_t)(-1)) && (errno == E2BIG)) {
 			ndstlen *= 2;
 			continue;
 		}
-		if (ret == -1) {
+		if (ret == (size_t)(-1)) {
 			perror("iconv");
 			free (dest);
 			return NULL;
