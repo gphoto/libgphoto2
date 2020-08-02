@@ -174,7 +174,7 @@ void light_enhance(int vw, int vh, int coarse, int fine,
 	}
     }
 
-    for (i=0;i<(vw*vh*3);i+=3)
+    for (i=0;i<(unsigned long int)(vw*vh*3);i+=3)
     {
 	int r,g,b;
 	r = *(output+i);
