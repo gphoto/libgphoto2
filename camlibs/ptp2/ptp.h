@@ -2605,6 +2605,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_1_LongExposureNoiseReduction	0xF00D
 #define PTP_DPC_NIKON_1_HiISONoiseReduction		0xF00E
 #define PTP_DPC_NIKON_1_ActiveDLighting			0xF00F
+#define PTP_DPC_NIKON_1_Language			0xF018
 #define PTP_DPC_NIKON_1_MovQuality			0xF01C
 
 /* Fuji specific */
