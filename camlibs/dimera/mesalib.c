@@ -114,7 +114,7 @@ mesa_flush( GPPort *port, int timeout )
 }
 
 /* Read exactly this number of bytes from the port within the given timeouts */
-int
+unsigned int
 mesa_read( GPPort *port, uint8_t *b, int s, int timeout2, int timeout1 )
 {
 	int		n = 0;
