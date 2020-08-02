@@ -459,7 +459,7 @@ gp_libusb1_open (GPPort *port)
 static int
 _close_async_interrupts(GPPort *port)
 {
-	int i, haveone;
+	unsigned int i, haveone;
 	struct timeval tv;
 
 	C_PARAMS (port);
@@ -632,7 +632,7 @@ _cb_irq(struct libusb_transfer *transfer)
 {
 	struct _PrivateIrqCompleted *irq_new = NULL;
 	struct _GPPortPrivateLibrary *pl = transfer->user_data;
-	int i;
+	unsigned int i;
 	int ret;
 
 	GP_LOG_D("%p with status %d", transfer, transfer->status);
