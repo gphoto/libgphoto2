@@ -417,34 +417,14 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				GP_LOG_E ("if camera is Nikon 1 series, camera should probably have flag NIKON_1 set. report that to the libgphoto2 project");
 				camera->pl->params.device_flags |= PTP_NIKON_1;
 			}
-
-
-			/* filter out the older models that do not support the getvendorprop / getevent codes
-			 * J1, J2 (J3 and J5 works) see https://github.com/gphoto/libgphoto2/issues/539
-			 * V1 reported not working  see https://github.com/gphoto/gphoto2/issues/336
-			 */
-			if (	strcmp(params->deviceinfo.Model,"J1") &&
-				strcmp(params->deviceinfo.Model,"J2") &&
-				strcmp(params->deviceinfo.Model,"V1")
+			/* Nikon J5 does not advertise the PTP_OC_NIKON_InitiateCaptureRecInMedia cmd ... gnh */
+			/* logic: If we have one 0x920x command, we will probably have 0x9207 too. */
+			if (	!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
+				 ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)
 			) {
-				/* The 1 hides some commands from us ... */
-				if ( ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetEvent) &&
-				    !ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)
-				) {
-					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
-					di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
-					di->OperationsSupported_len++;
-
-					/* Nikon J5 does not advertise the PTP_OC_NIKON_InitiateCaptureRecInMedia cmd ... gnh */
-					/* logic: If we have one 0x920x command, we will probably have 0x9207 too. */
-					if (	!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
-						 ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)
-					) {
-						di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
-						di->OperationsSupported_len++;
-					}
-					/* probably more */
-				}
+				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 1)));
+				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
+				di->OperationsSupported_len++;
 			}
 		}
 		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
