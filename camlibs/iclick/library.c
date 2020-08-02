@@ -60,7 +60,7 @@ static struct {
    	unsigned short idProduct;
 } models[] = {
         {"iClick 5X",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9153},
-	{NULL,0,0}
+	{NULL,0,0,0}
 };
 
 int
@@ -252,10 +252,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free (frame_data);
 		return GP_ERROR_NOT_SUPPORTED;
 	case GP_FILE_TYPE_NORMAL:
-		if (icl_get_width_height (camera->pl, entry, &w, &h) >= GP_OK)
-			break; /* Known format, process image */
-		/* Unsupported format, fallthrough to raw */
 	case GP_FILE_TYPE_RAW:
+		if (type == GP_FILE_TYPE_NORMAL && icl_get_width_height (camera->pl, entry, &w, &h) >= GP_OK)
+			break; /* Known format, process image */
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_adjust_name_for_mime_type (file);
 	        gp_file_set_data_and_size (file, (char *)frame_data, datasize);
