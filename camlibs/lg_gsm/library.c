@@ -57,7 +57,7 @@ static struct {
    	unsigned short idProduct;
 } models[] = {
         {"LG T5100", GP_DRIVER_STATUS_EXPERIMENTAL, 0x1004, 0x6005},
-	{NULL,0,0}
+	{NULL,0,0,0}
 };
 
 int

@@ -212,7 +212,7 @@ int lg_gsm_read_picture_data (GPPort *port, char *data, unsigned int datasize, u
 int lg_gsm_list_files (GPPort *port, CameraList *list)
 {
 	unsigned int num_pics;
-	int i;
+	unsigned int i;
 
 	char oknok[6];
 	unsigned char photonumber[22];
