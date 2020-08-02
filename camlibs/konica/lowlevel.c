@@ -225,7 +225,7 @@ l_send (GPPort *p, GPContext *context, unsigned char *send_buffer,
 	/**********************************************************************/
 	unsigned char *sb;
 	unsigned int sbs;
-	int i = 0;
+	unsigned int i = 0;
 
 	CHECK_NULL (p && send_buffer);
 
@@ -438,34 +438,34 @@ while (read < rbs_internal) {
 
 	/* Unescape the data we just read */
 	for (i = read; i < read + r; i++) {
-		unsigned char *c = &(*rb)[*rbs + i];
+		unsigned char *buf = &(*rb)[*rbs + i];
 
 		 /* The HP PhotoSmart does not escape every special code, only
 		  * some and it gets confused if we do this checks. By relaxing
 		  * these, it now downloads images etc.
 		  */
 #ifndef LESSER_ESCAPES
-	        if ((*c == STX) || (*c == ETX) || (*c == ENQ ) ||
-		    (*c == ACK) || (*c == XOFF) || (*c == XON) ||
-		    (*c == NACK) || (*c == ETB)) {
+	        if ((*buf == STX) || (*buf == ETX) || (*buf == ENQ ) ||
+		    (*buf == ACK) || (*buf == XOFF) || (*buf == XON) ||
+		    (*buf == NACK) || (*buf == ETB)) {
 #else /* LESSER_ESCAPES */
-	        if ((*c == STX) ||  (*c == XOFF) || (*c == XON)) {
+	        if ((*buf == STX) ||  (*buf == XOFF) || (*buf == XON)) {
 #endif /* LESSER_ESCAPES */
 			GP_DEBUG ("Wrong ESC masking!");
 			error_flag = 1;
 			break;
-		} else if (*c == ESC) {
+		} else if (*buf == ESC) {
 			if (i == read + r - 1) {
 				/* ESC is last char of packet */
-				CHECK (gp_port_read (p, (char *)c, 1));
+				CHECK (gp_port_read (p, (char *)buf, 1));
 			} else {
-				memmove (c, c + 1, read + r - i - 1);
+				memmove (buf, buf + 1, read + r - i - 1);
 				r--;
 			}
-			*c = ~*c & 0xff;
-			if ((*c != STX ) && (*c != ETX ) && (*c != ENQ) &&
-			    (*c != ACK ) && (*c != XOFF) && (*c != XON) &&
-			    (*c != NACK) && (*c != ETB ) && (*c != ESC)) {
+			*buf = ~*buf & 0xff;
+			if ((*buf != STX ) && (*buf != ETX ) && (*buf != ENQ) &&
+			    (*buf != ACK ) && (*buf != XOFF) && (*buf != XON) &&
+			    (*buf != NACK) && (*buf != ETB ) && (*buf != ESC)) {
 				GP_DEBUG ("Wrong ESC masking!");
 				error_flag = 1;
 				break;

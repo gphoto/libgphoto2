@@ -142,7 +142,7 @@
 static unsigned char
 k_calculate_checksum (unsigned char *buf, unsigned long int len)
 {
-	int i;
+	unsigned int i;
 	unsigned char result=0;
 	for (i=0; i < len; i++)
 		result += buf[i];
@@ -519,7 +519,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 	const char *d;
 	unsigned long int len, len_sent=0;
 	unsigned int id;
-	int ret,i;
+	int ret;
+	unsigned int i;
 
 	GP_DEBUG ("*** ENTER: put_file_func ***");
 
@@ -1278,7 +1279,8 @@ camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 	int speeds[] = { 115200, 9600, 19200, 38400, 57600, 115200 };
-	int ret, i;
+	int ret;
+	unsigned int i;
 	char cmd[3], buf[1];
 
 	/* First, set up all the function pointers. */
