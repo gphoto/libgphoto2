@@ -85,7 +85,7 @@ int pdrm11_init(GPPort *port)
 
 int pdrm11_get_filenames(GPPort *port, CameraList *list)
 {
-	int i, j;
+	unsigned int i, j;
 	uint32_t numPics;
 	char name[20];
 	char buf[30];
@@ -156,7 +156,7 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 	uint8_t buf[30];
 	uint8_t *image;
 	uint8_t temp;
-	int i;
+	unsigned int i;
 	int ret;
 	int file_type;
 
@@ -207,10 +207,10 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 	}
 
 	ret = gp_port_read(port, (char *)image, size);
-	if(ret != size) {
+	if(ret < GP_OK || (unsigned int)ret != size) {
 		GP_DEBUG("failed to read from port.  Giving it one more try...");
 		ret = gp_port_read(port, (char *)image, size);
-		if(ret != size) {
+		if(ret < GP_OK || (unsigned int)ret != size) {
 			GP_DEBUG("gp_port_read returned %d 0x%x.  size: %d 0x%x", ret, ret, size, size);
 			free (image);
 			return(GP_ERROR_IO_READ);
