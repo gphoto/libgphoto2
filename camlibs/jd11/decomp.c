@@ -73,7 +73,8 @@ decomp_1byte(struct compstate *cs) {
 static void
 build_huffmann_tree(struct compstate *cs) {
 	int	xstack[200];
-	int	i,curcl=0,curstack=0;
+	unsigned int	i;
+	int	curcl=0,curstack=0;
 	const int df[] = {
 	    -180,180,1000,-90,1000,90,1000,-45,1000,45,1000,-20,1000,
 	     20,1000,-11,1000,11,1000,-6,1000,2,1000,6,-2,1000,1000
