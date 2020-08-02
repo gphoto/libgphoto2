@@ -417,15 +417,17 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				GP_LOG_E ("if camera is Nikon 1 series, camera should probably have flag NIKON_1 set. report that to the libgphoto2 project");
 				camera->pl->params.device_flags |= PTP_NIKON_1;
 			}
+			C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
 			/* Nikon J5 does not advertise the PTP_OC_NIKON_InitiateCaptureRecInMedia cmd ... gnh */
 			/* logic: If we have one 0x920x command, we will probably have 0x9207 too. */
 			if (	!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
 				 ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)
 			) {
-				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 1)));
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
 				di->OperationsSupported_len++;
 			}
+			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
+			di->OperationsSupported_len++;
 		}
 		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
 			/* The A also hides some commands from us ... */
@@ -543,13 +545,19 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			/* The J5 so far goes up to 0xf01c */
 #define NIKON_1_ADDITIONAL_DEVPROPS 29
 			if (i==di->DevicePropertiesSupported_len) {
-				di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + NIKON_1_ADDITIONAL_DEVPROPS));
+				di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + NIKON_1_ADDITIONAL_DEVPROPS+3));
 				if (!di->DevicePropertiesSupported) {
 					C_MEM (di->DevicePropertiesSupported);
 				}
 				for (i=0;i<NIKON_1_ADDITIONAL_DEVPROPS;i++)
 					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xf000 | i;
-				di->DevicePropertiesSupported_len += NIKON_1_ADDITIONAL_DEVPROPS;
+
+				/* is returned by the J5, but readonly */
+				di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+NIKON_1_ADDITIONAL_DEVPROPS] = PTP_DPC_NIKON_ExposureTime;	// OKAY in J5
+				di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+NIKON_1_ADDITIONAL_DEVPROPS+1] = PTP_DPC_NIKON_LiveViewProhibitCondition;	// hack
+				di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+NIKON_1_ADDITIONAL_DEVPROPS+2] = PTP_DPC_NIKON_LiveViewStatus;	// hack
+
+				di->DevicePropertiesSupported_len += NIKON_1_ADDITIONAL_DEVPROPS + 3;
 			}
 		}
 
