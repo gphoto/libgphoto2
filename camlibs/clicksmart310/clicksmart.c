@@ -135,7 +135,7 @@ int
 clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 					unsigned char **data, int n)
 {
-	int offset=0;
+	unsigned int offset=0;
 	char c;
 	unsigned int size = 0;
 	unsigned int remainder = 0;
