@@ -282,7 +282,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	return GP_OK;
 }
 
-
+#if 0
 static int
 set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	       CameraFileInfo info, void *data, GPContext *context)
@@ -293,7 +293,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 	return GP_OK;
 }
-
+#endif
 
 static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
@@ -438,12 +438,13 @@ switchToPlayMode(Camera *camera) {
 	return loadCmd(camera,"cam.cgi?mode=camcmd&value=playmode");
 }
 
-
+#if 0
 static void Set_ISO(Camera *camera,const char * ISOValue) {
 	char buf[200];
 	sprintf(buf, "?mode=setsetting&type=iso&value=%s",ISOValue);
 	loadCmd(camera,buf);
 }
+#endif
 
 static char*
 generic_setting_getter(Camera *camera, char *type) {
@@ -565,26 +566,31 @@ Get_ExTeleConv(Camera *camera) {
 	return generic_setting_getter(camera,"ex_tele_conv");
 }
 
+#if 0
 static char*
 Get_Capability(Camera *camera) {
 	return loadCmd(camera,"cam.cgi?mode=getinfo&type=capability");
 }
+#endif
 
 static char*
 Get_Lens(Camera *camera) {
 	return loadCmd(camera,"cam.cgi?mode=getinfo&type=lens");
 }
 
+#if 0
 static char*
 Get_AllMenu(Camera *camera) {
 	return loadCmd(camera,"cam.cgi?mode=getinfo&type=allmenu");
 }
+#endif
 
+#if 0
 static char*
 Get_CurMenu(Camera *camera) {
 	return loadCmd(camera,"cam.cgi?mode=getinfo&type=curmenu");
 }
-
+#endif
 
 static void Set_ShutterSpeed(Camera *camera,const char* SpeedValue) {
 	char buf[200];
@@ -635,25 +641,35 @@ static void stopMovie(Camera *camera) {
 	loadCmd(camera,"cam.cgi?mode=camcmd&value=video_recstop");
 }
 
+#if 0
 static void zoomIn(Camera *camera) {
 	loadCmd(camera,"cam.cgi?mode=camcmd&value=tele-fast");
 }
+#endif
 
+#if 0
 static void zoomOut(Camera *camera) {
 	loadCmd(camera,"cam.cgi?mode=camcmd&value=wide-fast");
 }
+#endif
 
+#if 0
 static void zoomStop(Camera *camera) {
 	loadCmd(camera,"cam.cgi?mode=camcmd&value=zoomstop");
 }
+#endif
 
+#if 0
 static void focusIn(Camera *camera) {
 	loadCmd(camera,"cam.cgi?mode=camctrl&type=focus&value=tele-fast");
 }
+#endif
 
+#if 0
 static void focusOut(Camera *camera) {
 	loadCmd(camera,"cam.cgi?mode=camctrl&type=focus&value=wide-fast");
 }
+#endif
 
 /*
 
@@ -663,18 +679,6 @@ this is the XML sample to be parsed by the function below   NumberPix()
 
 
 */
-static int
-strend(const char *s, const char *t)
-{
-    size_t ls = strlen(s); // find length of s
-    size_t lt = strlen(t); // find length of t
-    if (ls >= lt)  // check if t can fit in s
-    {
-        // point s to where t should start and compare the strings from there
-        return (0 == memcmp(t, s + (ls - lt), lt));
-    }
-    return 0; // t was longer than s
-}
 
 static int
 NumberPix(Camera *camera) {
@@ -1106,8 +1110,9 @@ static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 {
         CameraWidget	*widget,*section;
-        int		ret, i, valset;
-	char		*val, *curval;
+        int		valset;
+        unsigned int 	i;
+	char		*val;
 
 	switchToRecMode (camera);
 
@@ -1271,7 +1276,8 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 	CameraWidget	*widget;
 	char		*val;
 	char		buf[50];
-	int		i, ret;
+	int		ret;
+	unsigned int	i;
 
 	if ((GP_OK == gp_widget_get_child_by_name(window, "zoom", &widget)) && gp_widget_changed (widget)) {
 		if (GP_OK != (ret = gp_widget_get_value (widget, &val)))
@@ -1377,6 +1383,19 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 }
 
 
+#if 0
+static int
+strend(const char *s, const char *t)
+{
+    size_t ls = strlen(s); // find length of s
+    size_t lt = strlen(t); // find length of t
+    if (ls >= lt)  // check if t can fit in s
+    {
+        // point s to where t should start and compare the strings from there
+        return (0 == memcmp(t, s + (ls - lt), lt));
+    }
+    return 0; // t was longer than s
+}
 
 static char*
 processNode(xmlTextReaderPtr reader) {
@@ -1395,7 +1414,7 @@ processNode(xmlTextReaderPtr reader) {
 	break;
 	}
 
-    const xmlChar *name, *value;
+    const xmlChar *name;
 
     name = xmlTextReaderConstName(reader);
     if (name == NULL)
@@ -1532,8 +1551,6 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 	char			*image;
 	long			nRead;
 	LumixMemoryBuffer	lmb;
-	char			*xmlimageName;
-	xmlDocPtr		doc; /* the resulting document tree */
 	int			ret;
 	char			* imageURL="";
 	xmlTextReaderPtr	reader;
@@ -1555,8 +1572,6 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 	CURL* imageUrl;
 	imageUrl = curl_easy_init();
 	CURLcode res;
-	double bytesread = 0;
-	char filename[100];
 	long http_response;
 	int ret_val=0;
 
@@ -1599,7 +1614,7 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 	strcpy(path->folder, "/");
 	return add_objectid_and_upload (camera, path, context, lmb.data, lmb.size);
 }
-
+#endif
 
 /**
 * Capture an image and tell libgphoto2 where to find it by filling
@@ -1731,10 +1746,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 	int		i;
 	CURLcode	res;
 	CURL		*imageUrl;
-	double		bytesread = 0;
 	long		http_response;
 	int		ret_val = 0;
-	long			nRead;
+	long			nRead = 0;
 	LumixMemoryBuffer	lmb;
 	const char	*url;
 
