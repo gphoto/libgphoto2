@@ -198,7 +198,7 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 	int status = GP_OK;
 	Camera *camera = user_data;
 	unsigned int b;
-	int w, h;
+	unsigned int w, h;
 	int k, next;
 	unsigned char comp_ratio;
 	unsigned char lighting;
