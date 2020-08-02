@@ -131,9 +131,8 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 
 int main(int argc, char **argv) {
 	Camera		*camera = NULL;
-	int		count, ret, storagecnt;
+	int		ret, storagecnt;
 	CameraStorageInformation	*storageinfo;
-	GPPortInfo	gpinfo;
 	GPPortInfoList	*gpinfolist;
 	GPContext	*context;
 	CameraWidget	*rootwidget;
@@ -141,7 +140,7 @@ int main(int argc, char **argv) {
 	const char	*name;
 	CameraText		summary;
 	CameraFile		*file;
-	CameraFilePath		path;
+	/*CameraFilePath		path;*/
 	CameraList		*list;
 	CameraAbilitiesList      *abilities = NULL;
 

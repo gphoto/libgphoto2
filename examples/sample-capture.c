@@ -122,7 +122,7 @@ main(int argc, char **argv) {
 	f = fopen("foo2.jpg", "wb");
 	if (f) {
 		retval = fwrite (data, size, 1, f);
-		if (retval != size) {
+		if (retval != (int)size) {
 			printf("  fwrite size %ld, written %d\n", size, retval);
 		}
 		fclose(f);

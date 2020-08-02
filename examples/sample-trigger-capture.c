@@ -42,7 +42,7 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 		waittime = 10; /* just drain the event queue */
 
 	while (1) {
-		unsigned int timediff;
+		int timediff;
 
 	        gettimeofday (&curtime, NULL);
 
