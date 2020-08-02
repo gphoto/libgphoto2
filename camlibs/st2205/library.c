@@ -284,7 +284,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *name,
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 	in = in_name;
 	out = out_name;
-	if (iconv (camera->pl->cd, &in, &inc, &out, &outc) == -1) {
+	if (iconv (camera->pl->cd, &in, &inc, &out, &outc) == (size_t)(-1)) {
 		free (in_name);
 		free (out_name);
 		gp_log (GP_LOG_ERROR, "iconv",
