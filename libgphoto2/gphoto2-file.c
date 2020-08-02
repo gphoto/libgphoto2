@@ -409,7 +409,7 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		break;
 	case GP_FILE_ACCESSTYPE_FD: {
 		off_t	offset;
-		unsigned long int curread = 0;
+		off_t	curread = 0;
 
 		if (-1 == lseek (file->fd, 0, SEEK_END)) {
 			if (errno == EBADF) return GP_ERROR_IO;
@@ -504,7 +504,7 @@ gp_file_save (CameraFile *file, const char *filename)
 		break;
 	case GP_FILE_ACCESSTYPE_FD: {
 		char *data;
-		unsigned long int curread = 0;
+		off_t	curread = 0;
 		off_t	offset;
 
 		if (-1 == lseek (file->fd, 0, SEEK_END))
@@ -537,7 +537,7 @@ gp_file_save (CameraFile *file, const char *filename)
 				unlink (filename);
 				return GP_ERROR_IO_READ;
 			}
-			if (fwrite (data, 1, res, fp) != res) {
+			if ((int)fwrite (data, 1, res, fp) != res) {
 				GP_LOG_E ("Not enough space on device in order to save '%s'.", filename);
 				free (data);
 				fclose (fp);
@@ -750,7 +750,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		(source->accesstype == GP_FILE_ACCESSTYPE_FD)
 	) {
 		off_t	offset;
-		unsigned long int curread = 0;
+		off_t	curread = 0;
 
 		free (destination->data);
 		destination->data = NULL;
@@ -799,7 +799,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		lseek (source->fd, 0, SEEK_SET);
 		C_MEM (data = malloc (65536));
 		while (1) {
-			unsigned long curwritten = 0;
+			ssize_t curwritten = 0;
 			ssize_t res;
 
 			res = read (source->fd, data, 65536);

@@ -411,7 +411,7 @@ lookup_folder (
 		while (f) {
 			if (s) {
 				if (!strncmp(f->name,curpt, (s-curpt)) &&
-				    (strlen(f->name) == (s-curpt))
+				    ((ssize_t)strlen(f->name) == (s-curpt))
 				) {
 					folder = f;
 					curpt = s;
@@ -553,7 +553,7 @@ append_to_folder (CameraFilesystemFolder *folder,
 	while (f) {
 		if (s) {
 			if (!strncmp(f->name,foldername, (s-foldername)) &&
-			    (strlen(f->name) == (s-foldername))
+			    ((ssize_t)strlen(f->name) == (s-foldername))
 			)
 				return append_to_folder (f, s+1, newfolder);
 		} else {
