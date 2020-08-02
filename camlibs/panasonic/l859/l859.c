@@ -494,6 +494,7 @@ static int get_file_func (CameraFilesystem *fs, const char *folder,
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		size = l859_selectimage_preview(camera, index);
+		break;
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}

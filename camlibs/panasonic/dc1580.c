@@ -76,7 +76,7 @@ static uint8_t dsc2_checksum(char *buffer, int size) {
 
 static int dsc2_sendcmd(Camera *camera, uint8_t cmd, long int data, uint8_t sequence) {
 
-        int     i;
+        unsigned int     i;
 
         DEBUG_PRINT_MEDIUM(("Sending command: 0x%02x, data: %i, sequence: %i.", cmd, data, sequence));
 
