@@ -95,7 +95,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	Camera		*camera = data;
-	int		i, ret;
+	unsigned int	i;
+	int		ret;
 	unsigned int	bytes, numpics;
 	unsigned char	*xbuf, buf[8];
 
@@ -115,7 +116,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		free(xbuf);
 		return ret;
 	}
-	if (ret < bytes) return GP_ERROR_IO_READ;
+	if ((unsigned int)ret < bytes) return GP_ERROR_IO_READ;
 	for ( i=0; i < numpics; i++) {
 		char name[20];
 		if (xbuf[8*(i+1)])
@@ -134,8 +135,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = data;
-        int image_no, result;
-	int	i, ret;
+	int image_no, result;
+	unsigned int i;
+	int ret;
 	unsigned int numpics, bytes;
 	unsigned char	*xbuf, buf[8];
 
@@ -168,7 +170,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(xbuf);
 		return ret;
 	}
-	if (ret < bytes) return GP_ERROR_IO_READ;
+	if ((unsigned int)ret < bytes) return GP_ERROR_IO_READ;
 	for ( i=0; i < numpics; i++) {
 		int end, start;
 
@@ -194,7 +196,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(addrs);
                 return image_no;
 	}
-	if (image_no >= numpics) {
+	if (image_no < 0 || (unsigned int)image_no >= numpics) {
 		free(addrs);
 		gp_log(GP_LOG_DEBUG, "blink2","image %d requested, but only %d pics on camera?", image_no, numpics);
                 return GP_ERROR;
@@ -284,7 +286,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			gp_file_append (file, foo, strlen(foo));
 		}
 		for (i = 0; i < dinfo.output_height ; i++ ) {
-			int j;
+			unsigned int j;
 			JSAMPROW row[1];
 			JSAMPARRAY arr = row;
 
@@ -343,7 +345,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		len = len*8;
 		do {
 			curread = 4096;
-			if (curread > len) curread = len;
+			if ((unsigned int)curread > len) curread = len;
 			curread = gp_port_read( camera->port, buf2, curread);
 			if (curread < GP_OK) {
 				result = GP_OK;
