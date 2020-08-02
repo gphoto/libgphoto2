@@ -73,7 +73,7 @@ static struct {
 	{"Casio:QV300", 1, 0x01048dc0},
 	{"Casio:QV700", 1, 0x01a0e081},
 	{"Casio:QV770", 1, 0x01a10000},
-	{NULL}
+	{NULL, 0, 0}
 };
 
 int
