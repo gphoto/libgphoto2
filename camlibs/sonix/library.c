@@ -230,13 +230,31 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_FILE_EXISTS;
 	i = camera->pl->size_code[k];
 	switch (i) {
-	case 0: w=352; h = 288; break;
-	case 9: avitype = 1;		/* multiframe */
-	case 1: w=176; h = 144; break;
-	case 0x0a: avitype = 1;		/* multiframe */
-	case 2: w=640; h = 480; break;
-	case 0x0b: avitype = 1;		/* multiframe */
-	case 3: w=320; h = 240; break;
+	case 0:
+		w = 352;
+		h = 288;
+		break;
+	case 9:
+	case 1:
+		if (i == 9)
+			avitype = 1; /* multiframe */
+		w = 176;
+		h = 144;
+		break;
+	case 0x0a:
+	case 2:
+		if (i == 0x0a)
+			avitype = 1; /* multiframe */
+		w = 640;
+		h = 480;
+		break;
+	case 0x0b:
+	case 3:
+		if (i == 0x0b)
+			avitype = 1; /* multiframe */
+		w = 320;
+		h = 240;
+		break;
 	default:  GP_DEBUG ("Size code unknown\n");
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
@@ -256,146 +274,149 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	switch(type) {
 	case GP_FILE_TYPE_NORMAL:
-		/* count end of frame markers to know the number of
-		 *frames and the size and starting offset of each */
-		endpoint = 0;
-		numframes = 0;
-		framestart[0] = 0;
-		p_buf = data;
-		while (p_buf < data + buffersize+64) {
-			endpoint = 12;
-			while ( !((p_buf[endpoint-12]==0xff) &&
-					(p_buf[endpoint-11]==0xff) &&
-					(p_buf[endpoint-10]==0x00) &&
-					(p_buf[endpoint-9]==0xc4) &&
-					(p_buf[endpoint-8]==0xc4) ) &&
-					(endpoint < buffersize +64
-						    - bytes_used))
-				endpoint ++ ;
-			if ( !((p_buf[endpoint-12]==0xff) &&
-					(p_buf[endpoint-11]==0xff) &&
-					(p_buf[endpoint-10]==0x00) &&
-					(p_buf[endpoint-9]==0xc4) &&
-					(p_buf[endpoint-8]==0xc4) ) ) {
-				GP_DEBUG("Finished counting frames!\n");
-				break;
-			}
-			if(!numframes) {
-				GP_DEBUG("compression byte is %#02x\n",
-						p_buf[endpoint-5]);
-				compressed=p_buf[endpoint-5]&1;
-			}
-			framestart[numframes+1] =
-				framestart[numframes] + endpoint;
-			p_buf += endpoint;
-			bytes_used += endpoint;
-			numframes ++;
-		}
-		GP_DEBUG("number of frames is %i\n",numframes);
-		GP_DEBUG("compressed %i\n",compressed);
-		POST_CODE|=compressed;
-		GP_DEBUG("POST_CODE is %i\n", POST_CODE);
-		/* AVI files need separate treatment */
-		if (avitype) {
-			CAM_OFFSET = camera->pl->avi_offset;
-			GP_DEBUG("CAM_OFFSET=%i\n",CAM_OFFSET);
-			frame_size = w*h;
-			gp_file_set_mime_type (file, GP_MIME_AVI);
-			frame_data = malloc(frame_size);
-			if (!frame_data) {
-				return -1;
-			}
-			size = (numframes)*(3*frame_size+ 8) + 224;
-			GP_DEBUG("size = %i\n", size);
-			avi = malloc(224);
-			if (!avi) {
-				free(frame_data);
-				return -1;
-			}
-			GP_DEBUG("avi malloc'ed\n");
-			memset(avi, 0, SAKAR_AVI_HEADER_LENGTH);
-			memcpy (avi,SakarAviHeader,SAKAR_AVI_HEADER_LENGTH);
-			GP_DEBUG("avi standard hdr copied\n");
-			avi[0x04] = (size -4)&0xff;
-			avi[0x05] = ((size -4)&0xff00) >> 8;
-			avi[0x06] = ((size -4)&0xff0000) >> 16;
-			avi[0x07] = ((size -4)&0xff000000) >> 24;
-			avi[0x40] = w&0xff;
-			avi[0x41] = (w>>8)&0xff;
-			avi[0x44] = h&0xff;
-			avi[0x45] = (h>>8)&0xff;
-			avi[0xb0] = w&0xff;
-			avi[0xb1] = (w>>8)&0xff;
-			avi[0xb4] = h&0xff;
-			avi[0xb5] = (h>>8)&0xff;
-			avi[0x30] = numframes&0xff;
-			avi[0x8c] = numframes&0xff;
-			ptr=malloc(3*frame_size+8);
-			if(!ptr) {
-				free(frame_data);
-				free(avi);
-				return GP_ERROR_NO_MEMORY;
-			}
-			GP_DEBUG("avi hdr written\n");
-			gp_file_append(file, (char *)avi,
-					SAKAR_AVI_HEADER_LENGTH);
-			free(avi);
-			GP_DEBUG("avi hdr put away\n");
-			for (i=0; i < numframes; i++) {
-				memset(ptr, 0, 3*frame_size+
-					    SAKAR_AVI_FRAME_HEADER_LENGTH);
-				memcpy(ptr,SakarAviFrameHeader,
-					    SAKAR_AVI_FRAME_HEADER_LENGTH);
-				ptr[4] = (3*frame_size)&0xff;
-				ptr[5] = ((3*frame_size)&0xff00) >> 8;
-				ptr[6] = ((3*frame_size)&0xff0000) >> 16;
-				GP_DEBUG("Doing frame number %i\n",i+1);
-				memset (frame_data, 0, frame_size);
-				offset = 0x40*(framestart[i]/0x40)+0x40;
-				if (offset == framestart[i] + 0x40)
-					offset -= 0x40;
-				GP_DEBUG("framestart[%i] = 0x%x\n", i,
-						framestart[i]);
-				GP_DEBUG("offset = 0x%x\n", offset);
-				switch (POST_CODE) {
-				case DECOMP|REVERSE:
-					sonix_decode (frame_data,
-					data+offset+CAM_OFFSET, w, h);
-					sonix_cols_reverse(frame_data, w, h);
-                                        gp_ahd_decode(frame_data, w, h, ptr+
-                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
-                                                            BAYER_TILE_GBRG);
-					break;
-				case DECOMP:
-					sonix_decode (frame_data,
-					data+offset+CAM_OFFSET, w, h);
-					sonix_rows_reverse(frame_data, w, h);
-                                        gp_ahd_decode(frame_data, w, h, ptr+
-                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
-                                                            BAYER_TILE_GRBG);
-					break;
-				default:
-					memcpy(frame_data, data + offset
-					    +CAM_OFFSET, frame_size);
-					sonix_rows_reverse(frame_data, w, h);
-                                        gp_ahd_decode(frame_data, w, h, ptr+
-                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
-                                                            BAYER_TILE_GRBG);
-				}
-				white_balance(ptr+SAKAR_AVI_FRAME_HEADER_LENGTH,
-						w * h, 1.2);
-				gp_file_append(file, (char *)ptr,
-				    3*frame_size+
-						SAKAR_AVI_FRAME_HEADER_LENGTH);
-				GP_DEBUG("Done with frame number %i\n",i+1);
-			}
-			avitype = 0;
-			free(ptr);
-			free(frame_data);
-			free(data);
-			return GP_OK;
-		}
 	case GP_FILE_TYPE_PREVIEW:
+		if (type == GP_FILE_TYPE_NORMAL) {
+			/* count end of frame markers to know the number of
+			 *frames and the size and starting offset of each */
+			endpoint = 0;
+			numframes = 0;
+			framestart[0] = 0;
+			p_buf = data;
+			while (p_buf < data + buffersize+64) {
+				endpoint = 12;
+				while ( !((p_buf[endpoint-12]==0xff) &&
+						(p_buf[endpoint-11]==0xff) &&
+						(p_buf[endpoint-10]==0x00) &&
+						(p_buf[endpoint-9]==0xc4) &&
+						(p_buf[endpoint-8]==0xc4) ) &&
+						(endpoint < buffersize +64
+							    - bytes_used))
+					endpoint ++ ;
+				if ( !((p_buf[endpoint-12]==0xff) &&
+						(p_buf[endpoint-11]==0xff) &&
+						(p_buf[endpoint-10]==0x00) &&
+						(p_buf[endpoint-9]==0xc4) &&
+						(p_buf[endpoint-8]==0xc4) ) ) {
+					GP_DEBUG("Finished counting frames!\n");
+					break;
+				}
+				if(!numframes) {
+					GP_DEBUG("compression byte is %#02x\n",
+							p_buf[endpoint-5]);
+					compressed=p_buf[endpoint-5]&1;
+				}
+				framestart[numframes+1] =
+					framestart[numframes] + endpoint;
+				p_buf += endpoint;
+				bytes_used += endpoint;
+				numframes ++;
+			}
+			GP_DEBUG("number of frames is %i\n",numframes);
+			GP_DEBUG("compressed %i\n",compressed);
+			POST_CODE|=compressed;
+			GP_DEBUG("POST_CODE is %i\n", POST_CODE);
+			/* AVI files need separate treatment */
+			if (avitype) {
+				CAM_OFFSET = camera->pl->avi_offset;
+				GP_DEBUG("CAM_OFFSET=%i\n",CAM_OFFSET);
+				frame_size = w*h;
+				gp_file_set_mime_type (file, GP_MIME_AVI);
+				frame_data = malloc(frame_size);
+				if (!frame_data) {
+					return -1;
+				}
+				size = (numframes)*(3*frame_size+ 8) + 224;
+				GP_DEBUG("size = %i\n", size);
+				avi = malloc(224);
+				if (!avi) {
+					free(frame_data);
+					return -1;
+				}
+				GP_DEBUG("avi malloc'ed\n");
+				memset(avi, 0, SAKAR_AVI_HEADER_LENGTH);
+				memcpy (avi,SakarAviHeader,SAKAR_AVI_HEADER_LENGTH);
+				GP_DEBUG("avi standard hdr copied\n");
+				avi[0x04] = (size -4)&0xff;
+				avi[0x05] = ((size -4)&0xff00) >> 8;
+				avi[0x06] = ((size -4)&0xff0000) >> 16;
+				avi[0x07] = ((size -4)&0xff000000) >> 24;
+				avi[0x40] = w&0xff;
+				avi[0x41] = (w>>8)&0xff;
+				avi[0x44] = h&0xff;
+				avi[0x45] = (h>>8)&0xff;
+				avi[0xb0] = w&0xff;
+				avi[0xb1] = (w>>8)&0xff;
+				avi[0xb4] = h&0xff;
+				avi[0xb5] = (h>>8)&0xff;
+				avi[0x30] = numframes&0xff;
+				avi[0x8c] = numframes&0xff;
+				ptr=malloc(3*frame_size+8);
+				if(!ptr) {
+					free(frame_data);
+					free(avi);
+					return GP_ERROR_NO_MEMORY;
+				}
+				GP_DEBUG("avi hdr written\n");
+				gp_file_append(file, (char *)avi,
+						SAKAR_AVI_HEADER_LENGTH);
+				free(avi);
+				GP_DEBUG("avi hdr put away\n");
+				for (i=0; i < (int)numframes; i++) {
+					memset(ptr, 0, 3*frame_size+
+						    SAKAR_AVI_FRAME_HEADER_LENGTH);
+					memcpy(ptr,SakarAviFrameHeader,
+						    SAKAR_AVI_FRAME_HEADER_LENGTH);
+					ptr[4] = (3*frame_size)&0xff;
+					ptr[5] = ((3*frame_size)&0xff00) >> 8;
+					ptr[6] = ((3*frame_size)&0xff0000) >> 16;
+					GP_DEBUG("Doing frame number %i\n",i+1);
+					memset (frame_data, 0, frame_size);
+					offset = 0x40*(framestart[i]/0x40)+0x40;
+					if (offset == framestart[i] + 0x40)
+						offset -= 0x40;
+					GP_DEBUG("framestart[%i] = 0x%x\n", i,
+							framestart[i]);
+					GP_DEBUG("offset = 0x%x\n", offset);
+					switch (POST_CODE) {
+					case DECOMP|REVERSE:
+						sonix_decode (frame_data,
+						data+offset+CAM_OFFSET, w, h);
+						sonix_cols_reverse(frame_data, w, h);
+	                                        gp_ahd_decode(frame_data, w, h, ptr+
+	                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
+	                                                            BAYER_TILE_GBRG);
+						break;
+					case DECOMP:
+						sonix_decode (frame_data,
+						data+offset+CAM_OFFSET, w, h);
+						sonix_rows_reverse(frame_data, w, h);
+	                                        gp_ahd_decode(frame_data, w, h, ptr+
+	                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
+	                                                            BAYER_TILE_GRBG);
+						break;
+					default:
+						memcpy(frame_data, data + offset
+						    +CAM_OFFSET, frame_size);
+						sonix_rows_reverse(frame_data, w, h);
+	                                        gp_ahd_decode(frame_data, w, h, ptr+
+	                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
+	                                                            BAYER_TILE_GRBG);
+					}
+					white_balance(ptr+SAKAR_AVI_FRAME_HEADER_LENGTH,
+							w * h, 1.2);
+					gp_file_append(file, (char *)ptr,
+					    3*frame_size+
+							SAKAR_AVI_FRAME_HEADER_LENGTH);
+					GP_DEBUG("Done with frame number %i\n",i+1);
+				}
+				avitype = 0;
+				free(ptr);
+				free(frame_data);
+				free(data);
+				return GP_OK;
+			}
+		}
+
 		if (k == camera->pl->num_pics - 1) {
 			camera->pl->sonix_init_done = 1;
 			sonix_exit(camera->port);
