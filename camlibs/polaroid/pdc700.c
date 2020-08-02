@@ -191,7 +191,7 @@ static const char *size[]    = {"VGA (640x480)", "XGA (1024x768", NULL};
 static int
 calc_checksum (unsigned char *cmd, unsigned int len)
 {
-	int i;
+	unsigned int i;
 	unsigned char checksum;
 
 	for (checksum = 0, i = 0; i < len; i++)
@@ -453,7 +453,7 @@ pdc700_picinfo (Camera *camera, unsigned int n, PDCPicInfo *info,
 	/* We don't know about the meaning of buf[0-1] */
 
 	/* Check if this information is about the right picture */
-	if (n != (buf[2] | (buf[3] << 8))) {
+	if (n != (unsigned int)(buf[2] | (buf[3] << 8))) {
 		gp_context_error (context, _("Requested information about "
 			"picture %i (= 0x%x), but got information about "
 			"picture %i back"), n, cmd[4] | (cmd[5] << 8),

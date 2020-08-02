@@ -204,7 +204,13 @@ static struct {
 			"dlink%04i.ppm"
 		}
 	},
-	{NULL,}
+	{NULL, 0, 0, {
+			0,
+			0,
+			NULL,
+			NULL
+		}
+	}
 };
 
 static int
