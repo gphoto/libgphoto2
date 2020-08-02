@@ -140,7 +140,8 @@ int mdc800_changespeed (Camera *camera,int new)
 {
 	int baud_rate [3]={19200,57600,115200};
 	GPPortSettings settings;
-	int ret,oldrate;
+	int ret;
+	unsigned int oldrate;
 
 	printFnkCall ("(mdc800_changespeed) called.\n");
 	if (camera->port->type != GP_PORT_SERIAL) /* USB ... */

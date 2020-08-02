@@ -114,6 +114,7 @@ static const unsigned char File_Header1[24]=
 	0xFF, 0xE1, 	0x0F, 0xEC
 };
 
+#if 0
 static const unsigned char File_Header2[34]=
 {
 	/* JPG file start marker */
@@ -125,6 +126,7 @@ static const unsigned char File_Header2[34]=
 	0xFF, 0xE1, 0x00, 0x0E, 0x43, 0x41, 0x4D, 0x2D, 0x4D, 0x44,
 	0x43, 0x38, 0x30, 0x30
 };
+#endif
 
 
 /* For Thumbnail: 112x96 */
