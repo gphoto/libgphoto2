@@ -5982,10 +5982,22 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		/* nikon 1 stuff */
 		{PTP_DPC_NIKON_1_ISO,				/* 0xf002 */
 		 N_("ISO")},
+		{PTP_DPC_NIKON_1_FNumber,				/* 0xf003 */
+		 N_("Aperture")},
+		{PTP_DPC_NIKON_1_FNumber2,				/* 0xf006 */
+		 N_("Aperture")},
+		{PTP_DPC_NIKON_1_ShutterSpeed,				/* 0xf004 */
+		 N_("Shutterspeed")},
+		{PTP_DPC_NIKON_1_ShutterSpeed2,				/* 0xf007 */
+		 N_("Shutterspeed")},
 		{PTP_DPC_NIKON_1_ImageSize,			/* 0xf00a */
 		 N_("Image Size")},
 		{PTP_DPC_NIKON_1_LongExposureNoiseReduction,    /* 0xF00D */
 		 N_("Long Exposure Noise Reduction")},
+		{PTP_DPC_NIKON_1_Language,                      /* 0xF018 */
+		 N_("Camera Language")},
+		{PTP_DPC_NIKON_1_ReleaseWithoutCard,            /* 0xF019 */
+		 N_("Release without SD card")},
 		{PTP_DPC_NIKON_1_MovQuality,                    /* 0xF01C */
 		 N_("Movie Quality")},
 		{PTP_DPC_NIKON_1_HiISONoiseReduction,           /* 0xF00E */
