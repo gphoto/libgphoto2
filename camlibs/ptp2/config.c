@@ -9167,8 +9167,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AV Max"),                         "avmax",                    PTP_DPC_CANON_AvMax,                    PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_CANON_EOS_Aperture,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_NIKON_1_FNumber,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Aperture,              _put_Nikon_1_Aperture },
-	{ N_("Shutterspeed"),                   "shutterspeed1",            PTP_DPC_NIKON_1_ShutterSpeed,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_1_ShutterSpeedI,         _put_Nikon_1_ShutterSpeedI },
-	{ N_("Shutterspeed"),                   "shutterspeed1",            PTP_DPC_NIKON_1_ShutterSpeed,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ShutterSpeedU,         _put_Nikon_1_ShutterSpeedU },
+	{ N_("Shutterspeed"),                   "shutterspeed1i",           PTP_DPC_NIKON_1_ShutterSpeed,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_1_ShutterSpeedI,         _put_Nikon_1_ShutterSpeedI },
+	{ N_("Shutterspeed"),                   "shutterspeed1u",           PTP_DPC_NIKON_1_ShutterSpeed,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ShutterSpeedU,         _put_Nikon_1_ShutterSpeedU },
 	{ N_("Aperture 2"),                     "aperture2",                PTP_DPC_NIKON_1_FNumber2,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Aperture,              _put_Nikon_1_Aperture },
 	{ N_("Focusing Point"),                 "focusingpoint",            PTP_DPC_CANON_FocusingPoint,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_FocusingPoint,           _put_Canon_FocusingPoint },
 	{ N_("Sharpness"),                      "sharpness",                PTP_DPC_Sharpness,                      0,                  PTP_DTC_UINT8,  _get_Sharpness,                     _put_Sharpness },
@@ -9591,11 +9591,19 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 						/* array is not compatible to non-array */
 						if (((cursub->type ^ dpd.DataType) & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
 							continue;
+						/* FIXME: continue to search here instead of below? */
 					}
 					ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 					if ((ret == GP_OK) && (dpd.GetSet == PTP_DPGS_Get))
 						gp_widget_set_readonly (widget, 1);
 					ptp_free_devicepropdesc(&dpd);
+
+					if (ret != GP_OK) {
+						/* the type might not have matched, try the next */
+						GP_LOG_E ("Widget get of property '%s' failed, trying to see if we have another...", cursub->label);
+						nrofsetprops--;
+						continue;
+					}
 					if (mode == MODE_SINGLE_GET) {
 						*outwidget = widget;
 						free (setprops);
@@ -9969,6 +9977,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 						/* array is not compatible to non-array */
 						if (((cursub->type ^ dpd.DataType) & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
 							continue;
+						/* FIXME: continue to search here perhaps instead of below? */
 					}
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
 						ret = cursub->putfunc (camera, widget, &propval, &dpd);
@@ -9986,6 +9995,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 						ptp_free_devicepropvalue (cursub->type, &propval);
 					}
 					ptp_free_devicepropdesc(&dpd);
+					if (ret != GP_OK) continue; /* see if we have another match */
 				} else {
 					ret = cursub->putfunc (camera, widget, NULL, NULL);
 				}
