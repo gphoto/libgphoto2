@@ -2599,6 +2599,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 
 /* this is irregular, as it should be -0x5000 or 0xD000 based */
 #define PTP_DPC_NIKON_1_ISO				0xF002
+#define PTP_DPC_NIKON_1_FNumber				0xF003
+#define PTP_DPC_NIKON_1_FNumber2			0xF006
 #define PTP_DPC_NIKON_1_ImageCompression		0xF009
 #define PTP_DPC_NIKON_1_ImageSize			0xF00A
 #define PTP_DPC_NIKON_1_WhiteBalance			0xF00C
@@ -2606,6 +2608,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_1_HiISONoiseReduction		0xF00E
 #define PTP_DPC_NIKON_1_ActiveDLighting			0xF00F
 #define PTP_DPC_NIKON_1_Language			0xF018
+#define PTP_DPC_NIKON_1_ReleaseWithoutCard		0xF019 /* no sd card */
 #define PTP_DPC_NIKON_1_MovQuality			0xF01C
 
 /* Fuji specific */

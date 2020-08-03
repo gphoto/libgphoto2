@@ -775,7 +775,7 @@ _get_Generic##bits##Table(CONFIG_GET_ARGS, struct deviceproptable##bits * tbl, i
 			} \
 			if (!isset) { \
 				char buf[200]; \
-				sprintf(buf, _("Unknown value %04d"), i); \
+				sprintf(buf, _("Unknown value %04x"), i); \
 				gp_widget_add_choice (*widget, buf); \
 				if (i == dpd->CurrentValue.bits) { \
 					isset2 = TRUE; \
@@ -5286,7 +5286,66 @@ static struct deviceproptableu16 fuji_aperture[] = {
 };
 GENERIC16TABLE(Fuji_Aperture,fuji_aperture)
 
-
+/* The j5 only reports some of those, there is no clear pattern... fill in with more 1 series */
+static struct deviceproptableu8 nikon_1_aperture[] = {
+	/* 1 */
+	/* 1.1 */
+	/* 1.2 */
+	/* 1.3 */
+	/* 1.4 */
+	/* 1.5 */
+	/* 1.6 */
+	/* 1.7 */
+	/* 1.8 */
+	/* 1.9 */
+	/* 2 */
+	/* 2.2 */
+	/* 2.4 */
+	/* 2.5 */
+	/* 2.7 */
+	/* 2.8 */
+	/* 3 */
+	/* 3.2 */
+	{ "3.5",	22, 0 },
+	/* 3.8 */
+	{ "4",		24, 0 },
+	/* 4.2 */
+	{ "4.5",	26, 0 },
+	/* 4.8 */
+	{ "5",		28, 0 },
+	/* 5.3 */
+	{ "5.6",	30, 0 },
+	/* 6 */
+	{ "6.3",	32, 0 },
+	/* 6.7 */
+	{ "7.1",	34, 0 },
+	/* 7.6 */
+	{ "8",		36, 0 },
+	/* 8.5 */
+	{ "9", 		38, 0 },
+	/* 9.5 */
+	{ "10", 	40, 0 },
+	{ "11", 	42, 0 },
+	/* 12 */
+	{ "13",		44, 0 },
+	{ "14", 	46, 0 },
+	/* 15 */
+	{ "16",		48, 0 },
+	/* 17 */
+	/* 18 */
+	/* 19 */
+	/* 20 */
+	/* 21 */
+	/* 22 */
+	/* 24 */
+	/* 25 */
+	/* 27.6 */
+	/* 29 */
+	/* 30 */
+	/* 32 */
+	/* 0 */
+};
+GENERIC8TABLE(Nikon_1_Aperture,nikon_1_aperture)
 
 static struct deviceproptableu8 nikon_bracketset[] = {
 	{ N_("AE & Flash"),	0, 0 },
@@ -9018,6 +9077,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AV Open"),                        "avopen",                   PTP_DPC_CANON_AvOpen,                   PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
 	{ N_("AV Max"),                         "avmax",                    PTP_DPC_CANON_AvMax,                    PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_CANON_EOS_Aperture,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
+	{ N_("Aperture"),                       "aperture",                 PTP_DPC_NIKON_1_FNumber,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Aperture,              _put_Nikon_1_Aperture },
+	{ N_("Aperture 2"),                     "aperture2",                PTP_DPC_NIKON_1_FNumber2,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Aperture,              _put_Nikon_1_Aperture },
 	{ N_("Focusing Point"),                 "focusingpoint",            PTP_DPC_CANON_FocusingPoint,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_FocusingPoint,           _put_Canon_FocusingPoint },
 	{ N_("Sharpness"),                      "sharpness",                PTP_DPC_Sharpness,                      0,                  PTP_DTC_UINT8,  _get_Sharpness,                     _put_Sharpness },
 	{ N_("Capture Delay"),                  "capturedelay",             PTP_DPC_CaptureDelay,                   0,                  PTP_DTC_UINT32, _get_Milliseconds,                  _put_Milliseconds },
