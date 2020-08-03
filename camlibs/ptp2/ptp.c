@@ -3836,10 +3836,10 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 	PTPDevicePropDesc	dpd;
 
 	/* for old A900 / A700 who does not have this, but has capture */
-	if (!ptp_operation_issupported(params, PTP_OC_SONY_GetAllDevicePropData))
+	if (!ptp_operation_issupported(params, opcode))
 		return PTP_RC_OK;
 
-	PTP_CNT_INIT(ptp, PTP_OC_SONY_GetAllDevicePropData);
+	PTP_CNT_INIT(ptp, opcode);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (!data)
 		return PTP_RC_GeneralError;
