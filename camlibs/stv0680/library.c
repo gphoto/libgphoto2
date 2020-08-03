@@ -147,6 +147,7 @@ int stv0680_try_cmd(GPPort *port, unsigned char cmd,
 			return ret;
 		}
 	    }
+	    break;
 	}
 	default:
 	    return GP_ERROR_NOT_SUPPORTED;
