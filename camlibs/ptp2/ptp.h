@@ -25,6 +25,7 @@
 
 #include <stdarg.h>
 #include <time.h>
+#include <sys/time.h>
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 #include <iconv.h>
 #endif
