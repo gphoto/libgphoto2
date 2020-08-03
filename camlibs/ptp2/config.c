@@ -5424,6 +5424,18 @@ static struct deviceproptablei8 nikon_1_shutterspeedi[] = {
 };
 GENERICI8TABLE(Nikon_1_ShutterSpeedI,nikon_1_shutterspeedi)
 
+static int
+_get_Nikon_1_ShutterSpeedU(CONFIG_GET_ARGS) {
+	dpd->DataType = PTP_DTC_INT8;
+	return _get_Nikon_1_ShutterSpeedI(CONFIG_GET_NAMES);
+}
+
+static int
+_put_Nikon_1_ShutterSpeedU(CONFIG_PUT_ARGS) {
+	dpd->DataType = PTP_DTC_INT8;
+	return _put_Nikon_1_ShutterSpeedI(CONFIG_PUT_NAMES);
+}
+
 static struct deviceproptableu8 nikon_bracketset[] = {
 	{ N_("AE & Flash"),	0, 0 },
 	{ N_("AE only"),	1, 0 },
@@ -9156,6 +9168,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_CANON_EOS_Aperture,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_NIKON_1_FNumber,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Aperture,              _put_Nikon_1_Aperture },
 	{ N_("Shutterspeed"),                   "shutterspeed1",            PTP_DPC_NIKON_1_ShutterSpeed,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_1_ShutterSpeedI,         _put_Nikon_1_ShutterSpeedI },
+	{ N_("Shutterspeed"),                   "shutterspeed1",            PTP_DPC_NIKON_1_ShutterSpeed,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ShutterSpeedU,         _put_Nikon_1_ShutterSpeedU },
 	{ N_("Aperture 2"),                     "aperture2",                PTP_DPC_NIKON_1_FNumber2,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Aperture,              _put_Nikon_1_Aperture },
 	{ N_("Focusing Point"),                 "focusingpoint",            PTP_DPC_CANON_FocusingPoint,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_FocusingPoint,           _put_Canon_FocusingPoint },
 	{ N_("Sharpness"),                      "sharpness",                PTP_DPC_Sharpness,                      0,                  PTP_DTC_UINT8,  _get_Sharpness,                     _put_Sharpness },
