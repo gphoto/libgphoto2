@@ -3835,6 +3835,7 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 	unsigned int		size, readlen;
 	PTPDevicePropDesc	dpd;
 
+	ptp_debug (params, "_ptp_sony_getalldevicepropdesc: opcode %04x", opcode);
 	/* for old A900 / A700 who does not have this, but has capture */
 	if (!ptp_operation_issupported(params, opcode))
 		return PTP_RC_OK;
@@ -4095,7 +4096,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
 				break;
 		if (i == params->nrofdeviceproperties) {
-			ptp_debug (params, "property 0x%04x not found?\n", propcode);
+			ptp_debug (params, "alpha property 0x%04x not found?\n", propcode);
 			return PTP_RC_GeneralError;
 		}
 		time(&now);
@@ -4112,7 +4113,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
 				break;
 		if (i == params->nrofdeviceproperties) {
-			ptp_debug (params, "property 0x%04x not found?\n", propcode);
+			ptp_debug (params, "qx property 0x%04x not found?\n", propcode);
 			return PTP_RC_GeneralError;
 		}
 		time(&now);

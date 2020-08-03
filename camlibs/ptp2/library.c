@@ -675,6 +675,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			di->OperationsSupported_len += opcodes;
 			free (xprops);
 			C_PTP (ptp_sony_qx_connect (&camera->pl->params, 3, 0xda01, 0xda01));
+
+			C_PTP (ptp_sony_qx_getalldevicepropdesc (&camera->pl->params));
 		}
 	}
 #if 0 /* Marcus: not regular ptp properties, not queryable via getdevicepropertyvalue */
