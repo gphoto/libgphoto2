@@ -5347,6 +5347,83 @@ static struct deviceproptableu8 nikon_1_aperture[] = {
 };
 GENERIC8TABLE(Nikon_1_Aperture,nikon_1_aperture)
 
+/* The j5 only reports some of those, there is no clear pattern... fill in with more 1 series */
+static struct deviceproptablei8 nikon_1_shutterspeedi[] = {
+	/* Bulb		-31*/
+	/* 30*/
+	/* 25*/
+	/* 20*/
+	/* 15*/
+	/* 13*/
+	/* 10*/
+	/* 8*/
+	/* 6*/
+	/* 5*/
+	/* 4*/
+	/* 3*/
+	/* 25/10*/
+	/* 2*/
+	/* 16/10*/
+	/* 15/10*/
+	/* 13/10*/
+	/* 1*/
+	/* 10/13*/
+	/* 10/15*/
+	/* 10/16*/
+	/* 1/2*/
+	/* 10/25*/
+	/* 1/3*/
+	/* 1/4*/
+	/* 1/5*/
+	/* 1/6*/
+	/* 1/8*/
+	/* 1/10*/
+	/* 1/13*/
+	/* 1/15*/
+	/* 1/20*/
+	/* 1/25*/
+	/* 1/30*/
+	/* 1/40*/
+	/* 1/45*/
+	/* 1/50*/
+	/* 1/60*/
+	/* 1/80*/
+	/* 1/90*/
+	/* 1/100*/
+	/* 1/125*/
+	/* 1/160*/
+	/* 1/180*/
+	/* 1/200*/
+	/* 1/250*/
+	/* 1/320*/
+	/* 1/350*/
+	/* 1/400*/
+	/* 1/500*/
+	/* 1/640*/
+	/* 1/750*/
+	/* 1/800*/
+	/* 1/1000*/
+	/* 1/1250*/
+	/* 1/1500*/
+	/* 1/1600*/
+	/* 1/2000*/
+	/* 1/2500*/
+	/* 1/3000*/
+	/* 1/3200*/
+	/* 1/4000*/
+	/* 1/5000*/
+	/* 1/6000*/
+	/* 1/6400*/
+	/* 1/8000*/
+	/* 1/9000*/
+	/* 1/10000*/
+	/* 1/12500*/
+	/* 1/13000*/
+	/* 1/15000*/
+	/* 1/16000*/
+};
+GENERICI8TABLE(Nikon_1_ShutterSpeedI,nikon_1_shutterspeedi)
+
 static struct deviceproptableu8 nikon_bracketset[] = {
 	{ N_("AE & Flash"),	0, 0 },
 	{ N_("AE only"),	1, 0 },
@@ -9078,6 +9155,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AV Max"),                         "avmax",                    PTP_DPC_CANON_AvMax,                    PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_CANON_EOS_Aperture,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_Aperture,                _put_Canon_Aperture },
 	{ N_("Aperture"),                       "aperture",                 PTP_DPC_NIKON_1_FNumber,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Aperture,              _put_Nikon_1_Aperture },
+	{ N_("Shutterspeed"),                   "shutterspeed1",            PTP_DPC_NIKON_1_ShutterSpeed,           PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Nikon_1_ShutterSpeedI,         _put_Nikon_1_ShutterSpeedI },
 	{ N_("Aperture 2"),                     "aperture2",                PTP_DPC_NIKON_1_FNumber2,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Aperture,              _put_Nikon_1_Aperture },
 	{ N_("Focusing Point"),                 "focusingpoint",            PTP_DPC_CANON_FocusingPoint,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_FocusingPoint,           _put_Canon_FocusingPoint },
 	{ N_("Sharpness"),                      "sharpness",                PTP_DPC_Sharpness,                      0,                  PTP_DTC_UINT8,  _get_Sharpness,                     _put_Sharpness },
