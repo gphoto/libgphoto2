@@ -2795,6 +2795,12 @@ typedef struct _PTPCanonEOSDeviceInfo {
 
 #define PTP_DPC_SONY_AF_Area_Position			0xD2DC
 
+/* Sony QX properties */
+#define PTP_DPC_SONY_QX_ExposureCompensation 		0xD6C3
+#define PTP_DPC_SONY_QX_Aperture 			0xD6C5
+#define PTP_DPC_SONY_QX_ShutterSpeed 			0xD6EA
+#define PTP_DPC_SONY_QX_ISO 				0xD6F2
+
 
 /* Casio EX-F1 */
 #define PTP_DPC_CASIO_MONITOR		0xD001
