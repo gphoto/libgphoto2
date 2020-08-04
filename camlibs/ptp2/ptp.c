@@ -3834,6 +3834,7 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 	unsigned char		*data = NULL, *dpddata;
 	unsigned int		size, readlen;
 	PTPDevicePropDesc	dpd;
+	time_t			now;
 
 	ptp_debug (params, "_ptp_sony_getalldevicepropdesc: opcode %04x", opcode);
 	/* for old A900 / A700 who does not have this, but has capture */
@@ -3850,6 +3851,7 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 	}
 	dpddata = data+8; /* nr of entries 32bit, 0 32bit */
 	size -= 8;
+	time(&now);
 	while (size>0) {
 		unsigned int	i;
 		uint16_t	propcode;
@@ -3900,6 +3902,7 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 			ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
 		}
 		params->deviceproperties[i].desc = dpd;
+		params->deviceproperties[i].timestamp = now;
 #if 0
 		ptp_debug (params, "dpd.DevicePropertyCode %04x, readlen %d, getset %d", dpd.DevicePropertyCode, readlen, dpd.GetSet);
 		switch (dpd.DataType) {
