@@ -7594,6 +7594,11 @@ ptp_opcode_trans_t ptp_opcode_sony_trans[] = {
 	{PTP_OC_SONY_GetControlDeviceDesc,"GetControlDeviceDesc"},
 	{PTP_OC_SONY_SetControlDeviceB,"SetControlDeviceB"},
 	{PTP_OC_SONY_GetAllDevicePropData,"GetAllDevicePropData"},
+	{PTP_OC_SONY_QX_GetAllDevicePropData,"QX_GetAllDevicePropData"},
+	{PTP_OC_SONY_QX_SetControlDeviceB,"QX_SetControlDeviceB"},
+	{PTP_OC_SONY_QX_SetControlDeviceA,"QX_SetControlDeviceA"},
+	{PTP_OC_SONY_QX_GetSDIOGetExtDeviceInfo,"QX_GetSDIOGetExtDeviceInfo"},
+	{PTP_OC_SONY_QX_Connect,"QX_Connect"},
 };
 
 ptp_opcode_trans_t ptp_opcode_parrot_trans[] = {
