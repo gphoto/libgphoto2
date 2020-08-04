@@ -6306,6 +6306,33 @@ sonyout:
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_QX_GetAllDevicePropData)
+	) {
+		do {
+			C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
+
+			/* FIXME: here the code for image addition */
+
+			/* If not, check for events and handle them */
+			if (time_since(event_start) > timeout-100) {
+				/* if there is less than 0.1 seconds, just check the
+				 * queue. with libusb1 this can still make progress,
+				 * as above bulk calls will check and queue new ptp events
+				 * async */
+				C_PTP_REP (ptp_check_event_queue(params));
+			} else {
+				C_PTP_REP (ptp_check_event(params));
+			}
+			if (ptp_get_one_event (params, &event))
+				goto handleregular;
+			gp_context_idle (context);
+		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
+
+		*eventtype = GP_EVENT_TIMEOUT;
+		return GP_OK;
+	}
 	if 	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD)
 	{
 
