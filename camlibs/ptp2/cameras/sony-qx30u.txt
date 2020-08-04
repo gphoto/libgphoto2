@@ -16,6 +16,72 @@ Device Capabilities:
 Storage Devices Summary:
 
 Device Property Summary:
+Property 0xd631:(readwrite) (type=0x4) Range [10 - 300, step 5] value: 50
+Property 0xd632:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd633:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 0
+Property 0xd63a:(readwrite) (type=0x4004) a[9] 0,0,0,1,0,0,0,0,0
+Property 0xd6a6:(readwrite) (type=0x2) Enumeration [0,1,2] value: 0
+Property 0xd6a7:(readwrite) (type=0x2) Enumeration [1,2] value: 1
+Property 0xd6a8:(readwrite) (type=0x4002) a[2] 50,50
+Property 0xd6aa:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd6af:(readwrite) (type=0x2) Range [0 - 100, step 1] value: 0
+Property 0xd6b0:(readwrite) (type=0x4) Enumeration [1,32773,32772] value: 1
+Property 0xd6b1:(readwrite) (type=0xffff) '20150101T000000+0900'
+Property 0xd6b3:(readwrite) (type=0x2) Enumeration [1,2,3] value: 3
+Property 0xd6b7:(readwrite) (type=0x2) Enumeration [1,2,3,25] value: 1
+Property 0xd6b8:(readwrite) (type=0x4) Enumeration [2,4,32784,6,32770,32771,32772,32786] value: 2
+Property 0xd6b9:(readwrite) (type=0x2) Enumeration [2,3] value: 0
+Property 0xd6ba:(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd6bb:(readwrite) (type=0x4008) a[5] 2,15825108992,15825076224,0,0
+Property 0xd6bc:(readwrite) (type=0x4) Enumeration [29,30] value: 30
+Property 0xd6bd:(readwrite) (type=0x2) Enumeration [4] value: 4
+Property 0xd6be:(readwrite) (type=0x2) Range [0 - 0, step 1] value: 0
+Property 0xd6bf:(readwrite) (type=0x4002) a[5] 255,255,255,255,255
+Property 0xd6c0:(readwrite) (type=0x4006) a[0] 
+Property 0xd6c3:(readwrite) (type=0x3) Enumeration [2000,1700,1300,1000,700,300,0,-300,-700,-1000,-1300,-1700,-2000] value: 0
+Property 0xd6c5:(readwrite) (type=0x4) Enumeration [100,110,130,140,160,170,180,200,220,250,280,320,350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200,2500,2900,3200,3600,4000,4500,5100,5700,6400,7200,8100,9000] value: 350
+Property 0xd6c6:(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd6c7:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd6c9:(readwrite) (type=0x2) Enumeration [1,2] value: 1
+Property 0xd6cb:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd6cc:(readwrite) (type=0x4) Enumeration [32768,32769,2,3,4,1] value: 32768
+Property 0xd6cd:(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+Property 0xd6cf:(readwrite) (type=0x4) Enumeration [2,1] value: 1
+Property 0xd6d0:(readwrite) (type=0x4) Enumeration [0,1] value: 1
+Property 0xd6d1:(readwrite) (type=0x4) Enumeration [0,1,2] value: 1
+Property 0xd6de:(readwrite) (type=0x2) Enumeration [0,1,2] value: 0
+Property 0xd6df: error 2002 on query.
+Property 0xd6e0:(readwrite) (type=0x2) Enumeration [2,1] value: 0
+Property 0xd6e2:(readwrite) (type=0x2) Enumeration [1,2,3,4] value: 2
+Property 0xd6e6:(readwrite) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd6e7:(readwrite) (type=0x1) Range [-1 - 100, step 1] value: -1
+Property 0xd6e8:(readwrite) (type=0x2) Enumeration [2,1] value: 1
+Property 0xd6ea:(readwrite) (type=0x6) Enumeration [19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,524298,393226,327690,262154,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536,75536,78336] value: 65566
+Property 0xd6ec:(readwrite) (type=0x2) Enumeration [1,2,3,5,6,7] value: 1
+Property 0xd6f0:(readwrite) (type=0x4) Range [2500 - 9900, step 100] value: 0
+Property 0xd6f1:(readwrite) (type=0x2) Enumeration [1,2,3,8,9,10,4,5,6,7,11,12,13,14,15] value: 1
+Property 0xd6f2:(readwrite) (type=0x6) Enumeration [16777215,80,100,160,200,400,800,1600,3200] value: 16777215
+Property 0xd60e:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd60f:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd612:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd613:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd614:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd617:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd61c:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd61d:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd61e:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd630:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd637:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd63b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd63c:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd63e:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd6a1:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd6a2:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd6a3:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd6a4:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd6a5:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd6d9:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd6da:(readwrite) (type=0x4) Enumeration [1,2] value: 1
 
 /main/actions/opcode
 Label: PTP Opcode
