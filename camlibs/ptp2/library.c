@@ -4473,7 +4473,10 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPDevicePropDesc	dpd;
 	struct timeval	event_start;
 
-	if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model, "ZV-1")) {
+	if (params->deviceinfo.Model && (
+		!strcmp(params->deviceinfo.Model, "ZV-1")		||
+		!strcmp(params->deviceinfo.Model, "DSC-RX100M7")
+	)) {
 		/* For some as yet unknown reason the ZV-1 needs around 3 seconds startup time
 		 * to be able to capture. I looked for various trigger events or property changes
 		 * but nothing worked except waiting. */
