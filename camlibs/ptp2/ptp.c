@@ -4180,6 +4180,11 @@ ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceA)
 	)
 		return ptp_sony_setdevicecontrolvaluea (params, propcode, value, datatype);
+	/* Sony QX method */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_QX_SetControlDeviceA)
+	)
+		return ptp_sony_qx_setdevicecontrolvaluea (params, propcode, value, datatype);
 	return ptp_setdevicepropvalue (params, propcode, value, datatype);
 }
 

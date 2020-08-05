@@ -1590,17 +1590,6 @@ _put_Sony_ExpCompensation2(CONFIG_PUT_ARGS) {
 	return translate_ptp_result (ptp_sony_setdevicecontrolvaluea (&camera->pl->params, dpd->DevicePropertyCode, propval, PTP_DTC_INT16));
 }
 
-/* QX method */
-static int
-_put_Sony_QX_ExpCompensation(CONFIG_PUT_ARGS) {
-	int ret;
-
-	ret = _put_ExpCompensation(CONFIG_PUT_NAMES);
-	if (ret != GP_OK) return ret;
-	return translate_ptp_result (ptp_sony_qx_setdevicecontrolvaluea (&camera->pl->params, dpd->DevicePropertyCode, propval, PTP_DTC_INT16));
-}
-
-
 static int
 _get_Olympus_ExpCompensation(CONFIG_GET_ARGS) {
 	int j;
@@ -2729,7 +2718,6 @@ _put_Sony_QX_ISO(CONFIG_PUT_ARGS)
 {
 	char 		*value;
 	uint32_t	u;
-	PTPParams	*params = &(camera->pl->params);
 
 	CR (gp_widget_get_value(widget, &value));
 	if (!strcmp(value,_("Auto ISO"))) {
@@ -2750,7 +2738,9 @@ _put_Sony_QX_ISO(CONFIG_PUT_ARGS)
 setiso:
 	propval->u32 = u;
 
-	return translate_ptp_result (ptp_sony_qx_setdevicecontrolvaluea(params, dpd->DevicePropertyCode, propval, PTP_DTC_UINT32));
+	/*return translate_ptp_result (ptp_sony_qx_setdevicecontrolvaluea(params, dpd->DevicePropertyCode, propval, PTP_DTC_UINT32));*/
+
+	return GP_OK; /* will be set by generic code */
 }
 
 
@@ -2969,7 +2959,8 @@ _put_Sony_QX_FNumber(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value (widget, &fvalue));
 
 	propval->u16 = fvalue*100;
-	return translate_ptp_result (ptp_sony_qx_setdevicecontrolvaluea (&camera->pl->params, dpd->DevicePropertyCode, propval, PTP_DTC_UINT16));
+	/*return translate_ptp_result (ptp_sony_qx_setdevicecontrolvaluea (&camera->pl->params, dpd->DevicePropertyCode, propval, PTP_DTC_UINT16)); */
+	return GP_OK; /* will be handled by generic setter going to QX stter */
 }
 
 static int
@@ -9147,7 +9138,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Assist Light"),                   "assistlight",              PTP_DPC_NIKON_AFAssist,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_OLYMPUS_ExposureCompensation,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16,  _get_Olympus_ExpCompensation,_put_Olympus_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_SONY_ExposureCompensation,      PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_Sony_ExpCompensation2 },
-	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_SONY_QX_ExposureCompensation,   PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_Sony_QX_ExpCompensation },
+	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_SONY_QX_ExposureCompensation,   PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_Sony_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       0,                  PTP_DTC_INT16,  _get_ExpCompensation,               _put_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_ExpCompensation,          PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
