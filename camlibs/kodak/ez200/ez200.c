@@ -163,7 +163,7 @@ static const struct {
    	unsigned short idProduct;
 } models[] = {
         {"Kodak EZ200", GP_DRIVER_STATUS_PRODUCTION, 0x040a, 0x0300},
-	{NULL,0,0}
+	{NULL,0,0,0}
 };
 
 int
