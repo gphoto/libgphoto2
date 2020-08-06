@@ -179,7 +179,8 @@ static int folder_list_func (CameraFilesystem *fs, const char *folder,
 	long unsigned 	data_len = 0;
 	unsigned char	*ptr_data_buff;
 	char		filename[13], *ptr;
-	int		res, i;
+	int		res;
+	unsigned int	i;
 
 	if(camera->pl->context)
 	{
@@ -260,7 +261,8 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	long unsigned	data_len = 0;
 	unsigned char	*ptr_data_buff;
 	char		filename[13];
-	int		res, i;
+	int		res;
+	unsigned int	i;
 
 	if(camera->pl->context)
 	{
