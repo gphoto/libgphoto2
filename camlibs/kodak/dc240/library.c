@@ -114,7 +114,7 @@ static unsigned char *
 dc240_packet_new_path (const char *folder, const char *filename) {
     unsigned char *p;
     char buf[1024];
-    int x;
+    size_t x;
     unsigned char cs = 0;
 
     p = malloc(sizeof(char)*60);
@@ -733,7 +733,8 @@ int dc240_get_directory_list (Camera *camera, CameraList *list, const char *fold
                              unsigned char attrib, GPContext *context) {
 
     CameraFile *file;
-    int x, y=0, z, size=256;
+    unsigned int x, y=0, z;
+    int size=256;
     char buf[64];
     unsigned char *p1 = dc240_packet_new(0x99);
     unsigned char *p2 = dc240_packet_new_path(folder, NULL);
@@ -741,7 +742,7 @@ int dc240_get_directory_list (Camera *camera, CameraList *list, const char *fold
     unsigned long int fsize;
     int ret;
     int num_of_entries = 0; /* number of entries in the listing */
-    int total_size = 0; /* total useful size of the listing */
+    unsigned int total_size = 0; /* total useful size of the listing */
 
     gp_file_new(&file);
     ret = dc240_packet_exchange(camera, file, p1, p2, &size, 256, context);
@@ -809,10 +810,11 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
 
     switch (action) {
     case DC240_ACTION_PREVIEW:
-        cmd_packet[4] = 0x02;
-        thumb = 1;
-        /* no break on purpose */
     case DC240_ACTION_IMAGE:
+        if (action == DC240_ACTION_PREVIEW) {
+            cmd_packet[4] = 0x02;
+            thumb = 1;
+        }
         if ((size = dc240_get_file_size(camera, folder, filename, thumb, context)) < GP_OK) {
             retval = GP_ERROR;
             break;
