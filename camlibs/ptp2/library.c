@@ -4461,7 +4461,6 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 }
 
-
 static int
 camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
 {
@@ -4602,6 +4601,113 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			}
 			break;
 		}
+
+	/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
+	} while (time_since (event_start) < 35000);
+	GP_LOG_D ("ending image availability");
+
+	/* If the camera does not report object presence, it will crash if we access 0xffffc001 ... */
+	if (!newobject) {
+		GP_LOG_E("no object found during event polling. perhaps no focus...");
+		return GP_ERROR;
+	}
+	/* FIXME: handle multiple images (as in BurstMode) */
+	C_PTP (ptp_getobjectinfo (params, newobject, &oi));
+
+	sprintf (path->folder,"/");
+	if (oi.ObjectFormat == PTP_OFC_SONY_RAW)
+		sprintf (path->name, "capt%04d.arw", params->capcnt++);
+	else
+		sprintf (path->name, "capt%04d.jpg", params->capcnt++);
+	return add_objectid_and_upload (camera, path, context, newobject, &oi);
+}
+
+static int
+camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
+{
+	PTPParams	*params = &camera->pl->params;
+	PTPPropertyValue propval;
+	PTPContainer	event;
+	PTPObjectInfo	oi;
+	uint32_t	newobject = 0;
+	struct timeval	event_start;
+
+	/* regular code */
+
+#if 0
+	PTPDevicePropDesc	dpd;
+
+	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
+
+	GP_LOG_D ("dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
+	GP_LOG_D ("dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
+
+	if (dpd.CurrentValue.u8 == 0)
+		dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
+	if (dpd.CurrentValue.u8 == 0x13) {
+		GP_LOG_D ("expecting raw+jpeg capture");
+	}
+#endif
+	/* half-press */
+	propval.u16 = 2;
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+
+	/* full-press */
+	propval.u16 = 2;
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
+
+#if 0
+	/* Check if we are in manual focus to skip the wait for focus */
+	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FocusMode, &dpd));
+	if (dpd.CurrentValue.u16 != 1) { /* 1 is Manual .. no need to wait there for focusing */
+
+		/* Now hold down the shutter button for a bit. We probably need to hold it as long as it takes to
+		* get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
+		*/
+#endif
+		GP_LOG_D ("holding down shutterbutton for 2 seconds... ");
+		event_start = time_now();
+		do {
+			/* needed on older cameras like the a58, check for events ... */
+			C_PTP (ptp_check_event (params));
+			if (ptp_get_one_event(params, &event)) {
+				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+			}
+
+			/* Alternative code in case we miss the event */
+
+			C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
+
+		} while (time_since (event_start) < 2000);
+#if 0
+	}
+#endif
+	GP_LOG_D ("releasing shutterbutton");
+
+	/* release full-press */
+	propval.u16 = 1;
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
+
+	/* release half-press */
+	propval.u16 = 1;
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
+
+	GP_LOG_D ("waiting for image availability");
+	event_start = time_now();
+	do {
+		/* break if we got it from above focus wait already for some reason, seen on A6000 */
+		if (newobject) break;
+#if 1
+		/* needed on older cameras like the a58, check for events ... */
+		/* This would be unsafe if we get an out-of-order event with no objects present, but
+		 * we drained all events above */
+		C_PTP (ptp_check_event_queue (params));
+		if (ptp_get_one_event(params, &event)) {
+			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+		}
+#endif
+
+		C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
 
 	/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
 	} while (time_since (event_start) < 35000);
@@ -5087,6 +5193,12 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
 	) {
 		return camera_sony_capture (camera, type, path, context);
+	}
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_QX_SetControlDeviceB)
+	) {
+		return camera_sony_qx_capture (camera, type, path, context);
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
