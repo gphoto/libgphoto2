@@ -5839,6 +5839,52 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		return GP_OK;
 	}
+
+	/* Sony QX */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
+		ptp_operation_issupported(params, PTP_OC_SONY_QX_SetControlDeviceB)
+	) {
+		PTPPropertyValue	propval;
+		struct timeval		event_start;
+		PTPContainer		event;
+		PTPDevicePropDesc	dpd;
+
+		/* half-press */
+		propval.u16 = 2;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
+
+		/* full-press */
+		propval.u16 = 2;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
+
+			GP_LOG_D ("holding down shutterbutton for 2 seconds");
+			event_start = time_now();
+			do {
+				/* needed on older cameras like the a58, check for events ... */
+				C_PTP (ptp_check_event (params));
+				if (ptp_get_one_event(params, &event)) {
+					GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+				}
+
+				/* Alternative code in case we miss the event */
+
+				C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
+				C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_FocusFound, &dpd));
+			} while (time_since (event_start) < 2000);
+
+		GP_LOG_D ("releasing shutterbutton");
+
+		/* release full-press */
+		propval.u16 = 1;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
+
+		/* release half-press */
+		propval.u16 = 1;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
+
+		return GP_OK;
+	}
+
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
 		ptp_operation_issupported(params, PTP_OC_InitiateCapture)
 	) {
