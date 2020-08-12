@@ -86,7 +86,7 @@ static int find_folder( Camera *camera, const char *folder,
 {
     CameraList *albums = NULL;
     const char* album_name;
-    int folder_len;
+    size_t folder_len;
     int i;
     char *dc120_folder_card   = _("CompactFlash Card");
 
