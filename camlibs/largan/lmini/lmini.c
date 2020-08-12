@@ -237,7 +237,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 		if (ret < GP_OK) {
 			return ret;
 		}
-		if (ret < pict->data_size) {
+		if ((unsigned int)ret < pict->data_size) {
 			GP_DEBUG ("largan_get_pict(): picture data short read\n");
 			return GP_ERROR;
 		}
