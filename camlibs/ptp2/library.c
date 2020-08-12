@@ -4650,11 +4650,11 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 #endif
 	/* half-press */
 	propval.u16 = 2;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
 
 	/* full-press */
 	propval.u16 = 2;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
 
 #if 0
 	/* Check if we are in manual focus to skip the wait for focus */
@@ -4686,11 +4686,11 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 
 	/* release full-press */
 	propval.u16 = 1;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
 
 	/* release half-press */
 	propval.u16 = 1;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
 
 	GP_LOG_D ("waiting for image availability");
 	event_start = time_now();
