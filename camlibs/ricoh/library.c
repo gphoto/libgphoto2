@@ -565,7 +565,7 @@ camera_init (Camera *camera, GPContext *context)
 	}
 
 	/* Contact made. Do we need to change the speed? */
-	if (settings.serial.speed != speed) {
+	if ((unsigned int)settings.serial.speed != speed) {
 		for (i = 0; speeds[i].speed; i++)
 			if (speeds[i].speed == speed)
 				break;
