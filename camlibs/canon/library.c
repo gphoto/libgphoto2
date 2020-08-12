@@ -1484,21 +1484,21 @@ put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, c
 		}
 	}
 
-	sprintf (dcf_root_dir, "%s\\DCIM", camera->pl->cached_drive);
+	snprintf (dcf_root_dir, sizeof (dcf_root_dir), "%s\\DCIM", camera->pl->cached_drive);
 
 	if (strlen (dir) == 0) {
-		sprintf (dir, "\\100CANON");
-		sprintf (destname, "AUT_0001.JPG");
+		snprintf (dir, sizeof (dir), "\\100CANON");
+		snprintf (destname, sizeof (destname), "AUT_0001.JPG");
 	} else {
 		if (strlen (destname) == 0) {
-			sprintf (destname, "AUT_%c%c01.JPG", dir[2], dir[3]);
+			snprintf (destname, sizeof (destname), "AUT_%c%c01.JPG", dir[2], dir[3]);
 		} else {
-			sprintf (buf, "%c%c", destname[6], destname[7]);
+			snprintf (buf, sizeof (buf), "%c%c", destname[6], destname[7]);
 			j = 1;
 			j = atoi (buf);
 			if (j == 99) {
 				j = 1;
-				sprintf (buf, "%c%c%c", dir[1], dir[2], dir[3]);
+				snprintf (buf, sizeof (buf), "%c%c%c", dir[1], dir[2], dir[3]);
 				dirnum = atoi (buf);
 				if (dirnum == 999) {
 					gp_context_error (context,
@@ -1507,15 +1507,15 @@ put_file_func (CameraFilesystem __unused__ *fs, const char __unused__ *folder, c
 					return GP_ERROR;
 				} else {
 					dirnum++;
-					sprintf (dir, "\\%03iCANON", dirnum);
+					snprintf (dir, sizeof (dir), "\\%03iCANON", dirnum);
 				}
 			} else
 				j++;
 
-			sprintf (destname, "AUT_%c%c%02i.JPG", dir[2], dir[3], j);
+			snprintf (destname, sizeof (destname), "AUT_%c%c%02i.JPG", dir[2], dir[3], j);
 		}
 
-		sprintf (destpath, "%s%s", dcf_root_dir, dir);
+		snprintf (destpath, sizeof (destpath), "%s%s", dcf_root_dir, dir);
 
 		GP_DEBUG ("destpath: %s destname: %s", destpath, destname);
 	}

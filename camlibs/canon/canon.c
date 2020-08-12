@@ -399,7 +399,7 @@ replace_filename_extension(const char *filename, const char __unused__ *newext)
                 return NULL;
         }
         if ((unsigned int)(p - buf) < sizeof (buf) - 4) {
-                strncpy (p, ".THM", 4);
+                memcpy (p, ".THM", 4);
                 GP_DEBUG ("replace_filename_extension: New name for '%s' is '%s'",
                           filename, buf);
                 return buf;
@@ -451,7 +451,7 @@ filename_to_audio(const char *filename, const char __unused__ *newext)
                 return NULL;
         }
         if ((unsigned int)(p - buf) < sizeof (buf) - 4) {
-                strncpy (p, ".WAV", 4);
+                memcpy (p, ".WAV", 4);
                 GP_DEBUG ("filename_to_audio: New name for '%s' is '%s'",
                           filename, buf);
                 return buf;
