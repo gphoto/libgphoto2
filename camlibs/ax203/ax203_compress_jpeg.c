@@ -321,12 +321,12 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 			jpeg_finish_compress (&cinfo);
 
 			stop = 0;
-			for (i = 2; i < buf_size && !stop; i += size) {
+			for (i = 2; (unsigned long)i < buf_size && !stop; i += size) {
 				stop = buf[i] == 0xff && buf[i + 1] == 0xda;
 				i += 2;
 				size = (buf[i] << 8) | buf[i + 1];
 			}
-			if (i >= buf_size) {
+			if ((unsigned long)i >= buf_size) {
 				gp_log (GP_LOG_ERROR, "ax203",
 					"missing in ff da marker?");
 				return GP_ERROR_CORRUPTED_DATA;

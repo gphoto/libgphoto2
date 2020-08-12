@@ -45,69 +45,69 @@ static const struct eeprom_info {
 	int has_4k_sectors;
 	int pp_64k;
 } ax203_eeprom_info[] = {
-	{ "AMIC A25L040", 0x37133037,  524288, 1 },
-	{ "AMIC A25L080", 0x37143037, 1048576, 1 },
-	{ "AMIC A25L40P", 0x1320377f,  524288, 0 },
-	{ "AMIC A25L80P", 0x1420377f, 1048576, 0 },
-	{ "AMIC A25L16P", 0x1520377f, 2097152, 0 },
+	{ "AMIC A25L040", 0x37133037,  524288, 1, 0 },
+	{ "AMIC A25L080", 0x37143037, 1048576, 1, 0 },
+	{ "AMIC A25L40P", 0x1320377f,  524288, 0, 0 },
+	{ "AMIC A25L80P", 0x1420377f, 1048576, 0, 0 },
+	{ "AMIC A25L16P", 0x1520377f, 2097152, 0, 0 },
 
 	/* Note the ATmel AT26DF041 id:0x0000441f is fsck-ed up. It doesn't
 	   support ERASE_64K, (only 4K) and SPI_EEPROM_PP is 0x11 rather then
 	   0x02 (0x02 only programs a single byte). */
 	/* I cannot find a datasheet for the ATmel AT26DF081 id:0x0000451f */
-	{ "ATmel AT26DF161",  0x0000461f, 2097152, 1 },
-	{ "ATmel AT26DF081A", 0x0001451f, 1048576, 1 },
-	{ "ATmel AT26DF161A", 0x0001461f, 2097152, 1 },
-	{ "ATmel AT25DF081",  0x0002451f, 1048576, 1 },
-	{ "ATmel AT25DF161",  0x0002461f, 2097152, 1 },
+	{ "ATmel AT26DF161",  0x0000461f, 2097152, 1, 0 },
+	{ "ATmel AT26DF081A", 0x0001451f, 1048576, 1, 0 },
+	{ "ATmel AT26DF161A", 0x0001461f, 2097152, 1, 0 },
+	{ "ATmel AT25DF081",  0x0002451f, 1048576, 1, 0 },
+	{ "ATmel AT25DF161",  0x0002461f, 2097152, 1, 0 },
 
-	{ "EON EN25B16", 0x1c15201c, 2097152, 0 },
-	{ "EON EN25B32", 0x1c16201c, 4194304, 0 },
-	{ "EON EN25F80", 0x1c14311c, 1048576, 1 },
-	{ "EON EN25F16", 0x1c15311c, 2097152, 1 },
+	{ "EON EN25B16", 0x1c15201c, 2097152, 0, 0 },
+	{ "EON EN25B32", 0x1c16201c, 4194304, 0, 0 },
+	{ "EON EN25F80", 0x1c14311c, 1048576, 1, 0 },
+	{ "EON EN25F16", 0x1c15311c, 2097152, 1, 0 },
 
-	{ "ESI ES25P80", 0x0014204a, 1048576, 0 },
-	{ "ESI ES25P16", 0x0015204a, 2097152, 0 },
+	{ "ESI ES25P80", 0x0014204a, 1048576, 0, 0 },
+	{ "ESI ES25P16", 0x0015204a, 2097152, 0, 0 },
 
-	{ "ESMT F25L008 (top)",    0x8c14208c, 1048576, 1 },
-	{ "ESMT F25L008 (bottom)", 0x8c14218c, 1048576, 1 },
+	{ "ESMT F25L008 (top)",    0x8c14208c, 1048576, 1, 0 },
+	{ "ESMT F25L008 (bottom)", 0x8c14218c, 1048576, 1, 0 },
 
-	{ "GigaDevice GD25Q40", 0xc81340c8,  524288, 1 },
-	{ "GigaDevice GD25Q80", 0xc81440c8, 1048576, 1 },
-	{ "GigaDevice GD25Q16", 0xc81540c8, 2097152, 1 },
+	{ "GigaDevice GD25Q40", 0xc81340c8,  524288, 1, 0 },
+	{ "GigaDevice GD25Q80", 0xc81440c8, 1048576, 1, 0 },
+	{ "GigaDevice GD25Q16", 0xc81540c8, 2097152, 1, 0 },
 
-	{ "MXIC MX25L4005A", 0xc21320c2,  524288, 1 },
-	{ "MXIC MX25L8005A", 0xc21420c2, 1048576, 1 },
-	{ "MXIC MX25L1605A", 0xc21520c2, 2097152, 1 },
+	{ "MXIC MX25L4005A", 0xc21320c2,  524288, 1, 0 },
+	{ "MXIC MX25L8005A", 0xc21420c2, 1048576, 1, 0 },
+	{ "MXIC MX25L1605A", 0xc21520c2, 2097152, 1, 0 },
 
-	{ "Nantronics N25S80", 0xd51430d5, 1048576, 1 },
+	{ "Nantronics N25S80", 0xd51430d5, 1048576, 1, 0 },
 
-	{ "PMC Pm25LV010", 0x007e9d7f, 524288, 0 },
+	{ "PMC Pm25LV010", 0x007e9d7f, 524288, 0, 0 },
 
-	{ "Spansion S25FL004A", 0x00120201,  524288, 0 },
-	{ "Spansion S25FL008A", 0x00130201, 1048576, 0 },
-	{ "Spansion S25FL016A", 0x00140201, 2097152, 0 },
+	{ "Spansion S25FL004A", 0x00120201,  524288, 0, 0 },
+	{ "Spansion S25FL008A", 0x00130201, 1048576, 0, 0 },
+	{ "Spansion S25FL016A", 0x00140201, 2097152, 0, 0 },
 
 	{ "SST25VF080", 0xbf8e25bf, 1048576, 0, 1 },
 	{ "SST25VF016", 0xbf4125bf, 2097152, 0, 1 },
 
-	{ "ST M25P08", 0x7f142020, 1048576, 0 },
-	{ "ST M25P16", 0x7f152020, 2097152, 0 },
-	{ "ST M25P32", 0x7f162020, 4194304, 0 },
-	{ "ST M25P64", 0x7f172020, 8388608, 0 },
+	{ "ST M25P08", 0x7f142020, 1048576, 0, 0 },
+	{ "ST M25P16", 0x7f152020, 2097152, 0, 0 },
+	{ "ST M25P32", 0x7f162020, 4194304, 0, 0 },
+	{ "ST M25P64", 0x7f172020, 8388608, 0, 0 },
 
-	{ "Winbond W25P80", 0x001420ef, 1048576, 0 },
-	{ "Winbond W25P16", 0x001520ef, 2097152, 0 },
+	{ "Winbond W25P80", 0x001420ef, 1048576, 0, 0 },
+	{ "Winbond W25P16", 0x001520ef, 2097152, 0, 0 },
 
-	{ "Winbond W25X40", 0x001330ef,  524288, 1 },
-	{ "Winbond W25X80", 0x001430ef, 1048576, 1 },
-	{ "Winbond W25X16", 0x001530ef, 2097152, 1 },
-	{ "Winbond W25X32", 0x001630ef, 4194304, 1 },
-	{ "Winbond W25X64", 0x001730ef, 8388608, 1 },
+	{ "Winbond W25X40", 0x001330ef,  524288, 1, 0 },
+	{ "Winbond W25X80", 0x001430ef, 1048576, 1, 0 },
+	{ "Winbond W25X16", 0x001530ef, 2097152, 1, 0 },
+	{ "Winbond W25X32", 0x001630ef, 4194304, 1, 0 },
+	{ "Winbond W25X64", 0x001730ef, 8388608, 1, 0 },
 
-	{ "Winbond W25Q80", 0x001440ef, 1048576, 1 },
-	{ "Winbond W25Q16", 0x001540ef, 2097152, 1 },
-	{ "Winbond W25Q32", 0x001640ef, 4194304, 1 },
+	{ "Winbond W25Q80", 0x001440ef, 1048576, 1, 0 },
+	{ "Winbond W25Q16", 0x001540ef, 2097152, 1, 0 },
+	{ "Winbond W25Q32", 0x001640ef, 4194304, 1, 0 },
 
 	{ }
 };
@@ -1138,8 +1138,8 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 			return GP_ERROR_CORRUPTED_DATA;
 		}
 		tinyjpeg_get_components (camera->pl->jdec, components);
-		for (y = 0; y < camera->pl->height; y++) {
-			for (x = 0; x < camera->pl->width; x++) {
+		for (y = 0; y < (unsigned int)camera->pl->height; y++) {
+			for (x = 0; x < (unsigned int)camera->pl->width; x++) {
 				dest[y][x] = gdTrueColor (components[0][0],
 							  components[0][1],
 							  components[0][2]);
@@ -1155,8 +1155,8 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 		jpeg_mem_src (&dinfo, (unsigned char *)src, src_size);
 		jpeg_read_header (&dinfo, TRUE);
 		jpeg_start_decompress (&dinfo);
-		if (dinfo.output_width  != camera->pl->width ||
-		    dinfo.output_height != camera->pl->height ||
+		if (dinfo.output_width  != (unsigned int)camera->pl->width ||
+		    dinfo.output_height != (unsigned int)camera->pl->height ||
 		    dinfo.output_components != 3 ||
 		    dinfo.out_color_space != JCS_RGB) {
 			gp_log (GP_LOG_ERROR, "ax203",
@@ -1198,7 +1198,7 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 #ifdef HAVE_LIBGD
 	int size = ax203_filesize (camera);
 #ifdef HAVE_LIBJPEG
-	int x, y;
+	unsigned int x, y;
 	struct jpeg_compress_struct cinfo;
 	struct jpeg_error_mgr jcerr;
 	JOCTET *jpeg_dest = NULL;
@@ -1251,7 +1251,7 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 		jpeg_finish_compress (&cinfo);
 		jpeg_destroy_compress (&cinfo);
 
-		if (jpeg_size > dest_size) {
+		if (jpeg_size > (unsigned int)dest_size) {
 			free (jpeg_dest);
 			gp_log (GP_LOG_ERROR, "ax203",
 				"JPEG is bigger then buffer");
