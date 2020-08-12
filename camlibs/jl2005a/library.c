@@ -165,8 +165,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = user_data;
 	int status = GP_OK;
 	unsigned int w, h = 0;
-	int i,j,k;
-	int b = 0;
+	unsigned int i, j;
+	int k;
+	unsigned int b = 0;
 	int compressed = 0;
 	unsigned char header[5] = "\xff\xff\xff\xff\x55";
 	unsigned int size;
