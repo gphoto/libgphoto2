@@ -112,7 +112,9 @@ static int
 camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 			    CameraWidget *section, GPContext *context)
 {
-	int ind, vind, ret, value;
+	int ret;
+	unsigned int value;
+	unsigned int ind, vind;
 	int mask;
 	char buff[1024];
 	CameraWidget *child;
@@ -139,7 +141,7 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		 * the fly and make a union with reg_value and a void*.
 		 */
 		ret = sierra_get_string_register (camera, reg_p->reg_number,
-					  -1, NULL, (unsigned char *)buff, (unsigned int *)&value, context);
+					  -1, NULL, (unsigned char *)buff, &value, context);
 		if ((ret == GP_OK) && value != reg_p->reg_len) {
 			GP_DEBUG ("Bad length result %d", value);
 			return (GP_ERROR);
@@ -198,7 +200,7 @@ camera_get_config_cam_desc (Camera *camera, CameraWidget **window,
 			    GPContext *context)
 {
 	CameraWidget *section;
-	int indw, indr;
+	unsigned int indw, indr;
 	const CameraDescType *cam_desc = NULL;
 
 	GP_DEBUG ("*** camera_get_config_cam_desc");
@@ -360,7 +362,8 @@ static int
 camera_cam_desc_set_widget (Camera *camera, CameraRegisterType *reg_p,
 			    CameraWidget *window, GPContext *context)
 {
-	int ind, vind, ret;
+	int ret;
+	unsigned int ind, vind;
 	union value_in {
 		char *charp;
 		int val;
@@ -423,7 +426,7 @@ int
 camera_set_config_cam_desc (Camera *camera, CameraWidget *window,
 			    GPContext *context)
 {
-	int wind, rind;
+	unsigned int wind, rind;
 	const CameraDescType *cam_desc = NULL;
 
 	GP_DEBUG ("*** camera_set_config_cam_desc");
