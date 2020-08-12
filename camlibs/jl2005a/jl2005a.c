@@ -121,7 +121,7 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 					unsigned char *data, unsigned int size)
 {
 	unsigned char *to_read;
-	int maxdl = 0xfa00;
+	unsigned int maxdl = 0xfa00;
 	int ret;
 
 	to_read=data;
@@ -156,7 +156,7 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 	}
 	ret = gp_port_read(port, (char *)to_read, size);
 	if (ret < GP_OK) return ret;
-	if (ret < size) return GP_ERROR;
+	if ((unsigned int)ret < size) return GP_ERROR;
 	/* Switch the inep back to 0x84. */
 	set_usb_in_endpoint	(camera, 0x84);
 	return GP_OK;
