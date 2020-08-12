@@ -48,7 +48,8 @@
 	 A packet must be at least eight bytes, with at least one byte of payload.
 */
 dimagev_packet *dimagev_make_packet(const unsigned char *const buffer, unsigned int length, unsigned int seq) {
-	unsigned int i=0, checksum=0;
+	int i=0;
+	unsigned int checksum=0;
 	dimagev_packet *p;
 
 	if ( ( p = calloc(1, sizeof(dimagev_packet) ) ) == NULL ) {
