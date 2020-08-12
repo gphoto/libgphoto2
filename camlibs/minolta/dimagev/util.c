@@ -72,8 +72,9 @@ unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 	unsigned char *rgb_data, *ycrcb_current, *rgb_current;
 	int count=0;
 	unsigned int magic_r, magic_g, magic_b;
+	const unsigned int size = 14413;
 
-	if ( ( rgb_data = malloc( 14413 ) ) == NULL ) {
+	if ( ( rgb_data = malloc( size ) ) == NULL ) {
 		GP_DEBUG( "dimagev_ycbcr_to_ppm::unable to allocate buffer for Y:Cb:Cr conversion");
 		return NULL;
 	}
@@ -82,7 +83,7 @@ unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr) {
 	rgb_current = &(rgb_data[13]);
 
 	/* This is the header for a PPM "rawbits" bitmap of size 80x60. */
-	strncpy((char *)rgb_data, "P6\n80 60\n255\n", 13);
+	strncpy((char *)rgb_data, "P6\n80 60\n255\n", size);
 
 	for ( count = 0 ; count < 9600 ; count+=4, ycrcb_current+=4, rgb_current+=6 ) {
 		magic_b = ( ( ycrcb_current[2] > (unsigned char) 128 ? 128 : ycrcb_current[2] ) - 128 ) * ( 2 - ( 2 * CR_COEFF ) ) + ycrcb_current[0];
