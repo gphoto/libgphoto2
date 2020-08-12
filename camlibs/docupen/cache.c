@@ -43,7 +43,7 @@ static bool fill_cache(Camera *camera)
 			break;
 		fwrite(buf, 1, ret, camera->pl->cache);
 		done += ret;
-		if (ret < pktsize)
+		if ((size_t)ret < pktsize)
 			break;
 	}
 	free(buf);

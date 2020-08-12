@@ -41,7 +41,7 @@
 #  define N_(String) (String)
 #endif
 
-
+#if 0
 static const struct {
 	char *model;
 	int usb_vendor;
@@ -50,6 +50,7 @@ static const struct {
 	{ "Planon DocuPen RC800", 0x18dd, 0x1000 },
 	{ NULL, 0, 0 }
 };
+#endif
 
 #define DP_ACK 0xD1
 #define DP_CMD_LEN 8
@@ -437,7 +438,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = data;
 	struct dp_imagehdr header;
-	int ret;
+	size_t ret;
 	char *file_data;
 	gdImagePtr img;
 	void *gdout;
@@ -658,7 +659,6 @@ CameraFilesystemFuncs fsfuncs = {
 int
 camera_init (Camera *camera, GPContext *context)
 {
-	GPPortSettings settings;
 	char buf[64];
 
         camera->functions->exit                 = camera_exit;
