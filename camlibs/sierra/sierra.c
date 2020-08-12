@@ -60,8 +60,8 @@ static int get_jpeg_data(const char *data, int data_size, char **jpeg_data, int 
 /* Useful markers */
 static const char JPEG_SOI_MARKER[]  = { (char)0xFF, (char)0xD8, '\0' };
 static const char JPEG_SOF_MARKER[]  = { (char)0xFF, (char)0xD9, '\0' };
-static const char JPEG_APP1_MARKER[] = { (char)0xFF, (char)0xE1, '\0' };
-static const char TIFF_SOI_MARKER[]  = { (char)0x49, (char)0x49, (char)0x2A, (char)0x00, (char)0x08, '\0' };
+/*static const char JPEG_APP1_MARKER[] = { (char)0xFF, (char)0xE1, '\0' };*/
+/*static const char TIFF_SOI_MARKER[]  = { (char)0x49, (char)0x49, (char)0x2A, (char)0x00, (char)0x08, '\0' };*/
 
 static struct {
 	const char *manuf;
@@ -782,7 +782,7 @@ put_file_func (CameraFilesystem * fs, const char *folder, const char *filename,
 
 	/* Check the available memory */
 	CHECK (sierra_get_memory_left(camera, &available_memory, context));
-	if (available_memory < data_size) {
+	if (available_memory < 0 || (unsigned int)available_memory < data_size) {
 		gp_context_error (context,
 				    _("Not enough memory available on the memory card"));
 		return GP_ERROR_NO_MEMORY;
@@ -2259,7 +2259,7 @@ camera_init (Camera *camera, GPContext *context)
 			/* Find the speed into abilities.speeds array.
 			 * Highest speeds are last ... so look backwards ...
 			 */
-			for (i=0;i<sizeof(a.speed)/sizeof(a.speed[0]) && a.speed[i];i++)
+			for (i=0;(unsigned int)i<sizeof(a.speed)/sizeof(a.speed[0]) && a.speed[i];i++)
 				/*empty*/;
 			i--;
 			for (; i >= 0 ; i--) {

@@ -459,7 +459,7 @@ usb_wrap_DATA (GPPort *dev, unsigned int type, char *sierra_response, int *sierr
    msg_len = msg_len * 256 + (unsigned int)(size.c2);
    msg_len = msg_len * 256 + (unsigned int)(size.c1);
 
-   if (*sierra_len < msg_len - sizeof(*msg))
+   if ((unsigned int)*sierra_len < msg_len - sizeof(*msg))
    {
       GP_DEBUG( "usb_wrap_read_packet buffer too small! (%i < %i) *** FAILED", *sierra_len, msg_len);
       return GP_ERROR;

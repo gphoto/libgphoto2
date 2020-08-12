@@ -200,8 +200,8 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 			 GPContext *context)
 {
-	int j, count;
-	unsigned int i, bsize;
+	int i, j, count;
+	unsigned int bsize;
 	char buf[1024];
 
 	/* List the folders only if the camera supports them */
@@ -680,7 +680,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 			for (c = 0, i = 4; i < br - 2; i++)
 				c += packet[i];
 			c &= 0xffff;
-			if (c == (packet[br - 2] + (packet[br - 1] * 256)))
+			if (c == ((unsigned int)packet[br - 2] + ((unsigned int)packet[br - 1] * 256)))
 				break;
 
 			/*
@@ -983,7 +983,7 @@ sierra_set_speed (Camera *camera, SierraSpeed speed, GPContext *context)
 	 * they are currently operating at that speed.
 	 */
 	CHECK (gp_port_get_settings (camera->port, &settings));
-	if (settings.serial.speed == bit_rate)
+	if ((unsigned int)settings.serial.speed == bit_rate)
 		return GP_OK;
 
 	/*
