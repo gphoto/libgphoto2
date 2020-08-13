@@ -3408,7 +3408,9 @@ GENERIC8TABLE(Nikon_1_S1_ISO,nikon_1_s1_iso);
 
 /* Generic Nikon 1 ISO */
 static struct deviceproptableu8 nikon_1_iso[] = {
-	{ "100",	0x0a, 0 },
+	{ "ISO Auto 6400",	0x01, 0 },
+	{ "ISO Auto 3200",	0x02, 0 },
+	{ "ISO Auto 800",	0x03, 0 },
 	{ "110",	0x0b, 0 },
 	{ "125",	0x0c, 0 },
 	{ "140",	0x0d, 0 },
