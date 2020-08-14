@@ -7254,6 +7254,16 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 				if (value.u32 & (1<<5)) { gp_context_error (context, _("Liveview cannot start: Minimum aperture warning")); return GP_ERROR; }
 				if (value.u32 & (1<<15)){ gp_context_error (context, _("Liveview cannot start: Processing of shooting operation")); return GP_ERROR; }
 				if (value.u32 & (1<<2)) { gp_context_error (context, _("Liveview cannot start: Sequence error")); return GP_ERROR; }
+				if (value.u32 & (1<<31)){ gp_context_error (context, _("Liveview cannot start: Exposure Program Mode is not P/A/S/M")); return GP_ERROR; }
+				if (value.u32 & (1<<21)){ gp_context_error (context, _("Liveview cannot start: Bulb warning")); return GP_ERROR; }
+				if (value.u32 & (1<<20)){ gp_context_error (context, _("Liveview cannot start: Card unformatted")); return GP_ERROR; }
+				if (value.u32 & (1<<19)){ gp_context_error (context, _("Liveview cannot start: Card error")); return GP_ERROR; }
+				if (value.u32 & (1<<18)){ gp_context_error (context, _("Liveview cannot start: Card protected")); return GP_ERROR; }
+				if (value.u32 & (1<<14)){ gp_context_error (context, _("Liveview cannot start: Recording destination card, but no card or card protected")); return GP_ERROR; }
+				if (value.u32 & (1<<12)){ gp_context_error (context, _("Liveview cannot start: Pending unretrieved SDRAM image")); return GP_ERROR; }
+				if (value.u32 & (1<<12)){ gp_context_error (context, _("Liveview cannot start: Pending unretrieved SDRAM image")); return GP_ERROR; }
+				if (value.u32 & (1<<4)) { gp_context_error (context, _("Liveview cannot start: Fully pressed button")); return GP_ERROR; }
+
 				gp_context_error (context, _("Liveview cannot start: code 0x%08x"), value.u32);
 				return GP_ERROR;
 			}
