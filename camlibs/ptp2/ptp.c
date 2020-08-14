@@ -6279,6 +6279,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_SONY_StillImageStoreDestination, N_("Capture Target")},
 		{PTP_DPC_SONY_NearFar, N_("Near Far")},
 		{PTP_DPC_SONY_AF_Area_Position, N_("AF Area Position")},
+		{PTP_DPC_SONY_QX_DateTime, N_("Date Time")},
 		{0,NULL}
         };
 

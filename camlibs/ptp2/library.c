@@ -4740,8 +4740,9 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 
 	/* If the camera does not report object presence, it will crash if we access 0xffffc001 ... */
 	if (!newobject) {
-		GP_LOG_E("no object found during event polling. perhaps no focus...");
-		return GP_ERROR;
+		GP_LOG_E("no object found during event polling. try anyway 0xffffc001...");
+		newobject = 0xffffc001;
+		/*return GP_ERROR;*/
 	}
 	/* FIXME: handle multiple images (as in BurstMode) */
 	C_PTP (ptp_getobjectinfo (params, newobject, &oi));
