@@ -4640,11 +4640,14 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	PTPObjectInfo	oi;
 	uint32_t	newobject = 0;
 	struct timeval	event_start;
+	PTPDevicePropDesc	dpd;
 
 	/* regular code */
 
+	/* lets try this, its in the trace... */
+	propval.u8 = 2;
+	C_PTP (ptp_sony_qx_setdevicecontrolvaluea (params, 0xd6e2, &propval, PTP_DTC_UINT8));
 #if 0
-	PTPDevicePropDesc	dpd;
 
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
@@ -4661,22 +4664,6 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	propval.u16 = 2;
 	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
 
-	/* FIXME: we might not need it for 1 second */
-	GP_LOG_D ("holding down shutterbutton half-press for 1 second... ");
-	event_start = time_now();
-	do {
-		/* needed on older cameras like the a58, check for events ... */
-		C_PTP (ptp_check_event (params));
-		if (ptp_get_one_event(params, &event)) {
-			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
-		}
-
-		/* Alternative code in case we miss the event */
-
-		C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
-
-	} while (time_since (event_start) < 1000);
-
 	/* full-press */
 	propval.u16 = 2;
 	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
@@ -4690,7 +4677,7 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 		* get focus, indicated by the 0xD213 property. But hold it for at most 1 second.
 		*/
 #endif
-		GP_LOG_D ("holding down shutterbutton for 4 seconds... ");
+		GP_LOG_D ("holding down shutterbutton for 1 second... ");
 		event_start = time_now();
 		do {
 			/* needed on older cameras like the a58, check for events ... */
@@ -4698,12 +4685,17 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 			if (ptp_get_one_event(params, &event)) {
 				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
 			}
+			C_PTP (ptp_generic_getdevicepropdesc (params, 0xd6e0, &dpd));
+
+			if (dpd.CurrentValue.u8 != 0) {
+				break;
+			}
 
 			/* Alternative code in case we miss the event */
 
 			C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
 
-		} while (time_since (event_start) < 4000);
+		} while (time_since (event_start) < 1000);
 #if 0
 	}
 #endif
@@ -4723,6 +4715,13 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	do {
 		/* break if we got it from above focus wait already for some reason, seen on A6000 */
 		if (newobject) break;
+		C_PTP (ptp_generic_getdevicepropdesc (params, 0xd6e0, &dpd));
+
+		if (dpd.CurrentValue.u8 != 0) {
+			newobject = 0xffffc001;
+			break;
+		}
+
 #if 1
 		/* needed on older cameras like the a58, check for events ... */
 		/* This would be unsafe if we get an out-of-order event with no objects present, but
