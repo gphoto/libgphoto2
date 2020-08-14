@@ -1996,6 +1996,13 @@ static struct deviceproptableu8 nikon_flashcommandermode[] = {
 };
 GENERIC8TABLE(Nikon_FlashCommanderMode,nikon_flashcommandermode)
 
+static struct deviceproptableu8 nikon_liveviewsize[] = {
+	{ N_("QVGA"),		1, 0 },
+	{ N_("VGA"),		2, 0 },
+	{ N_("XGA"),		3, 0 },
+};
+GENERIC8TABLE(Nikon_LiveViewSize,nikon_liveviewsize)
+
 static struct deviceproptableu8 nikon_flashcommanderpower[] = {
 	{ N_("Full"),		0, 0 },
 	{ "1/2",		1, 0 },
@@ -9481,6 +9488,8 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Continuous Shooting Speed High"), "shootingspeedhigh",        PTP_DPC_NIKON_ContinuousSpeedHigh,      PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_ShootingSpeedHigh,   _put_Nikon_D3s_ShootingSpeedHigh },
 	{ N_("Flash Sync. Speed"),              "flashsyncspeed",           PTP_DPC_NIKON_FlashSyncSpeed,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_FlashSyncSpeed,      _put_Nikon_D3s_FlashSyncSpeed },
 	{ N_("Flash Shutter Speed"),            "flashshutterspeed",        PTP_DPC_NIKON_FlashShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_FlashShutterSpeed,   _put_Nikon_D3s_FlashShutterSpeed },
+
+	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_NIKON_LiveViewImageSize,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewSize,            _put_Nikon_LiveViewSize },
 
 	{ 0,0,0,0,0,0,0 },
 };
