@@ -3871,7 +3871,7 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 			case PTP_DTC_INT8:
 #define CHECK_CHANGED(type) \
 				if (params->deviceproperties[i].desc.CurrentValue.type != dpd.CurrentValue.type) \
-					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %04x: value %d -> %d", propcode, params->deviceproperties[i].desc.CurrentValue.type, dpd.CurrentValue.type);
+					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %s(%04x): value %d -> %d", ptp_get_property_description (params, propcode), propcode, params->deviceproperties[i].desc.CurrentValue.type, dpd.CurrentValue.type);
 				CHECK_CHANGED(i8);
 				break;
 			case PTP_DTC_UINT8:
