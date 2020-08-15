@@ -4745,7 +4745,22 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 		/*return GP_ERROR;*/
 	}
 	/* FIXME: handle multiple images (as in BurstMode) */
-	C_PTP (ptp_getobjectinfo (params, newobject, &oi));
+
+	GP_LOG_D ("waiting for ffffc001 objectinfo availability");
+	/* QX software also seems to do it, queries objectinfo and needs several tries */
+	event_start = time_now();
+	do {
+		oi.ObjectFormat = 0;
+		C_PTP (ptp_getobjectinfo (params, newobject, &oi));
+		if (oi.ObjectFormat)
+			break;
+		/* just do some poll work */
+		C_PTP (ptp_check_event_queue (params));
+		if (ptp_get_one_event(params, &event)) {
+			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+		}
+		C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
+	} while (!oi.ObjectFormat && (time_since (event_start) < 5000));
 
 	sprintf (path->folder,"/");
 	if (oi.ObjectFormat == PTP_OFC_SONY_RAW)
