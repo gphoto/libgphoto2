@@ -319,8 +319,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 0010  00 00                  -                         ..
 */
 #define PTP_OC_CANON_GetRootCertificateData	0x906D /* no args */
-/* empty data on test */
-#define PTP_OC_CANON_SetRootCertificateData	0x906F
+#define PTP_OC_CANON_SetRootCertificateData	0x906E
+#define PTP_OC_CANON_DeleteRootCertificateData	0x906F
 #define PTP_OC_CANON_GetGpsMobilelinkObjectInfo	0x9075 /* 2 args: utcstart, utcend */
 #define PTP_OC_CANON_SendGpsTagInfo		0x9076 /* 1 arg: oid */
 #define PTP_OC_CANON_GetTranscodeApproxSize	0x9077 /* 1 arg: oid? */
@@ -473,6 +473,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_TouchAfPosition	0x915B /* 3 args: type,x,y */
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditMode	0x915C /* 1 arg */
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditParam	0x915D /* 1 arg */
+#define PTP_OC_CANON_EOS_RequestSensorCleaning	0x915E /* 1 arg? */
 #define PTP_OC_CANON_EOS_AfCancel		0x9160
 #define PTP_OC_CANON_EOS_SetImageRecoveryDataEx	0x916B
 #define PTP_OC_CANON_EOS_GetImageRecoveryListEx	0x916C
@@ -2145,6 +2146,14 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_MovieParam5		0xD20D
 #define PTP_DPC_CANON_EOS_HDRViewAssistModeRec	0xD20E
 #define PTP_DPC_CANON_EOS_PropFinderAFFrame	0xD214
+#define PTP_DPC_CANON_EOS_VariableMovieRecSetting	0xD215
+#define PTP_DPC_CANON_EOS_PropAutoRotate	0xD216
+#define PTP_DPC_CANON_EOS_MFPeakingSetting	0xD217
+#define PTP_DPC_CANON_EOS_MovieSpatialOversampling	0xD218
+#define PTP_DPC_CANON_EOS_MovieCropMode		0xD219
+#define PTP_DPC_CANON_EOS_ShutterType		0xD21A
+#define PTP_DPC_CANON_EOS_WFTBatteryPower	0xD21B
+#define PTP_DPC_CANON_EOS_BatteryInfoEx		0xD21C
 
 /* Nikon extension device property codes */
 #define PTP_DPC_NIKON_ShootingBank			0xD010
