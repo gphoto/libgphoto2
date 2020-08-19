@@ -654,11 +654,15 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* get all device property data at once */
 #define PTP_OC_SONY_GetAllDevicePropData	0x9209	/* gets a 4126 byte blob of device props ?*/
 
-#define PTP_OC_SONY_QX_GetAllDevicePropData	0x96f6
-#define PTP_OC_SONY_QX_SetControlDeviceB	0x96f8
-#define PTP_OC_SONY_QX_SetControlDeviceA	0x96fa
-#define PTP_OC_SONY_QX_GetSDIOGetExtDeviceInfo	0x96fd
-#define PTP_OC_SONY_QX_Connect			0x96fe
+#define PTP_OC_SONY_QX_SetExtPictureProfile	0x96F2
+#define PTP_OC_SONY_QX_GetExtPictureProfile	0x96F3
+#define PTP_OC_SONY_QX_GetExtLensInfo		0x96F4
+#define PTP_OC_SONY_QX_SendUpdateFile		0x96F5
+#define PTP_OC_SONY_QX_GetAllDevicePropData	0x96F6
+#define PTP_OC_SONY_QX_SetControlDeviceB	0x96F8 /* ControlDevice */
+#define PTP_OC_SONY_QX_SetControlDeviceA	0x96FA /* SetExtDevicePropValue */
+#define PTP_OC_SONY_QX_GetSDIOGetExtDeviceInfo	0x96FD
+#define PTP_OC_SONY_QX_Connect			0x96FE
 
 /* Microsoft / MTP extension codes */
 
@@ -2806,14 +2810,106 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_AF_Area_Position			0xD2DC
 
 /* Sony QX properties */
-#define PTP_DPC_SONY_QX_DateTime 			0xD6B1
-#define PTP_DPC_SONY_QX_ExposureCompensation 		0xD6C3
-#define PTP_DPC_SONY_QX_Aperture 			0xD6C5
-#define PTP_DPC_SONY_QX_ShutterSpeed 			0xD6EA
-#define PTP_DPC_SONY_QX_ISO 				0xD6F2
+/* all for 96f8 Control Device */
+#define PTP_DPC_SONY_QX_Zoom_Absolute			0xD60E
+#define PTP_DPC_SONY_QX_Movie_Rec			0xD60F
+#define PTP_DPC_SONY_QX_Request_For_Update		0xD612
+#define PTP_DPC_SONY_QX_Zoom_Wide_For_One_Shot		0xD613
+#define PTP_DPC_SONY_QX_Zoom_Tele_For_One_Shot		0xD614
+#define PTP_DPC_SONY_QX_S2_Button 			0xD617
+#define PTP_DPC_SONY_QX_Media_Format 			0xD61C
+#define PTP_DPC_SONY_QX_S1_Button 			0xD61D
+#define PTP_DPC_SONY_QX_AE_Lock 			0xD61E
+#define PTP_DPC_SONY_QX_Request_For_Update_For_Lens 	0xD625
+#define PTP_DPC_SONY_QX_Power_Off			0xD637
+#define PTP_DPC_SONY_QX_RequestOneShooting		0xD638
+#define PTP_DPC_SONY_QX_AF_Lock				0xD63B
+#define PTP_DPC_SONY_QX_Zoom_Tele			0xD63C
+#define PTP_DPC_SONY_QX_Zoom_Wide			0xD63E
+#define PTP_DPC_SONY_QX_Focus_Magnification		0xD641
+#define PTP_DPC_SONY_QX_Focus_Near_For_One_Shot		0xD6A1
+#define PTP_DPC_SONY_QX_Focus_Far_For_One_Shot		0xD6A2
+#define PTP_DPC_SONY_QX_Focus_Near_For_Continuous	0xD6A3
+#define PTP_DPC_SONY_QX_Focus_Far_For_Continuous	0xD6A4
+#define PTP_DPC_SONY_QX_Camera_Setting_Reset		0xD6D9
+#define PTP_DPC_SONY_QX_Camera_Initialize		0xD6DA
 
+/* old */
 #define PTP_DPC_SONY_QX_Capture				0xD617
 #define PTP_DPC_SONY_QX_AutoFocus			0xD61D
+
+/* set via 96fa */
+#define PTP_DPC_SONY_QX_PictureProfileInitialize 	0xD620
+#define PTP_DPC_SONY_QX_PictureProfile 			0xD621
+#define PTP_DPC_SONY_QX_AFSPrioritySetting 		0xD622
+#define PTP_DPC_SONY_QX_AFCPrioritySetting 		0xD623
+#define PTP_DPC_SONY_QX_LensUpdateState 		0xD624
+#define PTP_DPC_SONY_QX_SilentShooting 			0xD626
+#define PTP_DPC_SONY_QX_HDMIInfoDisplay 		0xD627
+#define PTP_DPC_SONY_QX_TCUBDisp 			0xD628
+#define PTP_DPC_SONY_QX_TCPreset 			0xD629
+#define PTP_DPC_SONY_QX_TCMake 				0xD62A
+#define PTP_DPC_SONY_QX_TCRun 				0xD62B
+#define PTP_DPC_SONY_QX_UBPreset 			0xD62C
+#define PTP_DPC_SONY_QX_TCFormat 			0xD62D
+#define PTP_DPC_SONY_QX_LongExposureNR 			0xD62E
+#define PTP_DPC_SONY_QX_UBTimeRec 			0xD62F
+#define PTP_DPC_SONY_QX_FocusMagnificationLevel 	0xD6A7
+#define PTP_DPC_SONY_QX_FocusMagnificationPosition 	0xD6A8
+#define PTP_DPC_SONY_QX_LensStatus 			0xD6A9
+#define PTP_DPC_SONY_QX_LiveviewResolution 		0xD6AA
+#define PTP_DPC_SONY_QX_NotifyFocusPosition 		0xD6AF
+#define PTP_DPC_SONY_QX_DriveMode 			0xD6B0
+#define PTP_DPC_SONY_QX_DateTime 			0xD6B1
+#define PTP_DPC_SONY_QX_AspectRatio 			0xD6B3
+#define PTP_DPC_SONY_QX_ImageSize 			0xD6B7
+#define PTP_DPC_SONY_QX_WhiteBalance 			0xD6B8
+#define PTP_DPC_SONY_QX_CompressionSetting 		0xD6B9
+#define PTP_DPC_SONY_QX_CautionError 			0xD6BA
+#define PTP_DPC_SONY_QX_StorageInformation		0xD6BB
+#define PTP_DPC_SONY_QX_MovieQualitySetting 		0xD6BC
+#define PTP_DPC_SONY_QX_MovieFormatSetting 		0xD6BD
+#define PTP_DPC_SONY_QX_ZoomSetAbsolute 		0xD6BE
+#define PTP_DPC_SONY_QX_ZoomInformation 		0xD6BF
+#define PTP_DPC_SONY_QX_FocusSpeedForOneShot 		0xD6C1
+#define PTP_DPC_SONY_QX_FlashCompensation 		0xD6C2
+#define PTP_DPC_SONY_QX_ExposureCompensation 		0xD6C3
+#define PTP_DPC_SONY_QX_Aperture 			0xD6C5
+#define PTP_DPC_SONY_QX_ShootingFileInformation		0xD6C6
+#define PTP_DPC_SONY_QX_MediaFormatState		0xD6C7
+#define PTP_DPC_SONY_QX_ZoomMode 			0xD6C9
+#define PTP_DPC_SONY_QX_FlashMode 			0xD6CA
+#define PTP_DPC_SONY_QX_FocusMode 			0xD6CB
+#define PTP_DPC_SONY_QX_ExposureMode 			0xD6CC
+#define PTP_DPC_SONY_QX_MovieRecordingState 		0xD6CD
+#define PTP_DPC_SONY_QX_SelectSaveMedia 		0xD6CF
+#define PTP_DPC_SONY_QX_StillSteady 			0xD6D0
+#define PTP_DPC_SONY_QX_MovieSteady 			0xD6D1
+#define PTP_DPC_SONY_QX_Housing 			0xD6D2
+#define PTP_DPC_SONY_QX_K4OutputSetting 		0xD6D3
+#define PTP_DPC_SONY_QX_HDMIRECControl 			0xD6D4
+#define PTP_DPC_SONY_QX_TimeCodeOutputToHDMI 		0xD6D5
+#define PTP_DPC_SONY_QX_HDMIResolution 			0xD6D6
+#define PTP_DPC_SONY_QX_NTSC_PAL_Selector		0xD6D7
+#define PTP_DPC_SONY_QX_HDMIOutput 			0xD6D8
+#define PTP_DPC_SONY_QX_ISOAutoMinimum 			0xD6DB
+#define PTP_DPC_SONY_QX_ISOAutoMaximum 			0xD6DC
+#define PTP_DPC_SONY_QX_APSCSuper35mm 			0xD6DD
+#define PTP_DPC_SONY_QX_LiveviewStatus 			0xD6DE
+#define PTP_DPC_SONY_QX_WhiteBalanceInitialize 		0xD6DF
+#define PTP_DPC_SONY_QX_OperatingMode 			0xD6E2
+#define PTP_DPC_SONY_QX_BiaxialFineTuningABDirection	0xD6E3
+#define PTP_DPC_SONY_QX_HighISONr			0xD6E5
+#define PTP_DPC_SONY_QX_AELockIndication 		0xD6E8
+#define PTP_DPC_SONY_QX_ElectronicFrontCurtainShutter 	0xD6E9
+#define PTP_DPC_SONY_QX_ShutterSpeed 			0xD6EA
+#define PTP_DPC_SONY_QX_FocusIndication 		0xD6EC
+#define PTP_DPC_SONY_QX_BiaxialFineTuningGMDirection	0xD6EF
+#define PTP_DPC_SONY_QX_ColorTemperature		0xD6F0
+#define PTP_DPC_SONY_QX_BatteryLevelIndication		0xD6F1
+#define PTP_DPC_SONY_QX_ISO 				0xD6F2
+#define PTP_DPC_SONY_QX_AutoSlowShutter 		0xD6F3
+#define PTP_DPC_SONY_QX_DynamicRangeOptimizer 		0xD6FE
 
 
 /* Casio EX-F1 */
