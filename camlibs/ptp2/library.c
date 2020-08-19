@@ -630,7 +630,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			params->starttime = time_now();
 		}
 		/* Sony QX */
-		if (ptp_operation_issupported(&camera->pl->params, 0x96fe)) {
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_SONY_QX_Connect)) {
 			int opcodes = 0, propcodes = 0, events = 0, j,k,l;
 			uint16_t  	*xprops;
 			unsigned int	xsize;
@@ -4644,11 +4644,16 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	struct timeval	event_start;
 	PTPDevicePropDesc	dpd;
 
-	/* regular code */
+	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_QX_OperatingMode, &dpd));
 
-	/* lets try this, its in the trace... */
-	propval.u8 = 2;
-	C_PTP (ptp_sony_qx_setdevicecontrolvaluea (params, 0xd6e2, &propval, PTP_DTC_UINT8));
+	while (dpd.CurrentValue.u8 != 2) {
+		propval.u8 = 2; /* 2 is Still Capture */
+		C_PTP (ptp_sony_qx_setdevicecontrolvaluea (params, PTP_DPC_SONY_QX_OperatingMode, &propval, PTP_DTC_UINT8));
+		/* lets try to get the props ... */
+		C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
+		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_QX_OperatingMode, &dpd));
+	}
+
 #if 0
 
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
@@ -4662,13 +4667,18 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 		GP_LOG_D ("expecting raw+jpeg capture");
 	}
 #endif
-	/* half-press */
+	/* half-press (S1 press?) */
 	propval.u16 = 2;
 	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
 
-	/* full-press */
+	usleep(100*1000); /* try random wait ... c# does a "100" wait */
+
+	/* full-press (S2 press?) */
 	propval.u16 = 2;
 	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
+
+
+	/* C Sharp code now does 300ms wait */
 
 #if 0
 	/* Check if we are in manual focus to skip the wait for focus */
@@ -4707,10 +4717,14 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	propval.u16 = 1;
 	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
 
+	usleep(100*1000); /* csharp does wait(100) */
 
 	/* release half-press */
 	propval.u16 = 1;
 	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
+
+
+	/* csharp now waits for 1 second */
 
 	GP_LOG_D ("waiting for image availability");
 	event_start = time_now();
@@ -9179,6 +9193,7 @@ camera_init (Camera *camera, GPContext *context)
 				int mode = 0x15;	/* default for EOS M and newer Powershot SX */
 
 				if (!strcmp(params->deviceinfo.Model,"Canon EOS M6 Mark II")) mode = 0x1;
+				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot SX720 HS")) mode = 0x11;
 
 				/* according to reporter only needed in config.c part
 				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
