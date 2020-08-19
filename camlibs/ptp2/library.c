@@ -4730,27 +4730,20 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	event_start = time_now();
 	do {
 		/* break if we got it from above focus wait already for some reason, seen on A6000 */
-		if (newobject) break;
-		C_PTP (ptp_generic_getdevicepropdesc (params, 0xd6e0, &dpd));
 
-		if (dpd.CurrentValue.u8 != 0) {
+		oi.ObjectFormat = 0;
+		C_PTP (ptp_getobjectinfo (params, 0xffffc001, &oi));
+		if (oi.ObjectFormat) {
 			newobject = 0xffffc001;
 			break;
 		}
 
-#if 1
-		/* needed on older cameras like the a58, check for events ... */
-		/* This would be unsafe if we get an out-of-order event with no objects present, but
-		 * we drained all events above */
 		C_PTP (ptp_check_event_queue (params));
 		if (ptp_get_one_event(params, &event)) {
 			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
 		}
-#endif
-
 		C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
-
-	/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
+		/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
 	} while (time_since (event_start) < 35000);
 	GP_LOG_D ("ending image availability");
 
