@@ -6203,6 +6203,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_NIKON_LiveViewTFTStatus,"LiveViewTFTStatus"},
 		{PTP_DPC_NIKON_MovieAutoDxCrop,"MovieAutoDxCrop"},
 		{PTP_DPC_NIKON_MovieChangePicCtrlItem,"MovieChangePicCtrlItem"},
+		{PTP_DPC_NIKON_MovieLoopLength,"MovieLoopLength"},
 		{0,NULL}
 	};
         struct {

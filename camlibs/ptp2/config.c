@@ -1904,6 +1904,48 @@ _put_Nikon_HueAdjustment(CONFIG_PUT_ARGS)
 	return (GP_ERROR);
 }
 
+static int
+_get_Nikon_MovieLoopLength(CONFIG_GET_ARGS) {
+
+	if (dpd->DataType != PTP_DTC_UINT32)
+		return GP_ERROR;
+
+	if (dpd->FormFlag & PTP_DPFF_Enumeration) {
+		char buf[20];
+		int i, isset = FALSE;
+
+		gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+		gp_widget_set_name (*widget,menu->name);
+		for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
+
+			sprintf (buf, "%d", dpd->FORM.Enum.SupportedValue[i].u32/10);
+			gp_widget_add_choice (*widget, buf);
+			if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32) {
+				gp_widget_set_value (*widget, buf);
+				isset = TRUE;
+			}
+		}
+		if (!isset && (dpd->FORM.Enum.NumberOfValues > 0)) {
+			sprintf (buf, "%d", dpd->FORM.Enum.SupportedValue[0].u32/10);
+			gp_widget_set_value (*widget, buf);
+		}
+		return GP_OK;
+	}
+	return GP_ERROR;
+}
+
+static int
+_put_Nikon_MovieLoopLength(CONFIG_PUT_ARGS)
+{
+	char *val;
+	int ival;
+
+	CR (gp_widget_get_value(widget, &val));
+	sscanf (val, "%d", &ival);
+	propval->u32 = ival*10;
+	return GP_OK;
+}
+
 
 static struct deviceproptableu8 canon_quality[] = {
 	{ N_("undefined"),	0x00, 0 },
@@ -9479,6 +9521,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Maximum continuous release"),     "maximumcontinousrelease",  PTP_DPC_NIKON_D2MaximumShots,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Range_UINT8,                   _put_Range_UINT8 },
 	{ N_("Movie Quality"),                  "moviequality",             PTP_DPC_NIKON_MovScreenSize,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_MovieQuality,            _put_Nikon_MovieQuality },
 	{ N_("Movie Quality"),                  "moviequality",             PTP_DPC_NIKON_1_MovQuality,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_MovieQuality,          _put_Nikon_1_MovieQuality },
+	{ N_("Movie Loop Length"),              "movielooplength",          PTP_DPC_NIKON_MovieLoopLength,          PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_MovieLoopLength,         _put_Nikon_MovieLoopLength },
 	{ N_("High ISO Noise Reduction"),       "highisonr",                PTP_DPC_NIKON_1_HiISONoiseReduction,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_HighISONR,             _put_Nikon_1_HighISONR },
 
 	{ N_("Raw Compression"),                "rawcompression",           PTP_DPC_NIKON_RawCompression,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_RawCompression,          _put_Nikon_RawCompression },

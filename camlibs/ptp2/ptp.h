@@ -2591,6 +2591,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_FacePriority			0xD316
 #define PTP_DPC_NIKON_LensTypeNikon1			0xD317
 #define PTP_DPC_NIKON_ISONoiseReduction			0xD318
+#define PTP_DPC_NIKON_MovieLoopLength			0xD323
 
 
 /* Nikon V1 (or WU adapter?) Trace */
