@@ -116,7 +116,7 @@ gp_port_usbscsi_lock (GPPort *port)
 		}
 	}
 #else
-	GP_LOG_D ("Locking '%s' not possible, flock not availbale.", port->settings.usbscsi.path);
+	GP_LOG_D ("Locking '%s' not possible, flock not available.", port->settings.usbscsi.path);
 #endif
 	return GP_OK;
 }
