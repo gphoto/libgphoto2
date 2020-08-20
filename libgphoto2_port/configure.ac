@@ -376,11 +376,11 @@ GP_CONFIG_MSG([USB ports])
 GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 		[libusb.h],[libusb_init],[
         case "$host" in
-          *-*-mingw* | *-*-cygwin* | *-*-msvc* )
-	  IOLIB_LIST="$IOLIB_LIST usb1"
+          *-linux*)
+	  IOLIB_LIST="$IOLIB_LIST usb1 usbdiskdirect usbscsi"
           ;;
           *)
-	  IOLIB_LIST="$IOLIB_LIST usb1 usbdiskdirect usbscsi"
+	  IOLIB_LIST="$IOLIB_LIST usb1"
           ;;
         esac
 
@@ -405,9 +405,16 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 	  dnl Windows itself has usb.h we mis-detect, in that case remove access to the other usb.h
 	  IOLIB_LIST="$IOLIB_LIST usb"
 	  ;;
-	  *)
+          *-linux*)
 	  if test "x$have_LIBUSB1" != xyes; then
 		IOLIB_LIST="$IOLIB_LIST usb usbdiskdirect usbscsi"
+          else
+		GP_CONFIG_MSG([libusb0 support],[detected, but disabled (libusb1 support is enabled)])
+          fi
+	  ;;
+	  *)
+	  if test "x$have_LIBUSB1" != xyes; then
+		IOLIB_LIST="$IOLIB_LIST usb"
           else
 		GP_CONFIG_MSG([libusb0 support],[detected, but disabled (libusb1 support is enabled)])
           fi
