@@ -113,6 +113,9 @@ camlibs/pccam300:
 camlibs/pccam600:
 	Peter Kajberg <pbk@odense.kollegienet.dk>
 
+camlibs/pentax:
+	Marcus Meissner <marcus@jet.franken.de>
+
 camlibs/polaroid/pdc320.c:
 	Nathan Stenzel <nathanstenzel@users.sourceforge.net>
 
