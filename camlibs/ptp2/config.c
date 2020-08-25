@@ -386,6 +386,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		int mode = 0x15;	/* default for EOS M and newer Powershot SX */
 
 		if (!strcmp(params->deviceinfo.Model,"Canon PowerShot SX540 HS")) mode = 0x11;	/* testing for https://github.com/gphoto/libgphoto2/issues/360 */
+		if (!strcmp(params->deviceinfo.Model,"Canon PowerShot SX600 HS")) goto skip;
 
 		if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
 		if (!strcmp(params->deviceinfo.Model,"Canon EOS M6 Mark II")) mode = 0x1;
@@ -393,6 +394,7 @@ camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	} else {
 		C_PTP (ptp_canon_eos_setremotemode(params, 1));
 	}
+skip:
 	C_PTP (ptp_canon_eos_seteventmode(params, 1));
 	params->eos_camerastatus = -1;	/* aka unknown */
 
