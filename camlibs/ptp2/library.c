@@ -2151,8 +2151,8 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/92 */
 	{"Canon:EOS 5D Mark IV",		0x04a9, 0x3281, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
-	/* Marcus parents */
-	{"Canon:PowerShot SX600 HS",		0x04a9, 0x3286, PTPBUG_DELETE_SENDS_EVENT},
+	/* Marcus parents  ... preview works a bit, capture on a full moon */
+	{"Canon:PowerShot SX600 HS",		0x04a9, 0x3286, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
 
 	/* https://sourceforge.net/p/gphoto/feature-requests/445/ */
 	{"Canon:PowerShot Elph135",		0x04a9, 0x3288, PTPBUG_DELETE_SENDS_EVENT},
@@ -9187,6 +9187,7 @@ camera_init (Camera *camera, GPContext *context)
 
 				if (!strcmp(params->deviceinfo.Model,"Canon EOS M6 Mark II")) mode = 0x1;
 				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot SX720 HS")) mode = 0x11;
+				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot SX600 HS")) mode = 0x11;
 
 				/* according to reporter only needed in config.c part
 				if (!strcmp(params->deviceinfo.Model,"Canon PowerShot G5 X")) mode = 0x11;
