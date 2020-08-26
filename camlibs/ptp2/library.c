@@ -4638,7 +4638,6 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 {
 	PTPParams	*params = &camera->pl->params;
 	PTPPropertyValue propval;
-	PTPContainer	event;
 	PTPObjectInfo	oi;
 	uint32_t	newobject = 0;
 	struct timeval	event_start;
@@ -4692,11 +4691,6 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 		GP_LOG_D ("holding down shutterbutton for 1 second... ");
 		event_start = time_now();
 		do {
-			/* needed on older cameras like the a58, check for events ... */
-			C_PTP (ptp_check_event (params));
-			if (ptp_get_one_event(params, &event)) {
-				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
-			}
 			C_PTP (ptp_generic_getdevicepropdesc (params, 0xd6e0, &dpd));
 
 			if (dpd.CurrentValue.u8 != 0) {
@@ -4738,10 +4732,6 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 			break;
 		}
 
-		C_PTP (ptp_check_event_queue (params));
-		if (ptp_get_one_event(params, &event)) {
-			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
-		}
 		C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
 		/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
 	} while (time_since (event_start) < 35000);
@@ -4763,11 +4753,7 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 		C_PTP (ptp_getobjectinfo (params, newobject, &oi));
 		if (oi.ObjectFormat)
 			break;
-		/* just do some poll work */
-		C_PTP (ptp_check_event_queue (params));
-		if (ptp_get_one_event(params, &event)) {
-			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
-		}
+
 		C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
 	} while (!oi.ObjectFormat && (time_since (event_start) < 5000));
 
