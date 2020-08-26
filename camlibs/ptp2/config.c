@@ -6037,6 +6037,15 @@ static struct deviceproptableu8 compressionsetting[] = {
 };
 GENERIC8TABLE(CompressionSetting,compressionsetting)
 
+static struct deviceproptableu8 sony_qx_compression[] = {
+	{ N_("Standard"),	0x02, 0 },
+	{ N_("Fine"),		0x03, 0 },
+	{ N_("Extra Fine"),	0x04, 0 },
+	{ N_("RAW"),		0x10, 0 },
+	{ N_("RAW+JPEG"),	0x13, 0 },
+};
+GENERIC8TABLE(Sony_QX_Compression,sony_qx_compression)
+
 static struct deviceproptableu8 sony_sensorcrop[] = {
 	{ N_("Off"),	0x01, 0 },
 	{ N_("On"),	0x02, 0 },
@@ -9566,6 +9575,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Raw Compression"),                "rawcompression",           PTP_DPC_NIKON_RawCompression,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_RawCompression,          _put_Nikon_RawCompression },
 
 	{ N_("Image Quality 2"),                "imagequality2",            PTP_DPC_NIKON_1_ImageCompression,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Compression,           _put_Nikon_1_Compression },
+	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_SONY_QX_CompressionSetting,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_QX_Compression,           _put_Sony_QX_Compression },
 
 	/* And some D3s values */
 	{ N_("Continuous Shooting Speed High"), "shootingspeedhigh",        PTP_DPC_NIKON_ContinuousSpeedHigh,      PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_ShootingSpeedHigh,   _put_Nikon_D3s_ShootingSpeedHigh },
