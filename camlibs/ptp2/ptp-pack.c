@@ -1009,7 +1009,7 @@ static inline int
 ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *poffset)
 {
 	unsigned int ret;
-#if 0
+#if 1
 	unsigned int unk1, unk2;
 #endif
 
@@ -1017,7 +1017,7 @@ ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_Sony_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_Sony_DataType]);
 
-#if 0
+#if 1
 	/* get set ? */
 	unk1 = dtoh8a(&data[PTP_dpd_Sony_GetSet]);
 	unk2 = dtoh8a(&data[PTP_dpd_Sony_Unknown]);
