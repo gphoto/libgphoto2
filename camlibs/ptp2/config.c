@@ -2047,6 +2047,13 @@ static struct deviceproptableu8 nikon_liveviewsize[] = {
 };
 GENERIC8TABLE(Nikon_LiveViewSize,nikon_liveviewsize)
 
+static struct deviceproptableu8 sony_qx_liveviewsize[] = {
+	{ "640x480",		1, 0 },
+	{ "1024x768",		2, 0 },
+	{ "1920x1280",		3, 0 },
+};
+GENERIC8TABLE(Sony_QX_LiveViewSize,sony_qx_liveviewsize)
+
 static struct deviceproptableu8 nikon_flashcommanderpower[] = {
 	{ N_("Full"),		0, 0 },
 	{ "1/2",		1, 0 },
@@ -9566,6 +9573,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Flash Shutter Speed"),            "flashshutterspeed",        PTP_DPC_NIKON_FlashShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_FlashShutterSpeed,   _put_Nikon_D3s_FlashShutterSpeed },
 
 	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_NIKON_LiveViewImageSize,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewSize,            _put_Nikon_LiveViewSize },
+	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_SONY_QX_LiveviewResolution,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_QX_LiveViewSize,          _put_Sony_QX_LiveViewSize },
 
 	{ 0,0,0,0,0,0,0 },
 };
