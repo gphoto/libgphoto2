@@ -6522,6 +6522,8 @@ sonyout:
 		ptp_operation_issupported(params, PTP_OC_SONY_QX_GetAllDevicePropData)
 	) {
 		do {
+			PTPObjectInfo		oi;
+
 			C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
 
 			/* FIXME: here the code for image addition */
@@ -6538,6 +6540,50 @@ sonyout:
 			}
 			if (ptp_get_one_event (params, &event))
 				goto handleregular;
+			oi.ObjectFormat = 0;
+			C_PTP (ptp_getobjectinfo (params, 0xffffc001, &oi));
+			if (oi.ObjectFormat) {
+				debug_objectinfo(params, newobject, &oi);
+				C_MEM (path = malloc(sizeof(CameraFilePath)));
+				path->name[0]='\0';
+				strcpy (path->folder,"/");
+				ret = gp_file_new(&file);
+				if (ret!=GP_OK)
+					return ret;
+				if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
+					GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
+					sprintf (path->name, "capt%04d.arw", params->capcnt++);
+					gp_file_set_mime_type (file, "image/x-sony-arw"); /* FIXME */
+				} else {
+					sprintf (path->name, "capt%04d.jpg", params->capcnt++);
+					gp_file_set_mime_type (file, GP_MIME_JPEG);
+				}
+				gp_file_set_mtime (file, time(NULL));
+
+				GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
+				C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
+				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+				if (ret != GP_OK) {
+					gp_file_free (file);
+					return ret;
+				}
+				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+				if (ret != GP_OK) {
+					gp_file_free (file);
+					return ret;
+				}
+				ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+				if (ret != GP_OK) {
+					gp_file_free (file);
+					return ret;
+				}
+				*eventtype = GP_EVENT_FILE_ADDED;
+				*eventdata = path;
+				/* We have now handed over the file, disclaim responsibility by unref. */
+				gp_file_unref (file);
+				break;
+			}
+
 			gp_context_idle (context);
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
