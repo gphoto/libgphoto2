@@ -2633,13 +2633,29 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_FilmSimulation			0xD001
 #define PTP_DPC_FUJI_ColorTemperature			0xD017
 #define PTP_DPC_FUJI_Quality				0xD018
+#define PTP_DPC_FUJI_RecMode				0xD019
+#define PTP_DPC_FUJI_CommandDialMode			0xD028
+#define PTP_DPC_FUJI_ExposureIndex			0xD02A
+#define PTP_DPC_FUJI_MovieISO				0xD02B
+#define PTP_DPC_FUJI_ImageSize				0xD174
+#define PTP_DPC_FUJI_FocusMeteringMode			0xD17C
 #define PTP_DPC_FUJI_ReleaseMode			0xD201
 #define PTP_DPC_FUJI_FocusAreas				0xD206
+#define PTP_DPC_FUJI_FocusLock				0xD209
+#define PTP_DPC_FUJI_CurrentState			0xD212
 #define PTP_DPC_FUJI_AELock				0xD213
 #define PTP_DPC_FUJI_Copyright				0xD215
 #define PTP_DPC_FUJI_Aperture				0xD218
 #define PTP_DPC_FUJI_ShutterSpeed			0xD219
+#define PTP_DPC_FUJI_DeviceError			0xD21B
+#define PTP_DPC_FUJI_CaptureRemaining			0xD229
+#define PTP_DPC_FUJI_MovieRemainingTime			0xD22A
+#define PTP_DPC_FUJI_ShutterSpeed2			0xD240
+#define PTP_DPC_FUJI_ImageAspectRatio			0xD241
+#define PTP_DPC_FUJI_BatteryLevel			0xD242
 #define PTP_DPC_FUJI_FocusPoint			    0xD347
+#define PTP_DPC_FUJI_InitSequence			0xDF01
+#define PTP_DPC_FUJI_AppVersion				0xDF24
 
 /* Microsoft/MTP specific */
 #define PTP_DPC_MTP_SecureTime				0xD101
