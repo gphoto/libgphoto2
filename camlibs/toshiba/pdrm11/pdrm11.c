@@ -207,10 +207,10 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 	}
 
 	ret = gp_port_read(port, (char *)image, size);
-	if(ret < GP_OK || (unsigned int)ret != size) {
+	if(ret < GP_OK || ret != size) {
 		GP_DEBUG("failed to read from port.  Giving it one more try...");
 		ret = gp_port_read(port, (char *)image, size);
-		if(ret < GP_OK || (unsigned int)ret != size) {
+		if(ret < GP_OK || ret != size) {
 			GP_DEBUG("gp_port_read returned %d 0x%x.  size: %d 0x%x", ret, ret, size, size);
 			free (image);
 			return(GP_ERROR_IO_READ);
