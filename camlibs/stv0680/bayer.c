@@ -24,7 +24,7 @@
 #include "bayer.h"
 
 /* Enhanced by Kurt Garloff to do scaling and debayering at the same time. */
-void bayer_unshuffle_preview(int w, int h, int scale, unsigned char *raw, unsigned char *output)
+void bayer_unshuffle_preview(unsigned int w, unsigned int h, unsigned int scale, unsigned char *raw, unsigned char *output)
 {
 
     int x, y, nx, ny;
@@ -96,7 +96,7 @@ static const rgbgamma gampar[6][3] = {
 	{ { 1.03, 0.52 }, { 0.97, 0.57 }, { 1.04, 0.49 } }  /* warm bright */
 };
 
-void light_enhance(int vw, int vh, int coarse, int fine,
+void light_enhance(unsigned int vw, unsigned int vh, unsigned int coarse, unsigned int fine,
 		   unsigned char avg_pix, unsigned char *output)
 {
     unsigned long int i;
@@ -174,7 +174,7 @@ void light_enhance(int vw, int vh, int coarse, int fine,
 	}
     }
 
-    for (i=0;i<(unsigned long int)(vw*vh*3);i+=3)
+    for (i=0;i<(vw*vh*3);i+=3)
     {
 	int r,g,b;
 	r = *(output+i);
@@ -195,7 +195,4 @@ void light_enhance(int vw, int vh, int coarse, int fine,
 		*(output+i+2) = trans[2][b];
 	}
     }  /* for */
-
 }  /* light_enhance */
-
-

@@ -21,9 +21,9 @@
 #ifndef BAYER_H
 #define BAYER_H
 
-void bayer_unshuffle_preview(int w, int h, int scale,
+void bayer_unshuffle_preview(unsigned int w, unsigned int h, unsigned int scale,
 			     unsigned char *raw, unsigned char *output);
-void light_enhance(int vw, int vh, int coarse, int fine,
+void light_enhance(unsigned int vw, unsigned int vh, unsigned int coarse, unsigned int fine,
 		   unsigned char avg_pix_val, unsigned char *output);
 
 #endif

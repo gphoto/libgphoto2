@@ -309,7 +309,7 @@ int stv0680_get_image_preview(GPPort *port, int image_no, CameraFile *file)
 	struct stv680_image_header imghdr;
 	char header[64];
 	unsigned char *raw, *data;
-	int h,w,rh,rw,scale,rsize,size;
+	unsigned int h,w,rh,rw,scale,rsize,size;
 	int ret;
 
 	switch (port->type) {
