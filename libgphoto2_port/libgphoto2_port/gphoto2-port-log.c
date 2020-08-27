@@ -55,7 +55,7 @@
  * Use gp_log_add_func() and gp_log_remove_func() to access it.
  */
 typedef struct {
-	unsigned int id;	/**< Internal id */
+	int id;			/**< Internal id */
 	GPLogLevel   level;	/**< Internal loglevel */
 	GPLogFunc    func;	/**< Internal function pointer to call */
 	void        *data;	/**< Private data supplied by caller */
@@ -140,7 +140,7 @@ gp_log_remove_func (int id)
 	unsigned int i;
 
 	for (i=0;i<log_funcs_count;i++) {
-		if (log_funcs[i].id == (unsigned int)id) {
+		if (log_funcs[i].id == id) {
 			memmove (log_funcs + i, log_funcs + i + 1, sizeof(LogFunc) * (log_funcs_count - i - 1));
 			log_funcs_count--;
 			return GP_OK;

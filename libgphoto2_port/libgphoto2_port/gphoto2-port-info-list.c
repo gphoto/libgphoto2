@@ -465,7 +465,7 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 
 	GP_LOG_D ("Getting info of entry %i (%i available)...", n, list->count);
 
-	C_PARAMS (n >= 0 && (unsigned int)n < list->count);
+	C_PARAMS ((n >= 0) && (unsigned int)n < list->count);
 
 	/* Ignore generic entries */
 	for (i = 0; i <= n; i++)
