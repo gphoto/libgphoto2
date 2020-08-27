@@ -636,7 +636,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * or:
  *  3 params: 2,0,0 ; IN: data 8 bytes all 0
  * or
- *  3 params: 3,0,0,: IN: data 8 butes all 0
+ *  3 params: 3,0,0,: IN: data 8 bytes all 0
  */
 #define PTP_OC_SONY_SDIOConnect			0x9201
 /* 9202: 1 param, 0xc8; IN data:
