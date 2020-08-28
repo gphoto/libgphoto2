@@ -193,7 +193,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		GPContext *context)
 {
 	Camera *camera = user_data;
-	int w, h = 0, buffersize = 0, i, k, rawsize = 0;
+	int w, h = 0, buffersize = 0, k, rawsize = 0;
+	unsigned int i;
 	unsigned char *data = NULL;
 	unsigned char  *ppm, *ptr, *avi=NULL, *frame_data = NULL;
 	unsigned char *p_data = NULL, *p_buf = NULL;
@@ -232,10 +233,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (i) {
 	case 0: w=352; h = 288; break;
 	case 9: avitype = 1;		/* multiframe */
+		/* fallthrough */
 	case 1: w=176; h = 144; break;
 	case 0x0a: avitype = 1;		/* multiframe */
+		/* fallthrough */
 	case 2: w=640; h = 480; break;
 	case 0x0b: avitype = 1;		/* multiframe */
+		/* fallthrough */
 	case 3: w=320; h = 240; break;
 	default:  GP_DEBUG ("Size code unknown\n");
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -395,6 +399,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			free(data);
 			return GP_OK;
 		}
+		/* fallthrough */
 	case GP_FILE_TYPE_PREVIEW:
 		if (k == camera->pl->num_pics - 1) {
 			camera->pl->sonix_init_done = 1;
