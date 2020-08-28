@@ -497,7 +497,7 @@ static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, ch
   	char *p;
 	const char *file_data;
 	long unsigned int file_size;
-	int offset;
+	unsigned int offset;
 
 	/* --- first read the file size --- */
 	p = dc120_packet_new(0x4A);
@@ -518,7 +518,7 @@ static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, ch
 	gp_file_get_data_and_size (size_file, &file_data, &file_size);
 
 	offset = 2 + (file_number-1) * 20;
-	if( file_size < (unsigned int)(offset+19) )
+	if( file_size < (offset+19) )
 	  {
 	    gp_file_free(size_file);
 	    free (p);
