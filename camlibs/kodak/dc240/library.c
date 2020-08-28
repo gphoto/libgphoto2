@@ -810,11 +810,10 @@ int dc240_file_action (Camera *camera, int action, CameraFile *file,
 
     switch (action) {
     case DC240_ACTION_PREVIEW:
+        cmd_packet[4] = 0x02;
+        thumb = 1;
+	/* fallthrough */
     case DC240_ACTION_IMAGE:
-        if (action == DC240_ACTION_PREVIEW) {
-            cmd_packet[4] = 0x02;
-            thumb = 1;
-        }
         if ((size = dc240_get_file_size(camera, folder, filename, thumb, context)) < GP_OK) {
             retval = GP_ERROR;
             break;
