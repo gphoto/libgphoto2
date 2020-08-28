@@ -173,7 +173,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	CameraWidget *section, *widget;
 	CameraAbilities abilities;
 	GPPortSettings settings;
-	int i;
+	unsigned int i;
 	char * wvalue;
 	char stringbuffer[12];
 
@@ -260,9 +260,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
         gp_widget_new (GP_WIDGET_MENU, _("Exposure compensation"), &widget);
         gp_widget_append (section, widget);
-	for (i = 0; (unsigned int)i < sizeof(exp_comp)/sizeof(*exp_comp); i++){
+	for (i = 0; i < sizeof(exp_comp)/sizeof(*exp_comp); i++){
 		gp_widget_add_choice (widget, exp_comp[i]);
-		if (status.exp_compensation + 4 == i)
+		if ((unsigned int)(status.exp_compensation + 4) == i)
 			gp_widget_set_value (widget, exp_comp[i]);
 	};
 
@@ -305,7 +305,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_port_get_settings (camera->port, &settings);
         gp_widget_new (GP_WIDGET_MENU, _("Port speed"), &widget);
         gp_widget_append (section, widget);
-	for (i = 0; (unsigned int)i < sizeof(abilities.speed); i++){
+	for (i = 0; i < sizeof(abilities.speed); i++){
 		if (abilities.speed[i] == 0) break;
 		snprintf(stringbuffer, 12, "%d", abilities.speed[i]);
 		gp_widget_add_choice (widget, stringbuffer);
@@ -353,7 +353,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
 	CameraWidget *w, *w2;
 	char *wvalue, *w2value;
-	int i;
+	unsigned int i;
 
 	gp_widget_get_child_by_label (window, _("File type"), &w);
 	if (gp_widget_changed (w)) {
@@ -425,7 +425,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if (gp_widget_changed (w)) {
 	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
-		for (i = 0; (unsigned int)i < sizeof(exp_comp)/sizeof(*exp_comp); i++){
+		for (i = 0; i < sizeof(exp_comp)/sizeof(*exp_comp); i++){
 			if (strncmp(wvalue, exp_comp[i], 4) == 0){
 				dc210_set_exp_compensation(camera, i - 4);
 				break;
