@@ -97,7 +97,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	Camera		*camera = data;
 	unsigned int	i;
 	int		ret;
-	unsigned int	bytes, numpics;
+	int		bytes;
+	unsigned int	numpics;
 	unsigned char	*xbuf, buf[8];
 
 	ret = blink2_getnumpics( camera->port, context, &numpics );
@@ -116,7 +117,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		free(xbuf);
 		return ret;
 	}
-	if ((unsigned int)ret < bytes) return GP_ERROR_IO_READ;
+	if (ret < bytes) return GP_ERROR_IO_READ;
 	for ( i=0; i < numpics; i++) {
 		char name[20];
 		if (xbuf[8*(i+1)])
@@ -137,8 +138,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	Camera *camera = data;
 	int image_no, result;
 	unsigned int i;
-	int ret;
-	unsigned int numpics, bytes;
+	int ret, bytes;
+	unsigned int numpics;
 	unsigned char	*xbuf, buf[8];
 
 	struct xaddr {
@@ -170,7 +171,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(xbuf);
 		return ret;
 	}
-	if ((unsigned int)ret < bytes) return GP_ERROR_IO_READ;
+	if (ret < bytes) return GP_ERROR_IO_READ;
 	for ( i=0; i < numpics; i++) {
 		int end, start;
 
@@ -321,7 +322,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
         case GP_FILE_TYPE_RAW: {
 		char buf2[4096];
 		unsigned int start, len;
-		int curread;
+		unsigned int curread;
 		memset( buf, 0, sizeof(buf));
 
 		if (addrs[image_no].type)
@@ -344,15 +345,17 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		len = len*8;
 		do {
+			int ret;
+
 			curread = 4096;
-			if ((unsigned int)curread > len) curread = len;
-			curread = gp_port_read( camera->port, buf2, curread);
-			if (curread < GP_OK) {
+			if (curread > len) curread = len;
+			ret = gp_port_read( camera->port, buf2, curread);
+			if (ret < GP_OK) {
 				result = GP_OK;
 				break;
 			}
-			len -= curread;
-			result = gp_file_append( file, buf2, curread);
+			len -= ret;
+			result = gp_file_append( file, buf2, ret);
 			if (result < GP_OK)
 				break;
 		} while (len>0);
