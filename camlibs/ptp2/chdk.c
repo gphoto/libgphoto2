@@ -1005,8 +1005,8 @@ static struct {
 
 static int
 chdk_get_onoff(CONFIG_GET_ARGS) {
-        int i;
-        char buf[1024];
+        unsigned int	i;
+        char		buf[1024];
 
         gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
         gp_widget_set_name (*widget, menu->name);
@@ -1022,8 +1022,8 @@ chdk_get_onoff(CONFIG_GET_ARGS) {
 
 static int
 chdk_put_onoff(CONFIG_PUT_ARGS) {
-        int i;
-        char *val;
+        unsigned int	i;
+        char		*val;
 
         CR (gp_widget_get_value(widget, &val));
         for (i=0;i<sizeof(chdkonoff)/sizeof(chdkonoff[i]);i++) {
@@ -1158,7 +1158,7 @@ chdk_camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 #ifdef HAVE_LIBJPEG
 static void yuv_live_to_jpeg(unsigned char *p_yuv,
-			     int buf_width, int width, int height,
+			     unsigned int buf_width, unsigned int width, unsigned int height,
 			     int fb_type, CameraFile *file
 ) {
 	struct		jpeg_compress_struct cinfo;
