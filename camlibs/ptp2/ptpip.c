@@ -132,11 +132,11 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 	htod32a(&request[ptpip_cmd_transid],req->Transaction_ID);
 
 	switch (req->Nparam) {
-	case 5: htod32a(&request[ptpip_cmd_param5],req->Param5);
-	case 4: htod32a(&request[ptpip_cmd_param4],req->Param4);
-	case 3: htod32a(&request[ptpip_cmd_param3],req->Param3);
-	case 2: htod32a(&request[ptpip_cmd_param2],req->Param2);
-	case 1: htod32a(&request[ptpip_cmd_param1],req->Param1);
+	case 5: htod32a(&request[ptpip_cmd_param5],req->Param5);/* fallthrough */
+	case 4: htod32a(&request[ptpip_cmd_param4],req->Param4);/* fallthrough */
+	case 3: htod32a(&request[ptpip_cmd_param3],req->Param3);/* fallthrough */
+	case 2: htod32a(&request[ptpip_cmd_param2],req->Param2);/* fallthrough */
+	case 1: htod32a(&request[ptpip_cmd_param1],req->Param1);/* fallthrough */
 	case 0:
 	default:
 		break;
@@ -409,11 +409,11 @@ retry:
 		resp->Transaction_ID	= dtoh32a(&data[ptpip_resp_transid]);
 		n = (dtoh32(hdr.length) - sizeof(hdr) - ptpip_resp_param1)/sizeof(uint32_t);
 		switch (n) {
-		case 5: resp->Param5 = dtoh32a(&data[ptpip_resp_param5]);
-		case 4: resp->Param4 = dtoh32a(&data[ptpip_resp_param4]);
-		case 3: resp->Param3 = dtoh32a(&data[ptpip_resp_param3]);
-		case 2: resp->Param2 = dtoh32a(&data[ptpip_resp_param2]);
-		case 1: resp->Param1 = dtoh32a(&data[ptpip_resp_param1]);
+		case 5: resp->Param5 = dtoh32a(&data[ptpip_resp_param5]);/* fallthrough */
+		case 4: resp->Param4 = dtoh32a(&data[ptpip_resp_param4]);/* fallthrough */
+		case 3: resp->Param3 = dtoh32a(&data[ptpip_resp_param3]);/* fallthrough */
+		case 2: resp->Param2 = dtoh32a(&data[ptpip_resp_param2]);/* fallthrough */
+		case 1: resp->Param1 = dtoh32a(&data[ptpip_resp_param1]);/* fallthrough */
 		case 0: break;
 		default:
 			GP_LOG_E ("response got %d parameters?", n);
@@ -613,9 +613,9 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 	event->Transaction_ID	= dtoh32a(&data[ptpip_event_transid]);
 	n = (dtoh32(hdr.length) - sizeof(hdr) - ptpip_event_param1)/sizeof(uint32_t);
 	switch (n) {
-	case 3: event->Param3 = dtoh32a(&data[ptpip_event_param3]);
-	case 2: event->Param2 = dtoh32a(&data[ptpip_event_param2]);
-	case 1: event->Param1 = dtoh32a(&data[ptpip_event_param1]);
+	case 3: event->Param3 = dtoh32a(&data[ptpip_event_param3]);/* fallthrough */
+	case 2: event->Param2 = dtoh32a(&data[ptpip_event_param2]);/* fallthrough */
+	case 1: event->Param1 = dtoh32a(&data[ptpip_event_param1]);/* fallthrough */
 	case 0: break;
 	default:
 		GP_LOG_E ("response got %d parameters?", n);
