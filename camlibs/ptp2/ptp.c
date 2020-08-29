@@ -2896,7 +2896,7 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 	}
 	case PTP_EC_StoreAdded:
 	case PTP_EC_StoreRemoved: {
-		int i;
+		unsigned int i;
 
 		/* FIXME: if we just remove 1 out of many storages, we do not need to invalidate/reload the entire tree? */
 
@@ -6242,6 +6242,29 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_FUJI_Quality, N_("Aperture")},				/* 0xD218 */
 		{PTP_DPC_FUJI_Quality, N_("Shutter Speed")},			/* 0xD219 */
 		{PTP_DPC_FUJI_FocusPoint, N_("Focus Point")},			/* 0xD347 */
+		{PTP_DPC_FUJI_RecMode, "RecMode"},
+		{PTP_DPC_FUJI_CommandDialMode, "CommandDialMode"},
+		{PTP_DPC_FUJI_ExposureIndex, "ExposureIndex"},
+		{PTP_DPC_FUJI_MovieISO, "MovieISO"},
+		{PTP_DPC_FUJI_ImageSize, "ImageSize"},
+		{PTP_DPC_FUJI_FocusMeteringMode, "FocusMeteringMode"},
+		{PTP_DPC_FUJI_ReleaseMode, "ReleaseMode"},
+		{PTP_DPC_FUJI_FocusAreas, "FocusAreas"},
+		{PTP_DPC_FUJI_FocusLock, "FocusLock"},
+		{PTP_DPC_FUJI_CurrentState, "CurrentState"},
+		{PTP_DPC_FUJI_AELock, "AELock"},
+		{PTP_DPC_FUJI_Copyright, "Copyright"},
+		{PTP_DPC_FUJI_Aperture, "Aperture"},
+		{PTP_DPC_FUJI_ShutterSpeed, "ShutterSpeed"},
+		{PTP_DPC_FUJI_DeviceError, "DeviceError"},
+		{PTP_DPC_FUJI_CaptureRemaining, "CaptureRemaining"},
+		{PTP_DPC_FUJI_MovieRemainingTime, "MovieRemainingTime"},
+		{PTP_DPC_FUJI_ShutterSpeed2, "ShutterSpeed2"},
+		{PTP_DPC_FUJI_ImageAspectRatio, "ImageAspectRatio"},
+		{PTP_DPC_FUJI_BatteryLevel, "BatteryLevel"},
+		{PTP_DPC_FUJI_InitSequence, "InitSequence"},
+		{PTP_DPC_FUJI_AppVersion, "AppVersion"},
+
 		{0,NULL}
         };
 
