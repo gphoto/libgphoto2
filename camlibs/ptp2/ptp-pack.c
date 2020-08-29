@@ -1954,7 +1954,7 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint16_t proptype)
 
 
 static inline int
-ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, PTPCanon_changes_entry **pce)
+ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int datasize, PTPCanon_changes_entry **pce)
 {
 	int	i = 0, entries = 0;
 	unsigned char	*curdata = data;
@@ -2454,9 +2454,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, int datasize, 
 					ptp_debug (params,"event %d: decoded focus info, currentvalue of %x is %s", i, proptype, dpd->CurrentValue.str);
 					break;
 				}
-
-				break;
-		}
+			}
+			break;
 		/* one more information record handed to us */
 		/* Versions seen: (d199)
 		 * 100D: 	7 (original reference)

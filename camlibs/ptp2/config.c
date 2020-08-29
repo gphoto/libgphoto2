@@ -3799,7 +3799,7 @@ static struct deviceproptableu16 canon_orientation[] = {
 static int
 _get_Canon_CameraOrientation(CONFIG_GET_ARGS) {
 	char	orient[50]; /* needs also to fit the translated string */
-	int	i;
+	unsigned int	i;
 
 	if (dpd->DataType != PTP_DTC_UINT16)
 		return (GP_ERROR);
@@ -3938,7 +3938,7 @@ _get_FocalLength(CONFIG_GET_ARGS) {
 
 static int
 _put_FocalLength(CONFIG_PUT_ARGS) {
-	int i;
+	unsigned int i;
 	float value_float;
 	uint32_t curdiff, newval;
 
@@ -5453,7 +5453,7 @@ GENERIC8TABLE(Nikon_1_Aperture,nikon_1_aperture)
 
 /* The j5 only reports some of those, there is no clear pattern... fill in with more 1 series */
 static struct deviceproptablei8 nikon_1_shutterspeedi[] = {
-	{ "Bulb"	-31, 0 },
+	{ "Bulb",	-31, 0 },
 	{ "30",		-30, 0 },
 	{ "25",		-28, 0 },
 	{ "20",		-26, 0 },
@@ -7977,7 +7977,8 @@ _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 	uint32_t currentVal;
 	uint32_t listCount;
 	uint32_t *list;
-	int i,ival;
+	int ival;
+	unsigned int i;
 
 	CR (gp_widget_get_value(widget, &xval));
 
@@ -7987,7 +7988,7 @@ _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 		val = ival;
 
 	for (i = 0; i < listCount; i++) {
-		int j;
+		unsigned int j;
 
 		for (j=0;j<sizeof(panasonic_wbtable)/sizeof(panasonic_wbtable[0]);j++) {
 			if (!strcmp(xval,_(panasonic_wbtable[j].str))) {
@@ -8350,7 +8351,7 @@ static struct {
 
 static int
 _get_CaptureTarget(CONFIG_GET_ARGS) {
-	int i;
+	unsigned int i;
 	char buf[1024];
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -8368,7 +8369,7 @@ _get_CaptureTarget(CONFIG_GET_ARGS) {
 
 static int
 _put_CaptureTarget(CONFIG_PUT_ARGS) {
-	int		i;
+	unsigned int	i;
 	char		*val;
 	PTPParams	*params = &(camera->pl->params);
 	GPContext	*context = ((PTPData *) params->data)->context;
@@ -8459,7 +8460,7 @@ static struct {
 
 static int
 _get_CHDK(CONFIG_GET_ARGS) {
-	int i;
+	unsigned int i;
 	char buf[1024];
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -8476,7 +8477,7 @@ _get_CHDK(CONFIG_GET_ARGS) {
 
 static int
 _put_CHDK(CONFIG_PUT_ARGS) {
-	int i;
+	unsigned int i;
 	char *val;
 
 	CR (gp_widget_get_value(widget, &val));
@@ -8499,7 +8500,7 @@ static struct {
 
 static int
 _get_Autofocus(CONFIG_GET_ARGS) {
-	int i;
+	unsigned int i;
 	char buf[1024];
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -8516,7 +8517,7 @@ _get_Autofocus(CONFIG_GET_ARGS) {
 
 static int
 _put_Autofocus(CONFIG_PUT_ARGS) {
-	int i;
+	unsigned int i;
 	char *val;
 
 	CR (gp_widget_get_value(widget, &val));
@@ -9632,7 +9633,8 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 	unsigned int	menuno, submenuno;
 	int 		ret;
 	uint16_t	*setprops = NULL;
-	int		i, nrofsetprops = 0;
+	unsigned int	i;
+	int		nrofsetprops = 0;
 	PTPParams	*params = &camera->pl->params;
 	CameraAbilities	ab;
 
