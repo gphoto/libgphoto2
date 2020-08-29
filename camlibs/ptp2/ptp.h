@@ -3506,6 +3506,17 @@ uint16_t ptp_ptpip_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_ptpip_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_ptpip_event_check_queue	(PTPParams* params, PTPContainer* event);
 
+int      ptp_fujiptpip_connect	(PTPParams* params, const char *port);
+uint16_t ptp_fujiptpip_sendreq	(PTPParams* params, PTPContainer* req, int dataphase);
+uint16_t ptp_fujiptpip_senddata	(PTPParams* params, PTPContainer* ptp,
+				uint64_t size, PTPDataHandler *handler);
+uint16_t ptp_fujiptpip_getresp	(PTPParams* params, PTPContainer* resp);
+uint16_t ptp_fujiptpip_getdata	(PTPParams* params, PTPContainer* ptp,
+	                         PTPDataHandler *handler);
+uint16_t ptp_fujiptpip_event_wait	(PTPParams* params, PTPContainer* event);
+uint16_t ptp_fujiptpip_event_check	(PTPParams* params, PTPContainer* event);
+uint16_t ptp_fujiptpip_event_check_queue(PTPParams* params, PTPContainer* event);
+
 uint16_t ptp_getdeviceinfo	(PTPParams* params, PTPDeviceInfo* deviceinfo);
 
 uint16_t ptp_generic_no_data	(PTPParams* params, uint16_t opcode, unsigned int cnt, ...);

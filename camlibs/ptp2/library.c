@@ -2564,6 +2564,7 @@ static struct {
 	{"Nikon DSLR (WLAN)"	, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Nikon 1 (WLAN)"	, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon EOS (WLAN)"	, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Fuji X (WLAN)"	, PTP_CAP|PTP_CAP_PREVIEW},
 };
 
 #include "device-flags.h"
@@ -4385,8 +4386,8 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 				newobject = event.Param1;
 				/* FALLTHROUGH */
 			}
-			/* FALLTHROUGH */
 		}
+			/* FALLTHROUGH */
 		case PTP_EC_CANON_RequestObjectTransfer: {
 			int j;
 
@@ -9068,18 +9069,34 @@ camera_init (Camera *camera, GPContext *context)
 			return ret;
 		}
 		gp_port_info_get_path (info, &xpath);
-		ret = ptp_ptpip_connect (params, xpath);
-		if (ret != GP_OK) {
-			GP_LOG_E ("Failed to connect.");
-			return ret;
+
+		if (strstr(a.model,"Fuji")) {
+			ret = ptp_fujiptpip_connect (params, xpath);
+			if (ret != GP_OK) {
+				GP_LOG_E ("Failed to connect.");
+				return ret;
+			}
+			params->sendreq_func	= ptp_fujiptpip_sendreq;
+			params->senddata_func	= ptp_fujiptpip_senddata;
+			params->getresp_func	= ptp_fujiptpip_getresp;
+			params->getdata_func	= ptp_fujiptpip_getdata;
+			params->event_wait	= ptp_fujiptpip_event_wait;
+			params->event_check	= ptp_fujiptpip_event_check;
+			params->event_check_queue	= ptp_fujiptpip_event_check_queue;
+		} else {
+			ret = ptp_ptpip_connect (params, xpath);
+			if (ret != GP_OK) {
+				GP_LOG_E ("Failed to connect.");
+				return ret;
+			}
+			params->sendreq_func	= ptp_ptpip_sendreq;
+			params->senddata_func	= ptp_ptpip_senddata;
+			params->getresp_func	= ptp_ptpip_getresp;
+			params->getdata_func	= ptp_ptpip_getdata;
+			params->event_wait	= ptp_ptpip_event_wait;
+			params->event_check	= ptp_ptpip_event_check;
+			params->event_check_queue	= ptp_ptpip_event_check_queue;
 		}
-		params->sendreq_func	= ptp_ptpip_sendreq;
-		params->senddata_func	= ptp_ptpip_senddata;
-		params->getresp_func	= ptp_ptpip_getresp;
-		params->getdata_func	= ptp_ptpip_getdata;
-		params->event_wait	= ptp_ptpip_event_wait;
-		params->event_check	= ptp_ptpip_event_check;
-		params->event_check_queue	= ptp_ptpip_event_check_queue;
 		break;
 	}
 	default:
