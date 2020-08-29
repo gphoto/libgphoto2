@@ -2640,6 +2640,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_LensZoomPos			0xD170
 #define PTP_DPC_FUJI_ImageSize				0xD174
 #define PTP_DPC_FUJI_FocusMeteringMode			0xD17C
+#define PTP_DPC_FUJI_TetherRawConditionCode		0xD186
+#define PTP_DPC_FUJI_TetherRawCompatibilityCode		0xD187
 #define PTP_DPC_FUJI_ReleaseMode			0xD201
 #define PTP_DPC_FUJI_FocusAreas				0xD206
 #define PTP_DPC_FUJI_PriorityMode			0xD207 /* from setprioritymode */
@@ -2653,6 +2655,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_DeviceError			0xD21B
 #define PTP_DPC_FUJI_CaptureRemaining			0xD229
 #define PTP_DPC_FUJI_MovieRemainingTime			0xD22A
+#define PTP_DPC_FUJI_ForceMode				0xD230
 #define PTP_DPC_FUJI_ShutterSpeed2			0xD240 /* movie aperture */
 #define PTP_DPC_FUJI_ImageAspectRatio			0xD241
 #define PTP_DPC_FUJI_BatteryLevel			0xD242 /* movie sensitivity???? */
