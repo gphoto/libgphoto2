@@ -3478,6 +3478,21 @@ enable_liveview:
 		unsigned char	*ximage = NULL;
 		int		tries = 10;
 
+		if (params->jpgfd) {
+			unsigned int	size;
+
+			C_PTP (ptp_fujiptpip_jpeg (params, &ximage, &size));
+			gp_file_append (file, (char*)ximage, size);
+			free (ximage);
+
+			gp_file_set_mime_type (file, GP_MIME_JPEG);
+			gp_file_set_name (file, "fuji_preview.jpg");
+			gp_file_set_mtime (file, time(NULL));
+
+			SET_CONTEXT_P(params, NULL);
+			return GP_OK;
+		}
+
 		while (tries--) {
 			ret = ptp_getobjectinfo (params, preview_object, &oi);
 			if (ret == PTP_RC_OK) break;

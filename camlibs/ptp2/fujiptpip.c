@@ -223,6 +223,11 @@ ptp_fujiptpip_evt_read (PTPParams* params, PTPIPHeader *hdr, unsigned char** dat
 }
 
 static uint16_t
+ptp_fujiptpip_jpg_read (PTPParams* params, PTPIPHeader *hdr, unsigned char** data) {
+	return ptp_fujiptpip_generic_read (params, params->jpgfd, hdr, data, 0);
+}
+
+static uint16_t
 ptp_fujiptpip_check_event (PTPParams* params) {
 	PTPContainer	event;
 	uint16_t	ret;
@@ -704,6 +709,21 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 		return GP_ERROR_IO;
 	} while (1);
 	GP_LOG_D ("fujiptpip event connected!");
+	tries = 2;
+	saddr.sin_family	= AF_INET;
+	saddr.sin_port		= htons(eventport+1);
+	do {
+		if (-1 != connect (params->jpgfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
+			break;
+		if ((errno == ECONNREFUSED) && (tries--)) {
+			GP_LOG_D ("jpeg connect failed, retrying after short wait");
+			usleep(100*1000);
+			continue;
+		}
+		GP_LOG_E ("could not connect event");
+		close (params->jpgfd);
+		return GP_ERROR_IO;
+	} while (1);
 	return GP_OK;
 #else
 	GP_LOG_E ("Windows currently not supported, neeeds a winsock port.");
@@ -797,6 +817,47 @@ ptp_fujiptpip_event_wait (PTPParams* params, PTPContainer* event) {
 	return ptp_fujiptpip_event (params, event, PTP_EVENT_CHECK);
 }
 
+uint16_t
+ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int xsize)
+{
+#ifndef WIN32
+	fd_set		infds;
+	struct timeval	timeout;
+	int ret;
+	unsigned char*	data = NULL;
+	PTPIPHeader	hdr;
+
+	while (1) {
+		FD_ZERO(&infds);
+		FD_SET(params->jpgfd, &infds);
+		timeout.tv_sec = 0;
+		timeout.tv_usec = 1;
+
+		ret = select (params->jpgfd+1, &infds, NULL, NULL, &timeout);
+		if (1 != ret) {
+			if (-1 == ret) {
+				GP_LOG_D ("select returned error, errno is %d", errno);
+				return PTP_ERROR_IO;
+			}
+			return PTP_ERROR_TIMEOUT;
+		}
+
+		ret = ptp_fujiptpip_jpg_read (params, &hdr, &data);
+		if (ret != PTP_RC_OK)
+			return ret;
+		GP_LOG_D ("length %d", hdr.length);
+		break;
+	}
+
+	free (data);
+	return PTP_RC_OK;
+#else
+	GP_LOG_E ("not supported currently on Windows");
+	return PTP_RC_OK;
+#endif
+}
+
+
 int
 ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	char 		*addr, *s, *p;
@@ -855,6 +916,13 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	params->evtfd = socket (PF_INET, SOCK_STREAM, 0);
 	if (params->evtfd == -1) {
 		perror ("socket evt");
+		close (params->cmdfd);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	params->jpgfd = socket (PF_INET, SOCK_STREAM, 0);
+	if (params->jpgfd == -1) {
+		perror ("socket jpg");
+		close (params->evtfd);
 		close (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
