@@ -2124,3 +2124,35 @@ Focus Point(0xd347): error 201b on query.
 Property 0xd170:(read only) (type=0x4) Range [1 - 1, step 1] value: 1
 BatteryLevel(0xd242): error 200a on query.
 
+
+WIFI MODE:
+
+Hersteller: FUJIFILM
+Modell: X-T42
+  Version: 1.01
+  Seriennummer: 000000000000000000000000000000
+Vendor Extension ID: 0xe (1.0)
+Beschreibung der Vendor Extension: fujifilm.co.jp: 1.0; 
+
+Aufnahmeformate: Defined Type JPEG Unknown(b103)
+Anzeigeformate: Defined Type, JPEG, Unknown(b103), TIFF
+
+Fähigkeiten des Geräts:
+        Dateien Download, Löschen von Dateien, kein Hochladen von Dateien
+        Generische Bild Aufnahme, Offene Aufnahme, Kein Vendor spezifischer Aufnahmemodus
+
+Informationen über Speichermedium:
+
+Properties des Geräts:
+Aufnahmeverzögerung(0x5012):(readwrite) (type=0x4) Enumeration [0,2,4] value: 0,0s (0)
+Blitzmodus(0x500c):(readwrite) (type=0x4) Enumeration [32777,32778] value: 32777
+Weißabgleich(0x5005):(readwrite) (type=0x4) Enumeration [2,4,32774,32769,32770,32771,6,32778,32779,32780,32781,32782] value: Automatic (2)
+Belichtungskorrektur(0x5010):(readwrite) (type=0x3) Enumeration [-3000,-2667,-2333,-2000,-1667,-1333,-1000,-667,-333,0,333,667,1000,1333,1667,2000,2333,2667,3000,0,20485,4,1,0,-30180,1070,-14734,918,2,0,-3164] value: 0,0 stops (0)
+Film Simulation(0xd001):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18] value: 1
+ExposureIndex(0xd02a):(readwrite) (type=0x6) Enumeration [2147484048,2147484448,2147485248,2147486848,2147490048,2147496448,1073741904,1073741924,1073741949,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,1073767424,1073793024] value: 4294967295
+FocusMeteringMode(0xd17c):PTP Fehler 201b beim Abfragen
+Property 0xd245:PTP Fehler 201b beim Abfragen
+F-Nummer(0x5007):(readwrite) (type=0x4) Enumeration [350,530,710,1000,1100,1600,65535] value: f/5,6 (560)
+RecMode(0xd019):(readwrite) (type=0x4) Enumeration [0,1] value: 1
+Property 0xd246:PTP Fehler 201b beim Abfragen
+
