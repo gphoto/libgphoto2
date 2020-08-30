@@ -3459,7 +3459,7 @@ struct _PTPParams {
 	PTPNIKONWifiProfile *wifi_profiles;
 
 	/* IO: PTP/IP related data */
-	int		cmdfd, evtfd;
+	int		cmdfd, evtfd, jpgfd;
 	uint8_t		cameraguid[16];
 	uint32_t	eventpipeid;
 	char		*cameraname;
