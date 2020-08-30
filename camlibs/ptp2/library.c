@@ -4877,6 +4877,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	while (ptp_get_one_event(params, &event)) {
 		switch (event.Code) {
 			case PTP_EC_ObjectAdded:
+			case PTP_EC_FUJI_ObjectAdded:
 				newobject2 = event.Param1;
 				break;
 			default:

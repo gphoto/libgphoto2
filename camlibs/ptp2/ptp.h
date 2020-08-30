@@ -1266,6 +1266,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_Olympus_PropertyChanged		0xC102
 #define PTP_EC_Olympus_CaptureComplete		0xC103
 
+#define PTP_EC_FUJI_PreviewAvailable		0xC001
+#define PTP_EC_FUJI_ObjectAdded			0xC004
+
 /* constants for GetObjectHandles */
 #define PTP_GOH_ALL_STORAGE 0xffffffff
 #define PTP_GOH_ALL_FORMATS 0x00000000
