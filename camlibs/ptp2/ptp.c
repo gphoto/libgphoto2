@@ -5161,6 +5161,7 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
 	xsize = size - 4;
 
 	*props = calloc(sizeof(uint16_t),nums);
+	*numprops = nums;
 	for (i=0;i<nums;i++) {
 		PTPDevicePropDesc	dpd;
 		unsigned int		dsize = dtoh32a(xdata);
