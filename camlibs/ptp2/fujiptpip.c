@@ -106,7 +106,7 @@ uint16_t
 ptp_fujiptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 {
 	int		ret;
-	int		len = 12+req->Nparam*4;
+	int		len = fujiptpip_cmd_param1 +req->Nparam*4;
 	unsigned char 	*request = malloc(len);
 
 	switch (req->Nparam) {
@@ -156,11 +156,16 @@ ptp_fujiptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 }
 
 static uint16_t
-ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned char**data) {
+ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned char**data, int withtype) {
 	int	ret, len, curread;
 	unsigned char *xhdr;
+	unsigned int hdrlen;
 
-	xhdr = (unsigned char*)hdr; curread = 0; len = sizeof (PTPIPHeader);
+	xhdr = (unsigned char*)hdr; curread = 0;
+	hdrlen = len = sizeof (PTPIPHeader);
+	if (!withtype)
+		hdrlen = len = sizeof(uint32_t);
+
 	while (curread < len) {
 		ret = read (fd, xhdr + curread, len - curread);
 		if (ret == -1) {
@@ -174,7 +179,7 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 			return PTP_RC_GeneralError;
 		}
 	}
-	len = dtoh32 (hdr->length) - sizeof (PTPIPHeader);
+	len = dtoh32 (hdr->length) - hdrlen;
 	if (len < 0) {
 		GP_LOG_E ("len < 0, %d?", len);
 		return PTP_RC_GeneralError;
@@ -209,12 +214,12 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 static uint16_t
 ptp_fujiptpip_cmd_read (PTPParams* params, PTPIPHeader *hdr, unsigned char** data) {
 	ptp_fujiptpip_check_event (params);
-	return ptp_fujiptpip_generic_read (params, params->cmdfd, hdr, data);
+	return ptp_fujiptpip_generic_read (params, params->cmdfd, hdr, data, 0);
 }
 
 static uint16_t
 ptp_fujiptpip_evt_read (PTPParams* params, PTPIPHeader *hdr, unsigned char** data) {
-	return ptp_fujiptpip_generic_read (params, params->evtfd, hdr, data);
+	return ptp_fujiptpip_generic_read (params, params->evtfd, hdr, data, 0);
 }
 
 static uint16_t
@@ -234,8 +239,9 @@ ptp_fujiptpip_check_event (PTPParams* params) {
 #define fujiptpip_startdata_transid	0
 #define fujiptpip_startdata_totallen	4
 #define fujiptpip_startdata_unknown	8
-#define fujiptpip_data_transid		0
-#define fujiptpip_data_payload		4
+#define fujiptpip_data_datatype		0
+#define fujiptpip_data_transid		2
+#define fujiptpip_data_payload		6
 
 #define WRITE_BLOCKSIZE 65536
 uint16_t
@@ -250,9 +256,9 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	GP_LOG_D ("Sending PTP_OC 0x%0x (%s) data...", ptp->Code, ptp_get_opcode_name(params, ptp->Code));
 	//htod32a(&request[ptpip_type],PTPIP_START_DATA_PACKET);
 	htod32a(&request[fujiptpip_len],sizeof(request));
-	htod32a(&request[fujiptpip_startdata_transid  + 8],ptp->Transaction_ID);
-	htod32a(&request[fujiptpip_startdata_totallen + 8],size);
-	htod32a(&request[fujiptpip_startdata_unknown  + 8],0);
+	htod32a(&request[fujiptpip_startdata_transid  + 4],ptp->Transaction_ID);
+	htod32a(&request[fujiptpip_startdata_totallen + 4],size);
+	htod32a(&request[fujiptpip_startdata_unknown  + 4],0);
 	GP_LOG_DATA ((char*)request, sizeof(request), "ptpip/senddata header:");
 	ret = write (params->cmdfd, request, sizeof(request));
 	if (ret == -1)
@@ -316,6 +322,7 @@ ptp_fujiptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *han
 	if (ret != PTP_RC_OK)
 		return ret;
 
+#if 0
 	if (dtoh32(hdr.type) == PTPIP_CMD_RESPONSE) { /* might happen if we have no data transfer due to error? */
 		GP_LOG_E ("Unexpected ptp response, ptp code %x", dtoh16a(&xdata[0]));
 		return dtoh16a(&xdata[0]);
@@ -324,6 +331,7 @@ ptp_fujiptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *han
 		GP_LOG_E ("got reply type %d\n", dtoh32(hdr.type));
 		return PTP_RC_GeneralError;
 	}
+#endif
 	toread = dtoh32a(&xdata[fujiptpip_data_payload]);
 	free (xdata); xdata = NULL;
 	curread = 0;
@@ -331,58 +339,37 @@ ptp_fujiptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *han
 		ret = ptp_fujiptpip_cmd_read (params, &hdr, &xdata);
 		if (ret != PTP_RC_OK)
 			return ret;
-		if (dtoh32(hdr.type) == PTPIP_END_DATA_PACKET) {
-			unsigned long datalen = dtoh32(hdr.length)-4-fujiptpip_data_payload;
-			if (datalen > (toread-curread)) {
-				GP_LOG_E ("returned data is too much, expected %ld, got %ld",
-					  (toread-curread), datalen
-				);
-				break;
-			}
-			xret = handler->putfunc (params, handler->priv,
-				datalen, xdata+fujiptpip_data_payload
+		unsigned long datalen = dtoh32(hdr.length)-4-fujiptpip_data_payload;
+		if (datalen > (toread-curread)) {
+			GP_LOG_E ("returned data is too much, expected %ld, got %ld",
+				  (toread-curread), datalen
 			);
-			if (xret != PTP_RC_OK) {
-				GP_LOG_E ("failed to putfunc of returned data");
-				break;
-			}
-			curread += datalen;
-			free (xdata); xdata = NULL;
-			continue;
+			break;
 		}
-		if (dtoh32(hdr.type) == PTPIP_DATA_PACKET) {
-			unsigned long datalen = dtoh32(hdr.length)-4-fujiptpip_data_payload;
-			if (datalen > (toread-curread)) {
-				GP_LOG_E ("returned data is too much, expected %ld, got %ld",
-					  (toread-curread), datalen
-				);
-				break;
-			}
-			xret = handler->putfunc (params, handler->priv,
-				datalen, xdata+fujiptpip_data_payload
-			);
-			if (xret != PTP_RC_OK) {
-				GP_LOG_E ("failed to putfunc of returned data");
-				break;
-			}
-			curread += datalen;
-			free (xdata); xdata = NULL;
-			continue;
+		xret = handler->putfunc (params, handler->priv,
+			datalen, xdata+fujiptpip_data_payload
+		);
+		if (xret != PTP_RC_OK) {
+			GP_LOG_E ("failed to putfunc of returned data");
+			break;
 		}
-		GP_LOG_E ("ret type %d", hdr.type);
+		curread += datalen;
+		free (xdata); xdata = NULL;
+		continue;
 	}
 	if (curread < toread)
 		return PTP_RC_GeneralError;
 	return PTP_RC_OK;
 }
 
-#define ptpip_resp_code		0
-#define ptpip_resp_transid	2
-#define ptpip_resp_param1	6
-#define ptpip_resp_param2	10
-#define ptpip_resp_param3	14
-#define ptpip_resp_param4	18
-#define ptpip_resp_param5	22
+#define fujiptpip_dataphase	0
+#define fujiptpip_resp_code	2
+#define fujiptpip_resp_transid	4
+#define fujiptpip_resp_param1	8
+#define fujiptpip_resp_param2	12
+#define fujiptpip_resp_param3	16
+#define fujiptpip_resp_param4	20
+#define fujiptpip_resp_param5	24
 
 uint16_t
 ptp_fujiptpip_getresp (PTPParams* params, PTPContainer* resp)
@@ -398,24 +385,18 @@ retry:
 	if (ret != PTP_RC_OK)
 		return ret;
 
-	switch (dtoh32(hdr.type)) {
-	case PTPIP_END_DATA_PACKET:
-		GP_LOG_D("PTPIP_END_DATA_PACKET");
-		resp->Transaction_ID	= dtoh32a(&data[0]);
-		free (data);
-		data = NULL;
-		goto retry;
-	case PTPIP_CMD_RESPONSE:
+	switch (dtoh16a(data)) {
+	case 3:
 		GP_LOG_D("PTPIP_CMD_RESPONSE");
-		resp->Code		= dtoh16a(&data[ptpip_resp_code]);
-		resp->Transaction_ID	= dtoh32a(&data[ptpip_resp_transid]);
-		n = (dtoh32(hdr.length) - sizeof(hdr) - ptpip_resp_param1)/sizeof(uint32_t);
+		resp->Code		= dtoh16a(&data[fujiptpip_resp_code]);
+		resp->Transaction_ID	= dtoh32a(&data[fujiptpip_resp_transid]);
+		n = (dtoh32(hdr.length) - sizeof(uint32_t) - fujiptpip_resp_param1)/sizeof(uint32_t);
 		switch (n) {
-		case 5: resp->Param5 = dtoh32a(&data[ptpip_resp_param5]);/* fallthrough */
-		case 4: resp->Param4 = dtoh32a(&data[ptpip_resp_param4]);/* fallthrough */
-		case 3: resp->Param3 = dtoh32a(&data[ptpip_resp_param3]);/* fallthrough */
-		case 2: resp->Param2 = dtoh32a(&data[ptpip_resp_param2]);/* fallthrough */
-		case 1: resp->Param1 = dtoh32a(&data[ptpip_resp_param1]);/* fallthrough */
+		case 5: resp->Param5 = dtoh32a(&data[fujiptpip_resp_param5]);/* fallthrough */
+		case 4: resp->Param4 = dtoh32a(&data[fujiptpip_resp_param4]);/* fallthrough */
+		case 3: resp->Param3 = dtoh32a(&data[fujiptpip_resp_param3]);/* fallthrough */
+		case 2: resp->Param2 = dtoh32a(&data[fujiptpip_resp_param2]);/* fallthrough */
+		case 1: resp->Param1 = dtoh32a(&data[fujiptpip_resp_param1]);/* fallthrough */
 		case 0: break;
 		default:
 			GP_LOG_E ("response got %d parameters?", n);
@@ -423,7 +404,7 @@ retry:
 		}
 		break;
 	default:
-		GP_LOG_E ("response type %d packet?", dtoh32(hdr.type));
+		GP_LOG_E ("response type %d packet?", dtoh16a(data));
 		break;
 	}
 	free (data);
@@ -499,7 +480,7 @@ ptp_fujiptpip_init_command_ack (PTPParams* params)
 	int		i;
 	unsigned short	*name;
 
-	ret = ptp_fujiptpip_generic_read (params, params->cmdfd, &hdr, &data);
+	ret = ptp_fujiptpip_generic_read (params, params->cmdfd, &hdr, &data, 1);
 	if (ret != PTP_RC_OK)
 		return ret;
 	if (hdr.type != dtoh32(PTPIP_INIT_COMMAND_ACK)) {
