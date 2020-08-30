@@ -4949,6 +4949,19 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		C_PTP_REP (ptp_check_event (params));
 		if (newobject)
 			break;
+		while (ptp_get_one_event(params, &event)) {
+			switch (event.Code) {
+				case PTP_EC_ObjectAdded:
+				case PTP_EC_FUJI_ObjectAdded:
+					newobject = event.Param1;
+					break;
+				default:
+					GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+					break;
+			}
+		}
+		if (newobject)
+			break;
 		usleep(1000*1000); /* wait 1 second for image to appear */
 	}
 	free (beforehandles.Handler);
