@@ -4989,6 +4989,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			switch (event.Code) {
 				case PTP_EC_ObjectAdded:
 				case PTP_EC_FUJI_ObjectAdded:
+					GP_LOG_D ("Event Code %04x, Param 1 %08x", event.Code, event.Param1);
 					ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 					if (ret != PTP_RC_OK) {
 						GP_LOG_E ("object added, but not found?");
