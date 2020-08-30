@@ -2858,6 +2858,8 @@ camera_abilities (CameraAbilitiesList *list)
 		memset(&a, 0, sizeof(a));
 		strcpy(a.model, ptpip_models[i].model);
 		a.status 		= GP_DRIVER_STATUS_TESTING;
+		if (strstr(ptpip_models[i].model,"Fuji"))
+			a.status 		= GP_DRIVER_STATUS_EXPERIMENTAL;
 		a.port   		= GP_PORT_PTPIP;
 		a.operations 		= GP_OPERATION_CONFIG;
 		if (ptpip_models[i].device_flags & PTP_CAP)
