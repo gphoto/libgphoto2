@@ -248,7 +248,7 @@ uint16_t
 ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		uint64_t size, PTPDataHandler *handler
 ) {
-	unsigned char	request[0x14];
+	unsigned char	request[0x10];
 	unsigned int	curwrite, towrite;
 	int		ret;
 	unsigned char*	xdata;
@@ -271,18 +271,15 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	if (!xdata) return PTP_RC_GeneralError;
 	curwrite = 0;
 	while (curwrite < size) {
-		unsigned long type, written, towrite2, xtowrite;
+		unsigned long written, towrite2, xtowrite;
 
 		ptp_fujiptpip_check_event (params);
 
 		towrite = size - curwrite;
 		if (towrite > WRITE_BLOCKSIZE) {
 			towrite	= WRITE_BLOCKSIZE;
-			type	= PTPIP_DATA_PACKET;
-		} else {
-			type	= PTPIP_END_DATA_PACKET;
 		}
-		ret = handler->getfunc (params, handler->priv, towrite, &xdata[fujiptpip_data_payload+8], &xtowrite);
+		ret = handler->getfunc (params, handler->priv, towrite, &xdata[fujiptpip_data_payload+4], &xtowrite);
 		if (ret == -1) {
 			perror ("getfunc in senddata failed");
 			free (xdata);
