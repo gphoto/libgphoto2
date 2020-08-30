@@ -5144,31 +5144,28 @@ ptp_fuji_getdeviceinfo (PTPParams* params, unsigned char **data, unsigned int *s
 {
         PTPContainer	ptp;
 	uint16_t	ret;
-	unsigned int	nums, i, newoffset, xsize, xoffset;
+	unsigned char	*xdata;
+	unsigned int	nums, i, newoffset, xsize;
 
         PTP_CNT_INIT(ptp, PTP_OC_FUJI_GetDeviceInfo);
         ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 
-	if (*size < 4) {
+	if (*size < 8) {
 		return PTP_RC_GeneralError;
 	}
 
 	nums = dtoh32a(*data);
+	xdata = (*data) + 4;
 	xsize = *size - 4;
-	xoffset = 4;
 	for (i=0;i<nums;i++) {
 		PTPDevicePropDesc	dpd;
+		unsigned int		dsize = dtoh32a(xdata);
 
-		if (xsize <= 2) {
-			return PTP_RC_GeneralError;
-		}
+		if (!ptp_unpack_DPD(params, xdata+4, &dpd, dsize, &newoffset))
+			break;
 
-		if (!ptp_unpack_DPD(params, *data + xoffset, &dpd, xsize, &newoffset)) {
-			return PTP_RC_GeneralError;
-		}
-		xoffset += newoffset;
-		xsize -= newoffset;
-		ptp_debug (params, "ptp_fuji_getdeviceinfo: property 0x%04x", dpd.DevicePropertyCode);
+		xdata	+= 4+newoffset;
+		xsize	-= 4+newoffset;
 	}
 	return ret;
 }
