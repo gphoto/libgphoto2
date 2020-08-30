@@ -818,7 +818,7 @@ ptp_fujiptpip_event_wait (PTPParams* params, PTPContainer* event) {
 }
 
 uint16_t
-ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int xsize)
+ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int *xsize)
 {
 #ifndef WIN32
 	fd_set		infds;
@@ -845,6 +845,9 @@ ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int xsize
 		ret = ptp_fujiptpip_jpg_read (params, &hdr, &data);
 		if (ret != PTP_RC_OK)
 			return ret;
+
+		*xdata = data;
+		*xsize = hdr.length - sizeof(uint32_t);
 		GP_LOG_D ("length %d", hdr.length);
 		break;
 	}

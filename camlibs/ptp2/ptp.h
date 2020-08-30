@@ -3528,7 +3528,7 @@ uint16_t ptp_fujiptpip_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_fujiptpip_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_fujiptpip_event_check_queue(PTPParams* params, PTPContainer* event);
 
-uint16_t ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int xsize);
+uint16_t ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int *xsize);
 
 uint16_t ptp_getdeviceinfo	(PTPParams* params, PTPDeviceInfo* deviceinfo);
 
