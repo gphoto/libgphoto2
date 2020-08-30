@@ -450,7 +450,7 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 #else
 	strcpy (hostname, "gpwindows");
 #endif
-	len = fujiptpip_initcmd_name + (strlen(hostname)+1)*2 + 4;
+	len = fujiptpip_initcmd_name + (strlen(hostname)+1)*2;
 
 	cmdrequest = malloc(len);
 	htod32a(&cmdrequest[ptpip_type],PTPIP_INIT_COMMAND_REQUEST);
@@ -464,8 +464,10 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 		cmdrequest[fujiptpip_initcmd_name+i*2] = hostname[i];
 		cmdrequest[fujiptpip_initcmd_name+i*2+1] = 0;
 	}
+/*
 	htod16a(&cmdrequest[fujiptpip_initcmd_name+(strlen(hostname)+1)*2],PTPIP_VERSION_MINOR);
 	htod16a(&cmdrequest[fujiptpip_initcmd_name+(strlen(hostname)+1)*2+2],PTPIP_VERSION_MAJOR);
+*/
 
 	GP_LOG_DATA ((char*)cmdrequest, len, "ptpip/init_cmd data:");
 	ret = write (params->cmdfd, cmdrequest, len);
