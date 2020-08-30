@@ -848,11 +848,8 @@ ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int *xsiz
 
 		*xdata = data;
 		*xsize = hdr.length - sizeof(uint32_t);
-		GP_LOG_D ("length %d", hdr.length);
 		break;
 	}
-
-	free (data);
 	return PTP_RC_OK;
 #else
 	GP_LOG_E ("not supported currently on Windows");

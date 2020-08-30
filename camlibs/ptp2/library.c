@@ -3481,10 +3481,13 @@ enable_liveview:
 		int		tries = 10;
 
 		if (params->jpgfd) {
-			unsigned int	size;
-
+			unsigned int i;
 			C_PTP (ptp_fujiptpip_jpeg (params, &ximage, &size));
-			gp_file_append (file, (char*)ximage, size);
+			/* there is a bit of header in front ... skip it */
+			for (i=0;i<size;i++)
+				if (ximage[i]==0xff)
+					break;
+			gp_file_append (file, (char*)ximage+i, size-i);
 			free (ximage);
 
 			gp_file_set_mime_type (file, GP_MIME_JPEG);
