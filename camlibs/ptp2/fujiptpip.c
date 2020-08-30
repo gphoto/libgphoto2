@@ -830,8 +830,8 @@ ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int *xsiz
 	while (1) {
 		FD_ZERO(&infds);
 		FD_SET(params->jpgfd, &infds);
-		timeout.tv_sec = 0;
-		timeout.tv_usec = 1;
+		timeout.tv_sec = 1;
+		timeout.tv_usec = 0;
 
 		ret = select (params->jpgfd+1, &infds, NULL, NULL, &timeout);
 		if (1 != ret) {
