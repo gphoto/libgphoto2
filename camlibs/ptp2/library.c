@@ -9202,9 +9202,19 @@ camera_init (Camera *camera, GPContext *context)
 		C_PTP_REP (ptp_olympus_opensession (params, &data, &len));
 	}
 
+#if 1
 	/* special fuji wlan init code */
 	if ((camera->port->type == GP_PORT_PTPIP)  && strstr(a.model,"Fuji")) {
 		PTPPropertyValue        propval;
+		GPPortInfo		info;
+		char 			*xpath;
+
+		ret = gp_port_get_info (camera->port, &info);
+		if (ret != GP_OK) {
+			GP_LOG_E ("Failed to get port info?");
+			return ret;
+		}
+		gp_port_info_get_path (info, &xpath);
 
 		propval.u16 = 5;
 		C_PTP_REP (ptp_setdevicepropvalue(params, PTP_DPC_FUJI_InitSequence, &propval, PTP_DTC_UINT16));
@@ -9213,8 +9223,12 @@ camera_init (Camera *camera, GPContext *context)
 
 		GP_LOG_D("FUJI AppVersion is %d", propval.u32);
 		C_PTP_REP (ptp_setdevicepropvalue(params, PTP_DPC_FUJI_AppVersion, &propval, PTP_DTC_UINT32));
-	}
 
+		C_PTP_REP (ptp_initiateopencapture(params, 0x00000000, 0x00000000));
+
+		ptp_fujiptpip_init_event(params, xpath);
+	}
+#endif
 	/* Seems HP does not like getdevinfo outside of session
 	   although it's legal to do so */
 	/* get device info */

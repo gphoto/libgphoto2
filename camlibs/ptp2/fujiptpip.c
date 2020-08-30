@@ -467,45 +467,77 @@ ptp_fujiptpip_init_command_ack (PTPParams* params)
 #define fujiptpip_eventinit_idx	8
 #define fujiptpip_eventinit_size	12
 
-static uint16_t
-ptp_fujiptpip_init_event_request (PTPParams* params)
+int
+ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 {
-	unsigned char	evtrequest[fujiptpip_eventinit_size];
-	int 		ret;
-
-	htod32a(&evtrequest[fujiptpip_type],PTPIP_INIT_EVENT_REQUEST);
-	htod32a(&evtrequest[fujiptpip_len],fujiptpip_eventinit_size);
-	htod32a(&evtrequest[fujiptpip_eventinit_idx],params->eventpipeid);
-
-	GP_LOG_DATA ((char*)evtrequest, fujiptpip_eventinit_size, "ptpip/init_event data:");
-	ret = write (params->evtfd, evtrequest, fujiptpip_eventinit_size);
-	if (ret == -1) {
-		perror("write init evt request");
-		return PTP_RC_GeneralError;
-	}
-	if (ret != fujiptpip_eventinit_size) {
-		GP_LOG_E ("unexpected retsize %d, expected %d", ret, fujiptpip_eventinit_size);
-		return PTP_RC_GeneralError;
-	}
-	return PTP_RC_OK;
-}
-
-static uint16_t
-ptp_fujiptpip_init_event_ack (PTPParams* params)
-{
-	PTPIPHeader	hdr;
-	unsigned char	*data = NULL;
+	char 		*addr, *s, *p;
+	int		port, eventport, tries;
+	struct sockaddr_in	saddr;
 	uint16_t	ret;
 
-	ret = ptp_fujiptpip_evt_read (params, &hdr, &data);
-	if (ret != PTP_RC_OK)
-		return ret;
-	free (data);
-	if (hdr.type != dtoh32(PTPIP_INIT_EVENT_ACK)) {
-		GP_LOG_E ("bad type returned %d\n", htod32(hdr.type));
-		return PTP_RC_GeneralError;
+	GP_LOG_D ("connecting to %s.", address);
+	if (NULL == strchr (address,':'))
+		return GP_ERROR_BAD_PARAMETERS;
+
+#ifdef HAVE_INET_ATON
+	addr = strdup (address);
+	if (!addr)
+		return GP_ERROR_NO_MEMORY;
+	s = strchr (addr,':');
+	if (!s) {
+		GP_LOG_E ("addr %s should contain a :", address);
+		free (addr);
+		return GP_ERROR_BAD_PARAMETERS;
 	}
-	return PTP_RC_OK;
+	*s = '\0';
+	p = strchr (s+1,':');
+	port = 55740;
+	eventport = port+1;
+	if (p) {
+		*p = '\0';
+		if (!sscanf (p+1,"%d",&port)) {
+			fprintf(stderr,"failed to scan for port in %s\n", p+1);
+			free (addr);
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		/* different event port ? */
+		p = strchr (p+1,':');
+		if (p) {
+			if (!sscanf (p+1,"%d",&eventport)) {
+				fprintf(stderr,"failed to scan for eventport in %s\n", p+1);
+				free (addr);
+				return GP_ERROR_BAD_PARAMETERS;
+			}
+		}
+	}
+	if (!inet_aton (s+1,  &saddr.sin_addr)) {
+		fprintf(stderr,"failed to scan for addr in %s\n", s+1);
+		free (addr);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	free (addr);
+
+	tries = 2;
+	saddr.sin_family	= AF_INET;
+	saddr.sin_port		= htons(eventport);
+	do {
+		if (-1 != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
+			break;
+		if ((errno == ECONNREFUSED) && (tries--)) {
+			GP_LOG_D ("event connect failed, retrying after short wait");
+			usleep(100*1000);
+			continue;
+		}
+		GP_LOG_E ("could not connect event");
+		close (params->evtfd);
+		return GP_ERROR_IO;
+	} while (1);
+	GP_LOG_D ("fujiptpip event connected!");
+	return GP_OK;
+#else
+	GP_LOG_E ("Windows currently not supported, neeeds a winsock port.");
+	return GP_ERROR_NOT_SUPPORTED;
+#endif
 }
 
 

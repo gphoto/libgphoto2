@@ -3507,6 +3507,7 @@ uint16_t ptp_ptpip_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_ptpip_event_check_queue	(PTPParams* params, PTPContainer* event);
 
 int      ptp_fujiptpip_connect	(PTPParams* params, const char *port);
+int      ptp_fujiptpip_init_event (PTPParams* params, const char *address);
 uint16_t ptp_fujiptpip_sendreq	(PTPParams* params, PTPContainer* req, int dataphase);
 uint16_t ptp_fujiptpip_senddata	(PTPParams* params, PTPContainer* ptp,
 				uint64_t size, PTPDataHandler *handler);
