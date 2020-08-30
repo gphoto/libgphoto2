@@ -9208,6 +9208,8 @@ camera_init (Camera *camera, GPContext *context)
 		PTPPropertyValue        propval;
 		GPPortInfo		info;
 		char 			*xpath;
+		unsigned char		*data = NULL;
+		unsigned int		size = 0;
 
 		ret = gp_port_get_info (camera->port, &info);
 		if (ret != GP_OK) {
@@ -9223,6 +9225,8 @@ camera_init (Camera *camera, GPContext *context)
 
 		GP_LOG_D("FUJI AppVersion is %d", propval.u32);
 		C_PTP_REP (ptp_setdevicepropvalue(params, PTP_DPC_FUJI_AppVersion, &propval, PTP_DTC_UINT32));
+
+		ptp_fuji_getdeviceinfo(params, &data, &size);
 
 		C_PTP_REP (ptp_initiateopencapture(params, 0x00000000, 0x00000000));
 

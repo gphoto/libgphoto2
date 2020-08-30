@@ -981,6 +981,13 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * 90fe firmware update
  */
 
+#define PTP_OC_FUJI_GetCapturePreview			0x9022
+#define PTP_OC_FUJI_SetFocusPoint			0x9026
+#define PTP_OC_FUJI_ResetFocusPoint			0x9027
+#define PTP_OC_FUJI_GetDeviceInfo			0x902B
+#define PTP_OC_FUJI_SetShutterSpeed			0x902C
+#define PTP_OC_FUJI_SetAperture				0x902D
+#define PTP_OC_FUJI_SetExposureCompensation		0x902E
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
@@ -4407,6 +4414,7 @@ uint16_t ptp_chdk_call_function(PTPParams* params, int *args, int size, int *ret
 /*uint16_t ptp_chdk_get_video_settings(PTPParams* params, ptp_chdk_videosettings* vsettings);*/
 
 uint16_t ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count);
+uint16_t ptp_fuji_getdeviceinfo (PTPParams* params, unsigned char **data, unsigned int *size);
 
 #define ptp_panasonic_liveview(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_Liveview,1,enable?0xD000010:0xD000011)
 uint16_t ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);

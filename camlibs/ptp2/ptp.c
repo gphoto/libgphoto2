@@ -5140,6 +5140,15 @@ ptp_android_sendpartialobject (PTPParams* params, uint32_t handle, uint64_t offs
 }
 
 uint16_t
+ptp_fuji_getdeviceinfo (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+        PTPContainer ptp;
+
+        PTP_CNT_INIT(ptp, PTP_OC_FUJI_GetDeviceInfo);
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
 ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 {
 	PTPContainer	ptp;
