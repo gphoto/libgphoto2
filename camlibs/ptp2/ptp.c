@@ -2098,7 +2098,7 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	PTPContainer	ptp;
 	uint16_t	ret = PTP_RC_OK;
 	unsigned char	*data = NULL;
-	unsigned int	size;
+	unsigned int	size, newoffset;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetDevicePropDesc, propcode);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
@@ -2133,7 +2133,7 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 		}
 #endif
 	} else {
-		if (!ptp_unpack_DPD(params, data, devicepropertydesc, size)) {
+		if (!ptp_unpack_DPD(params, data, devicepropertydesc, size, &newoffset)) {
 			ptp_debug(params,"failed to unpack DPD of propcode 0x%04x, likely corrupted?", propcode);
 			free (data);
 			return PTP_RC_InvalidDevicePropFormat;
@@ -5142,10 +5142,35 @@ ptp_android_sendpartialobject (PTPParams* params, uint32_t handle, uint64_t offs
 uint16_t
 ptp_fuji_getdeviceinfo (PTPParams* params, unsigned char **data, unsigned int *size)
 {
-        PTPContainer ptp;
+        PTPContainer	ptp;
+	uint16_t	ret;
+	unsigned int	nums, i, newoffset, xsize, xoffset;
 
         PTP_CNT_INIT(ptp, PTP_OC_FUJI_GetDeviceInfo);
-        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+        ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+
+	if (*size < 4) {
+		return PTP_RC_GeneralError;
+	}
+
+	nums = dtoh32a(*data);
+	xsize = *size - 4;
+	xoffset = 4;
+	for (i=0;i<nums;i++) {
+		PTPDevicePropDesc	dpd;
+
+		if (xsize <= 2) {
+			return PTP_RC_GeneralError;
+		}
+
+		if (!ptp_unpack_DPD(params, *data + xoffset, &dpd, xsize, &newoffset)) {
+			return PTP_RC_GeneralError;
+		}
+		xoffset += newoffset;
+		xsize -= newoffset;
+		ptp_debug (params, "ptp_fuji_getdeviceinfo: property 0x%04x", dpd.DevicePropertyCode);
+	}
+	return ret;
 }
 
 uint16_t

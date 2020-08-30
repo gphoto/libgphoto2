@@ -473,7 +473,6 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 	char 		*addr, *s, *p;
 	int		port, eventport, tries;
 	struct sockaddr_in	saddr;
-	uint16_t	ret;
 
 	GP_LOG_D ("connecting to %s.", address);
 	if (NULL == strchr (address,':'))
@@ -634,7 +633,7 @@ ptp_fujiptpip_event_wait (PTPParams* params, PTPContainer* event) {
 int
 ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	char 		*addr, *s, *p;
-	int		port, eventport, tries;
+	int		port, eventport;
 	struct sockaddr_in	saddr;
 	uint16_t	ret;
 
@@ -712,32 +711,6 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	}
 	GP_LOG_D ("fujiptpip connected!");
 	return GP_OK;
-#if 0
-	/* seen on Ricoh Theta, camera is not immediately ready. try again two times. */
-	tries = 2;
-	saddr.sin_port		= htons(eventport);
-	do {
-		if (-1 != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
-			break;
-		if ((errno == ECONNREFUSED) && (tries--)) {
-			GP_LOG_D ("event connect failed, retrying after short wait");
-			usleep(100*1000);
-			continue;
-		}
-		GP_LOG_E ("could not connect event");
-		close (params->cmdfd);
-		close (params->evtfd);
-		return GP_ERROR_IO;
-	} while (1);
-	ret = ptp_fujiptpip_init_event_request (params);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
-	ret = ptp_fujiptpip_init_event_ack (params);
-	if (ret != PTP_RC_OK)
-		return translate_ptp_result (ret);
-	GP_LOG_D ("fujiptpip connected!");
-	return GP_OK;
-#endif
 #else
 	GP_LOG_E ("Windows currently not supported, neeeds a winsock port.");
 	return GP_ERROR_NOT_SUPPORTED;

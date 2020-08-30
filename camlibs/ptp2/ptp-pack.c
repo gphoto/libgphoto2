@@ -921,9 +921,11 @@ ptp_unpack_DPV (
 #define PTP_dpd_FactoryDefaultValue	5
 
 static inline int
-ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen)
+ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *newoffset)
 {
 	unsigned int offset = 0, ret;
+
+	*newoffset = 0;
 
 	memset (dpd, 0, sizeof(*dpd));
 	if (dpdlen <= 5)
@@ -936,8 +938,10 @@ ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, 
 	offset = PTP_dpd_FactoryDefaultValue;
 	ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->FactoryDefaultValue, dpd->DataType);
 	if (!ret) goto outofmemory;
-	if ((dpd->DataType == PTP_DTC_STR) && (offset == dpdlen))
+	if ((dpd->DataType == PTP_DTC_STR) && (offset == dpdlen)) {
+		*newoffset = offset;
 		return 1;
+	}
 	ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->CurrentValue, dpd->DataType);
 	if (!ret) goto outofmemory;
 
@@ -946,8 +950,10 @@ ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, 
 	   values). In both cases Form Flag should be set to 0x00 and FORM is
 	   not present. */
 
-	if (offset + sizeof(uint8_t) > dpdlen)
+	if (offset + sizeof(uint8_t) > dpdlen) {
+		*newoffset = offset;
 		return 1;
+	}
 
 	dpd->FormFlag=dtoh8a(&data[offset]);
 	offset+=sizeof(uint8_t);
@@ -992,6 +998,7 @@ ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, 
 		}
 	}
 #undef N
+	*newoffset = offset;
 	return 1;
 outofmemory:
 	ptp_free_devicepropdesc(dpd);
