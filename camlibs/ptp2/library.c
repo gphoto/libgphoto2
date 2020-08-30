@@ -398,6 +398,18 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+6] = PTP_DPC_FUJI_LensZoomPos;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+7] = 0xd242;
 		di->DevicePropertiesSupported_len += 8;
+
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_FUJI_GetDeviceInfo)) {
+			uint16_t	*props;
+			unsigned int	numprops;
+
+			C_PTP (ptp_fuji_getdeviceinfo (params, &props, &numprops));
+			free (di->DevicePropertiesSupported);
+
+			di->DevicePropertiesSupported		= props;
+			di->DevicePropertiesSupported_len	= numprops;
+		}
+
 	}
 
 	/* Nikon DSLR hide its newer opcodes behind another vendor specific query,
@@ -9210,8 +9222,6 @@ camera_init (Camera *camera, GPContext *context)
 		PTPPropertyValue        propval;
 		GPPortInfo		info;
 		char 			*xpath;
-		unsigned char		*data = NULL;
-		unsigned int		size = 0;
 
 		ret = gp_port_get_info (camera->port, &info);
 		if (ret != GP_OK) {
@@ -9230,10 +9240,7 @@ camera_init (Camera *camera, GPContext *context)
 		GP_LOG_D("FUJI AppVersion is %d", propval.u32);
 		C_PTP_REP (ptp_setdevicepropvalue(params, PTP_DPC_FUJI_AppVersion, &propval, PTP_DTC_UINT32));
 
-		ptp_fuji_getdeviceinfo(params, &data, &size);
-
-		C_PTP_REP (ptp_initiateopencapture(params, 0x00000000, 0x00000000));
-
+		C_PTP_REP (ptp_initiateopencapture(params, 0x00000000, 0x00000000)); /* this will get the event queue started */
 		ptp_fujiptpip_init_event(params, xpath);
 	}
 #endif

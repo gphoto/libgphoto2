@@ -4414,7 +4414,7 @@ uint16_t ptp_chdk_call_function(PTPParams* params, int *args, int size, int *ret
 /*uint16_t ptp_chdk_get_video_settings(PTPParams* params, ptp_chdk_videosettings* vsettings);*/
 
 uint16_t ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count);
-uint16_t ptp_fuji_getdeviceinfo (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numprops);
 
 #define ptp_panasonic_liveview(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_Liveview,1,enable?0xD000010:0xD000011)
 uint16_t ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);

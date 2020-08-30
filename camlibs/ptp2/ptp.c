@@ -5140,33 +5140,38 @@ ptp_android_sendpartialobject (PTPParams* params, uint32_t handle, uint64_t offs
 }
 
 uint16_t
-ptp_fuji_getdeviceinfo (PTPParams* params, unsigned char **data, unsigned int *size)
+ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numprops)
 {
         PTPContainer	ptp;
 	uint16_t	ret;
 	unsigned char	*xdata;
-	unsigned int	nums, i, newoffset, xsize;
+	unsigned char	*data = NULL;
+	unsigned int	nums, i, newoffset, xsize, size  = 0;
 
         PTP_CNT_INIT(ptp, PTP_OC_FUJI_GetDeviceInfo);
-        ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+        ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 
-	if (*size < 8) {
+	if (size < 8) {
+		free (data);
 		return PTP_RC_GeneralError;
 	}
 
-	nums = dtoh32a(*data);
-	xdata = (*data) + 4;
-	xsize = *size - 4;
+	nums = dtoh32a(data);
+	xdata = data + 4;
+	xsize = size - 4;
+
+	*props = calloc(sizeof(uint16_t),nums);
 	for (i=0;i<nums;i++) {
 		PTPDevicePropDesc	dpd;
 		unsigned int		dsize = dtoh32a(xdata);
 
 		if (!ptp_unpack_DPD(params, xdata+4, &dpd, dsize, &newoffset))
 			break;
-
+		(*props)[i] = dpd.DevicePropertyCode;
 		xdata	+= 4+newoffset;
 		xsize	-= 4+newoffset;
 	}
+	free (data);
 	return ret;
 }
 
