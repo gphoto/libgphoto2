@@ -236,19 +236,17 @@ ptp_fujiptpip_check_event (PTPParams* params) {
 	return ptp_add_event (params, &event);
 }
 
-#define fujiptpip_startdata_transid	0
-#define fujiptpip_startdata_totallen	4
-#define fujiptpip_startdata_unknown	8
-#define fujiptpip_data_datatype		0
-#define fujiptpip_data_transid		2
-#define fujiptpip_data_payload		6
+#define fujiptpip_data_datatype		4
+#define fujiptpip_data_code		6
+#define fujiptpip_data_transid		8
+#define fujiptpip_data_payload		12
 
 #define WRITE_BLOCKSIZE 65536
 uint16_t
 ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		uint64_t size, PTPDataHandler *handler
 ) {
-	unsigned char	request[0x10];
+	unsigned char	request[fujiptpip_data_payload];
 	unsigned int	curwrite, towrite;
 	int		ret;
 	unsigned char*	xdata;
@@ -256,9 +254,9 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	GP_LOG_D ("Sending PTP_OC 0x%0x (%s) data...", ptp->Code, ptp_get_opcode_name(params, ptp->Code));
 	//htod32a(&request[ptpip_type],PTPIP_START_DATA_PACKET);
 	htod32a(&request[fujiptpip_len],sizeof(request));
-	htod32a(&request[fujiptpip_startdata_transid  + 4],ptp->Transaction_ID);
-	htod32a(&request[fujiptpip_startdata_totallen + 4],size);
-	htod32a(&request[fujiptpip_startdata_unknown  + 4],0);
+	htod16a(&request[fujiptpip_data_datatype],2);
+	htod16a(&request[fujiptpip_data_code],ptp->Code);
+	htod32a(&request[fujiptpip_data_transid],ptp->Transaction_ID);
 	GP_LOG_DATA ((char*)request, sizeof(request), "ptpip/senddata header:");
 	ret = write (params->cmdfd, request, sizeof(request));
 	if (ret == -1)
@@ -267,7 +265,7 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		GP_LOG_E ("ptp_fujiptpip_senddata() len=%d but ret=%d", (int)sizeof(request), ret);
 		return PTP_RC_GeneralError;
 	}
-	xdata = malloc(WRITE_BLOCKSIZE+8+4);
+	xdata = malloc(WRITE_BLOCKSIZE);
 	if (!xdata) return PTP_RC_GeneralError;
 	curwrite = 0;
 	while (curwrite < size) {
@@ -279,16 +277,13 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		if (towrite > WRITE_BLOCKSIZE) {
 			towrite	= WRITE_BLOCKSIZE;
 		}
-		ret = handler->getfunc (params, handler->priv, towrite, &xdata[fujiptpip_data_payload+4], &xtowrite);
+		ret = handler->getfunc (params, handler->priv, towrite, xdata, &xtowrite);
 		if (ret == -1) {
 			perror ("getfunc in senddata failed");
 			free (xdata);
 			return PTP_RC_GeneralError;
 		}
-		towrite2 = xtowrite + 8;
-		//htod32a(&xdata[ptpip_type], type);
-		htod32a(&xdata[fujiptpip_len], towrite2);
-		htod32a(&xdata[fujiptpip_data_transid+8], ptp->Transaction_ID);
+		towrite2 = xtowrite;
 		GP_LOG_DATA ((char*)xdata, towrite2, "ptpip/senddata data:");
 		written = 0;
 		while (written < towrite2) {

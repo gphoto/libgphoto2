@@ -9206,8 +9206,8 @@ camera_init (Camera *camera, GPContext *context)
 	if ((camera->port->type == GP_PORT_PTPIP)  && strstr(a.model,"Fuji")) {
 		PTPPropertyValue        propval;
 
-		propval.u32 = 5;
-		C_PTP_REP (ptp_setdevicepropvalue(params, PTP_DPC_FUJI_InitSequence, &propval, PTP_DTC_UINT32));
+		propval.u16 = 5;
+		C_PTP_REP (ptp_setdevicepropvalue(params, PTP_DPC_FUJI_InitSequence, &propval, PTP_DTC_UINT16));
 
 		C_PTP_REP (ptp_getdevicepropvalue(params, PTP_DPC_FUJI_AppVersion, &propval, PTP_DTC_UINT32));
 
