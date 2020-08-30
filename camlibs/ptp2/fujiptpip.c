@@ -430,8 +430,9 @@ retry:
 	return PTP_RC_OK;
 }
 
-#define ptpip_initcmd_guid	8
-#define ptpip_initcmd_name	24
+#define fujiptpip_initcmd_protocolversion	8
+#define fujiptpip_initcmd_guid			12
+#define fujiptpip_initcmd_name			28
 
 static uint16_t
 ptp_fujiptpip_init_command_request (PTPParams* params)
@@ -449,20 +450,22 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 #else
 	strcpy (hostname, "gpwindows");
 #endif
-	len = ptpip_initcmd_name + (strlen(hostname)+1)*2 + 4;
+	len = fujiptpip_initcmd_name + (strlen(hostname)+1)*2 + 4;
 
 	cmdrequest = malloc(len);
 	htod32a(&cmdrequest[ptpip_type],PTPIP_INIT_COMMAND_REQUEST);
 	htod32a(&cmdrequest[ptpip_len],len);
 
-	memcpy(&cmdrequest[ptpip_initcmd_guid], guid, 16);
+	htod32a(&cmdrequest[fujiptpip_initcmd_protocolversion], 0x8f53e4f2);	/* magic number */
+
+	memcpy(&cmdrequest[fujiptpip_initcmd_guid], guid, 16);
 	for (i=0;i<strlen(hostname)+1;i++) {
 		/* -> ucs-2 in little endian */
-		cmdrequest[ptpip_initcmd_name+i*2] = hostname[i];
-		cmdrequest[ptpip_initcmd_name+i*2+1] = 0;
+		cmdrequest[fujiptpip_initcmd_name+i*2] = hostname[i];
+		cmdrequest[fujiptpip_initcmd_name+i*2+1] = 0;
 	}
-	htod16a(&cmdrequest[ptpip_initcmd_name+(strlen(hostname)+1)*2],PTPIP_VERSION_MINOR);
-	htod16a(&cmdrequest[ptpip_initcmd_name+(strlen(hostname)+1)*2+2],PTPIP_VERSION_MAJOR);
+	htod16a(&cmdrequest[fujiptpip_initcmd_name+(strlen(hostname)+1)*2],PTPIP_VERSION_MINOR);
+	htod16a(&cmdrequest[fujiptpip_initcmd_name+(strlen(hostname)+1)*2+2],PTPIP_VERSION_MAJOR);
 
 	GP_LOG_DATA ((char*)cmdrequest, len, "ptpip/init_cmd data:");
 	ret = write (params->cmdfd, cmdrequest, len);
