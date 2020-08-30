@@ -722,6 +722,7 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 #define ptpip_event_param1	8
 #define ptpip_event_param2	12
 #define ptpip_event_param3	16
+#define ptpip_event_param4	20
 
 static uint16_t
 ptp_fujiptpip_event (PTPParams* params, PTPContainer* event, int wait)
@@ -763,6 +764,7 @@ ptp_fujiptpip_event (PTPParams* params, PTPContainer* event, int wait)
 	event->Transaction_ID	= dtoh32a(&data[ptpip_event_transid]);
 	n = (dtoh32(hdr.length) - sizeof(uint32_t) - ptpip_event_param1)/sizeof(uint32_t);
 	switch (n) {
+	case 4: event->Param4 = dtoh32a(&data[ptpip_event_param4]);/* fallthrough */
 	case 3: event->Param3 = dtoh32a(&data[ptpip_event_param3]);/* fallthrough */
 	case 2: event->Param2 = dtoh32a(&data[ptpip_event_param2]);/* fallthrough */
 	case 1: event->Param1 = dtoh32a(&data[ptpip_event_param1]);/* fallthrough */
