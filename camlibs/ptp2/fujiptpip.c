@@ -714,11 +714,12 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 
 /* PTP Events wait for or check mode */
 
-#define ptpip_event_code    0
-#define ptpip_event_transid	2
-#define ptpip_event_param1	6
-#define ptpip_event_param2	10
-#define ptpip_event_param3	14
+#define ptpip_event_type    	0
+#define ptpip_event_code    	2
+#define ptpip_event_transid	4
+#define ptpip_event_param1	8
+#define ptpip_event_param2	12
+#define ptpip_event_param3	16
 
 static uint16_t
 ptp_fujiptpip_event (PTPParams* params, PTPContainer* event, int wait)
@@ -752,21 +753,13 @@ ptp_fujiptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		ret = ptp_fujiptpip_evt_read (params, &hdr, &data);
 		if (ret != PTP_RC_OK)
 			return ret;
-		GP_LOG_D ("hdr type %d, length %d", hdr.type, hdr.length);
-
-		if (dtoh32(hdr.type) == PTPIP_EVENT) {
-			break;
-		}
-
-		/* TODO: Handle cancel transaction and ping/pong
-		 * If not PTPIP_EVENT, process it and wait for next PTPIP_EVENT
-		 */
-		GP_LOG_E ("unknown/unhandled event type %d", dtoh32(hdr.type));
+		GP_LOG_D ("length %d", hdr.length);
+		break;
 	}
 
 	event->Code		= dtoh16a(&data[ptpip_event_code]);
 	event->Transaction_ID	= dtoh32a(&data[ptpip_event_transid]);
-	n = (dtoh32(hdr.length) - sizeof(hdr) - ptpip_event_param1)/sizeof(uint32_t);
+	n = (dtoh32(hdr.length) - sizeof(uint32_t) - ptpip_event_param1)/sizeof(uint32_t);
 	switch (n) {
 	case 3: event->Param3 = dtoh32a(&data[ptpip_event_param3]);/* fallthrough */
 	case 2: event->Param2 = dtoh32a(&data[ptpip_event_param2]);/* fallthrough */
