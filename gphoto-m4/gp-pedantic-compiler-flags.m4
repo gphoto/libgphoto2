@@ -4,9 +4,9 @@ dnl ####################################################################
 dnl
 dnl
 dnl ####################################################################
-dnl _GP_CONDITIONAL_COMPILE_FLAGS(FLAG_VAR, FLAGS)
+dnl GP_CONDITIONAL_COMPILE_FLAGS(FLAG_VAR, FLAGS)
 dnl ####################################################################
-AC_DEFUN([_GP_CONDITIONAL_COMPILE_FLAGS], [dnl
+AC_DEFUN([GP_CONDITIONAL_COMPILE_FLAGS], [dnl
 # BEGIN $0($@)
 AS_VAR_IF([$1], [], [dnl
   $1="$2"
@@ -62,9 +62,9 @@ dnl ####################################################################
 AC_DEFUN([__GP_PEDANTIC_COMPILER_FLAGS], [dnl
 # BEGIN $0($@)
 gp_have_pedantic_compiler=yes
-_GP_CONDITIONAL_COMPILE_FLAGS([$1], [$4])dnl
+GP_CONDITIONAL_COMPILE_FLAGS([$1], [$4])dnl
 AS_VAR_IF([gp_have_pedantic_compiler], [yes], [dnl
-  _GP_CONDITIONAL_COMPILE_FLAGS([$1], [-pedantic -Wall -Wextra -Werror])dnl
+  GP_CONDITIONAL_COMPILE_FLAGS([$1], [-pedantic -Wall -Wextra -Werror])dnl
 ])
 AM_CONDITIONAL([$3], [test "x$gp_have_pedantic_compiler" = "xyes"])
 AC_SUBST([$2], ["[$]$1"])
@@ -87,6 +87,7 @@ dnl ####################################################################
 m4_pattern_allow([GP_PEDANTIC_CFLAGS_])dnl
 m4_pattern_allow([GP_PEDANTIC_CXXFLAGS_])dnl
 m4_pattern_allow([GP_HAVE_PEDANTIC_FLAGS_])dnl
+m4_pattern_allow([GP_CONDITIONAL_COMPILE_FLAGS])dnl
 AC_DEFUN([_GP_PEDANTIC_COMPILER_FLAGS], [dnl
 # BEGIN $0($@)
 gp_compiler_flags_saved_$1="[$]$1"
