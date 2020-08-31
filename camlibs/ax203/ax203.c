@@ -595,7 +595,7 @@ static int ax203_read_parameter_block(Camera *camera)
 	uint8_t buf[32], expect[32];
 	int i, param_offset = 0, resolution_offset = 0;
 	int compression_offset = -1, abfs_start_offset = 0, expect_size = 0;
-	const int valid_resolutions[][2] = {
+	const unsigned int valid_resolutions[][2] = {
 		{  96,  64 },
 		{ 120, 160 },
 		{ 128, 128 },
@@ -1121,8 +1121,8 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 		}
 		if (!row_skip) {
 			tinyjpeg_get_size (camera->pl->jdec, &width, &height);
-			if ((int)width  != camera->pl->width ||
-			    (int)height != camera->pl->height) {
+			if (width  != camera->pl->width ||
+			    height != camera->pl->height) {
 				gp_log (GP_LOG_ERROR, "ax203",
 					"Hdr dimensions %ux%u don't match lcd %dx%d",
 					width, height,
@@ -1193,12 +1193,12 @@ ax203_decode_image(Camera *camera, char *src, int src_size, int **dest)
 
 /* Returns the number of bytes of dest used or a negative error code */
 static int
-ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
+ax203_encode_image(Camera *camera, int **src, char *dest, unsigned int dest_size)
 {
 #ifdef HAVE_LIBGD
 	int size = ax203_filesize (camera);
 #ifdef HAVE_LIBJPEG
-	int x, y;
+	unsigned int x, y;
 	struct jpeg_compress_struct cinfo;
 	struct jpeg_error_mgr jcerr;
 	JOCTET *jpeg_dest = NULL;
@@ -1207,7 +1207,10 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 	JSAMPROW row_pointer[1] = { row };
 #endif
 
-	if (dest_size < size)
+	if (size < GP_OK)
+		return size;
+
+	if (dest_size < (unsigned int)size)
 		return GP_ERROR_FIXED_LIMIT_EXCEEDED;
 
 	switch (camera->pl->compression_version) {
@@ -1239,8 +1242,8 @@ ax203_encode_image(Camera *camera, int **src, char *dest, int dest_size)
 		cinfo.in_color_space = JCS_RGB;
 		jpeg_set_defaults (&cinfo);
 		jpeg_start_compress (&cinfo, TRUE);
-		for (y = 0; y < cinfo.image_height; y++) {
-			for (x = 0; x < cinfo.image_width; x++) {
+		for (y = 0; y < (unsigned int)cinfo.image_height; y++) {
+			for (x = 0; x < (unsigned int)cinfo.image_width; x++) {
 				int p = src[y][x];
 				row[x * 3 + 0] = gdTrueColorGetRed(p);
 				row[x * 3 + 1] = gdTrueColorGetGreen(p);

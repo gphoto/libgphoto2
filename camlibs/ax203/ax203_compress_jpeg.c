@@ -114,7 +114,7 @@ add_mcu_info(uint8_t *outbuf, int block_nr, int last_Y, int last_Cb,
 
 int
 ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
-	int width, int height)
+	unsigned int width, unsigned int height)
 {
 	struct jpeg_compress_struct cinfo;
 	struct jpeg_decompress_struct dinfo;
@@ -122,7 +122,8 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	JSAMPROW row_pointer[1];
 	JOCTET *buf = NULL, *regular_jpeg = NULL;
 	jvirt_barray_ptr *in_coefficients;
-	int i, x, y, stop, size, ret, outc;
+	unsigned int i, x, y;
+	int stop, size, ret, outc;
 	unsigned long regular_jpeg_size = 0, buf_size = 0;
 	int last_dc_val[3] = { 0, 0, 0 };
 
