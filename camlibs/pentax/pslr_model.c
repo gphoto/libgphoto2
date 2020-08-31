@@ -39,8 +39,12 @@
 #include <string.h>
 #include <stdbool.h>
 #include <fcntl.h>
+#ifndef RAD10
 #include <unistd.h>
+#endif
 #include "js0n.h"
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "pslr_model.h"
 #include "pslr.h"
@@ -49,6 +53,16 @@ static uint8_t lastbuf[MAX_STATUS_BUF_SIZE];
 static int first = 1;
 static char *jsontext=NULL;
 static int jsonsize;
+
+static int dir_exists(char *dir) {
+    int res = 0;
+    struct stat info;
+
+    if ( (stat(dir, &info) == 0) && (info.st_mode & S_IFDIR) ) {
+        res = 1;
+    }
+    return res;
+}
 
 static void ipslr_status_diff(uint8_t *buf) {
     int n;
@@ -573,6 +587,9 @@ void ipslr_status_parse_k3(ipslr_handle_t *p, pslr_status *status) {
     status->focus = get_int32_le(&buf[0x1A8]);
     status->lens_id1 = get_uint32_le(&buf[0x190]) & 0x0F;
     status->lens_id2 = get_uint32_le( &buf[0x19C]);
+    // cannot read max_shutter_speed from status buffer, hardwire the values here
+    status->max_shutter_speed.nom = 1;
+    status->max_shutter_speed.denom = 8000;
 }
 
 static
@@ -757,7 +774,7 @@ void ipslr_status_parse_k200d(ipslr_handle_t *p, pslr_status *status) {
     status->zoom.nom = get_uint32_be(&buf[0x17c]);
     status->zoom.denom = get_uint32_be(&buf[0x180]);
     status->focus = get_int32_be(&buf[0x184]);
-    // Drive mode: 0=Single shot, 1= Continuous Hi, 2= Continuous Low or Self timer 12s, 3=Self timer 2s
+    // Drive mode: 0=Single shot, 1= Continous Hi, 2= Continous Low or Self timer 12s, 3=Self timer 2s
     // 4= remote, 5= remote 3s delay
 }
 
@@ -779,7 +796,9 @@ char *read_json_file(int *jsonsize) {
     int jsonfd = open("pentax_settings.json", O_RDONLY);
     if (jsonfd == -1) {
         // cannot find in the current directory, also checking PKTDATADIR
-        jsonfd = open(PKTDATADIR "/pentax_settings.json", O_RDONLY);
+        if (dir_exists(PKTDATADIR)) {
+            jsonfd = open(PKTDATADIR "/pentax_settings.json", O_RDONLY);
+        }
         if (jsonfd == -1) {
             fprintf(stderr, "Cannot open pentax_settings.json file\n");
             return NULL;
@@ -788,7 +807,11 @@ char *read_json_file(int *jsonsize) {
     *jsonsize = lseek(jsonfd, 0, SEEK_END);
     lseek(jsonfd, 0, SEEK_SET);
     char *jsontext=malloc(*jsonsize);
-    read(jsonfd, jsontext, *jsonsize);
+    ssize_t ret = read(jsonfd, jsontext, *jsonsize);
+    if (ret < *jsonsize) {
+        fprintf(stderr, "Could not read pentax_settings.json file\n");
+        return NULL;
+    }
     DPRINT("json text:\n%.*s\n", *jsonsize, jsontext);
     return jsontext;
 }
@@ -980,11 +1003,12 @@ ipslr_model_info_t camera_models[] = {
     { 0x13092, "K-1",         false, false, true,  true,  false, true,  456,  3, {36, 22, 12, 2}, 9, 8000, 100, 204800, 100, 204800, PSLR_JPEG_IMAGE_TONE_FLAT, true,  33, ipslr_status_parse_k1 },
     { 0x13240, "K-1 II",      false, false, true,  true,  false, true,  456,  3, {36, 22, 12, 2}, 9, 8000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_FLAT, true,  33, ipslr_status_parse_k1 },
     { 0x13222, "K-70",        false, false, true,  true,  true,  true,  456,  3, {24, 14, 6, 2}, 9, 6000, 100, 102400, 100, 102400, PSLR_JPEG_IMAGE_TONE_AUTO, true,  11, ipslr_status_parse_k70},
-    { 0x1322c, "KP",          false, false, true,  true,  false, true,  456,   3, {24, 14, 6, 2}, 9, 6000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_AUTO, true,  27, ipslr_status_parse_k70}
+    { 0x1322c, "KP",          false, false, true,  true,  false, true,  456,   3, {24, 14, 6, 2}, 9, 6000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_AUTO, true,  27, ipslr_status_parse_k70},
+    { 0x13010, "645Z",        false, false, true,  true,  false, false,  0,   3, {51, 32, 21, 3}, 9, 4000, 100, 204800, 100, 204800, PSLR_JPEG_IMAGE_TONE_CROSS_PROCESSING, true,  35, NULL}
 };
 
 ipslr_model_info_t *find_model_by_id( uint32_t id ) {
-    int i;
+    unsigned int i;
     for ( i = 0; i<sizeof (camera_models) / sizeof (camera_models[0]); i++) {
         if ( camera_models[i].id == id ) {
             //    DPRINT("found %d\n",i);

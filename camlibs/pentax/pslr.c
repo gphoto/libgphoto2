@@ -41,7 +41,13 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <signal.h>
+#ifdef RAD10
+#include <windows.h>
+#include <utime.h>
+#include "tdbtime.h"
+#else
 #include <unistd.h>
+#endif
 #include <stdbool.h>
 #include <stdarg.h>
 #include <dirent.h>
@@ -981,6 +987,11 @@ int pslr_set_exposure_mode(pslr_handle_t h, pslr_exposure_mode_t mode) {
     if (mode >= PSLR_EXPOSURE_MODE_MAX) {
         return PSLR_PARAM;
     }
+
+    if ( p->model->need_exposure_mode_conversion ) {
+        mode = exposure_mode_conversion( mode );
+    }
+
     return ipslr_handle_command_x18( p, true, X18_EXPOSURE_MODE, 2, 1, mode, 0);
 }
 

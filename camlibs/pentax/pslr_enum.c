@@ -296,10 +296,14 @@ char *get_pslr_af11_point_str( uint32_t value ) {
     }
     int bitidx=0;
     char *ret = malloc(1024);
-    sprintf(ret, "%s", "");
+    int pos = sprintf(ret, "%s", "");
     while (value>0 && bitidx<11) {
         if ((value & 0x01) == 1) {
-            sprintf(ret, "%s%s%s", ret, strlen(ret) == 0 ? "" : ",", pslr_af11_point_str[bitidx]);
+            int written = sprintf(ret + pos, "%s%s", pos == 0 ? "" : ",", pslr_af11_point_str[bitidx]);
+            if (written < 0) {
+                return ret;
+            }
+            pos += written;
         }
         value >>= 1;
         ++bitidx;
