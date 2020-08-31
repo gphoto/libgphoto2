@@ -194,11 +194,9 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 
 	GP_DEBUG("size: %d 0x%x", size, size);
 
-	image = malloc(sizeof(char)*size);
+	image = malloc(size);
 	if(!image)
 		return(GP_ERROR_NO_MEMORY);
-
-
 
 	if(type == GP_FILE_TYPE_PREVIEW) {
 		CHECK_AND_FREE( gp_port_usb_msg_write(port, 0x01, PDRM11_CMD_GET_THUMB, picNum, NULL, 0), image );
@@ -207,10 +205,10 @@ int pdrm11_get_file(CameraFilesystem *fs, const char *filename, CameraFileType t
 	}
 
 	ret = gp_port_read(port, (char *)image, size);
-	if(ret < GP_OK || ret != size) {
+	if(ret < GP_OK || (unsigned int)ret != size) {
 		GP_DEBUG("failed to read from port.  Giving it one more try...");
 		ret = gp_port_read(port, (char *)image, size);
-		if(ret < GP_OK || ret != size) {
+		if(ret < GP_OK || (unsigned int)ret != size) {
 			GP_DEBUG("gp_port_read returned %d 0x%x.  size: %d 0x%x", ret, ret, size, size);
 			free (image);
 			return(GP_ERROR_IO_READ);
