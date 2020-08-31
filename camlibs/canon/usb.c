@@ -2104,7 +2104,7 @@ int canon_usb_set_file_time ( Camera *camera, char *camera_filename, time_t time
         }
         memset ( payload, 0, payload_size );
 
-        strncpy ( (char *)payload + 0x4, camera_filename, strlen(camera_filename) );
+        strcpy ( (char *)payload + 0x4, camera_filename );
         htole32a ( payload, time );          /* Load specified time for camera directory. */
         result_buffer = canon_usb_dialogue ( camera, CANON_USB_FUNCTION_SET_FILE_TIME,
 					     &bytes_read, payload, payload_size );
