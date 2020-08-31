@@ -20,15 +20,26 @@
 /*
  * This is a copy of ptpip.c...
  *
- * This is working, but unfinished!
- * - Event handling not finished.
- * - Some configure checking magic missing for the special header files
- *   and functions.
- * - Not everything implementation correctly cross checked.
- * - Coolpix P3 does not give transfer status (image 000x/000y), and reports an
- *   error when transfers finish correctly.
+ * This is working, but might be buggy.
  *
- * Nikon WU-1* adapters might use 0011223344556677 as GUID always...
+ * Only the setup packet is similar to PTP/IP.
+ * The rest speaks a protocol very like to the USB Bulk protocol.
+ *
+ * <32bit length> <16 bit transfertype> <16 bit code> <32bit transaction id> <...data...>
+ *
+ *
+ * transfertype as usual:
+ * - 1: send command (with optional parameters)
+ * - 2: send data (data follows transid)
+ * - 3: response (and optional parameters)
+ * - 4: event (over event pipe)
+ *
+ * For JPEG pipe, also <length> <data...> blobs are sent. There is a 14 byte blob in front of the FF D8 start.
+ *
+ * There are 3 TCP pipes:
+ * - command pipe , port 55740
+ * - event pipe , port 55741 (camera remote port starts listen when you run "InitiateOpenCapture")
+ * - jpeg pipe , port 55742 (camera remote port starts listen when you run "InitiateOpenCapture")
  */
 #define _DEFAULT_SOURCE
 #include "config.h"
