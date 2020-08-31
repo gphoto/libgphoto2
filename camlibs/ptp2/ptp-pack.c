@@ -134,7 +134,7 @@ dtoh64ap (PTPParams *params, const unsigned char *a)
  * len - in ptp string characters currently
  */
 static inline int
-ptp_unpack_string(PTPParams *params, unsigned char* data, uint16_t offset, uint32_t total, uint8_t *len, char **retstr)
+ptp_unpack_string(PTPParams *params, unsigned char* data, uint32_t offset, uint32_t total, uint8_t *len, char **retstr)
 {
 	uint8_t length;
 	uint16_t string[PTP_MAXSTRLEN+1];

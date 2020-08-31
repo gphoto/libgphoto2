@@ -125,7 +125,8 @@ ptp_usb_senddata (PTPParams* params, PTPContainer* ptp,
 		  uint64_t size, PTPDataHandler *handler
 ) {
 	uint16_t ret = PTP_RC_OK;
-	int res, wlen, datawlen;
+	int res, wlen;
+	unsigned long datawlen;
 	PTPUSBBulkContainer usbdata;
 	unsigned long bytes_left_to_transfer, written;
 	Camera *camera = ((PTPData *)params->data)->camera;
