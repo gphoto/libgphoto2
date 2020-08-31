@@ -7369,7 +7369,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 					APPEND_TXT ("\n\t");
 				for (j = 0; j<dpd.FORM.Enum.NumberOfValues; j++) {
 					txt += snprintf_ptp_property (txt, SPACE_LEFT, dpd.FORM.Enum.SupportedValue+j, dpd.DataType);
-					if (j != dpd.FORM.Enum.NumberOfValues-1) {
+					if (j+1 != dpd.FORM.Enum.NumberOfValues) {
 						APPEND_TXT (",");
 						if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
 							APPEND_TXT ("\n\t");
@@ -7480,7 +7480,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
     uint32_t parent, storage=0x0000000;
     unsigned int i, hasgetstorageids;
     SET_CONTEXT_P(params, context);
-    int	lastnrofobjects = params->nrofobjects, redoneonce = 0;
+    unsigned int	lastnrofobjects = params->nrofobjects, redoneonce = 0;
 
     GP_LOG_D ("file_list_func(%s)", folder);
 
@@ -7579,7 +7579,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	PTPParams *params = &((Camera *)data)->pl->params;
 	unsigned int i, hasgetstorageids;
 	uint32_t handler,storage;
-	int redoneonce = 0, lastnrofobjects = params->nrofobjects;
+	unsigned int redoneonce = 0, lastnrofobjects = params->nrofobjects;
 
 	SET_CONTEXT_P(params, context);
 	GP_LOG_D ("folder_list_func(%s)", folder);
