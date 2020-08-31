@@ -110,6 +110,12 @@ GP_PEDANTIC_COMPILER_FLAGS([CXX11], [C++], [-std=c++11])
 GP_PEDANTIC_COMPILER_FLAGS([CXX14], [C++], [-std=c++14])
 GP_PEDANTIC_COMPILER_FLAGS([CXX17], [C++], [-std=c++17])
 
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wall])
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wextra])
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wno-unused-parameter])
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wno-format-overflow])
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wno-format-truncation])
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wno-stringop-truncation])
 
 dnl Every compile example after here will be using the C language
 AC_LANG([C])
