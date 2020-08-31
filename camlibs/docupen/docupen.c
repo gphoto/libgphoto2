@@ -94,6 +94,8 @@ static bool inquiry_read(Camera *camera)
 		GP_LOG_E("error reading info header");
 		return false;
 	}
+	/* FIXME: len is 8bit unsigned, so can be at most 255 ... sizeof(struct dp_info) is currently over 256
+	 * so this is alwas false ... It is harmless and likely ok, but weird. -Marcus 20200831 */
 	if (camera->pl->info.len > sizeof(struct dp_info)) {
 		GP_LOG_E("camera info too long: %d bytes", camera->pl->info.len);
 		return false;
