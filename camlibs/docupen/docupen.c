@@ -500,6 +500,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		default:
 			GP_LOG_E("invalid image type 0x%x", le16toh(header.type));
+			free(file_data);
 			return GP_ERROR;
 		}
 		if (!img) {
@@ -511,6 +512,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(file_data);
 		if (!gdout) {
 			GP_LOG_E("image conversion error");
+			free(file_data);
 			return GP_ERROR;
 		}
 		file_data = malloc(gdsize);
@@ -529,6 +531,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gp_file_adjust_name_for_mime_type(file);
 		break;
 	default:
+		free(file_data);
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
