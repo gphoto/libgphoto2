@@ -668,6 +668,8 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 	int		port, eventport, tries;
 	struct sockaddr_in	saddr;
 
+	memset(&saddr,0,sizeof(saddr));
+
 	GP_LOG_D ("connecting to %s.", address);
 	if (NULL == strchr (address,':'))
 		return GP_ERROR_BAD_PARAMETERS;
@@ -881,6 +883,8 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	int		port, eventport;
 	struct sockaddr_in	saddr;
 	uint16_t	ret;
+
+	memset(&saddr,0,sizeof(saddr));
 
 	GP_LOG_D ("connecting to %s.", address);
 	if (NULL == strchr (address,':'))
