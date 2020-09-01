@@ -1006,32 +1006,38 @@ outofmemory:
 }
 
 /* Device Property pack/unpack */
-#define PTP_dpd_Sony_DevicePropertyCode	0
-#define PTP_dpd_Sony_DataType		2
-#define PTP_dpd_Sony_GetSet		4
-#define PTP_dpd_Sony_Unknown		5
+#define PTP_dpd_Sony_DevicePropertyCode		0
+#define PTP_dpd_Sony_DataType			2
+#define PTP_dpd_Sony_ChangeMethod		4
+#define PTP_dpd_Sony_GetSet			5
 #define PTP_dpd_Sony_FactoryDefaultValue	6
 
 static inline int
 ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *poffset)
 {
 	unsigned int ret;
-#if 1
-	unsigned int unk1, unk2;
-#endif
+	unsigned int changemethod, getset;
 
 	memset (dpd, 0, sizeof(*dpd));
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_Sony_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_Sony_DataType]);
 
-#if 1
-	/* get set ? */
-	unk1 = dtoh8a(&data[PTP_dpd_Sony_GetSet]);
-	unk2 = dtoh8a(&data[PTP_dpd_Sony_Unknown]);
-	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, unk1 %d unk2 %d", dpd->DevicePropertyCode, dpd->DataType, unk1, unk2);
-#endif
-	dpd->GetSet=1;
+	changemethod = dtoh8a(&data[PTP_dpd_Sony_ChangeMethod]);
+	getset = dtoh8a(&data[PTP_dpd_Sony_GetSet]);
 
+	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, changemethod %d getset %d", dpd->DevicePropertyCode, dpd->DataType, changemethod, getset);
+	switch (getset) {
+	case 0:	/* read only */
+	case 2: /* camera side only */
+		dpd->GetSet=0;
+		break;
+	case 1: /* writeable */
+		dpd->GetSet=1;
+		break;
+	default: /* values over 128 ... likely action triggers */
+		dpd->GetSet=1;
+		break;
+	}
 	dpd->FormFlag=PTP_DPFF_None;
 
 	*poffset = PTP_dpd_Sony_FactoryDefaultValue;
