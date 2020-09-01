@@ -512,11 +512,11 @@ ptp_fujiptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *han
 			dtoh32(hdr.length)-fujiptpip_getdata_payload-4, xdata+fujiptpip_getdata_payload
 		);
 	}
+	free (xdata);
 	if (xret != PTP_RC_OK) {
 		GP_LOG_E ("failed to putfunc of returned data");
 		return GP_ERROR;
 	}
-	free (xdata);
 	return PTP_RC_OK;
 }
 
