@@ -758,18 +758,19 @@ _get_Generic##bits##Table(CONFIG_GET_ARGS, struct deviceproptable##bits * tbl, i
 		} \
 	} \
 	if (dpd->FormFlag & PTP_DPFF_Range) { \
-		for (	i = dpd->FORM.Range.MinimumValue.bits; \
-			i<=dpd->FORM.Range.MaximumValue.bits; \
-			i+= dpd->FORM.Range.StepSize.bits \
+		type r;	\
+		for (	r = dpd->FORM.Range.MinimumValue.bits; \
+			r<=dpd->FORM.Range.MaximumValue.bits; \
+			r+= dpd->FORM.Range.StepSize.bits \
 		) { \
 			isset = FALSE; \
 			for (j=0;j<tblsize;j++) { \
-				if ((tbl[j].value == i) && \
+				if ((tbl[j].value == r) && \
 				    ((tbl[j].vendor_id == 0) || \
 				     (tbl[j].vendor_id == camera->pl->params.deviceinfo.VendorExtensionID)) \
 				) { \
 					gp_widget_add_choice (*widget, _(tbl[j].label)); \
-					if (i == dpd->CurrentValue.bits) { \
+					if (r == dpd->CurrentValue.bits) { \
 						isset2 = TRUE; \
 						gp_widget_set_value (*widget, _(tbl[j].label)); \
 					} \
@@ -779,9 +780,9 @@ _get_Generic##bits##Table(CONFIG_GET_ARGS, struct deviceproptable##bits * tbl, i
 			} \
 			if (!isset) { \
 				char buf[200]; \
-				sprintf(buf, _("Unknown value %04x"), i); \
+				sprintf(buf, _("Unknown value %04x"), r); \
 				gp_widget_add_choice (*widget, buf); \
-				if (i == dpd->CurrentValue.bits) { \
+				if (r == dpd->CurrentValue.bits) { \
 					isset2 = TRUE; \
 					gp_widget_set_value (*widget, buf); \
 				} \
@@ -3095,14 +3096,14 @@ _put_ExpTime(CONFIG_PUT_ARGS)
 	/* match the closest value */
 	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
 		/*GP_LOG_D ("delta is currently %d, val is %f, supval is %u, abs is %u",delta,val,dpd->FORM.Enum.SupportedValue[i].u32,abs(val - dpd->FORM.Enum.SupportedValue[i].u32));*/
-		if (abs(val - dpd->FORM.Enum.SupportedValue[i].u32)<delta) {
+		if (abs((int)(val - dpd->FORM.Enum.SupportedValue[i].u32))<delta) {
 			xval = dpd->FORM.Enum.SupportedValue[i].u32;
-			delta = abs(val - dpd->FORM.Enum.SupportedValue[i].u32);
+			delta = abs((int)(val - dpd->FORM.Enum.SupportedValue[i].u32));
 		}
 	}
 	GP_LOG_D ("value %s is %f, closest match was %d",value,val,xval);
 	propval->u32 = xval;
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int
@@ -3953,7 +3954,7 @@ _put_FocalLength(CONFIG_PUT_ARGS) {
 	curdiff = 10000;
 	newval = propval->u32;
 	for (i = 0; i<dpd->FORM.Enum.NumberOfValues; i++) {
-		uint32_t diff = abs(dpd->FORM.Enum.SupportedValue[i].u32  - propval->u32);
+		uint32_t diff = abs((int)(dpd->FORM.Enum.SupportedValue[i].u32  - propval->u32));
 
 		if (diff < curdiff) {
 			newval = dpd->FORM.Enum.SupportedValue[i].u32;
@@ -4534,7 +4535,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 				break;
 		}
 	} else {
-		for (i=sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0])-1;i>=0;i--) {
+		for (i=sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0])-1;i--;) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
 			position_new = i;
@@ -9920,28 +9921,28 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 		case PTP_DPFF_None: break;
 		case PTP_DPFF_Range:
 			switch (dpd.DataType) {
-#define X(dtc,val) 										\
+#define X(dtc,val,vartype,format) 										\
 			case dtc: 								\
 				if (type == GP_WIDGET_RANGE) {					\
 					gp_widget_set_range ( widget, (float) dpd.FORM.Range.MinimumValue.val, (float) dpd.FORM.Range.MaximumValue.val, (float) dpd.FORM.Range.StepSize.val);\
 				} else {							\
-					long k;							\
+					vartype k;							\
 					for (k=dpd.FORM.Range.MinimumValue.val;k<=dpd.FORM.Range.MaximumValue.val;k+=dpd.FORM.Range.StepSize.val) { \
-						sprintf (buf, "%ld", k); 			\
+						sprintf (buf, #format, k); 			\
 						gp_widget_add_choice (widget, buf);		\
 						if (dpd.FORM.Range.StepSize.val == 0) break;	\
 					}							\
 				} 								\
 				break;
 
-		X(PTP_DTC_INT8,i8)
-		X(PTP_DTC_UINT8,u8)
-		X(PTP_DTC_INT16,i16)
-		X(PTP_DTC_UINT16,u16)
-		X(PTP_DTC_INT32,i32)
-		X(PTP_DTC_UINT32,u32)
-		X(PTP_DTC_INT64,i64)
-		X(PTP_DTC_UINT64,u64)
+		X(PTP_DTC_INT8,i8,int8_t,%d)
+		X(PTP_DTC_UINT8,u8,uint8_t,%u)
+		X(PTP_DTC_INT16,i16,int16_t,%d)
+		X(PTP_DTC_UINT16,u16,uint16_t,%u)
+		X(PTP_DTC_INT32,i32,int32_t,%d)
+		X(PTP_DTC_UINT32,u32,uint32_t,%u)
+		X(PTP_DTC_INT64,i64,int64_t,%ld)
+		X(PTP_DTC_UINT64,u64,uint64_t,%lu)
 #undef X
 			default:break;
 			}
