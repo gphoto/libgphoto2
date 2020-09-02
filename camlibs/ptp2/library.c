@@ -9002,15 +9002,15 @@ storage_info_func (CameraFilesystem *fs,
 			sif->fstype = GP_STORAGEINFO_FST_DCF;
 			break;
 		}
-		if (si.MaxCapability != -1) {
+		if (si.MaxCapability != 0xffffffff) {
 			sif->fields |= GP_STORAGEINFO_MAXCAPACITY;
 			sif->capacitykbytes = si.MaxCapability / 1024;
 		}
-		if (si.FreeSpaceInBytes != -1) {
+		if (si.FreeSpaceInBytes != 0xffffffff) {
 			sif->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
 			sif->freekbytes = si.FreeSpaceInBytes / 1024;
 		}
-		if (si.FreeSpaceInImages != -1) {
+		if (si.FreeSpaceInImages != 0xffffffff) {
 			sif->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
 			sif->freeimages = si.FreeSpaceInImages;
 		}
