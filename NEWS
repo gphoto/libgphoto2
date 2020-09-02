@@ -7,11 +7,16 @@ ptp2:
 * Nikon 
   * D3000, D3100, and D3200 "static opcode list" reduced after reports what works and what not
   * Nikon 1 series cameras had some commands listed too much.
+  * Nikon 1 J5 improvements
 * Sony:
-  * some bugfixes in property settings, trying to speed it up
   * correct shutterspeed, iso and exposurebias decoding for Sony A7r4 and other new models
+  * some bugfixes in property settings, trying to speed it up
   * ZV-1 support, some additional startup wait hack to make it work.
-  * QX support started, can do preview perhaps.
+  * QX support started, can do preview... close to having capture (but not there yet)
+  * report read/write and read/only correctly
+* Fuji X:
+  * Added very experimental Wifi support.
+* synced new libmtp device ids
 * Cameras added to id list: 
   * Sony QX30U, ZV-1, 
   * Nikon D780
@@ -26,6 +31,7 @@ docupen:
 
 all:
 * more fuzzing related stability fixes, largely to "outdated" driver set.
+* lots of compiler warnings fixes across the codebase.
 
 translations:
 
