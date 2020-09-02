@@ -371,7 +371,7 @@
    *   that time it will not respond. Thus GUI programs work fine.
    * - Seems also to be used with Galaxy Nexus debug mode and on
    *   US markets for some weird reason.
-   * - has a weird USB bug if it reads exactly 512byte (usb 2 packetsize)
+   * - has a weird USB bug if it reads exactly 512byte (usb 2 packetsize) 
    *   the device will hang. this is one of the reasons we need to disable
    *   DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST as it can hit this size :/
    *
@@ -637,6 +637,9 @@
   /* https://sourceforge.net/p/libmtp/support-requests/279/ */
   { "Acer", 0x0502, "B3-A20", 0x3841,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/298/ */
+  { "Acer", 0x0502, "A3-A40", 0x387a,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1733/ */
   { "Acer", 0x0502, "Liquid Zest 4G", 0x38a5,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -652,7 +655,7 @@
 
   /*
    * SanDisk
-   * several devices (c150 for sure) are definitely dual-mode and must
+   * several devices (c150 for sure) are definately dual-mode and must
    * have the USB mass storage driver that hooks them unloaded first.
    * They all have problematic dual-mode making the device unload effect
    * uncertain on these devices.
@@ -865,7 +868,7 @@
   { "iRiver", 0x4102, "AK380", 0x1195,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
-  /* https://sourceforge.net/p/libmtp/bugs/1634/
+  /* https://sourceforge.net/p/libmtp/bugs/1634/ 
    * copying flags from above */
   { "iRiver", 0x4102, "AK70", 0x1200,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
@@ -1243,6 +1246,8 @@
   { "Nokia", 0x0421, "N9", 0x051a, DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/bugs/1308/ */
   { "Nokia", 0x0421, "N300", 0x0524, DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/bugs/1885/ */
+  { "Nokia", 0x0421, "701", 0x0530, DEVICE_FLAG_NONE },
   { "Nokia", 0x0421, "C5-00", 0x0592, DEVICE_FLAG_NONE },
   /* https://sourceforge.net/p/libmtp/bugs/1457/ */
   { "Nokia", 0x0421, "C5-00 (ID2)", 0x0595, DEVICE_FLAG_NONE },
@@ -1293,8 +1298,9 @@
       0x6765, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://sourceforge.net/p/libmtp/bugs/1377/ */
-  { "Qualcomm (for Xolo)", 0x901b, "Xolo Black (MTP)",
-      0x9039, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/44 */
+  { "Qualcomm (for Xolo)", 0x05c6, "Xolo Black (MTP)",
+      0x901b, DEVICE_FLAGS_ANDROID_BUGS },
 
   { "Qualcomm (for PhiComm)", 0x05c6, "C230w (MTP)",
       0x9039, DEVICE_FLAGS_ANDROID_BUGS },
@@ -1677,6 +1683,8 @@
       DEVICE_FLAGS_SONY_NWZ_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1540/ */
   { "Sony", 0x054c, "NWZ-E474", 0x06a9,
+      DEVICE_FLAGS_SONY_NWZ_BUGS },
+  { "Sony", 0x054c, "Xperia Tablet S - SGPT12", 0x06ac,
       DEVICE_FLAGS_SONY_NWZ_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1688/ */
   { "Sony", 0x054c, "NWZ-E384", 0x0882,
@@ -2451,7 +2459,7 @@
   /*
    * Motorola Xoom (Wingray) variants
    *
-   * These devices seem to use these product IDs simultaneously
+   * These devices seem to use these product IDs simulatenously
    * https://code.google.com/p/android-source-browsing/source/browse/init.stingray.usb.rc?repo=device--moto--wingray
    *
    * 0x70a3 - Factory test - reported as early MTP ID
@@ -3233,7 +3241,7 @@
 #if 1
   /* after some review I commented it back in. There was apparently
    * only one or two devices misbehaving (having this ID in mass storage mode),
-   * but more seem to use it regularly as MTP devices. Marcus 20150401 */
+   * but more seem to use it regulary as MTP devices. Marcus 20150401 */
   /*
    * This had to be commented out - the same VID+PID is used also for
    * other modes than MTP, so we need to let mtp-probe do its job on this
@@ -3328,7 +3336,7 @@
 #if 1
   /* after some review I commented it back in. There was apparently
    * only one or two devices misbehaving (having this ID in mass storage mode),
-   * but more seem to use it regularly as MTP devices. Marcus 20150401 */
+   * but more seem to use it regulary as MTP devices. Marcus 20150401 */
   /*
    * This had to be commented out - the same VID+PID is used also for
    * other modes than MTP, so we need to let mtp-probe do its job on this
@@ -3390,6 +3398,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1447/ */
   { "nVidia", 0x0955, "Shield (MTP)", 0xb401,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/297/ */
+  { "nVidia", 0x0955, "Shield Android TV pro (MTP)", 0xb42a,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1087/ */
   { "nVidia", 0x0955, "Tegra Note", 0xcf02,
@@ -3479,6 +3490,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/293/ */
   { "Amazon", 0x1949, "Kindle Fire Tablet 10 HD (2nd ID)", 0x03f1,
+      DEVICE_FLAGS_ANDROID_BUGS },
+
+  { "Amazon", 0x1949, "Kindle Fire HD8 Plus", 0x0581,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Amazon", 0x1949, "Fire Phone", 0x0800,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3628,7 +3642,10 @@
   { "SHARP Corporation", 0x04dd, "SH-06E", 0x96ca,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/192/ */
-  { "SHARP Corporation", 0x04dd, "SHV35 AQUOS U ", 0x99d2,
+  { "SHARP Corporation", 0x04dd, "SHV35 AQUOS U", 0x99d2,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1883/ */
+  { "SHARP Corporation", 0x04dd, "AndroidOne S5", 0x9c90,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -3737,7 +3754,7 @@
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /* In update 4 the order of devices was changed for
-     better OS X / Windows support and another device-id
+     better OS X / Windows suport and another device-id
      got assigned for the MTP */
   { "Jolla", 0x2931, "Sailfish (ID2)", 0x0a05,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3762,12 +3779,18 @@
   { "Garmin", 0x091e, "Fenix 5/5S/5X Plus", 0x4b54, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/271/ */
   { "Garmin", 0x091e, "Vivoactive 3", 0x4bac, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1884/ */
+  { "Garmin", 0x091e, "Forerunner 245 Music ", 0x4c05, DEVICE_FLAGS_ANDROID_BUGS },
   { "Garmin", 0x091e, "Vivoactive 4S", 0x4c98, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/51 */
+  { "Garmin", 0x091e, "Vivoactive 4", 0x4c99, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1864/ */
   { "Garmin", 0x091e, "Venu", 0x4c9a, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1852/ */
   { "Garmin", 0x091e, "Fenix 6", 0x4cda, DEVICE_FLAGS_ANDROID_BUGS },
   { "Garmin", 0x091e, "Fenix 6 Sapphire", 0x4cdb, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1887/ */
+  { "Garmin", 0x091e, "Zumo XT", 0x4d9c, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Wacom
