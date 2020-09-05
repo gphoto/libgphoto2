@@ -4808,11 +4808,15 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPParams		*params = &camera->pl->params;
 	PTPPropertyValue	propval;
 	PTPObjectHandles	handles, beforehandles;
-	int			gotone, tries;
+	int			gotone;
 	uint32_t		newobject = 0, newobject2 = 0;
 	PTPContainer		event, newevent;
+	struct timeval		event_start;
+	int			back_off_wait = 0;
+	unsigned int		i;
 
 	GP_LOG_D ("camera_fuji_capture");
+
 	if (params->inliveview) {
 		GP_LOG_D ("terminating running liveview");
 		params->inliveview = 0;
@@ -4824,7 +4828,8 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	/* focus */
 	propval.u16 = 0x0200;
 	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
-	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
 
 	/* poll camera until it is ready */
 	propval.u16 = 0x0001;
@@ -4832,6 +4837,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16);
 		GP_LOG_D ("XXX Ready to shoot? %X", propval.u16);
 	}
+
 	/* 2 - means OK apparently, 3 - means failed and initiatecapture will get busy. */
 	if (propval.u16 == 3) { /* reported on out of focus */
 		gp_context_error (context, _("Fuji Capture failed: Perhaps no auto-focus?"));
@@ -4841,118 +4847,84 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	/* shoot */
 	propval.u16 = 0x0304;
 	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+
+
 	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
 
-	/* debug code currently. not working as-is */
-	if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"X-T1")) { // X-T1 needs this
-		/* poll camera until it is ready */
-		propval.u16 = 0x0000;
-		int loops = 0, i;
-		uint16_t *events;
-		uint16_t count, ready = 0;
-		while (loops < 3300) { // loop for about 33 seconds max
-			ptp_fuji_getevents (params, &events, &count);
-			if(count > 0) {
-				for(i = 0; i < count; i++) {
-					if(events[i] == 0xd20d) {
-						ready = 1;
-						break;
-					}
-				}
-				free(events);
-				if(ready) break;
-			}
-			C_PTP_REP (ptp_check_event (params));
-			usleep(10000);
-			i++;
-		}
-	}
-
-
-	/* poll camera until it is ready */
+	event_start = time_now();
 	do {
 		uint16_t ret, count = 0;
 		uint16_t *events = NULL;
 
-		ret = ptp_fuji_getevents (params, &events, &count);
-		if (ret != PTP_RC_OK)  {
-			GP_LOG_D ("XXX d212 property did not work, error 0x%04x, bypassing.", ret);
-			break;
-		}
-		GP_LOG_D ("XXX Ready after shooting? count = %d", count);
+		C_PTP (ptp_fuji_getevents (params, &events, &count));
+		/* FIXME: should do something with those if needed */
 		free (events);
+
+		/* FIXME: Marcus ... I need to review this when I get hands on a camera ... the objecthandles loop needs to go */
+		/* Reporter in https://github.com/gphoto/libgphoto2/issues/133 says only 1 event ever is sent, so this does not work */
+		/* there is a ObjectAdded event being sent */
+
+		/* Marcus: X-Pro2 in current setup also sends just 1 event for the first capture, then none.
+		 * We might be missing something after capture.
+		 * But we need to drain the event queue, otherwise wait_event will see this ObjectAdded event again. */
+
 		C_PTP_REP (ptp_check_event (params));
-		if (count) break;
-	} while (1);
 
-	/* FIXME: Marcus ... I need to review this when I get hands on a camera ... the objecthandles loop needs to go */
-	/* Reporter in https://github.com/gphoto/libgphoto2/issues/133 says only 1 event ever is sent, so this does not work */
-	/* there is a ObjectAdded event being sent */
+		gotone = 0;
+		while (ptp_get_one_event(params, &event)) {
+			PTPObject	*ob;
 
-	/* Marcus: X-Pro2 in current setup also sends just 1 event for the first capture, then none.
-	 * We might be missing something after capture.
-	 * But we need to drain the event queue, otherwise wait_event will see this ObjectAdded event again. */
-	C_PTP_REP (ptp_check_event (params));
-
-	gotone = 0;
-	while (ptp_get_one_event(params, &event)) {
-		PTPObject	*ob;
-		uint16_t	ret;
-
-		switch (event.Code) {
-			case PTP_EC_ObjectAdded:
-			case PTP_EC_FUJI_ObjectAdded:
-				GP_LOG_D ("Event Code %04x, Param 1 %08x", event.Code, event.Param1);
-				ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-				if (ret != PTP_RC_OK) {
-					GP_LOG_E ("object added, but not found?");
-					continue;
-				}
-				/* A directory was added, like initial DCIM/100NIKON or so. */
-				if (ob->oi.ObjectFormat == PTP_OFC_Association) {
-					GP_LOG_D ("new object 0x%08x is a directory, continuing", event.Param1);
+			switch (event.Code) {
+				case PTP_EC_ObjectAdded:
+				case PTP_EC_FUJI_ObjectAdded:
+					GP_LOG_D ("Event Code %04x, Param 1 %08x", event.Code, event.Param1);
+					ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+					if (ret != PTP_RC_OK) {
+						GP_LOG_E ("object added, but not found?");
+						continue;
+					}
+					/* A directory was added, like initial DCIM/100NIKON or so. */
+					if (ob->oi.ObjectFormat == PTP_OFC_Association) {
+						GP_LOG_D ("new object 0x%08x is a directory, continuing", event.Param1);
+						break;
+					}
+					if (newobject) {
+						/* we already got one image ... means a secondary image in RAW+JPG. Push this to the event queue. */
+						newevent.Code = PTP_EC_ObjectAdded;
+						newevent.Param1 = newobject;
+						ptp_add_event (params, &newevent);
+					}
+					newobject = event.Param1;
+					GP_LOG_D ("newobject 0x%08x", newobject);
+					/* we found a new file */
+					strcpy  (path->name,  ob->oi.Filename);
+					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+					/* delete last / or we get confused later. */
+					path->folder[ strlen(path->folder)-1 ] = '\0';
+					add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
+					/* we need to proceed to download all images, in cases of RAW+JPG capture */
+					gotone = 1;
 					break;
-				}
-				if (newobject) {
-					/* we already got one image ... means a secondary image in RAW+JPG. Push this to the event queue. */
-					newevent.Code = PTP_EC_ObjectAdded;
-					newevent.Param1 = newobject;
-					ptp_add_event (params, &newevent);
-				}
-				newobject = event.Param1;
-				GP_LOG_D ("newobject 0x%08x", newobject);
-				/* we found a new file */
-				strcpy  (path->name,  ob->oi.Filename);
-				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-				get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-				/* delete last / or we get confused later. */
-				path->folder[ strlen(path->folder)-1 ] = '\0';
-				add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
-				/* we need to proceed to download all images, in cases of RAW+JPG capture */
-				gotone = 1;
-				break;
-			default:
-				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
-				break;
+				default:
+					GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
+					break;
+			}
 		}
-	}
-	if (gotone)
-		return GP_OK;
-	/* If we got no event seconds duplicate the nikon broken capture, as we do not know how to get events yet */
+		if (gotone)  {
+			free (beforehandles.Handler);
+			return GP_OK;
+		}
 
-	tries = 35;
-	GP_LOG_D ("XXXX missing fuji objectadded events workaround");
+		/* If we got no event seconds duplicate the nikon broken capture, as we do not know how to get events yet */
 
+		GP_LOG_D ("XXXX missing fuji objectadded events workaround");
 
-	/* clear path, so we get defined results even without object info */
-	path->name[0]='\0';
-	path->folder[0]='\0';
-
-	while (tries--) {
-		unsigned int i;
-		uint16_t ret = ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles);
-		if (ret != PTP_RC_OK)
-			break;
+		/* clear path, so we get defined results even without object info */
+		path->name[0]   = '\0';
+		path->folder[0] = '\0';
+	
+		C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles));
 
 		/* if (handles.n == params->handles.n)
 		 *	continue;
@@ -4970,6 +4942,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			if (j != beforehandles.n)
 				continue;
 			GP_LOG_D ("new object 0x%08x found", handles.Handler[i]);
+			gotone = 1;
 
 			ret = ptp_object_want (params, handles.Handler[i], PTPOBJECT_OBJECTINFO_LOADED, &ob);
 			if (ret != PTP_RC_OK) {
@@ -4998,62 +4971,17 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
 			/* we need to proceed to download all images, in cases of RAW+JPG capture */
 		}
-
 		free (handles.Handler);
-		C_PTP_REP (ptp_check_event (params));
-		if (newobject)
-			break;
-		while (ptp_get_one_event(params, &event)) {
-			PTPObject	*ob;
 
-			switch (event.Code) {
-				case PTP_EC_ObjectAdded:
-				case PTP_EC_FUJI_ObjectAdded:
-					GP_LOG_D ("Event Code %04x, Param 1 %08x", event.Code, event.Param1);
-					ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-					if (ret != PTP_RC_OK) {
-						GP_LOG_E ("object added, but not found?");
-						continue;
-					}
-					/* A directory was added, like initial DCIM/100NIKON or so. */
-					if (ob->oi.ObjectFormat == PTP_OFC_Association) {
-						GP_LOG_D ("new object 0x%08x is a directory, continuing", handles.Handler[i]);
-						break;
-					}
-					if (newobject) {
-						/* we already got one image ... means a secondary image in RAW+JPG. Push this to the event queue. */
-						newevent.Code = PTP_EC_ObjectAdded;
-						newevent.Param1 = newobject;
-						ptp_add_event (params, &newevent);
-					}
-					newobject = event.Param1;
-					GP_LOG_D ("newobject 0x%08x", newobject);
-					/* we found a new file */
-					strcpy  (path->name,  ob->oi.Filename);
-					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-					/* delete last / or we get confused later. */
-					path->folder[ strlen(path->folder)-1 ] = '\0';
-					add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
-					/* we need to proceed to download all images, in cases of RAW+JPG capture */
-					break;
-				default:
-					GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
-					break;
-			}
+		if (gotone)  {
+			free (beforehandles.Handler);
+			return GP_OK;
 		}
-		if (newobject)
-			break;
-		usleep(1000*1000); /* wait 1 second for image to appear */
-	}
+	}  while (waiting_for_timeout (&back_off_wait, event_start, 35000)); /* wait for 35 seconds after busy is no longer signaled */
+
 	free (beforehandles.Handler);
 
-	if (!newobject) {
-		GP_LOG_D ("fuji object added no new file found after 5 seconds?!?");
-		return GP_ERROR;
-	}
-
-	return GP_OK;
+	return GP_ERROR;
 }
 
 static int
