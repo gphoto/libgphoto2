@@ -431,14 +431,25 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				GP_LOG_E ("if camera is Nikon 1 series, camera should probably have flag NIKON_1 set. report that to the libgphoto2 project");
 				camera->pl->params.device_flags |= PTP_NIKON_1;
 			}
-			C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
+			C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 3)));
 			/* Nikon J5 does not advertise the PTP_OC_NIKON_InitiateCaptureRecInMedia cmd ... gnh */
-			/* logic: If we have one 0x920x command, we will probably have 0x9207 too. */
+			/* logic: If we have one 0x920x command, we will probably have 0x9207 too. and getvendorpropcodes ... */
+
+			/* Marcus note: GetVendorPropCodes crashes at least the V1, the J1 and J2.
+			 * but it works on the J3, J4...
+ 			 * V1: crashes protocol flow
+ 			 * J1: crashes protocol flow
+ 			 * J2: crashes protocol flow
+ 			 * J3: works
+ 			 * J4: works
+			 * J5: reports invalid opcode
+			 */
 			if (	!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
 				 ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)
 			) {
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
-				di->OperationsSupported_len++;
+				di->OperationsSupported[di->OperationsSupported_len+1] = PTP_OC_NIKON_GetVendorPropCodes;
+				di->OperationsSupported_len += 2;
 			}
 			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
 			di->OperationsSupported_len++;
