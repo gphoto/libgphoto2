@@ -448,8 +448,12 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				 ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)
 			) {
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
-				di->OperationsSupported[di->OperationsSupported_len+1] = PTP_OC_NIKON_GetVendorPropCodes;
-				di->OperationsSupported_len += 2;
+				di->OperationsSupported_len++;
+			}
+
+			if (ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
+				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
+				di->OperationsSupported_len++;
 			}
 			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
 			di->OperationsSupported_len++;
