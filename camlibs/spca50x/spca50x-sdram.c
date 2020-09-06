@@ -318,7 +318,7 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 {
 	int i, j, length, ret;
 	int frame_count = 0, frames_per_fat = 0, fn = 0;
-	int size = 0;
+	unsigned int size = 0;
 	int file_size;
 	int index_size;
 	uint32_t frame_size = 0, frame_width = 0, frame_height = 0;
@@ -392,6 +392,7 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 		+ 8 + index_size	/* for index chunk */
 		+ 1024 * 10 * frame_count;
 
+	GP_DEBUG("file_size = %d", file_size);
 	avi = malloc (file_size);
 	if (!avi) {
 		free (avi_index);
@@ -438,6 +439,14 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 				+ ((p[51 + j * 3] & 0xFF) * 0x100) +
 				(p[50 + j * 3] & 0xFF);
 
+			GP_DEBUG("frame_size = %d", frame_size);
+
+			if ((file_size - (avi - start_of_file)) < SPCA50X_AVI_FRAME_HEADER_LENGTH) {
+				free (mybuf);
+				GP_DEBUG("BAD: writing more than we allocated (%d, %d vs total %d)", (avi-start_of_file), (file_size - (avi - start_of_file)), SPCA50X_AVI_FRAME_HEADER_LENGTH);
+				return GP_ERROR_CORRUPTED_DATA;
+			}
+
 			memcpy (avi, SPCA50xAviFrameHeader,
 					SPCA50X_AVI_FRAME_HEADER_LENGTH);
 
@@ -450,10 +459,16 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 				GP_DEBUG("BAD: accessing more than we read (%u vs total %d)", (unsigned int)((data-mybuf)+frame_size), size);
 				return GP_ERROR_CORRUPTED_DATA;
 			}
-			create_jpeg_from_data (avi, data, qIndex, frame_width,
+			ret = create_jpeg_from_data (avi, data, qIndex, frame_width,
 					       frame_height, 0x22, frame_size,
 					       &length, 1, 0);
 
+			if (ret != GP_OK) {
+				free (mybuf);
+				return ret;
+			}
+
+			GP_DEBUG("avi added length = %d, width %d , height %d", length, frame_width, frame_height);
 			data += (frame_size + 7) & 0xfffffff8;
 			avi += length;
 			/* Make sure the next frame is aligned */
