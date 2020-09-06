@@ -86,7 +86,7 @@ int spca50x_detect_storage_type (CameraPrivateLibrary *lib);
 int spca50x_reset (CameraPrivateLibrary * lib);
 int spca50x_capture (CameraPrivateLibrary * lib);
 int yuv2rgb (uint32_t y, uint32_t u, uint32_t v, uint32_t *r, uint32_t *g, uint32_t *b);
-int create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex,
+int create_jpeg_from_data (uint8_t * dst, uint8_t * src, unsigned int qIndex,
 				   int w, int h, uint8_t format,
 				   int original_size, int *size,
 				   int omit_huffman_table, int omit_escape);

@@ -203,7 +203,7 @@ spca50x_capture (CameraPrivateLibrary * lib)
 }
 
 int
-create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
+create_jpeg_from_data (uint8_t * dst, uint8_t * src, unsigned int qIndex, int w,
 		       int h, uint8_t format, int o_size, int *size,
 		       int omit_huffman_table, int omit_escape)
 {
@@ -217,6 +217,10 @@ create_jpeg_from_data (uint8_t * dst, uint8_t * src, int qIndex, int w,
 			SPCA50X_JPG_DEFAULT_HEADER_PART1_LENGTH);
 
 	/* modify quantization table */
+	if (qIndex > sizeof(SPCA50xQTable)/sizeof(SPCA50xQTable[0])/2) {
+		gp_log(GP_LOG_ERROR,"create_jpeg_from_data","qIndex %d too large", qIndex);
+		return GP_ERROR;
+	}
 	memcpy (dst + 7, SPCA50xQTable[qIndex * 2], 64);
 	memcpy (dst + 72, SPCA50xQTable[qIndex * 2 + 1], 64);
 
