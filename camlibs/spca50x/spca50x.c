@@ -217,7 +217,7 @@ create_jpeg_from_data (uint8_t * dst, uint8_t * src, unsigned int qIndex, int w,
 			SPCA50X_JPG_DEFAULT_HEADER_PART1_LENGTH);
 
 	/* modify quantization table */
-	if (qIndex > sizeof(SPCA50xQTable)/sizeof(SPCA50xQTable[0])/2) {
+	if (qIndex >= sizeof(SPCA50xQTable)/sizeof(SPCA50xQTable[0])/2) {
 		gp_log(GP_LOG_ERROR,"create_jpeg_from_data","qIndex %d too large", qIndex);
 		return GP_ERROR;
 	}
