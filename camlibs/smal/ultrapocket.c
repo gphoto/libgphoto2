@@ -384,15 +384,19 @@ ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **pdata
 static int
 ultrapocket_reset(Camera *camera)
 {
-   GPPortInfo oldpi;
-   GPPortInfo newpi;
-   GPPort *port = camera->port;
    CameraAbilities cab;
    unsigned char cmdbuf[0x10];
+   GPPort *port = camera->port;
+
    gp_camera_get_abilities(camera, &cab);
    GP_DEBUG ("First connect since camera was used - need to reset cam");
-   char *val;
+
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
    GPPortType porttype;
+   GPPortInfo oldpi;
+   GPPortInfo newpi;
+   char *val;
+#endif
 
    /*
     * this resets the ultrapocket.  Messy, but it's what the windows
@@ -404,6 +408,7 @@ ultrapocket_reset(Camera *camera)
    cmdbuf[1] = 0x01;
    CHECK_RESULT(ultrapocket_command(port, 1, cmdbuf, 0x10));
    /* -------------- */
+#ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
    sleep(4); /* This should do - _might_ need increasing */
    CHECK_RESULT(gp_port_get_info(port, &oldpi));
    gp_port_info_new(&newpi);
@@ -422,6 +427,7 @@ ultrapocket_reset(Camera *camera)
    CHECK_RESULT(gp_port_usb_find_device(port, cab.usb_vendor, cab.usb_product));
    CHECK_RESULT(gp_port_open(port));
    camera->port = port;
+#endif
    return GP_OK;
 }
 
