@@ -10191,7 +10191,13 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					ptp_free_devicepropdesc(&dpd);
 				} else {
 					GP_LOG_D ("Setting virtual property '%s' / 0x%04x", cursub->label, cursub->propid);
-					ret = cursub->putfunc (camera, widget, &propval, &dpd);
+					/* if it is a OPC, check for its presence. Otherwise just use the widget. */
+					if (	((cursub->type & 0x7000) != 0x1000) ||
+						 ptp_operation_issupported(params, cursub->type)
+					)
+						ret = cursub->putfunc (camera, widget, &propval, &dpd);
+					else
+						continue;
 				}
 				if (mode == MODE_SINGLE_SET)
 					return ret;
