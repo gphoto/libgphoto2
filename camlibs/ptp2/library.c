@@ -4722,7 +4722,16 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	propval.u16 = 2;
 	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_AutoFocus, &propval, PTP_DTC_UINT16));
 
-	usleep(100*1000); /* try random wait ... c# does a "100" wait */
+	event_start = time_now();
+	do {
+		unsigned char	*object = NULL;
+		uint16_t	ret;
+
+		ret = ptp_getobject (params, 0xffffc002, &object);
+		if (ret == PTP_RC_AccessDenied)
+			break;	/* indicator that image is there */
+		free (object);
+	} while (time_since (event_start) < 500);
 
 	/* full-press (S2 press?) */
 	propval.u16 = 2;
@@ -4743,17 +4752,23 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 		GP_LOG_D ("holding down shutterbutton for 1 second... ");
 		event_start = time_now();
 		do {
+			unsigned char *object = NULL;
+			uint16_t	ret;
+
 			C_PTP (ptp_generic_getdevicepropdesc (params, 0xd6e0, &dpd));
 
-			if (dpd.CurrentValue.u8 != 0) {
+			if (dpd.CurrentValue.u8 != 0)
 				break;
-			}
+
+			ret = ptp_getobject (params, 0xffffc002, &object);
+			if (ret == PTP_RC_AccessDenied)
+				break;	/* indicator that image is there */
+			free (object);
 
 			/* Alternative code in case we miss the event */
 
 			C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
-
-		} while (time_since (event_start) < 1000);
+		} while (time_since (event_start) < 500);
 #if 0
 	}
 #endif
@@ -4763,7 +4778,17 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	propval.u16 = 1;
 	C_PTP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Capture, &propval, PTP_DTC_UINT16));
 
-	usleep(100*1000); /* csharp does wait(100) */
+	event_start = time_now();
+	do {
+		unsigned char	*object = NULL;
+		uint16_t	ret;
+
+		ret = ptp_getobject (params, 0xffffc002, &object);
+		if (ret == PTP_RC_AccessDenied)
+			break;	/* indicator that image is there */
+		free (object);
+	} while (time_since (event_start) < 500);
+
 
 	/* release half-press */
 	propval.u16 = 1;
