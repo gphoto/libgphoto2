@@ -1411,6 +1411,9 @@ static struct {
 	 * vendor commands? yeah right... */
 	{"Nikon:Coolpix P520 (PTP mode)", 0x04b0, 0x0228, 0}, /* PTP_CAP */
 
+	/* checamon <checamon@gmail.com> */
+	{"Nikon:Coolpix B700 (PTP mode)", 0x04b0, 0x0231, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
