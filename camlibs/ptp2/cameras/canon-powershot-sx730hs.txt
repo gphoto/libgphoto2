@@ -1,0 +1,552 @@
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon PowerShot SX730 HS
+  Version: 1-15.0.1.0
+  Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS Wave, JPEG, Defined Type, Unknown(b103), Unknown(b982), Unknown(b105), Unknown(bf01)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, Canon EOS Capture 2
+	Canon Wifi support
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: SD
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 14876672 (14 MB)
+	Free Space (Bytes): 5586944 (5 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Size of Output Data from Camera(0xd02e):(read only) (type=0x6) 524288
+Size of Input Data to Camera(0xd02f):(read only) (type=0x6) 524288
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [0,1,2,3] value: 3% (3)
+Battery Type(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: Unknown (0)
+Battery Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: Normal (1)
+UNIX Time(0xd034):(readwrite) (type=0x6) 1599563498
+Type of Slideshow(0xd047):(read only) (type=0x4) 0
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Remote API Version(0xd030):(read only) (type=0x6) 256
+Model ID(0xd049):(read only) (type=0x6) 68616192
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon PowerShot SX730 HS'
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[0] 
+Firmware Version(0xd031):(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 0
+Property 0xd051: error 201b on query.
+Property 0xd052:(read only) (type=0x2) 0
+Property 0xd057:(read only) (type=0xffff) 'nnnnnnnnnnnn' (serial?)
+Property 0xd402:(read only) (type=0xffff) 'Canon PowerShot SX730 HS'
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd303:(read only) (type=0x2) 1
+
+/main/actions/syncdatetimeutc
+Label: Synchronize camera date and time with PC
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/uilock
+Label: UI Lock
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Canon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/cancelautofocus
+Label: Cancel Canon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/viewfinder
+Label: Canon EOS Viewfinder
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/eosremoterelease
+Label: Canon EOS Remote Release
+Readonly: 0
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 Press Half
+Choice: 2 Press Full
+Choice: 3 Release Half
+Choice: 4 Release Full
+Choice: 5 Immediate
+Choice: 6 Press 1
+Choice: 7 Press 2
+Choice: 8 Press 3
+Choice: 9 Release 1
+Choice: 10 Release 2
+Choice: 11 Release 3
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetimeutc
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1599556342
+Printable: mar. 08 sept. 2020 11:12:22
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1599556344
+Printable: mar. 08 sept. 2020 11:12:24
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/output
+Label: Camera Output
+Readonly: 0
+Type: RADIO
+Current: MOBILE2
+Choice: 0 Off
+Choice: 1 MOBILE2
+END
+/main/settings/evfmode
+Label: EVF Mode
+Readonly: 0
+Type: RADIO
+Current: 1
+Choice: 0 1
+END
+/main/settings/ownername
+Label: Owner Name
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/ownername
+Label: Owner Name
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/artist
+Label: Artist
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/copyright
+Label: Copyright
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/depthoffield
+Label: Depth of Field
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/capture
+Label: Capture
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/settings/remotemode
+Label: Remote Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Canon Inc.
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: Canon PowerShot SX730 HS
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: 1-15.0.1.0
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: None
+END
+/main/status/model
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: Canon PowerShot SX730 HS
+END
+/main/status/model
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: 68616192
+END
+/main/status/firmwareversion
+Label: Firmware Version
+Readonly: 1
+Type: TEXT
+Current: 1.0.0.0
+END
+/main/status/Battery Level
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 3%
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 0
+Type: TEXT
+Current: 100%
+END
+/main/status/eosserialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: nnnnnnnnnnnn
+END
+/main/status/availableshots
+Label: Available Shots
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/imgsettings/imageformat
+Label: Image Format
+Readonly: 0
+Type: RADIO
+Current: Large Fine JPEG
+Choice: 0 Large Fine JPEG
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: Auto
+Choice: 0 Auto
+Choice: 1 80
+Choice: 2 100
+Choice: 3 200
+Choice: 4 400
+Choice: 5 800
+Choice: 6 1600
+Choice: 7 3200
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Auto
+Choice: 0 Auto
+END
+/main/capturesettings/zoom
+Label: Zoom
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 127
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 -2
+Choice: 1 -1.6
+Choice: 2 -1.3
+Choice: 3 -1
+Choice: 4 -0.6
+Choice: 5 -0.3
+Choice: 6 0
+Choice: 7 0.3
+Choice: 8 0.6
+Choice: 9 1
+Choice: 10 1.3
+Choice: 11 1.6
+Choice: 12 2
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 0
+Type: RADIO
+Current: One Shot
+Choice: 0 One Shot
+END
+/main/capturesettings/continuousaf
+Label: Continuous AF
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 Off
+Choice: 1 On
+END
+/main/capturesettings/aspectratio
+Label: Aspect Ratio
+Readonly: 0
+Type: RADIO
+Current: 16:9
+Choice: 0 16:9
+END
+/main/capturesettings/storageid
+Label: Storage Device
+Readonly: 0
+Type: TEXT
+Current: 00010001
+END
+/main/capturesettings/autoexposuremode
+Label: Canon Auto Exposure Mode
+Readonly: 0
+Type: RADIO
+Current: P
+Choice: 0 P
+Choice: 1 TV
+Choice: 2 AV
+Choice: 3 Manual
+Choice: 4 Bulb
+Choice: 5 A_DEP
+Choice: 6 DEP
+Choice: 7 Custom
+Choice: 8 Lock
+Choice: 9 Green
+Choice: 10 Night Portrait
+Choice: 11 Sports
+Choice: 12 Portrait
+Choice: 13 Landscape
+Choice: 14 Closeup
+Choice: 15 Flash Off
+END
+/main/capturesettings/drivemode
+Label: Drive Mode
+Readonly: 0
+Type: RADIO
+Current: Single
+Choice: 0 Single
+Choice: 1 Continuous
+Choice: 2 Timer 10 sec
+Choice: 3 Timer 2 sec
+END
+/main/capturesettings/aperture
+Label: Aperture
+Readonly: 0
+Type: RADIO
+Current: implicit auto
+Choice: 0 implicit auto
+END
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Readonly: 0
+Type: RADIO
+Current: auto
+Choice: 0 auto
+END
+/main/capturesettings/meteringmode
+Label: Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Evaluative
+Choice: 0 Evaluative
+END
+/main/other/d045
+Label: Event Emulate Mode
+Readonly: 0
+Type: MENU
+Current: 9
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+END
+/main/other/d04a
+Label: PTP Property 0xd04a
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d02e
+Label: Size of Output Data from Camera
+Readonly: 1
+Type: TEXT
+Current: 524288
+END
+/main/other/d02f
+Label: Size of Input Data to Camera
+Readonly: 1
+Type: TEXT
+Current: 524288
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d002
+Label: Battery Type
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+END
+/main/other/d003
+Label: Battery Mode
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d034
+Label: UNIX Time
+Readonly: 0
+Type: TEXT
+Current: 1599563544
+END
+/main/other/d047
+Label: Type of Slideshow
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d046
+Label: DPOF Version
+Readonly: 1
+Type: TEXT
+Current: 257
+END
+/main/other/d030
+Label: Remote API Version
+Readonly: 1
+Type: TEXT
+Current: 256
+END
+/main/other/d049
+Label: Model ID
+Readonly: 1
+Type: TEXT
+Current: 68616192
+END
+/main/other/d032
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: Canon PowerShot SX730 HS
+END
+/main/other/d033
+Label: Camera Owner
+Readonly: 0
+Type: TEXT
+Current: (null)
+END
+/main/other/d031
+Label: Firmware Version
+Readonly: 1
+Type: TEXT
+Current: 16777216
+END
+/main/other/d050
+Label: PTP Property 0xd050
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d052
+Label: PTP Property 0xd052
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d057
+Label: PTP Property 0xd057
+Readonly: 1
+Type: TEXT
+Current: 903063000671
+END
+/main/other/d402
+Label: PTP Property 0xd402
+Readonly: 1
+Type: TEXT
+Current: Canon PowerShot SX730 HS
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: Windows
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 1
+END

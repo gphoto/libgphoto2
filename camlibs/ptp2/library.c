@@ -2288,7 +2288,7 @@ static struct {
 	{"Canon:Digital IXUS 185",          	0x04a9, 0x32d4, 0},
 
 	/* Slavko Kocjancic <eslavko@gmail.com> */
-	{"Canon:Digital PowerShot SX730IS",	0x04a9, 0x32d6, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:Digital PowerShot SX730HS",	0x04a9, 0x32d6, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Jasem Mutlaq <mutlaqja@ikarustech.com> */
 	{"Canon:EOS 4000D",			0x04a9, 0x32d9, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
