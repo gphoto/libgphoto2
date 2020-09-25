@@ -1617,6 +1617,9 @@ static struct {
 	/* Marcus Meissner */
 	{"Nikon:Z6",                	  0x04b0, 0x0443, PTP_CAP|PTP_CAP_PREVIEW},
 
+        /* Thomas Schaad */
+        {"Nikon:Z5",                      0x04b0, 0x0448, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Daniel Baertschi <daniel@avisec.ch> */
 	{"Nikon:Z50",                	  0x04b0, 0x0444, PTP_CAP|PTP_CAP_PREVIEW},
 
