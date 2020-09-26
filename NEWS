@@ -9,6 +9,7 @@ ptp2:
   * Nikon 1 series cameras had some commands listed too much.
   * Nikon 1 J5 improvements
 * Sony:
+  * Modern Sony cameras seem to require a 3 second wait on startup. Seems needed on ZV-1, A7 R4, RX100 M7
   * correct shutterspeed, iso and exposurebias decoding for Sony A7r4 and other new models
   * some bugfixes in property settings, trying to speed it up
   * ZV-1 support, some additional startup wait hack to make it work.
