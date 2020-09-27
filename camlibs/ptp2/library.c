@@ -388,7 +388,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	if (di->VendorExtensionID == PTP_VENDOR_FUJI) {
-		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 13)));
+		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 35)));
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+0] = PTP_DPC_ExposureTime;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+1] = PTP_DPC_FNumber;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+2] = 0xd38c;	/* PC Mode */
@@ -402,7 +402,29 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+10] = PTP_DPC_FUJI_LiveViewImageQuality; /* xt3 confirmed */
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+11] = PTP_DPC_FUJI_ForceMode; /* on xt3 set by webcam app to 1 */
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+12] = 0xd16e; /* seen on xt3 */
-		di->DevicePropertiesSupported_len += 13;
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+13] = 0xd01c; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+14] = 0xd020; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+15] = 0xd022; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+16] = 0xd023; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+17] = 0xd024; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+18] = 0xd025; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+19] = 0xd026; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+20] = 0xd027; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+21] = 0xd029; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+22] = 0xd10a; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+23] = 0xd10b; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+24] = 0xd112; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+25] = 0xd320; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+26] = 0xd321; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+27] = 0xd322; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+28] = 0xd323; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+29] = 0xd346; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+30] = 0xd34a; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+31] = 0xd34b; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+32] = 0xd34d; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+33] = 0xd351; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+34] = 0xd35e; /* seen on xt3 */
+		di->DevicePropertiesSupported_len += 35;
 
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_FUJI_GetDeviceInfo)) {
 			uint16_t	*props;
@@ -4915,6 +4937,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		/* there is a ObjectAdded event being sent */
 
 		/* Marcus: X-Pro2 in current setup also sends just 1 event for the first capture, then none.
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
 		 * We might be missing something after capture.
 		 * But we need to drain the event queue, otherwise wait_event will see this ObjectAdded event again. */
 
@@ -6604,6 +6627,8 @@ sonyout:
 			unsigned int		i;
 			PTPObject		*oi;
 
+			if (ptp_get_one_event (params, &event))
+				goto handleregular;
 			C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles));
 			for (i=handles.n;i--;) {
 				if (PTP_RC_OK == ptp_object_find (params, handles.Handler[i], &oi)) /* already have it */
@@ -6614,8 +6639,6 @@ sonyout:
 				goto handleregular;
 			}
 			free (handles.Handler);
-			if (ptp_get_one_event (params, &event))
-				goto handleregular;
 			C_PTP_REP (ptp_check_event(params));
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 		*eventtype = GP_EVENT_TIMEOUT;

@@ -2645,18 +2645,46 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_ColorTemperature			0xD017
 #define PTP_DPC_FUJI_Quality				0xD018
 #define PTP_DPC_FUJI_RecMode				0xD019 /* LiveViewColorMode? */
+#define PTP_DPC_FUJI_LiveViewBrightness			0xD01A
+#define PTP_DPC_FUJI_ThroughImageZoom			0xD01B
+#define PTP_DPC_FUJI_NoiseReduction			0xD01C
+#define PTP_DPC_FUJI_MacroMode				0xD01D
+#define PTP_DPC_FUJI_LiveViewStyle			0xD01E
+#define PTP_DPC_FUJI_FaceDetectionMode			0xD020
+#define PTP_DPC_FUJI_RedEyeCorrectionMode		0xD021
+#define PTP_DPC_FUJI_RawCompression			0xD022
+#define PTP_DPC_FUJI_GrainEffect			0xD023
+#define PTP_DPC_FUJI_SetEyeAFMode			0xD024
+#define PTP_DPC_FUJI_FocusPoints			0xD025
+#define PTP_DPC_FUJI_MFAssistMode			0xD026
+#define PTP_DPC_FUJI_InterlockAEAFArea			0xD027
 #define PTP_DPC_FUJI_CommandDialMode			0xD028
+#define PTP_DPC_FUJI_Shadowing				0xD029
+/* d02a - d02c also appear in setafmode */
 #define PTP_DPC_FUJI_ExposureIndex			0xD02A
 #define PTP_DPC_FUJI_MovieISO				0xD02B
+#define PTP_DPC_FUJI_ExposureDelay			0xD102
+#define PTP_DPC_FUJI_ShutterPriorityMode1		0xD10A
+#define PTP_DPC_FUJI_ShutterPriorityMode2		0xD10B
+#define PTP_DPC_FUJI_AFIlluminator			0xD112
+#define PTP_DPC_FUJI_FlashTuneSpeed			0xD11F
+#define PTP_DPC_FUJI_BuiltinFlashMode			0xD121
+#define PTP_DPC_FUJI_FlashManualMode			0xD122
+#define PTP_DPC_FUJI_ModelingFlash			0xD12D
 #define PTP_DPC_FUJI_VideoMode				0xD15C
 #define PTP_DPC_FUJI_VideoOutOnOff			0xD168
 #define PTP_DPC_FUJI_LensZoomPos			0xD170
+#define PTP_DPC_FUJI_FocusPosition			0xD171
 #define PTP_DPC_FUJI_LiveViewImageQuality		0xD173
 #define PTP_DPC_FUJI_LiveViewImageSize			0xD174
+#define PTP_DPC_FUJI_LiveViewCondition			0xD175
+#define PTP_DPC_FUJI_LiveViewWhiteBalanceGain		0xD179
 #define PTP_DPC_FUJI_FocusMeteringMode			0xD17C
+#define PTP_DPC_FUJI_FocusLength			0xD17D
 #define PTP_DPC_FUJI_IOPCode				0xD184
 #define PTP_DPC_FUJI_TetherRawConditionCode		0xD186
 #define PTP_DPC_FUJI_TetherRawCompatibilityCode		0xD187
+#define PTP_DPC_FUJI_LightTune				0xD200
 #define PTP_DPC_FUJI_ReleaseMode			0xD201
 #define PTP_DPC_FUJI_ProgramShift			0xD205
 #define PTP_DPC_FUJI_FocusAreas				0xD206
@@ -2674,7 +2702,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
  * gfx50r: 0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1,0x9300,5,0xe
  * xpro2:  0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1
  */
-#define PTP_DPC_FUJI_FocusLock				0xD209
+#define PTP_DPC_FUJI_FocusLock				0xD209 /* AF Status */
 #define PTP_DPC_FUJI_DeviceName				0xD20B
 #define PTP_DPC_FUJI_MediaRecord			0xD20C /* from capmediarecord */
 #define PTP_DPC_FUJI_FreeSDRAMImages			0xD20E /* free images in SDRAM */
@@ -2684,17 +2712,29 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_Aperture				0xD218
 #define PTP_DPC_FUJI_ShutterSpeed			0xD219
 #define PTP_DPC_FUJI_DeviceError			0xD21B
-#define PTP_DPC_FUJI_CaptureRemaining			0xD229 /* Movie AF Mode? */
-#define PTP_DPC_FUJI_MovieRemainingTime			0xD22A
+#define PTP_DPC_FUJI_CaptureRemaining			0xD229	/* Movie AF Mode? */
+#define PTP_DPC_FUJI_MovieRemainingTime			0xD22A	/* Movie Focus Area? */
 #define PTP_DPC_FUJI_ForceMode				0xD230
 #define PTP_DPC_FUJI_ShutterSpeed2			0xD240 /* Movie Aperture */
 #define PTP_DPC_FUJI_ImageAspectRatio			0xD241
 #define PTP_DPC_FUJI_BatteryLevel			0xD242 /* Movie Sensitivity???? */
+#define PTP_DPC_FUJI_HighLightTone			0xD320
+#define PTP_DPC_FUJI_ShadowTone				0xD321
+#define PTP_DPC_FUJI_LongExposureNR			0xD322
+#define PTP_DPC_FUJI_FullTimeManualFocus		0xD323
+#define PTP_DPC_FUJI_LensISSwitch			0xD346
 #define PTP_DPC_FUJI_FocusPoint				0xD347
+#define PTP_DPC_FUJI_InstantAFMode			0xD34A
+#define PTP_DPC_FUJI_PreAFMode				0xD34B
+#define PTP_DPC_FUJI_CustomSetting			0xD34C
+#define PTP_DPC_FUJI_LMOMode				0xD34D
+#define PTP_DPC_FUJI_ISMode				0xD351
 #define PTP_DPC_FUJI_DateTimeDispFormat			0xD352
+#define PTP_DPC_FUJI_FocusCheckMode			0xD35E
 #define PTP_DPC_FUJI_FileNamePrefix1			0xD365
 #define PTP_DPC_FUJI_FileNamePrefix2			0xD366
 #define PTP_DPC_FUJI_LensZoomPosCaps			0xD38C
+#define PTP_DPC_FUJI_FocusLimiter			0xD390
 #define PTP_DPC_FUJI_InitSequence			0xDF01
 #define PTP_DPC_FUJI_AppVersion				0xDF24
 
