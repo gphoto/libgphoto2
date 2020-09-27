@@ -2671,7 +2671,13 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_BuiltinFlashMode			0xD121
 #define PTP_DPC_FUJI_FlashManualMode			0xD122
 #define PTP_DPC_FUJI_ModelingFlash			0xD12D
+#define PTP_DPC_FUJI_FunctionLock			0xD136
+#define PTP_DPC_FUJI_ShutterExchangeCount		0xD155
+#define PTP_DPC_FUJI_WorldClock				0xD157
+#define PTP_DPC_FUJI_Language				0xD15A
+#define PTP_DPC_FUJI_FrameNumberSequence		0xD15B
 #define PTP_DPC_FUJI_VideoMode				0xD15C
+#define PTP_DPC_FUJI_SetUSBMode				0xD15D
 #define PTP_DPC_FUJI_VideoOutOnOff			0xD168
 #define PTP_DPC_FUJI_LensZoomPos			0xD170
 #define PTP_DPC_FUJI_FocusPosition			0xD171
@@ -2681,6 +2687,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_LiveViewWhiteBalanceGain		0xD179
 #define PTP_DPC_FUJI_FocusMeteringMode			0xD17C
 #define PTP_DPC_FUJI_FocusLength			0xD17D
+#define PTP_DPC_FUJI_ResetSetting			0xD17F
 #define PTP_DPC_FUJI_IOPCode				0xD184
 #define PTP_DPC_FUJI_TetherRawConditionCode		0xD186
 #define PTP_DPC_FUJI_TetherRawCompatibilityCode		0xD187
@@ -2718,6 +2725,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_ShutterSpeed2			0xD240 /* Movie Aperture */
 #define PTP_DPC_FUJI_ImageAspectRatio			0xD241
 #define PTP_DPC_FUJI_BatteryLevel			0xD242 /* Movie Sensitivity???? */
+#define PTP_DPC_FUJI_TotalShotCount			0xD310
 #define PTP_DPC_FUJI_HighLightTone			0xD320
 #define PTP_DPC_FUJI_ShadowTone				0xD321
 #define PTP_DPC_FUJI_LongExposureNR			0xD322
@@ -2730,6 +2738,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_LMOMode				0xD34D
 #define PTP_DPC_FUJI_ISMode				0xD351
 #define PTP_DPC_FUJI_DateTimeDispFormat			0xD352
+#define PTP_DPC_FUJI_SilentMode				0xD355
+#define PTP_DPC_FUJI_PBSound				0xD356
 #define PTP_DPC_FUJI_FocusCheckMode			0xD35E
 #define PTP_DPC_FUJI_FileNamePrefix1			0xD365
 #define PTP_DPC_FUJI_FileNamePrefix2			0xD366

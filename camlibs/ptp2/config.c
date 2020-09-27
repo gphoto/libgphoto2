@@ -1067,6 +1067,17 @@ _put_Range_UINT8(CONFIG_PUT_ARGS) {
 	return (GP_OK);
 }
 
+static int
+_get_Fuji_Totalcount(CONFIG_GET_ARGS) {
+	char buf[20];
+
+	sprintf(buf,"%d",dpd->CurrentValue.u32 >> 16);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget, buf);
+	return	GP_OK;
+}
+
 /* generic int getter */
 static int
 _get_INT(CONFIG_GET_ARGS) {
@@ -9119,6 +9130,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Lens Name"),              "lensname",         PTP_DPC_CANON_EOS_LensName,             PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Serial Number"),          "eosserialnumber",  PTP_DPC_CANON_EOS_SerialNumber,         PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Shutter Counter"),        "shuttercounter",   PTP_DPC_CANON_EOS_ShutterCounter,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
+	{ N_("Shutter Counter"),        "shuttercounter",   PTP_DPC_FUJI_TotalShotCount,            PTP_VENDOR_FUJI,    PTP_DTC_UINT32, _get_Fuji_Totalcount,           _put_None },
 	{ N_("Available Shots"),        "availableshots",   PTP_DPC_CANON_EOS_AvailableShots,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Available Shots"),        "availableshots",   PTP_DPC_NIKON_ExposureRemaining,        PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Focal Length Minimum"),   "minfocallength",   PTP_DPC_NIKON_FocalLengthMin,           PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_FocalLength,         _put_None },
