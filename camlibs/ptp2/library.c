@@ -388,7 +388,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	if (di->VendorExtensionID == PTP_VENDOR_FUJI) {
-		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 9)));
+		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 11)));
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+0] = PTP_DPC_ExposureTime;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+1] = PTP_DPC_FNumber;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+2] = 0xd38c;	/* PC Mode */
@@ -397,8 +397,10 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+5] = 0xd347;	/* Focus Position */
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+6] = PTP_DPC_FUJI_LensZoomPos;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+7] = 0xd242;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+8] = PTP_DPC_FUJI_LiveViewImageSize;
-		di->DevicePropertiesSupported_len += 9;
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+8] = PTP_DPC_FUJI_LiveViewImageSize; /* xt3 confirmed */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+9] = 0xd168; /* video out on/off (unconfirmed) */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+10] = PTP_DPC_FUJI_LiveViewImageQuality; /* xt3 confirmed */
+		di->DevicePropertiesSupported_len += 11;
 
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_FUJI_GetDeviceInfo)) {
 			uint16_t	*props;
