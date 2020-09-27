@@ -2048,6 +2048,13 @@ static struct deviceproptableu8 nikon_liveviewsize[] = {
 };
 GENERIC8TABLE(Nikon_LiveViewSize,nikon_liveviewsize)
 
+static struct deviceproptableu16 fuji_liveviewsize[] = {
+	{ N_("XGA"),		1, 0 },
+	{ N_("VGA"),		2, 0 },
+	{ N_("QVGA"),		3, 0 },
+};
+GENERIC16TABLE(Fuji_LiveViewSize,fuji_liveviewsize)
+
 static struct deviceproptableu8 sony_qx_liveviewsize[] = {
 	{ "640x480",		1, 0 },
 	{ "1024x768",		2, 0 },
@@ -9359,6 +9366,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Live View Exposure Preview"),     "liveviewexposurepreview",  PTP_DPC_NIKON_LiveViewExposurePreview,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("Live View Image Zoom Ratio"),     "liveviewimagezoomratio",   PTP_DPC_NIKON_LiveViewImageZoomRatio,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewImageZoomRatio,  _put_Nikon_LiveViewImageZoomRatio },
 	{ N_("Live View White Balance"),        "liveviewwhitebalance",     PTP_DPC_NIKON_LiveViewWhiteBalance,     PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_WhiteBalance,                  _put_WhiteBalance },
+	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_FUJI_LiveViewImageSize,         PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_LiveViewSize,             _put_Fuji_LiveViewSize },
+	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_SONY_QX_LiveviewResolution,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_QX_LiveViewSize,          _put_Sony_QX_LiveViewSize },
 	{ N_("File Number Sequencing"),         "filenrsequencing",         PTP_DPC_NIKON_FileNumberSequence,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Sign"),                     "flashsign",                PTP_DPC_NIKON_FlashSign,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Modelling Flash"),                "modelflash",               PTP_DPC_NIKON_E4ModelingFlash,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
@@ -9585,7 +9594,6 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Flash Shutter Speed"),            "flashshutterspeed",        PTP_DPC_NIKON_FlashShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_FlashShutterSpeed,   _put_Nikon_D3s_FlashShutterSpeed },
 
 	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_NIKON_LiveViewImageSize,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewSize,            _put_Nikon_LiveViewSize },
-	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_SONY_QX_LiveviewResolution,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_QX_LiveViewSize,          _put_Sony_QX_LiveViewSize },
 
 	{ 0,0,0,0,0,0,0 },
 };

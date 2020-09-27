@@ -6293,7 +6293,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_FUJI_CommandDialMode, "CommandDialMode"},
 		{PTP_DPC_FUJI_ExposureIndex, "ExposureIndex"},
 		{PTP_DPC_FUJI_MovieISO, "MovieISO"},
-		{PTP_DPC_FUJI_ImageSize, "ImageSize"},
+		{PTP_DPC_FUJI_LiveViewImageSize, "LiveViewImageSize"},
 		{PTP_DPC_FUJI_FocusMeteringMode, "FocusMeteringMode"},
 		{PTP_DPC_FUJI_ReleaseMode, "ReleaseMode"},
 		{PTP_DPC_FUJI_FocusAreas, "FocusAreas"},

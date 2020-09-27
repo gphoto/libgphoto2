@@ -2643,12 +2643,13 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_FilmSimulation			0xD001
 #define PTP_DPC_FUJI_ColorTemperature			0xD017
 #define PTP_DPC_FUJI_Quality				0xD018
-#define PTP_DPC_FUJI_RecMode				0xD019
+#define PTP_DPC_FUJI_RecMode				0xD019 /* LiveViewColorMode? */
 #define PTP_DPC_FUJI_CommandDialMode			0xD028
 #define PTP_DPC_FUJI_ExposureIndex			0xD02A
 #define PTP_DPC_FUJI_MovieISO				0xD02B
+#define PTP_DPC_FUJI_VideoMode				0xD15C
 #define PTP_DPC_FUJI_LensZoomPos			0xD170
-#define PTP_DPC_FUJI_ImageSize				0xD174
+#define PTP_DPC_FUJI_LiveViewImageSize			0xD174
 #define PTP_DPC_FUJI_FocusMeteringMode			0xD17C
 #define PTP_DPC_FUJI_IOPCode				0xD184
 #define PTP_DPC_FUJI_TetherRawConditionCode		0xD186
@@ -2678,13 +2679,16 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_Aperture				0xD218
 #define PTP_DPC_FUJI_ShutterSpeed			0xD219
 #define PTP_DPC_FUJI_DeviceError			0xD21B
-#define PTP_DPC_FUJI_CaptureRemaining			0xD229
+#define PTP_DPC_FUJI_CaptureRemaining			0xD229 /* Movie AF Mode? */
 #define PTP_DPC_FUJI_MovieRemainingTime			0xD22A
 #define PTP_DPC_FUJI_ForceMode				0xD230
-#define PTP_DPC_FUJI_ShutterSpeed2			0xD240 /* movie aperture */
+#define PTP_DPC_FUJI_ShutterSpeed2			0xD240 /* Movie Aperture */
 #define PTP_DPC_FUJI_ImageAspectRatio			0xD241
-#define PTP_DPC_FUJI_BatteryLevel			0xD242 /* movie sensitivity???? */
-#define PTP_DPC_FUJI_FocusPoint			    0xD347
+#define PTP_DPC_FUJI_BatteryLevel			0xD242 /* Movie Sensitivity???? */
+#define PTP_DPC_FUJI_FocusPoint				0xD347
+#define PTP_DPC_FUJI_FileNamePrefix1			0xD365
+#define PTP_DPC_FUJI_FileNamePrefix2			0xD366
+#define PTP_DPC_FUJI_LensZoomPosCaps			0xD38C
 #define PTP_DPC_FUJI_InitSequence			0xDF01
 #define PTP_DPC_FUJI_AppVersion				0xDF24
 
