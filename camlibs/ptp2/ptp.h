@@ -2663,7 +2663,13 @@ typedef struct _PTPCanonEOSDeviceInfo {
 /* d02a - d02c also appear in setafmode */
 #define PTP_DPC_FUJI_ExposureIndex			0xD02A
 #define PTP_DPC_FUJI_MovieISO				0xD02B
+#define PTP_DPC_FUJI_WideDynamicRange			0xD02E
+#define PTP_DPC_FUJI_TNumber				0xD02F
 #define PTP_DPC_FUJI_ExposureDelay			0xD102
+#define PTP_DPC_FUJI_PreviewTime			0xD103
+#define PTP_DPC_FUJI_BlackImageTone			0xD104
+#define PTP_DPC_FUJI_FrameGuideMode			0xD106
+#define PTP_DPC_FUJI_AutoImageRotatio			0xD108
 #define PTP_DPC_FUJI_ShutterPriorityMode1		0xD10A
 #define PTP_DPC_FUJI_ShutterPriorityMode2		0xD10B
 #define PTP_DPC_FUJI_AFIlluminator			0xD112
@@ -2672,6 +2678,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_FlashManualMode			0xD122
 #define PTP_DPC_FUJI_ModelingFlash			0xD12D
 #define PTP_DPC_FUJI_FunctionLock			0xD136
+#define PTP_DPC_FUJI_ShotCount				0xD154
 #define PTP_DPC_FUJI_ShutterExchangeCount		0xD155
 #define PTP_DPC_FUJI_WorldClock				0xD157
 #define PTP_DPC_FUJI_Language				0xD15A
@@ -2679,6 +2686,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_VideoMode				0xD15C
 #define PTP_DPC_FUJI_SetUSBMode				0xD15D
 #define PTP_DPC_FUJI_VideoOutOnOff			0xD168
+#define PTP_DPC_FUJI_CropMode				0xD16F
 #define PTP_DPC_FUJI_LensZoomPos			0xD170
 #define PTP_DPC_FUJI_FocusPosition			0xD171
 #define PTP_DPC_FUJI_LiveViewImageQuality		0xD173
@@ -2687,7 +2695,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_LiveViewWhiteBalanceGain		0xD179
 #define PTP_DPC_FUJI_FocusMeteringMode			0xD17C
 #define PTP_DPC_FUJI_FocusLength			0xD17D
-#define PTP_DPC_FUJI_ResetSetting			0xD17F
+#define PTP_DPC_FUJI_ResetSetting			0xD17F /* also clean sensor? */
 #define PTP_DPC_FUJI_IOPCode				0xD184
 #define PTP_DPC_FUJI_TetherRawConditionCode		0xD186
 #define PTP_DPC_FUJI_TetherRawCompatibilityCode		0xD187
@@ -2713,6 +2721,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_DeviceName				0xD20B
 #define PTP_DPC_FUJI_MediaRecord			0xD20C /* from capmediarecord */
 #define PTP_DPC_FUJI_FreeSDRAMImages			0xD20E /* free images in SDRAM */
+#define PTP_DPC_FUJI_MediaStatus			0xD211
 #define PTP_DPC_FUJI_CurrentState			0xD212
 #define PTP_DPC_FUJI_AELock				0xD213
 #define PTP_DPC_FUJI_Copyright				0xD215
@@ -2730,19 +2739,45 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_ShadowTone				0xD321
 #define PTP_DPC_FUJI_LongExposureNR			0xD322
 #define PTP_DPC_FUJI_FullTimeManualFocus		0xD323
+#define PTP_DPC_FUJI_ISODialHn1				0xD332
+#define PTP_DPC_FUJI_ISODialHn2				0xD333
+#define PTP_DPC_FUJI_ViewMode1				0xD33F
+#define PTP_DPC_FUJI_ViewMode2				0xD340
+#define PTP_DPC_FUJI_DispInfoMode			0xD343
 #define PTP_DPC_FUJI_LensISSwitch			0xD346
 #define PTP_DPC_FUJI_FocusPoint				0xD347
 #define PTP_DPC_FUJI_InstantAFMode			0xD34A
 #define PTP_DPC_FUJI_PreAFMode				0xD34B
 #define PTP_DPC_FUJI_CustomSetting			0xD34C
 #define PTP_DPC_FUJI_LMOMode				0xD34D
+#define PTP_DPC_FUJI_LockButtonMode			0xD34E
+#define PTP_DPC_FUJI_AFLockMode				0xD34F
+#define PTP_DPC_FUJI_MicJackMode			0xD350
 #define PTP_DPC_FUJI_ISMode				0xD351
 #define PTP_DPC_FUJI_DateTimeDispFormat			0xD352
+#define PTP_DPC_FUJI_AeAfLockKeyAssign			0xD353
+#define PTP_DPC_FUJI_CrossKeyAssign			0xD354
 #define PTP_DPC_FUJI_SilentMode				0xD355
 #define PTP_DPC_FUJI_PBSound				0xD356
+#define PTP_DPC_FUJI_EVFDispAutoRotate			0xD358
+#define PTP_DPC_FUJI_ExposurePreview			0xD359
+#define PTP_DPC_FUJI_DispBrightness1			0xD35A
+#define PTP_DPC_FUJI_DispBrightness2			0xD35B
+#define PTP_DPC_FUJI_DispChroma1			0xD35C
+#define PTP_DPC_FUJI_DispChroma2			0xD35D
 #define PTP_DPC_FUJI_FocusCheckMode			0xD35E
+#define PTP_DPC_FUJI_FocusScaleUnit			0xD35F
+#define PTP_DPC_FUJI_SetFunctionButton			0xD361
+#define PTP_DPC_FUJI_SensorCleanTiming			0xD363
+#define PTP_DPC_FUJI_CustomAutoPowerOff			0xD364
 #define PTP_DPC_FUJI_FileNamePrefix1			0xD365
 #define PTP_DPC_FUJI_FileNamePrefix2			0xD366
+#define PTP_DPC_FUJI_CustomDispInfo			0xD36E
+#define PTP_DPC_FUJI_CustomPreviewTime			0xD371
+#define PTP_DPC_FUJI_FrameGuideGridInfo1		0xD375
+#define PTP_DPC_FUJI_FrameGuideGridInfo2		0xD376
+#define PTP_DPC_FUJI_FrameGuideGridInfo3		0xD377
+#define PTP_DPC_FUJI_FrameGuideGridInfo4		0xD378
 #define PTP_DPC_FUJI_LensZoomPosCaps			0xD38C
 #define PTP_DPC_FUJI_FocusLimiter			0xD390
 #define PTP_DPC_FUJI_InitSequence			0xDF01
