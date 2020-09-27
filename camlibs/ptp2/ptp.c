@@ -356,7 +356,7 @@ static uint16_t
 fd_putfunc(PTPParams* params, void* private,
 	       unsigned long sendlen, unsigned char *data
 ) {
-	ssize_t		written;
+	ssize_t	written;
 	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)private;
 
 	written = write (priv->fd, data, sendlen);
@@ -5200,10 +5200,20 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 
 			for(i = 0; i < *count; i++)
 			{
+				unsigned int j;
+
 				param = dtoh16a(&data[2 + 6 * i]);
 				value = dtoh32a(&data[2 + 6 * i + 2]);
 				(*events)[i] = param;
 				ptp_debug(params, "param: %02x, value: %d ", param, value);
+
+				/* reset the property cache entry for refetch ... */
+				for (j=0;j<params->nrofdeviceproperties;j++)
+					if (params->deviceproperties[j].desc.DevicePropertyCode == param)
+						break;
+				if (j != params->nrofdeviceproperties) {
+					params->deviceproperties[j].timestamp = 0;
+				}
 			}
 		}
 	}
