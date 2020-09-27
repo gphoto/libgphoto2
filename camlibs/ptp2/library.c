@@ -6594,6 +6594,33 @@ sonyout:
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
+		ptp_property_issupported(params, PTP_DPC_FUJI_CurrentState)
+	) {
+		/* current strategy ... as the camera (currently) does not send us ObjectAdded events for some reason...
+		 * we just synthesize them for the generic PTP event handler code */
+		do {
+			PTPObjectHandles	handles;
+			unsigned int		i;
+			PTPObject		*oi;
+
+			C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles));
+			for (i=handles.n;i--;) {
+				if (PTP_RC_OK == ptp_object_find (params, handles.Handler[i], &oi)) /* already have it */
+					continue;
+				event.Code = PTP_EC_ObjectAdded;
+				event.Param1 = handles.Handler[i];
+				free (handles.Handler);
+				goto handleregular;
+			}
+			free (handles.Handler);
+			if (ptp_get_one_event (params, &event))
+				goto handleregular;
+			C_PTP_REP (ptp_check_event(params));
+		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
+		*eventtype = GP_EVENT_TIMEOUT;
+		return GP_OK;
+	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_QX_GetAllDevicePropData)
