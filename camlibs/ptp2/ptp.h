@@ -2641,6 +2641,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 /* Fuji specific */
 
 #define PTP_DPC_FUJI_FilmSimulation			0xD001
+#define PTP_DPC_FUJI_DRangeMode				0xD007
 #define PTP_DPC_FUJI_ColorTemperature			0xD017
 #define PTP_DPC_FUJI_Quality				0xD018
 #define PTP_DPC_FUJI_RecMode				0xD019 /* LiveViewColorMode? */
