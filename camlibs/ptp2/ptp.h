@@ -2665,11 +2665,15 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_MovieISO				0xD02B
 #define PTP_DPC_FUJI_WideDynamicRange			0xD02E
 #define PTP_DPC_FUJI_TNumber				0xD02F
+#define PTP_DPC_FUJI_SerialMode				0xD101
 #define PTP_DPC_FUJI_ExposureDelay			0xD102
 #define PTP_DPC_FUJI_PreviewTime			0xD103
 #define PTP_DPC_FUJI_BlackImageTone			0xD104
+#define PTP_DPC_FUJI_Illumination			0xD105
 #define PTP_DPC_FUJI_FrameGuideMode			0xD106
-#define PTP_DPC_FUJI_AutoImageRotatio			0xD108
+#define PTP_DPC_FUJI_ViewfinderWarning			0xD107
+#define PTP_DPC_FUJI_AutoImageRotation			0xD108
+#define PTP_DPC_FUJI_DetectImageRotation		0xD109
 #define PTP_DPC_FUJI_ShutterPriorityMode1		0xD10A
 #define PTP_DPC_FUJI_ShutterPriorityMode2		0xD10B
 #define PTP_DPC_FUJI_AFIlluminator			0xD112
@@ -2677,7 +2681,13 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_BuiltinFlashMode			0xD121
 #define PTP_DPC_FUJI_FlashManualMode			0xD122
 #define PTP_DPC_FUJI_ModelingFlash			0xD12D
+#define PTP_DPC_FUJI_AEAFLockButton			0xD132
+#define PTP_DPC_FUJI_CenterButton			0xD133
+#define PTP_DPC_FUJI_MultiSelectorButton		0xD134
 #define PTP_DPC_FUJI_FunctionLock			0xD136
+#define PTP_DPC_FUJI_ButtonsAndDials			0xD14B
+#define PTP_DPC_FUJI_MBD200Batteries			0xD14E
+#define PTP_DPC_FUJI_AFOnForMBD200Batteries		0xD14F
 #define PTP_DPC_FUJI_ShotCount				0xD154
 #define PTP_DPC_FUJI_ShutterExchangeCount		0xD155
 #define PTP_DPC_FUJI_WorldClock				0xD157
@@ -2685,6 +2695,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_FrameNumberSequence		0xD15B
 #define PTP_DPC_FUJI_VideoMode				0xD15C
 #define PTP_DPC_FUJI_SetUSBMode				0xD15D
+#define PTP_DPC_FUJI_CommentWriteSetting		0xD161
+#define PTP_DPC_FUJI_BCRAppendDelimiter			0xD162
 #define PTP_DPC_FUJI_VideoOutOnOff			0xD168
 #define PTP_DPC_FUJI_CropMode				0xD16F
 #define PTP_DPC_FUJI_LensZoomPos			0xD170
@@ -2695,6 +2707,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_LiveViewWhiteBalanceGain		0xD179
 #define PTP_DPC_FUJI_FocusMeteringMode			0xD17C
 #define PTP_DPC_FUJI_FocusLength			0xD17D
+#define PTP_DPC_FUJI_CropAreaFrameInfo			0xD17E
 #define PTP_DPC_FUJI_ResetSetting			0xD17F /* also clean sensor? */
 #define PTP_DPC_FUJI_IOPCode				0xD184
 #define PTP_DPC_FUJI_TetherRawConditionCode		0xD186
