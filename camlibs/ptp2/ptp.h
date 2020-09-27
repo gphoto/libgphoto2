@@ -2675,6 +2675,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
  * xpro2:  0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1
  */
 #define PTP_DPC_FUJI_FocusLock				0xD209
+#define PTP_DPC_FUJI_DeviceName				0xD20B
 #define PTP_DPC_FUJI_MediaRecord			0xD20C /* from capmediarecord */
 #define PTP_DPC_FUJI_FreeSDRAMImages			0xD20E /* free images in SDRAM */
 #define PTP_DPC_FUJI_CurrentState			0xD212
