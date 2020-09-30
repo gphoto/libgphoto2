@@ -2732,8 +2732,9 @@ typedef struct _PTPCanonEOSDeviceInfo {
  * xpro2:  0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1
  *
  * 0x304 is for regular capture
- * 0x200 seems for autofocus
+ * 0x200 seems for autofocus (s1?)
  * 0x500 start bulb? 0xc end bulb?
+ * 0x400 might also be start bulb?
  */
 #define PTP_DPC_FUJI_FocusLock				0xD209 /* AF Status */
 #define PTP_DPC_FUJI_DeviceName				0xD20B
