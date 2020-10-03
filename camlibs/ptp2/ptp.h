@@ -2675,6 +2675,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_MovieISO				0xD02B
 #define PTP_DPC_FUJI_WideDynamicRange			0xD02E
 #define PTP_DPC_FUJI_TNumber				0xD02F
+#define PTP_DPC_FUJI_Comment				0xD100
 #define PTP_DPC_FUJI_SerialMode				0xD101
 #define PTP_DPC_FUJI_ExposureDelay			0xD102
 #define PTP_DPC_FUJI_PreviewTime			0xD103
@@ -2724,6 +2725,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_SetUSBMode				0xD15D
 #define PTP_DPC_FUJI_CommentWriteSetting		0xD161
 #define PTP_DPC_FUJI_BCRAppendDelimiter			0xD162
+#define PTP_DPC_FUJI_CommentEx				0xD167
 #define PTP_DPC_FUJI_VideoOutOnOff			0xD168
 #define PTP_DPC_FUJI_CropMode				0xD16F
 #define PTP_DPC_FUJI_LensZoomPos			0xD170
@@ -2732,8 +2734,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_LiveViewImageSize			0xD174
 #define PTP_DPC_FUJI_LiveViewCondition			0xD175
 #define PTP_DPC_FUJI_StandbyMode			0xD176
+#define PTP_DPC_FUJI_LiveViewExposure			0xD177
 #define PTP_DPC_FUJI_LiveViewWhiteBalance		0xD178 /* same values as 0x5005 */
 #define PTP_DPC_FUJI_LiveViewWhiteBalanceGain		0xD179
+#define PTP_DPC_FUJI_LiveViewTuning			0xD17A
 #define PTP_DPC_FUJI_FocusMeteringMode			0xD17C
 #define PTP_DPC_FUJI_FocusLength			0xD17D
 #define PTP_DPC_FUJI_CropAreaFrameInfo			0xD17E
