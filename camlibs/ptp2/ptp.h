@@ -2838,10 +2838,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_FrameGuideGridInfo2		0xD376
 #define PTP_DPC_FUJI_FrameGuideGridInfo3		0xD377
 #define PTP_DPC_FUJI_FrameGuideGridInfo4		0xD378
-/* d38a ... lens related ... */
+#define PTP_DPC_FUJI_LensUnknownData			0xD38A
 #define PTP_DPC_FUJI_LensZoomPosCaps			0xD38C
 #define PTP_DPC_FUJI_LensFNumberList			0xD38D
-#define PTP_DPC_FUJI_LensFocalLengtjList		0xD38E
+#define PTP_DPC_FUJI_LensFocalLengthList		0xD38E
 #define PTP_DPC_FUJI_FocusLimiter			0xD390
 #define PTP_DPC_FUJI_FocusArea4				0xD395
 #define PTP_DPC_FUJI_InitSequence			0xDF01
