@@ -981,13 +981,20 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * 90fe firmware update
  */
 
+/* These opcodes are probably FUJI Wifi only (but not USB) */
+#define PTP_OC_FUJI_InitiateMovieCapture		0x9020
+#define PTP_OC_FUJI_TerminateMovieCapture		0x9021
 #define PTP_OC_FUJI_GetCapturePreview			0x9022
-#define PTP_OC_FUJI_SetFocusPoint			0x9026
-#define PTP_OC_FUJI_ResetFocusPoint			0x9027
+#define PTP_OC_FUJI_SetFocusPoint			0x9026	/* LockS1Lock */
+#define PTP_OC_FUJI_ResetFocusPoint			0x9027	/* UnlockS1Lock */
 #define PTP_OC_FUJI_GetDeviceInfo			0x902B
-#define PTP_OC_FUJI_SetShutterSpeed			0x902C
-#define PTP_OC_FUJI_SetAperture				0x902D
-#define PTP_OC_FUJI_SetExposureCompensation		0x902E
+#define PTP_OC_FUJI_SetShutterSpeed			0x902C	/* StepShutterSpeed */
+#define PTP_OC_FUJI_SetAperture				0x902D	/* StepFNumber */
+#define PTP_OC_FUJI_SetExposureCompensation		0x902E	/* StepExposureBias */
+#define PTP_OC_FUJI_CancelInitiateCapture		0x9030
+#define PTP_OC_FUJI_FmSendObjectInfo			0x9040
+#define PTP_OC_FUJI_FmSendObject			0x9041
+#define PTP_OC_FUJI_FmSendPartialObject			0x9042
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
@@ -2686,6 +2693,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_CenterButton			0xD133
 #define PTP_DPC_FUJI_MultiSelectorButton		0xD134
 #define PTP_DPC_FUJI_FunctionLock			0xD136
+#define PTP_DPC_FUJI_Password				0xD145
+#define PTP_DPC_FUJI_ChangePassword			0xD146	/* ? */
 #define PTP_DPC_FUJI_ButtonsAndDials			0xD14B
 #define PTP_DPC_FUJI_MBD200Batteries			0xD14E
 #define PTP_DPC_FUJI_AFOnForMBD200Batteries		0xD14F
@@ -2731,10 +2740,14 @@ typedef struct _PTPCanonEOSDeviceInfo {
  * gfx50r: 0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1,0x9300,5,0xe
  * xpro2:  0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1
  *
- * 0x304 is for regular capture
- * 0x200 seems for autofocus (s1?)
- * 0x500 start bulb? 0xc end bulb?
- * 0x400 might also be start bulb?
+ * 0x304 is for regular capture 	SDK_ShootS2toS0	(default) (SDK_Shoot)
+ * 0x200 seems for autofocus (s1?)	SDK_ShootS1
+ * 0x500 start bulb? 0xc end bulb?	SDK_StartBulb
+ * 0x400 might also be start bulb?	SDK_StartBulb
+ * 0xc					SDK_EndBulb
+ * 0x600 				SDK_1PushAF
+ * 0x4 					SDK_CancelS1
+ * 0x300 				SDK_ShootS2
  */
 #define PTP_DPC_FUJI_FocusLock				0xD209 /* AF Status */
 #define PTP_DPC_FUJI_DeviceName				0xD20B
