@@ -2648,7 +2648,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 /* Fuji specific */
 
 #define PTP_DPC_FUJI_FilmSimulation			0xD001
+#define PTP_DPC_FUJI_FilmSimulationTune			0xD002
 #define PTP_DPC_FUJI_DRangeMode				0xD007
+#define PTP_DPC_FUJI_WhitebalanceTune1			0xD00B
+#define PTP_DPC_FUJI_WhitebalanceTune2			0xD00C
 #define PTP_DPC_FUJI_ColorTemperature			0xD017
 #define PTP_DPC_FUJI_Quality				0xD018
 #define PTP_DPC_FUJI_RecMode				0xD019 /* LiveViewColorMode? */
@@ -2684,10 +2687,22 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_ShutterPriorityMode1		0xD10A
 #define PTP_DPC_FUJI_ShutterPriorityMode2		0xD10B
 #define PTP_DPC_FUJI_AFIlluminator			0xD112
+#define PTP_DPC_FUJI_PhotometryLevel1			0xD11C
+#define PTP_DPC_FUJI_PhotometryLevel2			0xD11D
+#define PTP_DPC_FUJI_PhotometryLevel3			0xD11E
 #define PTP_DPC_FUJI_FlashTuneSpeed			0xD11F
 #define PTP_DPC_FUJI_FlashShutterLimit			0xD120
 #define PTP_DPC_FUJI_BuiltinFlashMode			0xD121
 #define PTP_DPC_FUJI_FlashManualMode			0xD122
+#define PTP_DPC_FUJI_FlashRepeatingMode1		0xD124
+#define PTP_DPC_FUJI_FlashRepeatingMode2		0xD125
+#define PTP_DPC_FUJI_FlashCommanderMode1		0xD126
+#define PTP_DPC_FUJI_FlashCommanderMode2		0xD127
+#define PTP_DPC_FUJI_FlashCommanderMode3		0xD128
+#define PTP_DPC_FUJI_FlashCommanderMode4		0xD129
+#define PTP_DPC_FUJI_FlashCommanderMode5		0xD12A
+#define PTP_DPC_FUJI_FlashCommanderMode6		0xD12B
+#define PTP_DPC_FUJI_FlashCommanderMode7		0xD12C
 #define PTP_DPC_FUJI_ModelingFlash			0xD12D
 #define PTP_DPC_FUJI_AEAFLockButton			0xD132
 #define PTP_DPC_FUJI_CenterButton			0xD133
@@ -2701,6 +2716,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_ShotCount				0xD154
 #define PTP_DPC_FUJI_ShutterExchangeCount		0xD155
 #define PTP_DPC_FUJI_WorldClock				0xD157
+#define PTP_DPC_FUJI_TimeDifference1			0xD158
+#define PTP_DPC_FUJI_TimeDifference2			0xD159
 #define PTP_DPC_FUJI_Language				0xD15A
 #define PTP_DPC_FUJI_FrameNumberSequence		0xD15B
 #define PTP_DPC_FUJI_VideoMode				0xD15C
@@ -2714,6 +2731,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_LiveViewImageQuality		0xD173
 #define PTP_DPC_FUJI_LiveViewImageSize			0xD174
 #define PTP_DPC_FUJI_LiveViewCondition			0xD175
+#define PTP_DPC_FUJI_StandbyMode			0xD176
+#define PTP_DPC_FUJI_LiveViewWhiteBalance		0xD178 /* same values as 0x5005 */
 #define PTP_DPC_FUJI_LiveViewWhiteBalanceGain		0xD179
 #define PTP_DPC_FUJI_FocusMeteringMode			0xD17C
 #define PTP_DPC_FUJI_FocusLength			0xD17D
@@ -2724,6 +2743,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_TetherRawCompatibilityCode		0xD187
 #define PTP_DPC_FUJI_LightTune				0xD200
 #define PTP_DPC_FUJI_ReleaseMode			0xD201
+#define PTP_DPC_FUJI_BKTFrame				0xD202
 #define PTP_DPC_FUJI_ProgramShift			0xD205
 #define PTP_DPC_FUJI_FocusAreas				0xD206
 #define PTP_DPC_FUJI_PriorityMode			0xD207 /* from setprioritymode */
@@ -2748,6 +2768,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
  * 0x600 				SDK_1PushAF
  * 0x4 					SDK_CancelS1
  * 0x300 				SDK_ShootS2
+ * 0x8000 migh be autowhitebalance
  */
 #define PTP_DPC_FUJI_FocusLock				0xD209 /* AF Status */
 #define PTP_DPC_FUJI_DeviceName				0xD20B
@@ -2760,6 +2781,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_Aperture				0xD218
 #define PTP_DPC_FUJI_ShutterSpeed			0xD219
 #define PTP_DPC_FUJI_DeviceError			0xD21B
+#define PTP_DPC_FUJI_SensitivityFineTune1		0xD222
+#define PTP_DPC_FUJI_SensitivityFineTune2		0xD223
 #define PTP_DPC_FUJI_CaptureRemaining			0xD229	/* Movie AF Mode? */
 #define PTP_DPC_FUJI_MovieRemainingTime			0xD22A	/* Movie Focus Area? */
 #define PTP_DPC_FUJI_ForceMode				0xD230
@@ -2804,6 +2827,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_CustomAutoPowerOff			0xD364
 #define PTP_DPC_FUJI_FileNamePrefix1			0xD365
 #define PTP_DPC_FUJI_FileNamePrefix2			0xD366
+/* d36a */
+#define PTP_DPC_FUJI_LensNameAndSerial			0xD36D
 #define PTP_DPC_FUJI_CustomDispInfo			0xD36E
 #define PTP_DPC_FUJI_CustomPreviewTime			0xD371
 #define PTP_DPC_FUJI_FocusArea1				0xD372
@@ -2813,7 +2838,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_FrameGuideGridInfo2		0xD376
 #define PTP_DPC_FUJI_FrameGuideGridInfo3		0xD377
 #define PTP_DPC_FUJI_FrameGuideGridInfo4		0xD378
+/* d38a ... lens related ... */
 #define PTP_DPC_FUJI_LensZoomPosCaps			0xD38C
+#define PTP_DPC_FUJI_LensFNumberList			0xD38D
+#define PTP_DPC_FUJI_LensFocalLengtjList		0xD38E
 #define PTP_DPC_FUJI_FocusLimiter			0xD390
 #define PTP_DPC_FUJI_FocusArea4				0xD395
 #define PTP_DPC_FUJI_InitSequence			0xDF01
