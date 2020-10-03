@@ -4924,7 +4924,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	/* poll camera until it is ready */
 	propval.u16 = 0x0001;
 	while (propval.u16 == 0x0001) {
-		ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16);
+		C_PTP (ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16));
 		GP_LOG_D ("XXX Ready to shoot? %X", propval.u16);
 	}
 
