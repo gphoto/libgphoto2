@@ -1,4 +1,4 @@
-libgphoto2 2.5.25.1 development version
+libgphoto2 2.5.25.2 development version
 
 ptp2:
 * olympus omd: fixed the 65 second wait after capture.
@@ -8,15 +8,20 @@ ptp2:
   * D3000, D3100, and D3200 "static opcode list" reduced after reports what works and what not
   * Nikon 1 series cameras had some commands listed too much.
   * Nikon 1 J5 improvements
+  * "liveviewsize" can change liveviewsize
 * Sony:
   * Modern Sony cameras seem to require a 3 second wait on startup. Seems needed on ZV-1, A7 R4, RX100 M7
   * correct shutterspeed, iso and exposurebias decoding for Sony A7r4 and other new models
   * some bugfixes in property settings, trying to speed it up
   * ZV-1 support, some additional startup wait hack to make it work.
-  * QX support started, can do preview... close to having capture (but not there yet)
+  * QX support started, can do preview... close to having capture (but not there yet) (liveviewsize)
   * report read/write and read/only correctly
 * Fuji X:
   * Added very experimental Wifi support.
+  * stabilized normal capture code
+  * added bulb capture, added autofocusdrive
+  * lots of properties listed now, only small set decoded yet.
+  * added "liveviewsize", "shuttercounter", "colortemperature"
 * synced new libmtp device ids
 * Cameras added to id list: 
   * Sony QX30U, ZV-1, 
