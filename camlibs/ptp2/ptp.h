@@ -2650,6 +2650,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_FilmSimulation			0xD001
 #define PTP_DPC_FUJI_FilmSimulationTune			0xD002
 #define PTP_DPC_FUJI_DRangeMode				0xD007
+#define PTP_DPC_FUJI_ColorSpace				0xD00A
 #define PTP_DPC_FUJI_WhitebalanceTune1			0xD00B
 #define PTP_DPC_FUJI_WhitebalanceTune2			0xD00C
 #define PTP_DPC_FUJI_ColorTemperature			0xD017
@@ -2705,6 +2706,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_FlashCommanderMode6		0xD12B
 #define PTP_DPC_FUJI_FlashCommanderMode7		0xD12C
 #define PTP_DPC_FUJI_ModelingFlash			0xD12D
+#define PTP_DPC_FUJI_BKTSelection			0xD131
 #define PTP_DPC_FUJI_AEAFLockButton			0xD132
 #define PTP_DPC_FUJI_CenterButton			0xD133
 #define PTP_DPC_FUJI_MultiSelectorButton		0xD134
@@ -2774,7 +2776,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
  * 0x300 				SDK_ShootS2
  * 0x8000 migh be autowhitebalance
  */
-#define PTP_DPC_FUJI_FocusLock				0xD209 /* AF Status */
+#define PTP_DPC_FUJI_AFStatus				0xD209
 #define PTP_DPC_FUJI_DeviceName				0xD20B
 #define PTP_DPC_FUJI_MediaRecord			0xD20C /* from capmediarecord */
 #define PTP_DPC_FUJI_FreeSDRAMImages			0xD20E /* free images in SDRAM */

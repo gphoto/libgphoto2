@@ -6297,7 +6297,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_FUJI_FocusMeteringMode, "FocusMeteringMode"},
 		{PTP_DPC_FUJI_ReleaseMode, "ReleaseMode"},
 		{PTP_DPC_FUJI_FocusAreas, "FocusAreas"},
-		{PTP_DPC_FUJI_FocusLock, "FocusLock"},
+		{PTP_DPC_FUJI_AFStatus, "AFStatus"},
 		{PTP_DPC_FUJI_CurrentState, "CurrentState"},
 		{PTP_DPC_FUJI_AELock, "AELock"},
 		{PTP_DPC_FUJI_Copyright, "Copyright"},

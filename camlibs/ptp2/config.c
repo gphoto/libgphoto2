@@ -2713,7 +2713,7 @@ _put_Fuji_Bulb(CONFIG_PUT_ARGS)
 		/* poll camera until it is ready */
 		pval.u16 = 0x0001;
 		while (pval.u16 == 0x0001) {
-			C_PTP (ptp_getdevicepropvalue (params, 0xd209, &pval, PTP_DTC_UINT16));
+			C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_FUJI_AFStatus, &pval, PTP_DTC_UINT16));
 			GP_LOG_D ("XXX Ready to shoot? %X", pval.u16);
 		}
 
@@ -3845,7 +3845,6 @@ static struct deviceproptableu16 canon_eos_colorspace[] = {
 	{ N_("AdobeRGB"),	0x02, 0 },
 };
 GENERIC16TABLE(Canon_EOS_ColorSpace,canon_eos_colorspace)
-
 
 static struct deviceproptableu8 nikon_evstep[] = {
 	{ "1/3",	0, 0 },
@@ -9299,6 +9298,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Model"),            "colormodel",           PTP_DPC_NIKON_ColorModel,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorModel,          _put_Nikon_ColorModel },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_NIKON_ColorSpace,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorSpace,          _put_Nikon_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_CANON_EOS_ColorSpace,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace },
+	{ N_("Color Space"),            "colorspace",           PTP_DPC_FUJI_ColorSpace,                PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace }, /* uses 1 for sRGB, and 2 for AdobeRGB too, same as EOS */
 	{ N_("Video Format"),           "videoformat",          PTP_DPC_VideoFormat,                    0,                  PTP_DTC_UINT32, _get_VideoFormat,               _put_VideoFormat },
 	{ N_("Video Resolution"),       "videoresolution",      PTP_DPC_VideoResolution,                0,                  PTP_DTC_STR   , _get_STR_ENUMList,              _put_STR },
 	{ N_("Video Quality"),          "videoquality",         PTP_DPC_VideoQuality,                   0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
