@@ -4910,7 +4910,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPContainer		event, newevent;
 	struct timeval		event_start;
 	int			back_off_wait = 0;
-	unsigned int		i, longwait = 0;
+	unsigned int		i, waittime = 35*1000;
 
 	GP_LOG_D ("camera_fuji_capture");
 
@@ -4923,8 +4923,30 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles));
 
 	C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_ExposureTime, &propval, PTP_DTC_UINT32));
-	if (propval.u32 > 1000000) /* longer than 1 second */
-		longwait = 1;
+	if (propval.u32 >= 10079368) {/* if longer than 10 seconds, switch to 2 hours wait max. (we could also add a translation table here if needed) */
+		switch (propval.u32) {
+		/* 2 times to allow for black picture, + safety time */
+		case 64000180: waittime = 2*60*60*1000 + 1*60*1000;break;
+		case 64000150: waittime = 2*30*60*1000 + 1*60*1000;break;
+		case 64000120: waittime = 2*15*60*1000 + 1*60*1000;break;
+		case 64000090: waittime = 2*8*60*1000 + 1*30*1000;break;
+		case 64000060: waittime = 2*4*60*1000 + 1*30*1000;break;
+		case 64000030: waittime = 2*2*60*1000 + 1*30*1000;break;
+		case 64000000: waittime = 2*1*60*1000 + 1*15*1000;break;
+		case 50796833: waittime = 2*1*50*1000 + 1*15*1000;break; /* 50s */
+		case 40317473: waittime = 2*1*40*1000 + 1*15*1000;break; /* 40s */
+		case 32000000: waittime = 2*1*30*1000 + 1*15*1000;break; /* 30s */
+		case 25398416: waittime = 2*1*25*1000 + 1*15*1000;break; /* 25s */
+		case 20158736: waittime = 2*1*20*1000 + 1*15*1000;break; /* 20s */
+		case 16000000: waittime = 2*1*16*1000 + 1*10*1000;break; /* 15s */
+		case 12699208: waittime = 2*1*16*1000 + 1*10*1000;break; /* 15s */
+		case 10079368: waittime = 2*1*16*1000 + 1*10*1000;break; /* 15s */
+		default:
+			GP_LOG_D("unknown exposure time %d, waiting 2 hours", propval.u32);
+			waittime = 2*61*60*1000;
+			break;
+		}
+	}
 
 	/* focus */
 	propval.u16 = 0x0200;
@@ -5079,10 +5101,8 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			free (beforehandles.Handler);
 			return GP_OK;
 		}
-	}  while (waiting_for_timeout (&back_off_wait, event_start, longwait?2*61*60*1000:35000)); /* wait for 35 seconds after busy is no longer signaled, for long capture wait up to 1 hour (60 minute + same time postprocessing) */
-
+	}  while (waiting_for_timeout (&back_off_wait, event_start, waittime));
 	free (beforehandles.Handler);
-
 	return GP_ERROR;
 }
 
