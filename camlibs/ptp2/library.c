@@ -4910,7 +4910,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPContainer		event, newevent;
 	struct timeval		event_start;
 	int			back_off_wait = 0;
-	unsigned int		i;
+	unsigned int		i, longwait = 0;
 
 	GP_LOG_D ("camera_fuji_capture");
 
@@ -4921,6 +4921,10 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	}
 
 	C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles));
+
+	C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_ExposureTime, &propval, PTP_DTC_UINT32));
+	if (propval.u32 > 1000000) /* longer than 1 second */
+		longwait = 1;
 
 	/* focus */
 	propval.u16 = 0x0200;
@@ -5075,7 +5079,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			free (beforehandles.Handler);
 			return GP_OK;
 		}
-	}  while (waiting_for_timeout (&back_off_wait, event_start, 35000)); /* wait for 35 seconds after busy is no longer signaled */
+	}  while (waiting_for_timeout (&back_off_wait, event_start, longwait?2*61*60*1000:35000)); /* wait for 35 seconds after busy is no longer signaled, for long capture wait up to 1 hour (60 minute + same time postprocessing) */
 
 	free (beforehandles.Handler);
 
