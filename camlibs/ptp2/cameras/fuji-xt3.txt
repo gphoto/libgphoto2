@@ -1,224 +1,3 @@
-Device info:
-Manufacturer: FUJIFILM
-  Model: X-T3
-  device version: 3.21
-  serial number: 'nnnnnnnnnnnnnnnnnxxxxxxxxxxxxx'
-Vendor extension ID: 0x0000000e
-Vendor extension version: 100
-Vendor extension description: fujifilm.co.jp: 1.0; 
-Functional Mode: 0x0000
-PTP Standard Version: 100
-Supported operations:
-  0x1001 (Get device info)
-  0x1002 (Open session)
-  0x1003 (Close session)
-  0x1004 (Get storage IDs)
-  0x1005 (Get storage info)
-  0x1006 (Get number of objects)
-  0x1007 (Get object handles)
-  0x1008 (Get object info)
-  0x1009 (Get object)
-  0x100a (Get thumbnail)
-  0x100b (Delete object)
-  0x100e (Initiate capture)
-  0x100f (Format storage)
-  0x1014 (Get device property description)
-  0x1015 (Get device property value)
-  0x1016 (Set device property value)
-  0x1017 (Reset device property value)
-  0x1018 (Terminate open capture)
-  0x101b (Get partial object)
-  0x101c (Initiate open capture)
-  0x900c (Unknown VendorExtensionID)
-  0x900d (Unknown VendorExtensionID)
-  0x901d (Unknown VendorExtensionID)
-  0x9801 (Unknown VendorExtensionID)
-  0x9802 (Unknown VendorExtensionID)
-  0x9803 (Unknown VendorExtensionID)
-  0x9805 (Unknown VendorExtensionID)
-Events Supported:
-  0x4002 (ObjectAdded)
-  0x4003 (ObjectRemoved)
-  0x4004 (StoreAdded)
-  0x4005 (StoreRemoved)
-  0x400d (CaptureComplete)
-  0xc006 (Unknown Event)
-Device Properties Supported:
-  0x5001 (Battery Level)
-  0x5003 (Image Size)
-  0x5005 (White Balance)
-  0x500a (Focus Mode)
-  0x500b (Exposure Metering Mode)
-  0x500c (Flash Mode)
-  0x500e (Exposure Program Mode)
-  0x500f (Exposure Index (film speed ISO))
-  0x5011 (Date & Time)
-  0x5012 (Pre-Capture Delay)
-  0x5015 (Sharpness)
-  0x5018 (Burst Number)
-  0x5019 (Burst Interval)
-  0x501c (Focus Metering Mode)
-  0xd001 (Unknown DPC code)
-  0xd002 (Unknown DPC code)
-  0xd003 (Unknown DPC code)
-  0xd004 (Unknown DPC code)
-  0xd005 (Unknown DPC code)
-  0xd007 (Unknown DPC code)
-  0xd008 (Unknown DPC code)
-  0xd009 (Unknown DPC code)
-  0xd00a (Unknown DPC code)
-  0xd00b (Unknown DPC code)
-  0xd00c (Unknown DPC code)
-  0xd00d (Unknown DPC code)
-  0xd00e (Unknown DPC code)
-  0xd00f (Unknown DPC code)
-  0xd010 (Unknown DPC code)
-  0xd011 (Unknown DPC code)
-  0xd012 (Unknown DPC code)
-  0xd013 (Unknown DPC code)
-  0xd014 (Unknown DPC code)
-  0xd015 (Unknown DPC code)
-  0xd016 (Unknown DPC code)
-  0xd017 (Color Temperature)
-  0xd018 (Quality)
-  0xd019 (Unknown DPC code)
-  0xd01a (Unknown DPC code)
-  0xd01b (Unknown DPC code)
-  0xd01c (Unknown DPC code)
-  0xd100 (Unknown DPC code)
-  0xd101 (Unknown DPC code)
-  0xd102 (Unknown DPC code)
-  0xd103 (Unknown DPC code)
-  0xd104 (Unknown DPC code)
-  0xd105 (Unknown DPC code)
-  0xd106 (Unknown DPC code)
-  0xd107 (Unknown DPC code)
-  0xd108 (Unknown DPC code)
-  0xd109 (Unknown DPC code)
-  0xd10a (Unknown DPC code)
-  0xd10b (Unknown DPC code)
-  0xd10c (Unknown DPC code)
-  0xd10d (Unknown DPC code)
-  0xd10e (Unknown DPC code)
-  0xd10f (Unknown DPC code)
-  0xd110 (Unknown DPC code)
-  0xd111 (Unknown DPC code)
-  0xd112 (Unknown DPC code)
-  0xd113 (Unknown DPC code)
-  0xd114 (Unknown DPC code)
-  0xd115 (Unknown DPC code)
-  0xd116 (Unknown DPC code)
-  0xd117 (Unknown DPC code)
-  0xd118 (Unknown DPC code)
-  0xd119 (Unknown DPC code)
-  0xd11a (Unknown DPC code)
-  0xd11b (Unknown DPC code)
-  0xd11c (Unknown DPC code)
-  0xd11d (Unknown DPC code)
-  0xd11e (Unknown DPC code)
-  0xd11f (Unknown DPC code)
-  0xd120 (Unknown DPC code)
-  0xd121 (Unknown DPC code)
-  0xd122 (Unknown DPC code)
-  0xd123 (Unknown DPC code)
-  0xd124 (Unknown DPC code)
-  0xd125 (Unknown DPC code)
-  0xd126 (Unknown DPC code)
-  0xd127 (Unknown DPC code)
-  0xd128 (Unknown DPC code)
-  0xd129 (Unknown DPC code)
-  0xd12a (Unknown DPC code)
-  0xd12b (Unknown DPC code)
-  0xd12c (Unknown DPC code)
-  0xd12d (Unknown DPC code)
-  0xd12e (Unknown DPC code)
-  0xd12f (Unknown DPC code)
-  0xd130 (Unknown DPC code)
-  0xd131 (Unknown DPC code)
-  0xd132 (Unknown DPC code)
-  0xd133 (Unknown DPC code)
-  0xd134 (Unknown DPC code)
-  0xd135 (Unknown DPC code)
-  0xd136 (Unknown DPC code)
-  0xd137 (Unknown DPC code)
-  0xd138 (Unknown DPC code)
-  0xd139 (Unknown DPC code)
-  0xd13a (Unknown DPC code)
-  0xd13b (Unknown DPC code)
-  0xd13c (Unknown DPC code)
-  0xd13d (Unknown DPC code)
-  0xd13e (Unknown DPC code)
-  0xd13f (Unknown DPC code)
-  0xd140 (Unknown DPC code)
-  0xd141 (Unknown DPC code)
-  0xd142 (Unknown DPC code)
-  0xd143 (Unknown DPC code)
-  0xd144 (Unknown DPC code)
-  0xd145 (Unknown DPC code)
-  0xd146 (Unknown DPC code)
-  0xd147 (Unknown DPC code)
-  0xd148 (Unknown DPC code)
-  0xd149 (Unknown DPC code)
-  0xd14a (Unknown DPC code)
-  0xd14b (Unknown DPC code)
-  0xd14c (Unknown DPC code)
-  0xd14d (Unknown DPC code)
-  0xd14e (Unknown DPC code)
-  0xd14f (Unknown DPC code)
-  0xd150 (Unknown DPC code)
-  0xd151 (Unknown DPC code)
-  0xd152 (Unknown DPC code)
-  0xd153 (Unknown DPC code)
-  0xd154 (Unknown DPC code)
-  0xd155 (Unknown DPC code)
-  0xd157 (Unknown DPC code)
-  0xd158 (Unknown DPC code)
-  0xd159 (Unknown DPC code)
-  0xd15a (Unknown DPC code)
-  0xd15b (Unknown DPC code)
-  0xd15c (Unknown DPC code)
-  0xd15d (Unknown DPC code)
-  0xd15e (Unknown DPC code)
-  0xd15f (Unknown DPC code)
-  0xd160 (Unknown DPC code)
-  0xd161 (Unknown DPC code)
-  0xd200 (Unknown DPC code)
-  0xd201 (Unknown DPC code)
-  0xd202 (Unknown DPC code)
-  0xd203 (Unknown DPC code)
-  0xd204 (Unknown DPC code)
-  0xd205 (Unknown DPC code)
-  0xd206 (Unknown DPC code)
-  0xd207 (Unknown DPC code)
-  0xd208 (Unknown DPC code)
-  0xd209 (Unknown DPC code)
-  0xd20a (Unknown DPC code)
-  0xd20b (Unknown DPC code)
-  0xd20c (Unknown DPC code)
-  0xd20d (Unknown DPC code)
-  0xd20e (Unknown DPC code)
-  0xd20f (Unknown DPC code)
-  0xd210 (Unknown DPC code)
-  0xd211 (Unknown DPC code)
-  0xd212 (Unknown DPC code)
-  0xd213 (Unknown DPC code)
-  0xd214 (Unknown DPC code)
-  0xd215 (Unknown DPC code)
-  0xd216 (Unknown DPC code)
-  0xd217 (Unknown DPC code)
-  0xd218 (Unknown DPC code)
-  0xd219 (Unknown DPC code)
-  0xd21a (Unknown DPC code)
-  0xd21b (Unknown DPC code)
-  0xd406 (Unknown DPC code)
-  0xd407 (Unknown DPC code)
-  0x500d (Exposure Time)
-  0x5007 (F-Number)
-  0xd38c (Unknown DPC code)
-  0xd171 (Unknown DPC code)
-  0xd21c (Unknown DPC code)
-  0xd347 (Focus Point)
-
 Camera summary:
 Manufacturer: FUJIFILM
 Model: X-T3
@@ -274,25 +53,25 @@ White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,6,8,32769,32770,32
 Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,32769,32770] value: 32769
 Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Center-spot (4)
 Flash Mode(0x500c): error 200a on query.
-Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,3,4,6] value: 6
-Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x5) Enumeration [80,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,25600,51200,-1,-2,-3] value: ISO -1 (-1)
-Date & Time(0x5011):(readwrite) (type=0xffff) '20200927T121100'
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,3,4,6] value: M (1)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x5) Enumeration [80,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,25600,51200,-1,-2,-3] value: ISO -3 (-3)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20201004T200100'
 Pre-Capture Delay(0x5012):(readwrite) (type=0x4) Enumeration [10000,2000,0] value: 0.0s (0)
 Sharpness(0x5015):(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
 Burst Number(0x5018): error 200a on query.
 Burst Interval(0x5019): error 200a on query.
 Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [32769,32770,32771] value: 32769
 Film Simulation(0xd001):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] value: 1
-Property 0xd002: error 200a on query.
+FilmSimulationTune(0xd002): error 200a on query.
 Property 0xd003: error 200a on query.
 Property 0xd004: error 200a on query.
 Property 0xd005: error 200a on query.
-Property 0xd007:(readwrite) (type=0x4) Enumeration [65535,100,200,400] value: 100
+DRangeMode(0xd007):(readwrite) (type=0x4) Enumeration [65535,100,200,400] value: 100
 Property 0xd008:(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
 Property 0xd009: error 200a on query.
-Property 0xd00a:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd00b:(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
-Property 0xd00c:(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+ColorSpace(0xd00a):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+WhitebalanceTune1(0xd00b):(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+WhitebalanceTune2(0xd00c):(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
 Property 0xd00d: error 200a on query.
 Property 0xd00e: error 200a on query.
 Property 0xd00f: error 200a on query.
@@ -303,31 +82,31 @@ Property 0xd013: error 200a on query.
 Property 0xd014: error 200a on query.
 Property 0xd015: error 200a on query.
 Property 0xd016: error 200a on query.
-Color Temperature(0xd017):(readwrite) (type=0x4) Enumeration [2500,2550,2650,2700,2800,2850,2950,3000,3100,3200,3300,3400,3600,3700,3800,4000,4200,4300,4500,4800,5000,5300,5600,5900,6300,6700,7100,7700,8300,9100,10000] value: 2500
+Color Temperature(0xd017):(readwrite) (type=0x4) Enumeration [2500,2550,2650,2700,2800,2850,2950,3000,3100,3200,3300,3400,3600,3700,3800,4000,4200,4300,4500,4800,5000,5300,5600,5900,6300,6700,7100,7700,8300,9100,10000] value: 10000
 Quality(0xd018):(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 2
 RecMode(0xd019): error 200a on query.
-Property 0xd01a: error 200a on query.
-Property 0xd01b:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
-Property 0xd01c:(readwrite) (type=0x4) Enumeration [0,4096,8192,12288,16384,20480,24576,28672,32768] value: 8192
+LiveViewBrightness(0xd01a): error 200a on query.
+ThroughImageZoom(0xd01b):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+NoiseReduction(0xd01c):(readwrite) (type=0x4) Enumeration [0,4096,8192,12288,16384,20480,24576,28672,32768] value: 8192
 Property 0xd100:(readwrite) (type=0xffff) ''
-Property 0xd101: error 200a on query.
-Property 0xd102: error 200a on query.
-Property 0xd103: error 200a on query.
-Property 0xd104:(readwrite) (type=0x3) Range [-90 - 90, step 10] value: 0
-Property 0xd105: error 200a on query.
-Property 0xd106:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
-Property 0xd107: error 200a on query.
-Property 0xd108: error 200a on query.
-Property 0xd109: error 200a on query.
-Property 0xd10a:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd10b:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+SerialMode(0xd101): error 200a on query.
+ExposureDelay(0xd102): error 200a on query.
+PreviewTime(0xd103): error 200a on query.
+BlackImageTone(0xd104):(readwrite) (type=0x3) Range [-90 - 90, step 10] value: 0
+Illumination(0xd105): error 200a on query.
+FrameGuideMode(0xd106):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+ViewfinderWarning(0xd107): error 200a on query.
+AutoImageRotation(0xd108): error 200a on query.
+DetectImageRotation(0xd109): error 200a on query.
+ShutterPriorityMode1(0xd10a):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+ShutterPriorityMode2(0xd10b):(readwrite) (type=0x4) Enumeration [1,2] value: 1
 Property 0xd10c: error 200a on query.
 Property 0xd10d: error 200a on query.
 Property 0xd10e: error 200a on query.
 Property 0xd10f: error 200a on query.
 Property 0xd110: error 200a on query.
 Property 0xd111: error 200a on query.
-Property 0xd112:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+AFIlluminator(0xd112):(readwrite) (type=0x4) Enumeration [1,2] value: 2
 Property 0xd113: error 200a on query.
 Property 0xd114: error 200a on query.
 Property 0xd115: error 200a on query.
@@ -337,33 +116,33 @@ Property 0xd118: error 200a on query.
 Property 0xd119: error 200a on query.
 Property 0xd11a: error 200a on query.
 Property 0xd11b: error 200a on query.
-Property 0xd11c: error 200a on query.
-Property 0xd11d: error 200a on query.
-Property 0xd11e: error 200a on query.
-Property 0xd11f: error 200a on query.
-Property 0xd120: error 200a on query.
-Property 0xd121: error 200a on query.
-Property 0xd122: error 200a on query.
+PhotometryLevel1(0xd11c): error 200a on query.
+PhotometryLevel2(0xd11d): error 200a on query.
+PhotometryLevel3(0xd11e): error 200a on query.
+FlashTuneSpeed(0xd11f): error 200a on query.
+FlashShutterLimit(0xd120): error 200a on query.
+BuiltinFlashMode(0xd121): error 200a on query.
+FlashManualMode(0xd122): error 200a on query.
 Property 0xd123: error 200a on query.
-Property 0xd124: error 200a on query.
-Property 0xd125: error 200a on query.
-Property 0xd126: error 200a on query.
-Property 0xd127: error 200a on query.
-Property 0xd128: error 200a on query.
-Property 0xd129: error 200a on query.
-Property 0xd12a: error 200a on query.
-Property 0xd12b: error 200a on query.
-Property 0xd12c: error 200a on query.
-Property 0xd12d: error 200a on query.
+FlashRepeatingMode1(0xd124): error 200a on query.
+FlashRepeatingMode2(0xd125): error 200a on query.
+FlashCommanderMode1(0xd126): error 200a on query.
+FlashCommanderMode2(0xd127): error 200a on query.
+FlashCommanderMode3(0xd128): error 200a on query.
+FlashCommanderMode4(0xd129): error 200a on query.
+FlashCommanderMode5(0xd12a): error 200a on query.
+FlashCommanderMode6(0xd12b): error 200a on query.
+FlashCommanderMode7(0xd12c): error 200a on query.
+ModelingFlash(0xd12d): error 200a on query.
 Property 0xd12e: error 200a on query.
 Property 0xd12f: error 200a on query.
 Property 0xd130: error 200a on query.
-Property 0xd131: error 200a on query.
-Property 0xd132: error 200a on query.
-Property 0xd133: error 200a on query.
-Property 0xd134: error 200a on query.
+BKTSelection(0xd131): error 200a on query.
+AEAFLockButton(0xd132): error 200a on query.
+CenterButton(0xd133): error 200a on query.
+MultiSelectorButton(0xd134): error 200a on query.
 Property 0xd135: error 200a on query.
-Property 0xd136:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+FunctionLock(0xd136):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
 Property 0xd137: error 200a on query.
 Property 0xd138: error 200a on query.
 Property 0xd139: error 200a on query.
@@ -378,52 +157,52 @@ Property 0xd141: error 200a on query.
 Property 0xd142: error 200a on query.
 Property 0xd143: error 200a on query.
 Property 0xd144: error 200a on query.
-Property 0xd145:(readwrite) (type=0xffff) '0000'
-Property 0xd146: error 200a on query.
+Password(0xd145):(readwrite) (type=0xffff) '0000'
+ChangePassword(0xd146): error 200a on query.
 Property 0xd147: error 200a on query.
 Property 0xd148: error 200a on query.
 Property 0xd149: error 200a on query.
 Property 0xd14a: error 200a on query.
-Property 0xd14b: error 200a on query.
+ButtonsAndDials(0xd14b): error 200a on query.
 Property 0xd14c: error 200a on query.
 Property 0xd14d: error 200a on query.
-Property 0xd14e: error 200a on query.
-Property 0xd14f: error 200a on query.
+MBD200Batteries(0xd14e): error 200a on query.
+AFOnForMBD200Batteries(0xd14f): error 200a on query.
 Property 0xd150: error 200a on query.
 Property 0xd151: error 200a on query.
 Property 0xd152: error 200a on query.
 Property 0xd153:(read only) (type=0x4) 801
-Property 0xd154:(read only) (type=0x6) 880148480
-Property 0xd155:(read only) (type=0x6) 0
-Property 0xd157: error 200a on query.
-Property 0xd158: error 200a on query.
-Property 0xd159: error 200a on query.
-Property 0xd15a: error 200a on query.
-Property 0xd15b: error 200a on query.
-Property 0xd15c: error 200a on query.
-Property 0xd15d: error 200a on query.
+ShotCount(0xd154):(read only) (type=0x6) 886767616
+ShutterExchangeCount(0xd155):(read only) (type=0x6) 0
+WorldClock(0xd157): error 200a on query.
+TimeDifference1(0xd158): error 200a on query.
+TimeDifference2(0xd159): error 200a on query.
+Language(0xd15a): error 200a on query.
+FrameNumberSequence(0xd15b): error 200a on query.
+VideoMode(0xd15c): error 200a on query.
+SetUSBMode(0xd15d): error 200a on query.
 Property 0xd15e: error 200a on query.
 Property 0xd15f: error 200a on query.
 Property 0xd160: error 200a on query.
-Property 0xd161: error 200a on query.
-Property 0xd200: error 200a on query.
+CommentWriteSetting(0xd161): error 200a on query.
+LightTune(0xd200): error 200a on query.
 ReleaseMode(0xd201):(readwrite) (type=0x4) Enumeration [4,8] value: 4
-Property 0xd202: error 200a on query.
+BKTFrame(0xd202): error 200a on query.
 Property 0xd203: error 200a on query.
 Property 0xd204: error 200a on query.
-Property 0xd205: error 200a on query.
+ProgramShift(0xd205): error 200a on query.
 FocusAreas(0xd206): error 200a on query.
-Property 0xd207:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+PriorityMode(0xd207):(readwrite) (type=0x4) Enumeration [1,2] value: 2
 Property 0xd208:(readwrite) (type=0x4) Enumeration [260,512,4,772,1280,12,40960,6,36864,2,37120,1,37376,64,37632,5,2052,128] value: 772
-FocusLock(0xd209):(read only) (type=0x4) Enumeration [1,2,3,4] value: 2
+AFStatus(0xd209):(read only) (type=0x4) Enumeration [1,2,3,4] value: 1
 Property 0xd20a: error 200a on query.
-Property 0xd20b:(readwrite) (type=0xffff) ''
-Property 0xd20c:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+DeviceName(0xd20b):(readwrite) (type=0xffff) 'gphoto'
+MediaRecord(0xd20c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
 Property 0xd20d:(read only) (type=0xffff) '0,0,0,0,0,0,0,0'
-Property 0xd20e:(read only) (type=0x4) Range [0 - 1, step 1] value: 30
+FreeSDRAMImages(0xd20e):(read only) (type=0x4) Range [0 - 1, step 1] value: 32
 Property 0xd20f: error 200a on query.
 Property 0xd210: error 200a on query.
-Property 0xd211:(read only) (type=0x4) Range [0 - 65535, step 1] value: 771
+MediaStatus(0xd211):(read only) (type=0x4) Range [0 - 65535, step 1] value: 771
 CurrentState(0xd212): error 201b on query.
 AELock(0xd213): error 200a on query.
 Property 0xd214: error 200a on query.
@@ -436,15 +215,79 @@ Property 0xd21a: error 200a on query.
 DeviceError(0xd21b): error 200a on query.
 Property 0xd406:(readwrite) (type=0xffff) ''
 Property 0xd407:(read only) (type=0x6) 1
-Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [] value: 0.049 sec (4921)
-F-Number(0x5007):(readwrite) (type=0x4) Enumeration [] value: f/5 (500)
-Property 0xd38c:(readwrite) (type=0x4) Range [1 - 27, step 1] value: 1
-Property 0xd171:(readwrite) (type=0x3) Enumeration [0,0,0,0,0,0] value: 0
-Property 0xd21c:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11] value: 4
+Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [122,153,193,244,307,387,488,615,775,976,1230,1550,1953,2460,3100,3906,4921,6200,7812,9843,12401,15625,19686,24803,31250,39372,49606,62500,78745,99212,125000,157490,198425,250000,314980,396850,500000,629960,793700,1000000,1259921,1587401,2000000,2519842,3174802,4000000,5039684,6349604,8000000,10079368,12699208,16000000,20158736,25398416,32000000,40317473,50796833,64000000,64000030,64000060,64000090,64000120,4294967295] value: 6.4e+02 sec (64000030)
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [120,140,160,180,200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/2 (200)
+LensZoomPosCaps(0xd38c):(readwrite) (type=0x4) Range [1 - 1, step 1] value: 1
+FocusPosition(0xd171):(readwrite) (type=0x3) Enumeration [0,0,0,0,0,0] value: 0
+Property 0xd21c:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11] value: 3
 Focus Point(0xd347): error 201b on query.
-Property 0xd170:(read only) (type=0x4) Range [1 - 27, step 1] value: 1
+LensZoomPos(0xd170):(read only) (type=0x4) Range [1 - 1, step 1] value: 1
 BatteryLevel(0xd242): error 200a on query.
+LiveViewImageSize(0xd174):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+VideoOutOnOff(0xd168): error 200a on query.
+LiveViewImageQuality(0xd173):(readwrite) (type=0x4) Enumeration [1,3] value: 1
+ForceMode(0xd230):(readwrite) (type=0x4) Enumeration [1] value: 1
+Property 0xd16e: error 200a on query.
+FocusArea1(0xd372): error 201b on query.
+FaceDetectionMode(0xd020):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+RawCompression(0xd022):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+GrainEffect(0xd023):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+SetEyeAFMode(0xd024):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+FocusPoints(0xd025):(readwrite) (type=0x4) Enumeration [3,4] value: 3
+MFAssistMode(0xd026):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12] value: 1
+InterlockAEAFArea(0xd027):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Shadowing(0xd029):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+CropMode(0xd16f):(readwrite) (type=0x4) Enumeration [0,1] value: 0
+TNumber(0xd02f):(readwrite) (type=0x4) Enumeration [] value: 0
+FocusArea4(0xd395): error 201b on query.
+HighLightTone(0xd320):(readwrite) (type=0x3) Range [-20 - 40, step 10] value: 0
+ShadowTone(0xd321):(readwrite) (type=0x3) Range [-20 - 40, step 10] value: 0
+LongExposureNR(0xd322):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+FullTimeManualFocus(0xd323):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+LensISSwitch(0xd346):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+InstantAFMode(0xd34a):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+PreAFMode(0xd34b):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+LMOMode(0xd34d):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+ISMode(0xd351):(readwrite) (type=0x4) Enumeration [1,2,3] value: 3
+FocusCheckMode(0xd35e):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+LiveViewImageQuality(0xd173):(readwrite) (type=0x4) Enumeration [1,3] value: 1
+FileNamePrefix1(0xd365):(readwrite) (type=0xffff) 'DSCF'
+FileNamePrefix2(0xd366):(readwrite) (type=0xffff) 'DSF'
+FocusArea3(0xd374): error 201b on query.
+TotalShotCount(0xd310):(read only) (type=0x6) 886767616
+ExposurePreview(0xd359):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+FrameGuideGridInfo1(0xd375):(readwrite) (type=0xffff) '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+FrameGuideGridInfo2(0xd376):(readwrite) (type=0xffff) '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+CustomDispInfo(0xd36e): error 200a on query.
+ViewMode1(0xd33f):(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 5
+CustomAutoPowerOff(0xd364):(readwrite) (type=0x4) Range [0 - 255, step 1] value: 0
+LockButtonMode(0xd34e):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+WideDynamicRange(0xd02e):(readwrite) (type=0x4) Enumeration [0,1,2,32768] value: 0
+LensNameAndSerial(0xd36d):(read only) (type=0xffff) 'LX201B,XF18mmF2 R,21A06480'
+LensUnknownData(0xd38a):(read only) (type=0x4) Enumeration [1,2,3,4,5] value: 1
+Property 0xd36a:(read only) (type=0x6) Range [0 - 16777215, step 1] value: 12
+Property 0xd36b:(read only) (type=0xffff) '100,0,0'
+Property 0xd36f:(readwrite) (type=0x6) 65536
+Property 0xd370:(readwrite) (type=0x6) 65536
+SensitivityFineTune1(0xd222):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 8192
+SensitivityFineTune2(0xd223):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 8192
+LensZoomPosCaps(0xd38c):(readwrite) (type=0x4) Range [1 - 1, step 1] value: 1
+LensFNumberList(0xd38d):(read only) (type=0xffff) '200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600'
+LensFocalLengthList(0xd38e):(read only) (type=0xffff) '1800,2740'
+Property 0xd17b:(readwrite) (type=0x4) Enumeration [1] value: 1
 
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Fuji Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
 /main/actions/movie
 Label: Movie Capture
 Readonly: 0
@@ -461,10 +304,22 @@ END
 Label: Camera Date and Time
 Readonly: 0
 Type: DATE
-Current: 1601201460
-Printable: Sun 27 Sep 2020 12:11:00 PM CEST
+Current: 1601834460
+Printable: Sun 04 Oct 2020 08:01:00 PM CEST
 Help: Use 'now' as the current time when setting.
 
+END
+/main/settings/imagecomment
+Label: Image Comment
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/devicename
+Label: Device Name
+Readonly: 0
+Type: TEXT
+Current: gphoto
 END
 /main/settings/copyright
 Label: Copyright
@@ -472,11 +327,35 @@ Readonly: 0
 Type: TEXT
 Current: 
 END
+/main/settings/cameraaction
+Label: Camera Action
+Readonly: 0
+Type: RADIO
+Current: Shoot
+Choice: 0 Unknown value 0104
+Choice: 1 AF
+Choice: 2 Cancel AF
+Choice: 3 Shoot
+Choice: 4 Bulb On
+Choice: 5 Bulb Off
+Choice: 6 Unknown value a000
+Choice: 7 Unknown value 0006
+Choice: 8 Unknown value 9000
+Choice: 9 Unknown value 0002
+Choice: 10 Unknown value 9100
+Choice: 11 Unknown value 0001
+Choice: 12 Unknown value 9200
+Choice: 13 Unknown value 0040
+Choice: 14 Unknown value 9300
+Choice: 15 Unknown value 0005
+Choice: 16 Unknown value 0804
+Choice: 17 Unknown value 0080
+END
 /main/status/serialnumber
 Label: Serial Number
 Readonly: 0
 Type: TEXT
-Current: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Current: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 END
 /main/status/manufacturer
 Label: Camera Manufacturer
@@ -501,6 +380,18 @@ Label: Vendor Extension
 Readonly: 0
 Type: TEXT
 Current: fujifilm.co.jp: 1.0; 
+END
+/main/status/lensname
+Label: Lens Name
+Readonly: 1
+Type: TEXT
+Current: LX201B,XF18mmF2 R,XXXXXXXX
+END
+/main/status/shuttercounter
+Label: Shutter Counter
+Readonly: 1
+Type: TEXT
+Current: 13531
 END
 /main/imgsettings/imageformat
 Label: Image Format
@@ -557,7 +448,7 @@ END
 Label: ISO Speed
 Readonly: 0
 Type: RADIO
-Current: -1
+Current: -3
 Choice: 0 80
 Choice: 1 100
 Choice: 2 125
@@ -587,6 +478,43 @@ Choice: 25 -1
 Choice: 26 -2
 Choice: 27 -3
 END
+/main/imgsettings/colortemperature
+Label: Color Temperature
+Readonly: 0
+Type: RADIO
+Current: 10000
+Choice: 0 2500
+Choice: 1 2550
+Choice: 2 2650
+Choice: 3 2700
+Choice: 4 2800
+Choice: 5 2850
+Choice: 6 2950
+Choice: 7 3000
+Choice: 8 3100
+Choice: 9 3200
+Choice: 10 3300
+Choice: 11 3400
+Choice: 12 3600
+Choice: 13 3700
+Choice: 14 3800
+Choice: 15 4000
+Choice: 16 4200
+Choice: 17 4300
+Choice: 18 4500
+Choice: 19 4800
+Choice: 20 5000
+Choice: 21 5300
+Choice: 22 5600
+Choice: 23 5900
+Choice: 24 6300
+Choice: 25 6700
+Choice: 26 7100
+Choice: 27 7700
+Choice: 28 8300
+Choice: 29 9100
+Choice: 30 10000
+END
 /main/imgsettings/whitebalance
 Label: WhiteBalance
 Readonly: 0
@@ -605,11 +533,45 @@ Choice: 9 Preset Custom 1
 Choice: 10 Preset Custom 2
 Choice: 11 Preset Custom 3
 END
+/main/imgsettings/colorspace
+Label: Color Space
+Readonly: 0
+Type: RADIO
+Current: sRGB
+Choice: 0 sRGB
+Choice: 1 AdobeRGB
+END
 /main/capturesettings/f-number
 Label: F-Number
 Readonly: 0
 Type: RADIO
-Current: (null)
+Current: f/2
+Choice: 0 f/1.2
+Choice: 1 f/1.4
+Choice: 2 f/1.6
+Choice: 3 f/1.8
+Choice: 4 f/2
+Choice: 5 f/2.2
+Choice: 6 f/2.5
+Choice: 7 f/2.8
+Choice: 8 f/3.2
+Choice: 9 f/3.6
+Choice: 10 f/4
+Choice: 11 f/4.5
+Choice: 12 f/5
+Choice: 13 f/5.6
+Choice: 14 f/6.4
+Choice: 15 f/7.1
+Choice: 16 f/8
+Choice: 17 f/9
+Choice: 18 f/10
+Choice: 19 f/11
+Choice: 20 f/13
+Choice: 21 f/14
+Choice: 22 f/16
+Choice: 23 f/18
+Choice: 24 f/20
+Choice: 25 f/22
 END
 /main/capturesettings/focusmode
 Label: Focus Mode
@@ -624,7 +586,7 @@ END
 Label: Exposure Program
 Readonly: 0
 Type: RADIO
-Current: Action
+Current: M
 Choice: 0 M
 Choice: 1 A
 Choice: 2 S
@@ -670,78 +632,79 @@ END
 Label: Shutter Speed
 Readonly: 0
 Type: RADIO
-Current: 1/200
-Choice: 0 bulb
-Choice: 1 60m
-Choice: 2 30m
-Choice: 3 15m
-Choice: 4 8m
-Choice: 5 4m
-Choice: 6 2m
-Choice: 7 60s
-Choice: 8 50s
-Choice: 9 40s
-Choice: 10 30s
-Choice: 11 25s
-Choice: 12 20s
-Choice: 13 15s
-Choice: 14 13s
-Choice: 15 10s
-Choice: 16 8s
-Choice: 17 6s
-Choice: 18 5s
-Choice: 19 4s
-Choice: 20 3s
-Choice: 21 2.5s
-Choice: 22 2s
-Choice: 23 1.6s
-Choice: 24 1.3s
-Choice: 25 1s
-Choice: 26 0.8s
-Choice: 27 0.6s
-Choice: 28 1/2
-Choice: 29 0.4s
-Choice: 30 1/3
-Choice: 31 1/4
+Current: 2m
+Choice: 0 1/8000
+Choice: 1 1/6400
+Choice: 2 1/5000
+Choice: 3 1/4000
+Choice: 4 1/3200
+Choice: 5 1/2500
+Choice: 6 1/2000
+Choice: 7 1/1600
+Choice: 8 1/1250
+Choice: 9 1/1000
+Choice: 10 1/800
+Choice: 11 1/640
+Choice: 12 1/500
+Choice: 13 1/400
+Choice: 14 1/320
+Choice: 15 1/250
+Choice: 16 1/200
+Choice: 17 1/160
+Choice: 18 1/125
+Choice: 19 1/100
+Choice: 20 1/80
+Choice: 21 1/60
+Choice: 22 1/50
+Choice: 23 1/40
+Choice: 24 1/30
+Choice: 25 1/25
+Choice: 26 1/20
+Choice: 27 1/15
+Choice: 28 1/13
+Choice: 29 1/10
+Choice: 30 1/8
+Choice: 31 1/6
 Choice: 32 1/5
-Choice: 33 1/6
-Choice: 34 1/8
-Choice: 35 1/10
-Choice: 36 1/13
-Choice: 37 1/15
-Choice: 38 1/20
-Choice: 39 1/25
-Choice: 40 1/30
-Choice: 41 1/40
-Choice: 42 1/50
-Choice: 43 1/60
-Choice: 44 1/80
-Choice: 45 1/100
-Choice: 46 1/125
-Choice: 47 1/160
-Choice: 48 1/200
-Choice: 49 1/250
-Choice: 50 1/320
-Choice: 51 1/400
-Choice: 52 1/500
-Choice: 53 1/640
-Choice: 54 1/800
-Choice: 55 1/1000
-Choice: 56 1/1250
-Choice: 57 1/1600
-Choice: 58 1/2000
-Choice: 59 1/2500
-Choice: 60 1/3200
-Choice: 61 1/4000
-Choice: 62 1/5000
-Choice: 63 1/6400
-Choice: 64 1/8000
-Choice: 65 1/10000
-Choice: 66 1/13000
-Choice: 67 1/16000
-Choice: 68 1/20000
-Choice: 69 1/25000
-Choice: 70 1/32000
+Choice: 33 1/4
+Choice: 34 1/3
+Choice: 35 0.4s
+Choice: 36 1/2
+Choice: 37 0.6s
+Choice: 38 0.8s
+Choice: 39 1s
+Choice: 40 1.3s
+Choice: 41 1.6s
+Choice: 42 2s
+Choice: 43 2.5s
+Choice: 44 3s
+Choice: 45 4s
+Choice: 46 5s
+Choice: 47 6s
+Choice: 48 8s
+Choice: 49 10s
+Choice: 50 13s
+Choice: 51 15s
+Choice: 52 20s
+Choice: 53 25s
+Choice: 54 30s
+Choice: 55 40s
+Choice: 56 50s
+Choice: 57 60s
+Choice: 58 2m
+Choice: 59 4m
+Choice: 60 8m
+Choice: 61 15m
+Choice: 62 bulb
+END
+/main/capturesettings/liveviewsize
+Label: Live View Size
+Readonly: 0
+Type: RADIO
+Current: XGA
+Choice: 0 XGA
+Choice: 1 VGA
+Choice: 2 QVGA
 END
 /main/other/5003
 Label: Image Size
@@ -802,7 +765,7 @@ END
 Label: Exposure Program Mode
 Readonly: 0
 Type: MENU
-Current: 6
+Current: 1
 Choice: 0 1
 Choice: 1 3
 Choice: 2 4
@@ -812,7 +775,7 @@ END
 Label: Exposure Index (film speed ISO)
 Readonly: 0
 Type: MENU
-Current: -1
+Current: -3
 Choice: 0 80
 Choice: 1 100
 Choice: 2 125
@@ -846,7 +809,7 @@ END
 Label: Date & Time
 Readonly: 0
 Type: TEXT
-Current: 20200927T121100
+Current: 20201004T200100
 END
 /main/other/5012
 Label: Pre-Capture Delay
@@ -898,7 +861,7 @@ Choice: 14 15
 Choice: 15 16
 END
 /main/other/d007
-Label: PTP Property 0xd007
+Label: DRangeMode
 Readonly: 0
 Type: MENU
 Current: 100
@@ -917,7 +880,7 @@ Top: 40
 Step: 10
 END
 /main/other/d00a
-Label: PTP Property 0xd00a
+Label: ColorSpace
 Readonly: 0
 Type: MENU
 Current: 1
@@ -925,7 +888,7 @@ Choice: 0 1
 Choice: 1 2
 END
 /main/other/d00b
-Label: PTP Property 0xd00b
+Label: WhitebalanceTune1
 Readonly: 0
 Type: MENU
 Current: 0
@@ -950,7 +913,7 @@ Choice: 17 8
 Choice: 18 9
 END
 /main/other/d00c
-Label: PTP Property 0xd00c
+Label: WhitebalanceTune2
 Readonly: 0
 Type: MENU
 Current: 0
@@ -978,7 +941,7 @@ END
 Label: Color Temperature
 Readonly: 0
 Type: MENU
-Current: 2500
+Current: 10000
 Choice: 0 2500
 Choice: 1 2550
 Choice: 2 2650
@@ -1023,7 +986,7 @@ Choice: 3 4
 Choice: 4 5
 END
 /main/other/d01b
-Label: PTP Property 0xd01b
+Label: ThroughImageZoom
 Readonly: 0
 Type: MENU
 Current: 1
@@ -1032,7 +995,7 @@ Choice: 1 2
 Choice: 2 3
 END
 /main/other/d01c
-Label: PTP Property 0xd01c
+Label: NoiseReduction
 Readonly: 0
 Type: MENU
 Current: 8192
@@ -1053,7 +1016,7 @@ Type: TEXT
 Current: 
 END
 /main/other/d104
-Label: PTP Property 0xd104
+Label: BlackImageTone
 Readonly: 0
 Type: RANGE
 Current: 0
@@ -1062,7 +1025,7 @@ Top: 90
 Step: 10
 END
 /main/other/d106
-Label: PTP Property 0xd106
+Label: FrameGuideMode
 Readonly: 0
 Type: MENU
 Current: 1
@@ -1071,7 +1034,7 @@ Choice: 1 2
 Choice: 2 3
 END
 /main/other/d10a
-Label: PTP Property 0xd10a
+Label: ShutterPriorityMode1
 Readonly: 0
 Type: MENU
 Current: 1
@@ -1079,7 +1042,7 @@ Choice: 0 1
 Choice: 1 2
 END
 /main/other/d10b
-Label: PTP Property 0xd10b
+Label: ShutterPriorityMode2
 Readonly: 0
 Type: MENU
 Current: 1
@@ -1087,7 +1050,7 @@ Choice: 0 1
 Choice: 1 2
 END
 /main/other/d112
-Label: PTP Property 0xd112
+Label: AFIlluminator
 Readonly: 0
 Type: MENU
 Current: 2
@@ -1095,7 +1058,7 @@ Choice: 0 1
 Choice: 1 2
 END
 /main/other/d136
-Label: PTP Property 0xd136
+Label: FunctionLock
 Readonly: 0
 Type: MENU
 Current: 1
@@ -1104,7 +1067,7 @@ Choice: 1 2
 Choice: 2 3
 END
 /main/other/d145
-Label: PTP Property 0xd145
+Label: Password
 Readonly: 0
 Type: TEXT
 Current: 0000
@@ -1116,13 +1079,13 @@ Type: TEXT
 Current: 801
 END
 /main/other/d154
-Label: PTP Property 0xd154
+Label: ShotCount
 Readonly: 1
 Type: TEXT
-Current: 880148480
+Current: 886767616
 END
 /main/other/d155
-Label: PTP Property 0xd155
+Label: ShutterExchangeCount
 Readonly: 1
 Type: TEXT
 Current: 0
@@ -1136,7 +1099,7 @@ Choice: 0 4
 Choice: 1 8
 END
 /main/other/d207
-Label: PTP Property 0xd207
+Label: PriorityMode
 Readonly: 0
 Type: MENU
 Current: 2
@@ -1168,23 +1131,23 @@ Choice: 16 2052
 Choice: 17 128
 END
 /main/other/d209
-Label: FocusLock
+Label: AFStatus
 Readonly: 1
 Type: MENU
-Current: 2
+Current: 1
 Choice: 0 1
 Choice: 1 2
 Choice: 2 3
 Choice: 3 4
 END
 /main/other/d20b
-Label: PTP Property 0xd20b
+Label: DeviceName
 Readonly: 0
 Type: TEXT
-Current: 
+Current: gphoto
 END
 /main/other/d20c
-Label: PTP Property 0xd20c
+Label: MediaRecord
 Readonly: 0
 Type: MENU
 Current: 1
@@ -1200,15 +1163,15 @@ Type: TEXT
 Current: 0,0,0,0,0,0,0,0
 END
 /main/other/d20e
-Label: PTP Property 0xd20e
+Label: FreeSDRAMImages
 Readonly: 1
 Type: MENU
-Current: 30
+Current: 32
 Choice: 0 0
 Choice: 1 1
 END
 /main/other/d211
-Label: PTP Property 0xd211
+Label: MediaStatus
 Readonly: 1
 Type: RANGE
 Current: 771
@@ -1244,49 +1207,112 @@ END
 Label: Exposure Time
 Readonly: 0
 Type: MENU
-Current: 4921
+Current: 64000030
+Choice: 0 122
+Choice: 1 153
+Choice: 2 193
+Choice: 3 244
+Choice: 4 307
+Choice: 5 387
+Choice: 6 488
+Choice: 7 615
+Choice: 8 775
+Choice: 9 976
+Choice: 10 1230
+Choice: 11 1550
+Choice: 12 1953
+Choice: 13 2460
+Choice: 14 3100
+Choice: 15 3906
+Choice: 16 4921
+Choice: 17 6200
+Choice: 18 7812
+Choice: 19 9843
+Choice: 20 12401
+Choice: 21 15625
+Choice: 22 19686
+Choice: 23 24803
+Choice: 24 31250
+Choice: 25 39372
+Choice: 26 49606
+Choice: 27 62500
+Choice: 28 78745
+Choice: 29 99212
+Choice: 30 125000
+Choice: 31 157490
+Choice: 32 198425
+Choice: 33 250000
+Choice: 34 314980
+Choice: 35 396850
+Choice: 36 500000
+Choice: 37 629960
+Choice: 38 793700
+Choice: 39 1000000
+Choice: 40 1259921
+Choice: 41 1587401
+Choice: 42 2000000
+Choice: 43 2519842
+Choice: 44 3174802
+Choice: 45 4000000
+Choice: 46 5039684
+Choice: 47 6349604
+Choice: 48 8000000
+Choice: 49 10079368
+Choice: 50 12699208
+Choice: 51 16000000
+Choice: 52 20158736
+Choice: 53 25398416
+Choice: 54 32000000
+Choice: 55 40317473
+Choice: 56 50796833
+Choice: 57 64000000
+Choice: 58 64000030
+Choice: 59 64000060
+Choice: 60 64000090
+Choice: 61 64000120
+Choice: 62 -1
 END
 /main/other/5007
 Label: F-Number
 Readonly: 0
 Type: MENU
-Current: 500
+Current: 200
+Choice: 0 120
+Choice: 1 140
+Choice: 2 160
+Choice: 3 180
+Choice: 4 200
+Choice: 5 220
+Choice: 6 250
+Choice: 7 280
+Choice: 8 320
+Choice: 9 360
+Choice: 10 400
+Choice: 11 450
+Choice: 12 500
+Choice: 13 560
+Choice: 14 640
+Choice: 15 710
+Choice: 16 800
+Choice: 17 900
+Choice: 18 1000
+Choice: 19 1100
+Choice: 20 1300
+Choice: 21 1400
+Choice: 22 1600
+Choice: 23 1800
+Choice: 24 2000
+Choice: 25 2200
 END
 /main/other/d38c
-Label: PTP Property 0xd38c
+Label: LensZoomPosCaps
 Readonly: 0
 Type: MENU
 Current: 1
 Choice: 0 1
-Choice: 1 2
-Choice: 2 3
-Choice: 3 4
-Choice: 4 5
-Choice: 5 6
-Choice: 6 7
-Choice: 7 8
-Choice: 8 9
-Choice: 9 10
-Choice: 10 11
-Choice: 11 12
-Choice: 12 13
-Choice: 13 14
-Choice: 14 15
-Choice: 15 16
-Choice: 16 17
-Choice: 17 18
-Choice: 18 19
-Choice: 19 20
-Choice: 20 21
-Choice: 21 22
-Choice: 22 23
-Choice: 23 24
-Choice: 24 25
-Choice: 25 26
-Choice: 26 27
 END
 /main/other/d171
-Label: PTP Property 0xd171
+Label: FocusPosition
 Readonly: 0
 Type: MENU
 Current: 0
@@ -1301,7 +1327,7 @@ END
 Label: PTP Property 0xd21c
 Readonly: 0
 Type: MENU
-Current: 4
+Current: 3
 Choice: 0 0
 Choice: 1 1
 Choice: 2 2
@@ -1316,8 +1342,82 @@ Choice: 10 10
 Choice: 11 11
 END
 /main/other/d170
-Label: PTP Property 0xd170
+Label: LensZoomPos
 Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d174
+Label: LiveViewImageSize
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d173
+Label: LiveViewImageQuality
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+END
+/main/other/d230
+Label: ForceMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d020
+Label: FaceDetectionMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d022
+Label: RawCompression
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d023
+Label: GrainEffect
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d024
+Label: SetEyeAFMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d025
+Label: FocusPoints
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 3
+Choice: 1 4
+END
+/main/other/d026
+Label: MFAssistMode
+Readonly: 0
 Type: MENU
 Current: 1
 Choice: 0 1
@@ -1332,241 +1432,843 @@ Choice: 8 9
 Choice: 9 10
 Choice: 10 11
 Choice: 11 12
-Choice: 12 13
-Choice: 13 14
-Choice: 14 15
-Choice: 15 16
-Choice: 16 17
-Choice: 17 18
-Choice: 18 19
-Choice: 19 20
-Choice: 20 21
-Choice: 21 22
-Choice: 22 23
-Choice: 23 24
-Choice: 24 25
-Choice: 25 26
-Choice: 26 27
 END
- Device info:
- Manufacturer: FUJIFILM
-   Model: X-T3
-   device version: 3.21
-   serial number: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
- Vendor extension ID: 0x0000000e
- Vendor extension version: 100
- Vendor extension description: fujifilm.co.jp: 1.0; 
- Functional Mode: 0x0000
- PTP Standard Version: 100
- Supported operations:
-   0x1001 (Get device info)
-   0x1002 (Open session)
-   0x1003 (Close session)
-   0x1004 (Get storage IDs)
-   0x1005 (Get storage info)
-   0x1006 (Get number of objects)
-   0x1007 (Get object handles)
-   0x1008 (Get object info)
-   0x1009 (Get object)
-   0x100a (Get thumbnail)
-   0x100b (Delete object)
-   0x100e (Initiate capture)
-   0x100f (Format storage)
-   0x1014 (Get device property description)
-   0x1015 (Get device property value)
-   0x1016 (Set device property value)
-   0x1017 (Reset device property value)
-   0x1018 (Terminate open capture)
-   0x101b (Get partial object)
-   0x101c (Initiate open capture)
-   0x900c (Unknown VendorExtensionID)
-   0x900d (Unknown VendorExtensionID)
-   0x901d (Unknown VendorExtensionID)
-   0x9801 (Unknown VendorExtensionID)
-   0x9802 (Unknown VendorExtensionID)
-   0x9803 (Unknown VendorExtensionID)
-   0x9805 (Unknown VendorExtensionID)
- Events Supported:
-   0x4002 (ObjectAdded)
-   0x4003 (ObjectRemoved)
-   0x4004 (StoreAdded)
-   0x4005 (StoreRemoved)
-   0x400d (CaptureComplete)
-   0xc006 (Unknown Event)
- Device Properties Supported:
-   0x5001 (Battery Level)
-   0x5003 (Image Size)
-   0x5005 (White Balance)
-   0x500a (Focus Mode)
-   0x500b (Exposure Metering Mode)
-   0x500c (Flash Mode)
-   0x500e (Exposure Program Mode)
-   0x500f (Exposure Index (film speed ISO))
-   0x5011 (Date & Time)
-   0x5012 (Pre-Capture Delay)
-   0x5015 (Sharpness)
-   0x5018 (Burst Number)
-   0x5019 (Burst Interval)
-   0x501c (Focus Metering Mode)
-   0xd001 (Film Simulation)
-   0xd002 (Unknown DPC code)
-   0xd003 (Unknown DPC code)
-   0xd004 (Unknown DPC code)
-   0xd005 (Unknown DPC code)
-   0xd007 (Unknown DPC code)
-   0xd008 (Unknown DPC code)
-   0xd009 (Unknown DPC code)
-   0xd00a (Unknown DPC code)
-   0xd00b (Unknown DPC code)
-   0xd00c (Unknown DPC code)
-   0xd00d (Unknown DPC code)
-   0xd00e (Unknown DPC code)
-   0xd00f (Unknown DPC code)
-   0xd010 (Unknown DPC code)
-   0xd011 (Unknown DPC code)
-   0xd012 (Unknown DPC code)
-   0xd013 (Unknown DPC code)
-   0xd014 (Unknown DPC code)
-   0xd015 (Unknown DPC code)
-   0xd016 (Unknown DPC code)
-   0xd017 (Color Temperature)
-   0xd018 (Quality)
-   0xd019 (RecMode)
-   0xd01a (Unknown DPC code)
-   0xd01b (Unknown DPC code)
-   0xd01c (Unknown DPC code)
-   0xd100 (Unknown DPC code)
-   0xd101 (Unknown DPC code)
-   0xd102 (Unknown DPC code)
-   0xd103 (Unknown DPC code)
-   0xd104 (Unknown DPC code)
-   0xd105 (Unknown DPC code)
-   0xd106 (Unknown DPC code)
-   0xd107 (Unknown DPC code)
-   0xd108 (Unknown DPC code)
-   0xd109 (Unknown DPC code)
-   0xd10a (Unknown DPC code)
-   0xd10b (Unknown DPC code)
-   0xd10c (Unknown DPC code)
-   0xd10d (Unknown DPC code)
-   0xd10e (Unknown DPC code)
-   0xd10f (Unknown DPC code)
-   0xd110 (Unknown DPC code)
-   0xd111 (Unknown DPC code)
-   0xd112 (Unknown DPC code)
-   0xd113 (Unknown DPC code)
-   0xd114 (Unknown DPC code)
-   0xd115 (Unknown DPC code)
-   0xd116 (Unknown DPC code)
-   0xd117 (Unknown DPC code)
-   0xd118 (Unknown DPC code)
-   0xd119 (Unknown DPC code)
-   0xd11a (Unknown DPC code)
-   0xd11b (Unknown DPC code)
-   0xd11c (Unknown DPC code)
-   0xd11d (Unknown DPC code)
-   0xd11e (Unknown DPC code)
-   0xd11f (Unknown DPC code)
-   0xd120 (Unknown DPC code)
-   0xd121 (Unknown DPC code)
-   0xd122 (Unknown DPC code)
-   0xd123 (Unknown DPC code)
-   0xd124 (Unknown DPC code)
-   0xd125 (Unknown DPC code)
-   0xd126 (Unknown DPC code)
-   0xd127 (Unknown DPC code)
-   0xd128 (Unknown DPC code)
-   0xd129 (Unknown DPC code)
-   0xd12a (Unknown DPC code)
-   0xd12b (Unknown DPC code)
-   0xd12c (Unknown DPC code)
-   0xd12d (Unknown DPC code)
-   0xd12e (Unknown DPC code)
-   0xd12f (Unknown DPC code)
-   0xd130 (Unknown DPC code)
-   0xd131 (Unknown DPC code)
-   0xd132 (Unknown DPC code)
-   0xd133 (Unknown DPC code)
-   0xd134 (Unknown DPC code)
-   0xd135 (Unknown DPC code)
-   0xd136 (Unknown DPC code)
-   0xd137 (Unknown DPC code)
-   0xd138 (Unknown DPC code)
-   0xd139 (Unknown DPC code)
-   0xd13a (Unknown DPC code)
-   0xd13b (Unknown DPC code)
-   0xd13c (Unknown DPC code)
-   0xd13d (Unknown DPC code)
-   0xd13e (Unknown DPC code)
-   0xd13f (Unknown DPC code)
-   0xd140 (Unknown DPC code)
-   0xd141 (Unknown DPC code)
-   0xd142 (Unknown DPC code)
-   0xd143 (Unknown DPC code)
-   0xd144 (Unknown DPC code)
-   0xd145 (Unknown DPC code)
-   0xd146 (Unknown DPC code)
-   0xd147 (Unknown DPC code)
-   0xd148 (Unknown DPC code)
-   0xd149 (Unknown DPC code)
-   0xd14a (Unknown DPC code)
-   0xd14b (Unknown DPC code)
-   0xd14c (Unknown DPC code)
-   0xd14d (Unknown DPC code)
-   0xd14e (Unknown DPC code)
-   0xd14f (Unknown DPC code)
-   0xd150 (Unknown DPC code)
-   0xd151 (Unknown DPC code)
-   0xd152 (Unknown DPC code)
-   0xd153 (Unknown DPC code)
-   0xd154 (Unknown DPC code)
-   0xd155 (Unknown DPC code)
-   0xd157 (Unknown DPC code)
-   0xd158 (Unknown DPC code)
-   0xd159 (Unknown DPC code)
-   0xd15a (Unknown DPC code)
-   0xd15b (Unknown DPC code)
-   0xd15c (Unknown DPC code)
-   0xd15d (Unknown DPC code)
-   0xd15e (Unknown DPC code)
-   0xd15f (Unknown DPC code)
-   0xd160 (Unknown DPC code)
-   0xd161 (Unknown DPC code)
-   0xd200 (Unknown DPC code)
-   0xd201 (ReleaseMode)
-   0xd202 (Unknown DPC code)
-   0xd203 (Unknown DPC code)
-   0xd204 (Unknown DPC code)
-   0xd205 (Unknown DPC code)
-   0xd206 (FocusAreas)
-   0xd207 (Unknown DPC code)
-   0xd208 (Unknown DPC code)
-   0xd209 (FocusLock)
-   0xd20a (Unknown DPC code)
-   0xd20b (Unknown DPC code)
-   0xd20c (Unknown DPC code)
-   0xd20d (Unknown DPC code)
-   0xd20e (Unknown DPC code)
-   0xd20f (Unknown DPC code)
-   0xd210 (Unknown DPC code)
-   0xd211 (Unknown DPC code)
-   0xd212 (CurrentState)
-   0xd213 (AELock)
-   0xd214 (Unknown DPC code)
-   0xd215 (Copyright)
-   0xd216 (Unknown DPC code)
-   0xd217 (Unknown DPC code)
-   0xd218 (Aperture)
-   0xd219 (ShutterSpeed)
-   0xd21a (Unknown DPC code)
-   0xd21b (DeviceError)
-   0xd406 (Unknown DPC code)
-   0xd407 (Unknown DPC code)
-   0x500d (Exposure Time)
-   0x5007 (F-Number)
-   0xd38c (Unknown DPC code)
-   0xd171 (Unknown DPC code)
-   0xd21c (Unknown DPC code)
-   0xd347 (Focus Point)
-   0xd170 (Unknown DPC code)
-   0xd242 (BatteryLevel)
+/main/other/d027
+Label: InterlockAEAFArea
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d029
+Label: Shadowing
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d16f
+Label: CropMode
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d02f
+Label: TNumber
+Readonly: 0
+Type: MENU
+Current: 0
+END
+/main/other/d320
+Label: HighLightTone
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -20
+Top: 40
+Step: 10
+END
+/main/other/d321
+Label: ShadowTone
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -20
+Top: 40
+Step: 10
+END
+/main/other/d322
+Label: LongExposureNR
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d323
+Label: FullTimeManualFocus
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d346
+Label: LensISSwitch
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d34a
+Label: InstantAFMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d34b
+Label: PreAFMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d34d
+Label: LMOMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d351
+Label: ISMode
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d35e
+Label: FocusCheckMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d173
+Label: LiveViewImageQuality
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+END
+/main/other/d365
+Label: FileNamePrefix1
+Readonly: 0
+Type: TEXT
+Current: DSCF
+END
+/main/other/d366
+Label: FileNamePrefix2
+Readonly: 0
+Type: TEXT
+Current: DSF
+END
+/main/other/d310
+Label: TotalShotCount
+Readonly: 1
+Type: TEXT
+Current: 886767616
+END
+/main/other/d359
+Label: ExposurePreview
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d375
+Label: FrameGuideGridInfo1
+Readonly: 0
+Type: TEXT
+Current: 0,0,0,0,850,0,0,0,0,850,0,0,0,0,
+END
+/main/other/d376
+Label: FrameGuideGridInfo2
+Readonly: 0
+Type: TEXT
+Current: 0,0,0,0,850,0,0,0,0,850,0,0,0,0,
+END
+/main/other/d33f
+Label: ViewMode1
+Readonly: 0
+Type: MENU
+Current: 5
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d364
+Label: CustomAutoPowerOff
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 255
+Step: 1
+END
+/main/other/d34e
+Label: LockButtonMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d02e
+Label: WideDynamicRange
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 32768
+END
+/main/other/d36d
+Label: LensNameAndSerial
+Readonly: 1
+Type: TEXT
+Current: LX201B,XF18mmF2 R,XXXXXXXX
+END
+/main/other/d38a
+Label: LensUnknownData
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d36a
+Label: PTP Property 0xd36a
+Readonly: 1
+Type: RANGE
+Current: 12
+Bottom: 0
+Top: 1.67772e+07
+Step: 1
+END
+/main/other/d36b
+Label: PTP Property 0xd36b
+Readonly: 1
+Type: TEXT
+Current: 100,0,0
+END
+/main/other/d36f
+Label: PTP Property 0xd36f
+Readonly: 0
+Type: TEXT
+Current: 65536
+END
+/main/other/d370
+Label: PTP Property 0xd370
+Readonly: 0
+Type: TEXT
+Current: 65536
+END
+/main/other/d222
+Label: SensitivityFineTune1
+Readonly: 0
+Type: RANGE
+Current: 8192
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/d223
+Label: SensitivityFineTune2
+Readonly: 0
+Type: RANGE
+Current: 8192
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/d38c
+Label: LensZoomPosCaps
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d38d
+Label: LensFNumberList
+Readonly: 1
+Type: TEXT
+Current: 200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600
+END
+/main/other/d38e
+Label: LensFocalLengthList
+Readonly: 1
+Type: TEXT
+Current: 1800,2740
+END
+/main/other/d17b
+Label: PTP Property 0xd17b
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+Device info:
+Manufacturer: FUJIFILM
+  Model: X-T3
+  device version: 3.21
+  serial number: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+Vendor extension ID: 0x0000000e
+Vendor extension version: 100
+Vendor extension description: fujifilm.co.jp: 1.0; 
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x1017 (Reset device property value)
+  0x1018 (Terminate open capture)
+  0x101b (Get partial object)
+  0x101c (Initiate open capture)
+  0x900c (Unknown VendorExtensionID)
+  0x900d (Unknown VendorExtensionID)
+  0x901d (Unknown VendorExtensionID)
+  0x9801 (Unknown VendorExtensionID)
+  0x9802 (Unknown VendorExtensionID)
+  0x9803 (Unknown VendorExtensionID)
+  0x9805 (Unknown VendorExtensionID)
+Events Supported:
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x400d (CaptureComplete)
+  0xc006 (Unknown Event)
+Device Properties Supported:
+  0x5001 (Battery Level)
+  0x5003 (Image Size)
+  0x5005 (White Balance)
+  0x500a (Focus Mode)
+  0x500b (Exposure Metering Mode)
+  0x500c (Flash Mode)
+  0x500e (Exposure Program Mode)
+  0x500f (Exposure Index (film speed ISO))
+  0x5011 (Date & Time)
+  0x5012 (Pre-Capture Delay)
+  0x5015 (Sharpness)
+  0x5018 (Burst Number)
+  0x5019 (Burst Interval)
+  0x501c (Focus Metering Mode)
+  0xd001 (Film Simulation)
+  0xd002 (FilmSimulationTune)
+  0xd003 (Unknown DPC code)
+  0xd004 (Unknown DPC code)
+  0xd005 (Unknown DPC code)
+  0xd007 (DRangeMode)
+  0xd008 (Unknown DPC code)
+  0xd009 (Unknown DPC code)
+  0xd00a (ColorSpace)
+  0xd00b (WhitebalanceTune1)
+  0xd00c (WhitebalanceTune2)
+  0xd00d (Unknown DPC code)
+  0xd00e (Unknown DPC code)
+  0xd00f (Unknown DPC code)
+  0xd010 (Unknown DPC code)
+  0xd011 (Unknown DPC code)
+  0xd012 (Unknown DPC code)
+  0xd013 (Unknown DPC code)
+  0xd014 (Unknown DPC code)
+  0xd015 (Unknown DPC code)
+  0xd016 (Unknown DPC code)
+  0xd017 (Color Temperature)
+  0xd018 (Quality)
+  0xd019 (RecMode)
+  0xd01a (LiveViewBrightness)
+  0xd01b (ThroughImageZoom)
+  0xd01c (NoiseReduction)
+  0xd100 (Unknown DPC code)
+  0xd101 (SerialMode)
+  0xd102 (ExposureDelay)
+  0xd103 (PreviewTime)
+  0xd104 (BlackImageTone)
+  0xd105 (Illumination)
+  0xd106 (FrameGuideMode)
+  0xd107 (ViewfinderWarning)
+  0xd108 (AutoImageRotation)
+  0xd109 (DetectImageRotation)
+  0xd10a (ShutterPriorityMode1)
+  0xd10b (ShutterPriorityMode2)
+  0xd10c (Unknown DPC code)
+  0xd10d (Unknown DPC code)
+  0xd10e (Unknown DPC code)
+  0xd10f (Unknown DPC code)
+  0xd110 (Unknown DPC code)
+  0xd111 (Unknown DPC code)
+  0xd112 (AFIlluminator)
+  0xd113 (Unknown DPC code)
+  0xd114 (Unknown DPC code)
+  0xd115 (Unknown DPC code)
+  0xd116 (Unknown DPC code)
+  0xd117 (Unknown DPC code)
+  0xd118 (Unknown DPC code)
+  0xd119 (Unknown DPC code)
+  0xd11a (Unknown DPC code)
+  0xd11b (Unknown DPC code)
+  0xd11c (PhotometryLevel1)
+  0xd11d (PhotometryLevel2)
+  0xd11e (PhotometryLevel3)
+  0xd11f (FlashTuneSpeed)
+  0xd120 (FlashShutterLimit)
+  0xd121 (BuiltinFlashMode)
+  0xd122 (FlashManualMode)
+  0xd123 (Unknown DPC code)
+  0xd124 (FlashRepeatingMode1)
+  0xd125 (FlashRepeatingMode2)
+  0xd126 (FlashCommanderMode1)
+  0xd127 (FlashCommanderMode2)
+  0xd128 (FlashCommanderMode3)
+  0xd129 (FlashCommanderMode4)
+  0xd12a (FlashCommanderMode5)
+  0xd12b (FlashCommanderMode6)
+  0xd12c (FlashCommanderMode7)
+  0xd12d (ModelingFlash)
+  0xd12e (Unknown DPC code)
+  0xd12f (Unknown DPC code)
+  0xd130 (Unknown DPC code)
+  0xd131 (BKTSelection)
+  0xd132 (AEAFLockButton)
+  0xd133 (CenterButton)
+  0xd134 (MultiSelectorButton)
+  0xd135 (Unknown DPC code)
+  0xd136 (FunctionLock)
+  0xd137 (Unknown DPC code)
+  0xd138 (Unknown DPC code)
+  0xd139 (Unknown DPC code)
+  0xd13a (Unknown DPC code)
+  0xd13b (Unknown DPC code)
+  0xd13c (Unknown DPC code)
+  0xd13d (Unknown DPC code)
+  0xd13e (Unknown DPC code)
+  0xd13f (Unknown DPC code)
+  0xd140 (Unknown DPC code)
+  0xd141 (Unknown DPC code)
+  0xd142 (Unknown DPC code)
+  0xd143 (Unknown DPC code)
+  0xd144 (Unknown DPC code)
+  0xd145 (Password)
+  0xd146 (ChangePassword)
+  0xd147 (Unknown DPC code)
+  0xd148 (Unknown DPC code)
+  0xd149 (Unknown DPC code)
+  0xd14a (Unknown DPC code)
+  0xd14b (ButtonsAndDials)
+  0xd14c (Unknown DPC code)
+  0xd14d (Unknown DPC code)
+  0xd14e (MBD200Batteries)
+  0xd14f (AFOnForMBD200Batteries)
+  0xd150 (Unknown DPC code)
+  0xd151 (Unknown DPC code)
+  0xd152 (Unknown DPC code)
+  0xd153 (Unknown DPC code)
+  0xd154 (ShotCount)
+  0xd155 (ShutterExchangeCount)
+  0xd157 (WorldClock)
+  0xd158 (TimeDifference1)
+  0xd159 (TimeDifference2)
+  0xd15a (Language)
+  0xd15b (FrameNumberSequence)
+  0xd15c (VideoMode)
+  0xd15d (SetUSBMode)
+  0xd15e (Unknown DPC code)
+  0xd15f (Unknown DPC code)
+  0xd160 (Unknown DPC code)
+  0xd161 (CommentWriteSetting)
+  0xd200 (LightTune)
+  0xd201 (ReleaseMode)
+  0xd202 (BKTFrame)
+  0xd203 (Unknown DPC code)
+  0xd204 (Unknown DPC code)
+  0xd205 (ProgramShift)
+  0xd206 (FocusAreas)
+  0xd207 (PriorityMode)
+  0xd208 (Unknown DPC code)
+  0xd209 (AFStatus)
+  0xd20a (Unknown DPC code)
+  0xd20b (DeviceName)
+  0xd20c (MediaRecord)
+  0xd20d (Unknown DPC code)
+  0xd20e (FreeSDRAMImages)
+  0xd20f (Unknown DPC code)
+  0xd210 (Unknown DPC code)
+  0xd211 (MediaStatus)
+  0xd212 (CurrentState)
+  0xd213 (AELock)
+  0xd214 (Unknown DPC code)
+  0xd215 (Copyright)
+  0xd216 (Unknown DPC code)
+  0xd217 (Unknown DPC code)
+  0xd218 (Aperture)
+  0xd219 (ShutterSpeed)
+  0xd21a (Unknown DPC code)
+  0xd21b (DeviceError)
+  0xd406 (Unknown DPC code)
+  0xd407 (Unknown DPC code)
+  0x500d (Exposure Time)
+  0x5007 (F-Number)
+  0xd38c (LensZoomPosCaps)
+  0xd171 (FocusPosition)
+  0xd21c (Unknown DPC code)
+  0xd347 (Focus Point)
+  0xd170 (LensZoomPos)
+  0xd242 (BatteryLevel)
+  0xd174 (LiveViewImageSize)
+  0xd168 (VideoOutOnOff)
+  0xd173 (LiveViewImageQuality)
+  0xd230 (ForceMode)
+  0xd16e (Unknown DPC code)
+  0xd372 (FocusArea1)
+  0xd020 (FaceDetectionMode)
+  0xd022 (RawCompression)
+  0xd023 (GrainEffect)
+  0xd024 (SetEyeAFMode)
+  0xd025 (FocusPoints)
+  0xd026 (MFAssistMode)
+  0xd027 (InterlockAEAFArea)
+  0xd029 (Shadowing)
+  0xd16f (CropMode)
+  0xd02f (TNumber)
+  0xd395 (FocusArea4)
+  0xd320 (HighLightTone)
+  0xd321 (ShadowTone)
+  0xd322 (LongExposureNR)
+  0xd323 (FullTimeManualFocus)
+  0xd346 (LensISSwitch)
+  0xd34a (InstantAFMode)
+  0xd34b (PreAFMode)
+  0xd34d (LMOMode)
+  0xd351 (ISMode)
+  0xd35e (FocusCheckMode)
+  0xd173 (LiveViewImageQuality)
+  0xd365 (FileNamePrefix1)
+  0xd366 (FileNamePrefix2)
+  0xd374 (FocusArea3)
+  0xd310 (TotalShotCount)
+  0xd359 (ExposurePreview)
+  0xd375 (FrameGuideGridInfo1)
+  0xd376 (FrameGuideGridInfo2)
+  0xd36e (CustomDispInfo)
+  0xd33f (ViewMode1)
+  0xd364 (CustomAutoPowerOff)
+  0xd34e (LockButtonMode)
+  0xd02e (WideDynamicRange)
+  0xd36d (LensNameAndSerial)
+  0xd38a (LensUnknownData)
+  0xd36a (Unknown DPC code)
+  0xd36b (Unknown DPC code)
+  0xd36f (Unknown DPC code)
+  0xd370 (Unknown DPC code)
+  0xd222 (SensitivityFineTune1)
+  0xd223 (SensitivityFineTune2)
+  0xd38c (LensZoomPosCaps)
+  0xd38d (LensFNumberList)
+  0xd38e (LensFocalLengthList)
+  0xd17b (Unknown DPC code)
+Camera summary:
+Manufacturer: FUJIFILM
+Model: X-T3
+  Version: 3.21
+  Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xe (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: Defined Type JPEG Unknown(b103)
+Display Formats: Defined Type, JPEG, Unknown(b103)
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+	StorageDescription: Still
+	VolumeLabel: 1593534373734181103973330215DDA
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+store_10000002:
+	StorageDescription: Live
+	VolumeLabel: 2593534373734181103973330215DDA
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001): error 200a on query.
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'3120x2080',
+	'3120x1760',
+	'2080x2080',
+	'4416x2944',
+	'4416x2488',
+	'2944x2944',
+	'6240x4160',
+	'6240x3512',
+	'4160x4160',
+	'4992x3328',
+	'4992x2808',
+	'3328x3328'
+	] value: '6240x4160'
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,6,8,32769,32770,32771,32774,32775,32776,32777,32778] value: Automatic (2)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,32769,32770] value: 32769
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Center-spot (4)
+Flash Mode(0x500c): error 200a on query.
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,3,4,6] value: M (1)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x5) Enumeration [80,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,25600,51200,-1,-2,-3] value: ISO -3 (-3)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20201004T204200'
+Pre-Capture Delay(0x5012):(readwrite) (type=0x4) Enumeration [10000,2000,0] value: 0.0s (0)
+Sharpness(0x5015):(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
+Burst Number(0x5018): error 200a on query.
+Burst Interval(0x5019): error 200a on query.
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [32769,32770,32771] value: 32769
+Film Simulation(0xd001):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] value: 1
+FilmSimulationTune(0xd002): error 200a on query.
+Property 0xd003: error 200a on query.
+Property 0xd004: error 200a on query.
+Property 0xd005: error 200a on query.
+DRangeMode(0xd007):(readwrite) (type=0x4) Enumeration [65535,100,200,400] value: 100
+ColorMode(0xd008):(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
+Property 0xd009: error 200a on query.
+ColorSpace(0xd00a):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+WhitebalanceTune1(0xd00b):(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+WhitebalanceTune2(0xd00c):(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+Property 0xd00d: error 200a on query.
+Property 0xd00e: error 200a on query.
+Property 0xd00f: error 200a on query.
+Property 0xd010: error 200a on query.
+Property 0xd011: error 200a on query.
+Property 0xd012: error 200a on query.
+Property 0xd013: error 200a on query.
+Property 0xd014: error 200a on query.
+Property 0xd015: error 200a on query.
+Property 0xd016: error 200a on query.
+Color Temperature(0xd017):(readwrite) (type=0x4) Enumeration [2500,2550,2650,2700,2800,2850,2950,3000,3100,3200,3300,3400,3600,3700,3800,4000,4200,4300,4500,4800,5000,5300,5600,5900,6300,6700,7100,7700,8300,9100,10000] value: 10000
+Quality(0xd018):(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 2
+RecMode(0xd019): error 200a on query.
+LiveViewBrightness(0xd01a): error 200a on query.
+ThroughImageZoom(0xd01b):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+NoiseReduction(0xd01c):(readwrite) (type=0x4) Enumeration [0,4096,8192,12288,16384,20480,24576,28672,32768] value: 8192
+Comment(0xd100):(readwrite) (type=0xffff) ''
+SerialMode(0xd101): error 200a on query.
+ExposureDelay(0xd102): error 200a on query.
+PreviewTime(0xd103): error 200a on query.
+BlackImageTone(0xd104):(readwrite) (type=0x3) Range [-90 - 90, step 10] value: 0
+Illumination(0xd105): error 200a on query.
+FrameGuideMode(0xd106):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+ViewfinderWarning(0xd107): error 200a on query.
+AutoImageRotation(0xd108): error 200a on query.
+DetectImageRotation(0xd109): error 200a on query.
+ShutterPriorityMode1(0xd10a):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+ShutterPriorityMode2(0xd10b):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd10c: error 200a on query.
+Property 0xd10d: error 200a on query.
+Property 0xd10e: error 200a on query.
+Property 0xd10f: error 200a on query.
+Property 0xd110: error 200a on query.
+Property 0xd111: error 200a on query.
+AFIlluminator(0xd112):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Beep(0xd113): error 200a on query.
+AELock(0xd114): error 200a on query.
+ISOAutoSetting1(0xd115): error 200a on query.
+ISOAutoSetting2(0xd116): error 200a on query.
+ISOAutoSetting3(0xd117): error 200a on query.
+ExposureStep(0xd118): error 200a on query.
+CompensationStep(0xd119): error 200a on query.
+ExposureSimpleSet(0xd11a): error 200a on query.
+CenterPhotometryRange(0xd11b): error 200a on query.
+PhotometryLevel1(0xd11c): error 200a on query.
+PhotometryLevel2(0xd11d): error 200a on query.
+PhotometryLevel3(0xd11e): error 200a on query.
+FlashTuneSpeed(0xd11f): error 200a on query.
+FlashShutterLimit(0xd120): error 200a on query.
+BuiltinFlashMode(0xd121): error 200a on query.
+FlashManualMode(0xd122): error 200a on query.
+FlashRepeatingMode1(0xd123): error 200a on query.
+FlashRepeatingMode2(0xd124): error 200a on query.
+FlashRepeatingMode3(0xd125): error 200a on query.
+FlashCommanderMode1(0xd126): error 200a on query.
+FlashCommanderMode2(0xd127): error 200a on query.
+FlashCommanderMode3(0xd128): error 200a on query.
+FlashCommanderMode4(0xd129): error 200a on query.
+FlashCommanderMode5(0xd12a): error 200a on query.
+FlashCommanderMode6(0xd12b): error 200a on query.
+FlashCommanderMode7(0xd12c): error 200a on query.
+ModelingFlash(0xd12d): error 200a on query.
+Property 0xd12e: error 200a on query.
+BKTChange(0xd12f): error 200a on query.
+BKTOrder(0xd130): error 200a on query.
+BKTSelection(0xd131): error 200a on query.
+AEAFLockButton(0xd132): error 200a on query.
+CenterButton(0xd133): error 200a on query.
+MultiSelectorButton(0xd134): error 200a on query.
+Property 0xd135: error 200a on query.
+FunctionLock(0xd136):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd137: error 200a on query.
+Property 0xd138: error 200a on query.
+Property 0xd139: error 200a on query.
+Property 0xd13a: error 200a on query.
+Property 0xd13b: error 200a on query.
+Property 0xd13c: error 200a on query.
+Property 0xd13d: error 200a on query.
+Property 0xd13e: error 200a on query.
+Property 0xd13f: error 200a on query.
+Property 0xd140: error 200a on query.
+Property 0xd141: error 200a on query.
+Property 0xd142: error 200a on query.
+Property 0xd143: error 200a on query.
+Property 0xd144: error 200a on query.
+Password(0xd145):(readwrite) (type=0xffff) '0000'
+ChangePassword(0xd146): error 200a on query.
+CommandDialSetting1(0xd147): error 200a on query.
+CommandDialSetting2(0xd148): error 200a on query.
+CommandDialSetting3(0xd149): error 200a on query.
+CommandDialSetting4(0xd14a): error 200a on query.
+ButtonsAndDials(0xd14b): error 200a on query.
+NonCPULensData(0xd14c): error 200a on query.
+Property 0xd14d: error 200a on query.
+MBD200Batteries(0xd14e): error 200a on query.
+AFOnForMBD200Batteries(0xd14f): error 200a on query.
+Property 0xd150: error 200a on query.
+Property 0xd151: error 200a on query.
+Property 0xd152: error 200a on query.
+FirmwareVersion(0xd153):(read only) (type=0x4) 801
+ShotCount(0xd154):(read only) (type=0x6) 886767616
+ShutterExchangeCount(0xd155):(read only) (type=0x6) 0
+WorldClock(0xd157): error 200a on query.
+TimeDifference1(0xd158): error 200a on query.
+TimeDifference2(0xd159): error 200a on query.
+Language(0xd15a): error 200a on query.
+FrameNumberSequence(0xd15b): error 200a on query.
+VideoMode(0xd15c): error 200a on query.
+SetUSBMode(0xd15d): error 200a on query.
+Property 0xd15e: error 200a on query.
+Property 0xd15f: error 200a on query.
+Property 0xd160: error 200a on query.
+CommentWriteSetting(0xd161): error 200a on query.
+LightTune(0xd200): error 200a on query.
+ReleaseMode(0xd201):(readwrite) (type=0x4) Enumeration [4,8] value: 4
+BKTFrame1(0xd202): error 200a on query.
+BKTFrame2(0xd203): error 200a on query.
+BKTStep(0xd204): error 200a on query.
+ProgramShift(0xd205): error 200a on query.
+FocusAreas(0xd206): error 200a on query.
+PriorityMode(0xd207):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd208:(readwrite) (type=0x4) Enumeration [260,512,4,772,1280,12,40960,6,36864,2,37120,1,37376,64,37632,5,2052,128] value: 772
+AFStatus(0xd209):(read only) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd20a: error 200a on query.
+DeviceName(0xd20b):(readwrite) (type=0xffff) 'gphoto'
+MediaRecord(0xd20c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+MediaCapacity(0xd20d):(read only) (type=0xffff) '0,0,0,0,0,0,0,0'
+FreeSDRAMImages(0xd20e):(read only) (type=0x4) Range [0 - 1, step 1] value: 32
+Property 0xd20f: error 200a on query.
+Property 0xd210: error 200a on query.
+MediaStatus(0xd211):(read only) (type=0x4) Range [0 - 65535, step 1] value: 771
+CurrentState(0xd212): error 201b on query.
+Property 0xd213: error 200a on query.
+Property 0xd214: error 200a on query.
+Copyright(0xd215):(readwrite) (type=0xffff) ''
+Copyright2(0xd216):(readwrite) (type=0xffff) ''
+Property 0xd217: error 200a on query.
+Aperture(0xd218): error 200a on query.
+ShutterSpeed(0xd219): error 200a on query.
+Property 0xd21a: error 200a on query.
+DeviceError(0xd21b): error 200a on query.
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd407:(read only) (type=0x6) 1
+Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [122,153,193,244,307,387,488,615,775,976,1230,1550,1953,2460,3100,3906,4921,6200,7812,9843,12401,15625,19686,24803,31250,39372,49606,62500,78745,99212,125000,157490,198425,250000,314980,396850,500000,629960,793700,1000000,1259921,1587401,2000000,2519842,3174802,4000000,5039684,6349604,8000000,10079368,12699208,16000000,20158736,25398416,32000000,40317473,50796833,64000000,64000030,64000060,64000090,64000120,4294967295] value: 6.4e+02 sec (64000030)
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [120,140,160,180,200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/2 (200)
+LensZoomPosCaps(0xd38c):(readwrite) (type=0x4) Range [1 - 1, step 1] value: 1
+FocusPosition(0xd171):(readwrite) (type=0x3) Enumeration [0,0,0,0,0,0] value: 0
+Property 0xd21c:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11] value: 3
+Focus Point(0xd347): error 201b on query.
+LensZoomPos(0xd170):(read only) (type=0x4) Range [1 - 1, step 1] value: 1
+BatteryLevel(0xd242): error 200a on query.
+LiveViewImageSize(0xd174):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+VideoOutOnOff(0xd168): error 200a on query.
+LiveViewImageQuality(0xd173):(readwrite) (type=0x4) Enumeration [1,3] value: 1
+ForceMode(0xd230):(readwrite) (type=0x4) Enumeration [1] value: 1
+Property 0xd16e: error 200a on query.
+FocusArea1(0xd372): error 201b on query.
+FaceDetectionMode(0xd020):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+RawCompression(0xd022):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+GrainEffect(0xd023):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+SetEyeAFMode(0xd024):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+FocusPoints(0xd025):(readwrite) (type=0x4) Enumeration [3,4] value: 3
+MFAssistMode(0xd026):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12] value: 1
+InterlockAEAFArea(0xd027):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Shadowing(0xd029):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+CropMode(0xd16f):(readwrite) (type=0x4) Enumeration [0,1] value: 0
+TNumber(0xd02f):(readwrite) (type=0x4) Enumeration [] value: 0
+FocusArea4(0xd395): error 201b on query.
+HighLightTone(0xd320):(readwrite) (type=0x3) Range [-20 - 40, step 10] value: 0
+ShadowTone(0xd321):(readwrite) (type=0x3) Range [-20 - 40, step 10] value: 0
+LongExposureNR(0xd322):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+FullTimeManualFocus(0xd323):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+LensISSwitch(0xd346):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+InstantAFMode(0xd34a):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+PreAFMode(0xd34b):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+LMOMode(0xd34d):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+ISMode(0xd351):(readwrite) (type=0x4) Enumeration [1,2,3] value: 3
+FocusCheckMode(0xd35e):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+LiveViewImageQuality(0xd173):(readwrite) (type=0x4) Enumeration [1,3] value: 1
+FileNamePrefix1(0xd365):(readwrite) (type=0xffff) 'DSCF'
+FileNamePrefix2(0xd366):(readwrite) (type=0xffff) 'DSF'
+FocusArea3(0xd374): error 201b on query.
+TotalShotCount(0xd310):(read only) (type=0x6) 886767616
+ExposurePreview(0xd359):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+FrameGuideGridInfo1(0xd375):(readwrite) (type=0xffff) '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+FrameGuideGridInfo2(0xd376):(readwrite) (type=0xffff) '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+CustomDispInfo(0xd36e): error 200a on query.
+ViewMode1(0xd33f):(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 5
+CustomAutoPowerOff(0xd364):(readwrite) (type=0x4) Range [0 - 255, step 1] value: 0
+LockButtonMode(0xd34e):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+WideDynamicRange(0xd02e):(readwrite) (type=0x4) Enumeration [0,1,2,32768] value: 0
+LensNameAndSerial(0xd36d):(read only) (type=0xffff) 'LX201B,XF18mmF2 R,XXXXXXXX'
+LensUnknownData(0xd38a):(read only) (type=0x4) Enumeration [1,2,3,4,5] value: 1
+BatteryInfo1(0xd36a):(read only) (type=0x6) Range [0 - 16777215, step 1] value: 12
+BatteryInfo2(0xd36b):(read only) (type=0xffff) '100,0,0'
+FunctionLockCategory1(0xd36f):(readwrite) (type=0x6) 65536
+FunctionLockCategory2(0xd370):(readwrite) (type=0x6) 65536
+SensitivityFineTune1(0xd222):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 8192
+SensitivityFineTune2(0xd223):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 8192
+LensZoomPosCaps(0xd38c):(readwrite) (type=0x4) Range [1 - 1, step 1] value: 1
+LensFNumberList(0xd38d):(read only) (type=0xffff) '200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600'
+LensFocalLengthList(0xd38e):(read only) (type=0xffff) '1800,2740'
+Property 0xd17b:(readwrite) (type=0x4) Enumeration [1] value: 1
+

@@ -9265,6 +9265,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Flash Charged"),          "flashcharged",     PTP_DPC_NIKON_FlashCharged,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("Lens Name"),              "lensname",         PTP_DPC_NIKON_LensID,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LensID,              _put_None },
 	{ N_("Lens Name"),              "lensname",         PTP_DPC_CANON_EOS_LensName,             PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
+	{ N_("Lens Name"),              "lensname",         PTP_DPC_FUJI_LensNameAndSerial,         PTP_VENDOR_FUJI,    PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Serial Number"),          "eosserialnumber",  PTP_DPC_CANON_EOS_SerialNumber,         PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Shutter Counter"),        "shuttercounter",   PTP_DPC_CANON_EOS_ShutterCounter,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Shutter Counter"),        "shuttercounter",   PTP_DPC_FUJI_TotalShotCount,            PTP_VENDOR_FUJI,    PTP_DTC_UINT32, _get_Fuji_Totalcount,           _put_None },
