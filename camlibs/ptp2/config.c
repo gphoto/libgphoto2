@@ -2685,6 +2685,59 @@ _put_Olympus_OMD_Bulb(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Fuji_Bulb(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Fuji_Bulb(CONFIG_PUT_ARGS)
+{
+	PTPParams		*params = &(camera->pl->params);
+	int			val;
+	GPContext		*context = ((PTPData *) params->data)->context;
+	PTPPropertyValue	pval;
+
+	CR (gp_widget_get_value(widget, &val));
+	if (val) {
+		/* Focusing first ... */
+		pval.u16 = 0x0200;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+		C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+		/* poll camera until it is ready */
+		pval.u16 = 0x0001;
+		while (pval.u16 == 0x0001) {
+			C_PTP (ptp_getdevicepropvalue (params, 0xd209, &pval, PTP_DTC_UINT16));
+			GP_LOG_D ("XXX Ready to shoot? %X", pval.u16);
+		}
+
+		/* 2 - means OK apparently, 3 - means failed and initiatecapture will get busy. */
+		if (pval.u16 == 3) { /* reported on out of focus */
+			gp_context_error (context, _("Fuji Capture failed: Perhaps no auto-focus?"));
+			return GP_ERROR;
+		}
+
+		/* now start bulb capture */
+		pval.u16 = 0x0500;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+
+		C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	} else {
+		pval.u16 = 0x000c;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+
+		C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	}
+	return GP_OK;
+}
+
+static int
 _get_Sony_ISO(CONFIG_GET_ARGS) {
 	int	i,isset=0;
 	char	buf[50];
@@ -9074,6 +9127,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_BulbStart,         _get_Canon_EOS_Bulb,            _put_Canon_EOS_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_OC_OLYMPUS_OMD_Capture,      _get_Olympus_OMD_Bulb,                _put_Olympus_OMD_Bulb },
+	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_FUJI,    PTP_OC_InitiateCapture,             _get_Fuji_Bulb,                 _put_Fuji_Bulb },
 	{ N_("UI Lock"),                        "uilock",           0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_SetUILock,         _get_Canon_EOS_UILock,          _put_Canon_EOS_UILock },
 	{ N_("Popup Flash"),                    "popupflash",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_PopupBuiltinFlash, _get_Canon_EOS_PopupFlash,      _put_Canon_EOS_PopupFlash },
 	{ N_("Drive Nikon DSLR Autofocus"),     "autofocusdrive",   0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_AfDrive,               _get_Nikon_AFDrive,             _put_Nikon_AFDrive },
