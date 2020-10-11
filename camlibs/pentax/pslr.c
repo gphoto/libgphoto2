@@ -516,6 +516,7 @@ char *get_white_balance_adjust_str( uint32_t adjust_mg, uint32_t adjust_ba ) {
     return ret;
 }
 
+static
 char *pslr_get_af_name(pslr_handle_t h, uint32_t af_point) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     if (p->model->af_point_num==11) {
