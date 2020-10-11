@@ -1,43 +1,47 @@
 libgphoto2 2.5.25.2 development version
 
 ptp2:
-* olympus omd: fixed the 65 second wait after capture.
+* Olympus OMD: fixed the 65 second wait after capture.
 * Canon EOS:
-  * better framerate for preview capture due to adjusted wait logic
+  * bugfixes
 * Nikon 
   * D3000, D3100, and D3200 "static opcode list" reduced after reports what works and what not
   * Nikon 1 series cameras had some commands listed too much.
   * Nikon 1 J5 improvements
   * "liveviewsize" can change liveviewsize
 * Sony:
-  * Modern Sony cameras seem to require a 3 second wait on startup. Seems needed on ZV-1, A7 R4, RX100 M7
+  * Modern Sony cameras seem to require a 3 second wait on startup. Seems needed on ZV-1, A7 R4, RX100 M7 so far... Unsure why.
   * correct shutterspeed, iso and exposurebias decoding for Sony A7r4 and other new models
   * some bugfixes in property settings, trying to speed it up
   * ZV-1 support, some additional startup wait hack to make it work.
-  * QX support started, can do preview... close to having capture (but not there yet) (liveviewsize)
-  * report read/write and read/only correctly
+  * partial Sony QX support added, can do preview... close to having capture (but not there yet) (also added "liveviewsize")
+  * report read/write and read/only of properties correctly
 * Fuji X:
-  * Added very experimental Wifi support.
   * stabilized normal capture code
   * added bulb capture, added autofocusdrive
-  * lots of properties listed now, only small set decoded yet.
-  * added "liveviewsize", "shuttercounter", "colortemperature"
+  * lots of properties listed now, some also decoded
+  * added "liveviewsize", "shuttercounter", "colortemperature",
+    "lensname", "devicename", "imagecomment", "filmsimulation", "colorspace"
+  * Added very experimental Wifi support.
 * synced new libmtp device ids
 * Cameras added to id list: 
-  * Sony QX30U, ZV-1, 
-  * Nikon D780
+  * Sony QX30U, ZV-1, DSC-RX100M7
+  * Nikon D780, Z5, Coolpix B700
   * Panasonic GMC-GX8
-  * Canon EOS 1D X Mark III
+  * Canon EOS 1D X Mark III, R5, R6
   * Canon PowerShot SX70HS
   * Fuji FinePix X-E1
   * Sigma fp
+
+pentax:
+* small changes synced from pktriggercord, added Pentax 645Z
 
 docupen:
 * new experimental driver, supports the docupen scanner pen.
 
 all:
 * more fuzzing related stability fixes, largely to "outdated" driver set.
-* lots of compiler warnings fixes across the codebase.
+* lots of compiler warnings fixes across the codebase
 
 translations:
 
