@@ -3492,6 +3492,9 @@
   /* https://github.com/libmtp/libmtp/issues/21 */
   { "Amazon", 0x1949, "Kindle Fire 8 HD (2nd ID)", 0x0331,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/feature-requests/300/ */
+  { "Amazon", 0x1949, "Kindle Fire 8 HD (3rd ID)", 0x0332,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/293/ */
   { "Amazon", 0x1949, "Kindle Fire Tablet 10 HD (2nd ID)", 0x03f1,
       DEVICE_FLAGS_ANDROID_BUGS },
