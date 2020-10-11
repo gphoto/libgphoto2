@@ -873,6 +873,10 @@
   { "iRiver", 0x4102, "AK70", 0x1200,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
+  /* https://bugzilla.suse.com/show_bug.cgi?id=1176588  ... */
+  { "A&K", 0x4102, "SR15", 0x1213,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
+    DEVICE_FLAG_OGG_IS_UNKNOWN },
   // Reported by Scott Call
   // Assume this actually supports OGG though it reports it doesn't.
   { "iRiver", 0x4102, "H10 20GB", 0x2101,
@@ -4099,6 +4103,9 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1822/ */
   { "vtevch" , 0x0f88, "Storio Max XL 2.0", 0x0684, DEVICE_FLAGS_ANDROID_BUGS },
+
+  /* https://sourceforge.net/p/libmtp/bugs/1889/ */
+  { "Tolino" , 0x1f85, "Vision 4 HD", 0x6056 , DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://sourceforge.net/p/libmtp/bugs/1846/ */
   { "Netronix" , 0x1f85, "E60QH2", 0x6a12 , DEVICE_FLAGS_ANDROID_BUGS },
