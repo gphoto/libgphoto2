@@ -810,6 +810,7 @@ char *read_json_file(int *jsonsize) {
     ssize_t ret = read(jsonfd, jsontext, *jsonsize);
     if (ret < *jsonsize) {
         fprintf(stderr, "Could not read pentax_settings.json file\n");
+        free(jsontext);
         return NULL;
     }
     DPRINT("json text:\n%.*s\n", *jsonsize, jsontext);
