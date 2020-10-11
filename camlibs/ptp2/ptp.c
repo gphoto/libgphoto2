@@ -1190,7 +1190,7 @@ ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t 
 	if(size < 8) return PTP_RC_GeneralError;
 	*valuesize = dtoh32a( (data + 4) );
 
-	if(size < 8 + (*valuesize)) return PTP_RC_GeneralError;
+	if(size < 8u + (*valuesize)) return PTP_RC_GeneralError;
 	if(*valuesize == 4) {
 		*currentValue = dtoh32a( (data + 8) );
 	} else if(*valuesize == 2) {
@@ -5066,7 +5066,7 @@ ptp_chdk_parse_live_data (PTPParams* params, unsigned char *data, unsigned int d
 			  lv_data_header *header,
 			  lv_framebuffer_desc *vpd, lv_framebuffer_desc *bmd
 ) {
-	int byte_w;
+	unsigned int byte_w;
 
 	if (data_size < sizeof (*header))
 		return PTP_ERROR_IO;
@@ -5192,7 +5192,7 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
                 *count = dtoh16a(data);
                 ptp_debug(params, "event count: %d", *count);
                 *events = calloc(*count, sizeof(uint16_t));
-                if(size >= 2 + *count * 6)
+                if(size >= 2u + *count * 6)
                 {
 			uint16_t	param;
 			uint32_t	value;
