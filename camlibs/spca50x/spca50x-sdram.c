@@ -443,7 +443,7 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 
 			if ((file_size - (avi - start_of_file)) < SPCA50X_AVI_FRAME_HEADER_LENGTH) {
 				free (mybuf);
-				GP_DEBUG("BAD: writing more than we allocated (%d, %d vs total %d)", (avi-start_of_file), (file_size - (avi - start_of_file)), SPCA50X_AVI_FRAME_HEADER_LENGTH);
+				GP_DEBUG("BAD: writing more than we allocated (%ld, %ld vs total %d)", (avi-start_of_file), (file_size - (avi - start_of_file)), SPCA50X_AVI_FRAME_HEADER_LENGTH);
 				return GP_ERROR_CORRUPTED_DATA;
 			}
 
