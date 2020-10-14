@@ -109,6 +109,7 @@ static const struct {
 	{"crw",  GP_MIME_CRW},
 	{"rw2",  GP_MIME_RW2},
 	{"cr2",  GP_MIME_RAW},
+	{"cr3",  GP_MIME_RAW},
 	{"nef",  GP_MIME_RAW},
 	{"mrw",  GP_MIME_RAW},
 	{"dng",  GP_MIME_RAW},
