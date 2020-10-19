@@ -507,8 +507,10 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
 				di->OperationsSupported_len++;
 			}
-			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
-			di->OperationsSupported_len++;
+			if (strcmp(params->deviceinfo.Model,"V1")) { /* the Nikon V1 does not like it */
+				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
+				di->OperationsSupported_len++;
+			}
 		}
 		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
 			/* The A also hides some commands from us ... */
