@@ -743,7 +743,7 @@ storage_info_func (CameraFilesystem *fs,
 	Camera 				*camera = data;
 	CameraStorageInformation	*sfs;
 
-#if defined(linux) && defined(HAVE_STATVFS)
+#if defined(HAVE_STATVFS)
 	struct	statvfs		stfs;
 	char *xpath;
 	int ret;
