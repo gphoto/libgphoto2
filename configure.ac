@@ -373,7 +373,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS([getenv getopt getopt_long mkdir setenv strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r statfs localtime_r lstat inet_aton rand_r])
+AC_CHECK_FUNCS([getenv getopt getopt_long mkdir setenv strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r statvfs localtime_r lstat inet_aton rand_r])
 
 dnl Find out how to get struct tm
 AC_STRUCT_TM
@@ -395,27 +395,10 @@ AC_MSG_RESULT(yes)
 AC_MSG_RESULT(no)
 ])
 
-AC_CHECK_HEADERS([sys/mount.h sys/statfs.h sys/user.h sys/vfs.h],,,[
+AC_CHECK_HEADERS([sys/mount.h sys/statvfs.h sys/user.h sys/vfs.h],,,[
 #include <sys/types.h>
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
-#endif
-])
-
-dnl Check for statfs members
-AC_CHECK_MEMBERS([struct statfs.f_bfree, struct statfs.f_bavail, struct statfs.f_favail],,,[
-#include <sys/types.h>
-#ifdef HAVE_SYS_PARAM_H
-# include <sys/param.h>
-#endif
-#ifdef HAVE_SYS_MOUNT_H
-# include <sys/mount.h>
-#endif
-#ifdef HAVE_SYS_VFS_H
-# include <sys/vfs.h>
-#endif
-#ifdef HAVE_SYS_STATFS_H
-# include <sys/statfs.h>
 #endif
 ])
 
