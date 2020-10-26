@@ -42,9 +42,6 @@
 #ifdef HAVE_SYS_MOUNT_H
 # include <sys/mount.h>
 #endif
-#ifdef HAVE_SYS_STATFS_H
-# include <sys/statfs.h>
-#endif
 #include <fcntl.h>
 
 /* will happen only on Win32 */
@@ -746,15 +743,15 @@ storage_info_func (CameraFilesystem *fs,
 	Camera 				*camera = data;
 	CameraStorageInformation	*sfs;
 
-#if defined(linux) && defined(HAVE_STATFS)
-	struct	statfs		stfs;
+#if defined(HAVE_STATVFS)
+	struct	statvfs		stfs;
 	char *xpath;
 	int ret;
 
 	ret = _get_mountpoint (camera->port, &xpath);
 	if (ret < GP_OK)
 		return ret;
-	if (-1 == statfs (xpath, &stfs))
+	if (-1 == statvfs (xpath, &stfs))
 		return GP_ERROR_NOT_SUPPORTED;
 
 	sfs = malloc (sizeof (CameraStorageInformation));
