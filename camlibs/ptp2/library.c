@@ -510,6 +510,15 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			if (strcmp(params->deviceinfo.Model,"V1")) { /* the Nikon V1 does not like it */
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
 				di->OperationsSupported_len++;
+			} else {
+				/* on V1 even the 90c7 getevents does not work https://github.com/gphoto/libgphoto2/issues/569 */
+				for (i=0;i<di->OperationsSupported_len;i++) {
+					if (di->OperationsSupported[i] == PTP_OC_NIKON_GetEvent) {
+						GP_LOG_D("On Nikon V1: disable NIKON_GetEvent as its unreliable");
+						di->OperationsSupported[i] = PTP_OC_GetDeviceInfo; /* overwrite */
+						break;
+					}
+				}
 			}
 		}
 		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
@@ -1684,7 +1693,8 @@ static struct {
 	{"Nikon:Z5",                      0x04b0, 0x0448, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
-	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1},
+	/* https://github.com/gphoto/libgphoto2/issues/569 */
+	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1|PTP_NIKON_BROKEN_CAP},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
 	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP|PTP_NIKON_1},
 	/* https://bugzilla.novell.com/show_bug.cgi?id=814622 Martin Caj at SUSE */
