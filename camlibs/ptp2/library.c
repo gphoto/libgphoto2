@@ -516,7 +516,10 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 					if (di->OperationsSupported[i] == PTP_OC_NIKON_GetEvent) {
 						GP_LOG_D("On Nikon V1: disable NIKON_GetEvent as its unreliable");
 						di->OperationsSupported[i] = PTP_OC_GetDeviceInfo; /* overwrite */
-						break;
+					}
+					if (di->OperationsSupported[i] == PTP_OC_NIKON_InitiateCaptureRecInSdram) {
+						GP_LOG_D("On Nikon V1: disable NIKON_InitiateCaptureRecInSdram as its unreliable");
+						di->OperationsSupported[i] = PTP_OC_InitiateCapture; /* overwrite */
 					}
 				}
 			}
@@ -1694,7 +1697,7 @@ static struct {
 
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	/* https://github.com/gphoto/libgphoto2/issues/569 */
-	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1|PTP_NIKON_BROKEN_CAP},
+	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
 	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP|PTP_NIKON_1},
 	/* https://bugzilla.novell.com/show_bug.cgi?id=814622 Martin Caj at SUSE */
