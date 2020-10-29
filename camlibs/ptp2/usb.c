@@ -647,11 +647,13 @@ ptp_usb_event_wait (PTPParams* params, PTPContainer* event) {
 
 uint16_t
 ptp_usb_control_get_extended_event_data (PTPParams *params, char *buffer, int *size) {
-	Camera	*camera = ((PTPData *)params->data)->camera;
-	int	ret;
+	Camera		*camera = ((PTPData *)params->data)->camera;
+	int		ret;
+	GPPortSettings	settings;
 
 	GP_LOG_D ("Getting extended event data.");
-	ret = gp_port_usb_msg_class_read (camera->port, 0x65, 0x0000, 0x0000, buffer, *size);
+	gp_port_get_settings (camera->port, &settings);
+	ret = gp_port_usb_msg_class_read (camera->port, 0x65, 0x0000, settings.usb.interface, buffer, *size);
 	if (ret < GP_OK)
 		return PTP_ERROR_IO;
 	*size = ret;
@@ -660,11 +662,13 @@ ptp_usb_control_get_extended_event_data (PTPParams *params, char *buffer, int *s
 
 uint16_t
 ptp_usb_control_device_reset_request (PTPParams *params) {
-	Camera	*camera = ((PTPData *)params->data)->camera;
-	int	ret;
+	Camera		*camera = ((PTPData *)params->data)->camera;
+	int		ret;
+	GPPortSettings	settings;
 
 	GP_LOG_D ("Sending usb device reset request.");
-	ret = gp_port_usb_msg_class_write (camera->port, 0x66, 0x0000, 0x0000, NULL, 0);
+	gp_port_get_settings (camera->port, &settings);
+	ret = gp_port_usb_msg_class_write (camera->port, 0x66, 0x0000, settings.usb.interface, NULL, 0);
 	if (ret < GP_OK)
 		return PTP_ERROR_IO;
 	return PTP_RC_OK;
@@ -672,10 +676,13 @@ ptp_usb_control_device_reset_request (PTPParams *params) {
 
 uint16_t
 ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size) {
-	Camera	*camera = ((PTPData *)params->data)->camera;
-	int	ret;
+	Camera		*camera = ((PTPData *)params->data)->camera;
+	int		ret;
+	GPPortSettings	settings;
 
-	ret = gp_port_usb_msg_class_read (camera->port, 0x67, 0x0000, 0x0000, buffer, *size);
+	GP_LOG_D ("Getting usb device status.");
+	gp_port_get_settings (camera->port, &settings);
+	ret = gp_port_usb_msg_class_read (camera->port, 0x67, 0x0000, settings.usb.interface, buffer, *size);
 	if (ret < GP_OK)
 		return PTP_ERROR_IO;
 	*size = ret;
@@ -684,13 +691,17 @@ ptp_usb_control_get_device_status (PTPParams *params, char *buffer, int *size) {
 
 uint16_t
 ptp_usb_control_cancel_request (PTPParams *params, uint32_t transactionid) {
-	Camera	*camera = ((PTPData *)params->data)->camera;
-	int	ret;
+	Camera		*camera = ((PTPData *)params->data)->camera;
+	int		ret;
 	unsigned char	buffer[6];
+	GPPortSettings	settings;
+
+	GP_LOG_D ("Sending cancel request.");
+	gp_port_get_settings (camera->port, &settings);
 
 	htod16a(&buffer[0],PTP_EC_CancelTransaction);
 	htod32a(&buffer[2],transactionid);
-	ret = gp_port_usb_msg_class_write (camera->port, 0x64, 0x0000, 0x0000, (char*)buffer, sizeof (buffer));
+	ret = gp_port_usb_msg_class_write (camera->port, 0x64, 0x0000, settings.usb.interface, (char*)buffer, sizeof (buffer));
 	if (ret < GP_OK)
 		return PTP_ERROR_IO;
 	return PTP_RC_OK;
