@@ -233,24 +233,24 @@ static const struct canonFlashModeStateStruct flashModeStateArray[] = {
 };
 
 static const struct canonExposureBiasStateStruct exposureBiasStateArray[] = {
-	{0x10,"+2"},
-	{0x0d,"+1 2/3"},
-	{0x0c,"+1 1/2"},
-	{0x0b,"+1 1/3"},
-	{0x08,"+1"},
-	{0x05,"+2/3"},
-	{0x04,"+1/2"},
-	{0x03,"+1/3"},
-	{0x00,"0"},
-	{0xfd,"-1/3"},
-	{0xfc,"-1/2"},
-	{0xfb,"-2/3"},
-	{0xf8,"-1"},
-	{0xf5,"-1 1/3"},
-	{0xf4,"-1 1/2"},
-	{0xf3,"-1 2/3"},
-	{0xf0,"-2"},
-	{0, NULL},
+	{0x10,0x08,"+2"},
+	{0x0d,0x0b,"+1 2/3"},
+	{0x0c,0x0c,"+1 1/2"},
+	{0x0b,0x0d,"+1 1/3"},
+	{0x08,0x10,"+1"},
+	{0x05,0x13,"+2/3"},
+	{0x04,0x14,"+1/2"},
+	{0x03,0x15,"+1/3"},
+	{0x00,0x18,"0"},
+	{0xfd,0x1b,"-1/3"},
+	{0xfc,0x1c,"-1/2"},
+	{0xfb,0x1d,"-2/3"},
+	{0xf8,0x20,"-1"},
+	{0xf5,0x23,"-1 1/3"},
+	{0xf4,0x24,"-1 1/2"},
+	{0xf3,0x25,"-1 2/3"},
+	{0xf0,0x28,"-2"},
+	{0,0,NULL},
 };
 
 
@@ -1757,7 +1757,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	while (exposureBiasStateArray[i].label) {
 		gp_widget_add_choice (t, _(exposureBiasStateArray[i].label));
 		if (camera->pl->release_params[EXPOSUREBIAS_INDEX] ==
-		    exposureBiasStateArray[i].value) {
+		    ((camera->pl->md->id_str && !strstr(camera->pl->md->id_str,"EOS") && !strstr(camera->pl->md->id_str,"Rebel")) ? exposureBiasStateArray[i].valuePS : exposureBiasStateArray[i].valueEOS)) {
 			gp_widget_set_value (t, _(exposureBiasStateArray[i].label));
 			menuval = i;
 		}
@@ -2157,7 +2157,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			i = 0;
 			while (exposureBiasStateArray[i].label) {
 				if (strcmp (_(exposureBiasStateArray[i].label), wvalue) == 0) {
-					expbias = exposureBiasStateArray[i].value;
+					expbias = ((camera->pl->md->id_str && !strstr(camera->pl->md->id_str,"EOS") && !strstr(camera->pl->md->id_str,"Rebel")) ? exposureBiasStateArray[i].valuePS : exposureBiasStateArray[i].valueEOS);
 					break;
 				}
 				i++;
