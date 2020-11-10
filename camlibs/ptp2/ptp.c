@@ -5539,6 +5539,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_CANON_TypeOfSupportedSlideShow,	N_("Type of Slideshow")},
 		{PTP_DPC_CANON_AverageFilesizes,N_("Average Filesizes")},
 		{PTP_DPC_CANON_ModelID,		N_("Model ID")},
+		{PTP_DPC_CANON_EOS_FixedMovie,	N_("EOS Fixed Movie Switch")},
 		{0,NULL}
 	};
 

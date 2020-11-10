@@ -2253,6 +2253,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 					XX(EOS_EFComp)
 					XX(EOS_LensName)
 					XX(EOS_LensID)
+					XX(EOS_FixedMovie)
 #undef XX
 						dpd->GetSet = PTP_DPGS_Get;
 						break;
@@ -2282,6 +2283,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case PTP_DPC_CANON_EOS_BuiltinStroboMode:
 				case PTP_DPC_CANON_EOS_StroboETTL2Metering:
 				case PTP_DPC_CANON_EOS_ColorTemperature:
+				case PTP_DPC_CANON_EOS_FixedMovie:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */

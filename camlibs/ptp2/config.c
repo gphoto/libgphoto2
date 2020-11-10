@@ -7607,6 +7607,30 @@ _put_Generic_OPCode(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Canon_EOS_MovieModeSw(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_MovieModeSw(CONFIG_PUT_ARGS) {
+	int		val;
+	PTPParams	*params = &(camera->pl->params);
+	CR (gp_widget_get_value(widget, &val));
+
+	if(val)
+		C_PTP_MSG (ptp_generic_no_data(params, PTP_OC_CANON_EOS_MovieSelectSWOn, 0), "Failed to set MovieSetSelectSWOn");
+	else
+		C_PTP_MSG (ptp_generic_no_data(params, PTP_OC_CANON_EOS_MovieSelectSWOff, 0), "Failed to set MovieSetSelectSWOff");
+	return GP_OK;
+}
+
+static int
 _get_Sony_Movie(CONFIG_GET_ARGS) {
 	int val;
 
@@ -9233,6 +9257,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartMovieRecInCard,   _get_Nikon_Movie,               _put_Nikon_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_SDIOConnect,            _get_Sony_Movie,                _put_Sony_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_QX_Connect,             _get_Sony_QX_Movie,             _put_Sony_QX_Movie },
+	{ N_("Movie Mode"),                     "eosmoviemode",     0,  PTP_VENDOR_CANON,   0,                                  _get_Canon_EOS_MovieModeSw,     _put_Canon_EOS_MovieModeSw },
 	{ N_("PTP Opcode"),                     "opcode",           0,  0,                  PTP_OC_GetDeviceInfo,               _get_Generic_OPCode,            _put_Generic_OPCode },
 	{ 0,0,0,0,0,0,0 },
 };
@@ -9281,6 +9306,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("AF Locked"),              "aflocked",         PTP_DPC_NIKON_AFLockStatus,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("AE Locked"),              "aelocked",         PTP_DPC_NIKON_AELockStatus,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("FV Locked"),              "fvlocked",         PTP_DPC_NIKON_FVLockStatus,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
+	{ N_("Movie Switch"),	        "eosmovieswitch",   PTP_DPC_CANON_EOS_FixedMovie,           PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ 0,0,0,0,0,0,0 },
 };
 
