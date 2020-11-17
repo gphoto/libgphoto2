@@ -2553,6 +2553,10 @@ static struct {
 	{"Ricoh:Theta S (PTP mode)",		0x05ca, 0x0366, 0},
 	{"Ricoh:Theta SC (PTP mode)",		0x05ca, 0x0367, 0},
 
+	/* https://github.com/libmtp/libmtp/pull/68  */
+	{"Ricoh:Theta V (PTP mode)",		0x05ca, 0x0368, 0},
+	{"Ricoh:Theta Z1 (PTP mode)",		0x05ca, 0x036d, 0},
+
 	/* Rollei dr5  */
 	{"Rollei:dr5 (PTP mode)",               0x05ca, 0x220f, 0},
 
