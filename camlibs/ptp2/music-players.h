@@ -374,6 +374,7 @@
    * - has a weird USB bug if it reads exactly 512byte (usb 2 packetsize) 
    *   the device will hang. this is one of the reasons we need to disable
    *   DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST as it can hit this size :/
+   *   Post scriptum: This did not help, so we added it again. -Marcus
    *
    * From: Ignacio Martínez <ignacio.martinezrivera@yahoo.es> and others
    * From Harrison Metzger <harrisonmetz@gmail.com>
@@ -390,8 +391,8 @@
       DEVICE_FLAG_FLAC_IS_UNKNOWN },
   { "Samsung", 0x04e8,
       "Galaxy models (MTP)", 0x6860,
-      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
-      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST |
+      /* DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL |
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | */
       DEVICE_FLAG_UNLOAD_DRIVER |
       DEVICE_FLAG_LONG_TIMEOUT |
       DEVICE_FLAG_PROPLIST_OVERRIDES_OI |
@@ -3782,22 +3783,38 @@
   { "Garmin", 0x091e, "Monterra", 0x2585, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1779/ */
   { "Garmin", 0x091e, "Forerunner 645 Music", 0x4b48, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "D2 Air", 0x488b, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/15 */
   { "Garmin", 0x091e, "Fenix 5/5S/5X Plus", 0x4b54, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/271/ */
   { "Garmin", 0x091e, "Vivoactive 3", 0x4bac, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Vivoactive 3 Music LTE", 0x4bfa, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1884/ */
   { "Garmin", 0x091e, "Forerunner 245 Music ", 0x4c05, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Forerunner 945", 0x4c29, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "D2 Delta/Delta S/Delta PX", 0x4c7c, DEVICE_FLAGS_ANDROID_BUGS },
   { "Garmin", 0x091e, "Vivoactive 4S", 0x4c98, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/51 */
   { "Garmin", 0x091e, "Vivoactive 4", 0x4c99, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1864/ */
   { "Garmin", 0x091e, "Venu", 0x4c9a, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "MARQ", 0x4cae, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "MARQ Aviator", 0x4caf, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Descent Mk2/Mk2i", 0x4cba, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Fenix 6S Pro/Sapphire", 0x4cd8, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1852/ */
-  { "Garmin", 0x091e, "Fenix 6", 0x4cda, DEVICE_FLAGS_ANDROID_BUGS },
-  { "Garmin", 0x091e, "Fenix 6 Sapphire", 0x4cdb, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Fenix 6 Pro/Sapphire", 0x4cda, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Fenix 6X Pro/Sapphire", 0x4cdb, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1887/ */
   { "Garmin", 0x091e, "Zumo XT", 0x4d9c, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Rey", 0x4daa, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Darth Vader", 0x4dab, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Captain Marvel", 0x4dac, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "First Avenger", 0x4dad, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Forerunner 745", 0x4e05, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Venu Sq Music", 0x4e0c, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Descent Mk2/Mk2i", 0x4e76, DEVICE_FLAGS_ANDROID_BUGS }, /* APAC version */
+  { "Garmin", 0x091e, "Venu Mercedes-Benz Collection", 0x4e9C, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Wacom
@@ -3986,7 +4003,8 @@
   /* https://sourceforge.net/p/libmtp/bugs/1436/ */
   { "Parrot", 0x19cf, "Bebop Drone", 0x5038, DEVICE_FLAGS_ANDROID_BUGS },
 
-#if 0
+#ifndef _GPHOTO2_INTERNAL_CODE
+  /* gphoto lists them in its library.c */
   /*
    * GoPro Action Cams.
    */
