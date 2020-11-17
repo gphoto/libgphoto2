@@ -3813,7 +3813,7 @@
   { "Garmin", 0x091e, "First Avenger", 0x4dad, DEVICE_FLAGS_ANDROID_BUGS },
   { "Garmin", 0x091e, "Forerunner 745", 0x4e05, DEVICE_FLAGS_ANDROID_BUGS },
   { "Garmin", 0x091e, "Venu Sq Music", 0x4e0c, DEVICE_FLAGS_ANDROID_BUGS },
-  { "Garmin", 0x091e, "Descent Mk2/Mk2i", 0x4e76, DEVICE_FLAGS_ANDROID_BUGS }, /* APAC version */
+  { "Garmin", 0x091e, "Descent Mk2/Mk2i (APAC)", 0x4e76, DEVICE_FLAGS_ANDROID_BUGS }, /* APAC version */
   { "Garmin", 0x091e, "Venu Mercedes-Benz Collection", 0x4e9C, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
