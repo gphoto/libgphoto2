@@ -4,8 +4,8 @@ AC_PREREQ(2.62)
 dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
-dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.26 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.5.25.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.27 at least or higher!
+AC_INIT([libgphoto2 photo camera library], [2.5.26.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
@@ -18,7 +18,7 @@ dnl The generated Makefile rule fails to remove the absolute part at
 dnl the beginning of the /path/to/buildroot/PACKAGE-VERSION/foo/bar
 dnl before determining the string length. However, the only relevant
 dnl string to determine the length of would be PACKAGE-VERSION/foo/bar
-AM_INIT_AUTOMAKE([-Wall foreign 1.9 dist-bzip2 check-news subdir-objects])
+AM_INIT_AUTOMAKE([-Wall foreign 1.9 dist-bzip2 dist-xz check-news subdir-objects])
 
 
 # Use the silent-rules feature when possible.
@@ -373,7 +373,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS([getenv getopt getopt_long mkdir setenv strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r statfs localtime_r lstat inet_aton rand_r])
+AC_CHECK_FUNCS([getenv getopt getopt_long mkdir setenv strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r statvfs localtime_r lstat inet_aton rand_r])
 
 dnl Find out how to get struct tm
 AC_STRUCT_TM
@@ -395,27 +395,10 @@ AC_MSG_RESULT(yes)
 AC_MSG_RESULT(no)
 ])
 
-AC_CHECK_HEADERS([sys/mount.h sys/statfs.h sys/user.h sys/vfs.h],,,[
+AC_CHECK_HEADERS([sys/mount.h sys/statvfs.h sys/user.h sys/vfs.h],,,[
 #include <sys/types.h>
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
-#endif
-])
-
-dnl Check for statfs members
-AC_CHECK_MEMBERS([struct statfs.f_bfree, struct statfs.f_bavail, struct statfs.f_favail],,,[
-#include <sys/types.h>
-#ifdef HAVE_SYS_PARAM_H
-# include <sys/param.h>
-#endif
-#ifdef HAVE_SYS_MOUNT_H
-# include <sys/mount.h>
-#endif
-#ifdef HAVE_SYS_VFS_H
-# include <sys/vfs.h>
-#endif
-#ifdef HAVE_SYS_STATFS_H
-# include <sys/statfs.h>
 #endif
 ])
 

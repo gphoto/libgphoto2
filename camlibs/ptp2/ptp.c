@@ -356,7 +356,7 @@ static uint16_t
 fd_putfunc(PTPParams* params, void* private,
 	       unsigned long sendlen, unsigned char *data
 ) {
-	ssize_t		written;
+	ssize_t	written;
 	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)private;
 
 	written = write (priv->fd, data, sendlen);
@@ -1190,7 +1190,7 @@ ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t 
 	if(size < 8) return PTP_RC_GeneralError;
 	*valuesize = dtoh32a( (data + 4) );
 
-	if(size < 8 + (*valuesize)) return PTP_RC_GeneralError;
+	if(size < 8u + (*valuesize)) return PTP_RC_GeneralError;
 	if(*valuesize == 4) {
 		*currentValue = dtoh32a( (data + 8) );
 	} else if(*valuesize == 2) {
@@ -5066,7 +5066,7 @@ ptp_chdk_parse_live_data (PTPParams* params, unsigned char *data, unsigned int d
 			  lv_data_header *header,
 			  lv_framebuffer_desc *vpd, lv_framebuffer_desc *bmd
 ) {
-	int byte_w;
+	unsigned int byte_w;
 
 	if (data_size < sizeof (*header))
 		return PTP_ERROR_IO;
@@ -5192,7 +5192,7 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
                 *count = dtoh16a(data);
                 ptp_debug(params, "event count: %d", *count);
                 *events = calloc(*count, sizeof(uint16_t));
-                if(size >= 2 + *count * 6)
+                if(size >= 2u + *count * 6)
                 {
 			uint16_t	param;
 			uint32_t	value;
@@ -5200,10 +5200,20 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 
 			for(i = 0; i < *count; i++)
 			{
+				unsigned int j;
+
 				param = dtoh16a(&data[2 + 6 * i]);
 				value = dtoh32a(&data[2 + 6 * i + 2]);
 				(*events)[i] = param;
 				ptp_debug(params, "param: %02x, value: %d ", param, value);
+
+				/* reset the property cache entry for refetch ... */
+				for (j=0;j<params->nrofdeviceproperties;j++)
+					if (params->deviceproperties[j].desc.DevicePropertyCode == param)
+						break;
+				if (j != params->nrofdeviceproperties) {
+					params->deviceproperties[j].timestamp = 0;
+				}
 			}
 		}
 	}
@@ -5529,6 +5539,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_CANON_TypeOfSupportedSlideShow,	N_("Type of Slideshow")},
 		{PTP_DPC_CANON_AverageFilesizes,N_("Average Filesizes")},
 		{PTP_DPC_CANON_ModelID,		N_("Model ID")},
+		{PTP_DPC_CANON_EOS_FixedMovie,	N_("EOS Fixed Movie Switch")},
 		{0,NULL}
 	};
 
@@ -6283,11 +6294,11 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_FUJI_CommandDialMode, "CommandDialMode"},
 		{PTP_DPC_FUJI_ExposureIndex, "ExposureIndex"},
 		{PTP_DPC_FUJI_MovieISO, "MovieISO"},
-		{PTP_DPC_FUJI_ImageSize, "ImageSize"},
+		{PTP_DPC_FUJI_LiveViewImageSize, "LiveViewImageSize"},
 		{PTP_DPC_FUJI_FocusMeteringMode, "FocusMeteringMode"},
 		{PTP_DPC_FUJI_ReleaseMode, "ReleaseMode"},
 		{PTP_DPC_FUJI_FocusAreas, "FocusAreas"},
-		{PTP_DPC_FUJI_FocusLock, "FocusLock"},
+		{PTP_DPC_FUJI_AFStatus, "AFStatus"},
 		{PTP_DPC_FUJI_CurrentState, "CurrentState"},
 		{PTP_DPC_FUJI_AELock, "AELock"},
 		{PTP_DPC_FUJI_Copyright, "Copyright"},
@@ -6301,7 +6312,185 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_FUJI_BatteryLevel, "BatteryLevel"},
 		{PTP_DPC_FUJI_InitSequence, "InitSequence"},
 		{PTP_DPC_FUJI_AppVersion, "AppVersion"},
-
+		{PTP_DPC_FUJI_DRangeMode,"DRangeMode"},
+		{PTP_DPC_FUJI_LiveViewBrightness,"LiveViewBrightness"},
+		{PTP_DPC_FUJI_ThroughImageZoom,"ThroughImageZoom"},
+		{PTP_DPC_FUJI_NoiseReduction,"NoiseReduction"},
+		{PTP_DPC_FUJI_MacroMode,"MacroMode"},
+		{PTP_DPC_FUJI_LiveViewStyle,"LiveViewStyle"},
+		{PTP_DPC_FUJI_FaceDetectionMode,"FaceDetectionMode"},
+		{PTP_DPC_FUJI_RedEyeCorrectionMode,"RedEyeCorrectionMode"},
+		{PTP_DPC_FUJI_RawCompression,"RawCompression"},
+		{PTP_DPC_FUJI_GrainEffect,"GrainEffect"},
+		{PTP_DPC_FUJI_SetEyeAFMode,"SetEyeAFMode"},
+		{PTP_DPC_FUJI_FocusPoints,"FocusPoints"},
+		{PTP_DPC_FUJI_MFAssistMode,"MFAssistMode"},
+		{PTP_DPC_FUJI_InterlockAEAFArea,"InterlockAEAFArea"},
+		{PTP_DPC_FUJI_Shadowing,"Shadowing"},
+		{PTP_DPC_FUJI_WideDynamicRange,"WideDynamicRange"},
+		{PTP_DPC_FUJI_TNumber,"TNumber"},
+		{PTP_DPC_FUJI_SerialMode,"SerialMode"},
+		{PTP_DPC_FUJI_ExposureDelay,"ExposureDelay"},
+		{PTP_DPC_FUJI_PreviewTime,"PreviewTime"},
+		{PTP_DPC_FUJI_BlackImageTone,"BlackImageTone"},
+		{PTP_DPC_FUJI_Illumination,"Illumination"},
+		{PTP_DPC_FUJI_FrameGuideMode,"FrameGuideMode"},
+		{PTP_DPC_FUJI_ViewfinderWarning,"ViewfinderWarning"},
+		{PTP_DPC_FUJI_AutoImageRotation,"AutoImageRotation"},
+		{PTP_DPC_FUJI_DetectImageRotation,"DetectImageRotation"},
+		{PTP_DPC_FUJI_ShutterPriorityMode1,"ShutterPriorityMode1"},
+		{PTP_DPC_FUJI_ShutterPriorityMode2,"ShutterPriorityMode2"},
+		{PTP_DPC_FUJI_AFIlluminator,"AFIlluminator"},
+		{PTP_DPC_FUJI_FlashTuneSpeed,"FlashTuneSpeed"},
+		{PTP_DPC_FUJI_FlashShutterLimit,"FlashShutterLimit"},
+		{PTP_DPC_FUJI_BuiltinFlashMode,"BuiltinFlashMode"},
+		{PTP_DPC_FUJI_FlashManualMode,"FlashManualMode"},
+		{PTP_DPC_FUJI_ModelingFlash,"ModelingFlash"},
+		{PTP_DPC_FUJI_AEAFLockButton,"AEAFLockButton"},
+		{PTP_DPC_FUJI_CenterButton,"CenterButton"},
+		{PTP_DPC_FUJI_MultiSelectorButton,"MultiSelectorButton"},
+		{PTP_DPC_FUJI_FunctionLock,"FunctionLock"},
+		{PTP_DPC_FUJI_ButtonsAndDials,"ButtonsAndDials"},
+		{PTP_DPC_FUJI_MBD200Batteries,"MBD200Batteries"},
+		{PTP_DPC_FUJI_AFOnForMBD200Batteries,"AFOnForMBD200Batteries"},
+		{PTP_DPC_FUJI_ShotCount,"ShotCount"},
+		{PTP_DPC_FUJI_ShutterExchangeCount,"ShutterExchangeCount"},
+		{PTP_DPC_FUJI_WorldClock,"WorldClock"},
+		{PTP_DPC_FUJI_Language,"Language"},
+		{PTP_DPC_FUJI_FrameNumberSequence,"FrameNumberSequence"},
+		{PTP_DPC_FUJI_VideoMode,"VideoMode"},
+		{PTP_DPC_FUJI_SetUSBMode,"SetUSBMode"},
+		{PTP_DPC_FUJI_CommentWriteSetting,"CommentWriteSetting"},
+		{PTP_DPC_FUJI_BCRAppendDelimiter,"BCRAppendDelimiter"},
+		{PTP_DPC_FUJI_VideoOutOnOff,"VideoOutOnOff"},
+		{PTP_DPC_FUJI_CropMode,"CropMode"},
+		{PTP_DPC_FUJI_LensZoomPos,"LensZoomPos"},
+		{PTP_DPC_FUJI_FocusPosition,"FocusPosition"},
+		{PTP_DPC_FUJI_LiveViewImageQuality,"LiveViewImageQuality"},
+		{PTP_DPC_FUJI_LiveViewCondition,"LiveViewCondition"},
+		{PTP_DPC_FUJI_LiveViewWhiteBalanceGain,"LiveViewWhiteBalanceGain"},
+		{PTP_DPC_FUJI_FocusLength,"FocusLength"},
+		{PTP_DPC_FUJI_CropAreaFrameInfo,"CropAreaFrameInfo"},
+		{PTP_DPC_FUJI_ResetSetting,"ResetSetting"},
+		{PTP_DPC_FUJI_IOPCode,"IOPCode"},
+		{PTP_DPC_FUJI_TetherRawConditionCode,"TetherRawConditionCode"},
+		{PTP_DPC_FUJI_TetherRawCompatibilityCode,"TetherRawCompatibilityCode"},
+		{PTP_DPC_FUJI_LightTune,"LightTune"},
+		{PTP_DPC_FUJI_ProgramShift,"ProgramShift"},
+		{PTP_DPC_FUJI_PriorityMode,"PriorityMode"},
+		{PTP_DPC_FUJI_DeviceName,"DeviceName"},
+		{PTP_DPC_FUJI_MediaRecord,"MediaRecord"},
+		{PTP_DPC_FUJI_FreeSDRAMImages,"FreeSDRAMImages"},
+		{PTP_DPC_FUJI_MediaStatus,"MediaStatus"},
+		{PTP_DPC_FUJI_ForceMode,"ForceMode"},
+		{PTP_DPC_FUJI_TotalShotCount,"TotalShotCount"},
+		{PTP_DPC_FUJI_HighLightTone,"HighLightTone"},
+		{PTP_DPC_FUJI_ShadowTone,"ShadowTone"},
+		{PTP_DPC_FUJI_LongExposureNR,"LongExposureNR"},
+		{PTP_DPC_FUJI_FullTimeManualFocus,"FullTimeManualFocus"},
+		{PTP_DPC_FUJI_ISODialHn1,"ISODialHn1"},
+		{PTP_DPC_FUJI_ISODialHn2,"ISODialHn2"},
+		{PTP_DPC_FUJI_ViewMode1,"ViewMode1"},
+		{PTP_DPC_FUJI_ViewMode2,"ViewMode2"},
+		{PTP_DPC_FUJI_DispInfoMode,"DispInfoMode"},
+		{PTP_DPC_FUJI_LensISSwitch,"LensISSwitch"},
+		{PTP_DPC_FUJI_InstantAFMode,"InstantAFMode"},
+		{PTP_DPC_FUJI_PreAFMode,"PreAFMode"},
+		{PTP_DPC_FUJI_CustomSetting,"CustomSetting"},
+		{PTP_DPC_FUJI_LMOMode,"LMOMode"},
+		{PTP_DPC_FUJI_LockButtonMode,"LockButtonMode"},
+		{PTP_DPC_FUJI_AFLockMode,"AFLockMode"},
+		{PTP_DPC_FUJI_MicJackMode,"MicJackMode"},
+		{PTP_DPC_FUJI_ISMode,"ISMode"},
+		{PTP_DPC_FUJI_DateTimeDispFormat,"DateTimeDispFormat"},
+		{PTP_DPC_FUJI_AeAfLockKeyAssign,"AeAfLockKeyAssign"},
+		{PTP_DPC_FUJI_CrossKeyAssign,"CrossKeyAssign"},
+		{PTP_DPC_FUJI_SilentMode,"SilentMode"},
+		{PTP_DPC_FUJI_PBSound,"PBSound"},
+		{PTP_DPC_FUJI_EVFDispAutoRotate,"EVFDispAutoRotate"},
+		{PTP_DPC_FUJI_ExposurePreview,"ExposurePreview"},
+		{PTP_DPC_FUJI_DispBrightness1,"DispBrightness1"},
+		{PTP_DPC_FUJI_DispBrightness2,"DispBrightness2"},
+		{PTP_DPC_FUJI_DispChroma1,"DispChroma1"},
+		{PTP_DPC_FUJI_DispChroma2,"DispChroma2"},
+		{PTP_DPC_FUJI_FocusCheckMode,"FocusCheckMode"},
+		{PTP_DPC_FUJI_FocusScaleUnit,"FocusScaleUnit"},
+		{PTP_DPC_FUJI_SetFunctionButton,"SetFunctionButton"},
+		{PTP_DPC_FUJI_SensorCleanTiming,"SensorCleanTiming"},
+		{PTP_DPC_FUJI_CustomAutoPowerOff,"CustomAutoPowerOff"},
+		{PTP_DPC_FUJI_FileNamePrefix1,"FileNamePrefix1"},
+		{PTP_DPC_FUJI_FileNamePrefix2,"FileNamePrefix2"},
+		{PTP_DPC_FUJI_CustomDispInfo,"CustomDispInfo"},
+		{PTP_DPC_FUJI_CustomPreviewTime,"CustomPreviewTime"},
+		{PTP_DPC_FUJI_FocusArea1,"FocusArea1"},
+		{PTP_DPC_FUJI_FocusArea2,"FocusArea2"},
+		{PTP_DPC_FUJI_FocusArea3,"FocusArea3"},
+		{PTP_DPC_FUJI_FrameGuideGridInfo1,"FrameGuideGridInfo1"},
+		{PTP_DPC_FUJI_FrameGuideGridInfo2,"FrameGuideGridInfo2"},
+		{PTP_DPC_FUJI_FrameGuideGridInfo3,"FrameGuideGridInfo3"},
+		{PTP_DPC_FUJI_FrameGuideGridInfo4,"FrameGuideGridInfo4"},
+		{PTP_DPC_FUJI_LensZoomPosCaps,"LensZoomPosCaps"},
+		{PTP_DPC_FUJI_FocusLimiter,"FocusLimiter"},
+		{PTP_DPC_FUJI_FocusArea4,"FocusArea4"},
+		{PTP_DPC_FUJI_FilmSimulationTune,"FilmSimulationTune"},
+		{PTP_DPC_FUJI_ColorSpace,"ColorSpace"},
+		{PTP_DPC_FUJI_WhitebalanceTune1,"WhitebalanceTune1"},
+		{PTP_DPC_FUJI_WhitebalanceTune2,"WhitebalanceTune2"},
+		{PTP_DPC_FUJI_PhotometryLevel1,"PhotometryLevel1"},
+		{PTP_DPC_FUJI_PhotometryLevel2,"PhotometryLevel2"},
+		{PTP_DPC_FUJI_PhotometryLevel3,"PhotometryLevel3"},
+		{PTP_DPC_FUJI_FlashRepeatingMode1,"FlashRepeatingMode1"},
+		{PTP_DPC_FUJI_FlashRepeatingMode2,"FlashRepeatingMode2"},
+		{PTP_DPC_FUJI_FlashCommanderMode1,"FlashCommanderMode1"},
+		{PTP_DPC_FUJI_FlashCommanderMode2,"FlashCommanderMode2"},
+		{PTP_DPC_FUJI_FlashCommanderMode3,"FlashCommanderMode3"},
+		{PTP_DPC_FUJI_FlashCommanderMode4,"FlashCommanderMode4"},
+		{PTP_DPC_FUJI_FlashCommanderMode5,"FlashCommanderMode5"},
+		{PTP_DPC_FUJI_FlashCommanderMode6,"FlashCommanderMode6"},
+		{PTP_DPC_FUJI_FlashCommanderMode7,"FlashCommanderMode7"},
+		{PTP_DPC_FUJI_BKTSelection,"BKTSelection"},
+		{PTP_DPC_FUJI_Password,"Password"},
+		{PTP_DPC_FUJI_ChangePassword,"ChangePassword"},
+		{PTP_DPC_FUJI_TimeDifference1,"TimeDifference1"},
+		{PTP_DPC_FUJI_TimeDifference2,"TimeDifference2"},
+		{PTP_DPC_FUJI_Comment,"Comment"},
+		{PTP_DPC_FUJI_CommentEx,"CommentEx"},
+		{PTP_DPC_FUJI_StandbyMode,"StandbyMode"},
+		{PTP_DPC_FUJI_LiveViewExposure,"LiveViewExposure"},
+		{PTP_DPC_FUJI_LiveViewTuning,"LiveViewTuning"},
+		{PTP_DPC_FUJI_SensitivityFineTune1,"SensitivityFineTune1"},
+		{PTP_DPC_FUJI_SensitivityFineTune2,"SensitivityFineTune2"},
+		{PTP_DPC_FUJI_LensNameAndSerial,"LensNameAndSerial"},
+		{PTP_DPC_FUJI_LensUnknownData,"LensUnknownData"},
+		{PTP_DPC_FUJI_LensFNumberList,"LensFNumberList"},
+		{PTP_DPC_FUJI_LensFocalLengthList,"LensFocalLengthList"},
+		{PTP_DPC_FUJI_ColorMode,"ColorMode"},
+		{PTP_DPC_FUJI_Beep,"Beep"},
+		{PTP_DPC_FUJI_ISOAutoSetting1,"ISOAutoSetting1"},
+		{PTP_DPC_FUJI_ISOAutoSetting2,"ISOAutoSetting2"},
+		{PTP_DPC_FUJI_ISOAutoSetting3,"ISOAutoSetting3"},
+		{PTP_DPC_FUJI_ExposureStep,"ExposureStep"},
+		{PTP_DPC_FUJI_CompensationStep,"CompensationStep"},
+		{PTP_DPC_FUJI_ExposureSimpleSet,"ExposureSimpleSet"},
+		{PTP_DPC_FUJI_CenterPhotometryRange,"CenterPhotometryRange"},
+		{PTP_DPC_FUJI_FlashRepeatingMode3,"FlashRepeatingMode3"},
+		{PTP_DPC_FUJI_BKTChange,"BKTChange"},
+		{PTP_DPC_FUJI_BKTOrder,"BKTOrder"},
+		{PTP_DPC_FUJI_CommandDialSetting1,"CommandDialSetting1"},
+		{PTP_DPC_FUJI_CommandDialSetting2,"CommandDialSetting2"},
+		{PTP_DPC_FUJI_CommandDialSetting3,"CommandDialSetting3"},
+		{PTP_DPC_FUJI_CommandDialSetting4,"CommandDialSetting4"},
+		{PTP_DPC_FUJI_NonCPULensData,"NonCPULensData"},
+		{PTP_DPC_FUJI_FirmwareVersion,"FirmwareVersion"},
+		{PTP_DPC_FUJI_BKTFrame1,"BKTFrame1"},
+		{PTP_DPC_FUJI_BKTFrame2,"BKTFrame2"},
+		{PTP_DPC_FUJI_BKTStep,"BKTStep"},
+		{PTP_DPC_FUJI_MediaCapacity,"MediaCapacity"},
+		{PTP_DPC_FUJI_Copyright2,"Copyright2"},
+		{PTP_DPC_FUJI_BatteryInfo1,"BatteryInfo1"},
+		{PTP_DPC_FUJI_BatteryInfo2,"BatteryInfo2"},
+		{PTP_DPC_FUJI_FunctionLockCategory1,"FunctionLockCategory1"},
+		{PTP_DPC_FUJI_FunctionLockCategory2,"FunctionLockCategory2"},
 		{0,NULL}
         };
 

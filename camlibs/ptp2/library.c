@@ -388,7 +388,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	if (di->VendorExtensionID == PTP_VENDOR_FUJI) {
-		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 8)));
+		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 60)));
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+0] = PTP_DPC_ExposureTime;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+1] = PTP_DPC_FNumber;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+2] = 0xd38c;	/* PC Mode */
@@ -397,7 +397,59 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+5] = 0xd347;	/* Focus Position */
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+6] = PTP_DPC_FUJI_LensZoomPos;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+7] = 0xd242;
-		di->DevicePropertiesSupported_len += 8;
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+8] = PTP_DPC_FUJI_LiveViewImageSize; /* xt3 confirmed */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+9] = 0xd168; /* video out on/off (unconfirmed) */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+10] = PTP_DPC_FUJI_LiveViewImageQuality; /* xt3 confirmed */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+11] = PTP_DPC_FUJI_ForceMode; /* on xt3 set by webcam app to 1 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+12] = 0xd16e; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+13] = 0xd372; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+14] = 0xd020; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+15] = 0xd022; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+16] = 0xd023; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+17] = 0xd024; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+18] = 0xd025; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+19] = 0xd026; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+20] = 0xd027; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+21] = 0xd029; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+22] = 0xd16f; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+23] = 0xd02f; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+24] = 0xd395; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+25] = 0xd320; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+26] = 0xd321; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+27] = 0xd322; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+28] = 0xd323; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+29] = 0xd346; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+30] = 0xd34a; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+31] = 0xd34b; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+32] = 0xd34d; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+33] = 0xd351; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+34] = 0xd35e; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+35] = 0xd173; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+36] = 0xd365; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+37] = 0xd366; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+38] = 0xd374; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+39] = 0xd310; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+40] = 0xd359; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+41] = 0xd375; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+42] = 0xd376; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+43] = 0xd36e; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+44] = 0xd33f; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+45] = 0xd364; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+46] = 0xd34e; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+47] = 0xd02e; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+48] = 0xd36d; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+49] = 0xd38a; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+50] = 0xd36a; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+51] = 0xd36b; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+52] = 0xd36f; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+53] = 0xd370; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+54] = 0xd222; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+55] = 0xd223; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+56] = 0xd38c; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+57] = 0xd38d; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+58] = 0xd38e; /* seen on xt3 */
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+59] = 0xd17b; /* seen on xt3 */
+		di->DevicePropertiesSupported_len += 60;
 
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_FUJI_GetDeviceInfo)) {
 			uint16_t	*props;
@@ -455,8 +507,22 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
 				di->OperationsSupported_len++;
 			}
-			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
-			di->OperationsSupported_len++;
+			if (strcmp(params->deviceinfo.Model,"V1")) { /* the Nikon V1 does not like it */
+				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
+				di->OperationsSupported_len++;
+			} else {
+				/* on V1 even the 90c7 getevents does not work https://github.com/gphoto/libgphoto2/issues/569 */
+				for (i=0;i<di->OperationsSupported_len;i++) {
+					if (di->OperationsSupported[i] == PTP_OC_NIKON_GetEvent) {
+						GP_LOG_D("On Nikon V1: disable NIKON_GetEvent as its unreliable");
+						di->OperationsSupported[i] = PTP_OC_GetDeviceInfo; /* overwrite */
+					}
+					if (di->OperationsSupported[i] == PTP_OC_NIKON_InitiateCaptureRecInSdram) {
+						GP_LOG_D("On Nikon V1: disable NIKON_InitiateCaptureRecInSdram as its unreliable");
+						di->OperationsSupported[i] = PTP_OC_InitiateCapture; /* overwrite */
+					}
+				}
+			}
 		}
 		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
 			/* The A also hides some commands from us ... */
@@ -1617,9 +1683,6 @@ static struct {
 	/* Marcus Meissner */
 	{"Nikon:Z6",                	  0x04b0, 0x0443, PTP_CAP|PTP_CAP_PREVIEW},
 
-        /* Thomas Schaad */
-        {"Nikon:Z5",                      0x04b0, 0x0448, PTP_CAP|PTP_CAP_PREVIEW},
-
 	/* Daniel Baertschi <daniel@avisec.ch> */
 	{"Nikon:Z50",                	  0x04b0, 0x0444, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -1629,7 +1692,11 @@ static struct {
 	/* timelapse-VIEW */
 	{"Nikon:DSC D780",		  0x04b0, 0x0446, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Thomas Schaad */
+	{"Nikon:Z5",                      0x04b0, 0x0448, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
+	/* https://github.com/gphoto/libgphoto2/issues/569 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1},
 	/* https://sourceforge.net/tracker/?func=detail&atid=358874&aid=3556403&group_id=8874 */
 	{"Nikon:J1",    		  0x04b0, 0x0602, PTP_CAP|PTP_NIKON_1},
@@ -2485,6 +2552,10 @@ static struct {
 	/* "Lacy Rhoades" <lacy@colordeaf.net> */
 	{"Ricoh:Theta S (PTP mode)",		0x05ca, 0x0366, 0},
 	{"Ricoh:Theta SC (PTP mode)",		0x05ca, 0x0367, 0},
+
+	/* https://github.com/libmtp/libmtp/pull/68  */
+	{"Ricoh:Theta V (PTP mode)",		0x05ca, 0x0368, 0},
+	{"Ricoh:Theta Z1 (PTP mode)",		0x05ca, 0x036d, 0},
 
 	/* Rollei dr5  */
 	{"Rollei:dr5 (PTP mode)",               0x05ca, 0x220f, 0},
@@ -3836,7 +3907,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 	/* if in liveview mode, we have to run non-af capture */
 	params->inliveview = 0;
-	if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus)) {
+	if (ptp_property_issupported (params, PTP_DPC_NIKON_LiveViewStatus) && ptp_operation_issupported(params,PTP_OC_NIKON_StartLiveView)) {
 		ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &propval, PTP_DTC_UINT8);
 		if (ret == PTP_RC_OK)
 			params->inliveview = propval.u8;
@@ -4541,10 +4612,11 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 	if (params->deviceinfo.Model && (
 		!strcmp(params->deviceinfo.Model, "ZV-1")		||
-		!strcmp(params->deviceinfo.Model, "DSC-RX100M7")
+		!strcmp(params->deviceinfo.Model, "DSC-RX100M7")	||
+		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")
 	)) {
-		/* For some as yet unknown reason the ZV-1 needs around 3 seconds startup time
-		 * to be able to capture. I looked for various trigger events or property changes
+		/* For some as yet unknown reason the ZV-1, the RX100M7 and the A7 R4 need around 3 seconds startup time
+		 * to be able to capture. I looked for various trigger events or property changes on the ZV-1
 		 * but nothing worked except waiting. */
 		while (time_since (params->starttime) < 2500) {
 			/* drain the queue first */
@@ -4857,7 +4929,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	PTPContainer		event, newevent;
 	struct timeval		event_start;
 	int			back_off_wait = 0;
-	unsigned int		i;
+	unsigned int		i, waittime = 35*1000;
 
 	GP_LOG_D ("camera_fuji_capture");
 
@@ -4869,6 +4941,32 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 	C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles));
 
+	C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_ExposureTime, &propval, PTP_DTC_UINT32));
+	if (propval.u32 >= 10079368) {/* if longer than 10 seconds, switch to 2 hours wait max. (we could also add a translation table here if needed) */
+		switch (propval.u32) {
+		/* 2 times to allow for black picture, + safety time */
+		case 64000180: waittime = 2*60*60*1000 + 1*60*1000;break;
+		case 64000150: waittime = 2*30*60*1000 + 1*60*1000;break;
+		case 64000120: waittime = 2*15*60*1000 + 1*60*1000;break;
+		case 64000090: waittime = 2*8*60*1000 + 1*30*1000;break;
+		case 64000060: waittime = 2*4*60*1000 + 1*30*1000;break;
+		case 64000030: waittime = 2*2*60*1000 + 1*30*1000;break;
+		case 64000000: waittime = 2*1*60*1000 + 1*15*1000;break;
+		case 50796833: waittime = 2*1*50*1000 + 1*15*1000;break; /* 50s */
+		case 40317473: waittime = 2*1*40*1000 + 1*15*1000;break; /* 40s */
+		case 32000000: waittime = 2*1*30*1000 + 1*15*1000;break; /* 30s */
+		case 25398416: waittime = 2*1*25*1000 + 1*15*1000;break; /* 25s */
+		case 20158736: waittime = 2*1*20*1000 + 1*15*1000;break; /* 20s */
+		case 16000000: waittime = 2*1*16*1000 + 1*10*1000;break; /* 15s */
+		case 12699208: waittime = 2*1*16*1000 + 1*10*1000;break; /* 15s */
+		case 10079368: waittime = 2*1*16*1000 + 1*10*1000;break; /* 15s */
+		default:
+			GP_LOG_D("unknown exposure time %d, waiting 2 hours", propval.u32);
+			waittime = 2*61*60*1000;
+			break;
+		}
+	}
+
 	/* focus */
 	propval.u16 = 0x0200;
 	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
@@ -4878,7 +4976,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	/* poll camera until it is ready */
 	propval.u16 = 0x0001;
 	while (propval.u16 == 0x0001) {
-		ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16);
+		C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_FUJI_AFStatus, &propval, PTP_DTC_UINT16));
 		GP_LOG_D ("XXX Ready to shoot? %X", propval.u16);
 	}
 
@@ -4909,6 +5007,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		/* there is a ObjectAdded event being sent */
 
 		/* Marcus: X-Pro2 in current setup also sends just 1 event for the first capture, then none.
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
 		 * We might be missing something after capture.
 		 * But we need to drain the event queue, otherwise wait_event will see this ObjectAdded event again. */
 
@@ -5021,10 +5120,8 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			free (beforehandles.Handler);
 			return GP_OK;
 		}
-	}  while (waiting_for_timeout (&back_off_wait, event_start, 35000)); /* wait for 35 seconds after busy is no longer signaled */
-
+	}  while (waiting_for_timeout (&back_off_wait, event_start, waittime));
 	free (beforehandles.Handler);
-
 	return GP_ERROR;
 }
 
@@ -6019,7 +6116,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		/* poll camera until it is ready */
 		propval.u16 = 0x0001;
 		while (propval.u16 == 0x0001) {
-			C_PTP_REP (ptp_getdevicepropvalue (params, 0xd209, &propval, PTP_DTC_UINT16));
+			C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_FUJI_AFStatus, &propval, PTP_DTC_UINT16));
 		}
 
 		/* shoot */
@@ -6585,6 +6682,33 @@ sonyout:
 			gp_context_idle (context);
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
+		*eventtype = GP_EVENT_TIMEOUT;
+		return GP_OK;
+	}
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
+		ptp_property_issupported(params, PTP_DPC_FUJI_CurrentState)
+	) {
+		/* current strategy ... as the camera (currently) does not send us ObjectAdded events for some reason...
+		 * we just synthesize them for the generic PTP event handler code */
+		do {
+			PTPObjectHandles	handles;
+			unsigned int		i;
+			PTPObject		*oi;
+
+			if (ptp_get_one_event (params, &event))
+				goto handleregular;
+			C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles));
+			for (i=handles.n;i--;) {
+				if (PTP_RC_OK == ptp_object_find (params, handles.Handler[i], &oi)) /* already have it */
+					continue;
+				event.Code = PTP_EC_ObjectAdded;
+				event.Param1 = handles.Handler[i];
+				free (handles.Handler);
+				goto handleregular;
+			}
+			free (handles.Handler);
+			C_PTP_REP (ptp_check_event(params));
+		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
 	}

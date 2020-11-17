@@ -400,7 +400,8 @@ struct canonZoomLevelStateStruct {
 };
 
 struct canonExposureBiasStateStruct {
-	unsigned char value;
+	unsigned char valueEOS;
+	unsigned char valuePS;
 	char* label;
 };
 

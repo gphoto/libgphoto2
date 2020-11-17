@@ -375,9 +375,7 @@ pslr_handle_t pslr_init( char *model, char *device ) {
     } else {
         driveNum = 1;
         drives = malloc( driveNum * sizeof(char*) );
-        drives[0] = malloc( strlen( device )+1 );
-        strncpy( drives[0], device, strlen( device ) );
-        drives[0][strlen(device)]='\0';
+        drives[0] = strdup( device );
     }
     DPRINT("driveNum:%d\n",driveNum);
     int i;
@@ -502,7 +500,7 @@ char *get_white_balance_single_adjust_str( uint32_t adjust, char negativeChar, c
     } else if ( adjust > 7 ) {
         snprintf( ret, 4, "%c%d", positiveChar, adjust-7);
     } else {
-        ret = "";
+        strcpy(ret,"");
     }
     return ret;
 }
@@ -513,11 +511,12 @@ char *get_white_balance_adjust_str( uint32_t adjust_mg, uint32_t adjust_ba ) {
     if ( adjust_mg != 7 || adjust_ba != 7 ) {
         snprintf(ret, 8, "%s%s", get_white_balance_single_adjust_str(adjust_mg, 'M', 'G'),get_white_balance_single_adjust_str(adjust_ba, 'B', 'A'));
     } else {
-        ret = "0";
+        strcpy(ret,"0");
     }
     return ret;
 }
 
+static
 char *pslr_get_af_name(pslr_handle_t h, uint32_t af_point) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     if (p->model->af_point_num==11) {
@@ -600,6 +599,7 @@ char *get_special_setting_info( pslr_setting_status_t setting_status) {
             sprintf(strbuffer,"Unknown");
             break;
         default:
+            free(strbuffer);
             return NULL;
     }
     return strbuffer;
@@ -679,6 +679,7 @@ int pslr_get_buffer(pslr_handle_t h, int bufno, pslr_buffer_type type, int resol
         bufpos += bytes;
     }
     if ( bufpos != size ) {
+        free(buf);
         return PSLR_READ_ERROR;
     }
     pslr_buffer_close(h);
@@ -1070,7 +1071,7 @@ int pslr_buffer_open(pslr_handle_t h, int bufno, pslr_buffer_type buftype, int b
 
 uint32_t pslr_buffer_read(pslr_handle_t h, uint8_t *buf, uint32_t size) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    int i;
+    uint32_t i;
     uint32_t pos = 0;
     uint32_t seg_offs;
     uint32_t addr;
@@ -1125,7 +1126,7 @@ uint32_t pslr_fullmemory_read(pslr_handle_t h, uint8_t *buf, uint32_t offset, ui
 
 uint32_t pslr_buffer_get_size(pslr_handle_t h) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    int i;
+    uint32_t i;
     uint32_t len = 0;
     for (i = 0; i < p->segment_count; i++) {
         len += p->segments[i].length;
@@ -1778,10 +1779,10 @@ static int read_result(FDTYPE fd, uint8_t *buf, uint32_t n) {
     DPRINT("[C]\t\t\tread_result(0x%x, size=%d)\n", fd, n);
     uint8_t cmd[8] = {0xf0, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     int r;
-    int i;
+    uint32_t i;
     set_uint32_le(n, &cmd[4]);
     r = scsi_read(fd, cmd, sizeof (cmd), buf, n);
-    if (r != n) {
+    if ((uint32_t)r != n) {
         return PSLR_READ_ERROR;
     }  else {
         //  Print first 32 bytes of the result.

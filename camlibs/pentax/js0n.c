@@ -2,6 +2,7 @@
 // public domain or MIT license, contributions/improvements welcome via github at https://github.com/quartzjer/js0n
 
 #include <string.h> // one strncmp() is used to do key comparison, and a strlen(key) if no len passed in
+#include "js0n.h"
 
 // gcc started warning for the init syntax used here, is not helpful so don't generate the spam, suppressing the warning is really inconsistently supported across versions
 #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))

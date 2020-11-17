@@ -1067,6 +1067,17 @@ _put_Range_UINT8(CONFIG_PUT_ARGS) {
 	return (GP_OK);
 }
 
+static int
+_get_Fuji_Totalcount(CONFIG_GET_ARGS) {
+	char buf[20];
+
+	sprintf(buf,"%d",dpd->CurrentValue.u32 >> 16);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget, buf);
+	return	GP_OK;
+}
+
 /* generic int getter */
 static int
 _get_INT(CONFIG_GET_ARGS) {
@@ -2048,6 +2059,13 @@ static struct deviceproptableu8 nikon_liveviewsize[] = {
 };
 GENERIC8TABLE(Nikon_LiveViewSize,nikon_liveviewsize)
 
+static struct deviceproptableu16 fuji_liveviewsize[] = {
+	{ N_("XGA"),		1, 0 },
+	{ N_("VGA"),		2, 0 },
+	{ N_("QVGA"),		3, 0 },
+};
+GENERIC16TABLE(Fuji_LiveViewSize,fuji_liveviewsize)
+
 static struct deviceproptableu8 sony_qx_liveviewsize[] = {
 	{ "640x480",		1, 0 },
 	{ "1024x768",		2, 0 },
@@ -2662,6 +2680,142 @@ _put_Olympus_OMD_Bulb(CONFIG_PUT_ARGS)
 		C_PTP_REP (ret);
 	} else {
 		C_PTP_REP (ptp_olympus_omd_bulbend (params));
+	}
+	return GP_OK;
+}
+
+static struct deviceproptableu16 fuji_action[] = {
+	{ N_("Shoot"),			0x0304, 0 },
+	{ N_("Bulb On"),		0x0500, 0 },
+	{ N_("Bulb Off"),		0x000c, 0 },
+	{ N_("AF"),			0x0200, 0 },
+	{ N_("Cancel AF"),		0x0004, 0 },
+/* D208 is some kind of control, likely bitmasked. reported like an enum.
+ * 0x200 seems to mean focusing?
+ * 0x208 capture?
+ * camera starts with 0x304
+ *
+ * After setting usually it does "initiatecapture" to trigger this mode operation.
+ *
+ * xt2:    0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1,0x9300,5
+ * xt3:    0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1,0x9200,0x40,0x9300,5,0x804,0x80
+ * xt30:   0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1,0x9200,0x40,0x9300,5
+ * xt4:    0x104,0x200,0x4,0x304,0x500,0xc,0x8000,0xa000,6,0x9000,2,0x9100,1,0x9300,5,0xe,0x9200,0x40,0x804,0x80
+ * xh1:    0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1,0x9300,5
+ * gfx100: 0x104,0x200,0x4,0x304,0x500,0xc,0x8000,0xa000,6,0x9000,2,0x9100,1,0x9300,5,0xe,0x9200
+ * gfx50r: 0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1,0x9300,5,0xe
+ * xpro2:  0x104,0x200,0x4,0x304,0x500,0xc,0xa000,6,0x9000,2,0x9100,1
+ *
+ * 0x304 is for regular capture         SDK_ShootS2toS0 (default) (SDK_Shoot)
+ * 0x200 seems for autofocus (s1?)      SDK_ShootS1
+ * 0x500 start bulb? 0xc end bulb?      SDK_StartBulb
+ * 0xc                                  SDK_EndBulb
+ * 0x600                                SDK_1PushAF
+ * 0x4                                  SDK_CancelS1
+ * 0x300                                SDK_ShootS2
+ * 0x8000 migh be autowhitebalance
+ * working bulb transition (with autofocus):
+ * 	0x200 -> wait for d209 turn from 1 to 2 -> 0x500 -> wait BULBTIME seconds -> 0xc
+ * seen in fuji webcam traces:
+ * 	0x9300 -> wait for d209 turn from 1 to 2 -> 0x0005
+ * 	0x9000 -> ? not sure, was polling with d212 ?  -> 0x0002
+ */
+};
+GENERIC16TABLE(Fuji_Action,fuji_action)
+
+static int
+_get_Fuji_AFDrive(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Fuji_AFDrive(CONFIG_PUT_ARGS)
+{
+	PTPParams		*params = &(camera->pl->params);
+	GPContext		*context = ((PTPData *) params->data)->context;
+	PTPPropertyValue	pval;
+
+	/* Focusing first ... */
+	pval.u16 = 0x9300;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+	/* poll camera until it is ready */
+	pval.u16 = 0x0001;
+	while (pval.u16 == 0x0001) {
+		C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_FUJI_AFStatus, &pval, PTP_DTC_UINT16));
+		GP_LOG_D ("XXX Ready to shoot? %X", pval.u16);
+	}
+
+	/* 2 - means OK apparently, 3 - means failed and initiatecapture will get busy. */
+	if (pval.u16 == 3) { /* reported on out of focus */
+		gp_context_error (context, _("Fuji Capture failed: Perhaps no auto-focus?"));
+		return GP_ERROR;
+	}
+
+	/* release focus lock */
+
+	pval.u16 = 0x0005;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	return GP_OK;
+}
+
+static int
+_get_Fuji_Bulb(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Fuji_Bulb(CONFIG_PUT_ARGS)
+{
+	PTPParams		*params = &(camera->pl->params);
+	int			val;
+	GPContext		*context = ((PTPData *) params->data)->context;
+	PTPPropertyValue	pval;
+
+	CR (gp_widget_get_value(widget, &val));
+	if (val) {
+		/* Focusing first ... */
+		pval.u16 = 0x0200;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+		C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+		/* poll camera until it is ready */
+		pval.u16 = 0x0001;
+		while (pval.u16 == 0x0001) {
+			C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_FUJI_AFStatus, &pval, PTP_DTC_UINT16));
+			GP_LOG_D ("XXX Ready to shoot? %X", pval.u16);
+		}
+
+		/* 2 - means OK apparently, 3 - means failed and initiatecapture will get busy. */
+		if (pval.u16 == 3) { /* reported on out of focus */
+			gp_context_error (context, _("Fuji Capture failed: Perhaps no auto-focus?"));
+			return GP_ERROR;
+		}
+
+		/* now start bulb capture */
+		pval.u16 = 0x0500;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+
+		C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	} else {
+		pval.u16 = 0x000c;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+
+		C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
 	}
 	return GP_OK;
 }
@@ -3774,7 +3928,6 @@ static struct deviceproptableu16 canon_eos_colorspace[] = {
 	{ N_("AdobeRGB"),	0x02, 0 },
 };
 GENERIC16TABLE(Canon_EOS_ColorSpace,canon_eos_colorspace)
-
 
 static struct deviceproptableu8 nikon_evstep[] = {
 	{ "1/3",	0, 0 },
@@ -7454,6 +7607,30 @@ _put_Generic_OPCode(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Canon_EOS_MovieModeSw(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_MovieModeSw(CONFIG_PUT_ARGS) {
+	int		val;
+	PTPParams	*params = &(camera->pl->params);
+	CR (gp_widget_get_value(widget, &val));
+
+	if(val)
+		C_PTP_MSG (ptp_generic_no_data(params, PTP_OC_CANON_EOS_MovieSelectSWOn, 0), "Failed to set MovieSetSelectSWOn");
+	else
+		C_PTP_MSG (ptp_generic_no_data(params, PTP_OC_CANON_EOS_MovieSelectSWOff, 0), "Failed to set MovieSetSelectSWOff");
+	return GP_OK;
+}
+
+static int
 _get_Sony_Movie(CONFIG_GET_ARGS) {
 	int val;
 
@@ -9056,10 +9233,12 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_BulbStart,         _get_Canon_EOS_Bulb,            _put_Canon_EOS_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_OC_OLYMPUS_OMD_Capture,      _get_Olympus_OMD_Bulb,                _put_Olympus_OMD_Bulb },
+	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_FUJI,    PTP_OC_InitiateCapture,             _get_Fuji_Bulb,                 _put_Fuji_Bulb },
 	{ N_("UI Lock"),                        "uilock",           0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_SetUILock,         _get_Canon_EOS_UILock,          _put_Canon_EOS_UILock },
 	{ N_("Popup Flash"),                    "popupflash",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_PopupBuiltinFlash, _get_Canon_EOS_PopupFlash,      _put_Canon_EOS_PopupFlash },
 	{ N_("Drive Nikon DSLR Autofocus"),     "autofocusdrive",   0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_AfDrive,               _get_Nikon_AFDrive,             _put_Nikon_AFDrive },
 	{ N_("Drive Canon DSLR Autofocus"),     "autofocusdrive",   0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_DoAf,              _get_Canon_EOS_AFDrive,         _put_Canon_EOS_AFDrive },
+	{ N_("Drive Fuji Autofocus"),           "autofocusdrive",   0,  PTP_VENDOR_FUJI,    0,               			_get_Fuji_AFDrive,              _put_Fuji_AFDrive },
 	{ N_("Drive Nikon DSLR Manual focus"),  "manualfocusdrive", 0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_MfDrive,               _get_Nikon_MFDrive,             _put_Nikon_MFDrive },
 	{ N_("Set Nikon Autofocus area"),       "changeafarea",     0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_ChangeAfArea,          _get_Nikon_ChangeAfArea,        _put_Nikon_ChangeAfArea },
 	{ N_("Set Nikon Control Mode"),         "controlmode",      0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_ChangeCameraMode,      _get_Nikon_ControlMode,         _put_Nikon_ControlMode },
@@ -9078,6 +9257,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartMovieRecInCard,   _get_Nikon_Movie,               _put_Nikon_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_SDIOConnect,            _get_Sony_Movie,                _put_Sony_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_QX_Connect,             _get_Sony_QX_Movie,             _put_Sony_QX_Movie },
+	{ N_("Movie Mode"),                     "eosmoviemode",     0,  PTP_VENDOR_CANON,   0,                                  _get_Canon_EOS_MovieModeSw,     _put_Canon_EOS_MovieModeSw },
 	{ N_("PTP Opcode"),                     "opcode",           0,  0,                  PTP_OC_GetDeviceInfo,               _get_Generic_OPCode,            _put_Generic_OPCode },
 	{ 0,0,0,0,0,0,0 },
 };
@@ -9110,8 +9290,10 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Flash Charged"),          "flashcharged",     PTP_DPC_NIKON_FlashCharged,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("Lens Name"),              "lensname",         PTP_DPC_NIKON_LensID,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LensID,              _put_None },
 	{ N_("Lens Name"),              "lensname",         PTP_DPC_CANON_EOS_LensName,             PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
+	{ N_("Lens Name"),              "lensname",         PTP_DPC_FUJI_LensNameAndSerial,         PTP_VENDOR_FUJI,    PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Serial Number"),          "eosserialnumber",  PTP_DPC_CANON_EOS_SerialNumber,         PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Shutter Counter"),        "shuttercounter",   PTP_DPC_CANON_EOS_ShutterCounter,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
+	{ N_("Shutter Counter"),        "shuttercounter",   PTP_DPC_FUJI_TotalShotCount,            PTP_VENDOR_FUJI,    PTP_DTC_UINT32, _get_Fuji_Totalcount,           _put_None },
 	{ N_("Available Shots"),        "availableshots",   PTP_DPC_CANON_EOS_AvailableShots,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Available Shots"),        "availableshots",   PTP_DPC_NIKON_ExposureRemaining,        PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Focal Length Minimum"),   "minfocallength",   PTP_DPC_NIKON_FocalLengthMin,           PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_FocalLength,         _put_None },
@@ -9124,6 +9306,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("AF Locked"),              "aflocked",         PTP_DPC_NIKON_AFLockStatus,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("AE Locked"),              "aelocked",         PTP_DPC_NIKON_AELockStatus,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("FV Locked"),              "fvlocked",         PTP_DPC_NIKON_FVLockStatus,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
+	{ N_("Movie Switch"),	        "eosmovieswitch",   PTP_DPC_CANON_EOS_FixedMovie,           PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ 0,0,0,0,0,0,0 },
 };
 
@@ -9135,6 +9318,8 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Camera Date and Time"),   "datetime",             PTP_DPC_SONY_QX_DateTime,           PTP_VENDOR_SONY,    PTP_DTC_STR,    _get_STR_as_time,               _put_STR_as_time },
 	{ N_("Beep Mode"),              "beep",                 PTP_DPC_CANON_BeepMode,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_BeepMode,            _put_Canon_BeepMode },
 	{ N_("Image Comment"),          "imagecomment",         PTP_DPC_NIKON_ImageCommentString,   PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
+	{ N_("Image Comment"),          "imagecomment",         PTP_DPC_FUJI_Comment,               PTP_VENDOR_FUJI,    PTP_DTC_STR,    _get_STR,                       _put_STR },
+	{ N_("Device Name"),            "devicename",           PTP_DPC_FUJI_DeviceName,            PTP_VENDOR_FUJI,    PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("WLAN GUID"),          	"guid",         	PTP_DPC_NIKON_GUID,   		    PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Enable Image Comment"),   "imagecommentenable",   PTP_DPC_NIKON_ImageCommentEnable,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("LCD Off Time"),           "lcdofftime",           PTP_DPC_NIKON_MonitorOff,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LCDOffTime,          _put_Nikon_LCDOffTime },
@@ -9163,6 +9348,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Depth of Field"),         "depthoffield",         PTP_DPC_CANON_EOS_DepthOfFieldPreview, PTP_VENDOR_CANON,PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Menus and Playback"),     "menusandplayback",     PTP_DPC_NIKON_MenusAndPlayback,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_MenusAndPlayback,    _put_Nikon_MenusAndPlayback },
 	{ N_("External Recording Control"),     "externalrecordingcontrol", PTP_DPC_NIKON_ExternalRecordingControl,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,    _put_Nikon_OffOn_UINT8 },
+	{ N_("Camera Action"),          "cameraaction", 	0xd208, 			    PTP_VENDOR_FUJI,	PTP_DTC_UINT16,	_get_Fuji_Action,		_put_Fuji_Action },
 
 /* virtual */
 	{ N_("Thumb Size"),		"thumbsize",    0,  PTP_VENDOR_NIKON,   0,  _get_Nikon_Thumbsize,   _put_Nikon_Thumbsize },
@@ -9213,6 +9399,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_WhiteBalance,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_WhiteBalance,        _put_Canon_WhiteBalance },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_CANON_EOS_WhiteBalance,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_EOS_WhiteBalance,    _put_Canon_EOS_WhiteBalance },
 	{ N_("Color Temperature"),      "colortemperature",     PTP_DPC_CANON_EOS_ColorTemperature,     PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_INT },
+	{ N_("Color Temperature"),      "colortemperature",     PTP_DPC_FUJI_ColorTemperature,          PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
 	{ N_("Color Temperature"),      "colortemperature",     PTP_DPC_SONY_ColorTemp,                 PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_WhiteBalance,                   0,                  PTP_DTC_UINT16, _get_WhiteBalance,              _put_WhiteBalance },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_NIKON_1_WhiteBalance,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_WhiteBalance,      _put_Nikon_1_WhiteBalance },
@@ -9224,6 +9411,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Model"),            "colormodel",           PTP_DPC_NIKON_ColorModel,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorModel,          _put_Nikon_ColorModel },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_NIKON_ColorSpace,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorSpace,          _put_Nikon_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_CANON_EOS_ColorSpace,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace },
+	{ N_("Color Space"),            "colorspace",           PTP_DPC_FUJI_ColorSpace,                PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace }, /* uses 1 for sRGB, and 2 for AdobeRGB too, same as EOS */
 	{ N_("Video Format"),           "videoformat",          PTP_DPC_VideoFormat,                    0,                  PTP_DTC_UINT32, _get_VideoFormat,               _put_VideoFormat },
 	{ N_("Video Resolution"),       "videoresolution",      PTP_DPC_VideoResolution,                0,                  PTP_DTC_STR   , _get_STR_ENUMList,              _put_STR },
 	{ N_("Video Quality"),          "videoquality",         PTP_DPC_VideoQuality,                   0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
@@ -9359,6 +9547,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Live View Exposure Preview"),     "liveviewexposurepreview",  PTP_DPC_NIKON_LiveViewExposurePreview,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
 	{ N_("Live View Image Zoom Ratio"),     "liveviewimagezoomratio",   PTP_DPC_NIKON_LiveViewImageZoomRatio,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewImageZoomRatio,  _put_Nikon_LiveViewImageZoomRatio },
 	{ N_("Live View White Balance"),        "liveviewwhitebalance",     PTP_DPC_NIKON_LiveViewWhiteBalance,     PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_WhiteBalance,                  _put_WhiteBalance },
+	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_FUJI_LiveViewImageSize,         PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_LiveViewSize,             _put_Fuji_LiveViewSize },
+	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_SONY_QX_LiveviewResolution,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_QX_LiveViewSize,          _put_Sony_QX_LiveViewSize },
 	{ N_("File Number Sequencing"),         "filenrsequencing",         PTP_DPC_NIKON_FileNumberSequence,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Sign"),                     "flashsign",                PTP_DPC_NIKON_FlashSign,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Modelling Flash"),                "modelflash",               PTP_DPC_NIKON_E4ModelingFlash,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
@@ -9585,7 +9775,6 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Flash Shutter Speed"),            "flashshutterspeed",        PTP_DPC_NIKON_FlashShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_FlashShutterSpeed,   _put_Nikon_D3s_FlashShutterSpeed },
 
 	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_NIKON_LiveViewImageSize,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewSize,            _put_Nikon_LiveViewSize },
-	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_SONY_QX_LiveviewResolution,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_QX_LiveViewSize,          _put_Sony_QX_LiveViewSize },
 
 	{ 0,0,0,0,0,0,0 },
 };

@@ -810,6 +810,7 @@ char *read_json_file(int *jsonsize) {
     ssize_t ret = read(jsonfd, jsontext, *jsonsize);
     if (ret < *jsonsize) {
         fprintf(stderr, "Could not read pentax_settings.json file\n");
+        free(jsontext);
         return NULL;
     }
     DPRINT("json text:\n%.*s\n", *jsonsize, jsontext);
@@ -888,6 +889,7 @@ pslr_setting_def_t *setting_file_process(const char *cameraid, int *def_num) {
     return ret;
 }
 
+static
 pslr_bool_setting ipslr_settings_parse_bool(const uint8_t *buf, const pslr_setting_def_t *def) {
     pslr_bool_setting bool_setting;
     if (def->value != NULL) {
@@ -907,6 +909,7 @@ pslr_bool_setting ipslr_settings_parse_bool(const uint8_t *buf, const pslr_setti
     return bool_setting;
 }
 
+static
 pslr_uint16_setting ipslr_settings_parse_uint16(const uint8_t *buf, const pslr_setting_def_t *def) {
     pslr_uint16_setting uint16_setting;
     if (def->value != NULL) {
