@@ -128,7 +128,8 @@ dtoh64ap (PTPParams *params, const unsigned char *a)
 
 /*
  * PTP strings ... if the size field is:
- * size 0  : "empty string" ... we interpret that as NULL, return 1
+ * size 0  : "empty string" ... we interpret that as string with just \0 terminator, return 1
+ *  (the whole PTP standard is not that clear, it occasionaly refers to strings as optional in such cases, but no clear guidance).
  * size > 0: all other strings have a terminating \0, included in the length (not sure how conforming everyone is here)
  *
  * len - in ptp string characters currently
@@ -152,6 +153,7 @@ ptp_unpack_string(PTPParams *params, unsigned char* data, uint32_t offset, uint3
 	length = dtoh8a(&data[offset]);	/* PTP_MAXSTRLEN == 255, 8 bit len */
 	if (length == 0) {		/* nothing to do? */
 		*len = 0;
+		*retstr = strdup("");	/* return an empty string, not NULL */
 		return 1;
 	}
 
