@@ -1,5 +1,9 @@
 libgphoto2 2.5.26.1 development release
 
+ptp2:
+* Nikon: download of files larger than 4GB supporte
+* generic: try handle files larger than 4GB
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.26 release
 
