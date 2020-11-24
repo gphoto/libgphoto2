@@ -1917,6 +1917,39 @@ ptp_nikon_getlargethumb (PTPParams* params, uint32_t handle, unsigned char** obj
 }
 
 /**
+ * ptp_nikon_getobjectsize:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		objectsize		- size of object
+ *
+ * Get the 64bit objectsize for object 'handle' from device and store the size in objectsize
+ * allocated 'object'. This function is Nikon specific.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_nikon_getobjectsize (PTPParams* params, uint32_t handle, uint64_t *objectsize)
+{
+	PTPContainer	ptp;
+	unsigned char	*data = NULL;
+	unsigned int	size = 0;
+
+	*objectsize = 0;
+
+	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetObjectSize, handle);
+	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+
+	if (size < 8) {
+		free (data);
+		return PTP_RC_GeneralError;
+	}
+
+	*objectsize = dtoh64ap(params, data);
+	free (data);
+	return PTP_RC_OK;
+}
+
+/**
  * ptp_deleteobject:
  * params:	PTPParams*
  *		handle			- object handle
@@ -8569,6 +8602,23 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 		/* Second EOS issue, 0x20000000 has 0x20000000 as parent */
 		if (ob->oi.ParentObject == handle)
 			ob->oi.ParentObject = 0;
+
+		/* Detect if the file is larger than 4GB ... indicator is size 0xffffffff ...
+		 * In that case explicitly request the MTP object proplist to get the right size */
+		if (ob->oi.ObjectCompressedSize == 0xffffffffUL) {
+			uint64_t	newsize;
+			if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON)	&&
+				ptp_operation_issupported(params,PTP_OC_NIKON_GetObjectSize)	&&
+				(PTP_RC_OK == ptp_nikon_getobjectsize(params, handle, &newsize))
+			) {
+				ob->oi.ObjectCompressedSize = newsize;
+				goto read64bit;
+			}
+			/* more methods like e.g. for Canon */
+			/* if not try MTP method */
+			want |= PTPOBJECT_MTPPROPLIST_LOADED;
+read64bit:		;
+		}
 
 		/* Apple iOS X does that for the root folder. */
 		if ((ob->oi.ParentObject == ob->oi.StorageID)) {
