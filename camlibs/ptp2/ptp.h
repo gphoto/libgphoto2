@@ -4228,6 +4228,7 @@ uint16_t ptp_nikon_curve_download (PTPParams* params,
 uint16_t ptp_nikon_getlargethumb (PTPParams *params, uint32_t handle,
 				unsigned char** object, unsigned int *len);
 uint16_t ptp_nikon_getobjectsize (PTPParams* params, uint32_t handle, uint64_t *objectsize);
+uint16_t ptp_nikon_getpartialobjectex (PTPParams* params, uint32_t handle, uint64_t offset, uint64_t maxbytes, unsigned char** object, uint32_t *len);
 uint16_t ptp_nikon_getptpipinfo (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_getwifiprofilelist (PTPParams* params);
 uint16_t ptp_nikon_writewifiprofile (PTPParams* params, PTPNIKONWifiProfile* profile);

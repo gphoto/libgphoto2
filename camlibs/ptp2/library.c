@@ -8369,7 +8369,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * (TODO for Marcus and 2.2 ;)
 	 */
 	uint32_t oid;
-	uint32_t size;
+	uint64_t size;
 	uint32_t storage;
 	PTPObject *ob;
 	PTPParams *params = &camera->pl->params;
@@ -8512,10 +8512,39 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		size=ob->oi.ObjectCompressedSize;
 #define BLOBSIZE 1*1024*1024
+		if (size > 0xffffffffUL) {	/* larger than 4GB */
+			if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
+				(ptp_operation_issupported(params,PTP_OC_NIKON_GetPartialObjectEx))
+			) {
+#define NIKONBLOBSIZE 10*1024*1024
+				unsigned char	*ximage = NULL;
+				uint64_t 	offset = 0;
+
+				while (offset < size) {
+					uint64_t	xsize = size - offset;
+					uint32_t	xlen;
+
+					if (xsize > NIKONBLOBSIZE)
+						xsize = NIKONBLOBSIZE;
+					C_PTP_REP (ptp_nikon_getpartialobjectex (params, oid, offset, xsize, &ximage, &xlen));
+					gp_file_append (file, (char*)ximage, xlen);
+					free (ximage);
+					ximage = NULL;
+					offset += xlen;
+					if (!xlen) {
+						GP_LOG_E ("nikon_getpartialobject loop: offset=%ld, size is %ld, xlen returned is 0?", offset, size);
+						break;
+					}
+				}
+				goto done;
+			}
+			gp_context_error (context, _("File '%s/%s' is larger than 4GB and we have no download method."), folder, filename);
+			return GP_ERROR_BAD_PARAMETERS;
+		}
 		/* We also need this for Nikon D850 and very big RAWs (>40 MB) */
 		/* Try the generic method first, EOS R does not like the second for some reason */
 		if (	(ptp_operation_issupported(params,PTP_OC_GetPartialObject)) &&
-			(size > BLOBSIZE)
+			(size > BLOBSIZE) && (size <= 0xffffffffUL)
 		) {
 				unsigned char	*ximage = NULL;
 				uint32_t 	offset = 0;
@@ -8532,7 +8561,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					ximage = NULL;
 					offset += xlen;
 					if (!xlen) {
-						GP_LOG_E ("getpartialobject loop: offset=%d, size is %d, xlen returned is 0?", offset, size);
+						GP_LOG_E ("getpartialobject loop: offset=%d, size is %ld, xlen returned is 0?", offset, size);
 						break;
 					}
 				}
@@ -8557,7 +8586,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					ximage = NULL;
 					offset += xsize;
 					if (!xsize) {
-						GP_LOG_E ("getpartialobject loop: offset=%d, size is %d, xlen returned is 0?", offset, size);
+						GP_LOG_E ("getpartialobject loop: offset=%d, size is %ld, xlen returned is 0?", offset, size);
 						break;
 					}
 				}

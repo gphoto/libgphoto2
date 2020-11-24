@@ -1877,6 +1877,32 @@ ptp_getpartialobject_to_handler (PTPParams* params, uint32_t handle, uint32_t of
 }
 
 /**
+ * ptp_nikon_getpartialobjectex:
+ * params:	PTPParams*
+ *		handle			- Object handle
+ *		offset			- 64bit offset into object
+ *		maxbytes		- 64bit maximum of bytes to read
+ *		handler			- a ptp data handler
+ *
+ * Get object 'handle' from device and send the data to the
+ * data handler. Start from offset and read at most maxbytes.
+ *
+ * Return values: Some PTP_RC_* code.
+ **/
+uint16_t
+ptp_nikon_getpartialobjectex (PTPParams* params, uint32_t handle, uint64_t offset,
+				uint64_t maxbytes, unsigned char** object,
+				uint32_t *len)
+{
+	PTPContainer ptp;
+
+	/* casts due to varargs otherwise pushing 64bit values on the stack */
+	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetPartialObjectEx, handle, ((uint32_t)offset & 0xFFFFFFFF), (uint32_t)(offset >> 32), ((uint32_t)maxbytes & 0xFFFFFFFF), (uint32_t)(maxbytes >> 32));
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, object, len);
+}
+
+
+/**
  * ptp_getthumb:
  * params:	PTPParams*
  *		handle			- Object handle
