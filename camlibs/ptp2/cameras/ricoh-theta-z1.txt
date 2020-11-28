@@ -1,0 +1,212 @@
+Camera summary:
+Manufacturer: Ricoh Company, Ltd.
+Model: RICOH THETA Z1
+  Version: 1.50.1
+  Serial Number: nnnnnnnnj
+Vendor Extension ID: 0x6 (1.10)
+
+Capture Formats: 
+Display Formats: Association/Directory, JPEG, MP4, DNG, Firmware
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height
+	MP4/b982: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height
+	DNG/3811: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height
+	Firmware/b802: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Builtin RAM
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 21055815680 (20080 MB)
+	Free Space (Bytes): 8002780436 (7632 MB)
+	Free Space (Images): 954
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 77% (77)
+Functional Mode(0x5002):(read only) (type=0x4) Enumeration [0] value: 0
+Image Size(0x5003): error 2019 on query.
+White Balance(0x5005): error 2019 on query.
+F-Number(0x5007): error 2019 on query.
+Exposure Program Mode(0x500e): error 2019 on query.
+Exposure Index (film speed ISO)(0x500f): error 2019 on query.
+Exposure Bias Compensation(0x5010): error 2019 on query.
+Date & Time(0x5011): error 2019 on query.
+Pre-Capture Delay(0x5012): error 2019 on query.
+Still Capture Mode(0x5013): error 2019 on query.
+Timelapse Number(0x501a): error 2019 on query.
+Timelapse Interval(0x501b): error 2019 on query.
+Audio Volume(0x502c): error 2019 on query.
+Property 0xd006: error 2019 on query.
+Property 0xd00f: error 2019 on query.
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Property 0xd801:(readwrite) (type=0xffff) '(null)'
+Property 0xd803: error 2019 on query.
+Property 0xd805: error 2019 on query.
+Property 0xd806: error 2019 on query.
+Property 0xd808: error 2019 on query.
+Property 0xd809: error 2019 on query.
+Property 0xd80a: error 2019 on query.
+Property 0xd80b: error 2019 on query.
+Property 0xd80c:(read only) (type=0x2) Enumeration [0,1,2] value: 1
+Property 0xd80d: error 2019 on query.
+Property 0xd80e:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd80f: error 2019 on query.
+Property 0xd810: error 2019 on query.
+Property 0xd811: error 2019 on query.
+Property 0xd812: error 2019 on query.
+Property 0xd813: error 2019 on query.
+Property 0xd814:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd815: error 2019 on query.
+Property 0xd816: error 2019 on query.
+Property 0xd817: error 2019 on query.
+Property 0xd818: error 2019 on query.
+Property 0xd81a: error 2019 on query.
+Property 0xd81b: error 2019 on query.
+Property 0xd81c: error 2019 on query.
+Property 0xd81d: error 2019 on query.
+Property 0xd81f: error 2019 on query.
+Property 0xd820: error 2019 on query.
+Property 0xd821: error 2019 on query.
+Property 0xd822: error 2019 on query.
+Property 0xd823: error 2019 on query.
+Property 0xd824: error 2019 on query.
+Property 0xd825: error 2019 on query.
+Property 0xd826: error 2019 on query.
+Property 0xd827: error 2019 on query.
+Property 0xd829: error 2019 on query.
+Property 0xd82a: error 2019 on query.
+Property 0xd82c:(readwrite) (type=0x2) Enumeration [1,2,3] value: 2
+Property 0xd831: error 2019 on query.
+
+Device info:
+Manufacturer: Ricoh Company, Ltd.
+  Model: RICOH THETA Z1
+  device version: 1.50.1
+  serial number: 'nnnnnnnn'
+Vendor extension ID: 0x00000006
+Vendor extension version: 110
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100e (Initiate capture)
+  0x1013 (Power down device)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x1017 (Reset device property value)
+  0x1018 (Terminate open capture)
+  0x101b (Get partial object)
+  0x101c (Initiate open capture)
+  0x9801 (Get object properties supported)
+  0x9802 (Get object property description)
+  0x9803 (Get object property value)
+  0x9804 (Set object property value)
+  0x9805 (Get object property list)
+  0x9001 (Unknown PTP_OC)
+  0x9991 (Unknown PTP_OC)
+  0x9999 (Unknown PTP_OC)
+  0x999a (Unknown PTP_OC)
+  0x999b (Unknown PTP_OC)
+  0x999c (Unknown PTP_OC)
+  0x999d (Unknown PTP_OC)
+  0x99a2 (Unknown PTP_OC)
+  0x99a3 (Unknown PTP_OC)
+  0x99a4 (Unknown PTP_OC)
+  0x99a5 (Unknown PTP_OC)
+  0x99a6 (Unknown PTP_OC)
+  0x99a7 (Unknown PTP_OC)
+  0x99a8 (Unknown PTP_OC)
+  0x99a9 (Unknown PTP_OC)
+  0x99aa (Unknown PTP_OC)
+  0x99ab (Unknown PTP_OC)
+  0x99ad (Unknown PTP_OC)
+  0x99b2 (Unknown PTP_OC)
+  0x99b3 (Unknown PTP_OC)
+  0x99b5 (Unknown PTP_OC)
+  0x99b6 (Unknown PTP_OC)
+  0x99b7 (Unknown PTP_OC)
+  0x99b8 (Unknown PTP_OC)
+  0x99b9 (Unknown PTP_OC)
+  0x99ae (Unknown PTP_OC)
+Events Supported:
+  0x4002 (ObjectAdded)
+  0x4006 (DevicePropChanged)
+  0x400a (StoreFull)
+  0x400c (StorageInfoChanged)
+  0x400d (CaptureComplete)
+Device Properties Supported:
+  0x5001 (Battery Level)
+  0x5002 (Functional Mode)
+  0x5003 (Image Size)
+  0x5005 (White Balance)
+  0x5007 (F-Number)
+  0x500e (Exposure Program Mode)
+  0x500f (Exposure Index (film speed ISO))
+  0x5010 (Exposure Bias Compensation)
+  0x5011 (Date & Time)
+  0x5012 (Pre-Capture Delay)
+  0x5013 (Still Capture Mode)
+  0x501a (Timelapse Number)
+  0x501b (Timelapse Interval)
+  0x502c (Audio Volume)
+  0xd006 (Unknown DPC code)
+  0xd00f (Unknown DPC code)
+  0xd407 (Perceived Device Type)
+  0xd801 (Unknown DPC code)
+  0xd803 (Unknown DPC code)
+  0xd805 (Unknown DPC code)
+  0xd806 (Unknown DPC code)
+  0xd808 (Unknown DPC code)
+  0xd809 (Unknown DPC code)
+  0xd80a (Unknown DPC code)
+  0xd80b (Unknown DPC code)
+  0xd80c (Unknown DPC code)
+  0xd80d (Unknown DPC code)
+  0xd80e (Unknown DPC code)
+  0xd80f (Unknown DPC code)
+  0xd810 (Unknown DPC code)
+  0xd811 (Unknown DPC code)
+  0xd812 (Unknown DPC code)
+  0xd813 (Unknown DPC code)
+  0xd814 (Unknown DPC code)
+  0xd815 (Unknown DPC code)
+  0xd816 (Unknown DPC code)
+  0xd817 (Unknown DPC code)
+  0xd818 (Unknown DPC code)
+  0xd81a (Unknown DPC code)
+  0xd81b (Unknown DPC code)
+  0xd81c (Unknown DPC code)
+  0xd81d (Unknown DPC code)
+  0xd81f (Unknown DPC code)
+  0xd820 (Unknown DPC code)
+  0xd821 (Unknown DPC code)
+  0xd822 (Unknown DPC code)
+  0xd823 (Unknown DPC code)
+  0xd824 (Unknown DPC code)
+  0xd825 (Unknown DPC code)
+  0xd826 (Unknown DPC code)
+  0xd827 (Unknown DPC code)
+  0xd829 (Unknown DPC code)
+  0xd82a (Unknown DPC code)
+  0xd82c (Unknown DPC code)
+  0xd831 (Unknown DPC 

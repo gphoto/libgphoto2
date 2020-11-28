@@ -1,0 +1,199 @@
+Camera summary:
+Manufacturer: Ricoh Company, Ltd.
+Model: RICOH THETA V
+  Version: 3.50.1
+  Serial Number: nnnnnnnn
+Vendor Extension ID: 0x6 (1.10)
+
+Capture Formats: 
+Display Formats: Association/Directory, JPEG, MP4, Firmware
+Supported MTP Object Properties:
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height
+	MP4/b982: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height
+	Firmware/b802: dc01/StorageID dc02/ObjectFormat dc04/ObjectSize dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Builtin RAM
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 21088788480 (20111 MB)
+	Free Space (Bytes): 20480942080 (19532 MB)
+	Free Space (Images): 4883
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 98% (98)
+Functional Mode(0x5002):(read only) (type=0x4) Enumeration [0] value: 0
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'5376x2688'
+	] value: '5376x2688'
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,32769,32770,6,32800,32771,32772,32773,32774,32775,32776] value: Automatic (2)
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,2,4,32771] value: P (2)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [65535] value: ISO 65535 (65535)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [2000,1700,1300,1000,700,300,0,-300,-700,-1000,-1300,-1700,-2000] value: 0.0 stops (0)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20201128T140958+0100'
+Pre-Capture Delay(0x5012):(readwrite) (type=0x6) Range [0 - 10000, step 1000] value: 0.0s (0)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,3,32770,32772,32773,32774,32775] value: Single Shot (1)
+Timelapse Number(0x501a):(readwrite) (type=0x4) Range [0 - 9999, step 1] value: 0
+Timelapse Interval(0x501b):(readwrite) (type=0x6) Range [4000 - 3600000, step 1000] value: 0.4s (4000)
+Audio Volume(0x502c):(readwrite) (type=0x6) Range [0 - 100, step 1] value: 100
+Property 0xd006:(read only) (type=0x6) 16
+Property 0xd00f:(readwrite) (type=0x8) Enumeration [0] value: 0
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Property 0xd801:(readwrite) (type=0xffff) '(null)'
+Property 0xd803:(readwrite) (type=0x4) Range [0 - 65534, step 1] value: 0
+Property 0xd805:(readwrite) (type=0xffff) 'THETAYL00165759.OSC'
+Property 0xd806:(readwrite) (type=0xffff) '00165759'
+Property 0xd808:(read only) (type=0x2) Enumeration [0,1,2,3,4] value: 0
+Property 0xd809:(read only) (type=0x4) Range [0 - 1499, step 1] value: 0
+Property 0xd80a:(read only) (type=0x4) Range [0 - 1500, step 1] value: 0
+Property 0xd80b:(readwrite) (type=0x2) Enumeration [0,1,2,3,4] value: 0
+Property 0xd80c:(read only) (type=0x2) Enumeration [0,1,2] value: 1
+Property 0xd80d:(read only) (type=0x4) 2797
+Property 0xd80e:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd812: error 201b on query.
+Property 0xd813:(readwrite) (type=0x4) Range [2500 - 10000, step 100] value: 5000
+Property 0xd814:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd815:(readwrite) (type=0xffff) 'THETAYL00165759'
+Property 0xd816:(readwrite) (type=0xffff) '00165759'
+Property 0xd817:(readwrite) (type=0x4) Enumeration [1] value: 1
+Property 0xd818:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd81a:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd81b:(readwrite) (type=0x6) Range [0 - 2592000, step 60] value: 64800
+Property 0xd81c:(readwrite) (type=0x2) Enumeration [0,1,2] value: 0
+Property 0xd81d:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd81f:(readwrite) (type=0x2) Enumeration [0,1,2] value: 0
+Property 0xd820:(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5,6,7,8] value: 0
+Property 0xd821:(readwrite) (type=0x2) Enumeration [0] value: 0
+Property 0xd822:(read only) (type=0x4) 0
+Property 0xd823:(readwrite) (type=0x4) Enumeration [300,1500] value: 1500
+Property 0xd825:(readwrite) (type=0x2) Enumeration [0,1,2,3,4] value: 0
+Property 0xd826:(readwrite) (type=0x4) Enumeration [200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200] value: 1600
+Property 0xd829:(readwrite) (type=0x4) Enumeration [0] value: 0
+Property 0xd82a:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd82c:(readwrite) (type=0x2) Enumeration [1,2,3] value: 2
+Property 0xd831:(read only) (type=0xffff) 'ProgressRate:000'
+
+Device info:
+Manufacturer: Ricoh Company, Ltd.
+  Model: RICOH THETA V
+  device version: 3.50.1
+  serial number: 'nnnnnnnn'
+Vendor extension ID: 0x00000006
+Vendor extension version: 110
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100e (Initiate capture)
+  0x1013 (Power down device)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x1017 (Reset device property value)
+  0x1018 (Terminate open capture)
+  0x101b (Get partial object)
+  0x101c (Initiate open capture)
+  0x9801 (Get object properties supported)
+  0x9802 (Get object property description)
+  0x9803 (Get object property value)
+  0x9804 (Set object property value)
+  0x9805 (Get object property list)
+  0x9001 (Unknown PTP_OC)
+  0x9991 (Unknown PTP_OC)
+  0x9999 (Unknown PTP_OC)
+  0x999a (Unknown PTP_OC)
+  0x999b (Unknown PTP_OC)
+  0x999c (Unknown PTP_OC)
+  0x999d (Unknown PTP_OC)
+  0x99a2 (Unknown PTP_OC)
+  0x99a3 (Unknown PTP_OC)
+  0x99a4 (Unknown PTP_OC)
+  0x99a5 (Unknown PTP_OC)
+  0x99a6 (Unknown PTP_OC)
+  0x99a7 (Unknown PTP_OC)
+  0x99a8 (Unknown PTP_OC)
+  0x99a9 (Unknown PTP_OC)
+  0x99aa (Unknown PTP_OC)
+  0x99ab (Unknown PTP_OC)
+  0x99ad (Unknown PTP_OC)
+  0x99b2 (Unknown PTP_OC)
+  0x99b3 (Unknown PTP_OC)
+  0x99b5 (Unknown PTP_OC)
+  0x99b6 (Unknown PTP_OC)
+  0x99b9 (Unknown PTP_OC)
+  0x99ae (Unknown PTP_OC)
+Events Supported:
+  0x4002 (ObjectAdded)
+  0x4006 (DevicePropChanged)
+  0x400a (StoreFull)
+  0x400c (StorageInfoChanged)
+  0x400d (CaptureComplete)
+Device Properties Supported:
+  0x5001 (Battery Level)
+  0x5002 (Functional Mode)
+  0x5003 (Image Size)
+  0x5005 (White Balance)
+  0x500e (Exposure Program Mode)
+  0x500f (Exposure Index (film speed ISO))
+  0x5010 (Exposure Bias Compensation)
+  0x5011 (Date & Time)
+  0x5012 (Pre-Capture Delay)
+  0x5013 (Still Capture Mode)
+  0x501a (Timelapse Number)
+  0x501b (Timelapse Interval)
+  0x502c (Audio Volume)
+  0xd006 (Unknown DPC code)
+  0xd00f (Unknown DPC code)
+  0xd407 (Perceived Device Type)
+  0xd801 (Unknown DPC code)
+  0xd803 (Unknown DPC code)
+  0xd805 (Unknown DPC code)
+  0xd806 (Unknown DPC code)
+  0xd808 (Unknown DPC code)
+  0xd809 (Unknown DPC code)
+  0xd80a (Unknown DPC code)
+  0xd80b (Unknown DPC code)
+  0xd80c (Unknown DPC code)
+  0xd80d (Unknown DPC code)
+  0xd80e (Unknown DPC code)
+  0xd812 (Unknown DPC code)
+  0xd813 (Unknown DPC code)
+  0xd814 (Unknown DPC code)
+  0xd815 (Unknown DPC code)
+  0xd816 (Unknown DPC code)
+  0xd817 (Unknown DPC code)
+  0xd818 (Unknown DPC code)
+  0xd81a (Unknown DPC code)
+  0xd81b (Unknown DPC code)
+  0xd81c (Unknown DPC code)
+  0xd81d (Unknown DPC code)
+  0xd81f (Unknown DPC code)
+  0xd820 (Unknown DPC code)
+  0xd821 (Unknown DPC code)
+  0xd822 (Unknown DPC code)
+  0xd823 (Unknown DPC code)
+  0xd825 (Unknown DPC code)
+  0xd826 (Unknown DPC code)
+  0xd829 (Unknown DPC code)
+  0xd82a (Unknown DPC code)
+  0xd82c (Unknown DPC code)
+  0xd831 (Unknown DPC code)
