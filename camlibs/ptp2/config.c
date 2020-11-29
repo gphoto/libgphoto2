@@ -643,7 +643,9 @@ nikon_wait_busy(PTPParams *params, int waitms, int timeout) {
 		tries=50;
 	do {
 		res = ptp_nikon_device_ready(params);
-		if (res != PTP_RC_DeviceBusy)
+		if (	(res != PTP_RC_DeviceBusy) &&
+			(res != PTP_RC_NIKON_Bulb_Release_Busy)
+		)
 			return res;
 		if (waitms) usleep(waitms*1000)/*wait a bit*/;
 	} while (tries--);

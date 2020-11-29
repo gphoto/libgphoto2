@@ -804,7 +804,9 @@ nikon_wait_busy(PTPParams *params, int waitms, int timeout) {
 
 	do {
 		res = ptp_nikon_device_ready(params);
-		if (res != PTP_RC_DeviceBusy) {
+                if (    (res != PTP_RC_DeviceBusy) &&
+                        (res != PTP_RC_NIKON_Bulb_Release_Busy)
+                ) {
 			if (res == PTP_RC_NIKON_Silent_Release_Busy)	/* seems to mean something like "not relevant" ... will repeat forever */
 				return PTP_RC_OK;
 			return res;
