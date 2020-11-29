@@ -1882,7 +1882,7 @@ ptp_getpartialobject_to_handler (PTPParams* params, uint32_t handle, uint32_t of
  *		handle			- Object handle
  *		offset			- 64bit offset into object
  *		maxbytes		- 64bit maximum of bytes to read
- *		handler			- a ptp data handler
+ *		handler			- a ptp pata handler
  *
  * Get object 'handle' from device and send the data to the
  * data handler. Start from offset and read at most maxbytes.
@@ -8643,6 +8643,7 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 			/* more methods like e.g. for Canon */
 			/* if not try MTP method */
 			want |= PTPOBJECT_MTPPROPLIST_LOADED;
+			params->device_flags |= DEVICE_FLAG_PROPLIST_OVERRIDES_OI; /* FIXME: wild hack so below code works, needs review. */
 read64bit:		;
 		}
 
