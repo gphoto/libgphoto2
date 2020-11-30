@@ -1675,7 +1675,7 @@ _get_Canon_ZoomRange(CONFIG_GET_ARGS) {
 	float	f, t, b, s;
 
 	if (!(dpd->FormFlag & PTP_DPFF_Range))
-		return (GP_ERROR);
+		return GP_ERROR;
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 	f = (float)dpd->CurrentValue.u16;
@@ -1684,7 +1684,7 @@ _get_Canon_ZoomRange(CONFIG_GET_ARGS) {
 	s = (float)dpd->FORM.Range.StepSize.u16;
 	gp_widget_set_range (*widget, b, t, s);
 	gp_widget_set_value (*widget, &f);
-	return (GP_OK);
+	return GP_OK;
 }
 
 static int
