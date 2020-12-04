@@ -144,8 +144,10 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 	GP_LOG_DATA ( (char*)request, len, "ptpip/oprequest data:");
 	ret = write (params->cmdfd, request, len);
 	free (request);
-	if (ret == -1)
+	if (ret == -1) {
 		perror ("sendreq/write to cmdfd");
+		return GP_ERROR_IO;
+	}
 	if (ret != len) {
 		GP_LOG_E ("ptp_ptpip_sendreq() len =%d but ret=%d", len, ret);
 		return PTP_RC_OK;
@@ -253,8 +255,10 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	htod32a(&request[ptpip_startdata_unknown  + 8],0);
 	GP_LOG_DATA ((char*)request, sizeof(request), "ptpip/senddata header:");
 	ret = write (params->cmdfd, request, sizeof(request));
-	if (ret == -1)
+	if (ret == -1) {
 		perror ("sendreq/write to cmdfd");
+		return GP_ERROR_IO;
+	}
 	if (ret != sizeof(request)) {
 		GP_LOG_E ("ptp_ptpip_senddata() len=%d but ret=%d", (int)sizeof(request), ret);
 		return PTP_RC_GeneralError;
