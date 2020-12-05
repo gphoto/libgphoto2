@@ -319,6 +319,24 @@ AS_IF([test "x$with_jpeg" != "xno"], [
 GP_CONFIG_MSG([JPEG mangling support],[${libjpeg_msg}])
 
 dnl ---------------------------------------------------------------------------
+dnl check for ws2_32
+dnl ---------------------------------------------------------------------------
+LIBWS232=""
+libws232_msg="no"
+AC_SUBST(LIBWS232)
+AC_ARG_WITH([ws232], AS_HELP_STRING([--without-ws232], [Build without ws2_32 library (default: no)]))
+AS_IF([test "x$with_jpeg" != "xno"], [
+	AC_CHECK_LIB(ws2_32,WSAStartup,[
+		AC_CHECK_HEADER(winsock.h,[
+			AC_DEFINE(HAVE_LIBWS232,1,[define if we found LIBWS232 and its headers])
+			LIBWS232="-lws2_32"
+			libws232_msg="yes"
+		])
+	])
+])
+GP_CONFIG_MSG([Winsocket support (for PTP/IP)],[${libws232_msg}])
+
+dnl ---------------------------------------------------------------------------
 dnl check for libxml2
 dnl ---------------------------------------------------------------------------
 GP_CHECK_LIBRARY([LIBXML2],[libxml-2.0],[>= 2.0],
