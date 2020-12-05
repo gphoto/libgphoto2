@@ -41,8 +41,11 @@
 #include <sys/select.h>
 #endif
 
+#include "ptpip-private.h"
+
 #ifdef WIN32
-# include <winsock.h>
+# include <winsock2.h>
+# include <ws2tcpip.h>
 #else
 # include <sys/socket.h>
 # include <netinet/in.h>
@@ -142,9 +145,9 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 		break;
 	}
 	GP_LOG_DATA ( (char*)request, len, "ptpip/oprequest data:");
-	ret = write (params->cmdfd, request, len);
+	ret = PTPSOCK_WRITE(params->cmdfd, request, len);
 	free (request);
-	if (ret == -1) {
+	if (ret == PTPSOCK_ERR) {
 		perror ("sendreq/write to cmdfd");
 		return GP_ERROR_IO;
 	}
@@ -162,8 +165,8 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 
 	xhdr = (unsigned char*)hdr; curread = 0; len = sizeof (PTPIPHeader);
 	while (curread < len) {
-		ret = read (fd, xhdr + curread, len - curread);
-		if (ret == -1) {
+		ret = PTPSOCK_READ (fd, xhdr + curread, len - curread);
+		if (ret == PTPSOCK_ERR) {
 			perror ("read PTPIPHeader");
 			return PTP_RC_GeneralError;
 		}
@@ -186,8 +189,8 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 	}
 	curread = 0;
 	while (curread < len) {
-		ret = read (fd, (*data)+curread, len-curread);
-		if (ret == -1) {
+		ret = PTPSOCK_READ (fd, (*data)+curread, len-curread);
+		if (ret == PTPSOCK_ERR) {
 			GP_LOG_E ("error %d in reading PTPIP data", errno);
 			free (*data);*data = NULL;
 			return PTP_RC_GeneralError;
@@ -254,8 +257,8 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	htod32a(&request[ptpip_startdata_totallen + 8],size);
 	htod32a(&request[ptpip_startdata_unknown  + 8],0);
 	GP_LOG_DATA ((char*)request, sizeof(request), "ptpip/senddata header:");
-	ret = write (params->cmdfd, request, sizeof(request));
-	if (ret == -1) {
+	ret = PTPSOCK_WRITE (params->cmdfd, request, sizeof(request));
+	if (ret == PTPSOCK_ERR) {
 		perror ("sendreq/write to cmdfd");
 		return GP_ERROR_IO;
 	}
@@ -291,8 +294,8 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		GP_LOG_DATA ((char*)xdata, towrite2, "ptpip/senddata data:");
 		written = 0;
 		while (written < towrite2) {
-			ret = write (params->cmdfd, xdata+written, towrite2-written);
-			if (ret == -1) {
+			ret = PTPSOCK_WRITE (params->cmdfd, xdata+written, towrite2-written);
+			if (ret == PTPSOCK_ERR) {
 				perror ("write in senddata failed");
 				free (xdata);
 				return PTP_RC_GeneralError;
@@ -449,7 +452,9 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	if (gethostname (hostname, sizeof(hostname)))
 		return PTP_RC_GeneralError;
 #else
-	strcpy (hostname, "gpwindows");
+	DWORD hostname_size = (DWORD)sizeof(hostname);
+	if (!GetComputerNameA(hostname, &hostname_size))
+		return PTP_RC_GeneralError;
 #endif
 	len = ptpip_initcmd_name + (strlen(hostname)+1)*2 + 4;
 
@@ -467,9 +472,9 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	htod16a(&cmdrequest[ptpip_initcmd_name+(strlen(hostname)+1)*2+2],PTPIP_VERSION_MAJOR);
 
 	GP_LOG_DATA ((char*)cmdrequest, len, "ptpip/init_cmd data:");
-	ret = write (params->cmdfd, cmdrequest, len);
+	ret = PTPSOCK_WRITE (params->cmdfd, cmdrequest, len);
 	free (cmdrequest);
-	if (ret == -1) {
+	if (ret == PTPSOCK_ERR) {
 		perror("write init cmd request");
 		return PTP_RC_GeneralError;
 	}
@@ -528,8 +533,8 @@ ptp_ptpip_init_event_request (PTPParams* params)
 	htod32a(&evtrequest[ptpip_eventinit_idx],params->eventpipeid);
 
 	GP_LOG_DATA ((char*)evtrequest, ptpip_eventinit_size, "ptpip/init_event data:");
-	ret = write (params->evtfd, evtrequest, ptpip_eventinit_size);
-	if (ret == -1) {
+	ret = PTPSOCK_WRITE (params->evtfd, evtrequest, ptpip_eventinit_size);
+	if (ret == PTPSOCK_ERR) {
 		perror("write init evt request");
 		return PTP_RC_GeneralError;
 	}
@@ -572,7 +577,6 @@ ptp_ptpip_init_event_ack (PTPParams* params)
 static uint16_t
 ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 {
-#ifndef WIN32
 	fd_set		infds;
 	struct timeval	timeout;
 	int ret;
@@ -627,10 +631,6 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 	}
 	free (data);
 	return PTP_RC_OK;
-#else
-	GP_LOG_E ("not supported currently on Windows");
-	return PTP_RC_OK;
-#endif
 }
 
 uint16_t
@@ -721,7 +721,6 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	if (NULL == strchr (address,':'))
 		return GP_ERROR_BAD_PARAMETERS;
 
-#ifdef HAVE_INET_ATON
 	addr = strdup (address);
 	if (!addr)
 		return GP_ERROR_NO_MEMORY;
@@ -751,7 +750,11 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 			}
 		}
 	}
+#ifdef HAVE_INET_ATON
 	if (!inet_aton (s+1,  &saddr.sin_addr)) {
+#else
+	if (inet_pton(AF_INET, s+1, &saddr.sin_addr) != 1) {
+#endif
 		fprintf(stderr,"failed to scan for addr in %s\n", s+1);
 		free (addr);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -759,49 +762,54 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	saddr.sin_port		= htons(port);
 	saddr.sin_family	= AF_INET;
 	free (addr);
-	params->cmdfd = socket (PF_INET, SOCK_STREAM, 0);
-	if (params->cmdfd == -1) {
+	PTPSOCK_SOCKTYPE cmdfd = params->cmdfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
+	if (cmdfd == PTPSOCK_INVALID) {
 		perror ("socket cmd");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	params->evtfd = socket (PF_INET, SOCK_STREAM, 0);
-	if (params->evtfd == -1) {
+	PTPSOCK_SOCKTYPE evtfd = params->evtfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
+	if (evtfd == PTPSOCK_INVALID) {
 		perror ("socket evt");
-		close (params->cmdfd);
+		PTPSOCK_CLOSE (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	if (-1 == connect (params->cmdfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
+	if (PTPSOCK_ERR == connect (params->cmdfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
 		perror ("connect cmd");
-		close (params->cmdfd);
-		close (params->evtfd);
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return GP_ERROR_IO;
 	}
 	ret = ptp_ptpip_init_command_request (params);
 	if (ret != PTP_RC_OK) {
-		close (params->cmdfd);
-		close (params->evtfd);
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return translate_ptp_result (ret);
 	}
 	ret = ptp_ptpip_init_command_ack (params);
 	if (ret != PTP_RC_OK) {
-		close (params->cmdfd);
-		close (params->evtfd);
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return translate_ptp_result (ret);
 	}
 	/* seen on Ricoh Theta, camera is not immediately ready. try again two times. */
 	tries = 2;
 	saddr.sin_port		= htons(eventport);
 	do {
-		if (-1 != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
+		if (PTPSOCK_ERR != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
 			break;
 		if ((errno == ECONNREFUSED) && (tries--)) {
 			GP_LOG_D ("event connect failed, retrying after short wait");
-			usleep(100*1000);
+			int sleep_ms = 100;
+#ifdef WIN32
+			Sleep(sleep_ms);
+#else
+			usleep(sleep_ms*1000);
+#endif
 			continue;
 		}
 		GP_LOG_E ("could not connect event");
-		close (params->cmdfd);
-		close (params->evtfd);
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return GP_ERROR_IO;
 	} while (1);
 	ret = ptp_ptpip_init_event_request (params);
@@ -812,8 +820,4 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 		return translate_ptp_result (ret);
 	GP_LOG_D ("ptpip connected!");
 	return GP_OK;
-#else
-	GP_LOG_E ("Windows currently not supported, neeeds a winsock port.");
-	return GP_ERROR_NOT_SUPPORTED;
-#endif
 }
