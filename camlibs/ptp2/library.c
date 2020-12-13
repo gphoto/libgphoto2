@@ -63,6 +63,10 @@
 #include "ptp-pack.c"
 #include "olympus-wrap.h"
 
+#ifdef HAVE_LIBWS232
+#include <winsock2.h>
+#endif
+
 #define USB_START_TIMEOUT 8000
 #define USB_CANON_START_TIMEOUT 1500	/* 1.5 seconds (0.5 was too low) */
 #define USB_NORMAL_TIMEOUT 20000
@@ -3081,6 +3085,11 @@ camera_exit (Camera *camera, GPContext *context)
 		gp_port_usb_clear_halt
 				(camera->port, GP_PORT_USB_ENDPOINT_INT);
 	}
+#if defined(HAVE_LIBWS232) && defined(WIN32)
+	else if ((camera->port!=NULL) && camera->port->type != GP_PORT_PTPIP) {
+		WSACleanup();
+	}
+#endif
 	return (GP_OK);
 }
 
@@ -9302,6 +9311,15 @@ camera_init (Camera *camera, GPContext *context)
 	case GP_PORT_PTPIP: {
 		GPPortInfo	info;
 		char 		*xpath;
+
+#if defined(HAVE_LIBWS232) && defined(WIN32)
+		WORD wsaVersionWanted = MAKEWORD(1, 1);
+		WSADATA wsaData;
+		if (WSAStartup(wsaVersionWanted, &wsaData)) {
+			GP_LOG_E("WSAStartup failed.");
+			return GP_ERROR;
+		}
+#endif
 
 		ret = gp_port_get_info (camera->port, &info);
 		if (ret != GP_OK) {

@@ -55,11 +55,13 @@
 #endif
 
 #ifdef WIN32
-# include <winsock.h>
+# include <winsock2.h>
+# include <ws2tcpip.h>
 #else
 # include <sys/socket.h>
 # include <netinet/in.h>
 #endif
+#include "ptpip-private.h"
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
@@ -586,7 +588,9 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 	if (gethostname (hostname, sizeof(hostname)))
 		return PTP_RC_GeneralError;
 #else
-	strcpy (hostname, "gpwindows");
+	DWORD hostname_size = (DWORD)sizeof(hostname);
+	if (!GetComputerNameA(hostname, &hostname_size))
+		return PTP_RC_GeneralError;
 #endif
 	len = fujiptpip_initcmd_name + (strlen(hostname)+1)*2;
 
@@ -610,9 +614,9 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 
 
 	GP_LOG_DATA ((char*)cmdrequest, len, "ptpip/init_cmd data:");
-	ret = write (params->cmdfd, cmdrequest, len);
+	ret = PTPSOCK_WRITE (params->cmdfd, cmdrequest, len);
 	free (cmdrequest);
-	if (ret == -1) {
+	if (ret == PTPSOCK_ERR) {
 		perror("write init cmd request");
 		return PTP_RC_GeneralError;
 	}
@@ -674,7 +678,6 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 	if (NULL == strchr (address,':'))
 		return GP_ERROR_BAD_PARAMETERS;
 
-#ifdef HAVE_INET_ATON
 	addr = strdup (address);
 	if (!addr)
 		return GP_ERROR_NO_MEMORY;
@@ -705,7 +708,11 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 			}
 		}
 	}
+#ifdef HAVE_INET_ATON
 	if (!inet_aton (s+1,  &saddr.sin_addr)) {
+#else
+	if (inet_pton(AF_INET, s+1, &saddr.sin_addr) != 1) {
+#endif
 		fprintf(stderr,"failed to scan for addr in %s\n", s+1);
 		free (addr);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -716,15 +723,20 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 	saddr.sin_family	= AF_INET;
 	saddr.sin_port		= htons(eventport);
 	do {
-		if (-1 != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
+		if (PTPSOCK_ERR != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
 			break;
 		if ((errno == ECONNREFUSED) && (tries--)) {
 			GP_LOG_D ("event connect failed, retrying after short wait");
-			usleep(100*1000);
+			int sleep_ms = 100;
+#ifdef WIN32
+			Sleep(sleep_ms);
+#else
+			usleep(sleep_ms*1000);
+#endif
 			continue;
 		}
 		GP_LOG_E ("could not connect event");
-		close (params->evtfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return GP_ERROR_IO;
 	} while (1);
 	GP_LOG_D ("fujiptpip event connected!");
@@ -732,22 +744,23 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 	saddr.sin_family	= AF_INET;
 	saddr.sin_port		= htons(eventport+1);
 	do {
-		if (-1 != connect (params->jpgfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
+		if (PTPSOCK_ERR != connect (params->jpgfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
 			break;
 		if ((errno == ECONNREFUSED) && (tries--)) {
 			GP_LOG_D ("jpeg connect failed, retrying after short wait");
-			usleep(100*1000);
+			int sleep_ms = 100;
+#ifdef WIN32
+			Sleep(sleep_ms);
+#else
+			usleep(sleep_ms*1000);
+#endif
 			continue;
 		}
 		GP_LOG_E ("could not connect event");
-		close (params->jpgfd);
+		PTPSOCK_CLOSE (params->jpgfd);
 		return GP_ERROR_IO;
 	} while (1);
 	return GP_OK;
-#else
-	GP_LOG_E ("Windows currently not supported, neeeds a winsock port.");
-	return GP_ERROR_NOT_SUPPORTED;
-#endif
 }
 
 
@@ -766,7 +779,6 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 static uint16_t
 ptp_fujiptpip_event (PTPParams* params, PTPContainer* event, int wait)
 {
-#ifndef WIN32
 	fd_set		infds;
 	struct timeval	timeout;
 	int ret;
@@ -814,10 +826,6 @@ ptp_fujiptpip_event (PTPParams* params, PTPContainer* event, int wait)
 	}
 	free (data);
 	return PTP_RC_OK;
-#else
-	GP_LOG_E ("not supported currently on Windows");
-	return PTP_RC_OK;
-#endif
 }
 
 uint16_t
@@ -839,7 +847,6 @@ ptp_fujiptpip_event_wait (PTPParams* params, PTPContainer* event) {
 uint16_t
 ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int *xsize)
 {
-#ifndef WIN32
 	fd_set		infds;
 	struct timeval	timeout;
 	int ret;
@@ -870,10 +877,6 @@ ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int *xsiz
 		break;
 	}
 	return PTP_RC_OK;
-#else
-	GP_LOG_E ("not supported currently on Windows");
-	return PTP_RC_OK;
-#endif
 }
 
 
@@ -890,7 +893,6 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	if (NULL == strchr (address,':'))
 		return GP_ERROR_BAD_PARAMETERS;
 
-#ifdef HAVE_INET_ATON
 	addr = strdup (address);
 	if (!addr)
 		return GP_ERROR_NO_MEMORY;
@@ -921,7 +923,11 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 			}
 		}
 	}
+#ifdef HAVE_INET_ATON
 	if (!inet_aton (s+1,  &saddr.sin_addr)) {
+#else
+	if (inet_pton(AF_INET, s+1, &saddr.sin_addr) != 1) {
+#endif
 		fprintf(stderr,"failed to scan for addr in %s\n", s+1);
 		free (addr);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -929,46 +935,42 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	saddr.sin_port		= htons(port);
 	saddr.sin_family	= AF_INET;
 	free (addr);
-	params->cmdfd = socket (PF_INET, SOCK_STREAM, 0);
-	if (params->cmdfd == -1) {
+	PTPSOCK_SOCKTYPE cmdfd = params->cmdfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
+	if (cmdfd == PTPSOCK_INVALID) {
 		perror ("socket cmd");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	params->evtfd = socket (PF_INET, SOCK_STREAM, 0);
-	if (params->evtfd == -1) {
+	PTPSOCK_SOCKTYPE evtfd = params->evtfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
+	if (evtfd == PTPSOCK_INVALID) {
 		perror ("socket evt");
-		close (params->cmdfd);
+		PTPSOCK_CLOSE (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	params->jpgfd = socket (PF_INET, SOCK_STREAM, 0);
-	if (params->jpgfd == -1) {
+	PTPSOCK_SOCKTYPE jpgfd = params->jpgfd = socket (PF_INET, SOCK_STREAM, 0);
+	if (jpgfd == PTPSOCK_INVALID) {
 		perror ("socket jpg");
-		close (params->evtfd);
-		close (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
+		PTPSOCK_CLOSE (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	if (-1 == connect (params->cmdfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
+	if (PTPSOCK_ERR == connect (params->cmdfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
 		perror ("connect cmd");
-		close (params->cmdfd);
-		close (params->evtfd);
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return GP_ERROR_IO;
 	}
 	ret = ptp_fujiptpip_init_command_request (params);
 	if (ret != PTP_RC_OK) {
-		close (params->cmdfd);
-		close (params->evtfd);
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return translate_ptp_result (ret);
 	}
 	ret = ptp_fujiptpip_init_command_ack (params);
 	if (ret != PTP_RC_OK) {
-		close (params->cmdfd);
-		close (params->evtfd);
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return translate_ptp_result (ret);
 	}
 	GP_LOG_D ("fujiptpip connected!");
 	return GP_OK;
-#else
-	GP_LOG_E ("Windows currently not supported, neeeds a winsock port.");
-	return GP_ERROR_NOT_SUPPORTED;
-#endif
 }
