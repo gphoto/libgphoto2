@@ -1,0 +1,143 @@
+Bus 002 Device 017: ID 04cb:02b9 Fuji Photo Film Co., Ltd
+
+~$ gphoto2 --auto-detect
+Model                          Port
+
+----------------------------------------------------------
+USB PTP Class Camera           usb:002,017
+
+--------------------------------------------------------------
+~$ LANG=C gphoto2 --summary >summary.txt
+CONTENTS
+----------------------------------------------
+Camera summary:
+Manufacturer: FUJIFILM
+Model: FinePix S8600 S8650 S8630
+  Version: 1.00
+  Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXSXXXXXX
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: microsoft.com/deviceservices:
+
+Capture Formats:
+Display Formats: JPEG, JFIF, MS AVI
+Supported MTP Object Properties:
+JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus
+dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc87/Width
+dc88/Height dcd3/ImageBitDepth
+JFIF/3808: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus
+dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name
+MS AVI/300a: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus
+dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject
+dc41/PersistantUniqueObjectIdentifier dc44/Name dc08/DateCreated dc87/Width
+dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels
+de97/ScanDepth de9a/AudioBitRate de9b/VideoFourCCCodec de9c/VideoBitRate
+
+Device Capabilities:
+File Download, File Deletion, File Upload
+No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+StorageDescription: External Memory
+VolumeLabel: 000000000000000000000000000000000000000000000000
+Storage Type: Removable RAM (memory card)
+Filesystemtype: Digital Camera Layout (DCIM)
+Access Capability: Read Only with Object deletion
+Maximum Capability: 31037849600 (29600 MB)
+Free Space (Bytes): 16326230016 (15569 MB)
+Free Space (Images): 3976
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 3, step 1] value:
+3% (3)
+Property 0xd303:(read only) (type=0x2) 1
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
+
+================================================
+LANG=C gphoto2 --list-all-config >config.txt
+CONTENTS
+-----------------------------------------------
+main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: XXXXXXXXXXXXXXXXXXXXXXXXXSXXXXXX
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: FUJIFILM
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: FinePix S8600 S8650 S8630
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: 1.00
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: microsoft.com/deviceservices:
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d407
+Label: Perceived Device Type
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: Session Initiator Info
+Readonly: 0
+Type: TEXT
+Current:
+END
+
+============================================
+~$ gphoto2 --capture-image
+RESULTS
+----------------------------------------------------------------
+
+*** Error ***
+Sorry, your camera does not support generic capture
+ERROR: Could not capture image.
+ERROR: Could not capture.
+*** Error (-6: 'Unsupported operation') ***
