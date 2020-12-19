@@ -586,6 +586,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_ActiveSelectionControl	0x941f
 #define PTP_OC_NIKON_SaveCameraSetting		0x9420
 #define PTP_OC_NIKON_GetObjectSize		0x9421	/* param: objecthandle, returns 64bit objectsize as DATA */
+#define PTP_OC_NIKON_ChangeMonitorOff		0x9422
 #define PTP_OC_NIKON_GetLiveViewCompressedSize	0x9423
 #define PTP_OC_NIKON_StartTracking		0x9424
 #define PTP_OC_NIKON_EndTracking		0x9425
@@ -593,7 +594,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_GetLiveViewImageEx		0x9428
 #define PTP_OC_NIKON_GetPartialObjectEx		0x9431	/* p1: objecthandle, p2: offset lower 32bit, p3: offset higher 32bit, p4: maxsize lower 32bit, p5: maxsize upper 32bit, response is r1: lower 32bit, r2: higher 32bit */
 #define PTP_OC_NIKON_GetManualSettingLensData	0x9432
+#define PTP_OC_NIKON_InitiatePixelMapping	0x9433
+#define PTP_OC_NIKON_GetObjectsMetaData		0x9434
 #define PTP_OC_NIKON_ChangeApplicationMode	0x9435
+#define PTP_OC_NIKON_ResetMenu			0x9436
 
 
 /* From Nikon V1 Trace */
