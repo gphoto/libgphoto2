@@ -6861,6 +6861,31 @@ _put_Nikon_ControlMode(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Nikon_ApplicationMode2(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	gp_widget_set_value(*widget, "0");
+	return (GP_OK);
+}
+
+static int
+_put_Nikon_ApplicationMode2(CONFIG_PUT_ARGS) {
+	PTPParams *params = &(camera->pl->params);
+	char*		val;
+	unsigned int	xval = 0;
+
+	if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_ChangeApplicationMode))
+		return GP_ERROR_NOT_SUPPORTED;
+	gp_widget_get_value(widget, &val);
+
+	if (!sscanf(val,"%d",&xval))
+		return GP_ERROR;
+
+	C_PTP (ptp_nikon_changeapplicationmode (&camera->pl->params, xval));
+	return GP_OK;
+}
+
+static int
 _get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
@@ -7717,6 +7742,9 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 				C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8));
 			}
 		}
+		if (ptp_operation_issupported(params, PTP_OC_NIKON_ChangeApplicationMode)) {
+			C_PTP (ptp_nikon_changeapplicationmode (params, 1));
+		}
 
                 ret = ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8);
                 if (ret != PTP_RC_OK)
@@ -7761,6 +7789,9 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 				value.u8 = 0;
 				C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_ApplicationMode, &value, PTP_DTC_UINT8));
 			}
+		}
+		if (ptp_operation_issupported(params, PTP_OC_NIKON_ChangeApplicationMode)) {
+			C_PTP (ptp_nikon_changeapplicationmode (params, 0));
 		}
 	}
 	return GP_OK;
@@ -9614,6 +9645,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Remote Timeout"),                 "remotetimeout",            PTP_DPC_NIKON_RemoteTimeout,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_RemoteTimeout,           _put_Nikon_RemoteTimeout },
 	{ N_("Remote Mode"),                    "remotemode",               PTP_DPC_NIKON_RemoteMode,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_RemoteMode,              _put_Nikon_RemoteMode },
 	{ N_("Application Mode"),               "applicationmode",          PTP_DPC_NIKON_ApplicationMode,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ApplicationMode,         _put_Nikon_ApplicationMode },
+	{ N_("Application Mode"),               "applicationmode",          PTP_OC_NIKON_ChangeApplicationMode,     PTP_VENDOR_NIKON,   0,              _get_Nikon_ApplicationMode2,        _put_Nikon_ApplicationMode2 },
 	{ N_("Optimize Image"),                 "optimizeimage",            PTP_DPC_NIKON_OptimizeImage,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OptimizeImage,           _put_Nikon_OptimizeImage },
 	{ N_("Sharpening"),                     "sharpening",               PTP_DPC_NIKON_ImageSharpening,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_Sharpening,              _put_Nikon_Sharpening },
 	{ N_("Tone Compensation"),              "tonecompensation",         PTP_DPC_NIKON_ToneCompensation,         PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ToneCompensation,        _put_Nikon_ToneCompensation },

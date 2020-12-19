@@ -593,6 +593,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_GetLiveViewImageEx		0x9428
 #define PTP_OC_NIKON_GetPartialObjectEx		0x9431	/* p1: objecthandle, p2: offset lower 32bit, p3: offset higher 32bit, p4: maxsize lower 32bit, p5: maxsize upper 32bit, response is r1: lower 32bit, r2: higher 32bit */
 #define PTP_OC_NIKON_GetManualSettingLensData	0x9432
+#define PTP_OC_NIKON_ChangeApplicationMode	0x9435
 
 
 /* From Nikon V1 Trace */
@@ -4275,6 +4276,18 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  *
  **/
 #define ptp_nikon_changecameramode(params,mode) ptp_generic_no_data(params,PTP_OC_NIKON_ChangeCameraMode,1,mode)
+/**
+ * ptp_nikon_changeapplicationmeramode:
+ *
+ * This command can switch the camera between PC control and remote mode.
+ *
+ * params:      PTPParams*
+ *      uint32_t mode - mode
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+#define ptp_nikon_changeapplicationmode(params,mode) ptp_generic_no_data(params,PTP_OC_NIKON_ChangeApplicationMode,1,mode)
 /**
  * ptp_nikon_terminatecapture:
  *
