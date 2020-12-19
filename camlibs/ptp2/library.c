@@ -8551,8 +8551,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				}
 				goto done;
 			}
-			gp_context_error (context, _("File '%s/%s' is larger than 4GB and we have no download method."), folder, filename);
-			return GP_ERROR_BAD_PARAMETERS;
+			/* fallthrough to the ptp_getobject method */
 		}
 		/* We also need this for Nikon D850 and very big RAWs (>40 MB) */
 		/* Try the generic method first, EOS R does not like the second for some reason */
