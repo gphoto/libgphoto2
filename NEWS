@@ -1,8 +1,8 @@
 libgphoto2 2.5.26.1 development release
 
 ptp2:
-* Nikon: download of files larger than 4GB supporte
-* generic: try handle files larger than 4GB
+* Nikon: download of files larger than 4GB using getpartial object method
+* report filesize > 4GB correctly, if possible
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.26 release
