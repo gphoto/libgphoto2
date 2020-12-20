@@ -9809,6 +9809,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Flash Shutter Speed"),            "flashshutterspeed",        PTP_DPC_NIKON_FlashShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D3s_FlashShutterSpeed,   _put_Nikon_D3s_FlashShutterSpeed },
 
 	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_NIKON_LiveViewImageSize,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewSize,            _put_Nikon_LiveViewSize },
+	{ N_("Live View Zoom Area"),            "liveviewzoomarea",         PTP_DPC_NIKON_LiveViewZoomArea,         PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_INT,                           _put_INT },
 
 	{ 0,0,0,0,0,0,0 },
 };
