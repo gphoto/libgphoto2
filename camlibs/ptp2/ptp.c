@@ -7799,6 +7799,11 @@ ptp_opcode_trans_t ptp_opcode_nikon_trans[] = {
 	{PTP_OC_NIKON_GetManualSettingLensData,"GetManualSettingLensData"},
 	{PTP_OC_NIKON_PowerZoomByFocalLength,"PowerZoomByFocalLength"},
 	{PTP_OC_NIKON_ActiveSelectionControl,"ActiveSelectionControl"},
+	{PTP_OC_NIKON_ChangeMonitorOff,"ChangeMonitorOff"},
+	{PTP_OC_NIKON_InitiatePixelMapping,"InitiatePixelMapping"},
+	{PTP_OC_NIKON_GetObjectsMetaData,"GetObjectsMetaData"},
+	{PTP_OC_NIKON_ChangeApplicationMode,"ChangeApplicationMode"},
+	{PTP_OC_NIKON_ResetMenu,"ResetMenu"},
 };
 
 ptp_opcode_trans_t ptp_opcode_canon_trans[] = {
