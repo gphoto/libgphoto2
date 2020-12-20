@@ -1486,6 +1486,9 @@ static struct {
 	/* checamon <checamon@gmail.com> */
 	{"Nikon:Coolpix B700 (PTP mode)", 0x04b0, 0x0231, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* https://github.com/gphoto/libgphoto2/issues/477 */
+	{"Nikon:Coolpix P1000 (PTP mode)",0x04b0, 0x0232, PTP_CAP/*|PTP_CAP_PREVIEW*/},
+
 	/* Nikon Coolpix 2000 */
 	{"Nikon:Coolpix 2000 (PTP mode)", 0x04b0, 0x0302, 0},
 	/* From IRC reporter. */
