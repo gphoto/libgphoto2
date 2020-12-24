@@ -173,3 +173,343 @@ Readonly: 1
 Type: TEXT
 Current: 1
 END
+
+
+Camera summary:
+Manufacturer: FUJIFILM
+Model: X-S10
+  Version: 1.01
+  Serial Number: 59xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Vendor Extension ID: 0xe (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: JPEG
+Display Formats: JPEG
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+	StorageDescription: Still
+	VolumeLabel: 1593xxxxxxxxxxxxxxxxxxxxxxxxxxx
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+store_10000002:
+	StorageDescription: Live
+	VolumeLabel: 259xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd16e: error 200a on query.
+LiveViewImageQuality(0xd173):(readwrite) (type=0x4) Enumeration [1,3] value: 1
+LiveViewImageSize(0xd174):(readwrite) (type=0x4) Enumeration [1,2,3] value: 2
+ReleaseMode(0xd201):(readwrite) (type=0x4) Enumeration [4,8] value: 4
+PriorityMode(0xd207):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+DeviceName(0xd20b):(readwrite) (type=0xffff) ''
+FreeSDRAMImages(0xd20e):(read only) (type=0x4) Range [0 - 1, step 1] value: 16
+CurrentState(0xd212): error 201b on query.
+Property 0xd21c:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11] value: 3
+ForceMode(0xd230):(readwrite) (type=0x4) Enumeration [1] value: 1
+BatteryInfo1(0xd36a):(read only) (type=0x6) Range [0 - 16777215, step 1] value: 12
+BatteryInfo2(0xd36b):(read only) (type=0xffff) '100,0,0'
+Exposure Time(0x500d): error 200a on query.
+F-Number(0x5007): error 200a on query.
+LensZoomPosCaps(0xd38c): error 200a on query.
+FocusPosition(0xd171): error 200a on query.
+Property 0xd21c:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11] value: 3
+Focus Point(0xd347): error 200a on query.
+LensZoomPos(0xd170): error 200a on query.
+BatteryLevel(0xd242): error 200a on query.
+LiveViewImageSize(0xd174):(readwrite) (type=0x4) Enumeration [1,2,3] value: 2
+VideoOutOnOff(0xd168): error 200a on query.
+LiveViewImageQuality(0xd173):(readwrite) (type=0x4) Enumeration [1,3] value: 1
+ForceMode(0xd230):(readwrite) (type=0x4) Enumeration [1] value: 1
+Property 0xd16e: error 200a on query.
+FocusArea1(0xd372): error 200a on query.
+FaceDetectionMode(0xd020): error 200a on query.
+RawCompression(0xd022): error 200a on query.
+GrainEffect(0xd023): error 200a on query.
+SetEyeAFMode(0xd024): error 200a on query.
+FocusPoints(0xd025): error 200a on query.
+MFAssistMode(0xd026): error 200a on query.
+InterlockAEAFArea(0xd027): error 200a on query.
+Shadowing(0xd029): error 200a on query.
+CropMode(0xd16f): error 200a on query.
+TNumber(0xd02f): error 200a on query.
+FocusArea4(0xd395): error 200a on query.
+HighLightTone(0xd320): error 200a on query.
+ShadowTone(0xd321): error 200a on query.
+LongExposureNR(0xd322): error 200a on query.
+FullTimeManualFocus(0xd323): error 200a on query.
+LensISSwitch(0xd346): error 200a on query.
+InstantAFMode(0xd34a): error 200a on query.
+PreAFMode(0xd34b): error 200a on query.
+LMOMode(0xd34d): error 200a on query.
+ISMode(0xd351): error 200a on query.
+FocusCheckMode(0xd35e): error 200a on query.
+LiveViewImageQuality(0xd173):(readwrite) (type=0x4) Enumeration [1,3] value: 1
+FileNamePrefix1(0xd365): error 200a on query.
+FileNamePrefix2(0xd366): error 200a on query.
+FocusArea3(0xd374): error 200a on query.
+TotalShotCount(0xd310): error 200a on query.
+ExposurePreview(0xd359): error 200a on query.
+FrameGuideGridInfo1(0xd375): error 200a on query.
+FrameGuideGridInfo2(0xd376): error 200a on query.
+CustomDispInfo(0xd36e): error 200a on query.
+ViewMode1(0xd33f): error 200a on query.
+CustomAutoPowerOff(0xd364): error 200a on query.
+LockButtonMode(0xd34e): error 200a on query.
+WideDynamicRange(0xd02e): error 200a on query.
+LensNameAndSerial(0xd36d): error 200a on query.
+LensUnknownData(0xd38a): error 200a on query.
+BatteryInfo1(0xd36a):(read only) (type=0x6) Range [0 - 16777215, step 1] value: 12
+BatteryInfo2(0xd36b):(read only) (type=0xffff) '100,0,0'
+FunctionLockCategory1(0xd36f): error 200a on query.
+FunctionLockCategory2(0xd370): error 200a on query.
+SensitivityFineTune1(0xd222): error 200a on query.
+SensitivityFineTune2(0xd223): error 200a on query.
+LensZoomPosCaps(0xd38c): error 200a on query.
+LensFNumberList(0xd38d): error 200a on query.
+LensFocalLengthList(0xd38e): error 200a on query.
+Property 0xd17b: error 200a on query.
+
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Fuji Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/movie
+Label: Movie Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/devicename
+Label: Device Name
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 59xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: FUJIFILM
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: X-S10
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: 1.01
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: fujifilm.co.jp: 1.0; 
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 0
+Type: RADIO
+Current: Self-timer
+Choice: 0 Self-timer
+Choice: 1 Unknown value 0008
+END
+/main/capturesettings/liveviewsize
+Label: Live View Size
+Readonly: 0
+Type: RADIO
+Current: VGA
+Choice: 0 XGA
+Choice: 1 VGA
+Choice: 2 QVGA
+END
+/main/other/d173
+Label: LiveViewImageQuality
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+END
+/main/other/d174
+Label: LiveViewImageSize
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d201
+Label: ReleaseMode
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 4
+Choice: 1 8
+END
+/main/other/d207
+Label: PriorityMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d20b
+Label: DeviceName
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d20e
+Label: FreeSDRAMImages
+Readonly: 1
+Type: MENU
+Current: 16
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d21c
+Label: PTP Property 0xd21c
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+END
+/main/other/d230
+Label: ForceMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d36a
+Label: BatteryInfo1
+Readonly: 1
+Type: RANGE
+Current: 12
+Bottom: 0
+Top: 1.67772e+07
+Step: 1
+END
+/main/other/d36b
+Label: BatteryInfo2
+Readonly: 1
+Type: TEXT
+Current: 100,0,0
+END
+/main/other/d21c
+Label: PTP Property 0xd21c
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+END
+/main/other/d174
+Label: LiveViewImageSize
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d173
+Label: LiveViewImageQuality
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+END
+/main/other/d230
+Label: ForceMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d173
+Label: LiveViewImageQuality
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+END
+/main/other/d36a
+Label: BatteryInfo1
+Readonly: 1
+Type: RANGE
+Current: 12
+Bottom: 0
+Top: 1.67772e+07
+Step: 1
+END
+/main/other/d36b
+Label: BatteryInfo2
+Readonly: 1
+Type: TEXT
+Current: 100,0,0
+END
