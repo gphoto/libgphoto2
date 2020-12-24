@@ -3613,7 +3613,9 @@ enable_liveview:
 			ret = ptp_getobjectinfo (params, preview_object, &oi);
 			if (ret == PTP_RC_OK) break;
 			if (ret == PTP_RC_InvalidObjectHandle) {
-				usleep(1000);
+				/* 1000 x 10 tries was not enough for the S10 ... make the wait a bit longer
+				 * see https://github.com/gphoto/libgphoto2/issues/603 */
+				usleep(5*1000);
 				continue;
 			}
 			C_PTP_REP (ret);
