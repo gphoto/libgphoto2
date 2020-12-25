@@ -2129,6 +2129,8 @@ static struct {
 	{"Canon:PowerShot SX210 IS",		0x04a9, 0x31f6, PTPBUG_DELETE_SENDS_EVENT},
 	/* name correct? https://bugs.launchpad.net/ubuntu/+source/gvfs/+bug/1296275?comments=all */
 	{"Canon:Digital IXUS 300 HS",		0x04a9, 0x31f7, PTPBUG_DELETE_SENDS_EVENT},
+	/* via email */
+	{"Canon:PowerShot G12",			0x04a9, 0x320f, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=3153412&group_id=8874&atid=358874 */
 	{"Canon:PowerShot SX130 IS",		0x04a9, 0x3211, PTPBUG_DELETE_SENDS_EVENT},
 	/* novell bugzilla 871944 */
