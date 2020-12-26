@@ -8164,6 +8164,8 @@ struct {
 	{PTP_EC_Nikon_SBRemoved,			PTP_VENDOR_NIKON, "Nikon_SBRemoved"},
 	{PTP_EC_Nikon_SBAttrChanged,			PTP_VENDOR_NIKON, "Nikon_SBAttrChanged"},
 	{PTP_EC_Nikon_SBGroupAttrChanged,		PTP_VENDOR_NIKON, "Nikon_SBGroupAttrChanged"},
+	{PTP_EC_Nikon_1stCaptureComplete,		PTP_VENDOR_NIKON, "Nikon_1stCaptureComplete"},
+	{PTP_EC_Nikon_MirrorUpCancelComplete,		PTP_VENDOR_NIKON, "Nikon_MirrorUpCancelComplete"},
 
 	{PTP_EC_Sony_ObjectAdded,			PTP_VENDOR_SONY,  "Sony_ObjectAdded"},
 	{PTP_EC_Sony_ObjectRemoved,			PTP_VENDOR_SONY,  "Sony_ObjectRemoved"},

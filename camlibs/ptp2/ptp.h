@@ -1216,6 +1216,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_Nikon_AdvancedTransfer		0xC103
 #define PTP_EC_Nikon_PreviewImageAdded		0xC104
 #define PTP_EC_Nikon_MovieRecordInterrupted	0xC105	/* e1: errocode, e2: recordkind */
+#define PTP_EC_Nikon_1stCaptureComplete		0xC106	/* 1st phase of mirror up is complete */
+#define PTP_EC_Nikon_MirrorUpCancelComplete	0xC107	/* mirror up canceling is complete */
 #define PTP_EC_Nikon_MovieRecordComplete	0xC108	/* e1: recordkind */
 #define PTP_EC_Nikon_MovieRecordStarted		0xC10A	/* e1: recordkind */
 #define PTP_EC_Nikon_PictureControlAdjustChanged	0xC10B	/* e1: picctrlitem e2: shootingmode */
