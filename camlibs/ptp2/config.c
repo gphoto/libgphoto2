@@ -3161,28 +3161,92 @@ _put_FNumber(CONFIG_PUT_ARGS)
 	return GP_ERROR;
 }
 
+/* the common sony f-numbers */
+static int sony_fnumbers[] = {
+	100,
+	110,
+	120,
+	140,
+	160,
+	180,
+	200,
+	220,
+	250,
+	280,
+	320,
+	350,
+	400,
+	450,
+	500,
+	560,
+	630,
+	710,
+	800,
+	900,
+	1000,
+	1100,
+	1300,
+	1400,
+	1600,
+	1800,
+	2000,
+	2200,
+	2500,
+	2900,
+	3200,
+	3600,
+	4200,
+	4500,
+	5000,
+	5700,
+	6400,
+};
+
+static int
+_get_Sony_FNumber(CONFIG_GET_ARGS) {
+	unsigned int	i;
+
+	GP_LOG_D ("get_Sony_FNumber");
+	if (!(dpd->FormFlag & (PTP_DPFF_Enumeration|PTP_DPFF_Range)))
+		return GP_ERROR;
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return GP_ERROR;
+
+	if (dpd->FormFlag & PTP_DPFF_Enumeration)
+		return _get_FNumber(CONFIG_GET_NAMES);	/* just use the normal code */
+
+	/* Range */
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i=0;i<sizeof(sony_fnumbers)/sizeof(sony_fnumbers[0]); i++) {
+		char	buf[20];
+
+		sprintf(buf,"f/%g",sony_fnumbers[i]/100.0);
+		gp_widget_add_choice (*widget,buf);
+		if (sony_fnumbers[i] == dpd->CurrentValue.u16)
+			gp_widget_set_value (*widget,buf);
+	}
+	GP_LOG_D ("get_Sony_FNumber via range and table");
+	return GP_OK;
+}
+
+
 static int
 _put_Sony_FNumber(CONFIG_PUT_ARGS)
 {
-	float			fvalue;
-	PTPParams		*params = &(camera->pl->params);
+	float		fvalue = 0.0;
+	char *		value;
+	PTPParams	*params = &(camera->pl->params);
 
-	CR (gp_widget_get_value (widget, &fvalue));
-
-	propval->u16 = fvalue*100; /* probably not used */
+	CR (gp_widget_get_value (widget, &value));
+	if (strstr (value, "f/") == value)
+		value += strlen("f/");
+	if (sscanf(value, "%g", &fvalue))
+		propval->u16 = fvalue*100;
+	else
+		return GP_ERROR;
 	return _put_sony_value_u16 (params, PTP_DPC_FNumber, fvalue*100, 0);
-}
-
-static int
-_put_Sony_QX_FNumber(CONFIG_PUT_ARGS)
-{
-	float			fvalue;
-
-	CR (gp_widget_get_value (widget, &fvalue));
-
-	propval->u16 = fvalue*100;
-	/*return translate_ptp_result (ptp_sony_qx_setdevicecontrolvaluea (&camera->pl->params, dpd->DevicePropertyCode, propval, PTP_DTC_UINT16)); */
-	return GP_OK; /* will be handled by generic setter going to QX stter */
 }
 
 static int
@@ -9506,8 +9570,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Command B Value"),          "flashcommandbvalue",       PTP_DPC_NIKON_FlashCommandBValue,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FlashCommandXValue,      _put_Nikon_FlashCommandXValue },
 	{ N_("AF Area Illumination"),           "af-area-illumination",     PTP_DPC_NIKON_AFAreaIllumination,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_AFAreaIllum,             _put_Nikon_AFAreaIllum },
 	{ N_("AF Beep Mode"),                   "afbeep",                   PTP_DPC_NIKON_BeepOff,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
-	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FNumber,                       _put_Sony_FNumber },
-	{ N_("F-Number"),                       "f-number",                 PTP_DPC_SONY_QX_Aperture,               PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FNumber,                       _put_Sony_QX_FNumber },
+	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_Sony_FNumber,                  _put_Sony_FNumber },
+	{ N_("F-Number"),                       "f-number",                 PTP_DPC_SONY_QX_Aperture,               PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        0,                  PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("F-Number"),			"f-number",		    0,					    PTP_VENDOR_PANASONIC,PTP_DTC_INT32, _get_Panasonic_FNumber,             _put_Panasonic_FNumber },
 	{ N_("Movie F-Number"),                 "movief-number",            PTP_DPC_NIKON_MovieFNumber,             PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
