@@ -326,8 +326,13 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 			GP_LOG_D ("Card value is %d",cardval);
 		}
 		if (cardval == -1) {
-			GP_LOG_D ("NO Card found - falling back to SDRAM!");
-			cardval = PTP_CANON_EOS_CAPTUREDEST_HD;
+			/* https://github.com/gphoto/gphoto2/issues/383 ... we dont get an enum, but the value is 2 ... */
+			if (dpd.CurrentValue.u32 != PTP_CANON_EOS_CAPTUREDEST_HD) {
+				cardval = dpd.CurrentValue.u32;
+			} else {
+				GP_LOG_D ("NO Card found - falling back to SDRAM!");
+				cardval = PTP_CANON_EOS_CAPTUREDEST_HD;
+			}
 		}
 	}
 
