@@ -1301,6 +1301,7 @@ static struct {
 
 	/* Elijah Parker, mail@timelapseplus.com */
 	{"Sony:DSC-A7r IV (Control)",		0x054c, 0x0ccc, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Sony:DSC-A7S III (Control)",		0x054c, 0x0d18, PTP_CAP|PTP_CAP_PREVIEW},
 
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
