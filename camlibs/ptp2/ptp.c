@@ -3113,7 +3113,6 @@ ptp_wait_event (PTPParams *params)
 	return ret;
 }
 
-
 int
 ptp_get_one_event(PTPParams *params, PTPContainer *event)
 {
@@ -3128,6 +3127,63 @@ ptp_get_one_event(PTPParams *params, PTPContainer *event)
 		params->events = NULL;
 	}
 	return 1;
+}
+
+/**
+ * ptp_get_one_event_by_type:
+ *
+ * Check if one specific event has appeared in the queue, and return it back to us, and remove it from the queue.
+
+ * params:	PTPParams*	in: params
+ * 		code		in: event code
+ * 		event		out: event container
+ *
+ * Return values: 1 if removed, 0 if not.
+ */
+int
+ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event)
+{
+	unsigned int i;
+
+	if (!params->nrofevents)
+		return 0;
+	for (i=0;i<params->nrofevents;i++) {
+		if (params->events[i].Code == code) {
+			memcpy (event, params->events+i, sizeof(PTPContainer));
+			memmove (params->events+i, params->events+i+1, sizeof(PTPContainer)*(params->nrofevents-i-1));
+			/* do not realloc on shrink. */
+			params->nrofevents--;
+			if (!params->nrofevents) {
+				free (params->events);
+				params->events = NULL;
+			}
+			return 1;
+		}
+	}
+	return 0;
+}
+
+/**
+ * ptp_have_event:
+ *
+ * Check if one specific event has appeared in the queue, without draining it.
+ *
+ * params:	PTPParams*	in: params
+ * 		code		in: event code
+ *
+ * Return values: 1 if removed, 0 if not.
+ */
+int
+ptp_have_event(PTPParams *params, uint16_t code)
+{
+	unsigned int i;
+
+	if (!params->nrofevents)
+		return 0;
+	for (i=0;i<params->nrofevents;i++)
+		if (params->events[i].Code == code)
+			return 1;
+	return 0;
 }
 
 /**

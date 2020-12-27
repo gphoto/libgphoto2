@@ -3628,7 +3628,7 @@ struct _PTPParams {
 
 	/* PTP: the current event queue */
 	PTPContainer	*events;
-	int		nrofevents;
+	unsigned int	nrofevents;
 
 	/* Capture count for SDRAM capture style images */
 	unsigned int		capcnt;
@@ -3899,7 +3899,9 @@ uint16_t ptp_check_event (PTPParams *params);
 uint16_t ptp_check_event_queue (PTPParams *params);
 uint16_t ptp_wait_event (PTPParams *params);
 uint16_t ptp_add_event (PTPParams *params, PTPContainer *evt);
+int ptp_have_event(PTPParams *params, uint16_t code);
 int ptp_get_one_event (PTPParams *params, PTPContainer *evt);
+int ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event);
 uint16_t ptp_check_eos_events (PTPParams *params);
 int ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry);
 
