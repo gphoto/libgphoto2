@@ -7869,13 +7869,10 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 				if (ret != PTP_RC_OK)
 					break;
 
-				while (ptp_get_one_event (params, &event)) {
-					GP_LOG_D ("Event: 0x%x", event.Code);
-					if (event.Code==0xc108) {
-						GP_LOG_D ("Event: movie rec completed.");
-						found = 1;
-						break;
-					}
+				while (ptp_get_one_event_by_type (params, PTP_EC_Nikon_MovieRecordComplete, &event)) {
+					GP_LOG_D ("Event: movie rec completed.");
+					found = 1;
+					break;
 				}
 				usleep(100*1000);
 			} while (!found && tries--);
