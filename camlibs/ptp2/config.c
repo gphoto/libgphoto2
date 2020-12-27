@@ -7849,7 +7849,37 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 
 		C_PTP_REP (ptp_nikon_startmovie (params));
 	} else {
+		unsigned int i, havec108 = 0;
+
 		C_PTP_REP (ptp_nikon_stopmovie (params));
+
+		for (i=0;i<params->deviceinfo.EventsSupported_len;i++)
+			if (params->deviceinfo.EventsSupported[i] == PTP_EC_Nikon_MovieRecordComplete) {
+				havec108 = 1;
+				break;
+			}
+
+		/* takes 3 seconds for a 10 second movie on Z6 */
+		if (havec108) {
+			int tries = 100, found = 0;
+			do {
+				PTPContainer	event;
+
+				ret = ptp_check_event (params);
+				if (ret != PTP_RC_OK)
+					break;
+
+				while (ptp_get_one_event (params, &event)) {
+					GP_LOG_D ("Event: 0x%x", event.Code);
+					if (event.Code==0xc108) {
+						GP_LOG_D ("Event: movie rec completed.");
+						found = 1;
+						break;
+					}
+				}
+				usleep(100*1000);
+			} while (!found && tries--);
+		}
 		/* switch Application Mode off again, otherwise we cannot get to the filesystem */
 		if (have_prop(camera,PTP_VENDOR_NIKON,PTP_DPC_NIKON_ApplicationMode)) {
 			value.u8 = 1;
