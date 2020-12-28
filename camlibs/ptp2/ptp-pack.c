@@ -2106,7 +2106,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				break;
 			}
 
-			ptp_debug (params, "event %d: EOS prop %04x desc record, datasize %d, propxtype %d", i, proptype, size-PTP_ece_Prop_Desc_Data, propxtype);
+			ptp_debug (params, "event %d: EOS prop %04x (%s) desc record, datasize %d, propxtype %d", i, proptype, ptp_get_property_description (params, proptype), size-PTP_ece_Prop_Desc_Data, propxtype);
 			for (j=0;j<params->nrofcanon_props;j++)
 				if (params->canon_props[j].proptype == proptype)
 					break;
@@ -2194,7 +2194,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 					ptp_debug (params, "size %d is smaller than %d", size, PTP_ece_Prop_Val_Data);
 					break;
 				}
-				ptp_debug (params, "event %d: EOS prop %04x info record, datasize is %d", i, proptype, size-PTP_ece_Prop_Val_Data);
+				ptp_debug (params, "event %d: EOS prop %04x (%s) info record, datasize is %d", i, proptype, ptp_get_property_description(params,proptype), size-PTP_ece_Prop_Val_Data);
 				for (j=0;j<params->nrofcanon_props;j++)
 					if (params->canon_props[j].proptype == proptype)
 						break;
