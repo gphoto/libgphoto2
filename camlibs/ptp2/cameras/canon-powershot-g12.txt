@@ -1,0 +1,256 @@
+Device info:
+Manufacturer: Canon Inc.
+  Model: Canon PowerShot G12
+  device version: 1-9.0.1.0
+  serial number: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x1017 (Reset device property value)
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x9013 (Unknown PTP_OC)
+  0x901f (Unknown PTP_OC)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x101b (Get partial object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100b (Delete object)
+  0x100f (Format storage)
+  0x1012 (Set object protection)
+  0x9001 (Unknown PTP_OC)
+  0x9021 (Unknown PTP_OC)
+  0x901b (Unknown PTP_OC)
+  0x901e (Unknown PTP_OC)
+  0x9019 (Unknown PTP_OC)
+  0x9006 (Unknown PTP_OC)
+  0x901c (Unknown PTP_OC)
+  0x9002 (Unknown PTP_OC)
+  0x904c (Unknown PTP_OC)
+  0x9024 (Unknown PTP_OC)
+  0x9025 (Unknown PTP_OC)
+  0x9038 (Unknown PTP_OC)
+  0x9039 (Unknown PTP_OC)
+  0x903a (Unknown PTP_OC)
+  0x903b (Unknown PTP_OC)
+  0x904b (Unknown PTP_OC)
+  0x9060 (Unknown PTP_OC)
+  0x9062 (Unknown PTP_OC)
+  0x900e (Unknown PTP_OC)
+  0x900f (Unknown PTP_OC)
+  0x9010 (Unknown PTP_OC)
+  0x9011 (Unknown PTP_OC)
+  0x9801 (Get object properties supported)
+  0x9802 (Get object property description)
+  0x9803 (Get object property value)
+  0x9804 (Set object property value)
+  0x9805 (Get object property list)
+  0x9050 (Unknown PTP_OC)
+  0x9051 (Unknown PTP_OC)
+  0x905c (Unknown PTP_OC)
+  0x905d (Unknown PTP_OC)
+Events Supported:
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4007 (ObjectInfoChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0x400a (StoreFull)
+  0x400b (DeviceReset)
+  0x400c (StorageInfoChanged)
+  0x400e (UnreportedStatus)
+  0xc001 (Unknown Event)
+  0xc005 (Unknown Event)
+  0xc00a (Unknown Event)
+Device Properties Supported:
+  0xd045 (Unknown DPC code)
+  0xd04a (Unknown DPC code)
+  0xd02e (Unknown DPC code)
+  0xd02f (Unknown DPC code)
+  0x5001 (Battery Level)
+  0xd002 (Unknown DPC code)
+  0xd003 (Unknown DPC code)
+  0xd034 (Unknown DPC code)
+  0xd047 (Unknown DPC code)
+  0xd046 (Unknown DPC code)
+  0xd030 (Unknown DPC code)
+  0xd049 (Unknown DPC code)
+  0xd032 (Unknown DPC code)
+  0xd033 (Unknown DPC code)
+  0xd031 (Unknown DPC code)
+  0xd050 (Unknown DPC code)
+  0xd051 (Unknown DPC code)
+  0xd402 (Friendly Device Name)
+  0xd406 (Session Initiator Info)
+  0xd407 (Perceived Device Type)
+  0xd303 (Unknown DPC code)
+Device info:
+Manufacturer: Canon Inc.
+  Model: Canon PowerShot G12
+  device version: 1-9.0.1.0
+  serial number: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+Vendor extension ID: 0x0000000b
+Vendor extension version: 100
+Vendor extension description: (null)
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x1017 (Reset device property value)
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x9013 (CheckEvent)
+  0x901f (ChangeUSBProtocol)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x101b (Get partial object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100b (Delete object)
+  0x100f (Format storage)
+  0x1012 (Set object protection)
+  0x9001 (GetPartialObjectInfo)
+  0x9021 (GetObjectInfoEx)
+  0x901b (GetPartialObjectEx)
+  0x901e (GetObjectAttributes)
+  0x9019 (SendPartialObject)
+  0x9006 (GetObjectHandleByName)
+  0x901c (SetObjectTime)
+  0x9002 (SetObjectArchive)
+  0x904c (Unknown PTP_OC)
+  0x9024 (SendObjectInfoByPath )
+  0x9025 (SendObjectByPath )
+  0x9038 (Unknown PTP_OC)
+  0x9039 (Unknown PTP_OC)
+  0x903a (Unknown PTP_OC)
+  0x903b (Unknown PTP_OC)
+  0x904b (Unknown PTP_OC)
+  0x9060 (Unknown PTP_OC)
+  0x9062 (Unknown PTP_OC)
+  0x900e (GetCustomizeSpec)
+  0x900f (GetCustomizeItemInfo)
+  0x9010 (GetCustomizeData)
+  0x9011 (SetCustomizeData)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9804 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+  0x9050 (Unknown PTP_OC)
+  0x9051 (Unknown PTP_OC)
+  0x905c (Unknown PTP_OC)
+  0x905d (Unknown PTP_OC)
+Events Supported:
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4007 (ObjectInfoChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0x400a (StoreFull)
+  0x400b (DeviceReset)
+  0x400c (StorageInfoChanged)
+  0x400e (UnreportedStatus)
+  0xc001 (Unknown Event)
+  0xc005 (Unknown Event)
+  0xc00a (Unknown Event)
+Device Properties Supported:
+  0xd045 (Event Emulate Mode)
+  0xd04a (Unknown DPC code)
+  0xd02e (Size of Output Data from Camera)
+  0xd02f (Size of Input Data to Camera)
+  0x5001 (Battery Level)
+  0xd002 (Battery Type)
+  0xd003 (Battery Mode)
+  0xd034 (UNIX Time)
+  0xd047 (Type of Slideshow)
+  0xd046 (DPOF Version)
+  0xd030 (Remote API Version)
+  0xd049 (Model ID)
+  0xd032 (Camera Model)
+  0xd033 (Camera Owner)
+  0xd031 (Firmware Version)
+  0xd050 (Unknown DPC code)
+  0xd051 (Unknown DPC code)
+  0xd402 (Unknown DPC code)
+  0xd406 (Unknown DPC code)
+  0xd407 (Unknown DPC code)
+  0xd303 (Unknown DPC code)
+
+Camera summary:
+Manufacturer: Canon Inc.
+Model: Canon PowerShot G12
+   Version: 1-9.0.1.0
+   Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xb (1.0)
+
+Capture Formats: JPEG
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS
+Wave, JPEG, Defined Type, CRW, Unknown(b103), Unknown(b105),
+Unknown(b104), Unknown(bf01)
+
+Device Capabilities:
+     File Download, File Deletion, File Upload
+     No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+     StorageDescription: None
+     VolumeLabel: None
+     Storage Type: Removable RAM (memory card)
+     Filesystemtype: Digital Camera Layout (DCIM)
+     Access Capability: Read-Write
+     Maximum Capability: 63988301824 (61024 MB)
+     Free Space (Bytes): 63435309056 (60496 MB)
+     Free Space (Images): -1
+
+Device Property Summary:
+Event Emulate Mode(0xd045):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 2
+Property 0xd04a:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Size of Output Data from Camera(0xd02e):(read only) (type=0x6) 524288
+Size of Input Data to Camera(0xd02f):(read only) (type=0x6) 524288
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [0,1,2,3] value: 3% (3)
+Battery Type(0xd002):(read only) (type=0x4) Enumeration [0,1,2,3,4,5] value: Unknown (0)
+Battery Mode(0xd003):(read only) (type=0x6) Enumeration [0,1,2,3] value: Normal (1)
+UNIX Time(0xd034):(readwrite) (type=0x6) 1609148695
+Type of Slideshow(0xd047):(read only) (type=0x4) 2
+DPOF Version(0xd046):(read only) (type=0x4) 257
+Remote API Version(0xd030):(read only) (type=0x6) 256
+Model ID(0xd049):(read only) (type=0x6) 43122688
+Camera Model(0xd032):(read only) (type=0xffff) 'Canon PowerShot G12'
+Camera Owner(0xd033):(readwrite) (type=0x4002) a[0]
+Firmware Version(0xd031):(read only) (type=0x6) 16777216
+Property 0xd050:(read only) (type=0x2) 0
+Property 0xd051: error 201b on query.
+Property 0xd402:(read only) (type=0xffff) 'Canon PowerShot G12'
+Property 0xd406:(readwrite) (type=0xffff) 'Windows'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd303:(read only) (type=0x2) 1
