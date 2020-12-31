@@ -4428,7 +4428,8 @@ ptp_canon_eos_get_viewfinder_image (PTPParams* params, unsigned char **data, uns
 {
         PTPContainer ptp;
 
-        PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetViewFinderData, 0x00100000 /* from trace */);
+	/* Saw 3 arguments ... 0x00200000 for EOS1000D, also used 0x00100000 */
+        PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetViewFinderData, 0x00200000 /* from trace */, 0, 0);
         return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
@@ -4437,7 +4438,8 @@ ptp_canon_eos_get_viewfinder_image_handler (PTPParams* params, PTPDataHandler*ha
 {
         PTPContainer ptp;
 
-        PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetViewFinderData, 0x00100000 /* from trace */);
+	/* Saw 3 arguments ... 0x00200000 for EOS1000D, also used 0x00100000 */
+        PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetViewFinderData, 0x00200000 /* from trace */, 0, 0);
         return ptp_transaction_new(params, &ptp, PTP_DP_GETDATA, 0, handler);
 }
 
