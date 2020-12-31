@@ -1705,6 +1705,9 @@ static struct {
 	/* Thomas Schaad */
 	{"Nikon:Z5",                      0x04b0, 0x0448, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Fahrion <fahrion.2600@gmail.com> */
+	{"Nikon:Z7_2",                	  0x04b0, 0x044b, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Thomas Schaad <tom@avisec.ch> */
 	{"Nikon:Z6_2",                	  0x04b0, 0x044c, PTP_CAP|PTP_CAP_PREVIEW},
 
