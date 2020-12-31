@@ -369,7 +369,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	if (	(	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) ||
 			(di->VendorExtensionID == PTP_VENDOR_MTP)
 		) &&
-		(camera->port->type == GP_PORT_USB) &&
+		(	(camera->port->type == GP_PORT_USB) ||
+			(camera->port->type == GP_PORT_PTPIP)
+		) &&
 		(a.usb_vendor == 0x4b0)
 	) {
 		/*camera->pl->bugs |= PTP_MTP;*/
