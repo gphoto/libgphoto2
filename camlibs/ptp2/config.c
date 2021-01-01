@@ -6926,6 +6926,7 @@ _put_Nikon_ControlMode(CONFIG_PUT_ARGS) {
 		return GP_ERROR;
 
 	C_PTP (ptp_nikon_changecameramode (&camera->pl->params, xval));
+	params->controlmode = xval;
 	return GP_OK;
 }
 
