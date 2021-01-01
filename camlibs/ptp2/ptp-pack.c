@@ -2881,6 +2881,7 @@ ptp_unpack_Nikon_EC_EX (PTPParams *params, unsigned char* data, unsigned int len
 		}
 		(*ec)[i].Code	= dtoh16a(&data[offset]);
 		(*ec)[i].Nparam	= dtoh16a(&data[offset+2]);
+		ptp_debug (params, "nikon eventex %d: code 0x%04x, params %d", i, (*ec)[i].Code, (*ec)[i].Nparam);
 		if (	((*ec)[i].Nparam > 5) 					||
 			(len < ((*ec)[i].Nparam*sizeof(uint32_t)) + 4 + offset)
 		) {

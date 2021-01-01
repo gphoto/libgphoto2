@@ -3022,31 +3022,53 @@ ptp_check_event (PTPParams *params)
 	PTPContainer	event;
 	uint16_t	ret;
 
-	/* Method offered by Nikon DSLR, Nikon 1, and some older Nikon Coolpix P*
-	 * The Nikon Coolpix P2 however does not return anything. So if we never get
-	 * events from here, use the ptp "interrupt" method */
-	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
-		ptp_operation_issupported(params, PTP_OC_NIKON_GetEvent)
-	) {
-		unsigned int evtcnt = 0, i;
-		PTPContainer *xevent = NULL;
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
+		if (ptp_operation_issupported(params, PTP_OC_NIKON_GetEventEx)) {
+			unsigned int evtcnt = 0, i;
+			PTPContainer *xevent = NULL;
 
-		ret = ptp_nikon_check_event(params, &xevent, &evtcnt);
-		if (ret != PTP_RC_OperationNotSupported)
-			CHECK_PTP_RC(ret);
+			ret = ptp_nikon_check_eventex(params, &xevent, &evtcnt);
+			if (ret != PTP_RC_OperationNotSupported)
+				CHECK_PTP_RC(ret);
 
-		if (evtcnt) {
-			for (i = 0; i < evtcnt; i++)
-				handle_event_internal (params, &xevent[i]);
-			params->events = realloc(params->events, sizeof(PTPContainer)*(evtcnt+params->nrofevents));
-			memcpy (&params->events[params->nrofevents],xevent,evtcnt*sizeof(PTPContainer));
-			params->nrofevents += evtcnt;
-			params->event90c7works = 1;
+			if (evtcnt) {
+				for (i = 0; i < evtcnt; i++)
+					handle_event_internal (params, &xevent[i]);
+				params->events = realloc(params->events, sizeof(PTPContainer)*(evtcnt+params->nrofevents));
+				memcpy (&params->events[params->nrofevents],xevent,evtcnt*sizeof(PTPContainer));
+				params->nrofevents += evtcnt;
+				params->event90c7works = 1;
+			}
+			free (xevent);
+			if (params->event90c7works)
+				return PTP_RC_OK;
+			/* fall through to generic event handling */
+		} else {
+			/* Method offered by Nikon DSLR, Nikon 1, and some older Nikon Coolpix P*
+			 * The Nikon Coolpix P2 however does not return anything. So if we never get
+			 * events from here, use the ptp "interrupt" method */
+			if (ptp_operation_issupported(params, PTP_OC_NIKON_GetEvent)) {
+				unsigned int evtcnt = 0, i;
+				PTPContainer *xevent = NULL;
+
+				ret = ptp_nikon_check_event(params, &xevent, &evtcnt);
+				if (ret != PTP_RC_OperationNotSupported)
+					CHECK_PTP_RC(ret);
+
+				if (evtcnt) {
+					for (i = 0; i < evtcnt; i++)
+						handle_event_internal (params, &xevent[i]);
+					params->events = realloc(params->events, sizeof(PTPContainer)*(evtcnt+params->nrofevents));
+					memcpy (&params->events[params->nrofevents],xevent,evtcnt*sizeof(PTPContainer));
+					params->nrofevents += evtcnt;
+					params->event90c7works = 1;
+				}
+				free (xevent);
+				if (params->event90c7works)
+					return PTP_RC_OK;
+				/* fall through to generic event handling */
+			}
 		}
-		free (xevent);
-		if (params->event90c7works)
-			return PTP_RC_OK;
-		/* fall through to generic event handling */
 	}
 	/* should not get here ... EOS has no normal PTP events and another queue handling. */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
