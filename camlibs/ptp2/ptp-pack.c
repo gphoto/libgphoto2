@@ -2844,6 +2844,64 @@ ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, P
 	}
 }
 
+/*
+ *  PTP USB Event container unpack for Nikon events, 2nd generation.
+ */
+#define PTP_nikon_ec_ex_Length		0
+#define PTP_nikon_ec_ex_Code		2
+
+static inline int
+ptp_unpack_Nikon_EC_EX (PTPParams *params, unsigned char* data, unsigned int len, PTPContainer **ec, unsigned int *cnt)
+{
+	unsigned int i, offset;
+
+	*ec = NULL;
+	if (data == NULL)
+		return 0;
+	if (len < PTP_nikon_ec_ex_Code)
+		return 0;
+	*cnt = dtoh16a(&data[PTP_nikon_ec_ex_Length]);
+	if (*cnt > (len-PTP_nikon_ec_ex_Code)/4) { /* broken cnt? simple first check ... due to dynamic size, we need to do more later */
+		*cnt = 0;
+		return 0;
+	}
+	if (!*cnt)
+		return 1;
+
+	*ec = malloc(sizeof(PTPContainer)*(*cnt));
+	offset = PTP_nikon_ec_ex_Code+sizeof(uint16_t);
+
+	for (i=0;i<*cnt;i++) {
+		memset(&(*ec)[i],0,sizeof(PTPContainer));
+		if (len - offset < 4) {
+			free (*ec);
+			*ec = NULL;
+			*cnt = 0;
+			return 0;
+		}
+		(*ec)[i].Code	= dtoh16a(&data[offset]);
+		(*ec)[i].Nparam	= dtoh16a(&data[offset+2]);
+		if (	((*ec)[i].Nparam > 5) 					||
+			(len < ((*ec)[i].Nparam*sizeof(uint32_t)) + 4 + offset)
+		) {
+			free (*ec);
+			*ec = NULL;
+			*cnt = 0;
+			return 0;
+		}
+		switch ((*ec)[i].Nparam) {
+		case 5:	(*ec)[i].Param5	= dtoh32a(&data[offset+4+sizeof(uint32_t)*4]);/* fallthrough */
+		case 4:	(*ec)[i].Param4	= dtoh32a(&data[offset+4+sizeof(uint32_t)*3]);/* fallthrough */
+		case 3:	(*ec)[i].Param3	= dtoh32a(&data[offset+4+sizeof(uint32_t)*2]);/* fallthrough */
+		case 2:	(*ec)[i].Param2	= dtoh32a(&data[offset+4+sizeof(uint32_t)*1]);/* fallthrough */
+		case 1:	(*ec)[i].Param1	= dtoh32a(&data[offset+4]);
+			/* fallthrough */
+		case 0:	break;
+		}
+		offset += (*ec)[i].Nparam*sizeof(uint32_t) + 4;
+	}
+	return 1;
+}
 
 static inline uint32_t
 ptp_pack_EK_text(PTPParams *params, PTPEKTextParams *text, unsigned char **data) {
