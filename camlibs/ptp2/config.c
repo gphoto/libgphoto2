@@ -7458,6 +7458,27 @@ _put_Canon_RemoteMode(CONFIG_PUT_ARGS) {
 
 
 static int
+_get_Canon_EventMode(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	return gp_widget_set_value  (*widget, "0");
+}
+
+static int
+_put_Canon_EventMode(CONFIG_PUT_ARGS) {
+	uint32_t	mode;
+	char		*val;
+	PTPParams	*params = &(camera->pl->params);
+
+	CR (gp_widget_get_value(widget, &val));
+	if (!sscanf (val, "%d", &mode))
+		return GP_ERROR;
+	C_PTP (ptp_canon_eos_seteventmode (params, mode));
+	return GP_OK;
+}
+
+
+static int
 _get_Canon_EOS_ViewFinder(CONFIG_GET_ARGS) {
 	int val;
 	PTPParams		*params = &(camera->pl->params);
@@ -9490,6 +9511,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("CHDK"),     		"chdk",		PTP_OC_CHDK,  PTP_VENDOR_CANON,   0,  _get_CHDK,     _put_CHDK },
 	{ N_("Capture"),		"capture",	0,  PTP_VENDOR_CANON,   0,  _get_Canon_CaptureMode, _put_Canon_CaptureMode },
 	{ N_("Remote Mode"),		"remotemode",	PTP_OC_CANON_EOS_SetRemoteMode,  PTP_VENDOR_CANON,   0,  _get_Canon_RemoteMode, _put_Canon_RemoteMode },
+	{ N_("Event Mode"),		"eventmode",	PTP_OC_CANON_EOS_SetEventMode,   PTP_VENDOR_CANON,   0,  _get_Canon_EventMode,  _put_Canon_EventMode },
 	{ 0,0,0,0,0,0,0 },
 };
 
