@@ -441,6 +441,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetRequestOLCInfoGroup	0x913D
 #define PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel	0x913E /* 1 arg: onoff? */
 /* 3 args, 0x21201020, 0x110, 0x1000000 (potentially reverse order) */
+
+/* EOS M6 Mark2:	opargs: 0x01000000, 0x000001020, 0 (supportkind, modelid ?),
+			response args: 0x00000811, 0x00000001 */
+
 #define PTP_OC_CANON_EOS_GetCameraSupport	0x913F
 #define PTP_OC_CANON_EOS_SetRating		0x9140 /* 2 args, objectid, rating? */
 #define PTP_OC_CANON_EOS_RequestInnerDevelopStart	0x9141 /* 2 args: 1 type, 1 object? */
@@ -4495,6 +4499,7 @@ uint16_t ptp_nikon_get_preview_image (PTPParams* params, unsigned char**, unsign
  **/
 #define ptp_nikon_end_liveview(params) ptp_generic_no_data(params,PTP_OC_NIKON_EndLiveView,0)
 uint16_t ptp_nikon_check_event (PTPParams* params, PTPContainer **evt, unsigned int *evtcnt);
+uint16_t ptp_nikon_check_eventex (PTPParams* params, PTPContainer **evt, unsigned int *evtcnt);
 uint16_t ptp_nikon_getfileinfoinblock (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3,
 					unsigned char **data, unsigned int *size);
 /**

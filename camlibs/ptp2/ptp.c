@@ -4471,6 +4471,33 @@ ptp_nikon_check_event (PTPParams* params, PTPContainer** event, unsigned int* ev
 }
 
 /**
+ * ptp_nikon_check_eventex:
+ *
+ * This command checks the event queue on the Nikon.
+ *
+ * params:	PTPParams*
+ *      PTPUSBEventContainer **event - list of usb events.
+ *	int *evtcnt - number of usb events in event structure.
+ *
+ * Return values: Some PTP_RC_* code.
+ *
+ **/
+uint16_t
+ptp_nikon_check_eventex (PTPParams* params, PTPContainer** event, unsigned int* evtcnt)
+{
+	PTPContainer	ptp;
+	unsigned char	*data = NULL;
+	unsigned int	size;
+
+	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetEventEx);
+	*evtcnt = 0;
+	CHECK_PTP_RC(ptp_transaction (params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	ptp_unpack_Nikon_EC_EX (params, data, size, event, evtcnt);
+	free (data);
+	return PTP_RC_OK;
+}
+
+/**
  * ptp_nikon_getptpipinfo:
  *
  * This command gets the ptpip info data.
