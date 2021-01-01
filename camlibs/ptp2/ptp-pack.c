@@ -1179,6 +1179,7 @@ static inline int
 ptp_unpack_OPD (PTPParams *params, unsigned char* data, PTPObjectPropDesc *opd, unsigned int opdlen)
 {
 	unsigned int offset=0, ret;
+	uint8_t	len;
 
 	memset (opd, 0, sizeof(*opd));
 
@@ -1240,13 +1241,35 @@ ptp_unpack_OPD (PTPParams *params, unsigned char* data, PTPObjectPropDesc *opd, 
 		}
 #undef N
 		}
+		break;
+	case PTP_OPFF_DateTime:
+		if (!ptp_unpack_string(params, data, offset, opdlen, &len, &opd->FORM.DateTime.String))
+			opd->FORM.DateTime.String = NULL;
+		offset += 2*len+1; /* offset not used afterwards anymore */
+		break;
+	case PTP_OPFF_RegularExpression:
+		if (!ptp_unpack_string(params, data, offset, opdlen, &len, &opd->FORM.RegularExpression.String))
+			opd->FORM.RegularExpression.String = NULL;
+		offset += 2*len+1; /* offset not used afterwards anymore */
+		break;
+	case PTP_OPFF_FixedLengthArray:
+		if (offset + sizeof(uint16_t) > opdlen) goto outofmemory;
+		opd->FORM.FixedLengthArray.NumberOfValues = dtoh16a(&data[offset]);
+		offset += sizeof(uint16_t); /* offset not used afterwards anymore */
+		break;
+	case PTP_OPFF_ByteArray:
+		if (offset + sizeof(uint16_t) > opdlen) goto outofmemory;
+		opd->FORM.ByteArray.NumberOfValues = dtoh16a(&data[offset]);
+		offset += sizeof(uint16_t); /* offset not used afterwards anymore */
+		break;
+	case PTP_OPFF_LongString:
+		break;
 	}
 	return 1;
 outofmemory:
 	ptp_free_objectpropdesc(opd);
 	return 0;
 }
-
 
 static inline uint32_t
 ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr, uint16_t datatype)

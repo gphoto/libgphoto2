@@ -1602,6 +1602,16 @@ struct _PTPPropDescEnumForm {
 };
 typedef struct _PTPPropDescEnumForm PTPPropDescEnumForm;
 
+struct _PTPPropDescArrayLengthForm {
+	uint16_t		NumberOfValues;
+};
+typedef struct _PTPPropDescArrayLengthForm PTPPropDescArrayLengthForm;
+
+struct _PTPPropDescStringForm {
+	char			*String;
+};
+typedef struct _PTPPropDescStringForm PTPPropDescStringForm;
+
 /* Device Property Describing Dataset (DevicePropDesc) */
 
 struct _PTPDevicePropDesc {
@@ -1628,8 +1638,13 @@ struct _PTPObjectPropDesc {
 	uint32_t		GroupCode;
 	uint8_t			FormFlag;
 	union	{
-		PTPPropDescEnumForm	Enum;
-		PTPPropDescRangeForm	Range;
+		PTPPropDescEnumForm		Enum;
+		PTPPropDescRangeForm		Range;
+		PTPPropDescStringForm		DateTime;
+		PTPPropDescArrayLengthForm	FixedLengthArray;
+		PTPPropDescStringForm		RegularExpression;
+		PTPPropDescArrayLengthForm	ByteArray;
+		PTPPropDescStringForm		LongString;
 	} FORM;
 };
 typedef struct _PTPObjectPropDesc PTPObjectPropDesc;

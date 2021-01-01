@@ -1458,9 +1458,13 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
 		}
 		break;
 	case PTP_OPFF_DateTime:
-	case PTP_OPFF_FixedLengthArray:
+		free(opd->FORM.DateTime.String);
+		break;
 	case PTP_OPFF_RegularExpression:
-	case PTP_OPFF_ByteArray:
+		free(opd->FORM.RegularExpression.String);
+		break;
+	case PTP_OPFF_FixedLengthArray:	/* nothing to free */ /* fallthrough */
+	case PTP_OPFF_ByteArray:	/* nothing to free */ /* fallthrough */
 	case PTP_OPFF_LongString:
 		/* Ignore these presently, we cannot unpack them, so there is nothing to be freed. */
 		break;
