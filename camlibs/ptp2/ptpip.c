@@ -405,15 +405,15 @@ retry:
 
 	switch (dtoh32(hdr.type)) {
 	case PTPIP_END_DATA_PACKET:
-		GP_LOG_D("PTPIP_END_DATA_PACKET");
 		resp->Transaction_ID	= dtoh32a(&data[0]);
+		GP_LOG_D("PTPIP_END_DATA_PACKET (tid = 0x%08x)", resp->Transaction_ID);
 		free (data);
 		data = NULL;
 		goto retry;
 	case PTPIP_CMD_RESPONSE:
-		GP_LOG_D("PTPIP_CMD_RESPONSE");
 		resp->Code		= dtoh16a(&data[ptpip_resp_code]);
 		resp->Transaction_ID	= dtoh32a(&data[ptpip_resp_transid]);
+		GP_LOG_D("PTPIP_CMD_RESPONSE (result=0x%04x, tid=0x%08x)", resp->Code, resp->Transaction_ID);
 		n = (dtoh32(hdr.length) - sizeof(hdr) - ptpip_resp_param1)/sizeof(uint32_t);
 		switch (n) {
 		case 5: resp->Param5 = dtoh32a(&data[ptpip_resp_param5]);/* fallthrough */
