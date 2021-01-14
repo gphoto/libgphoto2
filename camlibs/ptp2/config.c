@@ -9499,7 +9499,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Custom Functions Ex"),    "customfuncex",         PTP_DPC_CANON_EOS_CustomFuncEx,     PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Focus Info"),             "focusinfo",            PTP_DPC_CANON_EOS_FocusInfoEx,      PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Focus Area"),             "focusarea",            PTP_DPC_CANON_EOS_AFSelectFocusArea,PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_INT },
-	{ N_("Auto Power Off"),         "autopoweroff",         PTP_DPC_CANON_EOS_AutoPowerOff,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Auto Power Off"),         "autopoweroff",         PTP_DPC_CANON_EOS_AutoPowerOff,     PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Depth of Field"),         "depthoffield",         PTP_DPC_CANON_EOS_DepthOfFieldPreview, PTP_VENDOR_CANON,PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Menus and Playback"),     "menusandplayback",     PTP_DPC_NIKON_MenusAndPlayback,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_MenusAndPlayback,    _put_Nikon_MenusAndPlayback },
 	{ N_("External Recording Control"),     "externalrecordingcontrol", PTP_DPC_NIKON_ExternalRecordingControl,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,    _put_Nikon_OffOn_UINT8 },
