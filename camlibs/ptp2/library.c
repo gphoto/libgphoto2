@@ -3563,8 +3563,19 @@ enable_liveview:
 			usleep(20*1000);
 		} while (tries--);
 
+		jpgStartPtr = ximage;
+		/* There is an initial blob, and we had a case where 0xff 0xd8 was in the initial blob
+		 * https://github.com/gphoto/gphoto2/issues/389
+		 * as the data starts with an apparent offset into the data to the JPEG, try to use that
+		 */
+		if (size > 4) {
+			unsigned int offset = ximage[0] | (ximage[1] << 8) | (ximage[2] << 16) | (ximage[3] << 24);
+			if ((offset+1 < size) && (ximage[offset] == 0xff) && (ximage[offset+1] == 0xd8))
+				jpgStartPtr = ximage + offset;
+		}
+
 		/* look for the JPEG SOI marker (0xFFD8) in data */
-		jpgStartPtr = (unsigned char*)memchr(ximage, 0xff, size);
+		jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, size);
 		while(jpgStartPtr && ((jpgStartPtr+1) < (ximage + size))) {
 			if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
 				break;
