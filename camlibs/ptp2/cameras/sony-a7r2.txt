@@ -1,0 +1,72 @@
+Device info:
+Manufacturer: Sony Corporation
+  Model: ILCE-7RM2
+  device version: 4.0
+  serial number: '0000000000000000nnnnnnnnnnnnnnnn'
+Vendor extension ID: 0x00000011
+Vendor extension version: 100
+Vendor extension description: Sony PTP Extensions
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1001 (Get device info)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x101b (Get partial object)
+  0x9201 (SDIOConnect)
+  0x9202 (GetSDIOGetExtDeviceInfo)
+  0x9205 (SetControlDeviceA)
+  0x9207 (SetControlDeviceB)
+  0x9209 (GetAllDevicePropData)
+Events Supported:
+  0xc201 (Sony_ObjectAdded)
+  0xc202 (Sony_ObjectRemoved)
+  0xc203 (Sony_PropertyChanged)
+Device Properties Supported:
+
+sony code: 5004
+sony code: 5005
+sony code: 5007
+sony code: 500a
+sony code: 500b
+sony code: 500c
+sony code: 500e
+sony code: 5010
+sony code: 5013
+sony code: d200
+sony code: d201
+sony code: d203
+sony code: d20d
+sony code: d20e
+sony code: d20f
+sony code: d211
+sony code: d213
+sony code: d21e
+sony code: d21b
+sony code: d21d
+sony code: d21f
+sony code: d217
+sony code: d218
+sony code: d219
+sony code: d212
+sony code: d210
+sony code: d21c
+sony code: d221
+sony code: d214
+sony code: d215
+sony code: d220
+sony code: d2c1
+sony code: d2c2
+sony code: d2c3
+sony code: d2c9
+sony code: d2c8
+sony code: d2c5
+sony code: d2c7
+
