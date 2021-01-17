@@ -6994,6 +6994,14 @@ handleregular:
 		}
 		break;
 	}
+	case PTP_EC_DeviceInfoChanged:
+		*eventtype = GP_EVENT_UNKNOWN;
+		C_MEM (*eventdata = malloc(strlen("PTP Deviceinfo changed")+1));
+		sprintf (*eventdata, "PTP Deviceinfo changed");
+		C_PTP_REP (ptp_getdeviceinfo (params, &params->deviceinfo));
+		CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
+		print_debug_deviceinfo(params, &params->deviceinfo);
+		break;
 	case PTP_EC_DevicePropChanged:
 		*eventtype = GP_EVENT_UNKNOWN;
 		C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
@@ -7461,6 +7469,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	 */
 	C_PTP_REP (ptp_getdeviceinfo (params, &pdi));
 	CR (fixup_cached_deviceinfo (camera, &pdi));
+	print_debug_deviceinfo(params, &params->deviceinfo);
         for (i=0;i<pdi.DevicePropertiesSupported_len;i++) {
 		PTPDevicePropDesc dpd;
 		unsigned int dpc = pdi.DevicePropertiesSupported[i];
