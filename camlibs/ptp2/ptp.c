@@ -503,7 +503,7 @@ ptp_getstreaminfo (PTPParams *params, uint32_t streamid, PTPStreamInfo *si)
 	unsigned int	size;
 	int		ret;
 
-	PTP_CNT_INIT(ptp, PTP_OC_GetStreamInfo);
+	PTP_CNT_INIT(ptp, PTP_OC_GetStreamInfo, streamid);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	ret = ptp_unpack_StreamInfo(params, data, si, size);
 	free (data);
