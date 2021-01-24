@@ -299,7 +299,7 @@ END
 Label: Serial Number
 Readonly: 0
 Type: TEXT
-Current: 038071008753
+Current: nnnnnnnnnnnn
 END
 /main/status/availableshots
 Label: Available Shots
