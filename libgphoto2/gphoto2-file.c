@@ -26,6 +26,7 @@
  */
 #define _POSIX_SOURCE
 #define _DEFAULT_SOURCE
+#define _DARWIN_C_SOURCE
 
 #include "config.h"
 #include <gphoto2/gphoto2-file.h>
