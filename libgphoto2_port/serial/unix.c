@@ -28,6 +28,7 @@
  */
 
 #define _DEFAULT_SOURCE
+#define _DARWIN_C_SOURCE
 /* Solaris needs this */
 #define __EXTENSIONS__
 

@@ -22,6 +22,7 @@
  */
 
 #define _DEFAULT_SOURCE
+#define _DARWIN_C_SOURCE
 #include "config.h"
 
 #include <stdlib.h>
