@@ -2019,6 +2019,26 @@ static struct deviceproptableu16 canon_eos_autoexposuremode[] = {
 	{ N_("Landscape"),	0x000d, 0 },
 	{ N_("Closeup"),	0x000e, 0 },
 	{ N_("Flash Off"),	0x000f, 0 },
+
+	{ N_("Auto"),			0x0016, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Handheld Night Scene"),	0x0017, 0 },	/* EOS M6 Mark 2 */
+	{ N_("HDR Backlight Control"),	0x0018, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Food"),			0x001b, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Grainy B/W"),		0x001e, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Soft focus"),		0x001f, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Toy camera effect"),	0x0020, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Fish-eye effect"),	0x0021, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Water painting effect"),	0x0022, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Miniature effect"),	0x0023, 0 },	/* EOS M6 Mark 2 */
+	{ N_("HDR art standard"),	0x0024, 0 },	/* EOS M6 Mark 2 */
+	{ N_("HDR art vivid"),		0x0025, 0 },	/* EOS M6 Mark 2 */
+	{ N_("HDR art bold"),		0x0026, 0 },	/* EOS M6 Mark 2 */
+	{ N_("HDR art embossed"),	0x0027, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Panning"),		0x002d, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Self Portrait"),		0x0032, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Hybrid Auto"),		0x0033, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Smooth skin"),		0x0034, 0 },	/* EOS M6 Mark 2 */
+	{ N_("Fv"),			0x0037, 0 },	/* EOS M6 Mark 2 */
 };
 GENERIC16TABLE(Canon_EOS_AutoExposureMode,canon_eos_autoexposuremode)
 
