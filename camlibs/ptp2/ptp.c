@@ -1046,6 +1046,24 @@ ptp_panasonic_9401 (PTPParams* params, uint32_t param1)
 	return ret;
 }
 
+/* liveview format query
+ * 0d800012 - get imageformats
+ * 0d800011 - get current imageformat ?
+ */
+uint16_t
+ptp_panasonic_9414 (PTPParams* params, uint32_t param1)
+{
+        PTPContainer    ptp;
+	uint16_t	ret;
+	unsigned int	*size = 0;
+	unsigned char   *data = NULL;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetLiveViewParameters, param1);
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, size);
+	free(data);
+	return ret;
+}
+
 uint16_t
 ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode,
 			unsigned char *value, uint16_t valuesize)

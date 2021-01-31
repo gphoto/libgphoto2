@@ -937,6 +937,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_PANASONIC_SetGPSDataInfo		0x9411
 #define PTP_OC_PANASONIC_Liveview		0x9412	/* 0d000010 start, 0d000011 stop */
 #define PTP_OC_PANASONIC_PollEvents		0x9414	/* ? 1 arg e.g 12000020 */
+#define PTP_OC_PANASONIC_GetLiveViewParameters	0x9414	/* either all formats 0x0d800012 or current format 0x0d800011 */
+#define PTP_OC_PANASONIC_SetLiveViewParameters	0x9415	/* current format 0x0d800011 */
 #define PTP_OC_PANASONIC_ManualFocusDrive	0x9416	/* Rec Ctrl Mf Assist, Rec Ctrl Backup Req ... 1 arg */
 
 #define PTP_OC_PANASONIC_ChangeEvent		0x9603	/* 2 args ... e.g. 0x4002, new (change object added event) */
@@ -4681,6 +4683,7 @@ uint16_t ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propco
 uint16_t ptp_panasonic_setcapturetarget (PTPParams *params, uint16_t mode);
 uint16_t ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode);
 uint16_t ptp_panasonic_9401 (PTPParams* params, uint32_t x);
+uint16_t ptp_panasonic_9414 (PTPParams* params, uint32_t x);
 
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)
