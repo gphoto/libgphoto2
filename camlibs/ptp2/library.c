@@ -5386,11 +5386,12 @@ static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
-	PTPContainer event;
-	PTPParams *params = &camera->pl->params;
-	uint32_t newobject = 0x0;
-	int done,tries;
+	PTPContainer		event;
+	PTPParams		*params = &camera->pl->params;
+	uint32_t		newobject = 0x0;
+	int			done,tries;
 	PTPObjectHandles	beforehandles;
+	uint16_t		ptpres;
 
 	/* adjust if we ever do sound or movie capture */
 	if (type != GP_CAPTURE_IMAGE)
@@ -5508,7 +5509,10 @@ fallback:
 	 * few seconds. moving down the code. (kil3r)
 	 */
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
-	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	ptpres = LOG_ON_PTP_E (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	/* the V1 reports general error to us, but has actually captured ... so just ignore GeneralError. */
+	if ((ptpres != PTP_RC_OK) && (ptpres != PTP_RC_GeneralError))
+		CR(ptpres);
 	/* A word of comments is worth here.
 	 * After InitiateCapture camera should report with ObjectAdded event
 	 * all newly created objects. However there might be more than one
