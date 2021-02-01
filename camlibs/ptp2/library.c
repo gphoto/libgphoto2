@@ -5507,8 +5507,8 @@ fallback:
 	 * indicating that the capure has been completed may occur after
 	 * few seconds. moving down the code. (kil3r)
 	 */
-	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
+	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
 	/* A word of comments is worth here.
 	 * After InitiateCapture camera should report with ObjectAdded event
 	 * all newly created objects. However there might be more than one
