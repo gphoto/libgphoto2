@@ -2774,6 +2774,31 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			ce[i].u.info = malloc(strlen("BulbExposureTime 123456789012345678"));
 			sprintf (ce[i].u.info, "BulbExposureTime %u",  dtoh32a(curdata+8));
 			break;
+		case PTP_EC_CANON_EOS_CTGInfoCheckComplete: /* some form of storage catalog ? */
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			ce[i].u.info = malloc(strlen("CTGInfoCheckComplete 0x012345678"));
+			sprintf (ce[i].u.info, "CTGInfoCheckComplete 0x%08x",  dtoh32a(curdata+8));
+			break;
+		case PTP_EC_CANON_EOS_StorageStatusChanged:
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			ce[i].u.info = malloc(strlen("StorageStatusChanged 0x012345678"));
+			sprintf (ce[i].u.info, "StorageStatusChanged 0x%08x",  dtoh32a(curdata+8));
+			break;
+		case PTP_EC_CANON_EOS_StorageInfoChanged:
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			ce[i].u.info = malloc(strlen("StorageInfoChanged 0x012345678"));
+			sprintf (ce[i].u.info, "StorageInfoChanged 0x%08x",  dtoh32a(curdata+8));
+			break;
+		case PTP_EC_CANON_EOS_StoreAdded:
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			ce[i].u.info = malloc(strlen("StoreAdded 0x012345678"));
+			sprintf (ce[i].u.info, "StoreAdded 0x%08x",  dtoh32a(curdata+8));
+			break;
+		case PTP_EC_CANON_EOS_StoreRemoved:
+			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+			ce[i].u.info = malloc(strlen("StoreRemoved 0x012345678"));
+			sprintf (ce[i].u.info, "StoreRemoved 0x%08x",  dtoh32a(curdata+8));
+			break;
 		case PTP_EC_CANON_EOS_ObjectRemoved:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED;
 			ce[i].u.object.oid = dtoh32a(curdata+8);
@@ -2787,8 +2812,6 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				break;
 			XX(RequestGetEvent)
 			XX(RequestGetObjectInfoEx)
-			XX(StorageStatusChanged)
-			XX(StorageInfoChanged)
 			XX(ObjectInfoChangedEx)
 			XX(ObjectContentChanged)
 			XX(WillSoonShutdown)
@@ -2796,14 +2819,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			XX(RequestCancelTransfer)
 			XX(RequestObjectTransferDT)
 			XX(RequestCancelTransferDT)
-			XX(StoreAdded)
-			XX(StoreRemoved)
 			XX(BulbExposureTime)
 			XX(RecordingTime)
 			XX(RequestObjectTransferTS)
 			XX(AfResult)
 			XX(PowerZoomInfoChanged)
-			XX(CTGInfoCheckComplete)
 #undef XX
 			default:
 				ptp_debug (params, "event %d: unknown EOS event %04x", i, type);
