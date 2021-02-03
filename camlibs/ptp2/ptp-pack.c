@@ -2507,6 +2507,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 		 * 5Dsr:	b
 		 * 200D: 	f
 		 * EOS R:	11
+		 * EOS R5:	13
 		 */
 		case PTP_EC_CANON_EOS_OLCInfoChanged: {
 			uint32_t		len, curoff;
@@ -2557,6 +2558,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				 * 7 bytes: 01 03 98 10 00 70 00
 				 * EOS R also 7 bytes
 				 * 7 bytes: 01 01 a0 0c 00 0c 00
+				 * EOS R5 seems to have 10 bytes
+				 * 10 bytes: 01 03 a0 10 0 60 00 01 01 00
 				 */
 				proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
 				dpd = _lookup_or_allocate_canon_prop(params, proptype);
@@ -2569,6 +2572,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case 0xf:
 				case 0x11:
 					curoff += 7;	/* f (200D), 8 (M10) ???, 11 is EOS R */
+					break;
+				case 0x13:
+					curoff += 10;	/* 13 is EOS R5 */
 					break;
 				case 0x7:
 				case 0x8: /* EOS 70D */
