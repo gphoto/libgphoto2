@@ -2104,6 +2104,66 @@ static struct deviceproptableu8 sony_qx_liveviewsize[] = {
 };
 GENERIC8TABLE(Sony_QX_LiveViewSize,sony_qx_liveviewsize)
 
+static int
+_get_Canon_LiveViewSize(CONFIG_GET_ARGS) {
+	unsigned int i;
+	unsigned int have = 0;
+	char buf[20];
+
+	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
+		return GP_ERROR;
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return GP_ERROR;
+/* actually it is a flag value, 1 = TFT, 2 = PC, 4 = MOBILE, 8 = MOBILE2 */
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++) {
+		if ((dpd->FORM.Enum.SupportedValue[i].u16 & 0xe) == 0x2) {
+			if (!(have & 0x2))
+				gp_widget_add_choice (*widget, _("Large"));
+			have |= 0x2;
+			continue;
+		}
+		if ((dpd->FORM.Enum.SupportedValue[i].u16 & 0xe) == 0x4) {
+			if (!(have & 0x4))
+				gp_widget_add_choice (*widget, _("Medium"));
+			have |= 0x4;
+			continue;
+		}
+		if ((dpd->FORM.Enum.SupportedValue[i].u16 & 0xe) == 0x8) {
+			if (!(have & 0x8))
+				gp_widget_add_choice (*widget, _("Small"));
+			have |= 0x8;
+			continue;
+		}
+	}
+	if ((dpd->CurrentValue.u16 & 0xe) == 0x8) { gp_widget_set_value (*widget, _("Small")); return GP_OK; }
+	if ((dpd->CurrentValue.u16 & 0xe) == 0x4) { gp_widget_set_value (*widget, _("Medium")); return GP_OK; }
+	if ((dpd->CurrentValue.u16 & 0xe) == 0x2) { gp_widget_set_value (*widget, _("Large")); return GP_OK; }
+	sprintf(buf,"val %x", dpd->CurrentValue.u16);
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
+_put_Canon_LiveViewSize(CONFIG_PUT_ARGS) {
+	char		*val;
+	unsigned int	outputval = 0;
+
+	CR (gp_widget_get_value (widget, &val));
+	if (!strcmp(val,_("Large"))) { outputval = 0x2; }
+	if (!strcmp(val,_("Medium"))) { outputval = 0x4; }
+	if (!strcmp(val,_("Small"))) { outputval = 0x8; }
+
+	if (outputval == 0)
+		return GP_ERROR_BAD_PARAMETERS;
+	/* replace the current outputsize, but keep the TFT flag */
+	propval->u16 = (dpd->CurrentValue.u16 & ~0xe) | outputval;
+	return GP_OK;
+}
+
 static struct deviceproptableu8 nikon_flashcommanderpower[] = {
 	{ N_("Full"),		0, 0 },
 	{ "1/2",		1, 0 },
@@ -2375,6 +2435,7 @@ static struct deviceproptableu16 canon_eos_aspectratio[] = {
 	{ "1:1",	0x0001, 0},
 	{ "4:3",	0x0002, 0},
 	{ "16:9",	0x0007, 0},
+	{ "1.6x",	0x000d, 0}, /* guess , EOS R */
 };
 GENERIC16TABLE(Canon_EOS_AspectRatio,canon_eos_aspectratio)
 
@@ -9725,6 +9786,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Live View White Balance"),        "liveviewwhitebalance",     PTP_DPC_NIKON_LiveViewWhiteBalance,     PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_WhiteBalance,                  _put_WhiteBalance },
 	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_FUJI_LiveViewImageSize,         PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_LiveViewSize,             _put_Fuji_LiveViewSize },
 	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_SONY_QX_LiveviewResolution,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_QX_LiveViewSize,          _put_Sony_QX_LiveViewSize },
+	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_CANON_EOS_EVFOutputDevice,      PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_LiveViewSize,            _put_Canon_LiveViewSize },
 	{ N_("File Number Sequencing"),         "filenrsequencing",         PTP_DPC_NIKON_FileNumberSequence,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Sign"),                     "flashsign",                PTP_DPC_NIKON_FlashSign,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Modelling Flash"),                "modelflash",               PTP_DPC_NIKON_E4ModelingFlash,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
@@ -9982,6 +10044,10 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0441, nikon_d850_capture_settings,    NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0442, nikon_z6_capture_settings,      NULL,   NULL },	/* Z7 */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0443, nikon_z6_capture_settings,      NULL,   NULL }, /* Z6 */
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0444, nikon_z6_capture_settings,      NULL,   NULL }, /* Z50 */
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0448, nikon_z6_capture_settings,      NULL,   NULL }, /* Z5 guessed */
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x044b, nikon_z6_capture_settings,      NULL,   NULL }, /* Z7_2 guessed */
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x044c, nikon_z6_capture_settings,      NULL,   NULL }, /* Z6_2 guessed */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0,      nikon_generic_capture_settings, NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0,      0,      capture_settings_menu,          NULL,   NULL },
 
