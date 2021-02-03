@@ -7890,10 +7890,95 @@ _put_Sony_QX_Movie(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Nikon_MovieProhibitCondition(CONFIG_GET_ARGS) {
+	char 			buf[2000];
+	PTPPropertyValue	value;
+	PTPParams 		*params = &(camera->pl->params);
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+
+	value.u32 = 0;
+	LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_MovRecProhibitCondition, &value, PTP_DTC_UINT32));
+	if (value.u32) {
+		strcpy(buf,N_("Movie prohibit conditions: "));
+#define X(bit,str)					\
+		if (value.u32 & (1<<bit)) {		\
+			value.u32 &= ~(1<<bit);		\
+			strcat(buf, _(str));		\
+			if (value.u32) strcat(buf, " ");\
+		}
+
+		X(14,N_("Not in application mode"));
+		X(13,N_("Set liveview selector is enabled"));
+		X(12,N_("In enlarged liveview"));
+		X(12,N_("In enlarged liveview"));
+		X(11,N_("Card protected"));
+		X(10,N_("Already in movie recording"));
+		X( 9,N_("Images / movies not yet record in buffer"));
+		X( 3,N_("Card full"));
+		X( 2,N_("Card not formatted"));
+		X( 1,N_("Card error"));
+		X( 0,N_("No card"));
+#undef X
+		if (value.u32) { sprintf(buf+strlen(buf),"unhandled bitmask %x", value.u32); }
+	} else {
+		strcpy(buf,N_("No movie prohibit conditions"));
+	}
+	gp_widget_set_value  (*widget, buf);
+	return GP_OK;
+}
+
+static int
+_get_Nikon_LiveViewProhibitCondition(CONFIG_GET_ARGS) {
+	char 			buf[2000];
+	PTPPropertyValue	value;
+	PTPParams 		*params = &(camera->pl->params);
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+
+	value.u32 = 0;
+	LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewProhibitCondition, &value, PTP_DTC_UINT32));
+	if (value.u32) {
+		strcpy(buf,N_("Movie prohibit conditions: "));
+#define X(bit,str)					\
+		if (value.u32 & (1<<bit)) {		\
+			value.u32 &= ~(1<<bit);		\
+			strcat(buf, _(str));		\
+			if (value.u32) strcat(buf, " ");\
+		}
+		X( 2,N_("Sequence error"));
+		X( 4,N_("Fully pressed button"));
+		X( 5,N_("Minimum aperture warning"));
+		X( 8,N_("Battery exhausted"));
+		X( 9,N_("TTL error"));
+		X(12,N_("Pending unretrieved SDRAM image"));
+		X(14,N_("Recording destination card, but no card or card protected"));
+		X(15,N_("Processing of shooting operation"));
+		X(17,N_("Temperature too high"));
+		X(18,N_("Card protected"));
+		X(19,N_("Card error"));
+		X(20,N_("Card unformatted"));
+		X(21,N_("Bulb warning"));
+		X(22,N_("In Mirror-up operation"));
+		X(24,N_("Lens is retracting"));
+		X(31,N_("Exposure Program Mode is not P/A/S/M"));
+#undef X
+		if (value.u32) { sprintf(buf+strlen(buf),"unhandled bitmask %x", value.u32); }
+	} else {
+		strcpy(buf,N_("Liveview should not be prohibited"));
+	}
+	gp_widget_set_value  (*widget, buf);
+	return GP_OK;
+}
+
+
+static int
 _get_Nikon_Movie(CONFIG_GET_ARGS) {
 	int val;
 
-	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 	val = 2; /* always changed */
 	gp_widget_set_value  (*widget, &val);
@@ -9543,6 +9628,8 @@ static struct submenu camera_status_menu[] = {
 	{ N_("AE Locked"),              "aelocked",         PTP_DPC_NIKON_AELockStatus,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("FV Locked"),              "fvlocked",         PTP_DPC_NIKON_FVLockStatus,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("Movie Switch"),	        "eosmovieswitch",   PTP_DPC_CANON_EOS_FixedMovie,           PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
+	{ N_("Movie Prohibit Condition"), "movieprohibit",  PTP_DPC_NIKON_MovRecProhibitCondition,  PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_MovieProhibitCondition, _put_None },
+	{ N_("Liveview Prohibit Condition"), "liveviewprohibit", PTP_DPC_NIKON_LiveViewProhibitCondition, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_LiveViewProhibitCondition, _put_None },
 	{ 0,0,0,0,0,0,0 },
 };
 
