@@ -7906,7 +7906,7 @@ _get_Nikon_MovieProhibitCondition(CONFIG_GET_ARGS) {
 		if (value.u32 & (1<<bit)) {		\
 			value.u32 &= ~(1<<bit);		\
 			strcat(buf, _(str));		\
-			if (value.u32) strcat(buf, " ");\
+			if (value.u32) strcat(buf, ",");\
 		}
 
 		X(14,N_("Not in application mode"));
@@ -7946,7 +7946,7 @@ _get_Nikon_LiveViewProhibitCondition(CONFIG_GET_ARGS) {
 		if (value.u32 & (1<<bit)) {		\
 			value.u32 &= ~(1<<bit);		\
 			strcat(buf, _(str));		\
-			if (value.u32) strcat(buf, " ");\
+			if (value.u32) strcat(buf, ",");\
 		}
 		X( 2,N_("Sequence error"));
 		X( 4,N_("Fully pressed button"));
