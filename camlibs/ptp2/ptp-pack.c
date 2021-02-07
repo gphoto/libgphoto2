@@ -2310,6 +2310,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case PTP_DPC_CANON_EOS_ColorTemperature:
 				case PTP_DPC_CANON_EOS_FixedMovie:
 				case PTP_DPC_CANON_EOS_AutoPowerOff:
+				case PTP_DPC_CANON_EOS_AloMode:
+				case PTP_DPC_CANON_EOS_LvViewTypeSelect:
+				case PTP_DPC_CANON_EOS_EVFColorTemp:
+				case PTP_DPC_CANON_EOS_LvAfSystem:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */
@@ -2348,6 +2352,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case PTP_DPC_CANON_EOS_Copyright:
 				case PTP_DPC_CANON_EOS_SerialNumber:
 				case PTP_DPC_CANON_EOS_LensName:
+				case PTP_DPC_CANON_EOS_CameraNickname:
 					dpd->DataType = PTP_DTC_STR;
 					break;
 				case PTP_DPC_CANON_EOS_WhiteBalanceAdjustA:
@@ -2389,13 +2394,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case PTP_DPC_CANON_EOS_EVFSharpness:
 				case PTP_DPC_CANON_EOS_EVFWBMode:
 				case PTP_DPC_CANON_EOS_EVFClickWBCoeffs:
-				case PTP_DPC_CANON_EOS_EVFColorTemp:
 				case PTP_DPC_CANON_EOS_ExposureSimMode:
-				case PTP_DPC_CANON_EOS_LvAfSystem:
 				case PTP_DPC_CANON_EOS_MovSize:
 				case PTP_DPC_CANON_EOS_DepthOfField:
-				case PTP_DPC_CANON_EOS_LvViewTypeSelect:
-				case PTP_DPC_CANON_EOS_AloMode:
 				case PTP_DPC_CANON_EOS_Brightness:
 				case PTP_DPC_CANON_EOS_GPSLogCtrl:
 				case PTP_DPC_CANON_EOS_GPSDeviceActive:
