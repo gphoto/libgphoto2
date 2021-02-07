@@ -9660,6 +9660,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Artist"),                 "artist",               PTP_DPC_NIKON_ArtistName,           PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("CCD Number"),             "ccdnumber",            PTP_DPC_NIKON_CCDNumber,            PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Copyright"),              "copyright",            PTP_DPC_CANON_EOS_Copyright,        PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
+	{ N_("Nickname"),               "nickname",             PTP_DPC_CANON_EOS_CameraNickname,   PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Copyright"),              "copyright",            PTP_DPC_FUJI_Copyright,             PTP_VENDOR_FUJI,    PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Copyright"),              "copyright",            PTP_DPC_NIKON_CopyrightInfo,        PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Clean Sensor"),           "cleansensor",          PTP_DPC_NIKON_CleanImageSensor,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_CleanSensor,         _put_Nikon_CleanSensor },
