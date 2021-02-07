@@ -2507,8 +2507,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 		 * 70D:		8
 		 * 5Dsr:	b
 		 * 200D: 	f
-		 * EOS R:	11
-		 * EOS R5:	13
+		 * EOS R:	0x11
+		 * EOS M6 Mark2 0x12
+		 * EOS R5:	0x13
 		 */
 		case PTP_EC_CANON_EOS_OLCInfoChanged: {
 			uint32_t		len, curoff;
@@ -2554,13 +2555,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 
 			if (mask & CANON_EOS_OLC_SHUTTERSPEED) {
 				/* 6 bytes: 01 01 98 10 00 60 */
-				/* this seesm to be the shutter speed record */
+				/* this seem to be the shutter speed record */
 				/* EOS 200D seems to have 7 bytes here, sample:
 				 * 7 bytes: 01 03 98 10 00 70 00
 				 * EOS R also 7 bytes
 				 * 7 bytes: 01 01 a0 0c 00 0c 00
-				 * EOS R5 seems to have 10 bytes
-				 * 10 bytes: 01 03 a0 10 0 60 00 01 01 00
 				 */
 				proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
 				dpd = _lookup_or_allocate_canon_prop(params, proptype);
@@ -2572,10 +2571,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				switch (olcver) {
 				case 0xf:
 				case 0x11:
-					curoff += 7;	/* f (200D), 8 (M10) ???, 11 is EOS R */
-					break;
+				case 0x12:
 				case 0x13:
-					curoff += 10;	/* 13 is EOS R5 */
+					curoff += 7;	/* f (200D), 8 (M10) ???, 11 is EOS R , 12 is EOS m6 Mark2*/
 					break;
 				case 0x7:
 				case 0x8: /* EOS 70D */
@@ -2593,33 +2591,46 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			}
 			if (mask & CANON_EOS_OLC_APERTURE) {
 				/* 5 bytes: 01 01 5b 30 30 */
-				/* this seesm to be the aperture record */
+				/* this seem to be the aperture record */
 				/* EOS 200D seems to have 6 bytes here?
 				 * 6 bytes: 01 01 50 20 20 00 *
+				 * EOS M6 Mark 2:
+				 * 9 bytes: 01 03 00 58 00 2d 00 30 00
 				 */
 				proptype = PTP_DPC_CANON_EOS_Aperture;
 				dpd = _lookup_or_allocate_canon_prop(params, proptype);
-				dpd->CurrentValue.u16 = curdata[curoff+4]; /* just use last byte */
+				if (olcver >= 0x12)
+					dpd->CurrentValue.u16 = curdata[curoff+5]; /* CHECK */
+				else
+					dpd->CurrentValue.u16 = curdata[curoff+4]; /* just use last byte */
 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
-				if (olcver >= 0xf) {
-					curoff += 6;	/* f, 11 */
+				if (olcver >= 0x12) {
+					curoff += 9;	/* m6 mark 2, r5 */
 				} else {
-					curoff += 5;	/* 7, 8, b */
+					if (olcver >= 0xf) {
+						curoff += 6;	/* f, 11 */
+					} else {
+						curoff += 5;	/* 7, 8, b */
+					}
 				}
 				i++;
 			}
 			if (mask & CANON_EOS_OLC_ISO) {
 				/* 4 bytes: 01 01 00 78 */
-				/* this seesm to be the aperture record */
+				/* EOS M6 Mark2: 01 01 00 6b 68 28 */
+				/* this seem to be the ISO record */
 				proptype = PTP_DPC_CANON_EOS_ISOSpeed;
 				dpd = _lookup_or_allocate_canon_prop(params, proptype);
 				dpd->CurrentValue.u16 = curdata[curoff+3]; /* just use last byte */
 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
-				curoff += 4;	/* 7, 8, b, f*/
+				if (curoff >= 0x12)
+					curoff += 6;	/* m6 mark 2 */
+				else
+					curoff += 4;	/* 7, 8, b, f*/
 				i++;
 			}
 			if (mask & 0x0010) {
