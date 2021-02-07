@@ -2319,6 +2319,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */
+				case PTP_DPC_CANON_EOS_AEModeDial:
 				case PTP_DPC_CANON_EOS_AutoExposureMode:
 					dpd->DataType = PTP_DTC_UINT16;
 					dpd->FormFlag = PTP_DPFF_Enumeration;
