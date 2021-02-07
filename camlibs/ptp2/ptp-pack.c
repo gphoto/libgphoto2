@@ -2314,6 +2314,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case PTP_DPC_CANON_EOS_LvViewTypeSelect:
 				case PTP_DPC_CANON_EOS_EVFColorTemp:
 				case PTP_DPC_CANON_EOS_LvAfSystem:
+				case PTP_DPC_CANON_EOS_OneShotRawOn:
+				case PTP_DPC_CANON_EOS_FlashChargingState:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */
@@ -2679,7 +2681,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 					curdata[curoff+5],
 					curdata[curoff+6]
 				);
-				curoff += 7;
+				if (olcver >= 0x12) {
+					curoff += 8;
+				} else {
+					curoff += 7;
+				}
 				i++;
 			}
 			if (mask & 0x0080) {
@@ -2707,7 +2713,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 					curdata[curoff+4],
 					curdata[curoff+5]
 				);
-				curoff += 6;
+				if (olcver >= 0x12)
+					curoff += 7;
+				else
+					curoff += 6;
 				i++;
 			}
 			if (mask & 0x0200) {
