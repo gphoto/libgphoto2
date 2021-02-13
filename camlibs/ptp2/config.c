@@ -8597,16 +8597,16 @@ _put_Panasonic_LiveViewSize(CONFIG_PUT_ARGS)
 {
 	PTPParams		*params = &(camera->pl->params);
 	char			*xval;
-	unsigned int		height, width, freq;
+	unsigned int		height, width, freq, x;
 	PanasonicLiveViewSize	liveviewsize;
 
 	CR (gp_widget_get_value(widget, &xval));
-	if (!sscanf(xval, "%dx%d %d HZ", &width, &height, &freq))
+	if (!sscanf(xval, "%dx%d %d %dHZ", &width, &height, &x, &freq))
 		return GP_ERROR;
 	liveviewsize.width	= width;
 	liveviewsize.height	= height;
 	liveviewsize.freq	= freq;
-	liveviewsize.x		= 0;
+	liveviewsize.x		= x;
 	return translate_ptp_result (ptp_panasonic_9415(params, &liveviewsize));
 }
 
@@ -8625,13 +8625,13 @@ _get_Panasonic_LiveViewSize(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i = 0;i < nrofliveviewsizes; i++) {
-		sprintf(buf,"%dx%d %d HZ", liveviewsizes[i].width, liveviewsizes[i].height, liveviewsizes[i].freq);
+		sprintf(buf,"%dx%d %d %dHZ", liveviewsizes[i].width, liveviewsizes[i].height, liveviewsizes[i].x, liveviewsizes[i].freq);
                 gp_widget_add_choice (*widget, buf);
 	}
 	free (liveviewsizes);
 
 	C_PTP_REP (ptp_panasonic_9414_0d800011(params, &liveviewsize));
-	sprintf(buf,"%dx%d %d HZ", liveviewsize.width, liveviewsize.height, liveviewsize.freq);
+	sprintf(buf,"%dx%d %d %dHZ", liveviewsize.width, liveviewsize.height, liveviewsize.x, liveviewsize.freq);
 	gp_widget_set_value (*widget, buf);
 	return GP_OK;
 }
