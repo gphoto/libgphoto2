@@ -1051,16 +1051,126 @@ ptp_panasonic_9401 (PTPParams* params, uint32_t param1)
  * 0d800011 - get current imageformat ?
  */
 uint16_t
-ptp_panasonic_9414 (PTPParams* params, uint32_t param1)
+ptp_panasonic_9414_0d800012 (PTPParams* params, PanasonicLiveViewSize **liveviewsizes, unsigned int *nrofliveviewsizes)
 {
         PTPContainer    ptp;
-	uint16_t	ret;
-	unsigned int	*size = 0;
+	unsigned int	i;
+	unsigned int	size = 0;
 	unsigned char   *data = NULL;
+	uint32_t	blobsize;
+	uint16_t	count;
+	uint16_t	structsize;
 
-	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetLiveViewParameters, param1);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, size);
+	*nrofliveviewsizes = 0;
+	*liveviewsizes = NULL;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetLiveViewParameters, 0x0d800012);
+	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+
+	if (size < 8) return PTP_RC_GeneralError;
+
+	blobsize = dtoh32a(data+4);
+	if (size - 8 < blobsize) {
+		ptp_debug (params, "blobsize expected %d, but size is only %d", blobsize, size - 8);
+		return PTP_RC_GeneralError;
+	}
+	if (blobsize < 4) {
+		ptp_debug (params, "blobsize expected at least 4, but is only %d", blobsize);
+		return PTP_RC_GeneralError;
+	}
+	count		= dtoh16a (data+8);
+	structsize	= dtoh16a (data+10);
+	if (structsize != 8) {
+		ptp_debug (params, "structsize expected 8, but is %d", structsize);
+		return PTP_RC_GeneralError;
+	}
+	if (count * structsize > blobsize) {
+		ptp_debug (params, "%d * %d = %d is larger than %d", count, structsize, count * structsize, blobsize);
+		return PTP_RC_GeneralError;
+	}
+
+	*liveviewsizes = calloc (sizeof(PanasonicLiveViewSize),count);
+	for (i = 0;i < count; i++) {
+		(*liveviewsizes)[i].height	= dtoh16a (data + 12 + i*structsize);
+		(*liveviewsizes)[i].width	= dtoh16a (data + 12 + 2 + i*structsize);
+		(*liveviewsizes)[i].x		= dtoh16a (data + 12 + 4 + i*structsize);
+		(*liveviewsizes)[i].freq	= dtoh16a (data + 12 + 6 + i*structsize);
+	}
+	*nrofliveviewsizes = count;
+/*
+
+12 00 80 0d
+1c 00 00 00
+03 00           count
+08 00           structsize
+e0 01 80 02 20 00 1e 00
+d0 02 c0 03 5e 01 1e 00
+c0 03 00 05 bc 02 1e 00
+
+ */
 	free(data);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_panasonic_9414_0d800011 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
+{
+        PTPContainer    ptp;
+	unsigned int	size = 0;
+	unsigned char   *data = NULL;
+	uint32_t	blobsize;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetLiveViewParameters, 0x0d800011);
+	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+
+	if (size < 8) return PTP_RC_GeneralError;
+
+	blobsize = dtoh32a(data+4);
+	if (size - 8 < blobsize) {
+		ptp_debug (params, "blobsize expected %d, but size is only %d", blobsize, size - 8);
+		return PTP_RC_GeneralError;
+	}
+	if (blobsize < 8) {
+		ptp_debug (params, "blobsize expected at least 8, but is only %d", blobsize);
+		return PTP_RC_GeneralError;
+	}
+	liveviewsize->height	= dtoh16a (data + 8 + 0);
+	liveviewsize->width	= dtoh16a (data + 8 + 2);
+	liveviewsize->x		= dtoh16a (data + 8 + 4);
+	liveviewsize->freq	= dtoh16a (data + 8 + 6);
+/*
+
+11 00 80 0d
+08 00 00 00
+
+e0 01 80 02
+00 00
+1e 00
+
+ */
+	free(data);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
+{
+        PTPContainer    ptp;
+	unsigned char   *data;
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetLiveViewParameters, 0x0d800011);
+
+	data = malloc(16);
+	htod32a(data+0 , 0x0d800011);
+	htod32a(data+4 , 8);
+	htod16a(data+8 , liveviewsize->height);
+	htod16a(data+10, liveviewsize->width);
+	htod16a(data+12, liveviewsize->x);
+	htod16a(data+14, liveviewsize->freq);
+
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 16, (unsigned char**)&data, 0);
+	free (data);
 	return ret;
 }
 
@@ -1150,17 +1260,23 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	unsigned char	*data = NULL;
 	unsigned int 	size = 0;
 	uint16_t	ret = PTP_RC_OK;
+	uint32_t	headerLength;
+	uint32_t	propertyCode;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ListProperty, propcode, 0, 0);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (!data) return PTP_RC_GeneralError;
 
 
-	if (size < 4) return PTP_RC_GeneralError;
-	uint32_t headerLength 		= dtoh32a( (data) + 4 );
-	if (size < 4 + 6 * 4) return PTP_RC_GeneralError;
-	uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 );
-	if (size < headerLength * 4 + 2 * 4) return PTP_RC_GeneralError;
+	if (size < 4)
+		return PTP_RC_GeneralError;
+	headerLength = dtoh32a( (data) + 4 );
+	if (size < 4 + 6 * 4)
+		return PTP_RC_GeneralError;
+
+	propertyCode = dtoh32a( (data) + 4 + 6 * 4 );
+	if (size < headerLength * 4 + 2 * 4)
+		return PTP_RC_GeneralError;
 
 	if(valuesize == 2) {
 		*currentValue 		= (uint32_t) dtoh16a( (data) + headerLength * 4 + 2 * 4 );

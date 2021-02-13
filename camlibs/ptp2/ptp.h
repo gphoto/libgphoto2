@@ -3594,6 +3594,14 @@ struct _MTPObjectFormat {
 };
 typedef struct _MTPObjectFormat MTPObjectFormat;
 
+struct _PanasonicLiveViewSize {
+	uint16_t	width;
+	uint16_t	height;
+	uint16_t	x;
+	uint16_t	freq;
+};
+typedef struct _PanasonicLiveViewSize PanasonicLiveViewSize;
+
 /* Transaction data phase description, internal flags to sendreq / transaction driver. */
 #define PTP_DP_NODATA           0x0000  /* no data phase */
 #define PTP_DP_SENDDATA         0x0001  /* sending data */
@@ -4683,7 +4691,11 @@ uint16_t ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propco
 uint16_t ptp_panasonic_setcapturetarget (PTPParams *params, uint16_t mode);
 uint16_t ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode);
 uint16_t ptp_panasonic_9401 (PTPParams* params, uint32_t x);
-uint16_t ptp_panasonic_9414 (PTPParams* params, uint32_t x);
+
+uint16_t ptp_panasonic_9414_0d800012 (PTPParams* params, PanasonicLiveViewSize **liveviewsizes, unsigned int *nrofliveviewsizes);
+uint16_t ptp_panasonic_9414_0d800011 (PTPParams* params, PanasonicLiveViewSize *liveviewsize);
+uint16_t ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize);
+
 
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)

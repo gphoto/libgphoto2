@@ -245,7 +245,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
         gp_camera_get_abilities(camera, &a);
 
-	/* Panasonic GH5 */
+	/* Panasonic GH5, GC9 */
 	if (    (di->VendorExtensionID == PTP_VENDOR_PANASONIC) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_product == 0x2382)

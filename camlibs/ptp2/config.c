@@ -8593,6 +8593,50 @@ _get_Panasonic_Exposure(CONFIG_GET_ARGS) {
 }
 
 static int
+_put_Panasonic_LiveViewSize(CONFIG_PUT_ARGS)
+{
+	PTPParams		*params = &(camera->pl->params);
+	char			*xval;
+	unsigned int		height, width, freq;
+	PanasonicLiveViewSize	liveviewsize;
+
+	CR (gp_widget_get_value(widget, &xval));
+	if (!sscanf(xval, "%dx%d %d HZ", &width, &height, &freq))
+		return GP_ERROR;
+	liveviewsize.width	= width;
+	liveviewsize.height	= height;
+	liveviewsize.freq	= freq;
+	liveviewsize.x		= 0;
+	return translate_ptp_result (ptp_panasonic_9415(params, &liveviewsize));
+}
+
+static int
+_get_Panasonic_LiveViewSize(CONFIG_GET_ARGS) {
+	unsigned int		i;
+	char			buf[100];
+	PTPParams		*params = &(camera->pl->params);
+	GPContext		*context = ((PTPData *) params->data)->context;
+	PanasonicLiveViewSize	liveviewsize, *liveviewsizes = NULL;
+	unsigned int		nrofliveviewsizes = 0;
+
+	C_PTP_REP (ptp_panasonic_9414_0d800012(params, &liveviewsizes, &nrofliveviewsizes));
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i = 0;i < nrofliveviewsizes; i++) {
+		sprintf(buf,"%dx%d %d HZ", liveviewsizes[i].width, liveviewsizes[i].height, liveviewsizes[i].freq);
+                gp_widget_add_choice (*widget, buf);
+	}
+	free (liveviewsizes);
+
+	C_PTP_REP (ptp_panasonic_9414_0d800011(params, &liveviewsize));
+	sprintf(buf,"%dx%d %d HZ", liveviewsize.width, liveviewsize.height, liveviewsize.freq);
+	gp_widget_set_value (*widget, buf);
+	return GP_OK;
+}
+
+static int
 _put_Panasonic_FNumber(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
@@ -9800,6 +9844,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_SONY_QX_Aperture,               PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        0,                  PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("F-Number"),			"f-number",		    0,					    PTP_VENDOR_PANASONIC,PTP_DTC_INT32, _get_Panasonic_FNumber,             _put_Panasonic_FNumber },
+	{ N_("Live View Size"),			"liveviewsize",		    0,					    PTP_VENDOR_PANASONIC,PTP_DTC_INT32, _get_Panasonic_LiveViewSize,        _put_Panasonic_LiveViewSize },
 	{ N_("Movie F-Number"),                 "movief-number",            PTP_DPC_NIKON_MovieFNumber,             PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("Flexible Program"),               "flexibleprogram",          PTP_DPC_NIKON_FlexibleProgram,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Range_INT8,                    _put_Range_INT8 },
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_CompressionSetting,            _put_Sony_CompressionSetting },
