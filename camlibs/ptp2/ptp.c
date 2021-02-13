@@ -1149,7 +1149,7 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int 	size = 0;
-	uint16_t	ret = 0;
+	uint16_t	ret = PTP_RC_OK;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ListProperty, propcode, 0, 0);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
@@ -1167,6 +1167,7 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	} else if(valuesize == 4) {
 		*currentValue 		= dtoh32a( (data) + headerLength * 4 + 2 * 4 );
 	} else {
+		ptp_debug (params, "unexpected valuesize %d", valuesize);
 		return PTP_RC_GeneralError;
 	}
 	if (size < headerLength * 4 + 2 * 4 + valuesize) return PTP_RC_GeneralError;
@@ -1174,7 +1175,10 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 
 	ptp_debug(params, "header: %lu, code: 0x%lx, value: %lu, count: %lu", headerLength, propertyCode, *currentValue, *propertyValueListLength);
 
-	if (size < headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize) return PTP_RC_GeneralError;
+	if (size < headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize) {
+		ptp_debug (params, "size %d vs expected size %d", size, headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize);
+		return PTP_RC_GeneralError;
+	}
 
 	*propertyValueList = calloc(*propertyValueListLength, sizeof(uint32_t));
 
