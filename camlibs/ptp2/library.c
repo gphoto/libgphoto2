@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2020 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2021 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  * Copyright (C) 2009 Axel Waggershauser <awagger@web.de>
  *
@@ -6686,8 +6686,11 @@ downloadnow:
 				path->name[0]='\0';
 				strcpy (path->folder,"/");
 				ret = gp_file_new(&file);
-				if (ret!=GP_OK)
+				if (ret != GP_OK) {
+					ptp_free_devicepropdesc (&dpd);
+					ptp_free_objectinfo (&oi);
 					return ret;
+				}
 				if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
 					GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
 					sprintf (path->name, "capt%04d.arw", params->capcnt++);
@@ -6704,18 +6707,21 @@ downloadnow:
 				if (ret != GP_OK) {
 					gp_file_free (file);
 					ptp_free_devicepropdesc (&dpd);
+					ptp_free_objectinfo (&oi);
 					return ret;
 				}
 				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
 				if (ret != GP_OK) {
 					gp_file_free (file);
 					ptp_free_devicepropdesc (&dpd);
+					ptp_free_objectinfo (&oi);
 					return ret;
 				}
 				ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
 				if (ret != GP_OK) {
 					gp_file_free (file);
 					ptp_free_devicepropdesc (&dpd);
+					ptp_free_objectinfo (&oi);
 					return ret;
 				}
 				*eventtype = GP_EVENT_FILE_ADDED;
@@ -6730,6 +6736,7 @@ downloadnow:
 					ptp_add_event (params, &event);
 				}
 				ptp_free_devicepropdesc (&dpd);
+				ptp_free_objectinfo (&oi);
 				return GP_OK;
 			}
 sonyout:
