@@ -1206,7 +1206,7 @@ static void yuv_live_to_jpeg(unsigned char *p_yuv,
 
 	jpeg_start_compress (&cinfo, TRUE);
 
-	tmprowbuf = malloc (cinfo.image_width * 3);
+	tmprowbuf = calloc (cinfo.image_width , 3);
 	row_ptr[0] = &tmprowbuf[0];
 
 	while (cinfo.next_scanline < cinfo.image_height) {

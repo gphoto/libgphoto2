@@ -311,7 +311,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 		/* Dup and merge the lists */
 #define DI_MERGE(x) \
-		C_MEM (newdi.x = malloc(sizeof(outerdi->x[0])*(ndi.x##_len + outerdi->x##_len)));\
+		C_MEM (newdi.x = calloc(sizeof(outerdi->x[0]),(ndi.x##_len + outerdi->x##_len)));\
 		for (i = 0; i < outerdi->x##_len ; i++) 					\
 			newdi.x[i] = outerdi->x[i];						\
 		for (i = 0; i < ndi.x##_len ; i++)						\

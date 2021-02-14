@@ -1019,7 +1019,7 @@ _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	CR (gp_widget_get_value(widget, &value));
 	memset(propval,0,sizeof(PTPPropertyValue));
 	/* add \0 ? */
-	C_MEM (propval->a.v = malloc((strlen(value)+1)*sizeof(PTPPropertyValue)));
+	C_MEM (propval->a.v = calloc((strlen(value)+1),sizeof(PTPPropertyValue)));
 	propval->a.count = strlen(value)+1;
 	for (i=0;i<strlen(value)+1;i++)
 		propval->a.v[i].u8 = value[i];
