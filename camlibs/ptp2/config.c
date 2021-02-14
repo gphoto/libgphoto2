@@ -8451,52 +8451,52 @@ struct {
 } panasonic_wbtable[] = {
 	{ N_("Automatic"),	0x0002	},
 	{ N_("Daylight"),	0x0004	},
-	{ N_("Cloudy"),		32776	},
 	{ N_("Tungsten"),	0x0006	},
+	{ N_("Flourescent"),	0x0005	},
 	{ N_("Flash"),		0x0007	},
-	{ N_("Preset 1"),	32779	},
-	{ N_("Preset 2"),	32780	},
-	{ N_("Preset 3"),	32781	},
-	{ N_("Preset 4"),	32782	},
-	{ N_("Shadow"),		32783	},
-	{ N_("Temperature 1"),	32784	},
-	{ N_("Temperature 2"),	32785	},
-	{ N_("Temperature 3"),	32786	},
-	{ N_("Temperature 4"),	32787	},
-	{ N_("Automatic C"), 	32788	},
+	{ N_("Cloudy"),		0x8008	},
+	{ N_("White set"),	0x8009	},
+	{ N_("Black White"),	0x800A	},
+	{ N_("Preset 1"),	0x800B	},
+	{ N_("Preset 2"),	0x800C	},
+	{ N_("Preset 3"),	0x800D	},
+	{ N_("Preset 4"),	0x800E	},
+	{ N_("Shadow"),		0x800F	},
+	{ N_("Temperature 1"),	0x8010	},
+	{ N_("Temperature 2"),	0x8011	},
+	{ N_("Temperature 3"),	0x8012	},
+	{ N_("Temperature 4"),	0x8013	},
+	{ N_("Automatic Cool"),	0x8014	},
+	{ N_("Automatic Warm"),	0x8015	},
 };
 
 static int
 _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
-	GPContext *context = ((PTPData *) params->data)->context;
-	char *xval;
+	char	*xval;
 	uint32_t val = 0;
+/*
 	uint32_t currentVal;
 	uint32_t listCount;
 	uint32_t *list;
-	int ival;
-	unsigned int i;
+*/
+	int	ival;
+	unsigned int j;
 
 	CR (gp_widget_get_value(widget, &xval));
 
-	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount));
+	/* C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount)); */
 
 	if (sscanf(xval,_("Unknown 0x%04x"), &ival))
 		val = ival;
-
-	for (i = 0; i < listCount; i++) {
-		unsigned int j;
-
-		for (j=0;j<sizeof(panasonic_wbtable)/sizeof(panasonic_wbtable[0]);j++) {
-			if (!strcmp(xval,_(panasonic_wbtable[j].str))) {
-				val = panasonic_wbtable[j].val;
-				break;
-			}
+	for (j=0;j<sizeof(panasonic_wbtable)/sizeof(panasonic_wbtable[0]);j++) {
+		if (!strcmp(xval,_(panasonic_wbtable[j].str))) {
+			val = panasonic_wbtable[j].val;
+			break;
 		}
 	}
-	free(list);
+	/* free(list); */
 	GP_LOG_D("setting whitebalance to 0x%04x", val);
 	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance, (unsigned char*)&val, 2));
 }
