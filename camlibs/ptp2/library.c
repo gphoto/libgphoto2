@@ -5205,7 +5205,7 @@ camera_panasonic_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	uint16_t valuesize;
 	uint32_t waitMS = 1000;
 
-	ptp_panasonic_getdeviceproperty(params, 0x2000030, &valuesize, &currentVal);
+	ptp_panasonic_getdeviceproperty(params, PTP_DPC_PANASONIC_ShutterSpeed, &valuesize, &currentVal);
 
 	float f;
 	if(currentVal == 0xFFFFFFFF) {
