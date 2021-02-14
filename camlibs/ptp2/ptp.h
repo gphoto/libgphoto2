@@ -927,7 +927,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_PANASONIC_9406			0x9406	/* Setup Ctrl various functions: Format, Sensor Cleaning, Menu Save, firmware update? */
 #define PTP_OC_PANASONIC_9408			0x9408
 #define PTP_OC_PANASONIC_9409			0x9409	/* 1 arg */
-#define PTP_OC_PANASONIC_940A			0x940A	/* 1 arg, e.g. 0x08000010 */
+#define PTP_OC_PANASONIC_GetCaptureTarget	0x940A	/* 1 arg, e.g. 0x08000010 */
 #define PTP_OC_PANASONIC_SetCaptureTarget	0x940B	/* 1 arg, e.g. 0x08000010 */
 #define PTP_OC_PANASONIC_MoveRecControl		0x940C	/* 07000011 start, 07000012 stop, 0700013 still capture */
 #define PTP_OC_PANASONIC_PowerControl		0x940D	/* 1 arg: 0x0A000011 power off, 0x0a00012 device reset, 0x0a00013 device restart */
@@ -3242,7 +3242,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_PANASONIC_Aperture			0x02000040
 #define PTP_DPC_PANASONIC_WhiteBalance			0x02000050
 #define PTP_DPC_PANASONIC_Exposure			0x02000060
-#define PTP_DPC_PANASONIC_AFArea			0x02000070
+#define PTP_DPC_PANASONIC_AFArea			0x02000070 /* AFCONFIG */
 #define PTP_DPC_PANASONIC_CameraMode			0x02000080
 #define PTP_DPC_PANASONIC_ImageFormat			0x020000A2
 #define PTP_DPC_PANASONIC_MeteringInfo			0x020000B0
@@ -3253,7 +3253,18 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_PANASONIC_RecPreviewConfig		0x02000170
 #define PTP_DPC_PANASONIC_RecInfoSelfTimer		0x020001A0
 #define PTP_DPC_PANASONIC_RecInfoFlash2			0x020001B0
-#define PTP_DPC_PANASONIC_MovConfig			0x06000010
+#define PTP_DPC_PANASONIC_RecCtrlRelease		0x03000010
+
+#define PTP_DPC_PANASONIC_RecCtrlAFAE			0x03000020 /* cmd base for afae */
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAE    	0x03000021
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAF    	0x03000022
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAFAE    	0x03000023
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_AF_OneShot    	0x03000024
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_Lock_Clear    	0x03000025
+
+#define PTP_DPC_PANASONIC_Zoom				0x03000080
+#define PTP_DPC_PANASONIC_RecCtrlLens			0x03010010
+#define PTP_DPC_PANASONIC_MovConfig			0x06000010	/* uses 9408 */
 #define PTP_DPC_PANASONIC_08000010			0x08000010
 /* various modes of the camera, HDMI, GetDateTimeWorldTime Mode/Area, SetupCfgInfo, SetupConfig_DateTime, GetSystemFreq Mode, GetSetupConfig Info */
 /*
@@ -4688,7 +4699,8 @@ uint16_t ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode, 
 uint16_t ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
 uint16_t ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint16_t valuesize, uint32_t *currentValue, uint32_t **propertyValueList, uint32_t *propertyValueListLength);
 uint16_t ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode);
-uint16_t ptp_panasonic_setcapturetarget (PTPParams *params, uint16_t mode);
+uint16_t ptp_panasonic_getcapturetarget (PTPParams *params, uint16_t *target);
+uint16_t ptp_panasonic_setcapturetarget (PTPParams *params, uint16_t target);
 uint16_t ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode);
 uint16_t ptp_panasonic_9401 (PTPParams* params, uint32_t x);
 

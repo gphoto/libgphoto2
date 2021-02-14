@@ -1234,20 +1234,33 @@ ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode)
 }
 
 uint16_t
-ptp_panasonic_setcapturetarget (PTPParams* params, uint16_t mode) // mode == 1 == RAM, mode == 0 == SD
+ptp_panasonic_getcapturetarget (PTPParams* params, uint16_t *target)
+{
+	PTPContainer    ptp;
+	unsigned char	*data;
+	unsigned int	size;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetCaptureTarget, 0x08000090);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	if (!data) return PTP_RC_GeneralError;
+
+	*target = 0;
+
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_panasonic_setcapturetarget (PTPParams* params, uint16_t mode) // mode == 1 == RAM, mode == 0 == SD, 2 = BOTH
 {
 	PTPContainer    ptp;
 	unsigned char	data[10];
-	uint32_t	propcode = 0x00000000;
-	uint32_t	propcodedata = 0x08000091;
-	uint32_t	type = 2;
 	unsigned char	*xdata = (unsigned char*)data;
 
-	htod32a(data, propcodedata); /* memcpy(data, &propcodedata, 4); */
-	htod32a(&data[4], type); /* memcpy(&data[4], &type, 4); */
-	htod16a(&data[8], mode); /* memcpy(&data[8], &mode, 2); */
+	htod32a(data, 	  0x08000091);	/* capturetarget */
+	htod32a(&data[4], 2); 		/* size */
+	htod16a(&data[8], mode);
 
-	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetCaptureTarget, propcode);
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetCaptureTarget, 0);
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
 }
 
@@ -1260,14 +1273,21 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	uint16_t	ret = PTP_RC_OK;
 	uint32_t	headerLength;
 	uint32_t	propertyCode;
+	unsigned int	off = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ListProperty, propcode, 0, 0);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (!data) return PTP_RC_GeneralError;
-
-
-	if (size < 4)
+	if (size < 8)
 		return PTP_RC_GeneralError;
+
+	ptp_debug (params, "ptp_panasonic_getdevicepropertydesc 0x%08x", propcode);
+	while (off < size) {
+		if (off >= size-8) break;
+		ptp_debug (params, "propcode 0x%08lx, size %d", dtoh32a(data+off), dtoh32a(data+off+4));
+		off += dtoh32a(data+off+4)+8;
+	}
+
 	headerLength = dtoh32a( (data) + 4 );
 	if (size < 4 + 6 * 4)
 		return PTP_RC_GeneralError;

@@ -8934,6 +8934,9 @@ _put_CaptureTarget(CONFIG_PUT_ARGS) {
 		CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
 
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_PANASONIC) {
+		uint16_t	target;
+
+		C_PTP (ptp_panasonic_getcapturetarget(params, &target));
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
 			C_PTP (ptp_panasonic_setcapturetarget(params, 1));
 		else
