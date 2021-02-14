@@ -250,14 +250,17 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_product == 0x2382)
 	) {
-		C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 6)));
+		C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 9)));
 		di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_PANASONIC_GetProperty;
 		di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_PANASONIC_SetProperty;
 		di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_PANASONIC_ListProperty;
 		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_InitiateCapture;
 		di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_PANASONIC_Liveview;
 		di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_PANASONIC_LiveviewImage;
-		di->OperationsSupported_len += 6;
+		di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_PANASONIC_MovieRecControl;
+		di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_PANASONIC_GetLiveViewParameters;
+		di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_PANASONIC_SetLiveViewParameters;
+		di->OperationsSupported_len += 9;
 	}
 
 	/* Panasonic hack */

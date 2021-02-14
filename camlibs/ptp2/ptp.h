@@ -929,7 +929,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_PANASONIC_9409			0x9409	/* 1 arg */
 #define PTP_OC_PANASONIC_GetCaptureTarget	0x940A	/* 1 arg, e.g. 0x08000010 */
 #define PTP_OC_PANASONIC_SetCaptureTarget	0x940B	/* 1 arg, e.g. 0x08000010 */
-#define PTP_OC_PANASONIC_MoveRecControl		0x940C	/* 07000011 start, 07000012 stop, 0700013 still capture */
+#define PTP_OC_PANASONIC_MovieRecControl	0x940C	/* 07000011 start, 07000012 stop, 0700013 still capture */
 #define PTP_OC_PANASONIC_PowerControl		0x940D	/* 1 arg: 0x0A000011 power off, 0x0a00012 device reset, 0x0a00013 device restart */
 #define PTP_OC_PANASONIC_PlayControl		0x940E	/* 2 arg? 0x05000011 current=0, next=1, prev=0xffffffff */
 #define PTP_OC_PANASONIC_PlayControlPlay	0x940F	/* 0x05000020 */
@@ -3327,16 +3327,36 @@ typedef struct _PTPCanonEOSDeviceInfo {
 
 #define PTP_DPC_PANASONIC_GetFreeSpaceInImages		0x12000010
 /*
-0000  98 00 00 00 02 00 14 94-04 00 00 00 11 00 00 12  ................
-0010  04 00 00 00 4e 00 00 00-12 00 00 12 04 00 00 00  ....N...........
-0020  00 00 00 00 13 00 00 12-02 00 00 00 00 00 14 00  ................
-0030  00 12 04 00 00 00 00 00-00 00 15 00 00 12 06 00  ................
-0040  00 00 02 00 01 00 00 00-16 00 00 12 3a 00 00 00  ............:...
-0050  02 00 4e 00 00 00 00 00-00 00 4e 00 00 00 ff ff  ..N.......N.....
-0060  ff ff 00 00 00 00 ff ff-ff ff 00 00 00 00 00 00  ................
-0070  00 00 00 00 00 00 ff ff-ff ff 00 00 00 00 ff ff  ................
-0080  ff ff 00 00 00 00 00 00-00 00 17 00 00 12 06 00  ................
-0090  00 00 00 00 00 00 00 00-                         ........
+11 00 00 12
+04 00 00 00
+4e 00 00 00
+
+12 00 00 12
+04 00 00 00
+00 00 00 00
+
+13 00 00 12
+02 00 00 00
+00 00
+
+14 00 00 12
+04 00 00 00
+00 00 00 00
+
+15 00 00 12
+06 00 00 00
+02 00 01 00 00 00
+
+16 00 00 12
+3a 00 00 00
+02 00 4e 00 00 00 00 00 00 00 4e 00 00 00 ff ff
+ff ff 00 00 00 00 ff ff ff ff 00 00 00 00 00 00
+00 00 00 00 00 00 ff ff ff ff 00 00 00 00 ff ff
+ff ff 00 00 00 00 00 00 00 00
+
+17 00 00 12
+06 00 00 00
+00 00 00 00 00 00
  */
 #define PTP_DPC_PANASONIC_GetBatteryInfo		0x16000010
 /*
@@ -4718,6 +4738,7 @@ uint16_t ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned i
 
 #define ptp_panasonic_liveview(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_Liveview,1,enable?0xD000010:0xD000011)
 uint16_t ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
+#define ptp_panasonic_movierec(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_MovieRecControl,1,enable?0x07000011:0x07000012)
 
 uint16_t ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode, unsigned char *value, uint16_t valuesize);
 uint16_t ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
