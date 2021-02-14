@@ -1066,7 +1066,17 @@ ptp_panasonic_9414_0d800012 (PTPParams* params, PanasonicLiveViewSize **liveview
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetLiveViewParameters, 0x0d800012);
 	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+/* return data with the GC9 is:
 
+12 00 80 0d
+1c 00 00 00
+03 00           count
+08 00           structsize
+e0 01 80 02 20 00 1e 00
+d0 02 c0 03 5e 01 1e 00
+c0 03 00 05 bc 02 1e 00
+
+ */
 	if (size < 8) return PTP_RC_GeneralError;
 
 	blobsize = dtoh32a(data+4);
@@ -1097,17 +1107,6 @@ ptp_panasonic_9414_0d800012 (PTPParams* params, PanasonicLiveViewSize **liveview
 		(*liveviewsizes)[i].freq	= dtoh16a (data + 12 + 6 + i*structsize);
 	}
 	*nrofliveviewsizes = count;
-/*
-
-12 00 80 0d
-1c 00 00 00
-03 00           count
-08 00           structsize
-e0 01 80 02 20 00 1e 00
-d0 02 c0 03 5e 01 1e 00
-c0 03 00 05 bc 02 1e 00
-
- */
 	free(data);
 	return PTP_RC_OK;
 }
@@ -1122,7 +1121,16 @@ ptp_panasonic_9414_0d800011 (PTPParams* params, PanasonicLiveViewSize *liveviews
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetLiveViewParameters, 0x0d800011);
 	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+/* data is:
 
+11 00 80 0d
+08 00 00 00
+
+e0 01 80 02
+00 00
+1e 00
+
+ */
 	if (size < 8) return PTP_RC_GeneralError;
 
 	blobsize = dtoh32a(data+4);
@@ -1138,16 +1146,6 @@ ptp_panasonic_9414_0d800011 (PTPParams* params, PanasonicLiveViewSize *liveviews
 	liveviewsize->width	= dtoh16a (data + 8 + 2);
 	liveviewsize->x		= dtoh16a (data + 8 + 4);
 	liveviewsize->freq	= dtoh16a (data + 8 + 6);
-/*
-
-11 00 80 0d
-08 00 00 00
-
-e0 01 80 02
-00 00
-1e 00
-
- */
 	free(data);
 	return PTP_RC_OK;
 }
