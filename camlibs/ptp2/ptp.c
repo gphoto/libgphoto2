@@ -1240,12 +1240,16 @@ ptp_panasonic_getcapturetarget (PTPParams* params, uint16_t *target)
 	unsigned char	*data;
 	unsigned int	size;
 
+	*target = 0;
+
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetCaptureTarget, 0x08000090);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (!data) return PTP_RC_GeneralError;
-
-	*target = 0;
-
+	if (size < 10) return PTP_RC_GeneralError;
+	if (dtoh32a(data) != 0x08000091) return PTP_RC_GeneralError;
+	if (dtoh32a(data+4) != 2) return PTP_RC_GeneralError;
+	*target = dtoh16a(data+8);
+	free (data);
 	return PTP_RC_OK;
 }
 
