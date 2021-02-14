@@ -305,7 +305,7 @@ ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, unsigned int o
 		return 0;
 	}
 
-	*array = malloc (n*sizeof(uint32_t));
+	*array = calloc (n,sizeof(uint32_t));
 	if (!*array)
 		return 0;
 	for (i=0;i<n;i++)
@@ -318,7 +318,7 @@ ptp_pack_uint32_t_array(PTPParams *params, uint32_t *array, uint32_t arraylen, u
 {
 	uint32_t i=0;
 
-	*data = malloc ((arraylen+1)*sizeof(uint32_t));
+	*data = calloc ((arraylen+1),sizeof(uint32_t));
 	if (!*data)
 		return 0;
 	htod32a(&(*data)[0],arraylen);
@@ -350,7 +350,7 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, unsigned int o
 		ptp_debug (params ,"array runs over datalen bufferend (%d vs %d)", offset + sizeof(uint32_t)+n*sizeof(uint16_t) , datalen);
 		return 0;
 	}
-	*array = malloc (n*sizeof(uint16_t));
+	*array = calloc (n,sizeof(uint16_t));
 	if (!*array)
 		return 0;
 	for (i=0;i<n;i++)
@@ -821,7 +821,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	if (n > (total - (*offset))/sizeof(val->a.v[0]))\
 		return 0;				\
 	val->a.count = n;				\
-	val->a.v = malloc(sizeof(val->a.v[0])*n);	\
+	val->a.v = calloc(sizeof(val->a.v[0]),n);	\
 	if (!val->a.v) return 0;			\
 	for (j=0;j<n;j++)				\
 		CTVAL(val->a.v[j].member, func);	\
@@ -977,11 +977,10 @@ ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, 
 
 		N = dtoh16a(&data[offset]);
 		offset+=sizeof(uint16_t);
-		dpd->FORM.Enum.SupportedValue = malloc(N*sizeof(dpd->FORM.Enum.SupportedValue[0]));
+		dpd->FORM.Enum.SupportedValue = calloc(N,sizeof(dpd->FORM.Enum.SupportedValue[0]));
 		if (!dpd->FORM.Enum.SupportedValue)
 			goto outofmemory;
 
-		memset (dpd->FORM.Enum.SupportedValue,0 , N*sizeof(dpd->FORM.Enum.SupportedValue[0]));
 		for (i=0;i<N;i++) {
 			ret = ptp_unpack_DPV (params, data, &offset, dpdlen, &dpd->FORM.Enum.SupportedValue[i], dpd->DataType);
 
@@ -1075,11 +1074,10 @@ ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *
 #define N	dpd->FORM.Enum.NumberOfValues
 		N = dtoh16a(&data[*poffset]);
 		*poffset+=sizeof(uint16_t);
-		dpd->FORM.Enum.SupportedValue = malloc(N*sizeof(dpd->FORM.Enum.SupportedValue[0]));
+		dpd->FORM.Enum.SupportedValue = calloc(N,sizeof(dpd->FORM.Enum.SupportedValue[0]));
 		if (!dpd->FORM.Enum.SupportedValue)
 			goto outofmemory;
 
-		memset (dpd->FORM.Enum.SupportedValue,0 , N*sizeof(dpd->FORM.Enum.SupportedValue[0]));
 		for (i=0;i<N;i++) {
 			ret = ptp_unpack_DPV (params, data, poffset, dpdlen, &dpd->FORM.Enum.SupportedValue[i], dpd->DataType);
 
@@ -1118,7 +1116,7 @@ duplicate_PropertyValue (const PTPPropertyValue *src, PTPPropertyValue *dst, uin
 		unsigned int i;
 
 		dst->a.count = src->a.count;
-		dst->a.v = malloc (sizeof(src->a.v[0])*src->a.count);
+		dst->a.v = calloc (sizeof(src->a.v[0]),src->a.count);
 		for (i=0;i<src->a.count;i++)
 			duplicate_PropertyValue (&src->a.v[i], &dst->a.v[i], type & ~PTP_DTC_ARRAY_MASK);
 		return;
@@ -1161,7 +1159,7 @@ duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 		break;
 	case PTP_DPFF_Enumeration:
 		dst->FORM.Enum.NumberOfValues = src->FORM.Enum.NumberOfValues;
-		dst->FORM.Enum.SupportedValue = malloc (sizeof(dst->FORM.Enum.SupportedValue[0])*src->FORM.Enum.NumberOfValues);
+		dst->FORM.Enum.SupportedValue = calloc (sizeof(dst->FORM.Enum.SupportedValue[0]),src->FORM.Enum.NumberOfValues);
 		for (i = 0; i<src->FORM.Enum.NumberOfValues ; i++)
 			duplicate_PropertyValue (&src->FORM.Enum.SupportedValue[i], &dst->FORM.Enum.SupportedValue[i], src->DataType);
 		break;
@@ -1219,11 +1217,10 @@ ptp_unpack_OPD (PTPParams *params, unsigned char* data, PTPObjectPropDesc *opd, 
 		N = dtoh16a(&data[offset]);
 		offset+=sizeof(uint16_t);
 
-		opd->FORM.Enum.SupportedValue = malloc(N*sizeof(opd->FORM.Enum.SupportedValue[0]));
+		opd->FORM.Enum.SupportedValue = calloc(N,sizeof(opd->FORM.Enum.SupportedValue[0]));
 		if (!opd->FORM.Enum.SupportedValue)
 			goto outofmemory;
 
-		memset (opd->FORM.Enum.SupportedValue,0 , N*sizeof(opd->FORM.Enum.SupportedValue[0]));
 		for (i=0;i<N;i++) {
 			ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->FORM.Enum.SupportedValue[i], opd->DataType);
 
@@ -1477,7 +1474,7 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, 
 
 	data += sizeof(uint32_t);
 	len -= sizeof(uint32_t);
-	props = malloc(prop_count * sizeof(MTPProperties));
+	props = calloc(prop_count , sizeof(MTPProperties));
 	if (!props) return 0;
 	for (i = 0; i < prop_count; i++) {
 		if (len <= (sizeof(uint32_t) + sizeof(uint16_t) + sizeof(uint16_t))) {
@@ -2031,7 +2028,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 		curdata += size;
 		entries++;
 	}
-	ce = malloc (sizeof(PTPCanon_changes_entry)*(entries+1));
+	ce = calloc (sizeof(PTPCanon_changes_entry),(entries+1));
 	if (!ce) return 0;
 
 	curdata = data;
@@ -2158,7 +2155,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = propxcnt;
 			free (dpd->FORM.Enum.SupportedValue);
-			dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*propxcnt);
+			dpd->FORM.Enum.SupportedValue = calloc (sizeof (PTPPropertyValue),propxcnt);
 
 			switch (proptype) {
 			case PTP_DPC_CANON_EOS_ImageFormat:
@@ -2905,7 +2902,7 @@ ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, P
 	if (!*cnt)
 		return;
 
-	*ec = malloc(sizeof(PTPContainer)*(*cnt));
+	*ec = calloc(sizeof(PTPContainer),(*cnt));
 
 	for (i=0;i<*cnt;i++) {
 		memset(&(*ec)[i],0,sizeof(PTPContainer));
@@ -2939,7 +2936,7 @@ ptp_unpack_Nikon_EC_EX (PTPParams *params, unsigned char* data, unsigned int len
 	if (!*cnt)
 		return 1;
 
-	*ec = malloc(sizeof(PTPContainer)*(*cnt));
+	*ec = calloc(sizeof(PTPContainer),(*cnt));
 	offset = PTP_nikon_ec_ex_Code+sizeof(uint16_t);
 
 	for (i=0;i<*cnt;i++) {
