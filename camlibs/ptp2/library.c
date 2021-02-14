@@ -6703,16 +6703,19 @@ downloadnow:
 				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 				if (ret != GP_OK) {
 					gp_file_free (file);
+					ptp_free_devicepropdesc (&dpd);
 					return ret;
 				}
 				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
 				if (ret != GP_OK) {
 					gp_file_free (file);
+					ptp_free_devicepropdesc (&dpd);
 					return ret;
 				}
 				ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
 				if (ret != GP_OK) {
 					gp_file_free (file);
+					ptp_free_devicepropdesc (&dpd);
 					return ret;
 				}
 				*eventtype = GP_EVENT_FILE_ADDED;
@@ -6726,10 +6729,11 @@ downloadnow:
 					event.Nparam = 0;
 					ptp_add_event (params, &event);
 				}
+				ptp_free_devicepropdesc (&dpd);
 				return GP_OK;
 			}
-
 sonyout:
+			ptp_free_devicepropdesc (&dpd);
 			/* If not, check for events and handle them */
 			if (time_since(event_start) > timeout-100) {
 				/* if there is less than 0.1 seconds, just check the
