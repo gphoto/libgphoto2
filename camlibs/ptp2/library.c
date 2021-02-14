@@ -6107,6 +6107,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				}
 			} while (time_since (event_start) < 1000);
 		}
+		ptp_free_devicepropdesc(&dpd);
 		GP_LOG_D ("releasing shutterbutton");
 
 		/* release full-press */
