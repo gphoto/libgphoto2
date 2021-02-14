@@ -3276,11 +3276,11 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_PANASONIC_RecCtrlRelease		0x03000010
 
 #define PTP_DPC_PANASONIC_RecCtrlAFAE			0x03000020 /* cmd base for afae */
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAE    	0x03000021
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAF    	0x03000022
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAFAE    	0x03000023
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_AF_OneShot    	0x03000024
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_Lock_Clear    	0x03000025
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAE    		0x03000021
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAF    		0x03000022
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAFAE    		0x03000023
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_AF_OneShot    		0x03000024
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_Lock_Clear    		0x03000025
 
 #define PTP_DPC_PANASONIC_Zoom				0x03000080
 #define PTP_DPC_PANASONIC_RecCtrlLens			0x03010010
