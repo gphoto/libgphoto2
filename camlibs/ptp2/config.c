@@ -8314,10 +8314,7 @@ _put_Panasonic_Shutter(CONFIG_PUT_ARGS)
 		val = (uint32_t) f;
 		val |= 0x80000000;
 	}
-
-	//printf("setting shutterspeed to %lu (%s)\n", val, xval);
-
-	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, 0x2000031, (unsigned char*)&val, 4));
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_ShutterSpeed_Param, (unsigned char*)&val, 4));
 }
 
 static int
@@ -8328,7 +8325,7 @@ _get_Panasonic_Shutter(CONFIG_GET_ARGS) {
 	PTPParams *params = &(camera->pl->params);
 	GPContext *context = ((PTPData *) params->data)->context;
 
-	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, 0x2000030, 4, &currentVal, &list, &listCount));
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_ShutterSpeed, 4, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -8409,7 +8406,7 @@ _put_Panasonic_ISO(CONFIG_PUT_ARGS)
 
 	//printf("setting ISO to %lu (%s)\n", val, xval);
 
-	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, 0x2000021, (unsigned char*)&val, 4));
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_ISO_Param, (unsigned char*)&val, 4));
 }
 
 static int
@@ -8421,7 +8418,7 @@ _get_Panasonic_ISO(CONFIG_GET_ARGS) {
 	PTPParams *params = &(camera->pl->params);
 	GPContext *context = ((PTPData *) params->data)->context;
 
-	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, 0x2000020, 4, &currentVal, &list, &listCount));
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_ISO, 4, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -8434,7 +8431,7 @@ _get_Panasonic_ISO(CONFIG_GET_ARGS) {
 		sprintf (buf, "%d", (unsigned int)list[i]);
 		gp_widget_add_choice (*widget, buf);
 	}
-	ptp_panasonic_getdeviceproperty(params, 0x2000021, &valsize, &currentVal);
+	ptp_panasonic_getdeviceproperty(params, PTP_DPC_PANASONIC_ISO_Param, &valsize, &currentVal);
 
 	sprintf (buf, "%d", (unsigned int)currentVal);
 	gp_widget_set_value (*widget, buf);
