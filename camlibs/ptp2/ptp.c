@@ -588,7 +588,7 @@ parse_9301_cmd_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		next = xmlNextElementSibling (next);
 	}
 	di->OperationsSupported_len = cnt;
-	di->OperationsSupported = malloc (cnt*sizeof(di->OperationsSupported[0]));
+	di->OperationsSupported = calloc (cnt,sizeof(di->OperationsSupported[0]));
 	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
@@ -757,7 +757,7 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr next, PTPDevicePropDesc *dpd)
 				n++;
 			} while (s);
 			dpd->FORM.Enum.NumberOfValues = n;
-			dpd->FORM.Enum.SupportedValue = malloc (n * sizeof(PTPPropertyValue));
+			dpd->FORM.Enum.SupportedValue = calloc (n , sizeof(PTPPropertyValue));
 			s = (char*)xmlNodeGetContent (next);
 			i = 0;
 			do {
@@ -805,7 +805,7 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 	}
 
 	di->DevicePropertiesSupported_len = cnt;
-	di->DevicePropertiesSupported = malloc (cnt*sizeof(di->DevicePropertiesSupported[0]));
+	di->DevicePropertiesSupported = calloc (cnt,sizeof(di->DevicePropertiesSupported[0]));
 	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
@@ -852,7 +852,7 @@ parse_9301_event_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		next = xmlNextElementSibling (next);
 	}
 	di->EventsSupported_len = cnt;
-	di->EventsSupported = malloc (cnt*sizeof(di->EventsSupported[0]));
+	di->EventsSupported = calloc (cnt,sizeof(di->EventsSupported[0]));
 	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
@@ -1286,6 +1286,7 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 		ptp_debug (params, "unexpected valuesize %d", valuesize);
 		return PTP_RC_GeneralError;
 	}
+	/* Marcus: where is 4*headerLenght coming from ? */
 	if (size < headerLength * 4 + 2 * 4 + valuesize) return PTP_RC_GeneralError;
 	*propertyValueListLength 		= dtoh32a( (data) + headerLength * 4 + 2 * 4 + valuesize);
 
@@ -2713,7 +2714,7 @@ ptp_canon_gettreesize (PTPParams* params,
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetTreeSize);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	*cnt = dtoh32a(data);
-	*entries = malloc(sizeof(PTPCanon_directtransfer_entry)*(*cnt));
+	*entries = calloc(sizeof(PTPCanon_directtransfer_entry),(*cnt));
 	if (!*entries) {
 		ret = PTP_RC_GeneralError;
 		goto exit;
@@ -3437,7 +3438,7 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	memcpy (dpd, &params->canon_props[i].dpd, sizeof (*dpd));
 	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
 		/* need to duplicate the Enumeration alloc */
-		dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*dpd->FORM.Enum.NumberOfValues);
+		dpd->FORM.Enum.SupportedValue = calloc (sizeof (PTPPropertyValue),dpd->FORM.Enum.NumberOfValues);
 		memcpy (dpd->FORM.Enum.SupportedValue,
 			params->canon_props[i].dpd.FORM.Enum.SupportedValue,
 			sizeof (PTPPropertyValue)*dpd->FORM.Enum.NumberOfValues
@@ -3504,7 +3505,7 @@ ptp_canon_eos_getobjectinfoex (
 	}
 
 	*nrofentries = dtoh32a(data);
-	*entries = malloc(*nrofentries * sizeof(PTPCANONFolderEntry));
+	*entries = calloc(*nrofentries , sizeof(PTPCANONFolderEntry));
 	if (!*entries) {
 		ret = PTP_RC_GeneralError;
 		goto exit;
@@ -3910,9 +3911,8 @@ ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* obj
 	uint8_t		len = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetObjectHandleByName);
-	data = malloc (2*(strlen(name)+1)+2);
+	data = calloc (2,(strlen(name)+2));
 	if (!data) return PTP_RC_GeneralError;
-	memset (data, 0, 2*(strlen(name)+1)+2);
 	ptp_pack_string (params, name, data, 0, &len);
 	ret=ptp_transaction (params, &ptp, PTP_DP_SENDDATA, (len+1)*2+1, &data, NULL);
 	free (data);
@@ -4714,8 +4714,7 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 	params->wifi_profiles_number = data[1];
 	free(params->wifi_profiles);
 
-	params->wifi_profiles = malloc(params->wifi_profiles_number*sizeof(PTPNIKONWifiProfile));
-	memset(params->wifi_profiles, 0, params->wifi_profiles_number*sizeof(PTPNIKONWifiProfile));
+	params->wifi_profiles = calloc(params->wifi_profiles_number,sizeof(PTPNIKONWifiProfile));
 
 	pos = 2;
 	profn = 0;
