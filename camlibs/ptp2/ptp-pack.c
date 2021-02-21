@@ -1480,7 +1480,7 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, 
 		if (len <= (sizeof(uint32_t) + sizeof(uint16_t) + sizeof(uint16_t))) {
 			ptp_debug (params ,"short MTP Object Property List at property %d (of %d)", i, prop_count);
 			ptp_debug (params ,"device probably needs DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL");
-			ptp_debug (params ,"or even DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST", i);
+			ptp_debug (params ,"or even DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST");
 			qsort (props, i, sizeof(MTPProperties),_compare_func);
 			*pprops = props;
 			return i;
