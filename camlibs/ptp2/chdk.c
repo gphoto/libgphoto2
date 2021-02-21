@@ -204,6 +204,7 @@ chdk_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	free(xfolder);
 
 	ret = chdk_generic_script_run (params, lua, &table, &retint, context);
+	free (lua);
 	if (ret != GP_OK)
 		return ret;
 	if (table) {
