@@ -27,7 +27,7 @@
 #define _DEFAULT_SOURCE
 
 #include <stdio.h>
-#include <_stdint.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 

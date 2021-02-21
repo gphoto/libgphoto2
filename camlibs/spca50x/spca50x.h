@@ -26,7 +26,7 @@
 
 #ifndef __SPCA50X_H__
 #define __SPCA50X_H__
-#include <_stdint.h>
+#include <stdint.h>
 #include <gphoto2/gphoto2-camera.h>
 
 #define SPCA50X_FAT_PAGE_SIZE 0x100

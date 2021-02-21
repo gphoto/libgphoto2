@@ -27,7 +27,7 @@
 
 #ifndef __GSMART300_H__
 #define __GSMART300_H__
-#include <_stdint.h>
+#include <stdint.h>
 #include <gphoto2/gphoto2-camera.h>
 
 #define FLASH_PAGE_SIZE_300 0x200

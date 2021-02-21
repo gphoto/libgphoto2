@@ -21,7 +21,7 @@
 #include "config.h"
 #include "pdrm11.h"
 
-#include <_stdint.h>
+#include <stdint.h>
 #include <string.h>
 
 #include <gphoto2/gphoto2.h>

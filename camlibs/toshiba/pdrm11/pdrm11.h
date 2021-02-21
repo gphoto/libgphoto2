@@ -23,7 +23,7 @@
 
 #include "config.h"
 #include <gphoto2/gphoto2.h>
-#include <_stdint.h>
+#include <stdint.h>
 
 /* once in a while a gp_port command will fail and then work on a
  * second try this tries to run the command twice and returns the
