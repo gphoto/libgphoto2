@@ -512,7 +512,6 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(file_data);
 		if (!gdout) {
 			GP_LOG_E("image conversion error");
-			free(file_data);
 			return GP_ERROR;
 		}
 		file_data = malloc(gdsize);
