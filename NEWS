@@ -1,8 +1,43 @@
 libgphoto2 2.5.26.1 development release
 
 ptp2:
-* Nikon: download of files larger than 4GB using getpartial object method
+* report filesizes larger than 4GB correctly
+* download files larger than 4GB
+* empty ptp strings are reported as "", not as NULL
+* report more MTP object properties
+* Nikon
+  * download of files larger than 4GB using getpartial object method
+  * handle new application mode
+  * handle new eventex fetcher on Z series
+  * fixed movie on recent Z series
+  * report liveview and movie prohibit conditions, as errors and also in configuration tree
+  * some Nikon 1 V1 enhancements (the first camera of the 1 series is a bit special)
 * report filesize > 4GB correctly, if possible
+* Canon EOS:
+  * EOS M6 Mark 2 is actually more like a EOS DSLR and fully capable, added some work
+  * Handle OLCINFO for M6 Mark 2 and EOS R5 and new cameras
+  * added current list of autoexposuremode to expose also Fv and friends
+  * Canon Liveview size is encoded in "output" (PC / MOBILE / MOBILE2 variants are the different livesizes), try to expose seperately as "liveviewsize"
+  * decode more options, nickname, eosmoviemode (color/bw), strobofiring, eventmode, flashcharged, oneshotrawon
+  * bugfixes
+* Sony Alpha:
+  * report f-numbers enum with fixed list
+  * fixed liveview taking on a new model
+* Panasonic
+  * implement liveviewsize
+  * implement movie recording ( using --set-config movie=1/0 )
+  * more doc and minor fixes
+* ptp/ip: allow building on Windows
+* New IDS:
+  * Sony DSC-A7S III
+  * Nikon Coolpix P1000, Z6_2, Z7_2 
+  * Olympus E-M1 MII
+  * Canon PowerShot G12, EOS M200
+  * Fuji Fujifilm X-S10
+  * Ricoh Theta V, Z1
+
+canon:
+* more shutterspeed reported
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.26 release
