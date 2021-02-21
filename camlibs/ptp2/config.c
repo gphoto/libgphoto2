@@ -7978,7 +7978,7 @@ static int
 _get_Nikon_Movie(CONFIG_GET_ARGS) {
 	int val;
 
-	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 	val = 2; /* always changed */
 	gp_widget_set_value  (*widget, &val);
