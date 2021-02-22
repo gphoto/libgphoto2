@@ -23,7 +23,7 @@
 #include "sierra.h"
 
 #include <stdlib.h>
-#include <_stdint.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>

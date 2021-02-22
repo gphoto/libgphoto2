@@ -17,7 +17,7 @@
 #ifndef soundvision_H
 #define soundvision_H
 
-#include <_stdint.h>
+#include <stdint.h>
 
 #define SOUNDVISION_START_TRANSACTION 0x0001
 

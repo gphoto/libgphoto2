@@ -55,5 +55,3 @@ libgphoto2_la_DEPENDENCIES = \
 	$(srcdir)/libgphoto2.sym
 
 EXTRA_DIST = gphoto2-library.c libgphoto2.sym
-
-DISTCLEANFILES = _stdint.h

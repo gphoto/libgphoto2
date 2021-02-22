@@ -72,7 +72,7 @@
  */
 
 #include "config.h"
-#include <_stdint.h>
+#include <stdint.h>
 #include "tinyjpeg-internal.h"
 
 #define FAST_FLOAT float

@@ -50,7 +50,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <_stdint.h>
+#include <stdint.h>
 
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port-log.h>

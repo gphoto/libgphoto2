@@ -426,20 +426,6 @@ AC_CHECK_MEMBERS([struct statvfs.f_blocks],,,[
 #endif
 ])
 
-
-dnl ---------------------------------------------------------------------------
-dnl Checks for integer types.
-dnl ---------------------------------------------------------------------------
-dnl
-dnl FIXME: Test AC_TYPE_UINT32_T & Co and check whether that could work for us.
-dnl        Potential problem: The required autoconf version.
-dnl Note: We are already using AC_TYPE_SIZE_T somewhere else in here.
-
-
-dnl Create a stdint.h-like file containing size-specific integer definitions
-dnl that will always be available
-AX_NEED_STDINT_H([libgphoto2/_stdint.h])
-
 dnl Create a header file containing NetBSD-style byte swapping macros
 AC_NEED_BYTEORDER_H([libgphoto2/gphoto2-endian.h])
 

@@ -97,7 +97,6 @@ libgphoto2_port/po/stamp-po
 libgphoto2_port/stamp-h1
 libgphoto2_port/test/test-gp-port
 libgphoto2_port/test/test-port-list
-libgphoto2/_stdint.h
 libtool
 Makefile
 Makefile.in

@@ -22,7 +22,7 @@
 
 #include <stdio.h>
 #include <errno.h>
-#include <_stdint.h>
+#include <stdint.h>
 #include <gphoto2/gphoto2.h>
 
 #define DSC1	1	/* DC1000 */

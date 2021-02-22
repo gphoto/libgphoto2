@@ -23,7 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
 #include <stdio.h>
-#include <_stdint.h>
+#include <stdint.h>
 #include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>

@@ -30,7 +30,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <_stdint.h>
+#include <stdint.h>
 
 #include <libxml/parser.h>
 
