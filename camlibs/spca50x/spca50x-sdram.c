@@ -123,7 +123,7 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 		CHECK (gp_port_usb_msg_read
 				(lib->gpdev, 0, 0, 0xe15,
 				 (char *) & lib->num_files_on_sdram, 1));
-		LE32TOH (lib->num_files_on_sdram);
+		le32toh (lib->num_files_on_sdram);
 
 		/*  get fatscount */
 		CHECK (gp_port_usb_msg_write
