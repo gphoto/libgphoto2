@@ -6930,7 +6930,10 @@ downloadomdfile:
 			*eventdata = path;
 			return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 		}
+		*eventtype = GP_EVENT_TIMEOUT;
+		return GP_OK;
 	}
+
 	/* Wait for the whole timeout period */
 	CR (gp_port_get_timeout (camera->port, &oldtimeout));
 	CR (gp_port_set_timeout (camera->port, timeout));
