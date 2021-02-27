@@ -162,7 +162,7 @@ static int enigma13_get_filecount (Camera *camera, int *filecount)
         CHECK (gp_port_usb_msg_read (camera->port,
                              0x54, 0x0000, 0x0000,
                              (char*)&response, 0x02));
-        LE16TOH (response);
+        le16toh (response);
         *filecount = response;
         return GP_OK;
 }
@@ -188,7 +188,7 @@ static int enigma13_get_toc(Camera *camera, int *filecount, char** toc)
         CHECK (gp_port_usb_msg_read (camera->port,
                              0x54, 0x0000, 0x0000,
                              (char*)&response, 0x02));
-        LE16TOH (response);
+        le16toh (response);
         *filecount = response;
 
         /* Calc toc size */
