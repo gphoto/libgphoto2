@@ -4678,7 +4678,10 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	)) {
 		/* For some as yet unknown reason the ZV-1, the RX100M7 and the A7 R4 need around 3 seconds startup time
 		 * to be able to capture. I looked for various trigger events or property changes on the ZV-1
-		 * but nothing worked except waiting. */
+		 * but nothing worked except waiting.
+		 * This might not be required when having manual focusing according to https://github.com/gphoto/gphoto2/issues/349 
+		 */
+		
 		while (time_since (params->starttime) < 2500) {
 			/* drain the queue first */
 			if (ptp_get_one_event(params, &event)) {
