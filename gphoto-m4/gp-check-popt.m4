@@ -202,7 +202,7 @@ if test "x$POPT_CFLAGS" = "x" && test "x$POPT_LIBS" = "x"; then
 ])
 	fi
 elif test "x$POPT_CFLAGS" != "x" && test "x$POPT_LIBS" != "x"; then
-    # just use the user specivied option
+    # just use the user specified option
     popt_msg="yes (user specified)"
     have_popt=yes
 else
