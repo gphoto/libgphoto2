@@ -4673,7 +4673,8 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	if (params->deviceinfo.Model && (
 		!strcmp(params->deviceinfo.Model, "ZV-1")		||
 		!strcmp(params->deviceinfo.Model, "DSC-RX100M7")	||
-		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")
+		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")		||
+		!strcmp(params->deviceinfo.Model, "DSC-RX0M2")
 	)) {
 		/* For some as yet unknown reason the ZV-1, the RX100M7 and the A7 R4 need around 3 seconds startup time
 		 * to be able to capture. I looked for various trigger events or property changes on the ZV-1
