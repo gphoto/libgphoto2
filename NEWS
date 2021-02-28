@@ -1,4 +1,8 @@
 libgphoto2 2.5.27.1 development snapshot
+
+ptp2:
+* olympus: wait time was twice as long as required if no events arrived
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.27 release
 
