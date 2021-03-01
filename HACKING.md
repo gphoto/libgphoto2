@@ -268,7 +268,7 @@ for more details.
 * A char can be signed or unsigned.
 
   Use `signed char` or `unsigned char`, or `int8_t` or `uint8_t` from
-  `_stdint.h`, to be sure to get the type you want when it is
+  `stdint.h`, to be sure to get the type you want when it is
   important.
 
 
@@ -280,16 +280,16 @@ for more details.
 * An `int` can be almost any width.
 
   Don't assume that it's 32 or 16 bits or any other value.  Instead,
-  if you need a variable of a certain size, include the gphoto2 header
-  file `_stdint.h` (or `gphoto2-endian.h`) and use the C99-style
-  fixed-width types declared therein.  If you don't really care about
-  the size of a variable (e.g. as the index variable in a small for
-  loop), you can still use an `int` as it's often the most efficient
-  type for each processor.  It's usually the case that a char is 8
-  bits, `int` is at least 16 bits, and a long is at least 32 bits.
-  Never assume that `int` or `long` (or `char`, for that matter) have a
-  specific size, or that they will overflow at a particular point.
-  Use a size-specific type (e.g. `uint32_t`) if necessary.
+  if you need a variable of a certain size, include the header file
+  `stdint.h` (or `gphoto2-endian.h`) and use the C99-style fixed-width
+  types declared therein.  If you don't really care about the size of a
+  variable (e.g. as the index variable in a small for loop), you can
+  still use an `int` as it's often the most efficient type for each
+  processor.  It's usually the case that a char is 8 bits, `int` is at
+  least 16 bits, and a long is at least 32 bits. Never assume that
+  `int` or `long` (or `char`, for that matter) have a specific size, or
+  that they will overflow at a particular point. Use a size-specific
+  type (e.g. `uint32_t`) if necessary.
 
 
 * The sequence of bytes received from a camera isn't necessarily the
@@ -338,8 +338,7 @@ for more details.
   the installed base of C compilers to allow unrestricted use, but
   this will change as time goes by.  In the meantime, use `autoconf`
   to detect if the feature is available at run-time and act
-  appropriately (for an extreme example, see how configure handles the
-  C99 header file `stdint.h` or inline keyword).
+  appropriately.
 
   Although one-line comments starting with `//` have been available in
   most compilers for several years, they were only officially added to

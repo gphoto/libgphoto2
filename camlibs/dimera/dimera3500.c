@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <_stdint.h>
+#include <stdint.h>
 
 #include <gphoto2/gphoto2.h>
 

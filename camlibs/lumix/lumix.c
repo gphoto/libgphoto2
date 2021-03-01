@@ -859,7 +859,7 @@ GetPixRange(Camera *camera, int start, int num) {
 		docin2 = xmlReadMemory ((char*)xchar, strlen((char*)xchar), "http://gphoto.org/", "utf-8", 0);
 		if (!docin2) return NULL;
 		docroot2 = xmlDocGetRootElement (docin2);
-		if (!docroot) {
+		if (!docroot2) {
 			xmlFreeDoc (docin2);
 			return NULL;
 		}

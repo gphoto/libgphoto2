@@ -12,12 +12,18 @@
    if gphoto2 is released too: 
    rsync -Lrtvz  translationproject.org::tp/latest/gphoto2/  po
 
+   For updated files, use
+
+	git commit LANG.po --author="Last translator from po file"
+  
+   to make it clear who did the change.
+
 ## sync music-players.h from libmtp
 
    (We ship this to give additional device support for distributions
     that might update libmtp less often.)
 
-   Copy over, disable the GoPro entries.
+   Copy over from libmtp and commit.
 
 ## test cameras
 
@@ -44,12 +50,13 @@
 
    make distcheck
 
-   this builds .gz and .bz2 tarballs currently.
+   this builds .gz, .bz2 and .xz tarballs currently.
 
-   GPG detach sign
+   GPG detach sign:
 
-   gpg --detach-sign -a libgphoto2-2.5.22.tar.bz2
-   gpg --detach-sign -a libgphoto2-2.5.22.tar.gz
+   gpg --detach-sign -a libgphoto2-2.5.27.tar.bz2
+   gpg --detach-sign -a libgphoto2-2.5.27.tar.gz
+   gpg --detach-sign -a libgphoto2-2.5.27.tar.xz
 
    this will create .asc files alongside the tarballs.
 
@@ -57,7 +64,10 @@
 
 ## tag git
 
-   git tag libgphoto2-2\_5\_22-release
+   Do old style and new style GIT tagging (new style for github largely)
+
+   git tag libgphoto2-2\_5\_27-release
+   git tag v2.5.27
    git push --tags
 
 ## create a README for sourceforge
@@ -68,7 +78,7 @@
 
    Create a new folder below libgphoto2 with the release number in it (Add Folder)
 
-   Inside that "Add File" of the two tarballs, the two .asc files and the README.
+   Inside that "Add File" of the tarballs, the .asc files and the README.
 
    After upload, select "Info" on the .tar.bz2 tarball, and "Select All" for the Default download.
    This will make it point the "default download" link to this tarball.
@@ -81,7 +91,7 @@
 
    "Draft a new release"
 
-   Select the new release tag. Name is "2.5.22 release",
+   Select the new release tag. Name is "2.5.27 release",
    paste in the NEWS blob into the textfield.
 
 ## Edit the website
@@ -124,6 +134,8 @@
 
    Fill out the "New release" form. It is pretty straight forward. As text use the NEWS blob again.
 
+   Same for gphoto2.
+
 ## Announce to twitter / facebook / etc.
 
    e.g.:
@@ -134,8 +146,8 @@
 
 ## change IRC topic of #gphoto in Freenode
 
-   /msg Chanserv topic #gphoto Digital cameras for Linux/UNIX/MacOS | http://gphoto.org/ | just ask | no webcams | newest 2.5.24
+   /msg Chanserv topic #gphoto Digital cameras for Linux/UNIX/MacOS | http://gphoto.org/ | just ask | no webcams | newest 2.5.27
  
 ## Make git ready for further development
 
-   Rev NEWS and configure.ac versions to 2.5.22.1 devel release.
+   Rev NEWS and configure.ac versions to 2.5.27.1 devel release.

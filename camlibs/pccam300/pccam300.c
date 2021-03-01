@@ -27,7 +27,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <_stdint.h>
+#include <stdint.h>
 
 #include "pccam300.h"
 

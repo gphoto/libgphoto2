@@ -30,7 +30,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <_stdint.h>
+#include <stdint.h>
 
 #include <libxml/parser.h>
 
@@ -820,7 +820,7 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd)
 				n++;
 			} while (s);
 			dpd->FORM.Enum.NumberOfValues = n;
-			dpd->FORM.Enum.SupportedValue = malloc (n * sizeof(PTPPropertyValue));
+			dpd->FORM.Enum.SupportedValue = calloc (n , sizeof(PTPPropertyValue));
 			s = (char*)xmlNodeGetContent (next);
 			i = 0;
 			do {

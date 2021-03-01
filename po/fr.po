@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.5.25\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2020-05-24 16:55+0200\n"
-"PO-Revision-Date: 2020-06-06 03:23+0200\n"
+"PO-Revision-Date: 2020-12-30 21:20+0100\n"
 "Last-Translator: Stéphane Aulery <lkppo@free.fr>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "Language: fr\n"
@@ -21,8 +21,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Generator: Lokalize 1.5\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.4.2\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: camlibs/adc65/adc65.c:242
 msgid ""
@@ -235,12 +235,12 @@ msgstr "Erreur fatale : valeur CRC initiale pour la longueur %d inconnue\n"
 #: camlibs/canon/crc.c:247
 #, c-format
 msgid "unable to guess initial CRC value\n"
-msgstr "Impossible de déterminer la valeur CRC initiale\n"
+msgstr "impossible de déterminer la valeur CRC initiale\n"
 
 #: camlibs/canon/crc.c:274
 #, c-format
 msgid "warning: CRC not checked (add len %d, value 0x%04x) #########################\n"
-msgstr "Avertissement : CRC non vérifié (ajout longueur %d, valeur 0x%04x) #########################\n"
+msgstr "avertissement : CRC non vérifié (ajout longueur %d, valeur 0x%04x) #########################\n"
 
 #: camlibs/canon/library.c:96 camlibs/canon/library.c:1608
 msgid "Compatibility Mode"
@@ -631,7 +631,7 @@ msgstr "alimentation : mauvaise"
 #: camlibs/canon/library.c:1043
 #, c-format
 msgid "not available: %s"
-msgstr "Indisponible : %s"
+msgstr "indisponible : %s"
 
 #: camlibs/canon/library.c:1069
 #, c-format
@@ -1212,7 +1212,7 @@ msgstr "Non reconnu"
 
 #: camlibs/canon/usb.c:235
 msgid "Could not establish initial contact with camera"
-msgstr "Impossible d'établir une initiation de connexion à l'appareil."
+msgstr "Impossible d'établir la connexion avec l'appareil"
 
 #: camlibs/canon/usb.c:243
 msgid "Camera was already active"
@@ -1230,37 +1230,37 @@ msgstr "Réponse initiale « %c » de l'appareil non reconnue"
 #: camlibs/canon/usb.c:263
 #, c-format
 msgid "Step #2 of initialization failed: (\"%s\" on read of %i). Camera not operational"
-msgstr "Échec de l'étape nº 2 d'initialisation : (« %s » en lecture de %i). Appareil non opérationnel."
+msgstr "Échec de l'étape nº 2 d'initialisation : (« %s » en lecture de %i). Appareil non opérationnel"
 
 #: camlibs/canon/usb.c:268
 #, c-format
 msgid "Step #2 of initialization failed! (returned %i bytes, expected %i). Camera not operational"
-msgstr "Échec de l'étape nº 2 d'initialisation. (%i octets renvoyés, %i attendus). Appareil non opérationnel."
+msgstr "Échec de l'étape nº 2 d'initialisation. (%i octets renvoyés, %i attendus). Appareil non opérationnel"
 
 #: camlibs/canon/usb.c:287
 #, c-format
 msgid "Step #3 of initialization failed: \"%s\" on read of %i. Camera not operational"
-msgstr "Échec de l'étape nº 3 d'initialisation : « %s » en lecture de %i. Appareil non opérationnel."
+msgstr "Échec de l'étape nº 3 d'initialisation : « %s » en lecture de %i. Appareil non opérationnel"
 
 #: camlibs/canon/usb.c:294 camlibs/canon/usb.c:321
 #, c-format
 msgid "Step #3 of initialization failed! (returned %i, expected %i). Camera not operational"
-msgstr "Échec de l'étape nº 3 d'initialisation. (%i renvoyé, %i attendu). Appareil non opérationnel."
+msgstr "Échec de l'étape nº 3 d'initialisation. (%i renvoyé, %i attendu). Appareil non opérationnel"
 
 #: camlibs/canon/usb.c:314
 #, c-format
 msgid "Step #3 of initialization failed: \"%s\" on write of %i. Camera not operational"
-msgstr "Échec de l'étape nº 3 d'initialisation : « %s » en écriture sur %i. Appareil non opérationnel."
+msgstr "Échec de l'étape nº 3 d'initialisation : « %s » en écriture sur %i. Appareil non opérationnel"
 
 #: camlibs/canon/usb.c:352 camlibs/canon/usb.c:393
 #, c-format
 msgid "Step #4 failed: \"%s\" on read of %i. Camera not operational"
-msgstr "Échec de l'étape nº 4 : « %s » en lecture de %i. Appareil non opérationnel."
+msgstr "Échec de l'étape nº 4 : « %s » en lecture de %i. Appareil non opérationnel"
 
 #: camlibs/canon/usb.c:359 camlibs/canon/usb.c:400
 #, c-format
 msgid "Step #4 failed (returned %i, expected %i). Camera not operational"
-msgstr "Échec de l'étape nº 4 (%i renvoyé, %i attendu). Appareil non opérationnel."
+msgstr "Échec de l'étape nº 4 (%i renvoyé, %i attendu). Appareil non opérationnel"
 
 #: camlibs/canon/usb.c:512
 #, c-format
@@ -1308,7 +1308,7 @@ msgstr "canon_usb_set_file_attributes : échec de canon_usb_dialogue"
 #: camlibs/canon/usb.c:2172
 #, c-format
 msgid "Warning in canon_usb_set_file_attributes: canon_usb_dialogue returned error status 0x%08x from camera"
-msgstr "canon_usb_set_file_attributes : canon_usb_dialogue renvoie un état d'erreur 0x%08x de l'appareil"
+msgstr "Avertissement canon_usb_set_file_attributes : canon_usb_dialogue renvoie un état d'erreur 0x%08x de l'appareil"
 
 #: camlibs/canon/usb.c:2262
 #, c-format
@@ -1512,7 +1512,7 @@ msgid ""
 "sq905C generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Pilote générique sq905C\n"
+"pilote générique sq905C\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/digita/digita.c:337 camlibs/dimera/dimera3500.c:321
@@ -1940,7 +1940,7 @@ msgid ""
 "based on several other gphoto2 camlib modules and the specifications kindly provided by Mustek.\n"
 "\n"
 msgstr ""
-"Bibliothèque gsmart300\n"
+"bibliothèque gsmart300\n"
 "Till Adam <till@adam-lilienthal.de>\n"
 "Jérôme Lodewyck <jerome.lodewyck@ens.fr>\n"
 "Prise en charge des appareils Mustek gSmart 300\n"
@@ -2039,7 +2039,7 @@ msgstr "Vues prises      : %4d\n"
 
 #: camlibs/jamcam/jamcam.c:295
 msgid "jamcam library v"
-msgstr "Bibliothèque jamcam v"
+msgstr "bibliothèque jamcam v"
 
 #: camlibs/jamcam/library.c:348 camlibs/jd11/serial.c:473
 #: camlibs/sierra/library.c:1258 camlibs/sonydscf1/sonydscf1.c:270
@@ -2144,7 +2144,7 @@ msgid ""
 "jl2005a camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Bibliothèque d'appareils jl2005a\n"
+"bibliothèque d'appareils jl2005a\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/jl2005c/library.c:135
@@ -2180,7 +2180,7 @@ msgid ""
 "jl2005bcd camera library\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Bibliothèque d'appareils jl2005bcd\n"
+"bibliothèque d'appareils jl2005bcd\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/kodak/dc120/dc120.c:91 camlibs/kodak/dc120/dc120.c:167
@@ -2911,7 +2911,7 @@ msgstr "Autre commande en cours d'exécution."
 
 #: camlibs/konica/konica.c:131
 msgid "Command order error."
-msgstr "Erreur d'ordre de commandes. "
+msgstr "Erreur d'ordre de commandes."
 
 #: camlibs/konica/konica.c:134
 msgid "Unknown error."
@@ -2920,7 +2920,7 @@ msgstr "Erreur inconnue."
 #: camlibs/konica/konica.c:137
 #, c-format
 msgid "The camera has just sent an error that has not yet been discovered. Please report the following to %s with additional information how you got this error: (0x%x,0x%x). Thank you very much!"
-msgstr "L'appareil vient de renvoyer une erreur inconnue. Veuillez signaler cela à l'équipe de développement %s en expliquant comment reproduire cette erreur : (0x%x,0x%x). Merci d'avance."
+msgstr "L'appareil vient de renvoyer une erreur inconnue. Veuillez signaler cela à l'équipe de développement %s en expliquant comment reproduire cette erreur : (0x%x,0x%x). Merci d'avance !"
 
 #: camlibs/konica/library.c:157 camlibs/pccam300/library.c:118
 msgid "Getting file list..."
@@ -3149,7 +3149,7 @@ msgstr "Impossible de trouver les données de localisation en « %s »"
 
 #: camlibs/konica/library.c:1160
 msgid "Localization file too long!"
-msgstr "Fichier de localisation trop grand."
+msgstr "Fichier de localisation trop grand !"
 
 #: camlibs/konica/qm150.c:256
 msgid "This preview doesn't exist."
@@ -3161,12 +3161,12 @@ msgstr "Les données ont été corrompues."
 
 #: camlibs/konica/qm150.c:398
 msgid "Compiled without EXIF support, no thumbnails available."
-msgstr "compilé sans prise en charge d’EXIF, miniatures indisponible."
+msgstr "Compilé sans prise en charge d’EXIF, miniatures indisponible."
 
 #: camlibs/konica/qm150.c:415
 #, c-format
 msgid "Image type %d is not supported by this camera !"
-msgstr "Le type %d de photographie n'est pas géré par cet appareil."
+msgstr "Le type %d de photographie n'est pas géré par cet appareil !"
 
 #: camlibs/konica/qm150.c:469
 #, c-format
@@ -3717,7 +3717,7 @@ msgstr "Résumé pour Mustek MDC800 :\n"
 
 #: camlibs/mustek/mdc800.c:220
 msgid "no status reported."
-msgstr "Pas de signalement d'état."
+msgstr "pas de signalement d'état."
 
 #: camlibs/mustek/mdc800.c:226
 msgid "Compact Flash Card detected\n"
@@ -3757,7 +3757,7 @@ msgstr ""
 
 #: camlibs/panasonic/coolshot/coolshot.c:256
 msgid "coolshot library v"
-msgstr "Bibliothèque coolshot v"
+msgstr "bibliothèque coolshot v"
 
 #: camlibs/panasonic/dc1000.c:369 camlibs/panasonic/dc1580.c:465
 msgid "Disconnecting camera."
@@ -4046,7 +4046,7 @@ msgstr "L'appareil a envoyé plus d'octets que prévu (%i)"
 #: camlibs/polaroid/pdc700.c:457
 #, c-format
 msgid "Requested information about picture %i (= 0x%x), but got information about picture %i back"
-msgstr "Demande de renseignements sur l'image %i (= 0x%x), mais renseignements sur l'image %i reçus."
+msgstr "Demande de renseignements sur l'image %i (= 0x%x), mais renseignements sur l'image %i reçus"
 
 #: camlibs/polaroid/pdc700.c:920
 #, c-format
@@ -4386,7 +4386,7 @@ msgstr "indéfinie"
 
 #: camlibs/ptp2/config.c:1865
 msgid "economy"
-msgstr "économique "
+msgstr "économie"
 
 #: camlibs/ptp2/config.c:1868
 msgid "lossless"
@@ -4488,7 +4488,7 @@ msgstr "x3"
 
 #: camlibs/ptp2/config.c:1932
 msgid "red eye suppression"
-msgstr "Supprimer l'effet yeux rouges"
+msgstr "supprimer les yeux rouges"
 
 # Le fill-in permet d'équilibrer la lumière du flash et la lumière ambiante.
 #: camlibs/ptp2/config.c:1933
@@ -4901,11 +4901,11 @@ msgstr "Continu silencieux"
 
 #: camlibs/ptp2/config.c:2480
 msgid "Silent HS continous"
-msgstr ""
+msgstr "Prise de vue silencieuse continue HS"
 
 #: camlibs/ptp2/config.c:2481
 msgid "Silent LS continous"
-msgstr ""
+msgstr "Prise de vue silencieuse continue LS"
 
 #: camlibs/ptp2/config.c:2555 camlibs/ptp2/config.c:7765
 msgid "For bulb capture to work, make sure the mode dial is switched to 'M' and set 'shutterspeed' to 'bulb'."
@@ -5028,7 +5028,7 @@ msgstr "Effet d’image"
 
 #: camlibs/ptp2/config.c:3182
 msgid "S&Q"
-msgstr ""
+msgstr "S&Q"
 
 #: camlibs/ptp2/config.c:3187
 msgid "Night landscape"
@@ -5129,35 +5129,35 @@ msgstr "Très élevé"
 
 #: camlibs/ptp2/config.c:3378
 msgid "2 images (normal and under)"
-msgstr ""
+msgstr "2 images (normal et dessous)"
 
 #: camlibs/ptp2/config.c:3379
 msgid "2 images (normal and over)"
-msgstr ""
+msgstr "2 images (normal et dessus)"
 
 #: camlibs/ptp2/config.c:3380
 msgid "3 images (normal and 2 unders)"
-msgstr ""
+msgstr "3 images (normal et 2 dessous)"
 
 #: camlibs/ptp2/config.c:3381
 msgid "3 images (normal and 2 overs)"
-msgstr ""
+msgstr "3 images (normal et 2 dessus)"
 
 #: camlibs/ptp2/config.c:3382
 msgid "3 images (normal, under and over)"
-msgstr ""
+msgstr "3 images (normal, dessous et dessus)"
 
 #: camlibs/ptp2/config.c:3383
 msgid "5 images (normal, 2 unders and 2 overs)"
-msgstr ""
+msgstr "5 images (normal, 2 dessous et 2 dessus)"
 
 #: camlibs/ptp2/config.c:3384
 msgid "7 images (normal, 3 unders and 3 overs)"
-msgstr ""
+msgstr "7 images (normal, 3 dessous et 3 dessus)"
 
 #: camlibs/ptp2/config.c:3385
 msgid "9 images (normal, 4 unders and 4 overs)"
-msgstr ""
+msgstr "9 images (normal, 4 dessous et 4 dessus)"
 
 #: camlibs/ptp2/config.c:3386 camlibs/ptp2/config.c:3395
 msgid "0 image"
@@ -5165,19 +5165,19 @@ msgstr "0 image"
 
 #: camlibs/ptp2/config.c:3391
 msgid "2 shots (Off -> User setting)"
-msgstr ""
+msgstr "2 prises (Off -> Configuration utilisateur)"
 
 #: camlibs/ptp2/config.c:3392
 msgid "3 shots (Off -> Low -> User setting)"
-msgstr ""
+msgstr "3 prises (Off -> Basse -> Configuration utilisateur)"
 
 #: camlibs/ptp2/config.c:3393
 msgid "4 shots (Off -> Low -> Normal -> High)"
-msgstr ""
+msgstr "4 prises (Off -> Basse -> Normal -> Haute)"
 
 #: camlibs/ptp2/config.c:3394
 msgid "5 shots (Off -> Low -> Normal -> High -> Extra High)"
-msgstr ""
+msgstr "5 prises (Off -> Basse -> Normal -> Haute -> Très haute)"
 
 #: camlibs/ptp2/config.c:3420 camlibs/ptp2/config.c:3439
 msgid "Scene"
@@ -5435,7 +5435,7 @@ msgstr "Balance des blancs du bracketing basse"
 
 #: camlibs/ptp2/config.c:3528
 msgid "Bracketing DRO Lo"
-msgstr "Bracketing avec de faibles variations du réglage de l'optimiseur de plage dynamique."
+msgstr "Bracketing avec de faibles variations du réglage de l'optimiseur de plage dynamique"
 
 #: camlibs/ptp2/config.c:3529
 msgid "Bracketing WB Hi"
@@ -5443,7 +5443,7 @@ msgstr "Balance des blancs du bracketing haute"
 
 #: camlibs/ptp2/config.c:3530
 msgid "Bracketing DRO Hi"
-msgstr "Bracketing des variations importantes du réglage de l'optimiseur de plage dynamique."
+msgstr "Bracketing des variations importantes du réglage de l'optimiseur de plage dynamique"
 
 #: camlibs/ptp2/config.c:3539 camlibs/ptp2/ptp.c:6353
 msgid "Centre-spot"
@@ -5618,7 +5618,7 @@ msgstr "Centre"
 
 #: camlibs/ptp2/config.c:3674
 msgid "Entire Screen Avg."
-msgstr ""
+msgstr "Moy. de l'écran entier"
 
 #: camlibs/ptp2/config.c:3675
 msgid "Spot Standard"
@@ -5744,7 +5744,7 @@ msgstr "%d mm"
 
 #: camlibs/ptp2/config.c:3858 camlibs/ptp2/config.c:3902
 msgid "infinite"
-msgstr "Infini"
+msgstr "infini"
 
 #: camlibs/ptp2/config.c:3931 camlibs/ptp2/config.c:3976
 #, c-format
@@ -5794,7 +5794,7 @@ msgstr "100 %"
 
 #: camlibs/ptp2/config.c:4543
 msgid "200%"
-msgstr ""
+msgstr "200 %"
 
 #: camlibs/ptp2/config.c:4557
 msgid "Single-servo AF"
@@ -6297,15 +6297,15 @@ msgstr "Fluorescent élevé"
 
 #: camlibs/ptp2/config.c:4913 camlibs/ptp2/ptp.c:6780
 msgid "Custom Whitebalance PC-1"
-msgstr "Balance des blancs, réglage nº 1 "
+msgstr "Balance des blancs, réglage nº 1"
 
 #: camlibs/ptp2/config.c:4914 camlibs/ptp2/ptp.c:6781
 msgid "Custom Whitebalance PC-2"
-msgstr "Balance des blancs, réglage nº 2 "
+msgstr "Balance des blancs, réglage nº 2"
 
 #: camlibs/ptp2/config.c:4915 camlibs/ptp2/ptp.c:6782
 msgid "Custom Whitebalance PC-3"
-msgstr "Balance des blancs, réglage nº 3 "
+msgstr "Balance des blancs, réglage nº 3"
 
 #: camlibs/ptp2/config.c:4916 camlibs/ptp2/ptp.c:6783
 msgid "Missing Number"
@@ -6360,28 +6360,20 @@ msgid "Black & white"
 msgstr "Noir et blanc"
 
 #: camlibs/ptp2/config.c:5038
-#, fuzzy
-#| msgid "ADL bracketing"
 msgid "AE bracket"
-msgstr "D-Lighting actif (ADL) du bracketing"
+msgstr "Bracketing d'exposition automatique"
 
 #: camlibs/ptp2/config.c:5039
-#, fuzzy
-#| msgid "WB bracketing"
 msgid "ISO bracket"
-msgstr "Balance des blancs du bracketing"
+msgstr "Bracketing ISO"
 
 #: camlibs/ptp2/config.c:5040
-#, fuzzy
-#| msgid "WB bracketing"
 msgid "WB bracket"
-msgstr "Balance des blancs du bracketing"
+msgstr "Bracketing Balance des blancs"
 
 #: camlibs/ptp2/config.c:5041
-#, fuzzy
-#| msgid "WB bracketing"
 msgid "FE bracket"
-msgstr "Balance des blancs du bracketing"
+msgstr "Bracketing FE"
 
 #: camlibs/ptp2/config.c:5042
 msgid "Bracket off"
@@ -6832,11 +6824,11 @@ msgstr "Détection des visages"
 
 #: camlibs/ptp2/config.c:5912
 msgid "Face and pupil detection"
-msgstr ""
+msgstr "Détection de la figure et des pupilles"
 
 #: camlibs/ptp2/config.c:5913
 msgid "Animal detection"
-msgstr ""
+msgstr "Détection d'animal"
 
 #: camlibs/ptp2/config.c:5988
 msgid "75%"
@@ -6952,40 +6944,40 @@ msgstr "Loin %d"
 
 #: camlibs/ptp2/config.c:6901 camlibs/ptp2/library.c:3177
 msgid "Liveview cannot start: Battery exhausted"
-msgstr ""
+msgstr "La visée par écran ne peut pas démarrer : batterie vide"
 
 #: camlibs/ptp2/config.c:6902 camlibs/ptp2/library.c:3178
 msgid "Liveview cannot start: Temperature too high"
-msgstr ""
+msgstr "La visée par écran ne peut pas démarrer : température trop élevée"
 
 #: camlibs/ptp2/config.c:6903 camlibs/ptp2/library.c:3179
 msgid "Liveview cannot start: TTL error"
-msgstr ""
+msgstr "La visée par écran ne peut pas démarrer : erreur TTL"
 
 #: camlibs/ptp2/config.c:6904 camlibs/ptp2/library.c:3180
 msgid "Liveview cannot start: In Mirror-up operation"
-msgstr ""
+msgstr "La visée par écran ne peut pas démarrer : miroir en cours de relèvement"
 
 #: camlibs/ptp2/config.c:6905 camlibs/ptp2/library.c:3181
 msgid "Liveview cannot start: Lens is retracting"
-msgstr ""
+msgstr "La visée par écran ne peut pas démarrer : lentille rétractée"
 
 #: camlibs/ptp2/config.c:6906 camlibs/ptp2/library.c:3182
 msgid "Liveview cannot start: Minimum aperture warning"
-msgstr ""
+msgstr "La visée par écran ne peut pas démarrer : ouverture miniamle"
 
 #: camlibs/ptp2/config.c:6907 camlibs/ptp2/library.c:3183
 msgid "Liveview cannot start: Processing of shooting operation"
-msgstr ""
+msgstr "La visée par écran ne peut pas démarrer : prise de vue en cours"
 
 #: camlibs/ptp2/config.c:6908 camlibs/ptp2/library.c:3184
 msgid "Liveview cannot start: Sequence error"
-msgstr ""
+msgstr "La visée par écran ne peut pas démarrer : erreur de séquence"
 
 #: camlibs/ptp2/config.c:6909 camlibs/ptp2/library.c:3185
 #, c-format
 msgid "Liveview cannot start: code 0x%08x"
-msgstr ""
+msgstr "La visée par écran ne peut pas démarrer : code 0x%08x"
 
 #: camlibs/ptp2/config.c:6918 camlibs/ptp2/config.c:7096
 #: camlibs/ptp2/config.c:7098 camlibs/ptp2/library.c:3192
@@ -6996,48 +6988,48 @@ msgstr "Impossible d'activer le mode de visée par l’écran de Nikon"
 
 #: camlibs/ptp2/config.c:7105
 msgid "Movie recording cannot start: Camera is not in application mode."
-msgstr ""
+msgstr "Impossible de démarrer le film : l'appareil n'est pas en mode application."
 
 #: camlibs/ptp2/config.c:7106
 msgid "Movie recording cannot start: Set liveview selector is enabled."
-msgstr ""
+msgstr "Impossible de démarrer le film : la visée sur écran est activée."
 
 #: camlibs/ptp2/config.c:7107
 msgid "Movie recording cannot start: In enlarged liewview."
-msgstr ""
+msgstr "Impossible de démarrer le film : visée sur écran élargie."
 
 #: camlibs/ptp2/config.c:7108
 msgid "Movie recording cannot start: Card protected."
-msgstr ""
+msgstr "Impossible de démarrer le film : carte protégée."
 
 #: camlibs/ptp2/config.c:7109
 msgid "Movie recording cannot start: Already in movie recording."
-msgstr ""
+msgstr "Impossible de démarrer le film : enregistrement de film en cours."
 
 #: camlibs/ptp2/config.c:7110
 msgid "Movie recording cannot start: Images / movies not yet record in buffer."
-msgstr ""
+msgstr "Impossible de démarrer le film : images / films en cours de mis en cache."
 
 #: camlibs/ptp2/config.c:7111
 msgid "Movie recording cannot start: Card full."
-msgstr ""
+msgstr "Impossible de démarrer le film : carte pleine."
 
 #: camlibs/ptp2/config.c:7112
 msgid "Movie recording cannot start: Card not formatted."
-msgstr ""
+msgstr "Impossible de démarrer le film : carte non formatée."
 
 #: camlibs/ptp2/config.c:7113
 msgid "Movie recording cannot start: Card error."
-msgstr ""
+msgstr "Impossible de démarrer le film : erreur de la carte."
 
 #: camlibs/ptp2/config.c:7114
 msgid "Movie recording cannot start: No card."
-msgstr ""
+msgstr "Impossible de démarrer le film : pas de carte."
 
 #: camlibs/ptp2/config.c:7115
 #, c-format
 msgid "Movie recording cannot start: code 0x%08x"
-msgstr ""
+msgstr "Impossible de démarrer le film : code 0x%08x"
 
 #: camlibs/ptp2/config.c:7500
 msgid "Temperature 1"
@@ -7072,7 +7064,7 @@ msgstr "large"
 #: camlibs/ptp2/config.c:7876
 #, c-format
 msgid "Unknown thumb size value '%s'."
-msgstr ""
+msgstr "Taille de miniature inconnue '%s'."
 
 #: camlibs/ptp2/config.c:7884
 msgid "Internal RAM"
@@ -7303,16 +7295,12 @@ msgid "Battery Level"
 msgstr "Niveau de batterie"
 
 #: camlibs/ptp2/config.c:8636
-#, fuzzy
-#| msgid "Mirror Up"
 msgid "Mirror Up Status"
-msgstr "Miroir relevé"
+msgstr "État du miroir relevé"
 
 #: camlibs/ptp2/config.c:8637
-#, fuzzy
-#| msgid "Mirror Up Sequence"
 msgid "Mirror Up Shooting Count"
-msgstr "Séquence avec miroir relevé"
+msgstr "Compteur de prise de vue avec miroir relevé"
 
 #: camlibs/ptp2/config.c:8638
 msgid "Continuous Shooting Count"
@@ -7485,7 +7473,7 @@ msgstr "Menus et lecture"
 
 #: camlibs/ptp2/config.c:8698
 msgid "External Recording Control"
-msgstr ""
+msgstr "Contrôle de l'enregistrement externe"
 
 #: camlibs/ptp2/config.c:8701
 msgid "Thumb Size"
@@ -7873,10 +7861,8 @@ msgid "Live View AF Focus"
 msgstr "Mise au point automatique en mode de visée par l’écran"
 
 #: camlibs/ptp2/config.c:8880
-#, fuzzy
-#| msgid "Live View Drive Mode"
 msgid "Live View Exposure Preview"
-msgstr "Fonction mode de visée par l’écran"
+msgstr "Aperçu de la visée sur écran"
 
 #: camlibs/ptp2/config.c:8881 camlibs/ptp2/ptp.c:5813
 msgid "Live View Image Zoom Ratio"
@@ -7947,82 +7933,56 @@ msgid "Bracket Order"
 msgstr "Ordre de bracket"
 
 #: camlibs/ptp2/config.c:8899
-#, fuzzy
-#| msgid "Exposure Bracketing Step"
 msgid "AE Bracketing Step"
-msgstr "Palier d'exposition du bracketing"
+msgstr "Palier du bracketing d'exposition automatique"
 
 #: camlibs/ptp2/config.c:8900
-#, fuzzy
-#| msgid "WB bracketing"
 msgid "WB Bracketing Step"
-msgstr "Balance des blancs du bracketing"
+msgstr "Palier du bracketing de la balance des blancs"
 
 #: camlibs/ptp2/config.c:8901
-#, fuzzy
-#| msgid "Bracketing Enable"
 msgid "AE Bracketing Pattern"
-msgstr "Bracketing activé"
+msgstr "Motif de bracketing d'exposition automatique"
 
 #: camlibs/ptp2/config.c:8902
-#, fuzzy
-#| msgid "WB bracketing"
 msgid "WB Bracketing Pattern"
-msgstr "Balance des blancs du bracketing"
+msgstr "Motif de bracketing de la balance des blancs"
 
 #: camlibs/ptp2/config.c:8903
-#, fuzzy
-#| msgid "Bracketing burst"
 msgid "AE Bracketing Count"
-msgstr "Bracketing en rafale"
+msgstr "Compteur de bracketing d'exposition automatique"
 
 #: camlibs/ptp2/config.c:8904
-#, fuzzy
-#| msgid "ADL bracketing"
 msgid "ADL Bracketing Pattern"
-msgstr "D-Lighting actif (ADL) du bracketing"
+msgstr "Motif de bracketing D-Lighting actif (ADL)"
 
 #: camlibs/ptp2/config.c:8905
-#, fuzzy
-#| msgid "ADL bracketing"
 msgid "ADL Bracketing Step"
-msgstr "D-Lighting actif (ADL) du bracketing"
+msgstr "Palier du bracketing D-Lighting actif (ADL)"
 
 #: camlibs/ptp2/config.c:8906
-#, fuzzy
-#| msgid "Preset Custom 1"
 msgid "WB Preset Comment 1"
-msgstr "Préconfiguration personnalisée 1"
+msgstr "Préconfiguration de la balance des blancs personnalisée 1"
 
 #: camlibs/ptp2/config.c:8907
-#, fuzzy
-#| msgid "Preset Custom 2"
 msgid "WB Preset Comment 2"
-msgstr "Préconfiguration personnalisée 2"
+msgstr "Préconfiguration de la balance des blancs personnalisée 2"
 
 #: camlibs/ptp2/config.c:8908
-#, fuzzy
-#| msgid "Preset Custom 3"
 msgid "WB Preset Comment 3"
-msgstr "Préconfiguration personnalisée 3"
+msgstr "Préconfiguration de la balance des blancs personnalisée 3"
 
 #: camlibs/ptp2/config.c:8909
-#, fuzzy
-#| msgid "Preset Custom 4"
 msgid "WB Preset Comment 4"
-msgstr "Préconfiguration personnalisée 4"
+msgstr "Préconfiguration de la balance des blancs personnalisée 4"
 
 #: camlibs/ptp2/config.c:8910
-#, fuzzy
-#| msgid "Preset Custom 5"
 msgid "WB Preset Comment 5"
-msgstr "Préconfiguration personnalisée 5"
+msgstr "Préconfiguration de la balance des blancs personnalisée 5"
 
 #: camlibs/ptp2/config.c:8911
-#, fuzzy
-#| msgid "Preset Custom 1"
 msgid "WB Preset Comment 6"
-msgstr "Préconfiguration personnalisée 1"
+msgstr "Préconfiguration de la balance des blancs personnalisée 6"
 
 #: camlibs/ptp2/config.c:8912 camlibs/ptp2/ptp.c:5250
 msgid "Burst Number"
@@ -8034,7 +7994,7 @@ msgstr "Intervalle de prise de vue en rafale"
 
 #: camlibs/ptp2/config.c:8914 camlibs/ptp2/ptp.c:5527 camlibs/ptp2/ptp.c:5664
 msgid "Maximum Shots"
-msgstr "Prise de vue maximum "
+msgstr "Prise de vue maximum"
 
 #: camlibs/ptp2/config.c:8917 camlibs/ptp2/config.c:8926
 #: camlibs/ptp2/ptp.c:5385
@@ -8077,27 +8037,27 @@ msgstr "Balance des blancs ensoleillés naturels"
 
 #: camlibs/ptp2/config.c:8934
 msgid "White Balance Bias Preset Nr"
-msgstr "Nombre de Balance des blancs pré-configuré"
+msgstr "Balance des blancs pré-configurée #"
 
 #: camlibs/ptp2/config.c:8935
 msgid "White Balance Bias Preset 0"
-msgstr "Balance des blancs pré-configuré 0"
+msgstr "Balance des blancs pré-configurée 0"
 
 #: camlibs/ptp2/config.c:8936
 msgid "White Balance Bias Preset 1"
-msgstr "Balance des blancs pré-configuré 1"
+msgstr "Balance des blancs pré-configurée 1"
 
 #: camlibs/ptp2/config.c:8937
 msgid "White Balance Bias Preset 2"
-msgstr "Balance des blancs pré-configuré 2"
+msgstr "Balance des blancs pré-configurée 2"
 
 #: camlibs/ptp2/config.c:8938
 msgid "White Balance Bias Preset 3"
-msgstr "Balance des blancs pré-configuré 3"
+msgstr "Balance des blancs pré-configurée 3"
 
 #: camlibs/ptp2/config.c:8939
 msgid "White Balance Bias Preset 4"
-msgstr "Balance des blancs pré-configuré 4"
+msgstr "Balance des blancs pré-configurée 4"
 
 #: camlibs/ptp2/config.c:8940
 msgid "Selftimer Delay"
@@ -8182,7 +8142,7 @@ msgstr "Rognage du capteur"
 
 #: camlibs/ptp2/config.c:8961
 msgid "HDMI Output Data Depth"
-msgstr ""
+msgstr "Profondeur de données de la sortie HDMI"
 
 #: camlibs/ptp2/config.c:8962
 msgid "Face Detection"
@@ -8242,15 +8202,15 @@ msgstr "Vitesse rapide de prise de vue continue"
 
 #: camlibs/ptp2/config.c:9063 camlibs/ptp2/ptp.c:5437
 msgid "JPEG Compression Policy"
-msgstr "politique de compression JPEG"
+msgstr "Politique de compression JPEG"
 
 #: camlibs/ptp2/config.c:9064
 msgid "AF-C Mode Priority"
-msgstr "priorité au mode AF-C"
+msgstr "Priorité au mode AF-C"
 
 #: camlibs/ptp2/config.c:9065
 msgid "AF-S Mode Priority"
-msgstr "priorité au mode AF-S"
+msgstr "Priorité au mode AF-S"
 
 #: camlibs/ptp2/config.c:9066
 msgid "AF Activation"
@@ -8358,7 +8318,9 @@ msgstr ""
 "© 2001-2005 par Mariusz Woloszyn <emsi@ipartners.pl>.\n"
 "© 2003-%d par Marcus Meissner <marcus@jet.franken.de>.\n"
 "Ce Pilote permet d'utiliser les appareils compatibles PTP ou PictBridge\n"
-"et les lecteur multimédia utilisant MTP (Media Transfer Protocol)."
+"et les lecteurs multimédia utilisant MTP (Media Transfer Protocol).\n"
+"\n"
+"Amusez-vous bien !"
 
 #: camlibs/ptp2/library.c:2952 camlibs/ptp2/library.c:3235
 #: camlibs/ptp2/library.c:3251
@@ -8399,7 +8361,7 @@ msgstr "Cet appareil ne prend pas en charge l'acquisition Nikon"
 
 #: camlibs/ptp2/library.c:3670 camlibs/ptp2/library.c:5367
 msgid "Failed to enable liveview on a Nikon 1, but it is required for capture"
-msgstr "Impossible d'activer le mode de visée par l’écran sur un Nikon 1, mais c’est nécessaire pour la capture."
+msgstr "Impossible d'activer le mode de visée sur écran sur un Nikon 1, mais c’est nécessaire pour la capture"
 
 #: camlibs/ptp2/library.c:3909
 msgid "Sorry, your Canon camera does not support Canon EOS Capture"
@@ -8425,7 +8387,7 @@ msgstr "Échec de Canon Capture"
 
 #: camlibs/ptp2/library.c:4525
 msgid "Fuji Capture failed: Perhaps no auto-focus?"
-msgstr "Capture Fuji n'a pas pu déclencher : possible problème de mise au point."
+msgstr "Capture Fuji n'a pas pu déclencher : problème de mise au point?"
 
 #: camlibs/ptp2/library.c:4974 camlibs/ptp2/library.c:5634
 msgid "Sorry, your camera does not support generic capture"
@@ -8441,7 +8403,7 @@ msgstr "Échec de la demi-pression EOS Canon"
 
 #: camlibs/ptp2/library.c:5211 camlibs/ptp2/library.c:5311
 msgid "Canon EOS Capture failed to release: Perhaps no focus?"
-msgstr "Capture EOS Canon n'a pas pu déclencher : possible problème de mise au point."
+msgstr "Capture EOS Canon n'a pas pu déclencher : problème de mise au point ?"
 
 #: camlibs/ptp2/library.c:5241 camlibs/ptp2/library.c:5253
 msgid "Canon EOS Half-Release failed"
@@ -8461,7 +8423,7 @@ msgstr "Échec de la pression complète EOS M Canon"
 
 #: camlibs/ptp2/library.c:5285
 msgid "Canon EOS M Capture failed: Perhaps no focus?"
-msgstr "Capture EOS M Canon n'a pas pu déclencher : possible problème de mise au point."
+msgstr "Capture EOS M Canon n'a pas pu déclencher : problème de mise au point?"
 
 #: camlibs/ptp2/library.c:5292
 msgid "Canon EOS M Full-Release failed"
@@ -8478,15 +8440,15 @@ msgstr "Échec de Capture EOS Canon : %x"
 
 #: camlibs/ptp2/library.c:5313
 msgid "Canon EOS Capture failed to release: Perhaps mirror up?"
-msgstr "Capture EOS Canon n'a pas pu déclencher : possible problème de miroir relevé."
+msgstr "Capture EOS Canon n'a pas pu déclencher : problème de miroir relevé?"
 
 #: camlibs/ptp2/library.c:5315
 msgid "Canon EOS Capture failed to release: Perhaps no more memory on card?"
-msgstr "Capture EOS Canon n'a pas pu déclencher : possible manque de mémoire sur la carte."
+msgstr "Capture EOS Canon n'a pas pu déclencher : manque de mémoire sur la carte?"
 
 #: camlibs/ptp2/library.c:5317
 msgid "Canon EOS Capture failed to release: Card read-only?"
-msgstr "Capture EOS Canon n'a pas pu déclencher : carte peut-être en lecture seule."
+msgstr "Capture EOS Canon n'a pas pu déclencher : carte en lecture seule?"
 
 #: camlibs/ptp2/library.c:5319
 #, c-format
@@ -8713,7 +8675,7 @@ msgstr "Générique hiérarchique"
 
 #: camlibs/ptp2/library.c:6763
 msgid "Digital Camera Layout (DCIM)"
-msgstr "Disposition de l'appareil numérique (DCIM) "
+msgstr "Disposition de l'appareil numérique (DCIM)"
 
 #: camlibs/ptp2/library.c:6769
 #, c-format
@@ -8815,7 +8777,7 @@ msgstr "Erreur PTP non définie"
 
 #: camlibs/ptp2/ptp.c:5100
 msgid "PTP OK!"
-msgstr "PTP fonctionnel"
+msgstr "PTP fonctionnel !"
 
 #: camlibs/ptp2/ptp.c:5101
 msgid "PTP General Error"
@@ -8951,7 +8913,7 @@ msgstr "Aucun flux actif"
 
 #: camlibs/ptp2/ptp.c:5134
 msgid "Invalid Data Set"
-msgstr "jue de données invalide"
+msgstr "Jeu de données invalide"
 
 #: camlibs/ptp2/ptp.c:5136
 msgid "Filename Required"
@@ -9035,15 +8997,15 @@ msgstr "Stockage non formaté"
 
 #: camlibs/ptp2/ptp.c:5157
 msgid "Bulb Release Busy"
-msgstr ""
+msgstr "Relâchement en cours de la pose longue"
 
 #: camlibs/ptp2/ptp.c:5158
 msgid "Silent Release Busy"
-msgstr ""
+msgstr "Relâchement en cours du silencieux"
 
 #: camlibs/ptp2/ptp.c:5159
 msgid "MovieFrame Release Busy"
-msgstr ""
+msgstr "Relâchement en cours de la caméra"
 
 #: camlibs/ptp2/ptp.c:5160
 msgid "Shutter Speed Time"
@@ -9051,11 +9013,11 @@ msgstr "Temps de pose"
 
 #: camlibs/ptp2/ptp.c:5161
 msgid "Waiting for 2nd Release"
-msgstr ""
+msgstr "En attente du second relâchement"
 
 #: camlibs/ptp2/ptp.c:5162
 msgid "MirrorUpCapture Already Started"
-msgstr ""
+msgstr "Relâchement en cours du miroir"
 
 #: camlibs/ptp2/ptp.c:5163
 msgid "Invalid SBAttribute Value"
@@ -9143,7 +9105,7 @@ msgstr "Identifiant de session media invalide"
 
 #: camlibs/ptp2/ptp.c:5189
 msgid "Media Session Limit Reached"
-msgstr ""
+msgstr "Limite de session média atteinte"
 
 #: camlibs/ptp2/ptp.c:5190
 msgid "No More Data"
@@ -9203,7 +9165,7 @@ msgstr "Temps de pose"
 
 #: camlibs/ptp2/ptp.c:5238
 msgid "Exposure Program Mode"
-msgstr "Mode d’exposition programmé "
+msgstr "Mode du programme d’exposition"
 
 #: camlibs/ptp2/ptp.c:5240
 msgid "Exposure Index (film speed ISO)"
@@ -9392,7 +9354,7 @@ msgstr "Identifiant du matériel de l'appareil"
 
 #: camlibs/ptp2/ptp.c:5344
 msgid "Disp Av"
-msgstr "Afficher la valeur d'ouverture "
+msgstr "Afficher la valeur d'ouverture"
 
 #: camlibs/ptp2/ptp.c:5345
 msgid "Av Open Apex"
@@ -9448,7 +9410,7 @@ msgstr "Taille moyenne des fichiers"
 
 #: camlibs/ptp2/ptp.c:5362
 msgid "Model ID"
-msgstr "Identifiant du modèle :"
+msgstr "Identifiant du modèle"
 
 #: camlibs/ptp2/ptp.c:5371
 msgid "Shooting Bank"
@@ -10049,7 +10011,7 @@ msgstr "Affichage de l'état d'exposition"
 
 #: camlibs/ptp2/ptp.c:5819
 msgid "Exposure Indicate Status"
-msgstr "État d'indicateur d'exposition "
+msgstr "État d'indicateur d'exposition"
 
 #: camlibs/ptp2/ptp.c:5821
 msgid "Info Display Error Status"
@@ -10699,7 +10661,7 @@ msgstr "Section"
 #: camlibs/ptp2/ptp.c:7066
 #, c-format
 msgid "Unknown(%04x)"
-msgstr "inconnu(%04x)"
+msgstr "Inconnu(%04x)"
 
 #: camlibs/ptp2/ptp.c:7076
 msgid "Get device info"
@@ -10715,7 +10677,7 @@ msgstr "Fermer la session"
 
 #: camlibs/ptp2/ptp.c:7079
 msgid "Get storage IDs"
-msgstr "Obtenir l'identifiant du support de stockage "
+msgstr "Obtenir l'identifiant du support de stockage"
 
 #: camlibs/ptp2/ptp.c:7080
 msgid "Get storage info"
@@ -10731,7 +10693,7 @@ msgstr "Obtenir les identificateurs de l'objet"
 
 #: camlibs/ptp2/ptp.c:7083
 msgid "Get object info"
-msgstr "Obtenir les renseignements sur l'objet "
+msgstr "Obtenir les renseignements sur l'objet"
 
 #: camlibs/ptp2/ptp.c:7084
 msgid "Get object"
@@ -10783,7 +10745,7 @@ msgstr "Obtenir la description de propriété du périphérique"
 
 #: camlibs/ptp2/ptp.c:7096
 msgid "Get device property value"
-msgstr "Obtenir la valeur de propriété du périphérique "
+msgstr "Obtenir la valeur de propriété du périphérique"
 
 #: camlibs/ptp2/ptp.c:7097
 msgid "Set device property value"
@@ -11280,7 +11242,7 @@ msgstr "Compression"
 #: camlibs/ricoh/library.c:573
 #, c-format
 msgid "Speed %i is not supported!"
-msgstr "La vitesse %i n'est pas autorisée."
+msgstr "La vitesse %i n'est pas prise en charge !"
 
 #: camlibs/ricoh/ricoh.c:66
 #, c-format
@@ -11537,7 +11499,7 @@ msgstr "Envoi de données…"
 #: camlibs/sierra/library.c:1229
 #, c-format
 msgid "recursive calls are not supported by the sierra driver! Please contact %s."
-msgstr "Les appels récursifs ne sont pas gérées par le pilote sierra. Veuillez contacter %s."
+msgstr "les appels récursifs ne sont pas gérées par le pilote sierra. Veuillez contacter %s."
 
 #: camlibs/sierra/library.c:1283
 #, c-format
@@ -11655,7 +11617,7 @@ msgstr "Zoom (en millimètre)"
 
 #: camlibs/sierra/nikon-desc.c:543
 msgid "none"
-msgstr "Aucun"
+msgstr "aucun"
 
 #: camlibs/sierra/nikon-desc.c:546
 msgid "AE-lock"
@@ -12162,7 +12124,7 @@ msgid ""
 "for the use of their Olympus C-3030Z for USB\n"
 "support implementation."
 msgstr ""
-"Bibliothèque sierra SPARClite\n"
+"bibliothèque sierra SPARClite\n"
 "Scott Fritzinger <scottf@unr.edu>\n"
 "Prise en charge des appareils numériques basés\n"
 "sur les composants sierra dont les Olympus,\n"
@@ -12341,7 +12303,7 @@ msgstr ""
 
 #: camlibs/spca50x/library.c:299
 msgid "spca50x library v"
-msgstr "Bibliothèque spca50x v"
+msgstr "bibliothèque spca50x v"
 
 #: camlibs/sq905/library.c:133
 #, c-format
@@ -12402,7 +12364,7 @@ msgid ""
 "sq905 generic driver\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 msgstr ""
-"Pilote générique sq905\n"
+"pilote générique sq905\n"
 "Theodore Kilgore <kilgota@auburn.edu>\n"
 
 #: camlibs/st2205/library.c:83

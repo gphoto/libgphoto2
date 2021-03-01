@@ -1,6 +1,6 @@
 /* config.c
  *
- * Copyright (C) 2003-2020 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2021 Marcus Meissner <marcus@jet.franken.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -1019,7 +1019,7 @@ _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	CR (gp_widget_get_value(widget, &value));
 	memset(propval,0,sizeof(PTPPropertyValue));
 	/* add \0 ? */
-	C_MEM (propval->a.v = malloc((strlen(value)+1)*sizeof(PTPPropertyValue)));
+	C_MEM (propval->a.v = calloc((strlen(value)+1),sizeof(PTPPropertyValue)));
 	propval->a.count = strlen(value)+1;
 	for (i=0;i<strlen(value)+1;i++)
 		propval->a.v[i].u8 = value[i];
@@ -7906,7 +7906,7 @@ _get_Nikon_MovieProhibitCondition(CONFIG_GET_ARGS) {
 		if (value.u32 & (1<<bit)) {		\
 			value.u32 &= ~(1<<bit);		\
 			strcat(buf, _(str));		\
-			if (value.u32) strcat(buf, " ");\
+			if (value.u32) strcat(buf, ",");\
 		}
 
 		X(14,N_("Not in application mode"));
@@ -7946,7 +7946,7 @@ _get_Nikon_LiveViewProhibitCondition(CONFIG_GET_ARGS) {
 		if (value.u32 & (1<<bit)) {		\
 			value.u32 &= ~(1<<bit);		\
 			strcat(buf, _(str));		\
-			if (value.u32) strcat(buf, " ");\
+			if (value.u32) strcat(buf, ",");\
 		}
 		X( 2,N_("Sequence error"));
 		X( 4,N_("Fully pressed button"));
@@ -7978,7 +7978,7 @@ static int
 _get_Nikon_Movie(CONFIG_GET_ARGS) {
 	int val;
 
-	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 	val = 2; /* always changed */
 	gp_widget_set_value  (*widget, &val);
@@ -8126,7 +8126,6 @@ _put_Nikon_Bulb(CONFIG_PUT_ARGS)
 		return GP_OK;
 	}
 }
-
 
 static int
 _get_OpenCapture(CONFIG_GET_ARGS) {
@@ -8294,6 +8293,34 @@ _put_Sony_Bulb(CONFIG_PUT_ARGS)
 }
 
 static int
+_get_Panasonic_Movie(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Panasonic_Movie(CONFIG_PUT_ARGS)
+{
+	PTPParams *params = &(camera->pl->params);
+	int val;
+
+	CR (gp_widget_get_value(widget, &val));
+	if (val) {
+		C_PTP_MSG (ptp_panasonic_movierec (params, 1), "failed to start movie capture");
+		return GP_OK;
+	} else {
+		C_PTP_MSG (ptp_panasonic_movierec (params, 0), "failed to stop movie capture");
+		return GP_OK;
+	}
+}
+
+
+static int
 _put_Panasonic_Shutter(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
@@ -8314,10 +8341,7 @@ _put_Panasonic_Shutter(CONFIG_PUT_ARGS)
 		val = (uint32_t) f;
 		val |= 0x80000000;
 	}
-
-	//printf("setting shutterspeed to %lu (%s)\n", val, xval);
-
-	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, 0x2000031, (unsigned char*)&val, 4));
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_ShutterSpeed_Param, (unsigned char*)&val, 4));
 }
 
 static int
@@ -8328,7 +8352,7 @@ _get_Panasonic_Shutter(CONFIG_GET_ARGS) {
 	PTPParams *params = &(camera->pl->params);
 	GPContext *context = ((PTPData *) params->data)->context;
 
-	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, 0x2000030, 4, &currentVal, &list, &listCount));
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_ShutterSpeed, 4, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -8409,7 +8433,7 @@ _put_Panasonic_ISO(CONFIG_PUT_ARGS)
 
 	//printf("setting ISO to %lu (%s)\n", val, xval);
 
-	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, 0x2000021, (unsigned char*)&val, 4));
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_ISO_Param, (unsigned char*)&val, 4));
 }
 
 static int
@@ -8421,7 +8445,7 @@ _get_Panasonic_ISO(CONFIG_GET_ARGS) {
 	PTPParams *params = &(camera->pl->params);
 	GPContext *context = ((PTPData *) params->data)->context;
 
-	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, 0x2000020, 4, &currentVal, &list, &listCount));
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_ISO, 4, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -8434,7 +8458,7 @@ _get_Panasonic_ISO(CONFIG_GET_ARGS) {
 		sprintf (buf, "%d", (unsigned int)list[i]);
 		gp_widget_add_choice (*widget, buf);
 	}
-	ptp_panasonic_getdeviceproperty(params, 0x2000021, &valsize, &currentVal);
+	ptp_panasonic_getdeviceproperty(params, PTP_DPC_PANASONIC_ISO_Param, &valsize, &currentVal);
 
 	sprintf (buf, "%d", (unsigned int)currentVal);
 	gp_widget_set_value (*widget, buf);
@@ -8451,52 +8475,52 @@ struct {
 } panasonic_wbtable[] = {
 	{ N_("Automatic"),	0x0002	},
 	{ N_("Daylight"),	0x0004	},
-	{ N_("Cloudy"),		32776	},
 	{ N_("Tungsten"),	0x0006	},
+	{ N_("Flourescent"),	0x0005	},
 	{ N_("Flash"),		0x0007	},
-	{ N_("Preset 1"),	32779	},
-	{ N_("Preset 2"),	32780	},
-	{ N_("Preset 3"),	32781	},
-	{ N_("Preset 4"),	32782	},
-	{ N_("Shadow"),		32783	},
-	{ N_("Temperature 1"),	32784	},
-	{ N_("Temperature 2"),	32785	},
-	{ N_("Temperature 3"),	32786	},
-	{ N_("Temperature 4"),	32787	},
-	{ N_("Automatic C"), 	32788	},
+	{ N_("Cloudy"),		0x8008	},
+	{ N_("White set"),	0x8009	},
+	{ N_("Black White"),	0x800A	},
+	{ N_("Preset 1"),	0x800B	},
+	{ N_("Preset 2"),	0x800C	},
+	{ N_("Preset 3"),	0x800D	},
+	{ N_("Preset 4"),	0x800E	},
+	{ N_("Shadow"),		0x800F	},
+	{ N_("Temperature 1"),	0x8010	},
+	{ N_("Temperature 2"),	0x8011	},
+	{ N_("Temperature 3"),	0x8012	},
+	{ N_("Temperature 4"),	0x8013	},
+	{ N_("Automatic Cool"),	0x8014	},
+	{ N_("Automatic Warm"),	0x8015	},
 };
 
 static int
 _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
-	GPContext *context = ((PTPData *) params->data)->context;
-	char *xval;
+	char	*xval;
 	uint32_t val = 0;
+/*
 	uint32_t currentVal;
 	uint32_t listCount;
 	uint32_t *list;
-	int ival;
-	unsigned int i;
+*/
+	int	ival;
+	unsigned int j;
 
 	CR (gp_widget_get_value(widget, &xval));
 
-	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount));
+	/* C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount)); */
 
 	if (sscanf(xval,_("Unknown 0x%04x"), &ival))
 		val = ival;
-
-	for (i = 0; i < listCount; i++) {
-		unsigned int j;
-
-		for (j=0;j<sizeof(panasonic_wbtable)/sizeof(panasonic_wbtable[0]);j++) {
-			if (!strcmp(xval,_(panasonic_wbtable[j].str))) {
-				val = panasonic_wbtable[j].val;
-				break;
-			}
+	for (j=0;j<sizeof(panasonic_wbtable)/sizeof(panasonic_wbtable[0]);j++) {
+		if (!strcmp(xval,_(panasonic_wbtable[j].str))) {
+			val = panasonic_wbtable[j].val;
+			break;
 		}
 	}
-	free(list);
+	/* free(list); */
 	GP_LOG_D("setting whitebalance to 0x%04x", val);
 	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance, (unsigned char*)&val, 2));
 }
@@ -8589,6 +8613,50 @@ _get_Panasonic_Exposure(CONFIG_GET_ARGS) {
 
 	sprintf (buf, "%f", (float)currentVal);
 	gp_widget_set_value (*widget, &buf);
+	return GP_OK;
+}
+
+static int
+_put_Panasonic_LiveViewSize(CONFIG_PUT_ARGS)
+{
+	PTPParams		*params = &(camera->pl->params);
+	char			*xval;
+	unsigned int		height, width, freq, x;
+	PanasonicLiveViewSize	liveviewsize;
+
+	CR (gp_widget_get_value(widget, &xval));
+	if (!sscanf(xval, "%dx%d %d %dHZ", &width, &height, &x, &freq))
+		return GP_ERROR;
+	liveviewsize.width	= width;
+	liveviewsize.height	= height;
+	liveviewsize.freq	= freq;
+	liveviewsize.x		= x;
+	return translate_ptp_result (ptp_panasonic_9415(params, &liveviewsize));
+}
+
+static int
+_get_Panasonic_LiveViewSize(CONFIG_GET_ARGS) {
+	unsigned int		i;
+	char			buf[100];
+	PTPParams		*params = &(camera->pl->params);
+	GPContext		*context = ((PTPData *) params->data)->context;
+	PanasonicLiveViewSize	liveviewsize, *liveviewsizes = NULL;
+	unsigned int		nrofliveviewsizes = 0;
+
+	C_PTP_REP (ptp_panasonic_9414_0d800012(params, &liveviewsizes, &nrofliveviewsizes));
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i = 0;i < nrofliveviewsizes; i++) {
+		sprintf(buf,"%dx%d %d %dHZ", liveviewsizes[i].width, liveviewsizes[i].height, liveviewsizes[i].x, liveviewsizes[i].freq);
+                gp_widget_add_choice (*widget, buf);
+	}
+	free (liveviewsizes);
+
+	C_PTP_REP (ptp_panasonic_9414_0d800011(params, &liveviewsize));
+	sprintf(buf,"%dx%d %d %dHZ", liveviewsize.width, liveviewsize.height, liveviewsize.x, liveviewsize.freq);
+	gp_widget_set_value (*widget, buf);
 	return GP_OK;
 }
 
@@ -8890,6 +8958,9 @@ _put_CaptureTarget(CONFIG_PUT_ARGS) {
 		CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
 
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_PANASONIC) {
+		uint16_t	target;
+
+		C_PTP (ptp_panasonic_getcapturetarget(params, &target));
 		if ((GP_OK != gp_setting_get("ptp2","capturetarget",buf)) || !strcmp(buf,"sdram"))
 			C_PTP (ptp_panasonic_setcapturetarget(params, 1));
 		else
@@ -9578,6 +9649,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartMovieRecInCard,   _get_Nikon_Movie,               _put_Nikon_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_SDIOConnect,            _get_Sony_Movie,                _put_Sony_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_QX_Connect,             _get_Sony_QX_Movie,             _put_Sony_QX_Movie },
+	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_PANASONIC,PTP_OC_PANASONIC_MovieRecControl,  _get_Panasonic_Movie,           _put_Panasonic_Movie },
 	{ N_("Movie Mode"),                     "eosmoviemode",     0,  PTP_VENDOR_CANON,   0,                                  _get_Canon_EOS_MovieModeSw,     _put_Canon_EOS_MovieModeSw },
 	{ N_("PTP Opcode"),                     "opcode",           0,  0,                  PTP_OC_GetDeviceInfo,               _get_Generic_OPCode,            _put_Generic_OPCode },
 	{ 0,0,0,0,0,0,0 },
@@ -9660,6 +9732,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Artist"),                 "artist",               PTP_DPC_NIKON_ArtistName,           PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("CCD Number"),             "ccdnumber",            PTP_DPC_NIKON_CCDNumber,            PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Copyright"),              "copyright",            PTP_DPC_CANON_EOS_Copyright,        PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
+	{ N_("Nickname"),               "nickname",             PTP_DPC_CANON_EOS_CameraNickname,   PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Copyright"),              "copyright",            PTP_DPC_FUJI_Copyright,             PTP_VENDOR_FUJI,    PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Copyright"),              "copyright",            PTP_DPC_NIKON_CopyrightInfo,        PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Clean Sensor"),           "cleansensor",          PTP_DPC_NIKON_CleanImageSensor,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_CleanSensor,         _put_Nikon_CleanSensor },
@@ -9667,6 +9740,9 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Custom Functions Ex"),    "customfuncex",         PTP_DPC_CANON_EOS_CustomFuncEx,     PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Focus Info"),             "focusinfo",            PTP_DPC_CANON_EOS_FocusInfoEx,      PTP_VENDOR_CANON,   PTP_DTC_STR,    _get_STR,                       _put_None },
 	{ N_("Focus Area"),             "focusarea",            PTP_DPC_CANON_EOS_AFSelectFocusArea,PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_INT },
+	{ N_("Strobo Firing"),          "strobofiring",         PTP_DPC_CANON_EOS_StroboFiring,     PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
+	{ N_("Flash Charging State"),   "flashcharged",         PTP_DPC_CANON_EOS_FlashChargingState,PTP_VENDOR_CANON,  PTP_DTC_UINT32, _get_INT,                       _put_None },
+	{ N_("One Shot Raw On"),        "oneshotrawon",         PTP_DPC_CANON_EOS_OneShotRawOn,     PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Auto Power Off"),         "autopoweroff",         PTP_DPC_CANON_EOS_AutoPowerOff,     PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Depth of Field"),         "depthoffield",         PTP_DPC_CANON_EOS_DepthOfFieldPreview, PTP_VENDOR_CANON,PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("Menus and Playback"),     "menusandplayback",     PTP_DPC_NIKON_MenusAndPlayback,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_MenusAndPlayback,    _put_Nikon_MenusAndPlayback },
@@ -9796,6 +9872,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_SONY_QX_Aperture,               PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("F-Number"),                       "f-number",                 PTP_DPC_FNumber,                        0,                  PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("F-Number"),			"f-number",		    0,					    PTP_VENDOR_PANASONIC,PTP_DTC_INT32, _get_Panasonic_FNumber,             _put_Panasonic_FNumber },
+	{ N_("Live View Size"),			"liveviewsize",		    0,					    PTP_VENDOR_PANASONIC,PTP_DTC_INT32, _get_Panasonic_LiveViewSize,        _put_Panasonic_LiveViewSize },
 	{ N_("Movie F-Number"),                 "movief-number",            PTP_DPC_NIKON_MovieFNumber,             PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("Flexible Program"),               "flexibleprogram",          PTP_DPC_NIKON_FlexibleProgram,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Range_INT8,                    _put_Range_INT8 },
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_CompressionSetting,            _put_Sony_CompressionSetting },
@@ -9826,6 +9903,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Still Capture Mode"),             "capturemode",              PTP_DPC_FUJI_ReleaseMode,               PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_ReleaseMode,              _put_Fuji_ReleaseMode },
 	{ N_("Canon Shooting Mode"),            "shootingmode",             PTP_DPC_CANON_ShootingMode,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ShootMode,               _put_Canon_ShootMode },
 	{ N_("Canon Auto Exposure Mode"),       "autoexposuremode",         PTP_DPC_CANON_EOS_AutoExposureMode,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_AutoExposureMode,    _put_Canon_EOS_AutoExposureMode },
+	{ N_("Canon Auto Exposure Mode Dial"),  "autoexposuremodedial",     PTP_DPC_CANON_EOS_AEModeDial,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_AutoExposureMode,    _put_Canon_EOS_AutoExposureMode },
 	{ N_("Drive Mode"),                     "drivemode",                PTP_DPC_CANON_EOS_DriveMode,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_DriveMode,           _put_Canon_EOS_DriveMode },
 	{ N_("Picture Style"),                  "picturestyle",             PTP_DPC_CANON_EOS_PictureStyle,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_EOS_PictureStyle,        _put_Canon_EOS_PictureStyle },
 	{ N_("Focus Metering Mode"),            "focusmetermode",           PTP_DPC_FocusMeteringMode,              0,                  PTP_DTC_UINT16, _get_FocusMetering,                 _put_FocusMetering },

@@ -349,7 +349,7 @@ fi
 
 cat >> "$1" << EOF
 /* Define the C99 standard length-specific integer types */
-#include <_stdint.h>
+#include <stdint.h>
 
 EOF
 

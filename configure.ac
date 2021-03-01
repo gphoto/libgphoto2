@@ -4,8 +4,8 @@ AC_PREREQ(2.62)
 dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
-dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.27 at least or higher!
-AC_INIT([libgphoto2 photo camera library], [2.5.26.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
+dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.28 at least or higher!
+AC_INIT([libgphoto2 photo camera library], [2.5.27.1], [gphoto-devel@lists.sourceforge.net], [libgphoto2])
 
 AC_CONFIG_SRCDIR([libgphoto2/gphoto2-version.c])
 AC_CONFIG_HEADERS([config.h])
@@ -425,20 +425,6 @@ AC_CHECK_MEMBERS([struct statvfs.f_blocks],,,[
 # include <sys/statvfs.h>
 #endif
 ])
-
-
-dnl ---------------------------------------------------------------------------
-dnl Checks for integer types.
-dnl ---------------------------------------------------------------------------
-dnl
-dnl FIXME: Test AC_TYPE_UINT32_T & Co and check whether that could work for us.
-dnl        Potential problem: The required autoconf version.
-dnl Note: We are already using AC_TYPE_SIZE_T somewhere else in here.
-
-
-dnl Create a stdint.h-like file containing size-specific integer definitions
-dnl that will always be available
-AX_NEED_STDINT_H([libgphoto2/_stdint.h])
 
 dnl Create a header file containing NetBSD-style byte swapping macros
 AC_NEED_BYTEORDER_H([libgphoto2/gphoto2-endian.h])

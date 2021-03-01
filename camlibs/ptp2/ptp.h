@@ -927,9 +927,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_PANASONIC_9406			0x9406	/* Setup Ctrl various functions: Format, Sensor Cleaning, Menu Save, firmware update? */
 #define PTP_OC_PANASONIC_9408			0x9408
 #define PTP_OC_PANASONIC_9409			0x9409	/* 1 arg */
-#define PTP_OC_PANASONIC_940A			0x940A	/* 1 arg, e.g. 0x08000010 */
+#define PTP_OC_PANASONIC_GetCaptureTarget	0x940A	/* 1 arg, e.g. 0x08000010 */
 #define PTP_OC_PANASONIC_SetCaptureTarget	0x940B	/* 1 arg, e.g. 0x08000010 */
-#define PTP_OC_PANASONIC_MoveRecControl		0x940C	/* 07000011 start, 07000012 stop, 0700013 still capture */
+#define PTP_OC_PANASONIC_MovieRecControl	0x940C	/* 07000011 start, 07000012 stop, 0700013 still capture */
 #define PTP_OC_PANASONIC_PowerControl		0x940D	/* 1 arg: 0x0A000011 power off, 0x0a00012 device reset, 0x0a00013 device restart */
 #define PTP_OC_PANASONIC_PlayControl		0x940E	/* 2 arg? 0x05000011 current=0, next=1, prev=0xffffffff */
 #define PTP_OC_PANASONIC_PlayControlPlay	0x940F	/* 0x05000020 */
@@ -3238,12 +3238,32 @@ typedef struct _PTPCanonEOSDeviceInfo {
 /* Panasonic does not have regular device properties, they use some 32bit values */
 #define PTP_DPC_PANASONIC_PhotoStyle			0x02000010
 #define PTP_DPC_PANASONIC_ISO				0x02000020
+#define PTP_DPC_PANASONIC_ISO_Param				0x02000021
+#define PTP_DPC_PANASONIC_ISO_UpperLimit			0x02000022
 #define PTP_DPC_PANASONIC_ShutterSpeed			0x02000030
+#define PTP_DPC_PANASONIC_ShutterSpeed_Param			0x02000031
+#define PTP_DPC_PANASONIC_ShutterSpeed_RangeLimit		0x02000032
 #define PTP_DPC_PANASONIC_Aperture			0x02000040
+#define PTP_DPC_PANASONIC_Aperture_Param			0x02000041
+#define PTP_DPC_PANASONIC_Aperture_RangeLimit			0x02000042
 #define PTP_DPC_PANASONIC_WhiteBalance			0x02000050
+#define PTP_DPC_PANASONIC_WhiteBalance_Param			0x02000051
+#define PTP_DPC_PANASONIC_WhiteBalance_KSet			0x02000052
+#define PTP_DPC_PANASONIC_WhiteBalance_ADJ_AB			0x02000053
+#define PTP_DPC_PANASONIC_WhiteBalance_ADJ_GM			0x02000054
+#define PTP_DPC_PANASONIC_WhiteBalance_ADJ_AB_Sep		0x02000055
 #define PTP_DPC_PANASONIC_Exposure			0x02000060
-#define PTP_DPC_PANASONIC_AFArea			0x02000070
+#define PTP_DPC_PANASONIC_Exposure_Param			0x02000061
+#define PTP_DPC_PANASONIC_Exposure_RangeLimit			0x02000062
+#define PTP_DPC_PANASONIC_AFArea			0x02000070 /* AFCONFIG */
+#define PTP_DPC_PANASONIC_AFArea_AFModeParam			0x02000071 /* AFCONFIG */
+#define PTP_DPC_PANASONIC_AFArea_AFAreaParam			0x02000072 /* AFCONFIG */
+#define PTP_DPC_PANASONIC_AFArea_SetQuickAFParam		0x02000073 /* AFCONFIG */
 #define PTP_DPC_PANASONIC_CameraMode			0x02000080
+#define PTP_DPC_PANASONIC_CameraMode_DriveMode			0x02000081
+#define PTP_DPC_PANASONIC_CameraMode_ModePos			0x02000082
+#define PTP_DPC_PANASONIC_CameraMode_CreativeMode		0x02000083
+#define PTP_DPC_PANASONIC_CameraMode_iAMode			0x02000084
 #define PTP_DPC_PANASONIC_ImageFormat			0x020000A2
 #define PTP_DPC_PANASONIC_MeteringInfo			0x020000B0
 #define PTP_DPC_PANASONIC_IntervalInfo			0x020000C0
@@ -3253,7 +3273,22 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_PANASONIC_RecPreviewConfig		0x02000170
 #define PTP_DPC_PANASONIC_RecInfoSelfTimer		0x020001A0
 #define PTP_DPC_PANASONIC_RecInfoFlash2			0x020001B0
-#define PTP_DPC_PANASONIC_MovConfig			0x06000010
+#define PTP_DPC_PANASONIC_RecCtrlRelease		0x03000010
+
+#define PTP_DPC_PANASONIC_RecCtrlAFAE			0x03000020 /* cmd base for afae */
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAE    		0x03000021
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAF    		0x03000022
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAFAE    		0x03000023
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_AF_OneShot    		0x03000024
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_Lock_Clear    		0x03000025
+
+#define PTP_DPC_PANASONIC_Zoom				0x03000080
+#define PTP_DPC_PANASONIC_RecCtrlLens			0x03010010
+#define PTP_DPC_PANASONIC_MovConfig			0x06000010	/* uses 9408 */
+#define PTP_DPC_PANASONIC_MovConfig_C_Movie_Mode		0x06000011	/* uses 9409 */
+#define PTP_DPC_PANASONIC_MovConfig_HDMI_Mode			0x06000012	/* uses 9409 */
+#define PTP_DPC_PANASONIC_MovConfig_Quality_Mode		0x06000013	/* uses 9409 */
+#define PTP_DPC_PANASONIC_MovConfig_Rec_Mode			0x06000014	/* uses 9409 */
 #define PTP_DPC_PANASONIC_08000010			0x08000010
 /* various modes of the camera, HDMI, GetDateTimeWorldTime Mode/Area, SetupCfgInfo, SetupConfig_DateTime, GetSystemFreq Mode, GetSetupConfig Info */
 /*
@@ -3292,16 +3327,36 @@ typedef struct _PTPCanonEOSDeviceInfo {
 
 #define PTP_DPC_PANASONIC_GetFreeSpaceInImages		0x12000010
 /*
-0000  98 00 00 00 02 00 14 94-04 00 00 00 11 00 00 12  ................
-0010  04 00 00 00 4e 00 00 00-12 00 00 12 04 00 00 00  ....N...........
-0020  00 00 00 00 13 00 00 12-02 00 00 00 00 00 14 00  ................
-0030  00 12 04 00 00 00 00 00-00 00 15 00 00 12 06 00  ................
-0040  00 00 02 00 01 00 00 00-16 00 00 12 3a 00 00 00  ............:...
-0050  02 00 4e 00 00 00 00 00-00 00 4e 00 00 00 ff ff  ..N.......N.....
-0060  ff ff 00 00 00 00 ff ff-ff ff 00 00 00 00 00 00  ................
-0070  00 00 00 00 00 00 ff ff-ff ff 00 00 00 00 ff ff  ................
-0080  ff ff 00 00 00 00 00 00-00 00 17 00 00 12 06 00  ................
-0090  00 00 00 00 00 00 00 00-                         ........
+11 00 00 12
+04 00 00 00
+4e 00 00 00
+
+12 00 00 12
+04 00 00 00
+00 00 00 00
+
+13 00 00 12
+02 00 00 00
+00 00
+
+14 00 00 12
+04 00 00 00
+00 00 00 00
+
+15 00 00 12
+06 00 00 00
+02 00 01 00 00 00
+
+16 00 00 12
+3a 00 00 00
+02 00 4e 00 00 00 00 00 00 00 4e 00 00 00 ff ff
+ff ff 00 00 00 00 ff ff ff ff 00 00 00 00 00 00
+00 00 00 00 00 00 ff ff ff ff 00 00 00 00 ff ff
+ff ff 00 00 00 00 00 00 00 00
+
+17 00 00 12
+06 00 00 00
+00 00 00 00 00 00
  */
 #define PTP_DPC_PANASONIC_GetBatteryInfo		0x16000010
 /*
@@ -3593,6 +3648,14 @@ struct _MTPObjectFormat {
 	MTPPropertyDesc	*pds;
 };
 typedef struct _MTPObjectFormat MTPObjectFormat;
+
+struct _PanasonicLiveViewSize {
+	uint16_t	width;
+	uint16_t	height;
+	uint16_t	x;
+	uint16_t	freq;
+};
+typedef struct _PanasonicLiveViewSize PanasonicLiveViewSize;
 
 /* Transaction data phase description, internal flags to sendreq / transaction driver. */
 #define PTP_DP_NODATA           0x0000  /* no data phase */
@@ -4675,15 +4738,21 @@ uint16_t ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned i
 
 #define ptp_panasonic_liveview(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_Liveview,1,enable?0xD000010:0xD000011)
 uint16_t ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
+#define ptp_panasonic_movierec(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_MovieRecControl,1,enable?0x07000011:0x07000012)
 
 uint16_t ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode, unsigned char *value, uint16_t valuesize);
 uint16_t ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
 uint16_t ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint16_t valuesize, uint32_t *currentValue, uint32_t **propertyValueList, uint32_t *propertyValueListLength);
 uint16_t ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode);
-uint16_t ptp_panasonic_setcapturetarget (PTPParams *params, uint16_t mode);
+uint16_t ptp_panasonic_getcapturetarget (PTPParams *params, uint16_t *target);
+uint16_t ptp_panasonic_setcapturetarget (PTPParams *params, uint16_t target);
 uint16_t ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode);
 uint16_t ptp_panasonic_9401 (PTPParams* params, uint32_t x);
-uint16_t ptp_panasonic_9414 (PTPParams* params, uint32_t x);
+
+uint16_t ptp_panasonic_9414_0d800012 (PTPParams* params, PanasonicLiveViewSize **liveviewsizes, unsigned int *nrofliveviewsizes);
+uint16_t ptp_panasonic_9414_0d800011 (PTPParams* params, PanasonicLiveViewSize *liveviewsize);
+uint16_t ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize);
+
 
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)

@@ -46,6 +46,9 @@
    * some of the folders will start to disappear when getting all objects
    * and properties.
    */
+  /* https://sourceforge.net/p/libmtp/bugs/1898/ */
+  { "Creative", 0x041e, "ZEN Micro", 0x411e,
+      DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Creative", 0x041e, "ZEN Vision", 0x411f,
       DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL },
   { "Creative", 0x041e, "Portable Media Center", 0x4123,
@@ -2557,6 +2560,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Google", 0x18d1, "Pixel C (MTP+ADB)", 0x5203,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1892/ */
+  { "Nook", 0x18d1, "Tablet", 0x685c,
+      DEVICE_FLAGS_ANDROID_BUGS },
   // WiFi-only version of Xoom
   // See: http://bugzilla.gnome.org/show_bug.cgi?id=647506
   { "Google Inc (for Motorola)", 0x18d1, "Xoom (MZ604)", 0x70a8,
@@ -2568,6 +2574,7 @@
   // Another OEM for Medion
   { "Google Inc (for Medion)", 0x18d1, "MD99000 (P9514)", 0xb00a,
       DEVICE_FLAGS_ANDROID_BUGS },
+
   /* https://sourceforge.net/p/libmtp/bugs/1563/ */
   { "Meizu", 0x18d1, "Pro 5 Ubuntu Phone", 0xd001, DEVICE_FLAGS_ANDROID_BUGS },
   // Reported by Frederik Himpe <fhimpe@telenet.be>
@@ -3091,6 +3098,8 @@
   /* https://sourceforge.net/p/libmtp/bugs/1873/ */
   { "Lenovo", 0x17ef, "Tab P10", 0x7bd3,
       DEVICE_FLAGS_ANDROID_BUGS },
+  { "Lenovo", 0x17ef, "TB-X606F", 0x7c45,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1736/ */
   { "Lenovo", 0x17ef, "P1060X", 0x9039,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3541,6 +3550,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/291/ */
   { "Onyx", 0x2207, "Boox Nova", 0x0014,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1900/ */
+  { "Onyx", 0x2207, "Boox Nova Pro", 0x0015,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -4023,7 +4035,14 @@
   { "GoPro" , 0x2672, "HERO7 Silver", 0x0043, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO7 Black", 0x0047, DEVICE_FLAG_NONE },
   { "GoPro" , 0x2672, "HERO8 Black", 0x0049, DEVICE_FLAG_NONE },
+  { "GoPro" , 0x2672, "HERO9 Black", 0x004d, DEVICE_FLAG_NONE },
 #endif
+
+  /* These Ricoh Theta cameras run Android but seem to work
+   * without DEVICE_FLAGS_ANDROID_BUGS.
+   */
+  { "Ricoh", 0x05ca, "Theta V (MTP)", 0x0368, DEVICE_FLAG_NONE },
+  { "Ricoh", 0x05ca, "Theta Z1 (MTP)", 0x036d, DEVICE_FLAG_NONE },
 
   /* https://sourceforge.net/p/libmtp/bugs/1490/ */
   { "Marshall" , 0x2ad9, "London", 0x000b, DEVICE_FLAG_NONE },
@@ -4141,6 +4160,12 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1817/ */
   { "Nox", 0x1e0a, "A1", 0x1001, DEVICE_FLAG_NONE },
+
+  /* https://sourceforge.net/p/libmtp/bugs/1893/ */
+  { "Nintendo", 0x057e, "Switch Lite", 0x201d, DEVICE_FLAG_NONE },
+
+  /* https://github.com/libmtp/libmtp/issues/72 https://sourceforge.net/p/libmtp/bugs/1895/ */
+  { "Mudita", 0x3310, "Pure Phone", 0x0100, DEVICE_FLAG_NONE },
 
   /* qemu 3.0.0 hw/usb/dev-mtp.c */
   { "QEMU", 0x46f4, "Virtual MTP", 0x0004, DEVICE_FLAG_NONE }

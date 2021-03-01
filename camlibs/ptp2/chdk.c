@@ -204,6 +204,7 @@ chdk_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	free(xfolder);
 
 	ret = chdk_generic_script_run (params, lua, &table, &retint, context);
+	free (lua);
 	if (ret != GP_OK)
 		return ret;
 	if (table) {
@@ -1206,7 +1207,7 @@ static void yuv_live_to_jpeg(unsigned char *p_yuv,
 
 	jpeg_start_compress (&cinfo, TRUE);
 
-	tmprowbuf = malloc (cinfo.image_width * 3);
+	tmprowbuf = calloc (cinfo.image_width , 3);
 	row_ptr[0] = &tmprowbuf[0];
 
 	while (cinfo.next_scanline < cinfo.image_height) {

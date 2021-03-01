@@ -22,7 +22,7 @@
 #ifdef STANDALONE_MAIN
 
 #include <stdio.h>
-#include <_stdint.h>
+#include <stdint.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>

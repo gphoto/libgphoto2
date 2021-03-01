@@ -588,7 +588,7 @@ parse_9301_cmd_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		next = xmlNextElementSibling (next);
 	}
 	di->OperationsSupported_len = cnt;
-	di->OperationsSupported = malloc (cnt*sizeof(di->OperationsSupported[0]));
+	di->OperationsSupported = calloc (cnt,sizeof(di->OperationsSupported[0]));
 	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
@@ -757,7 +757,7 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr next, PTPDevicePropDesc *dpd)
 				n++;
 			} while (s);
 			dpd->FORM.Enum.NumberOfValues = n;
-			dpd->FORM.Enum.SupportedValue = malloc (n * sizeof(PTPPropertyValue));
+			dpd->FORM.Enum.SupportedValue = calloc (n , sizeof(PTPPropertyValue));
 			s = (char*)xmlNodeGetContent (next);
 			i = 0;
 			do {
@@ -805,7 +805,7 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 	}
 
 	di->DevicePropertiesSupported_len = cnt;
-	di->DevicePropertiesSupported = malloc (cnt*sizeof(di->DevicePropertiesSupported[0]));
+	di->DevicePropertiesSupported = calloc (cnt,sizeof(di->DevicePropertiesSupported[0]));
 	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
@@ -852,7 +852,7 @@ parse_9301_event_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		next = xmlNextElementSibling (next);
 	}
 	di->EventsSupported_len = cnt;
-	di->EventsSupported = malloc (cnt*sizeof(di->EventsSupported[0]));
+	di->EventsSupported = calloc (cnt,sizeof(di->EventsSupported[0]));
 	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
@@ -1051,16 +1051,124 @@ ptp_panasonic_9401 (PTPParams* params, uint32_t param1)
  * 0d800011 - get current imageformat ?
  */
 uint16_t
-ptp_panasonic_9414 (PTPParams* params, uint32_t param1)
+ptp_panasonic_9414_0d800012 (PTPParams* params, PanasonicLiveViewSize **liveviewsizes, unsigned int *nrofliveviewsizes)
 {
         PTPContainer    ptp;
-	uint16_t	ret;
-	unsigned int	*size = 0;
+	unsigned int	i;
+	unsigned int	size = 0;
 	unsigned char   *data = NULL;
+	uint32_t	blobsize;
+	uint16_t	count;
+	uint16_t	structsize;
 
-	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetLiveViewParameters, param1);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, size);
+	*nrofliveviewsizes = 0;
+	*liveviewsizes = NULL;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetLiveViewParameters, 0x0d800012);
+	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+/* return data with the GC9 is:
+
+12 00 80 0d
+1c 00 00 00
+03 00           count
+08 00           structsize
+e0 01 80 02 20 00 1e 00
+d0 02 c0 03 5e 01 1e 00
+c0 03 00 05 bc 02 1e 00
+
+ */
+	if (size < 8) return PTP_RC_GeneralError;
+
+	blobsize = dtoh32a(data+4);
+	if (size - 8 < blobsize) {
+		ptp_debug (params, "blobsize expected %d, but size is only %d", blobsize, size - 8);
+		return PTP_RC_GeneralError;
+	}
+	if (blobsize < 4) {
+		ptp_debug (params, "blobsize expected at least 4, but is only %d", blobsize);
+		return PTP_RC_GeneralError;
+	}
+	count		= dtoh16a (data+8);
+	structsize	= dtoh16a (data+10);
+	if (structsize != 8) {
+		ptp_debug (params, "structsize expected 8, but is %d", structsize);
+		return PTP_RC_GeneralError;
+	}
+	if (count * structsize > blobsize) {
+		ptp_debug (params, "%d * %d = %d is larger than %d", count, structsize, count * structsize, blobsize);
+		return PTP_RC_GeneralError;
+	}
+
+	*liveviewsizes = calloc (sizeof(PanasonicLiveViewSize),count);
+	for (i = 0;i < count; i++) {
+		(*liveviewsizes)[i].height	= dtoh16a (data + 12 + i*structsize);
+		(*liveviewsizes)[i].width	= dtoh16a (data + 12 + 2 + i*structsize);
+		(*liveviewsizes)[i].x		= dtoh16a (data + 12 + 4 + i*structsize);
+		(*liveviewsizes)[i].freq	= dtoh16a (data + 12 + 6 + i*structsize);
+	}
+	*nrofliveviewsizes = count;
 	free(data);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_panasonic_9414_0d800011 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
+{
+        PTPContainer    ptp;
+	unsigned int	size = 0;
+	unsigned char   *data = NULL;
+	uint32_t	blobsize;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetLiveViewParameters, 0x0d800011);
+	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+/* data is:
+
+11 00 80 0d
+08 00 00 00
+
+e0 01 80 02
+00 00
+1e 00
+
+ */
+	if (size < 8) return PTP_RC_GeneralError;
+
+	blobsize = dtoh32a(data+4);
+	if (size - 8 < blobsize) {
+		ptp_debug (params, "blobsize expected %d, but size is only %d", blobsize, size - 8);
+		return PTP_RC_GeneralError;
+	}
+	if (blobsize < 8) {
+		ptp_debug (params, "blobsize expected at least 8, but is only %d", blobsize);
+		return PTP_RC_GeneralError;
+	}
+	liveviewsize->height	= dtoh16a (data + 8 + 0);
+	liveviewsize->width	= dtoh16a (data + 8 + 2);
+	liveviewsize->x		= dtoh16a (data + 8 + 4);
+	liveviewsize->freq	= dtoh16a (data + 8 + 6);
+	free(data);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
+{
+        PTPContainer    ptp;
+	unsigned char   *data;
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetLiveViewParameters, 0x0d800011);
+
+	data = malloc(16);
+	htod32a(data+0 , 0x0d800011);
+	htod32a(data+4 , 8);
+	htod16a(data+8 , liveviewsize->height);
+	htod16a(data+10, liveviewsize->width);
+	htod16a(data+12, liveviewsize->x);
+	htod16a(data+14, liveviewsize->freq);
+
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 16, (unsigned char**)&data, 0);
+	free (data);
 	return ret;
 }
 
@@ -1126,20 +1234,37 @@ ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode)
 }
 
 uint16_t
-ptp_panasonic_setcapturetarget (PTPParams* params, uint16_t mode) // mode == 1 == RAM, mode == 0 == SD
+ptp_panasonic_getcapturetarget (PTPParams* params, uint16_t *target)
+{
+	PTPContainer    ptp;
+	unsigned char	*data;
+	unsigned int	size;
+
+	*target = 0;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetCaptureTarget, 0x08000090);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	if (!data) return PTP_RC_GeneralError;
+	if (size < 10) return PTP_RC_GeneralError;
+	if (dtoh32a(data) != 0x08000091) return PTP_RC_GeneralError;
+	if (dtoh32a(data+4) != 2) return PTP_RC_GeneralError;
+	*target = dtoh16a(data+8);
+	free (data);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_panasonic_setcapturetarget (PTPParams* params, uint16_t mode) // mode == 1 == RAM, mode == 0 == SD, 2 = BOTH
 {
 	PTPContainer    ptp;
 	unsigned char	data[10];
-	uint32_t	propcode = 0x00000000;
-	uint32_t	propcodedata = 0x08000091;
-	uint32_t	type = 2;
 	unsigned char	*xdata = (unsigned char*)data;
 
-	htod32a(data, propcodedata); /* memcpy(data, &propcodedata, 4); */
-	htod32a(&data[4], type); /* memcpy(&data[4], &type, 4); */
-	htod16a(&data[8], mode); /* memcpy(&data[8], &mode, 2); */
+	htod32a(data, 	  0x08000091);	/* capturetarget */
+	htod32a(&data[4], 2); 		/* size */
+	htod16a(&data[8], mode);
 
-	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetCaptureTarget, propcode);
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetCaptureTarget, 0);
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
 }
 
@@ -1149,32 +1274,50 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int 	size = 0;
-	uint16_t	ret = 0;
+	uint16_t	ret = PTP_RC_OK;
+	uint32_t	headerLength;
+	uint32_t	propertyCode;
+	unsigned int	off = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ListProperty, propcode, 0, 0);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (!data) return PTP_RC_GeneralError;
+	if (size < 8)
+		return PTP_RC_GeneralError;
 
+	ptp_debug (params, "ptp_panasonic_getdevicepropertydesc 0x%08x", propcode);
+	while (off < size) {
+		if (off >= size-8) break;
+		ptp_debug (params, "propcode 0x%08lx, size %d", dtoh32a(data+off), dtoh32a(data+off+4));
+		off += dtoh32a(data+off+4)+8;
+	}
 
-	if (size < 4) return PTP_RC_GeneralError;
-	uint32_t headerLength 		= dtoh32a( (data) + 4 );
-	if (size < 4 + 6 * 4) return PTP_RC_GeneralError;
-	uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 );
-	if (size < headerLength * 4 + 2 * 4) return PTP_RC_GeneralError;
+	headerLength = dtoh32a( (data) + 4 );
+	if (size < 4 + 6 * 4)
+		return PTP_RC_GeneralError;
+
+	propertyCode = dtoh32a( (data) + 4 + 6 * 4 );
+	if (size < headerLength * 4 + 2 * 4)
+		return PTP_RC_GeneralError;
 
 	if(valuesize == 2) {
 		*currentValue 		= (uint32_t) dtoh16a( (data) + headerLength * 4 + 2 * 4 );
 	} else if(valuesize == 4) {
 		*currentValue 		= dtoh32a( (data) + headerLength * 4 + 2 * 4 );
 	} else {
+		ptp_debug (params, "unexpected valuesize %d", valuesize);
 		return PTP_RC_GeneralError;
 	}
+	/* Marcus: where is 4*headerLenght coming from ? */
 	if (size < headerLength * 4 + 2 * 4 + valuesize) return PTP_RC_GeneralError;
 	*propertyValueListLength 		= dtoh32a( (data) + headerLength * 4 + 2 * 4 + valuesize);
 
 	ptp_debug(params, "header: %lu, code: 0x%lx, value: %lu, count: %lu", headerLength, propertyCode, *currentValue, *propertyValueListLength);
 
-	if (size < headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize) return PTP_RC_GeneralError;
+	if (size < headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize) {
+		ptp_debug (params, "size %d vs expected size %d", size, headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize);
+		return PTP_RC_GeneralError;
+	}
 
 	*propertyValueList = calloc(*propertyValueListLength, sizeof(uint32_t));
 
@@ -2593,7 +2736,7 @@ ptp_canon_gettreesize (PTPParams* params,
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetTreeSize);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	*cnt = dtoh32a(data);
-	*entries = malloc(sizeof(PTPCanon_directtransfer_entry)*(*cnt));
+	*entries = calloc(sizeof(PTPCanon_directtransfer_entry),(*cnt));
 	if (!*entries) {
 		ret = PTP_RC_GeneralError;
 		goto exit;
@@ -3317,7 +3460,7 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	memcpy (dpd, &params->canon_props[i].dpd, sizeof (*dpd));
 	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
 		/* need to duplicate the Enumeration alloc */
-		dpd->FORM.Enum.SupportedValue = malloc (sizeof (PTPPropertyValue)*dpd->FORM.Enum.NumberOfValues);
+		dpd->FORM.Enum.SupportedValue = calloc (sizeof (PTPPropertyValue),dpd->FORM.Enum.NumberOfValues);
 		memcpy (dpd->FORM.Enum.SupportedValue,
 			params->canon_props[i].dpd.FORM.Enum.SupportedValue,
 			sizeof (PTPPropertyValue)*dpd->FORM.Enum.NumberOfValues
@@ -3384,7 +3527,7 @@ ptp_canon_eos_getobjectinfoex (
 	}
 
 	*nrofentries = dtoh32a(data);
-	*entries = malloc(*nrofentries * sizeof(PTPCANONFolderEntry));
+	*entries = calloc(*nrofentries , sizeof(PTPCANONFolderEntry));
 	if (!*entries) {
 		ret = PTP_RC_GeneralError;
 		goto exit;
@@ -3790,9 +3933,8 @@ ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* obj
 	uint8_t		len = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetObjectHandleByName);
-	data = malloc (2*(strlen(name)+1)+2);
+	data = calloc (2,(strlen(name)+2));
 	if (!data) return PTP_RC_GeneralError;
-	memset (data, 0, 2*(strlen(name)+1)+2);
 	ptp_pack_string (params, name, data, 0, &len);
 	ret=ptp_transaction (params, &ptp, PTP_DP_SENDDATA, (len+1)*2+1, &data, NULL);
 	free (data);
@@ -4594,8 +4736,7 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 	params->wifi_profiles_number = data[1];
 	free(params->wifi_profiles);
 
-	params->wifi_profiles = malloc(params->wifi_profiles_number*sizeof(PTPNIKONWifiProfile));
-	memset(params->wifi_profiles, 0, params->wifi_profiles_number*sizeof(PTPNIKONWifiProfile));
+	params->wifi_profiles = calloc(params->wifi_profiles_number,sizeof(PTPNIKONWifiProfile));
 
 	pos = 2;
 	profn = 0;

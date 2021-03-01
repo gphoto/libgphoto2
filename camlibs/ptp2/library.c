@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2020 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2021 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  * Copyright (C) 2009 Axel Waggershauser <awagger@web.de>
  *
@@ -245,19 +245,22 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
         gp_camera_get_abilities(camera, &a);
 
-	/* Panasonic GH5 */
+	/* Panasonic GH5, GC9 */
 	if (    (di->VendorExtensionID == PTP_VENDOR_PANASONIC) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_product == 0x2382)
 	) {
-		C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 6)));
+		C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 9)));
 		di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_PANASONIC_GetProperty;
 		di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_PANASONIC_SetProperty;
 		di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_PANASONIC_ListProperty;
 		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_InitiateCapture;
 		di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_PANASONIC_Liveview;
 		di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_PANASONIC_LiveviewImage;
-		di->OperationsSupported_len += 6;
+		di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_PANASONIC_MovieRecControl;
+		di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_PANASONIC_GetLiveViewParameters;
+		di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_PANASONIC_SetLiveViewParameters;
+		di->OperationsSupported_len += 9;
 	}
 
 	/* Panasonic hack */
@@ -311,7 +314,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 		/* Dup and merge the lists */
 #define DI_MERGE(x) \
-		C_MEM (newdi.x = malloc(sizeof(outerdi->x[0])*(ndi.x##_len + outerdi->x##_len)));\
+		C_MEM (newdi.x = calloc(sizeof(outerdi->x[0]),(ndi.x##_len + outerdi->x##_len)));\
 		for (i = 0; i < outerdi->x##_len ; i++) 					\
 			newdi.x[i] = outerdi->x[i];						\
 		for (i = 0; i < ndi.x##_len ; i++)						\
@@ -2431,6 +2434,7 @@ static struct {
 	{"Konica-Minolta:DiMAGE Z3 (PictBridge mode)", 0x132b, 0x0018, 0},
 	{"Konica-Minolta:DiMAGE A200 (PictBridge mode)",0x132b, 0x0019, 0},
 	{"Konica-Minolta:DiMAGE Z5 (PictBridge mode)", 0x132b, 0x0022, 0},
+	{"Konica-Minolta:DiMAGE Z6 (PictBridge mode)", 0x132b, 0x0033, 0},
 
 	/* Fuji PTP cameras */
 	{"Fuji:FinePix S7000",			0x04cb, 0x0142, 0},
@@ -2562,6 +2566,7 @@ static struct {
 	/* Bruno Filho at SUSE (currently not working with cpature, but shows variables) */
 	/* so far looks like the low end X-T30 does not support tethering, https://www.dpreview.com/forums/thread/4451199 */
 	{"Fuji:Fujifilm X-T30",			0x04cb, 0x02e3, 0},
+	{"Fuji:Fujifilm X100V",			0x04cb, 0x02e5, PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/505 */
 	{"Fuji:Fujifilm X-T4",			0x04cb, 0x02e6, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/603 */
@@ -4668,7 +4673,8 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	if (params->deviceinfo.Model && (
 		!strcmp(params->deviceinfo.Model, "ZV-1")		||
 		!strcmp(params->deviceinfo.Model, "DSC-RX100M7")	||
-		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")
+		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")		||
+		!strcmp(params->deviceinfo.Model, "DSC-RX0M2")
 	)) {
 		/* For some as yet unknown reason the ZV-1, the RX100M7 and the A7 R4 need around 3 seconds startup time
 		 * to be able to capture. I looked for various trigger events or property changes on the ZV-1
@@ -5205,7 +5211,7 @@ camera_panasonic_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	uint16_t valuesize;
 	uint32_t waitMS = 1000;
 
-	ptp_panasonic_getdeviceproperty(params, 0x2000030, &valuesize, &currentVal);
+	ptp_panasonic_getdeviceproperty(params, PTP_DPC_PANASONIC_ShutterSpeed, &valuesize, &currentVal);
 
 	float f;
 	if(currentVal == 0xFFFFFFFF) {
@@ -6104,6 +6110,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				}
 			} while (time_since (event_start) < 1000);
 		}
+		ptp_free_devicepropdesc(&dpd);
 		GP_LOG_D ("releasing shutterbutton");
 
 		/* release full-press */
@@ -6682,8 +6689,11 @@ downloadnow:
 				path->name[0]='\0';
 				strcpy (path->folder,"/");
 				ret = gp_file_new(&file);
-				if (ret!=GP_OK)
+				if (ret != GP_OK) {
+					ptp_free_devicepropdesc (&dpd);
+					ptp_free_objectinfo (&oi);
 					return ret;
+				}
 				if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
 					GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
 					sprintf (path->name, "capt%04d.arw", params->capcnt++);
@@ -6699,16 +6709,22 @@ downloadnow:
 				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 				if (ret != GP_OK) {
 					gp_file_free (file);
+					ptp_free_devicepropdesc (&dpd);
+					ptp_free_objectinfo (&oi);
 					return ret;
 				}
 				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
 				if (ret != GP_OK) {
 					gp_file_free (file);
+					ptp_free_devicepropdesc (&dpd);
+					ptp_free_objectinfo (&oi);
 					return ret;
 				}
 				ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
 				if (ret != GP_OK) {
 					gp_file_free (file);
+					ptp_free_devicepropdesc (&dpd);
+					ptp_free_objectinfo (&oi);
 					return ret;
 				}
 				*eventtype = GP_EVENT_FILE_ADDED;
@@ -6722,10 +6738,12 @@ downloadnow:
 					event.Nparam = 0;
 					ptp_add_event (params, &event);
 				}
+				ptp_free_devicepropdesc (&dpd);
+				ptp_free_objectinfo (&oi);
 				return GP_OK;
 			}
-
 sonyout:
+			ptp_free_devicepropdesc (&dpd);
 			/* If not, check for events and handle them */
 			if (time_since(event_start) > timeout-100) {
 				/* if there is less than 0.1 seconds, just check the
@@ -6913,7 +6931,10 @@ downloadomdfile:
 			*eventdata = path;
 			return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 		}
+		*eventtype = GP_EVENT_TIMEOUT;
+		return GP_OK;
 	}
+
 	/* Wait for the whole timeout period */
 	CR (gp_port_get_timeout (camera->port, &oldtimeout));
 	CR (gp_port_set_timeout (camera->port, timeout));

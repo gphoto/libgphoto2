@@ -24,7 +24,6 @@ EXTRA_DIST += %reldir%/gp-manual-pstoimg.m4
 EXTRA_DIST += %reldir%/gp-manual-w3m.m4
 EXTRA_DIST += %reldir%/gp-packaging.m4
 EXTRA_DIST += %reldir%/gp-references.m4
-EXTRA_DIST += %reldir%/gp-stdint.m4
 EXTRA_DIST += %reldir%/gp-subpackage.m4
 EXTRA_DIST += %reldir%/gp-udev.m4
 EXTRA_DIST += %reldir%/gp-va-copy.m4

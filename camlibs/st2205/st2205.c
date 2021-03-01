@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
-#include <_stdint.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
 #include <fcntl.h>
@@ -502,7 +502,7 @@ st2205_read_raw_file(Camera *camera, int idx, unsigned char **raw)
 			"trying to read a deleted file");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	LE32TOH(entry.address);
+	le32toh(entry.address);
 
 	GP_DEBUG ("file: %d start at: %08x\n", idx, entry.address);
 
@@ -515,10 +515,10 @@ st2205_read_raw_file(Camera *camera, int idx, unsigned char **raw)
 			return GP_ERROR_CORRUPTED_DATA;
 		}
 
-		BE16TOH(header.width);
-		BE16TOH(header.height);
-		BE16TOH(header.length);
-		BE16TOH(header.blocks);
+		be16toh(header.width);
+		be16toh(header.height);
+		be16toh(header.length);
+		be16toh(header.blocks);
 
 		if ((header.width != camera->pl->width) ||
 		    (header.height != camera->pl->height)) {
@@ -619,7 +619,7 @@ st2205_real_write_file(Camera *camera,
 							      &header,
 							      sizeof(header)))
 
-					BE16TOH(header.length);
+					be16toh(header.length);
 					end = start + sizeof(header) +
 					      header.length;
 				} else
@@ -1105,7 +1105,7 @@ st2205_get_free_mem_size(Camera *camera)
 							      &header,
 							      sizeof(header)))
 
-					BE16TOH(header.length);
+					be16toh(header.length);
 					end = start + sizeof(header) +
 					      header.length;
 				} else {

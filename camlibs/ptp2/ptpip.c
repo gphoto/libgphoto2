@@ -514,7 +514,7 @@ ptp_ptpip_init_command_ack (PTPParams* params)
 	memcpy (params->cameraguid, &data[ptpip_cmdack_guid], 16);
 	name = (unsigned short*)&data[ptpip_cmdack_name];
 	for (i=0;name[i];i++) /* EMPTY */;
-	params->cameraname = malloc((i+1)*sizeof(uint16_t));
+	params->cameraname = calloc((i+1),sizeof(uint16_t));
 	for (i=0;name[i];i++)
 		params->cameraname[i] = name[i];
 	free (data);
