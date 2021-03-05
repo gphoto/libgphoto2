@@ -1311,6 +1311,9 @@ static struct {
 	{"Sony:DSC-A7r IV (Control)",		0x054c, 0x0ccc, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Sony:DSC-A7S III (Control)",		0x054c, 0x0d18, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* via email */
+	{"Sony:ILCE-7C (Control)",		0x054c, 0x0d2b, PTP_CAP|PTP_CAP_PREVIEW},
+
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
