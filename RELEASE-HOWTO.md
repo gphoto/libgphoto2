@@ -128,6 +128,8 @@
 
    Write a summary email to gphoto-user@lists.sourceforge.net, gphoto-devel@lists.sourceforge.net
 
+   Add download links to either SF or GITHUB.
+
 ## Announce to freshcode.club
 
    https://freshcode.club/, look for libgphoto2
@@ -143,6 +145,7 @@
    I have just released libgphoto2 2.5.22 ( http://gphoto.org/news/  )
    ... Fixed Canon EOS M and PowerShot SX capture, added Sony Alpha RX0
    and RX100M5A, added Canon EOS R, and some bugfixes.
+
 
 ## change IRC topic of #gphoto in Freenode
 
