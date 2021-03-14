@@ -2104,6 +2104,12 @@ static struct deviceproptableu8 sony_qx_liveviewsize[] = {
 };
 GENERIC8TABLE(Sony_QX_LiveViewSize,sony_qx_liveviewsize)
 
+static struct deviceproptablei8 sony_prioritymode[] = {
+	{ N_("Camera"),		0, 0 },
+	{ N_("Application"),	1, 0 },
+};
+GENERICI8TABLE(Sony_PriorityMode,sony_prioritymode)
+
 static int
 _get_Canon_LiveViewSize(CONFIG_GET_ARGS) {
 	unsigned int i;
@@ -9748,6 +9754,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Menus and Playback"),     "menusandplayback",     PTP_DPC_NIKON_MenusAndPlayback,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_MenusAndPlayback,    _put_Nikon_MenusAndPlayback },
 	{ N_("External Recording Control"),     "externalrecordingcontrol", PTP_DPC_NIKON_ExternalRecordingControl,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,    _put_Nikon_OffOn_UINT8 },
 	{ N_("Camera Action"),          "cameraaction", 	0xd208, 			    PTP_VENDOR_FUJI,	PTP_DTC_UINT16,	_get_Fuji_Action,		_put_Fuji_Action },
+	{ N_("Priority Mode"),		"prioritymode",		PTP_DPC_SONY_PriorityMode,  	    PTP_VENDOR_SONY,	PTP_DTC_INT8, 	_get_Sony_PriorityMode,     	_put_Sony_PriorityMode },
 
 /* virtual */
 	{ N_("Thumb Size"),		"thumbsize",    0,  PTP_VENDOR_NIKON,   0,  _get_Nikon_Thumbsize,   _put_Nikon_Thumbsize },
