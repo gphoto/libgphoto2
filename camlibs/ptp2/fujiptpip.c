@@ -962,18 +962,21 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 		perror ("connect cmd");
 		PTPSOCK_CLOSE (params->cmdfd);
 		PTPSOCK_CLOSE (params->evtfd);
+		PTPSOCK_CLOSE (params->jpgfd);
 		return GP_ERROR_IO;
 	}
 	ret = ptp_fujiptpip_init_command_request (params);
 	if (ret != PTP_RC_OK) {
 		PTPSOCK_CLOSE (params->cmdfd);
 		PTPSOCK_CLOSE (params->evtfd);
+		PTPSOCK_CLOSE (params->jpgfd);
 		return translate_ptp_result (ret);
 	}
 	ret = ptp_fujiptpip_init_command_ack (params);
 	if (ret != PTP_RC_OK) {
 		PTPSOCK_CLOSE (params->cmdfd);
 		PTPSOCK_CLOSE (params->evtfd);
+		PTPSOCK_CLOSE (params->jpgfd);
 		return translate_ptp_result (ret);
 	}
 	GP_LOG_D ("fujiptpip connected!");
