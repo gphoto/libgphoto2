@@ -158,10 +158,12 @@ ptp_fujiptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 		break;
 	}
 	GP_LOG_DATA ( (char*)request, len, "ptpip/oprequest data:");
-	ret = write (params->cmdfd, request, len);
+	ret = ptpip_write_with_timeout (params->cmdfd, request, len, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 	free (request);
-	if (ret == -1)
-		perror ("sendreq/write to cmdfd");
+	if (ret == PTPSOCK_ERR) {
+		ptpip_perror ("sendreq/write to cmdfd");
+		return PTP_ERROR_IO;
+	}
 	if (ret != len) {
 		GP_LOG_E ("ptp_fujiptpip_sendreq() len =%d but ret=%d", len, ret);
 		return PTP_RC_OK;
@@ -182,9 +184,9 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 
 	while (curread < len) {
 		ret = read (fd, xhdr + curread, len - curread);
-		if (ret == -1) {
-			perror ("read PTPIPHeader");
-			return PTP_RC_GeneralError;
+		if (ret == PTPSOCK_ERR) {
+			ptpip_perror ("read fujiptpip generic");
+			return PTP_ERROR_IO;
 		}
 		GP_LOG_DATA ((char*)xhdr+curread, ret, "ptpip/generic_read header:");
 		curread += ret;
@@ -206,10 +208,10 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 	curread = 0;
 	while (curread < len) {
 		ret = read (fd, (*data)+curread, len-curread);
-		if (ret == -1) {
-			GP_LOG_E ("error %d in reading PTPIP data", errno);
+		if (ret == PTPSOCK_ERR) {
+			GP_LOG_E ("error %d in reading PTPIP data", ptpip_get_socket_error());
 			free (*data);*data = NULL;
-			return PTP_RC_GeneralError;
+			return PTP_ERROR_IO;
 		} else {
 			GP_LOG_DATA ((char*)((*data)+curread), ret, "ptpip/generic_read data:");
 		}
@@ -278,8 +280,10 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	htod32a(&request[fujiptpip_data_transid],ptp->Transaction_ID);
 	GP_LOG_DATA ((char*)request, sizeof(request), "ptpip/senddata header:");
 	ret = write (params->cmdfd, request, sizeof(request));
-	if (ret == -1)
-		perror ("sendreq/write to cmdfd");
+	if (ret == PTPSOCK_ERR) {
+		ptpip_perror ("sendreq/write to cmdfd");
+		return PTP_ERROR_IO;
+	}
 	if (ret != sizeof(request)) {
 		GP_LOG_E ("ptp_fujiptpip_senddata() len=%d but ret=%d", (int)sizeof(request), ret);
 		return PTP_RC_GeneralError;
@@ -298,7 +302,7 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		}
 		ret = handler->getfunc (params, handler->priv, towrite, xdata, &xtowrite);
 		if (ret == -1) {
-			perror ("getfunc in senddata failed");
+			ptpip_perror ("getfunc in senddata failed");
 			free (xdata);
 			return PTP_RC_GeneralError;
 		}
@@ -307,10 +311,10 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		written = 0;
 		while (written < towrite2) {
 			ret = write (params->cmdfd, xdata+written, towrite2-written);
-			if (ret == -1) {
-				perror ("write in senddata failed");
+			if (ret == PTPSOCK_ERR) {
+				ptpip_perror ("write in senddata failed");
 				free (xdata);
-				return PTP_RC_GeneralError;
+				return PTP_ERROR_IO;
 			}
 			written += ret;
 		}
@@ -618,8 +622,8 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 	ret = PTPSOCK_WRITE (params->cmdfd, cmdrequest, len);
 	free (cmdrequest);
 	if (ret == PTPSOCK_ERR) {
-		perror("write init cmd request");
-		return PTP_RC_GeneralError;
+		ptpip_perror("write init cmd request");
+		return PTP_ERROR_IO;
 	}
 	GP_LOG_E ("return %d / len %d", ret, len);
 	if (ret != len) {
@@ -726,7 +730,7 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 	do {
 		if (PTPSOCK_ERR != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
 			break;
-		if ((errno == ECONNREFUSED) && (tries--)) {
+		if ((ptpip_get_socket_error() == ECONNREFUSED) && (tries--)) {
 			GP_LOG_D ("event connect failed, retrying after short wait");
 			int sleep_ms = 100;
 #ifdef WIN32
@@ -747,7 +751,7 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 	do {
 		if (PTPSOCK_ERR != connect (params->jpgfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
 			break;
-		if ((errno == ECONNREFUSED) && (tries--)) {
+		if ((ptpip_get_socket_error() == ECONNREFUSED) && (tries--)) {
 			GP_LOG_D ("jpeg connect failed, retrying after short wait");
 			int sleep_ms = 100;
 #ifdef WIN32
@@ -799,7 +803,7 @@ ptp_fujiptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		ret = select (params->evtfd+1, &infds, NULL, NULL, &timeout);
 		if (1 != ret) {
 			if (-1 == ret) {
-				GP_LOG_D ("select returned error, errno is %d", errno);
+				GP_LOG_D ("select returned error, errno is %d", ptpip_get_socket_error());
 				return PTP_ERROR_IO;
 			}
 			return PTP_ERROR_TIMEOUT;
@@ -863,7 +867,7 @@ ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int *xsiz
 		ret = select (params->jpgfd+1, &infds, NULL, NULL, &timeout);
 		if (1 != ret) {
 			if (-1 == ret) {
-				GP_LOG_D ("select returned error, errno is %d", errno);
+				GP_LOG_D ("select returned error, errno is %d", ptpip_get_socket_error());
 				return PTP_ERROR_IO;
 			}
 			return PTP_ERROR_TIMEOUT;
@@ -938,18 +942,18 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	free (addr);
 	PTPSOCK_SOCKTYPE cmdfd = params->cmdfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
 	if (cmdfd == PTPSOCK_INVALID) {
-		perror ("socket cmd");
+		ptpip_perror ("socket cmd");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	PTPSOCK_SOCKTYPE evtfd = params->evtfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
 	if (evtfd == PTPSOCK_INVALID) {
-		perror ("socket evt");
+		ptpip_perror ("socket evt");
 		PTPSOCK_CLOSE (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	PTPSOCK_SOCKTYPE jpgfd = params->jpgfd = socket (PF_INET, SOCK_STREAM, 0);
 	if (jpgfd == PTPSOCK_INVALID) {
-		perror ("socket jpg");
+		ptpip_perror ("socket jpg");
 		PTPSOCK_CLOSE (params->evtfd);
 		PTPSOCK_CLOSE (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
