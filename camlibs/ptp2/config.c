@@ -10096,6 +10096,12 @@ static struct submenu nikon_d7500_capture_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
+/* D780 has the same list as the D7500 */
+static struct submenu nikon_d780_capture_settings[] = {
+	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D7500_Compression, _put_Nikon_D7500_Compression },
+	{ 0,0,0,0,0,0,0 },
+};
+
 /* D500 has the same list as the D850 */
 static struct submenu nikon_d500_capture_settings[] = {
 	{ N_("Image Quality"), "imagequality", PTP_DPC_CompressionSetting, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_D850_Compression, _put_Nikon_D850_Compression },
@@ -10212,6 +10218,7 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0429, nikon_d5100_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0430, nikon_d7100_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0440, nikon_d7500_capture_settings,   NULL,   NULL },
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0446, nikon_d780_capture_settings,    NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0414, nikon_d40_capture_settings,     NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0441, nikon_d850_capture_settings,    NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0442, nikon_z6_capture_settings,      NULL,   NULL },	/* Z7 */
