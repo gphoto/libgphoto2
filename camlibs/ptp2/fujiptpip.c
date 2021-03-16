@@ -162,6 +162,8 @@ ptp_fujiptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 	free (request);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror ("sendreq/write to cmdfd");
+		if (ptpip_get_socket_error() == ETIMEDOUT)
+			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
 	if (ret != len) {
@@ -186,6 +188,8 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 		ret = read (fd, xhdr + curread, len - curread);
 		if (ret == PTPSOCK_ERR) {
 			ptpip_perror ("read fujiptpip generic");
+			if (ptpip_get_socket_error() == ETIMEDOUT)
+				return PTP_ERROR_TIMEOUT;
 			return PTP_ERROR_IO;
 		}
 		GP_LOG_DATA ((char*)xhdr+curread, ret, "ptpip/generic_read header:");
@@ -211,6 +215,8 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 		if (ret == PTPSOCK_ERR) {
 			GP_LOG_E ("error %d in reading PTPIP data", ptpip_get_socket_error());
 			free (*data);*data = NULL;
+			if (ptpip_get_socket_error() == ETIMEDOUT)
+				return PTP_ERROR_TIMEOUT;
 			return PTP_ERROR_IO;
 		} else {
 			GP_LOG_DATA ((char*)((*data)+curread), ret, "ptpip/generic_read data:");
@@ -282,6 +288,8 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	ret = write (params->cmdfd, request, sizeof(request));
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror ("sendreq/write to cmdfd");
+		if (ptpip_get_socket_error() == ETIMEDOUT)
+			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
 	if (ret != sizeof(request)) {
@@ -314,6 +322,8 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 			if (ret == PTPSOCK_ERR) {
 				ptpip_perror ("write in senddata failed");
 				free (xdata);
+				if (ptpip_get_socket_error() == ETIMEDOUT)
+					return PTP_ERROR_TIMEOUT;
 				return PTP_ERROR_IO;
 			}
 			written += ret;
@@ -623,6 +633,8 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 	free (cmdrequest);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror("write init cmd request");
+		if (ptpip_get_socket_error() == ETIMEDOUT)
+			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
 	GP_LOG_E ("return %d / len %d", ret, len);

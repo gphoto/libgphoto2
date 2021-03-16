@@ -150,6 +150,8 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 	free (request);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror ("sendreq/write to cmdfd");
+		if (ptpip_get_socket_error() == ETIMEDOUT)
+			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
 	if (ret != len) {
@@ -169,6 +171,8 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 		ret = PTPSOCK_READ (fd, xhdr + curread, len - curread);
 		if (ret == PTPSOCK_ERR) {
 			ptpip_perror ("read PTPIPHeader");
+			if (ptpip_get_socket_error() == ETIMEDOUT)
+				return PTP_ERROR_TIMEOUT;
 			return PTP_ERROR_IO;
 		}
 		GP_LOG_DATA ((char*)xhdr+curread, ret, "ptpip/generic_read header:");
@@ -194,6 +198,8 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 		if (ret == PTPSOCK_ERR) {
 			GP_LOG_E ("error %d in reading PTPIP data", ptpip_get_socket_error());
 			free (*data);*data = NULL;
+			if (ptpip_get_socket_error() == ETIMEDOUT)
+				return PTP_ERROR_TIMEOUT;
 			return PTP_ERROR_IO;
 		} else {
 			GP_LOG_DATA ((char*)((*data)+curread), ret, "ptpip/generic_read data:");
@@ -261,6 +267,8 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	ret = PTPSOCK_WRITE (params->cmdfd, request, sizeof(request));
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror ("sendreq/write to cmdfd");
+		if (ptpip_get_socket_error() == ETIMEDOUT)
+			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
 	if (ret != sizeof(request)) {
@@ -299,6 +307,8 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 			if (ret == PTPSOCK_ERR) {
 				ptpip_perror ("write in senddata failed");
 				free (xdata);
+				if (ptpip_get_socket_error() == ETIMEDOUT)
+					return PTP_ERROR_TIMEOUT;
 				return PTP_ERROR_IO;
 			}
 			written += ret;
@@ -477,6 +487,8 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	free (cmdrequest);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror("write init cmd request");
+		if (ptpip_get_socket_error() == ETIMEDOUT)
+			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
 	GP_LOG_E ("return %d / len %d", ret, len);
@@ -537,6 +549,8 @@ ptp_ptpip_init_event_request (PTPParams* params)
 	ret = PTPSOCK_WRITE (params->evtfd, evtrequest, ptpip_eventinit_size);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror("write init evt request");
+		if (ptpip_get_socket_error() == ETIMEDOUT)
+			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
 	if (ret != ptpip_eventinit_size) {
@@ -598,6 +612,8 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		if (1 != ret) {
 			if (-1 == ret) {
 				GP_LOG_D ("select returned error, errno is %d", ptpip_get_socket_error());
+				if (ptpip_get_socket_error() == ETIMEDOUT)
+					return PTP_ERROR_TIMEOUT;
 				return PTP_ERROR_IO;
 			}
 			return PTP_ERROR_TIMEOUT;
