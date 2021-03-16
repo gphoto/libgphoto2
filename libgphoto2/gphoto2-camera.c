@@ -263,6 +263,7 @@ struct _CameraPrivateCore {
 int
 gp_camera_exit (Camera *camera, GPContext *context)
 {
+	int exit_result = GP_OK;
 	C_PARAMS (camera);
 
 	GP_LOG_D ("Exiting camera ('%s')...", camera->pc->a.model);
@@ -287,7 +288,7 @@ gp_camera_exit (Camera *camera, GPContext *context)
 #ifdef HAVE_MULTI
 		gp_port_open (camera->port);
 #endif
-		camera->functions->exit (camera, context);
+		exit_result = camera->functions->exit (camera, context);
 	}
 	gp_port_close (camera->port);
 	memset (camera->functions, 0, sizeof (CameraFunctions));
@@ -302,7 +303,7 @@ gp_camera_exit (Camera *camera, GPContext *context)
 
 	gp_filesystem_reset (camera->fs);
 
-	return (GP_OK);
+	return exit_result;
 }
 
 
