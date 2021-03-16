@@ -18,8 +18,10 @@
  * Boston, MA  02110-1301  USA
  */
 
-/* Definitions for PTP/IP to work with WinSock and regular BSD-style sockets */
+#ifndef PTPIP_PRIVATE_H
+#define PTPIP_PRIVATE_H
 
+/* Definitions for PTP/IP to work with WinSock and regular BSD-style sockets */
 #ifdef WIN32
 # define PTPSOCK_SOCKTYPE SOCKET
 # define PTPSOCK_INVALID INVALID_SOCKET
@@ -36,4 +38,9 @@
 # define PTPSOCK_READ(fd, buf, size) read((fd), (buf), (size))
 # define PTPSOCK_WRITE(fd, buf, size) write((fd), (buf), (size))
 # define PTPSOCK_PROTO 0
+#endif
+
+void ptpip_perror(const char *what);
+int ptpip_get_socket_error(void);
+
 #endif

@@ -149,8 +149,8 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 	ret = PTPSOCK_WRITE(params->cmdfd, request, len);
 	free (request);
 	if (ret == PTPSOCK_ERR) {
-		perror ("sendreq/write to cmdfd");
-		return GP_ERROR_IO;
+		ptpip_perror ("sendreq/write to cmdfd");
+		return PTP_ERROR_IO;
 	}
 	if (ret != len) {
 		GP_LOG_E ("ptp_ptpip_sendreq() len =%d but ret=%d", len, ret);
@@ -168,8 +168,8 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 	while (curread < len) {
 		ret = PTPSOCK_READ (fd, xhdr + curread, len - curread);
 		if (ret == PTPSOCK_ERR) {
-			perror ("read PTPIPHeader");
-			return PTP_RC_GeneralError;
+			ptpip_perror ("read PTPIPHeader");
+			return PTP_ERROR_IO;
 		}
 		GP_LOG_DATA ((char*)xhdr+curread, ret, "ptpip/generic_read header:");
 		curread += ret;
@@ -192,9 +192,9 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 	while (curread < len) {
 		ret = PTPSOCK_READ (fd, (*data)+curread, len-curread);
 		if (ret == PTPSOCK_ERR) {
-			GP_LOG_E ("error %d in reading PTPIP data", errno);
+			GP_LOG_E ("error %d in reading PTPIP data", ptpip_get_socket_error());
 			free (*data);*data = NULL;
-			return PTP_RC_GeneralError;
+			return PTP_ERROR_IO;
 		} else {
 			GP_LOG_DATA ((char*)((*data)+curread), ret, "ptpip/generic_read data:");
 		}
@@ -260,8 +260,8 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	GP_LOG_DATA ((char*)request, sizeof(request), "ptpip/senddata header:");
 	ret = PTPSOCK_WRITE (params->cmdfd, request, sizeof(request));
 	if (ret == PTPSOCK_ERR) {
-		perror ("sendreq/write to cmdfd");
-		return GP_ERROR_IO;
+		ptpip_perror ("sendreq/write to cmdfd");
+		return PTP_ERROR_IO;
 	}
 	if (ret != sizeof(request)) {
 		GP_LOG_E ("ptp_ptpip_senddata() len=%d but ret=%d", (int)sizeof(request), ret);
@@ -284,7 +284,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		}
 		ret = handler->getfunc (params, handler->priv, towrite, &xdata[ptpip_data_payload+8], &xtowrite);
 		if (ret == -1) {
-			perror ("getfunc in senddata failed");
+			ptpip_perror ("getfunc in senddata failed");
 			free (xdata);
 			return PTP_RC_GeneralError;
 		}
@@ -297,9 +297,9 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		while (written < towrite2) {
 			ret = PTPSOCK_WRITE (params->cmdfd, xdata+written, towrite2-written);
 			if (ret == PTPSOCK_ERR) {
-				perror ("write in senddata failed");
+				ptpip_perror ("write in senddata failed");
 				free (xdata);
-				return PTP_RC_GeneralError;
+				return PTP_ERROR_IO;
 			}
 			written += ret;
 		}
@@ -476,8 +476,8 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	ret = PTPSOCK_WRITE (params->cmdfd, cmdrequest, len);
 	free (cmdrequest);
 	if (ret == PTPSOCK_ERR) {
-		perror("write init cmd request");
-		return PTP_RC_GeneralError;
+		ptpip_perror("write init cmd request");
+		return PTP_ERROR_IO;
 	}
 	GP_LOG_E ("return %d / len %d", ret, len);
 	if (ret != len) {
@@ -536,8 +536,8 @@ ptp_ptpip_init_event_request (PTPParams* params)
 	GP_LOG_DATA ((char*)evtrequest, ptpip_eventinit_size, "ptpip/init_event data:");
 	ret = PTPSOCK_WRITE (params->evtfd, evtrequest, ptpip_eventinit_size);
 	if (ret == PTPSOCK_ERR) {
-		perror("write init evt request");
-		return PTP_RC_GeneralError;
+		ptpip_perror("write init evt request");
+		return PTP_ERROR_IO;
 	}
 	if (ret != ptpip_eventinit_size) {
 		GP_LOG_E ("unexpected retsize %d, expected %d", ret, ptpip_eventinit_size);
@@ -597,7 +597,7 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		ret = select (params->evtfd+1, &infds, NULL, NULL, &timeout);
 		if (1 != ret) {
 			if (-1 == ret) {
-				GP_LOG_D ("select returned error, errno is %d", errno);
+				GP_LOG_D ("select returned error, errno is %d", ptpip_get_socket_error());
 				return PTP_ERROR_IO;
 			}
 			return PTP_ERROR_TIMEOUT;
@@ -765,17 +765,17 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	free (addr);
 	PTPSOCK_SOCKTYPE cmdfd = params->cmdfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
 	if (cmdfd == PTPSOCK_INVALID) {
-		perror ("socket cmd");
+		ptpip_perror ("socket cmd");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	PTPSOCK_SOCKTYPE evtfd = params->evtfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
 	if (evtfd == PTPSOCK_INVALID) {
-		perror ("socket evt");
+		ptpip_perror ("socket evt");
 		PTPSOCK_CLOSE (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
 	if (PTPSOCK_ERR == connect (params->cmdfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
-		perror ("connect cmd");
+		ptpip_perror("connect cmd");
 		PTPSOCK_CLOSE (params->cmdfd);
 		PTPSOCK_CLOSE (params->evtfd);
 		return GP_ERROR_IO;
@@ -798,7 +798,7 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	do {
 		if (PTPSOCK_ERR != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
 			break;
-		if ((errno == ECONNREFUSED) && (tries--)) {
+		if ((ptpip_get_socket_error() == ECONNREFUSED) && (tries--)) {
 			GP_LOG_D ("event connect failed, retrying after short wait");
 			int sleep_ms = 100;
 #ifdef WIN32
@@ -821,4 +821,29 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 		return translate_ptp_result (ret);
 	GP_LOG_D ("ptpip connected!");
 	return GP_OK;
+}
+
+void
+ptpip_perror (const char *what) {
+#ifdef WIN32
+	wchar_t *s = NULL;
+	FormatMessageW (FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+		NULL, WSAGetLastError(),
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_NEUTRAL),
+		(LPWSTR)&s, 0, NULL);
+	fprintf(stderr, "%s: %S\n", what, s);
+	fflush(stderr);
+	LocalFree(s);
+#else
+	perror(what);
+#endif
+}
+
+int
+ptpip_get_socket_error (void) {
+#ifdef WIN32
+	return WSAGetLastError();
+#else
+	return errno;
+#endif
 }
