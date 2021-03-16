@@ -637,7 +637,7 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 			return PTP_ERROR_TIMEOUT;
 		return PTP_ERROR_IO;
 	}
-	GP_LOG_E ("return %d / len %d", ret, len);
+	GP_LOG_D ("return %d / len %d", ret, len);
 	if (ret != len) {
 		GP_LOG_E ("return %d vs len %d", ret, len);
 		return PTP_RC_GeneralError;
