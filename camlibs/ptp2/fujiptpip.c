@@ -185,7 +185,7 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 		hdrlen = len = sizeof(uint32_t);
 
 	while (curread < len) {
-		ret = read (fd, xhdr + curread, len - curread);
+		ret = ptpip_read_with_timeout (fd, xhdr + curread, len - curread, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 		if (ret == PTPSOCK_ERR) {
 			ptpip_perror ("read fujiptpip generic");
 			if (ptpip_get_socket_error() == ETIMEDOUT)
@@ -211,7 +211,7 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 	}
 	curread = 0;
 	while (curread < len) {
-		ret = read (fd, (*data)+curread, len-curread);
+		ret = ptpip_read_with_timeout (fd, (*data)+curread, len-curread, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 		if (ret == PTPSOCK_ERR) {
 			GP_LOG_E ("error %d in reading PTPIP data", ptpip_get_socket_error());
 			free (*data);*data = NULL;
@@ -285,7 +285,7 @@ ptp_fujiptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	htod16a(&request[fujiptpip_data_code],ptp->Code);
 	htod32a(&request[fujiptpip_data_transid],ptp->Transaction_ID);
 	GP_LOG_DATA ((char*)request, sizeof(request), "ptpip/senddata header:");
-	ret = write (params->cmdfd, request, sizeof(request));
+	ret = ptpip_write_with_timeout (params->cmdfd, request, sizeof(request), PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror ("sendreq/write to cmdfd");
 		if (ptpip_get_socket_error() == ETIMEDOUT)
@@ -629,7 +629,7 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 
 
 	GP_LOG_DATA ((char*)cmdrequest, len, "ptpip/init_cmd data:");
-	ret = PTPSOCK_WRITE (params->cmdfd, cmdrequest, len);
+	ret = ptpip_write_with_timeout (params->cmdfd, cmdrequest, len, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 	free (cmdrequest);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror("write init cmd request");
@@ -740,7 +740,7 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 	saddr.sin_family	= AF_INET;
 	saddr.sin_port		= htons(eventport);
 	do {
-		if (PTPSOCK_ERR != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
+		if (PTPSOCK_ERR != ptpip_connect_with_timeout (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in), PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS))
 			break;
 		if ((ptpip_get_socket_error() == ECONNREFUSED) && (tries--)) {
 			GP_LOG_D ("event connect failed, retrying after short wait");
@@ -761,7 +761,7 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 	saddr.sin_family	= AF_INET;
 	saddr.sin_port		= htons(eventport+1);
 	do {
-		if (PTPSOCK_ERR != connect (params->jpgfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
+		if (PTPSOCK_ERR != ptpip_connect_with_timeout (params->jpgfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in), PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS))
 			break;
 		if ((ptpip_get_socket_error() == ECONNREFUSED) && (tries--)) {
 			GP_LOG_D ("jpeg connect failed, retrying after short wait");
@@ -957,11 +957,22 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 		ptpip_perror ("socket cmd");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	if (ptpip_set_nonblock(cmdfd) == -1) {
+		ptpip_perror("cmdfd set nonblocking");
+		PTPSOCK_CLOSE (params->cmdfd);
+		return GP_ERROR_IO;
+	}
 	PTPSOCK_SOCKTYPE evtfd = params->evtfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
 	if (evtfd == PTPSOCK_INVALID) {
 		ptpip_perror ("socket evt");
 		PTPSOCK_CLOSE (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
+	}
+	if (ptpip_set_nonblock(evtfd) == -1) {
+		ptpip_perror("evtfd set nonblocking");
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
+		return GP_ERROR_IO;
 	}
 	PTPSOCK_SOCKTYPE jpgfd = params->jpgfd = socket (PF_INET, SOCK_STREAM, 0);
 	if (jpgfd == PTPSOCK_INVALID) {
@@ -970,8 +981,15 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 		PTPSOCK_CLOSE (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	if (PTPSOCK_ERR == connect (params->cmdfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
-		perror ("connect cmd");
+	if (ptpip_set_nonblock(jpgfd) == -1) {
+		ptpip_perror("jpgfd set nonblocking");
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
+		PTPSOCK_CLOSE (params->jpgfd);
+		return GP_ERROR_IO;
+	}
+	if (PTPSOCK_ERR == ptpip_connect_with_timeout (params->cmdfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in), PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS)) {
+		ptpip_perror ("connect cmd");
 		PTPSOCK_CLOSE (params->cmdfd);
 		PTPSOCK_CLOSE (params->evtfd);
 		PTPSOCK_CLOSE (params->jpgfd);
