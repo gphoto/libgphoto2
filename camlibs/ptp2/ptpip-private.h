@@ -23,6 +23,8 @@
 
 /* Definitions for PTP/IP to work with WinSock and regular BSD-style sockets */
 #ifdef WIN32
+# include <winsock2.h>
+# include <ws2tcpip.h>
 # define PTPSOCK_SOCKTYPE SOCKET
 # define PTPSOCK_INVALID INVALID_SOCKET
 # define PTPSOCK_CLOSE closesocket
@@ -31,6 +33,7 @@
 # define PTPSOCK_WRITE(fd, buf, size) send((fd), ((char*)(buf)), (size), 0)
 # define PTPSOCK_PROTO IPPROTO_TCP
 #else
+# include <sys/socket.h>
 # define PTPSOCK_SOCKTYPE int
 # define PTPSOCK_INVALID -1
 # define PTPSOCK_CLOSE close
@@ -40,7 +43,17 @@
 # define PTPSOCK_PROTO 0
 #endif
 
+#include <sys/types.h> /* for ssize_t, size_t */
+
+#define PTPIP_DEFAULT_TIMEOUT_S 2
+#define PTPIP_DEFAULT_TIMEOUT_MS 500
+
+int ptpip_connect_with_timeout(int fd, const struct sockaddr *address, socklen_t address_len, int seconds, int milliseconds);
+ssize_t ptpip_read_with_timeout(int fd, void *buf, size_t nbytes, int seconds, int milliseconds);
+ssize_t ptpip_write_with_timeout(int fd, void *buf, size_t nbytes, int seconds, int milliseconds);
+int ptpip_set_nonblock(int fd);
 void ptpip_perror(const char *what);
 int ptpip_get_socket_error(void);
+void ptpip_set_socket_error(int err);
 
 #endif

@@ -50,6 +50,7 @@
 #else
 # include <sys/socket.h>
 # include <netinet/in.h>
+# include <fcntl.h>
 #endif
 
 #include <gphoto2/gphoto2-library.h>
@@ -146,7 +147,7 @@ ptp_ptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 		break;
 	}
 	GP_LOG_DATA ( (char*)request, len, "ptpip/oprequest data:");
-	ret = PTPSOCK_WRITE(params->cmdfd, request, len);
+	ret = ptpip_write_with_timeout(params->cmdfd, request, len, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 	free (request);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror ("sendreq/write to cmdfd");
@@ -168,7 +169,7 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 
 	xhdr = (unsigned char*)hdr; curread = 0; len = sizeof (PTPIPHeader);
 	while (curread < len) {
-		ret = PTPSOCK_READ (fd, xhdr + curread, len - curread);
+		ret = ptpip_read_with_timeout (fd, xhdr + curread, len - curread, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 		if (ret == PTPSOCK_ERR) {
 			ptpip_perror ("read PTPIPHeader");
 			if (ptpip_get_socket_error() == ETIMEDOUT)
@@ -194,7 +195,7 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 	}
 	curread = 0;
 	while (curread < len) {
-		ret = PTPSOCK_READ (fd, (*data)+curread, len-curread);
+		ret = ptpip_read_with_timeout (fd, (*data)+curread, len-curread, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 		if (ret == PTPSOCK_ERR) {
 			GP_LOG_E ("error %d in reading PTPIP data", ptpip_get_socket_error());
 			free (*data);*data = NULL;
@@ -264,7 +265,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 	htod32a(&request[ptpip_startdata_totallen + 8],size);
 	htod32a(&request[ptpip_startdata_unknown  + 8],0);
 	GP_LOG_DATA ((char*)request, sizeof(request), "ptpip/senddata header:");
-	ret = PTPSOCK_WRITE (params->cmdfd, request, sizeof(request));
+	ret = ptpip_write_with_timeout (params->cmdfd, request, sizeof(request), PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror ("sendreq/write to cmdfd");
 		if (ptpip_get_socket_error() == ETIMEDOUT)
@@ -303,7 +304,7 @@ ptp_ptpip_senddata (PTPParams* params, PTPContainer* ptp,
 		GP_LOG_DATA ((char*)xdata, towrite2, "ptpip/senddata data:");
 		written = 0;
 		while (written < towrite2) {
-			ret = PTPSOCK_WRITE (params->cmdfd, xdata+written, towrite2-written);
+			ret = ptpip_write_with_timeout (params->cmdfd, xdata+written, towrite2-written, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 			if (ret == PTPSOCK_ERR) {
 				ptpip_perror ("write in senddata failed");
 				free (xdata);
@@ -483,7 +484,7 @@ ptp_ptpip_init_command_request (PTPParams* params)
 	htod16a(&cmdrequest[ptpip_initcmd_name+(strlen(hostname)+1)*2+2],PTPIP_VERSION_MAJOR);
 
 	GP_LOG_DATA ((char*)cmdrequest, len, "ptpip/init_cmd data:");
-	ret = PTPSOCK_WRITE (params->cmdfd, cmdrequest, len);
+	ret = ptpip_write_with_timeout (params->cmdfd, cmdrequest, len, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 	free (cmdrequest);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror("write init cmd request");
@@ -546,7 +547,7 @@ ptp_ptpip_init_event_request (PTPParams* params)
 	htod32a(&evtrequest[ptpip_eventinit_idx],params->eventpipeid);
 
 	GP_LOG_DATA ((char*)evtrequest, ptpip_eventinit_size, "ptpip/init_event data:");
-	ret = PTPSOCK_WRITE (params->evtfd, evtrequest, ptpip_eventinit_size);
+	ret = ptpip_write_with_timeout (params->evtfd, evtrequest, ptpip_eventinit_size, PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS);
 	if (ret == PTPSOCK_ERR) {
 		ptpip_perror("write init evt request");
 		if (ptpip_get_socket_error() == ETIMEDOUT)
@@ -784,13 +785,24 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 		ptpip_perror ("socket cmd");
 		return GP_ERROR_BAD_PARAMETERS;
 	}
+	if (ptpip_set_nonblock(cmdfd) == -1) {
+		ptpip_perror("cmdfd set nonblocking");
+		PTPSOCK_CLOSE (params->cmdfd);
+		return GP_ERROR_IO;
+	}
 	PTPSOCK_SOCKTYPE evtfd = params->evtfd = socket (PF_INET, SOCK_STREAM, PTPSOCK_PROTO);
 	if (evtfd == PTPSOCK_INVALID) {
 		ptpip_perror ("socket evt");
 		PTPSOCK_CLOSE (params->cmdfd);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	if (PTPSOCK_ERR == connect (params->cmdfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in))) {
+	if (ptpip_set_nonblock(evtfd) == -1) {
+		ptpip_perror("evtfd set nonblocking");
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
+		return GP_ERROR_IO;
+	}
+	if (ptpip_connect_with_timeout (params->cmdfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in), PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS) == -1) {
 		ptpip_perror("connect cmd");
 		PTPSOCK_CLOSE (params->cmdfd);
 		PTPSOCK_CLOSE (params->evtfd);
@@ -812,7 +824,7 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	tries = 2;
 	saddr.sin_port		= htons(eventport);
 	do {
-		if (PTPSOCK_ERR != connect (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in)))
+		if (PTPSOCK_ERR != ptpip_connect_with_timeout (params->evtfd, (struct sockaddr*)&saddr, sizeof(struct sockaddr_in), PTPIP_DEFAULT_TIMEOUT_S, PTPIP_DEFAULT_TIMEOUT_MS))
 			break;
 		if ((ptpip_get_socket_error() == ECONNREFUSED) && (tries--)) {
 			GP_LOG_D ("event connect failed, retrying after short wait");
@@ -839,6 +851,117 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	return GP_OK;
 }
 
+int
+ptpip_connect_with_timeout (int fd, const struct sockaddr *address, socklen_t address_len, int seconds, int milliseconds) {
+	int res = 0;
+	struct timeval tv;
+	socklen_t errsz = sizeof(res);
+	fd_set fds;
+
+	if ((res = connect(fd, address, address_len)) == -1) {
+		if (ptpip_get_socket_error() == EINPROGRESS) { // connection is not ready yet
+			tv.tv_sec = seconds;
+			tv.tv_usec = milliseconds * 1000;
+			FD_ZERO(&fds);
+			FD_SET(fd, &fds);
+			res = select(fd+1, NULL, &fds, NULL, &tv);
+			if (res == -1) { // Select failed
+				ptpip_perror ("select");
+				return -1;
+			} else if (res == 0) { // Timeout
+				ptpip_set_socket_error (ETIMEDOUT);
+				return -1;
+			} else { // Socket is marked as writable, connect is okay, query actual error status
+				if(getsockopt(fd, SOL_SOCKET, SO_ERROR, (char*)&res, &errsz) == -1) {
+					ptpip_perror("getsockopt");
+					return -1;
+				} else if(res != 0) { // Socket has an error
+					ptpip_set_socket_error (res);
+					return -1;
+				} else { // Connect successful
+					return res;
+				}
+			}
+		} else { // connect failed with error.
+			return -1;
+		}
+	}
+	return res;
+}
+
+ssize_t
+ptpip_read_with_timeout (int fd, void *buf, size_t nbytes, int seconds, int milliseconds) {
+	ssize_t res;
+	struct timeval tv;
+	fd_set fds;
+
+	res = PTPSOCK_READ(fd, buf, nbytes);
+	if (res == -1 && (ptpip_get_socket_error() == EAGAIN || ptpip_get_socket_error() == EWOULDBLOCK)) {
+		tv.tv_sec = seconds;
+		tv.tv_usec = milliseconds * 1000;
+		FD_ZERO(&fds);
+		FD_SET(fd, &fds);
+		res = select(fd+1, &fds, NULL, NULL, &tv);
+		if (res == -1) { // Select failed
+			ptpip_perror ("select");
+			return -1;
+		} else if (res == 0) { // Timeout
+			ptpip_set_socket_error (ETIMEDOUT);
+			return -1;
+		} else { // Socket is marked as readable, do the read now
+			return PTPSOCK_READ(fd, buf, nbytes);
+		}
+	} else {
+		return res;
+	}
+}
+
+ssize_t
+ptpip_write_with_timeout (int fd, void *buf, size_t nbytes, int seconds, int milliseconds) {
+	ssize_t res;
+	struct timeval tv;
+	fd_set fds;
+
+	res = PTPSOCK_WRITE(fd, buf, nbytes);
+	if (res == -1 && (ptpip_get_socket_error() == EAGAIN || ptpip_get_socket_error() == EWOULDBLOCK)) {
+		tv.tv_sec = seconds;
+		tv.tv_usec = milliseconds * 1000;
+		FD_ZERO(&fds);
+		FD_SET(fd, &fds);
+		res = select(fd+1, NULL, &fds, NULL, &tv);
+		if (res == -1) { // Select failed
+			ptpip_perror ("select");
+			return -1;
+		} else if (res == 0) { // Timeout
+			ptpip_set_socket_error (ETIMEDOUT);
+			return -1;
+		} else { // Socket is marked as writable, do the write now
+			return PTPSOCK_WRITE(fd, buf, nbytes);
+		}
+	} else {
+		return res;
+	}
+}
+
+int
+ptpip_set_nonblock (int fd) {
+#ifdef WIN32
+	u_long mode = 0;
+	if (ioctlsocket (fd, FIONBIO, &mode) == SOCKET_ERROR) {
+		return -1;
+	}
+#else
+	int flags = fcntl(fd, F_GETFL);
+	if (flags < 0) {
+		return -1;
+	}
+	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0) {
+		return -1;
+	}
+#endif
+	return 0;
+}
+
 void
 ptpip_perror (const char *what) {
 #ifdef WIN32
@@ -862,4 +985,12 @@ ptpip_get_socket_error (void) {
 #else
 	return errno;
 #endif
+}
+
+void
+ptpip_set_socket_error (int err) {
+#ifdef WIN32
+	WSASetLastError(err);
+#endif
+	errno = err;
 }
