@@ -3025,6 +3025,7 @@ camera_id (CameraText *id)
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
+	int exit_result = PTP_RC_OK;
 	if (camera->pl!=NULL) {
 		PTPParams *params = &camera->pl->params;
 		PTPContainer event;
@@ -3037,7 +3038,8 @@ camera_exit (Camera *camera, GPContext *context)
 				if (camera->pl->checkevents) {
 					PTPCanon_changes_entry entry;
 
-					ptp_check_eos_events (params);
+					if ((exit_result = ptp_check_eos_events (params)) != PTP_RC_OK)
+						goto exitfailed;
 					while (ptp_get_one_eos_event (params, &entry)) {
 						GP_LOG_D ("missed EOS ptp type %d", entry.type);
 						if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
@@ -3046,13 +3048,16 @@ camera_exit (Camera *camera, GPContext *context)
 					camera->pl->checkevents = 0;
 				}
 				if (params->inliveview && ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder))
-					ptp_canon_eos_end_viewfinder (params);
-				camera_unprepare_capture (camera, context);
+					if ((exit_result = ptp_canon_eos_end_viewfinder (params)) != PTP_RC_OK)
+						goto exitfailed;
+				if ((exit_result = camera_unprepare_capture (camera, context)) != PTP_RC_OK)
+					goto exitfailed;
 			}
 			break;
 		case PTP_VENDOR_NIKON:
 			if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView))
-				C_PTP (ptp_nikon_end_liveview (params));
+				if ((exit_result = ptp_nikon_end_liveview (params)) != PTP_RC_OK)
+					goto exitfailed;
 			params->inliveview = 0;
 
 			/* get the Nikon out of control mode again */
@@ -3081,7 +3086,8 @@ camera_exit (Camera *camera, GPContext *context)
 		}
 		case PTP_VENDOR_GP_LEICA:
 			if (ptp_operation_issupported(params, PTP_OC_LEICA_LECloseSession)) {
-				C_PTP (ptp_leica_leclosesession (params));
+				if ((exit_result = ptp_leica_leclosesession (params)) != PTP_RC_OK)
+					goto exitfailed;
 			}
 			break;
 		}
@@ -3096,6 +3102,7 @@ camera_exit (Camera *camera, GPContext *context)
 			/* close ptp session */
 			ptp_closesession (params);
 		}
+exitfailed:
 		ptp_free_params(params);
 
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
@@ -3125,7 +3132,7 @@ camera_exit (Camera *camera, GPContext *context)
 		WSACleanup();
 	}
 #endif
-	return (GP_OK);
+	return translate_ptp_result(exit_result);
 }
 
 static int
