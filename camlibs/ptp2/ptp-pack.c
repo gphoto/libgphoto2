@@ -2600,7 +2600,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				proptype = PTP_DPC_CANON_EOS_Aperture;
 				dpd = _lookup_or_allocate_canon_prop(params, proptype);
 				if (olcver >= 0x12)
-					dpd->CurrentValue.u16 = curdata[curoff+5]; /* CHECK */
+					dpd->CurrentValue.u16 = curdata[curoff+7]; /* CHECK */
 				else
 					dpd->CurrentValue.u16 = curdata[curoff+4]; /* just use last byte */
 
