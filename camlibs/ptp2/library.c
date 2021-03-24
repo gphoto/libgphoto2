@@ -1579,6 +1579,9 @@ static struct {
 	/* https://sourceforge.net/p/libmtp/bugs/1743/ */
 	{"Nikon:Coolpix L340", 	  	  0x04b0, 0x0361, PTP_CAP},
 
+	/* via email to gphoto-devel */
+	{"Nikon:Coolpix B500", 	  	  0x04b0, 0x0362, PTP_CAP},
+
 	/* Krystal Puga <krystalvp@gmail.com> */
 	{"Nikon:KeyMission 170", 	  0x04b0, 0x0364, PTP_CAP},
 
