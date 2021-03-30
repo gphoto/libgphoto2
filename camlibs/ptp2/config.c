@@ -9850,6 +9850,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_SONY_QX_ExposureCompensation,   PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       PTP_VENDOR_SONY,    PTP_DTC_INT16,  _get_ExpCompensation,               _put_Sony_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_ExposureBiasCompensation,       0,                  PTP_DTC_INT16,  _get_ExpCompensation,               _put_ExpCompensation },
+	{ N_("Movie Exposure Compensation"),    "movieexposurecompensation",PTP_DPC_NIKON_MovieExposureBiasCompensation,       0,       PTP_DTC_INT16,  _get_ExpCompensation,               _put_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_ExpCompensation,          PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_EOS_ExpCompensation,      PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation2,        _put_Canon_ExpCompensation2 },
 	{ N_("Exposure Compensation"),		"exposurecompensation",	    0, 					    PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Exposure,         _put_Panasonic_Exposure },
