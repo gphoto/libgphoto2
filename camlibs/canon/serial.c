@@ -211,7 +211,7 @@ canon_serial_send (Camera *camera, const unsigned char *buf, int len, int sleep)
  * @gdev: serial port to use
  * @to:   timeout in milliseconds
  *
- * Sets the timeout, in miliseconds.
+ * Sets the timeout, in milliseconds.
  *
  */
 static void

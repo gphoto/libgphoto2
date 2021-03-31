@@ -12,7 +12,7 @@
  * use a FireWire (IEEE 1394) interface.
  *
  * We are working at moving serial and USB specific stuff to serial.c
- * and usb.c, keeping the common protocols/busses support in this
+ * and usb.c, keeping the common protocols/buses support in this
  * file.
  */
 #define _DEFAULT_SOURCE

@@ -19,7 +19,7 @@ List of work that still has to be done on this driver:
  - handle rotated images correctly (how?)
 
  - A5 support is completely broken, with the new filename based API, the 
-   directory caching mecanism must be completely revisited. On the
+   directory caching mechanism must be completely revisited. On the
    other hand, when removing the internal caching layer, we perhaps
    facilitated the solution to this problem.
 
