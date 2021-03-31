@@ -2,8 +2,6 @@
 # Housekeeping
 ########################################################################
 
-SUBDIRS = ddb
-
 EXTRA_PROGRAMS =
 check_PROGRAMS =
 TESTS =
