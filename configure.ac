@@ -151,55 +151,6 @@ GP_VA_COPY
 #       Put these into LIBFOO_CFLAGS and LIBFOO_LIBS instead.
 
 
-try_gp2ddb=false
-msg_gp2ddb=""
-gp_msg_dp2ddb="no"
-
-AC_ARG_ENABLE([gp2ddb],
-[AS_HELP_STRING([--enable-gp2ddb],
-		[enable EXPERIMENTAL PRE-ALPHA gphoto2 device database code])],[
-	if test "x$enableval" = "xyes"; then
-		try_gp2ddb=true
-		msg_dp2ddb="(--enable-gp2ddb detected)"
-	elif test "x$enableval" = "xno"; then
-		try_gp2ddb=false
-		msg_dp2ddb="(--disable-gp2ddb detected)"
-	fi
-])
-
-AC_PATH_PROG([FLEX], [flex])
-AC_SUBST([FLEX])
-AC_PATH_PROG([BISON], [bison])
-AC_SUBST([BISON])
-
-AC_MSG_CHECKING([whether to enable GP2DDB])
-if "$try_gp2ddb"; then
-   if test -x "$FLEX" && test -x "$BISON"; then
-      gp_msg_dp2ddb="yes $msg_dp2ddb"
-   else
-      AC_MSG_ERROR([Fatal: GP2DDB support requires flex and bison!
-
-Aborting configuration.
-
-Install flex and bison into your PATH or run configure with --disable-gp2ddb
-to disable GP2DDB support.
-])
-   fi
-else
-      gp_msg_dp2ddb="no $msg_dp2ddb"
-fi
-AC_MSG_RESULT([${gp_msg_gp2ddb}])
-
-AM_CONDITIONAL([ENABLED_GP2DDB], ["$try_gp2ddb" && test -x "$FLEX" && test -x "$BISON"])
-
-if "$try_gp2ddb" && test -x "$FLEX" && test -x "$BISON"; then
-	gp_msg_gp2ddb="yes $msg_gp2ddb"
-        AC_DEFINE([ENABLED_GP2DDB], [1], [Whether we have flex and bison for GP2DDB])
-else
-	gp_msg_gp2ddb="no $msg_gp2ddb"
-fi
-GP_CONFIG_MSG([GP2DDB support], [${gp_msg_gp2ddb} (EXPERIMENTAL)])
-
 dnl check for/set up libtool and libltdl
 dnl AC_DISABLE_STATIC
 dnl AC_DISABLE_SHARED
@@ -696,8 +647,6 @@ libgphoto2.pc
 libgphoto2-uninstalled.pc
 examples/Makefile
 tests/Makefile
-tests/ddb/Makefile
-tests/ddb/check-ddb.sh
 packaging/Makefile
 packaging/linux-hotplug/Makefile
 packaging/generic/Makefile
