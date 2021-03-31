@@ -124,3 +124,5 @@ Makefile.in
 /tests/test-filesys
 /tests/test-gphoto2
 +.vscode/
+
+/tmpwrk*/
