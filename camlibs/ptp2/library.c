@@ -2576,6 +2576,8 @@ static struct {
 	/* Bruno Filho at SUSE (currently not working with cpature, but shows variables) */
 	/* so far looks like the low end X-T30 does not support tethering, https://www.dpreview.com/forums/thread/4451199 */
 	{"Fuji:Fujifilm X-T30",			0x04cb, 0x02e3, 0},
+	/* via email to gphoto-devel on Apr 2 2021 */
+	{"Fuji:Fujifilm X-Pro3",		0x04cb, 0x02e4, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Fuji:Fujifilm X100V",			0x04cb, 0x02e5, PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/505 */
 	{"Fuji:Fujifilm X-T4",			0x04cb, 0x02e6, PTP_CAP|PTP_CAP_PREVIEW},
