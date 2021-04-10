@@ -1007,6 +1007,35 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_FUJI_FmSendObject			0x9041
 #define PTP_OC_FUJI_FmSendPartialObject			0x9042
 
+/* SIGMA FP */
+
+#define PTP_OC_SIGMA_FP_GetCamConfig		0x9010
+#define PTP_OC_SIGMA_FP_GetCamStatus		0x9011
+#define PTP_OC_SIGMA_FP_GetDataGroup1		0x9012
+#define PTP_OC_SIGMA_FP_GetDataGroup2		0x9013
+#define PTP_OC_SIGMA_FP_GetDataGroup3		0x9014
+#define PTP_OC_SIGMA_FP_GetCaptureStatus	0x9015
+#define PTP_OC_SIGMA_FP_SetDataGroup1		0x9016
+#define PTP_OC_SIGMA_FP_SetDataGroup2		0x9017
+#define PTP_OC_SIGMA_FP_SetDataGroup3		0x9018
+#define PTP_OC_SIGMA_FP_ClockAdjust		0x9019
+#define PTP_OC_SIGMA_FP_Snap			0x901b
+#define PTP_OC_SIGMA_FP_ClearImageDBSingle	0x901c
+#define PTP_OC_SIGMA_FP_ClearImageDBAll		0x901d	/* ? */
+#define PTP_OC_SIGMA_FP_GetPictFileInfo		0x9020	/* ? */
+#define PTP_OC_SIGMA_FP_GetPartialPictFile	0x9021	/* ? */
+#define PTP_OC_SIGMA_FP_GetBigPartialPictFile	0x9022
+#define PTP_OC_SIGMA_FP_GetDataGroup4		0x9023
+#define PTP_OC_SIGMA_FP_SetDataGroup4		0x9024
+#define PTP_OC_SIGMA_FP_GetCamSentInfo2		0x9025	/* ? */
+#define PTP_OC_SIGMA_FP_GetCamSentInfo3		0x9026	/* ? */
+#define PTP_OC_SIGMA_FP_GetDataGroup5		0x9027
+#define PTP_OC_SIGMA_FP_SetDataGroup5		0x9028
+#define PTP_OC_SIGMA_FP_GetDataGroup6		0x9029
+#define PTP_OC_SIGMA_FP_SetDataGroup6		0x902a
+#define PTP_OC_SIGMA_FP_GetCamViewFrame		0x902b	/* liveview here! */
+#define PTP_OC_SIGMA_FP_GetPictFileInfo2	0x902c
+
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
 #define PTP_OC_EXTENSION                0x9000
@@ -4753,6 +4782,7 @@ uint16_t ptp_panasonic_9414_0d800012 (PTPParams* params, PanasonicLiveViewSize *
 uint16_t ptp_panasonic_9414_0d800011 (PTPParams* params, PanasonicLiveViewSize *liveviewsize);
 uint16_t ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize);
 
+uint16_t ptp_sigma_fp_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)

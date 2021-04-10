@@ -969,6 +969,15 @@ ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned 
 }
 
 uint16_t
+ptp_sigma_fp_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamViewFrame);
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
 ptp_olympus_init_pc_mode (PTPParams* params)
 {
 	uint16_t		ret;
@@ -8593,6 +8602,35 @@ ptp_opcode_trans_t ptp_opcode_leica_trans[] = {
 	{PTP_OC_LEICA_GetViewFinderData,"GetViewFinderData"},
 };
 
+ptp_opcode_trans_t ptp_opcode_sigmafp_trans[] = {
+	{PTP_OC_SIGMA_FP_GetCamConfig,"GetCamConfig"},
+	{PTP_OC_SIGMA_FP_GetCamStatus,"GetCamStatus"},
+	{PTP_OC_SIGMA_FP_GetDataGroup1,"GetDataGroup1"},
+	{PTP_OC_SIGMA_FP_GetDataGroup2,"GetDataGroup2"},
+	{PTP_OC_SIGMA_FP_GetDataGroup3,"GetDataGroup3"},
+	{PTP_OC_SIGMA_FP_GetCaptureStatus,"GetCaptureStatus"},
+	{PTP_OC_SIGMA_FP_SetDataGroup1,"SetDataGroup1"},
+	{PTP_OC_SIGMA_FP_SetDataGroup2,"SetDataGroup2"},
+	{PTP_OC_SIGMA_FP_SetDataGroup3,"SetDataGroup3"},
+	{PTP_OC_SIGMA_FP_ClockAdjust,"ClockAdjust"},
+	{PTP_OC_SIGMA_FP_Snap,"Snap"},
+	{PTP_OC_SIGMA_FP_ClearImageDBSingle,"ClearImageDBSingle"},
+	{PTP_OC_SIGMA_FP_ClearImageDBAll,"ClearImageDBAll"},
+	{PTP_OC_SIGMA_FP_GetPictFileInfo,"GetPictFileInfo"},
+	{PTP_OC_SIGMA_FP_GetPartialPictFile,"GetPartialPictFile"},
+	{PTP_OC_SIGMA_FP_GetBigPartialPictFile,"GetBigPartialPictFile"},
+	{PTP_OC_SIGMA_FP_GetDataGroup4,"GetDataGroup4"},
+	{PTP_OC_SIGMA_FP_SetDataGroup4,"SetDataGroup4"},
+	{PTP_OC_SIGMA_FP_GetCamSentInfo2,"GetCamSentInfo2"},
+	{PTP_OC_SIGMA_FP_GetCamSentInfo3,"GetCamSentInfo3"},
+	{PTP_OC_SIGMA_FP_GetDataGroup5,"GetDataGroup5"},
+	{PTP_OC_SIGMA_FP_SetDataGroup5,"SetDataGroup5"},
+	{PTP_OC_SIGMA_FP_GetDataGroup6,"GetDataGroup6"},
+	{PTP_OC_SIGMA_FP_SetDataGroup6,"SetDataGroup6"},
+	{PTP_OC_SIGMA_FP_GetCamViewFrame,"GetCamViewFrame"},
+	{PTP_OC_SIGMA_FP_GetPictFileInfo2,"GetPictFileInfo2"},
+};
+
 const char*
 ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 {
@@ -8617,6 +8655,7 @@ ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 	case PTP_VENDOR_SONY:	RETURN_NAME_FROM_TABLE(ptp_opcode_sony_trans, opcode);
 	case PTP_VENDOR_PARROT:	RETURN_NAME_FROM_TABLE(ptp_opcode_parrot_trans, opcode);
 	case PTP_VENDOR_GP_LEICA:	RETURN_NAME_FROM_TABLE(ptp_opcode_leica_trans, opcode);
+	case PTP_VENDOR_GP_SIGMAFP:	RETURN_NAME_FROM_TABLE(ptp_opcode_sigmafp_trans, opcode);
 	default:
 		break;
 	}
