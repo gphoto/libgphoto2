@@ -4783,6 +4783,7 @@ uint16_t ptp_panasonic_9414_0d800011 (PTPParams* params, PanasonicLiveViewSize *
 uint16_t ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize);
 
 uint16_t ptp_sigma_fp_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size);
 
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)

@@ -978,6 +978,15 @@ ptp_sigma_fp_liveview_image (PTPParams* params, unsigned char **data, unsigned i
 }
 
 uint16_t
+ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, 0x9035);
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
 ptp_olympus_init_pc_mode (PTPParams* params)
 {
 	uint16_t		ret;

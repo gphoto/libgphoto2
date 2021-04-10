@@ -2682,7 +2682,7 @@ static struct {
 	{"Samsung:EK-GC100",			0x04e8,	0x6866, 0},
 
 	/* 522903503@qq.com */
-	{"Sigma:fp",				0x1003,	0xc432, 0},
+	{"Sigma:fp",				0x1003,	0xc432, PTP_CAP_PREVIEW},
 
 	/* Bernhard Wagner <me@bernhardwagner.net> */
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
@@ -3826,6 +3826,38 @@ enable_liveview:
 		gp_file_set_name (file, "preview.jpg");
 		gp_file_set_mtime (file, time(NULL));
 
+		SET_CONTEXT_P(params, NULL);
+		return GP_OK;
+	}
+
+	case PTP_VENDOR_GP_SIGMAFP: {
+		unsigned char	*ximage = NULL;
+
+		size = 0;
+
+		C_PTP (ptp_sigma_fp_liveview_image (params, &ximage, &size));
+		if (size < 4) return GP_ERROR;
+
+		/* look for the JPEG SOI marker (0xFFD8) in data */
+		jpgStartPtr = (unsigned char*)memchr(ximage, 0xff, size);
+		while(jpgStartPtr && ((jpgStartPtr+1) < (ximage + size))) {
+			if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
+				break;
+			} else { /* go on looking (starting at next byte) */
+				jpgStartPtr++;
+				jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, ximage + size - jpgStartPtr);
+			}
+		}
+		if(!jpgStartPtr) { /* no SOI -> no JPEG */
+			gp_context_error (context, _("Sorry, your Panasonic camera does not seem to return a JPEG image in LiveView mode"));
+			return GP_ERROR;
+		}
+		gp_file_append (file, (char*)jpgStartPtr, size - (jpgStartPtr-ximage));
+		free (ximage);
+
+		gp_file_set_mime_type (file, GP_MIME_JPEG);
+		gp_file_set_name (file, "preview.jpg");
+		gp_file_set_mtime (file, time(NULL));
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
@@ -9680,6 +9712,15 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	case PTP_VENDOR_FUJI:
 		CR (camera_prepare_capture (camera, context));
+		break;
+	case PTP_VENDOR_GP_SIGMAFP:
+		if (ptp_operation_issupported(params, 0x9035)) {
+			unsigned char *xdata = NULL;
+			unsigned int xsize = 0;
+			C_PTP (ptp_sigma_fp_9035 (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "9035 output");
+			free (xdata);
+		}
 		break;
 	case PTP_VENDOR_GP_LEICA:
 		if (ptp_operation_issupported(params, PTP_OC_LEICA_LEOpenSession)) {
