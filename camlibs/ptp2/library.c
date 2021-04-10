@@ -282,7 +282,16 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		C_PTP (ptp_getdeviceinfo (params, di));
 		return GP_OK;
 	}
+	/* SIGMA FP */
+	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x1003)
+	) {
+		di->VendorExtensionID = PTP_VENDOR_GP_SIGMAFP;
+		return GP_OK;
+	}
 
+	/* LEICA */
 	if (    (di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x1a98)

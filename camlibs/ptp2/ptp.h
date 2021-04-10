@@ -182,10 +182,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_VENDOR_MTP			0xffffffff
 
 /* gphoto overrides */
-#define PTP_VENDOR_GP_OLYMPUS          0x0000fffe
-#define PTP_VENDOR_GP_OLYMPUS_OMD      0x0000fffd
-#define PTP_VENDOR_GP_LEICA            0x0000fffc
-
+#define PTP_VENDOR_GP_OLYMPUS		0x0000fffe
+#define PTP_VENDOR_GP_OLYMPUS_OMD	0x0000fffd
+#define PTP_VENDOR_GP_LEICA		0x0000fffc
+#define PTP_VENDOR_GP_SIGMAFP		0x0000fffb
 
 /* Operation Codes */
 

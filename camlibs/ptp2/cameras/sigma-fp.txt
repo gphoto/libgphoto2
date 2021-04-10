@@ -89,3 +89,130 @@ Events Supported:
   0xc401 (Unknown Event)
   0xc411 (Unknown Event)
 Device Properties Supported:
+
+
+Init sequence:
+0x9035 no args
+	0x9035	recv data from cam: gets an info blob
+
+0x9017	no args	setdatagroup2
+	0x9017	send data to cam: 0x03,0x04,0x00,0x04,0x0b
+
+0x9012	no args	getdatagroup1
+	0x9012	recv data from cam: 13 ff 7f 58 20 00 01 f8 00 00 01 09 b6 01 01 d0 02 01 00 00 97
+
+0x9013	no args getdatagroup2
+	0x9013	recv data from cam: 0e 3f fc 01 02 04 01 00 01 00 00 00 01 01 02 56
+
+0x9014	no args getdatagroup3
+	0x9014	recv data from cam: 10 ff a3 00 00 00 01 03 01 00 f0 00 f0 02 05 05 00 a3
+
+0x9018	no args setdatagroup3
+	0x9018	send data to cam: 03 00 80 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 85
+
+0x9024	no args	setdatagroup4
+	0x9024	send data to cam: 03 01 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 06
+
+0x9034	no args
+	0x9034	send data to cam: 15 00 00 00 01 00 00 00 00 00 01 00 01 00 00 00 01 00 00 00 00 00 00 00 1f
+
+0x9033	no args
+	0x9033	recv data from cam: d8 ... (0xd8 bytes)
+
+0x9030	no args
+	0x9030	recv data from cam: 24 05 00 00 (0x524 bytes)
+
+0x902c	no args	getcamstatus2
+	0x902c	recv data from cam: 50 00 00 00 (0x50 bytes)
+
+0x9014	no args getdatagroup3
+	0x9014	recv data from cam: 10 ff a3 00 00 00 01 03 01 00 f0 00 f0 02 05 05 02 a5
+
+0x9023	no args	getdatagroup4
+	0x9023	recv data from cam: 11 f0 3f 00 03 01 03 ff 0e 00 01 01 01 01 fe 02 02 05 5f
+
+0x9027	no args getdatagroup5
+	0x9027	recv data from cam: 0c 2b 00 1e 00 02 00 00 02 88 13 03 01 f8
+
+0x9015	1 arg 0x0	getcapturestatus
+	0x9015	recv data from cam: 06 00 00 00 00 02 08
+
+0x9015	1 arg 0x1	getcapturestatus
+	0x9015	recv data from cam: 06 01 00 00 00 00 07
+
+0x9015	1 arg 0x2	getcapturestatus
+	0x9015	recv data from cam: 06 02 00 00 00 00 08
+
+0x9015	1 arg 0x3	getcapturestatus
+	0x9015	recv data from cam: 06 03 00 00 00 00 09
+
+0x9015	1 arg 0x4	getcapturestatus
+	0x9015	recv data from cam: 06 04 00 00 00 00 0a
+0x9015	1 arg 0x5	getcapturestatus
+	0x9015	recv data from cam: 06 05 00 00 00 00 0b
+
+0x9015	1 arg 0x6	getcapturestatus
+	0x9015	recv data from cam: 06 06 00 00 00 00 0c
+
+0x9015	1 arg 0x7	getcapturestatus
+	0x9015	recv data from cam: 06 07 00 00 00 00 0d
+0x9015	1 arg 0x8	getcapturestatus
+	0x9015	recv data from cam: 06 08 00 00 00 00 0e
+0x9015	1 arg 0x9	getcapturestatus
+	0x9015	recv data from cam: 06 09 00 00 00 00 0f
+0x9015	1 arg 0xa	getcapturestatus
+	0x9015	recv data from cam: 06 0a 00 00 00 00 10
+0x9015	1 arg 0xb	getcapturestatus
+	0x9015	recv data from cam: 06 0b 00 00 00 00 11
+... until arg 0x1c...
+
+0x902c	3 args 0x0,0x0,0x0	getcamstatus2
+	0x902c	recv data from cam:	0x44 bytes
+
+0x9031 	no args
+	0x9031	recv data from cam:	0xa5 bytes
+
+0x902c	3 args 0x0,0x0,0x0	getcamstatus2
+	0x902c	recv data from cam:	0x44 bytes
+(repeats a bit)
+
+0x9033	no args
+	0x9033 	recv data from cam: 0xd8 bytes
+
+0x9018	no args, setdatagroup2
+	90x18	send data to cam: 03 00 80 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 85
+
+0x901b	no args snap
+	0x901b	send data to cam: 02 02 01 05
+
+some 0x902c polling
+
+0x9015	arg 0 getcapturestatus
+	0x9015:	06 00 00 01 05 00 02 0e
+
+0x902d	no args	getpictfileinfo2
+	0x902d: from cam: 0x38 bytes, with some info data
+
+0x9022	3 args, 80 05 00 57, 00 00 00 00, c2 b8 07 00 getbigpartialpictfile
+	0x9022: 4 byte size, JPEG
+
+0x9015	0
+	0x9015: 06 00 00 01 03 80 02 8c
+
+0x901c	1 arg: 0x0 clearimagedbsingle
+	0x901c: send data (8 byte): 00 00 00 00 00 00 00 00
+
+0x9015	0
+	0x9015:	06 00 01 01 00 00 00 08
+
+0x9015	1
+	0x9015:	06 01 01 01 00 00 00 09
+
+0x9015	2
+	0x9015:	06 02 01 01 00 00 00 0a
+
+....
+
+
+
+0x902b	no args getcamviewframe
