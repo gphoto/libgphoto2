@@ -1034,7 +1034,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_SIGMA_FP_GetDataGroup6		0x9029
 #define PTP_OC_SIGMA_FP_SetDataGroup6		0x902a
 #define PTP_OC_SIGMA_FP_GetCamViewFrame		0x902b	/* liveview here! */
-#define PTP_OC_SIGMA_FP_GetPictFileInfo2	0x902c
+#define PTP_OC_SIGMA_FP_GetCamStatus2		0x902c
+#define PTP_OC_SIGMA_FP_GetPictFileInfo2	0x902d
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
@@ -4784,6 +4785,10 @@ uint16_t ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviews
 
 uint16_t ptp_sigma_fp_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getpictfileinfo2 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getbigpartialpictfile (PTPParams* params, uint32_t p1, uint32_t offset, uint32_t insize, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_snap (PTPParams* params, uint32_t p1, uint32_t p2);
+uint16_t ptp_sigma_fp_getcapturestatus (PTPParams* params, uint32_t p1, unsigned char **data, unsigned int *size);
 
 uint16_t ptp_olympus_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_olympus_omd_move_focus(params,direction,step_size) ptp_generic_no_data(params,PTP_OC_OLYMPUS_OMD_MFDrive,2,direction,step_size)

@@ -193,6 +193,16 @@ some 0x902c polling
 0x902d	no args	getpictfileinfo2
 	0x902d: from cam: 0x38 bytes, with some info data
 
+		4800000002002d9050000000
+
+		38
+		00 00 00 01
+		00 00 00 0c
+		00 00 00
+		80 05 00 57
+		c2 b8 07 00
+  		24000000...
+
 0x9022	3 args, 80 05 00 57, 00 00 00 00, c2 b8 07 00 getbigpartialpictfile
 	0x9022: 4 byte size, JPEG
 

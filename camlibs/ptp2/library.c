@@ -2682,7 +2682,7 @@ static struct {
 	{"Samsung:EK-GC100",			0x04e8,	0x6866, 0},
 
 	/* 522903503@qq.com */
-	{"Sigma:fp",				0x1003,	0xc432, PTP_CAP_PREVIEW},
+	{"Sigma:fp",				0x1003,	0xc432, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Bernhard Wagner <me@bernhardwagner.net> */
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
@@ -5452,6 +5452,90 @@ downloadfile:
 	return GP_ERROR;
 }
 
+static int
+camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
+{
+	PTPParams	*params = &camera->pl->params;
+	unsigned char	*data = NULL;
+	unsigned int	size = 0;
+	uint32_t	id, insize;
+	CameraFile	*file;
+	int		ret;
+
+	C_PTP_REP (ptp_sigma_fp_snap(params, 2, 1));
+
+	C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &data, &size));
+	free (data);
+
+	C_PTP_REP (ptp_sigma_fp_getpictfileinfo2(params, &data, &size));
+	if (size < 0x38) {
+		GP_LOG_E ("unexpected size %d\n", size);
+		free (data);
+		return GP_ERROR;
+	}
+	if (data[0] != 0x38) {
+		GP_LOG_E ("unexpected size byte %d\n", data[0]);
+		free (data);
+		return GP_ERROR;
+	}
+	id = data[12] | (data[13]<<8) | (((unsigned int)data[14]) << 16) | (((unsigned int)data[15]) << 24);
+	insize = data[16] | (data[17]<<8) | (((unsigned int)data[18]) << 16) | (((unsigned int)data[19]) << 24);
+
+	free (data);
+
+	C_PTP_REP (ptp_sigma_fp_getbigpartialpictfile(params, id, 0, insize, &data, &size));
+
+	sprintf (path->name, "capt%04d.jpg", params->capcnt++);
+	strcpy (path->folder,"/");
+
+	ret = gp_file_new (&file);
+	if (ret != GP_OK) {
+		free (data);
+		return ret;
+	}
+
+	ret = gp_file_append (file, (char*)data+4, size-4);
+	free (data);
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
+
+	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
+	return GP_OK;
+
+#if 0
+	CameraFileInfo info;
+	info.file.fields = GP_FILE_INFO_TYPE |
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+			GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+	strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
+	info.file.width		= ob->oi.ImagePixWidth;
+	info.file.height	= ob->oi.ImagePixHeight;
+	info.file.size		= size;
+	info.file.mtime		= time(NULL);
+
+	info.preview.fields = GP_FILE_INFO_TYPE |
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+			GP_FILE_INFO_SIZE;
+	strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
+	info.preview.width	= ob->oi.ThumbPixWidth;
+	info.preview.height	= ob->oi.ThumbPixHeight;
+	info.preview.size	= ob->oi.ThumbCompressedSize;
+	GP_LOG_D ("setting fileinfo in fs");
+	return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+#endif
+}
+
 
 static int
 camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
@@ -5558,6 +5642,11 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return camera_panasonic_capture (camera, type, path, context);
 	}
 
+	if (    (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_SIGMAFP) &&
+		ptp_operation_issupported(params, PTP_OC_SIGMA_FP_Snap)
+	) {
+		return camera_sigma_fp_capture (camera, type, path, context);
+	}
 
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,
@@ -8924,6 +9013,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) ||
+		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_SIGMAFP) ||
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) ||
 		 (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)) &&
 		!strncmp (filename, "capt", 4)

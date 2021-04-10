@@ -987,6 +987,51 @@ ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size)
 }
 
 uint16_t
+ptp_sigma_fp_getcapturestatus (PTPParams* params, unsigned int p1, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCaptureStatus, p1);
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_sigma_fp_getpictfileinfo2 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetPictFileInfo2);
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_sigma_fp_getbigpartialpictfile (PTPParams* params, unsigned int p1, unsigned int off, unsigned int insize, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetBigPartialPictFile, p1, off, insize);
+        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_sigma_fp_snap (PTPParams* params, unsigned int p1, unsigned int p2)
+{
+	PTPContainer    ptp;
+	unsigned char	*data = malloc(4);
+	uint16_t	ret;
+
+	data[0] = 0x02;
+	data[1] = p1;
+	data[2] = p2;
+	data[3] = 0x02+p1+p2;	/* checksum, just add everything */
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_Snap);
+        ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 4, (unsigned char**)&data, 0);
+	free (data);
+	return ret;
+}
+
+uint16_t
 ptp_olympus_init_pc_mode (PTPParams* params)
 {
 	uint16_t		ret;
