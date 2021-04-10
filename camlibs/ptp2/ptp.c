@@ -1032,6 +1032,19 @@ ptp_sigma_fp_snap (PTPParams* params, unsigned int p1, unsigned int p2)
 }
 
 uint16_t
+ptp_sigma_fp_clearimagedbsingle (PTPParams* params)
+{
+	PTPContainer    ptp;
+	unsigned char	*data = calloc(8,1);
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_ClearImageDBSingle, 0);	/* param */
+        ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 8, (unsigned char**)&data, 0);
+	free (data);
+	return ret;
+}
+
+uint16_t
 ptp_olympus_init_pc_mode (PTPParams* params)
 {
 	uint16_t		ret;

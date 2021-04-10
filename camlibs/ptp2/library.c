@@ -5485,6 +5485,8 @@ camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath 
 
 	C_PTP_REP (ptp_sigma_fp_getbigpartialpictfile(params, id, 0, insize, &data, &size));
 
+	C_PTP_REP (ptp_sigma_fp_clearimagedbsingle(params));
+
 	sprintf (path->name, "capt%04d.jpg", params->capcnt++);
 	strcpy (path->folder,"/");
 
