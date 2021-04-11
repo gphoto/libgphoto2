@@ -9823,6 +9823,42 @@ camera_init (Camera *camera, GPContext *context)
 			C_PTP (ptp_sigma_fp_9035 (params, &xdata, &xsize));
 			GP_LOG_DATA ((char*)xdata, xsize, "9035 output");
 			free (xdata);
+
+			C_PTP (ptp_sigma_fp_getcamcansetinfo5 (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "getcamcansetinfo5 output");
+			free (xdata);
+
+			C_PTP (ptp_sigma_fp_getdatagroup1 (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "getdatagroup1 output");
+			free (xdata);
+
+			C_PTP (ptp_sigma_fp_getdatagroup2 (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "getdatagroup2 output");
+			free (xdata);
+
+			C_PTP (ptp_sigma_fp_getdatagroup3 (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "getdatagroup3 output");
+			free (xdata);
+
+			C_PTP (ptp_sigma_fp_getdatagroup4 (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "getdatagroup4 output");
+			free (xdata);
+
+			C_PTP (ptp_sigma_fp_getdatagroup5 (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "getdatagroup5 output");
+			free (xdata);
+
+			C_PTP (ptp_sigma_fp_getdatagroup6 (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "getdatagroup6 output");
+			free (xdata);
+
+			C_PTP (ptp_sigma_fp_getcamdatagroupfocus (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "getdatagroupfocus output");
+			free (xdata);
+
+			C_PTP (ptp_sigma_fp_getcamdatagroupmovie (params, &xdata, &xsize));
+			GP_LOG_DATA ((char*)xdata, xsize, "getdatagroupmovie output");
+			free (xdata);
 		}
 		break;
 	case PTP_VENDOR_GP_LEICA:

@@ -4793,6 +4793,15 @@ uint16_t ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviews
 
 uint16_t ptp_sigma_fp_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getcamcansetinfo5 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getdatagroup1 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getdatagroup2 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getdatagroup3 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getdatagroup4 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getdatagroup5 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getdatagroup6 (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getcamdatagroupfocus (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_getcamdatagroupmovie (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_sigma_fp_getbigpartialpictfile (PTPParams* params, uint32_t p1, uint32_t offset, uint32_t insize, unsigned char **data, unsigned int *size);
 uint16_t ptp_sigma_fp_snap (PTPParams* params, uint32_t mode, uint32_t amount);
 uint16_t ptp_sigma_fp_clearimagedbsingle (PTPParams* params, uint32_t id);

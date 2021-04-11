@@ -977,13 +977,164 @@ ptp_sigma_fp_liveview_image (PTPParams* params, unsigned char **data, unsigned i
         return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
+static uint16_t
+ptp_sigma_fp_parse_ifdlist (PTPParams* params, unsigned char *data, unsigned int size)
+{
+	uint32_t	datalen, entrycount, offset;
+	unsigned int	i;
+
+	if (size < 5) {
+		ptp_debug (params, "size %d is less than 5", size);
+		return PTP_RC_GeneralError;
+	}
+	datalen = dtoh32a(data);
+	if (datalen != size-4-1) {
+		ptp_debug (params, "size %d is not specified size %d", size-4-1, datalen);
+		return PTP_RC_GeneralError;
+	}
+
+	entrycount = dtoh32a(data+4);
+	offset = 8;
+	if (8 + 12*entrycount > size) {
+		ptp_debug (params, "count %d entries do not fit size %d", entrycount, size);
+		return PTP_RC_GeneralError;
+	}
+	for (i = 0; i<entrycount; i++) {
+		uint16_t tag = dtoh16a(data+offset+i*12), type = dtoh16a(data+offset+i*12+2);
+		uint32_t count = dtoh32a(data+offset+i*12+4), value = dtoh32a(data+offset+i*12+8);
+		/* word tag, word type, dword elements, value */
+		ptp_debug (params, "entry %d: tag=0x%04x, type=0x%04x, elements=%d, value=0x%08x", i, tag, type, count, value);
+		switch (dtoh16a(data+offset+i*12+2)) {
+		case 0x2: /* ASCII */
+			if (count > 4) {
+				ptp_debug (params, "ascii: %s", &data[dtoh32a(data+offset+i*12+8)]);
+			} else {
+				ptp_debug (params, "ascii: %s", data+offset+i*12+8);
+			}
+			break;
+		case 0xb: /* 32bit ieee float */
+			ptp_debug (params, "float: %f", *(float*)(data+offset+i*12+8));
+			break;
+		}
+	}
+	return PTP_RC_OK;
+#if 0
+0000  5b 00 00 00 02 00 35 90-02 00 00 00
+
+4a 00 00 00  [.....5.....J...
+0010  04 00 00 00 01 00 02 00-09 00 00 00 3c 00 00 00  ............<...
+0020  02 00 02 00 09 00 00 00-45 00 00 00 03 00 02 00  ........E.......
+0030  04 00 00 00 56 38 34 00-05 00 0b 00 01 00 00 00  ....V84.........
+0040  52 b8 9e 3f 00 00 00 00-53 49 47 4d 41 20 66 70  R..?....SIGMA fp
+0050  00 39 31 34 30 33 37 32-37 00 b3                 .91403727..
+
+#endif
+}
+
 uint16_t
 ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size)
 {
 	PTPContainer    ptp;
+	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCameraInfo);
-        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+	if (ret != PTP_RC_OK) return ret;
+	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_sigma_fp_getcamcansetinfo5 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamCanSetInfo5);
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+	if (ret != PTP_RC_OK) return ret;
+	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_sigma_fp_getcamdatagroupfocus (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamDataGroupFocus);
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+	if (ret != PTP_RC_OK) return ret;
+	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_sigma_fp_getcamdatagroupmovie (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+	uint16_t	ret;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamDataGroupMovie);
+	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+	if (ret != PTP_RC_OK) return ret;
+	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
+	return PTP_RC_OK;
+}
+
+uint16_t
+ptp_sigma_fp_getdatagroup1 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetDataGroup1);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_sigma_fp_getdatagroup2 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetDataGroup2);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_sigma_fp_getdatagroup3 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetDataGroup3);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_sigma_fp_getdatagroup4 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetDataGroup4);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_sigma_fp_getdatagroup5 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetDataGroup5);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_sigma_fp_getdatagroup6 (PTPParams* params, unsigned char **data, unsigned int *size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetDataGroup6);
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
 uint16_t
