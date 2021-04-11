@@ -982,7 +982,7 @@ ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size)
 {
 	PTPContainer    ptp;
 
-	PTP_CNT_INIT(ptp, 0x9035);
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCameraInfo);
         return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
@@ -8780,7 +8780,12 @@ ptp_opcode_trans_t ptp_opcode_sigmafp_trans[] = {
 	{PTP_OC_SIGMA_FP_GetPictFileInfo2,"GetPictFileInfo2"},
 	{PTP_OC_SIGMA_FP_GetCamCanSetInfo5,"GetCamCanSetInfo5"},
 	{PTP_OC_SIGMA_FP_GetCamDataGroupFocus,"GetCamDataGroupFocus"},
+	{PTP_OC_SIGMA_FP_SetCamDataGroupFocus,"SetCamDataGroupFocus"},
 	{PTP_OC_SIGMA_FP_GetCamDataGroupMovie,"GetCamDataGroupMovie"},
+	{PTP_OC_SIGMA_FP_SetCamDataGroupMovie,"SetCamDataGroupMovie"},
+	{PTP_OC_SIGMA_FP_GetCameraInfo,"GetCameraInfo"},
+	{PTP_OC_SIGMA_FP_GetMovieFileInfo,"GetMovieFileInfo"},
+	{PTP_OC_SIGMA_FP_GetPartialMovieFile,"GetPartialMovieFile"},
 };
 
 const char*

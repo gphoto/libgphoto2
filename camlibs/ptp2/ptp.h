@@ -1038,7 +1038,12 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_SIGMA_FP_GetPictFileInfo2	0x902d
 #define PTP_OC_SIGMA_FP_GetCamCanSetInfo5	0x9030
 #define PTP_OC_SIGMA_FP_GetCamDataGroupFocus	0x9031
-#define PTP_OC_SIGMA_FP_GetCamDataGroupMovie	0x9032
+#define PTP_OC_SIGMA_FP_SetCamDataGroupFocus	0x9032
+#define PTP_OC_SIGMA_FP_GetCamDataGroupMovie	0x9033
+#define PTP_OC_SIGMA_FP_SetCamDataGroupMovie	0x9034
+#define PTP_OC_SIGMA_FP_GetCameraInfo		0x9035 /* name guessed */
+#define PTP_OC_SIGMA_FP_GetMovieFileInfo	0x9036
+#define PTP_OC_SIGMA_FP_GetPartialMovieFile	0x9037
 
 /* Proprietary vendor extension operations mask */
 #define PTP_OC_EXTENSION_MASK           0xF000
