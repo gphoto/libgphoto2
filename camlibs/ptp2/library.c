@@ -5485,7 +5485,7 @@ camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath 
 		if (captstatus.status == 0x0002) break;	/* success ? */
 		if (captstatus.status == 0x0005) break;	/* success */
 
-		usleep(10*1000);
+		usleep(20*1000);
 
 	}
 	C_PTP_REP (ptp_sigma_fp_getpictfileinfo2(params, &pictfileinfoex2));
