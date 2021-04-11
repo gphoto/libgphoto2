@@ -4791,7 +4791,14 @@ uint16_t ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned in
 uint16_t ptp_sigma_fp_getbigpartialpictfile (PTPParams* params, uint32_t p1, uint32_t offset, uint32_t insize, unsigned char **data, unsigned int *size);
 uint16_t ptp_sigma_fp_snap (PTPParams* params, uint32_t mode, uint32_t amount);
 uint16_t ptp_sigma_fp_clearimagedbsingle (PTPParams* params);
-uint16_t ptp_sigma_fp_getcapturestatus (PTPParams* params, uint32_t p1, unsigned char **data, unsigned int *size);
+typedef struct _SIGMAFP_CaptureStatus {
+	uint8_t		imageid;
+	uint8_t		imagedbhead;
+	uint8_t		imagedbtail;
+	uint16_t	status;
+	uint8_t		destination;
+} SIGMAFP_CaptureStatus;
+uint16_t ptp_sigma_fp_getcapturestatus (PTPParams* params, uint32_t p1, SIGMAFP_CaptureStatus *status);
 uint16_t ptp_sigma_fp_getcamstatus2 (PTPParams* params, uint32_t canset, uint32_t datagroup, uint32_t other, unsigned char **data, unsigned int *size);
 
 typedef struct _SIGMAFP_PictFileInfo2Ex {

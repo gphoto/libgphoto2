@@ -5455,26 +5455,39 @@ downloadfile:
 static int
 camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
 {
-	PTPParams	*params = &camera->pl->params;
-	unsigned char	*data = NULL;
-	unsigned int	size = 0;
-	CameraFile	*file;
-	int		ret;
+	PTPParams		*params = &camera->pl->params;
+	unsigned char		*data = NULL;
+	unsigned int		size = 0;
+	CameraFile		*file;
+	int			ret, tries;
 	SIGMAFP_PictFileInfo2Ex	pictfileinfoex2;
+	SIGMAFP_CaptureStatus	captstatus;
 
-	C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &data, &size));
-	free (data);
+	C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &captstatus));
+	GP_LOG_D("status before snap 0x%04x", captstatus.status);
 
 	C_PTP_REP (ptp_sigma_fp_snap(params, 1, 1));
 
-	C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &data, &size));
-	free (data);
+	tries = 50;
+	while (tries--) {
+		C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &captstatus));
+		GP_LOG_D("trying ... status 0x%04x", captstatus.status);
+		if ((captstatus.status & 0xf000) == 0x6000) {	/* failure */
+			if (captstatus.status == 0x6001) {
+				gp_context_error (context, _("Capture failed: No focus."));
+				return GP_ERROR;
+			}
+			return GP_ERROR;
+		}
+		if ((captstatus.status & 0xf000) == 0x8000) {	/* success */
+			break;
+		}
+		if (captstatus.status == 0x0002) break;	/* success ? */
+		if (captstatus.status == 0x0005) break;	/* success */
 
-	usleep(1000);
+		usleep(10*1000);
 
-	C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &data, &size));
-	free (data);
-
+	}
 	C_PTP_REP (ptp_sigma_fp_getpictfileinfo2(params, &pictfileinfoex2));
 
 	C_PTP_REP (ptp_sigma_fp_getbigpartialpictfile(params, pictfileinfoex2.fileaddress, 0, pictfileinfoex2.filesize, &data, &size));

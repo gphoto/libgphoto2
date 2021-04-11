@@ -987,12 +987,32 @@ ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size)
 }
 
 uint16_t
-ptp_sigma_fp_getcapturestatus (PTPParams* params, unsigned int p1, unsigned char **data, unsigned int *size)
+ptp_sigma_fp_getcapturestatus (PTPParams* params, unsigned int p1, SIGMAFP_CaptureStatus*status)
 {
 	PTPContainer    ptp;
+	uint16_t	ret;
+	unsigned char	*data = NULL;
+	unsigned int	size = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCaptureStatus, p1);
-        return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+        ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	if (ret != PTP_RC_OK) return ret;
+
+	if (size < 7) {
+		ptp_debug (params, "size %d is smaller than expected 7", size);
+		return PTP_RC_GeneralError;
+	}
+	if (data[0] != 6) {
+		ptp_debug (params, "byte size %d is smaller than expected 6", data[0]);
+		return PTP_RC_GeneralError;
+	}
+	status->imageid		= data[1];
+	status->imagedbhead	= data[2];
+	status->imagedbtail	= data[3];
+	status->status		= dtoh16a(&data[4]);
+	status->destination	= data[5];
+	/* data[6] is the checksum (sum of bytes 0->5 */
+	return ret;
 }
 
 uint16_t
