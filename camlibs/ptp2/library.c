@@ -5492,7 +5492,7 @@ camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath 
 
 	C_PTP_REP (ptp_sigma_fp_getbigpartialpictfile(params, pictfileinfoex2.fileaddress, 0, pictfileinfoex2.filesize, &data, &size));
 
-	C_PTP_REP (ptp_sigma_fp_clearimagedbsingle(params));
+	C_PTP_REP (ptp_sigma_fp_clearimagedbsingle(params, captstatus.imageid));
 
 	sprintf (path->name, "%s%s", pictfileinfoex2.name, pictfileinfoex2.fileext);
 	strcpy (path->folder,"/");
