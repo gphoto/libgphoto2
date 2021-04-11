@@ -5458,36 +5458,30 @@ camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath 
 	PTPParams	*params = &camera->pl->params;
 	unsigned char	*data = NULL;
 	unsigned int	size = 0;
-	uint32_t	id, insize;
 	CameraFile	*file;
 	int		ret;
-
-	C_PTP_REP (ptp_sigma_fp_snap(params, 2, 1));
+	SIGMAFP_PictFileInfo2Ex	pictfileinfoex2;
 
 	C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &data, &size));
 	free (data);
 
-	C_PTP_REP (ptp_sigma_fp_getpictfileinfo2(params, &data, &size));
-	if (size < 0x38) {
-		GP_LOG_E ("unexpected size %d\n", size);
-		free (data);
-		return GP_ERROR;
-	}
-	if (data[0] != 0x38) {
-		GP_LOG_E ("unexpected size byte %d\n", data[0]);
-		free (data);
-		return GP_ERROR;
-	}
-	id = data[12] | (data[13]<<8) | (((unsigned int)data[14]) << 16) | (((unsigned int)data[15]) << 24);
-	insize = data[16] | (data[17]<<8) | (((unsigned int)data[18]) << 16) | (((unsigned int)data[19]) << 24);
+	C_PTP_REP (ptp_sigma_fp_snap(params, 1, 1));
 
+	C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &data, &size));
 	free (data);
 
-	C_PTP_REP (ptp_sigma_fp_getbigpartialpictfile(params, id, 0, insize, &data, &size));
+	usleep(1000);
+
+	C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &data, &size));
+	free (data);
+
+	C_PTP_REP (ptp_sigma_fp_getpictfileinfo2(params, &pictfileinfoex2));
+
+	C_PTP_REP (ptp_sigma_fp_getbigpartialpictfile(params, pictfileinfoex2.fileaddress, 0, pictfileinfoex2.filesize, &data, &size));
 
 	C_PTP_REP (ptp_sigma_fp_clearimagedbsingle(params));
 
-	sprintf (path->name, "capt%04d.jpg", params->capcnt++);
+	sprintf (path->name, "%s%s", pictfileinfoex2.name, pictfileinfoex2.fileext);
 	strcpy (path->folder,"/");
 
 	ret = gp_file_new (&file);
@@ -9019,6 +9013,10 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		 (params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) ||
 		 (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)) &&
 		!strncmp (filename, "capt", 4)
+	)
+		return GP_OK;
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_SIGMAFP) &&
+		!strncmp (filename,  "SDIM", 4)
 	)
 		return GP_OK;
 

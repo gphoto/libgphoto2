@@ -996,12 +996,74 @@ ptp_sigma_fp_getcapturestatus (PTPParams* params, unsigned int p1, unsigned char
 }
 
 uint16_t
-ptp_sigma_fp_getpictfileinfo2 (PTPParams* params, unsigned char **data, unsigned int *size)
+ptp_sigma_fp_getcamstatus2 (PTPParams* params, uint32_t canset, uint32_t datagroup, uint32_t other, unsigned char **data, unsigned int *size)
 {
 	PTPContainer    ptp;
 
-	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetPictFileInfo2);
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamStatus2, canset, datagroup, other);
         return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
+}
+
+uint16_t
+ptp_sigma_fp_getpictfileinfo2 (PTPParams* params, SIGMAFP_PictFileInfo2Ex *pictinfo)
+{
+	PTPContainer    ptp;
+	uint16_t	ret;
+	unsigned int	off;
+	char		*data = NULL;
+	unsigned int	size = 0;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetPictFileInfo2);
+        ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, (unsigned char**)&data, &size);
+	if (ret != PTP_RC_OK) return ret;
+
+	if (size < 60) {
+		ptp_debug (params, "size %d is smaller than expected 60", size);
+		return PTP_RC_GeneralError;
+	}
+	if (dtoh32a((unsigned char*)data) != 56) {
+		ptp_debug (params, "dword size %d is smaller than expected 56", dtoh32a((unsigned char*)data));
+		return PTP_RC_GeneralError;
+	}
+	memset(pictinfo, 0, sizeof(*pictinfo));
+	pictinfo->fileaddress = dtoh32a((unsigned char*)(&data[12]));	/* perhaps ? */
+	pictinfo->filesize = dtoh32a((unsigned char*)(&data[16]));
+	strncpy(pictinfo->fileext, data+28, 4);
+	pictinfo->width = dtoh16a((unsigned char*)(&data[32]));
+	pictinfo->height = dtoh16a((unsigned char*)(&data[34]));
+	off = dtoh32a((unsigned char*)(&data[20]));
+	if (off > size) {
+		ptp_debug (params, "off %d is larger than size %d", off, size);
+		return PTP_RC_GeneralError;
+	}
+	strncpy(pictinfo->path, data+off, 9);
+	off = dtoh32a((unsigned char*)(&data[24]));
+	if (off > size) {
+		ptp_debug (params, "off %d is larger than size %d", off, size);
+		return PTP_RC_GeneralError;
+	}
+	strncpy(pictinfo->name, data+off, 9);
+
+#if 0
+uint16_t        pictureformat;	/* ? */
+char            fileext[4];	/* 28,29,30,31 */
+uint16_t        width;		/* 32, 33 */
+uint16_t        height;		/* 34, 35 */
+char            path[128];	/* offset 20,21,22,23 => 36 */
+char            name[128];	/* offset 24,25,26,27 => 45 */
+uint32_t        filesize;	/* 16,17,18,19 */
+uint32_t        fileaddress;	/* 12,13,14,15 */
+
+
+38 00 00 00
+
+01 00 00 00 0c 00 00 00 80 05 00 57 49 24 63 00  ...........WI$c.
+24 00 00 00 2d 00 00 00 4a 50 47 00 70 17 a0 0f  $...-...JPG.p...
+31 30 30 53 49 47 4d 41 00 53 44 49 4d 30 30 30  100SIGMA.SDIM000
+31 2e 4a 50 47 00 00 00                          1.JPG...
+#endif
+	free (data);
+	return PTP_RC_OK;
 }
 
 uint16_t
@@ -1014,16 +1076,16 @@ ptp_sigma_fp_getbigpartialpictfile (PTPParams* params, unsigned int p1, unsigned
 }
 
 uint16_t
-ptp_sigma_fp_snap (PTPParams* params, unsigned int p1, unsigned int p2)
+ptp_sigma_fp_snap (PTPParams* params, unsigned int mode, unsigned int amount)
 {
 	PTPContainer    ptp;
 	unsigned char	*data = malloc(4);
 	uint16_t	ret;
 
-	data[0] = 0x02;
-	data[1] = p1;
-	data[2] = p2;
-	data[3] = 0x02+p1+p2;	/* checksum, just add everything */
+	data[0] = 0x02;			/* num data bytes */
+	data[1] = mode;
+	data[2] = amount;
+	data[3] = 0x02+mode+amount;	/* checksum, just add everything */
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_Snap);
         ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 4, (unsigned char**)&data, 0);
@@ -8696,6 +8758,9 @@ ptp_opcode_trans_t ptp_opcode_sigmafp_trans[] = {
 	{PTP_OC_SIGMA_FP_SetDataGroup6,"SetDataGroup6"},
 	{PTP_OC_SIGMA_FP_GetCamViewFrame,"GetCamViewFrame"},
 	{PTP_OC_SIGMA_FP_GetPictFileInfo2,"GetPictFileInfo2"},
+	{PTP_OC_SIGMA_FP_GetCamCanSetInfo5,"GetCamCanSetInfo5"},
+	{PTP_OC_SIGMA_FP_GetCamDataGroupFocus,"GetCamDataGroupFocus"},
+	{PTP_OC_SIGMA_FP_GetCamDataGroupMovie,"GetCamDataGroupMovie"},
 };
 
 const char*

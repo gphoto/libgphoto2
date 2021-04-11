@@ -169,6 +169,14 @@ Init sequence:
 0x902c	3 args 0x0,0x0,0x0	getcamstatus2
 	0x902c	recv data from cam:	0x44 bytes
 
+	dword length
+	dword nrofdirs
+	dir[]:
+		word tagtype
+		word datatype
+		dword count
+		dword valueoffset
+
 0x9031 	no args
 	0x9031	recv data from cam:	0xa5 bytes
 
@@ -183,12 +191,21 @@ Init sequence:
 	90x18	send data to cam: 03 00 80 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 85
 
 0x901b	no args snap
-	0x901b	send data to cam: 02 02 01 05
+	0x901b	send data to cam: 02  02 01  05
+		capturemode
+		amount
 
 some 0x902c polling
 
 0x9015	arg 0 getcapturestatus
-	0x9015:	06 00 00 01 05 00 02 0e
+	0x9015:	06  00 00  01 05  00 02   0e
+                    ^^ id
+                       ^^ db head
+                           ^^ db tail
+                              ^^^^^^^ captstatus
+                                     ^^ dest to save
+
+	ImageID, ImageDBHead, ImageDBTail, word CaptStatus, DestinationToSave
 
 0x902d	no args	getpictfileinfo2
 	0x902d: from cam: 0x38 bytes, with some info data
