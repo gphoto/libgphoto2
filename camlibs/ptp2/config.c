@@ -10417,6 +10417,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 					gp_widget_append (section, widget);
 				continue;
 			}
+			/* Canon EOS special handling */
 			if (have_eos_prop(params,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
@@ -10431,6 +10432,32 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 				ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
 				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				ptp_free_devicepropdesc(&dpd);
+				if (ret != GP_OK) {
+					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
+					continue;
+				}
+				if (mode == MODE_SINGLE_GET) {
+					*outwidget = widget;
+					free (setprops);
+					return GP_OK;
+				}
+				if (mode == MODE_GET)
+					gp_widget_append (section, widget);
+				continue;
+			}
+			/* Sigma FP special handling */
+			if (have_sigma_prop(params,cursub->vendorid,cursub->propid)) {
+				PTPDevicePropDesc	dpd;
+
+				if ((mode == MODE_SINGLE_GET) && strcmp (cursub->name, confname))
+					continue;
+				if (mode == MODE_LIST) {
+					gp_list_append (list, cursub->name, NULL);
+					continue;
+				}
+				GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
+				memset(&dpd,0,sizeof(dpd));
+				ret = cursub->getfunc (camera, &widget, cursub, &dpd);
 				if (ret != GP_OK) {
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
@@ -10780,6 +10807,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				if (mode == MODE_SINGLE_SET)
 					return ret;
 			}
+			/* Canon EOS special handling */
 			if (have_eos_prop(params,cursub->vendorid,cursub->propid)) {
 				PTPDevicePropDesc	dpd;
 
@@ -10812,6 +10840,21 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					else
 						continue;
 				}
+				if (mode == MODE_SINGLE_SET)
+					return ret;
+			}
+			/* Sigma FP special handling */
+			if (have_sigma_prop(params,cursub->vendorid,cursub->propid)) {
+				PTPDevicePropDesc	dpd; /* fake, unused here for now */
+
+				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
+					continue;
+				gp_widget_set_changed (widget, FALSE); /* clear flag */
+				GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid);
+				memset(&dpd,0,sizeof(dpd));
+				ret = cursub->putfunc (camera, widget, &propval, &dpd);
+				if (ret != GP_OK)
+					gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d."), _(cursub->label), cursub->propid, ret);
 				if (mode == MODE_SINGLE_SET)
 					return ret;
 			}

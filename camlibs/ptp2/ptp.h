@@ -3413,6 +3413,16 @@ ff ff 00 00 00 00 00 00 00 00
 /* d610 */
 
 
+/* Sigma FP */
+/* These are all gphoto2 local defines, so we can use our config framework */
+#define PTP_DPC_GP_SIGMA_FP_ShutterSpeed		0xD001
+#define PTP_DPC_GP_SIGMA_FP_Aperture			0xD002
+#define PTP_DPC_GP_SIGMA_FP_ISOAuto			0xD003
+#define PTP_DPC_GP_SIGMA_FP_ISOSpeed			0xD004
+#define PTP_DPC_GP_SIGMA_FP_ExpCompensation		0xD005
+#define PTP_DPC_GP_SIGMA_FP_BatteryState		0xD006
+
+
 /* MTP specific Object Properties */
 #define PTP_OPC_StorageID				0xDC01
 #define PTP_OPC_ObjectFormat				0xDC02

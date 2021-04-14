@@ -142,6 +142,16 @@ have_eos_prop(PTPParams *params, uint16_t vendor, uint16_t prop) {
 	return 0;
 }
 
+static inline int
+have_sigma_prop(PTPParams *params, uint16_t vendor, uint16_t prop) {
+	/* The special Canon EOS property set gets special treatment. */
+	if ((params->deviceinfo.VendorExtensionID != PTP_VENDOR_GP_SIGMAFP) || (vendor != PTP_VENDOR_GP_SIGMAFP))
+		return 0;
+	if ((prop & 0xf000) == 0xd000)	/* we map it to vendor config space */
+		return 1;
+	return 0;
+}
+
 struct _CameraPrivateLibrary {
 	PTPParams params;
 	int checkevents;
