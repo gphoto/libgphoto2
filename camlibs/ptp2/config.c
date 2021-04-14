@@ -4587,7 +4587,6 @@ _put_Olympus_ShutterSpeed(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
-
 static int
 _get_Ricoh_ShutterSpeed(CONFIG_GET_ARGS) {
 	int i, valset = 0;
@@ -4655,6 +4654,73 @@ _put_Ricoh_ShutterSpeed(CONFIG_PUT_ARGS) {
 		y = 1;
 	}
 	propval->u64 = ((uint64_t)x<<32) | y;
+	return GP_OK;
+}
+
+static int
+_get_SigmaFP_ShutterSpeed(CONFIG_GET_ARGS) {
+	char		buf[200];
+	unsigned char	*xdata = NULL;
+	unsigned int	xsize = 0;
+	unsigned int	shutterspeed;
+	PTPParams	*params = &(camera->pl->params);
+
+	/* shutterspeed is in datagroup1, bit 0 presence */
+	C_PTP (ptp_sigma_fp_getdatagroup1 (params, &xdata, &xsize));
+
+	/* byte 0: 	count of bytes
+	 * byte 1,2: 	bitmask of presence
+	 * byte 3... 	start
+	 * byte[last]	checksum
+	 */
+
+	if (!(xdata[1] & (1<<0))) {
+		free (xdata);
+		return GP_ERROR;
+	}
+	shutterspeed = xdata[3];
+	free (xdata);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	gp_widget_add_choice (*widget, _("Bulb"));
+
+	if (shutterspeed == 0x8) {
+		gp_widget_set_value (*widget, _("Bulb"));
+	}  else {
+		sprintf(buf,"value %x", shutterspeed);
+		gp_widget_add_choice (*widget, buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_SigmaFP_ShutterSpeed(CONFIG_PUT_ARGS) {
+	const char	*value_str;
+	unsigned char	datagrp1[22];
+	unsigned int	shutterspeed = 0;
+	unsigned int	i, chksum = 0;
+	PTPParams	*params = &(camera->pl->params);
+
+	gp_widget_get_value (widget, &value_str);
+	memset(datagrp1,0,sizeof(datagrp1));
+
+	if (!strcmp(value_str,_("Bulb"))) {
+		shutterspeed = 0x08;
+	} else {
+		if (!sscanf (value_str, "value %x", &shutterspeed))
+			return GP_ERROR;
+	}
+	datagrp1[0] = 0x13;
+	datagrp1[1] = (1<<0);
+	datagrp1[2] = 0;
+	datagrp1[3] = shutterspeed;
+	chksum = 0;
+	for (i=0;i<21;i++)
+		chksum+=datagrp1[i];
+	datagrp1[21] = chksum & 0xff;
+	C_PTP (ptp_sigma_fp_setdatagroup1 (params, datagrp1, 22));
 	return GP_OK;
 }
 
@@ -9944,6 +10010,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed2,             PTP_VENDOR_SONY,    PTP_DTC_UINT32,  _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed,              PTP_VENDOR_SONY,    PTP_DTC_UINT32,  _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_RICOH_ShutterSpeed,             PTP_VENDOR_PENTAX,  PTP_DTC_UINT64, _get_Ricoh_ShutterSpeed,            _put_Ricoh_ShutterSpeed },
+	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_GP_SIGMA_FP_ShutterSpeed,       PTP_VENDOR_GP_SIGMAFP, PTP_DTC_UINT64, _get_SigmaFP_ShutterSpeed,       _put_SigmaFP_ShutterSpeed },
 	{ N_("Metering Mode"),                  "meteringmode",             PTP_DPC_CANON_MeteringMode,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_MeteringMode,            _put_Canon_MeteringMode },
 	{ N_("Metering Mode"),                  "meteringmode",             PTP_DPC_CANON_EOS_MeteringMode,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_MeteringMode,            _put_Canon_MeteringMode },
 	{ N_("AF Distance"),                    "afdistance",               PTP_DPC_CANON_AFDistance,               PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_AFDistance,              _put_Canon_AFDistance },

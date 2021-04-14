@@ -4812,6 +4812,7 @@ uint16_t ptp_sigma_fp_getdatagroup5 (PTPParams* params, unsigned char **data, un
 uint16_t ptp_sigma_fp_getdatagroup6 (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_sigma_fp_getcamdatagroupfocus (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_sigma_fp_getcamdatagroupmovie (PTPParams* params, unsigned char **data, unsigned int *size);
+uint16_t ptp_sigma_fp_setdatagroup1 (PTPParams* params, unsigned char *data, unsigned int size);
 uint16_t ptp_sigma_fp_getbigpartialpictfile (PTPParams* params, uint32_t p1, uint32_t offset, uint32_t insize, unsigned char **data, unsigned int *size);
 uint16_t ptp_sigma_fp_snap (PTPParams* params, uint32_t mode, uint32_t amount);
 uint16_t ptp_sigma_fp_clearimagedbsingle (PTPParams* params, uint32_t id);

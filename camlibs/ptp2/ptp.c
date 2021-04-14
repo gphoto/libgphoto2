@@ -1138,6 +1138,16 @@ ptp_sigma_fp_getdatagroup6 (PTPParams* params, unsigned char **data, unsigned in
 }
 
 uint16_t
+ptp_sigma_fp_setdatagroup1 (PTPParams* params, unsigned char *data, unsigned int size)
+{
+	PTPContainer    ptp;
+
+	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_SetDataGroup1);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, 0);
+}
+
+
+uint16_t
 ptp_sigma_fp_getcapturestatus (PTPParams* params, unsigned int p1, SIGMAFP_CaptureStatus*status)
 {
 	PTPContainer    ptp;
