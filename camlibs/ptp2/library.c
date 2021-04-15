@@ -1271,6 +1271,9 @@ static struct {
 	/* Andre Crone <andre@elysia.nl> */
 	{"Sony:DSC-RX100M4",          		0x054c, 0x0a6d, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* via email to gphoto-devel */
+	{"Sony:Alpha-RX1R II (Control)",	0x054c,0x0a70, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Andre Crone <andre@elysia.nl>, adjusted */
 	{"Sony:Alpha-A7S II (Control)",		0x054c,0x0a71, PTP_CAP|PTP_CAP_PREVIEW},
 
