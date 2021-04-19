@@ -2422,6 +2422,11 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 					break;
 				}
 				switch (dpd->DataType) {
+				case PTP_DTC_INT32:
+					dpd->FactoryDefaultValue.i32	= dtoh32a(xdata);
+					dpd->CurrentValue.i32		= dtoh32a(xdata);
+					ptp_debug (params ,"event %d: currentvalue of %x is %x", i, proptype, dpd->CurrentValue.i32);
+					break;
 				case PTP_DTC_UINT32:
 					dpd->FactoryDefaultValue.u32	= dtoh32a(xdata);
 					dpd->CurrentValue.u32		= dtoh32a(xdata);
