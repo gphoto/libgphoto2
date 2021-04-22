@@ -4657,11 +4657,82 @@ _put_Ricoh_ShutterSpeed(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+struct sigma_shutterspeed {
+	uint8_t		numval;
+	const char*	val;
+} sigma_shutterspeeds[] = {
+	{8,	N_("bulb")	},
+	{16,	"30"		},
+	{19,	"25"		},
+	{21,	"20"		},
+	{24,	"15"		},
+	{27,	"13"		},
+	{29,	"10"		},
+	{32,	"8"		},
+	{35,	"6"		},
+	{37,	"5"		},
+	{40,	"4"		},
+	{43,	"3.2"		},
+	{44,	"3"		},	/* 1/2 */
+	{45,	"2.5"		},
+	{48,	"2"		},
+	{51,	"1.6"		},
+	{53,	"1.3"		},
+	{56,	"1"		},
+	{59,	"0.8"		},
+	{61,	"0.6"		},
+	{64,	"0.5"		},
+	{67,	"0.4"		},
+	{69,	"0.3"		},
+	{72,	"1/4"		},
+	{75,	"1/5"		},
+	{77,	"1/6"		},
+	{80,	"1/8"		},
+	{83,	"1/10"		},
+	{85,	"1/13"		},
+	{88,	"1/15"		},
+	{91,	"1/20"		},
+	{93,	"1/25"		},
+	{96,	"1/30"		},
+	{99,	"1/40"		},
+	{101,	"1/50"		},
+	{104,	"1/60"		},
+	{107,	"1/80"		},
+	{109,	"1/100"		},
+	{112,	"1/125"		},
+	{115,	"1/160"		},
+	{117,	"1/200"		},
+	{120,	"1/250"		},
+	{123,	"1/320"		},
+	{125,	"1/400"		},
+	{128,	"1/500"		},
+	{131,	"1/640"		},
+	{133,	"1/800"		},
+	{136,	"1/1000"	},
+	{139,	"1/1250"	},
+	{141,	"1/1600"	},
+	{144,	"1/2000"	},
+	{147,	"1/2500"	},
+	{149,	"1/3200"	},
+	{152,	"1/4000"	},
+	{155,	"1/5000"	},
+	{157,	"1/6000"	},
+	{160,	"1/8000"	},
+	{162,	N_("Sync")	},
+	{163,	"1/10000"	},
+	{165,	"1/12800"	},
+	{168,	"1/16000"	},
+	{171,	"1/20000"	},
+	{173,	"1/25600"	},
+	{176,	"1/32000"	},
+};
+
 static int
 _get_SigmaFP_ShutterSpeed(CONFIG_GET_ARGS) {
 	char		buf[200];
 	unsigned char	*xdata = NULL;
 	unsigned int	xsize = 0;
+	unsigned int	i, valset = 0;
 	unsigned int	shutterspeed;
 	PTPParams	*params = &(camera->pl->params);
 
@@ -4684,13 +4755,16 @@ _get_SigmaFP_ShutterSpeed(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	gp_widget_add_choice (*widget, _("Bulb"));
-
-	if (shutterspeed == 0x8) {
-		gp_widget_set_value (*widget, _("Bulb"));
-	}  else {
-		sprintf(buf,"value %x", shutterspeed);
-		gp_widget_add_choice (*widget, buf);
+	for (i=0;i<sizeof(sigma_shutterspeeds)/sizeof(sigma_shutterspeeds[0]);i++) {
+		gp_widget_add_choice (*widget, _(sigma_shutterspeeds[i].val));
+		if (shutterspeed == sigma_shutterspeeds[i].numval) {
+			gp_widget_set_value (*widget, _(sigma_shutterspeeds[i].val));
+			valset = 1;
+		}
+	}
+	if (!valset) {
+		sprintf(buf,"unknown value 0x%x", shutterspeed);
+		gp_widget_set_value (*widget, shutterspeed);
 	}
 	return GP_OK;
 }
@@ -4700,17 +4774,21 @@ _put_SigmaFP_ShutterSpeed(CONFIG_PUT_ARGS) {
 	const char	*value_str;
 	unsigned char	datagrp1[22];
 	unsigned int	shutterspeed = 0;
-	unsigned int	i, chksum = 0;
+	unsigned int	i, chksum = 0, valfound = 0;
 	PTPParams	*params = &(camera->pl->params);
 
 	gp_widget_get_value (widget, &value_str);
 	memset(datagrp1,0,sizeof(datagrp1));
 
-	if (!strcmp(value_str,_("Bulb"))) {
-		shutterspeed = 0x08;
-	} else {
-		if (!sscanf (value_str, "value %x", &shutterspeed))
-			return GP_ERROR;
+	for (i=0;i<sizeof(sigma_shutterspeeds)/sizeof(sigma_shutterspeeds[0]);i++) {
+		if (!strcmp(value_str,_(sigma_shutterspeeds[i].val))) {
+			shutterspeed = sigma_shutterspeeds[i].numval;
+			valfound = 1;
+			break;
+		}
+	}
+	if (!valfound && !sscanf (value_str, "unknown value 0x%x", &shutterspeed)) {
+		return GP_ERROR;
 	}
 	datagrp1[0] = 0x13;
 	datagrp1[1] = (1<<0);
