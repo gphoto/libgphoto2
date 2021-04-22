@@ -4657,6 +4657,127 @@ _put_Ricoh_ShutterSpeed(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+struct sigma_aperture {
+	uint8_t		numval;
+	const char*	val;
+} sigma_apertures[] = {
+	{8,	"1.0"},
+	{11,	"1.1"},
+	{13,	"1.2"},
+	{16,	"1.4"},
+	{19,	"1.6"},
+	{21,	"1.8"},
+	{24,	"2.0"},
+	{27,	"2.2"},
+	{29,	"2.5"},
+	{32,	"2.8"},
+	{35,	"3.2"},
+	{40,	"4.0"},
+	{43,	"4.5"},
+	{45,	"5.0"},
+	{48,	"5.6"},
+	{51,	"6.3"},
+	{53,	"7.1"},
+	{56,	"8.0"},
+	{59,	"9.0"},
+	{61,	"10"},
+	{64,	"11"},
+	{67,	"13"},
+	{69,	"14"},
+	{72,	"16"},
+	{75,	"18"},
+	{77,	"20"},
+	{80,	"22"},
+	{83,	"25"},
+	{85,	"29"},
+	{88,	"32"},
+	{91,	"36"},
+	{93,	"40"},
+	{96,	"45"},
+	{99,	"51"},
+	{101,	"57"},
+	{104,	"64"},
+	{107,	"72"},
+	{109,	"81"},
+	{112,	"91"},
+};
+
+static int
+_get_SigmaFP_Aperture(CONFIG_GET_ARGS) {
+	char		buf[200];
+	unsigned char	*xdata = NULL;
+	unsigned int	xsize = 0;
+	unsigned int	i, valset = 0;
+	unsigned int	aperture;
+	PTPParams	*params = &(camera->pl->params);
+
+	/* shutterspeed is in datagroup1, bit 1 presence, offset 4 */
+	C_PTP (ptp_sigma_fp_getdatagroup1 (params, &xdata, &xsize));
+
+	/* byte 0: 	count of bytes
+	 * byte 1,2: 	bitmask of presence
+	 * byte 3... 	start
+	 * byte[last]	checksum
+	 */
+
+	if (!(xdata[1] & (1<<1))) {
+		free (xdata);
+		return GP_ERROR;
+	}
+	aperture = xdata[4];
+	free (xdata);
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (i=0;i<sizeof(sigma_apertures)/sizeof(sigma_apertures[0]);i++) {
+		gp_widget_add_choice (*widget, _(sigma_apertures[i].val));
+		if (aperture == sigma_apertures[i].numval) {
+			gp_widget_set_value (*widget, _(sigma_apertures[i].val));
+			valset = 1;
+		}
+	}
+	if (!valset) {
+		sprintf(buf,"unknown value 0x%x", aperture);
+		gp_widget_set_value (*widget, buf);
+	}
+	return GP_OK;
+}
+
+static int
+_put_SigmaFP_Aperture(CONFIG_PUT_ARGS) {
+	const char	*value_str;
+	unsigned char	datagrp1[22];
+	unsigned int	aperture = 0;
+	unsigned int	i, chksum = 0, valfound = 0;
+	PTPParams	*params = &(camera->pl->params);
+
+	gp_widget_get_value (widget, &value_str);
+	memset(datagrp1,0,sizeof(datagrp1));
+
+	for (i=0;i<sizeof(sigma_apertures)/sizeof(sigma_apertures[0]);i++) {
+		if (!strcmp(value_str,_(sigma_apertures[i].val))) {
+			aperture = sigma_apertures[i].numval;
+			valfound = 1;
+			break;
+		}
+	}
+	if (!valfound && !sscanf (value_str, "unknown value 0x%x", &aperture)) {
+		return GP_ERROR;
+	}
+	datagrp1[0] = 0x13;
+	datagrp1[1] = (1<<1);
+	datagrp1[2] = 0;
+	datagrp1[3] = 0;
+	datagrp1[4] = aperture;
+	chksum = 0;
+	for (i=0;i<21;i++)
+		chksum+=datagrp1[i];
+	datagrp1[21] = chksum & 0xff;
+	C_PTP (ptp_sigma_fp_setdatagroup1 (params, datagrp1, 22));
+	return GP_OK;
+}
+
 struct sigma_shutterspeed {
 	uint8_t		numval;
 	const char*	val;
@@ -4764,7 +4885,7 @@ _get_SigmaFP_ShutterSpeed(CONFIG_GET_ARGS) {
 	}
 	if (!valset) {
 		sprintf(buf,"unknown value 0x%x", shutterspeed);
-		gp_widget_set_value (*widget, shutterspeed);
+		gp_widget_set_value (*widget, buf);
 	}
 	return GP_OK;
 }
@@ -10089,6 +10210,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed,              PTP_VENDOR_SONY,    PTP_DTC_UINT32,  _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_RICOH_ShutterSpeed,             PTP_VENDOR_PENTAX,  PTP_DTC_UINT64, _get_Ricoh_ShutterSpeed,            _put_Ricoh_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_GP_SIGMA_FP_ShutterSpeed,       PTP_VENDOR_GP_SIGMAFP, PTP_DTC_UINT64, _get_SigmaFP_ShutterSpeed,       _put_SigmaFP_ShutterSpeed },
+	{ N_("Aperture"),                  	"aperture",		    PTP_DPC_GP_SIGMA_FP_Aperture,           PTP_VENDOR_GP_SIGMAFP, PTP_DTC_UINT64, _get_SigmaFP_Aperture,           _put_SigmaFP_Aperture },
 	{ N_("Metering Mode"),                  "meteringmode",             PTP_DPC_CANON_MeteringMode,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_MeteringMode,            _put_Canon_MeteringMode },
 	{ N_("Metering Mode"),                  "meteringmode",             PTP_DPC_CANON_EOS_MeteringMode,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_MeteringMode,            _put_Canon_MeteringMode },
 	{ N_("AF Distance"),                    "afdistance",               PTP_DPC_CANON_AFDistance,               PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_AFDistance,              _put_Canon_AFDistance },
