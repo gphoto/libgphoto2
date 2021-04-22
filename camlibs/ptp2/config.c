@@ -1554,6 +1554,12 @@ static struct deviceproptableu16 fuji_filmsimulation[] = {
 };
 GENERIC16TABLE(Fuji_FilmSimulation,fuji_filmsimulation)
 
+static struct deviceproptableu16 fuji_prioritymode[] = {
+	{ N_("Camera"),	1,	PTP_VENDOR_FUJI },
+	{ N_("USB"),	2,	PTP_VENDOR_FUJI },
+};
+GENERIC16TABLE(Fuji_PriorityMode,fuji_prioritymode)
+
 static int
 _get_ExpCompensation(CONFIG_GET_ARGS) {
 	int j;
@@ -10020,6 +10026,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("External Recording Control"),     "externalrecordingcontrol", PTP_DPC_NIKON_ExternalRecordingControl,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,    _put_Nikon_OffOn_UINT8 },
 	{ N_("Camera Action"),          "cameraaction", 	0xd208, 			    PTP_VENDOR_FUJI,	PTP_DTC_UINT16,	_get_Fuji_Action,		_put_Fuji_Action },
 	{ N_("Priority Mode"),		"prioritymode",		PTP_DPC_SONY_PriorityMode,  	    PTP_VENDOR_SONY,	PTP_DTC_INT8, 	_get_Sony_PriorityMode,     	_put_Sony_PriorityMode },
+	{ N_("Priority Mode"),          "prioritymode",         PTP_DPC_FUJI_PriorityMode,          PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_PriorityMode,         _put_Fuji_PriorityMode },
 
 /* virtual */
 	{ N_("Thumb Size"),		"thumbsize",    0,  PTP_VENDOR_NIKON,   0,  _get_Nikon_Thumbsize,   _put_Nikon_Thumbsize },
