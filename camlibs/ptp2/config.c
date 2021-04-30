@@ -5379,6 +5379,7 @@ static struct deviceproptableu8 nikon_liveviewaf[] = {
 };
 GENERIC8TABLE(Nikon_LiveViewAFU,nikon_liveviewaf)
 
+/* varies between nikons */
 static struct deviceproptableu8 nikon_liveviewimagezoomratio[] = {
 	{ N_("Entire Display"),	0, 0 },
 	{ N_("25%"),		2, 0 },
@@ -5387,6 +5388,17 @@ static struct deviceproptableu8 nikon_liveviewimagezoomratio[] = {
 	{ N_("200%"),		7, 0 },
 };
 GENERIC8TABLE(Nikon_LiveViewImageZoomRatio,nikon_liveviewimagezoomratio)
+
+/* varies between nikons */
+static struct deviceproptableu8 nikon_liveviewimagezoomratio_d5000[] = {
+	{ N_("Entire Display"),	0, 0 },
+	{ N_("25%"),		1, 0 },
+	{ N_("33%"),		2, 0 },
+	{ N_("50%"),		3, 0 },
+	{ N_("66%"),		4, 0 },
+	{ N_("100%"),		5, 0 },
+};
+GENERIC8TABLE(Nikon_LiveViewImageZoomRatio_D5000,nikon_liveviewimagezoomratio_d5000)
 
 static struct deviceproptablei8 nikon_liveviewafi[] = {
 	{ N_("Face-priority AF"),	0, 0 },
@@ -10383,6 +10395,15 @@ static struct submenu nikon_d500_capture_settings[] = {
 	{ 0,0,0,0,0,0,0 },
 };
 
+/* D5000...
+ * compression is same as D90
+ */
+static struct submenu nikon_d5000_capture_settings[] = {
+	{ N_("Image Quality"),                  "imagequality",         PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D90_Compression,     _put_Nikon_D90_Compression },
+	{ N_("Live View Image Zoom Ratio"),     "liveviewimagezoomratio",   PTP_DPC_NIKON_LiveViewImageZoomRatio,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LiveViewImageZoomRatio_D5000,  _put_Nikon_LiveViewImageZoomRatio_D5000 },
+	{ 0,0,0,0,0,0,0 },
+};
+
 static struct submenu nikon_z6_capture_settings[] = {
 	{ N_("Image Quality"),          	"imagequality",		PTP_DPC_CompressionSetting,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_D850_Compression,	_put_Nikon_D850_Compression },
 	{ N_("Focus Metering Mode"),            "focusmetermode",       PTP_DPC_FocusMeteringMode,	PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_Nikon_D850_FocusMetering,	_put_Nikon_D850_FocusMetering },
@@ -10488,6 +10509,7 @@ static struct menu menus[] = {
 
 
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0421, nikon_d90_capture_settings,     NULL,   NULL },
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0423, nikon_d5000_capture_settings,   NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x043c, nikon_d500_capture_settings,    NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0426, nikon_d3s_capture_settings,     NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0429, nikon_d5100_capture_settings,   NULL,   NULL },
