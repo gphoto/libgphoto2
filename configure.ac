@@ -193,9 +193,9 @@ dnl ---------------------------------------------------------------------------
 
 ALL_LINGUAS="cs da de es eu fr hu it ja nl pl ru sv uk vi zh_CN"
 GP_GETTEXT_HACK([${PACKAGE}-${LIBGPHOTO2_CURRENT_MIN}],[The gPhoto Team],[${MAIL_GPHOTO_TRANSLATION}])
+AM_PO_SUBDIRS()
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
-AM_PO_SUBDIRS()
 AM_ICONV()
 GP_GETTEXT_FLAGS()
 
