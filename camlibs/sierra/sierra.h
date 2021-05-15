@@ -39,6 +39,7 @@ typedef enum {
 	SIERRA_NO_USB_CLEAR	= 1<<6,
 	SIERRA_NO_REGISTER_40	= 1<<7,
 	SIERRA_MID_SPEED	= 1<<8,	/* serial line 9600 -> 57600 */
+	SIERRA_NO_BLOCK_WRITE	= 1<<9,
 } SierraFlags;
 
 struct _CameraPrivateLibrary {

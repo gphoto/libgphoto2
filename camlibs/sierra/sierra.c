@@ -2313,7 +2313,27 @@ camera_init (Camera *camera, GPContext *context)
 	 * contents of this register and directly proceed with checking for
 	 * folder support, the camera doesn't send anything.
 	 */
-	sierra_get_int_register (camera, 1, &value, NULL);
+	if (camera->pl->model == SIERRA_MODEL_EPSON && camera->port->type == GP_PORT_SERIAL) {
+		/*
+		 * At least Epson PhotoPC 500 with firmware v22-75 fails to
+		 * work above 38400bps - all commands time out.
+		 * Windows driver awaits response for up to 500ms, then
+		 * switches to byte-by-byte write mode.
+		 */
+		gp_port_set_timeout (camera->port, 55); /* 55ms, retried 9 times */
+		x = 0;
+		do {
+			ret = sierra_get_int_register (camera, 1, &value, NULL);
+			if (ret != GP_OK && x == 0)
+				GP_DEBUG ("We're probably too fast for the camera: disabling block writes");
+			camera->pl->flags |= SIERRA_NO_BLOCK_WRITE;
+			if (++x > 2) {
+				GP_DEBUG ("No response even without block writes. Giving up...");
+				break;
+			}
+		} while (ret != GP_OK);
+	} else
+		sierra_get_int_register (camera, 1, &value, NULL);
 
 #if 0
         /* FIXME??? What's that for? "Resetting folder system"? */
