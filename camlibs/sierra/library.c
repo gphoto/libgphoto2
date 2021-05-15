@@ -460,7 +460,11 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 			(camera->pl->flags & SIERRA_WRAP_USB_MASK),
 			packet, length));
 	} else {
-		CHECK (gp_port_write (camera->port, packet, length));
+		if (camera->pl->flags & SIERRA_NO_BLOCK_WRITE) {
+			for (x = 0; x < length; x++)
+				CHECK (gp_port_write(camera->port, &packet[x], 1));
+		} else
+			CHECK (gp_port_write (camera->port, packet, length));
 	}
 
 	return GP_OK;
