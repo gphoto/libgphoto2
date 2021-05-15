@@ -61,6 +61,7 @@ enum _SierraPacket {
 	ACK				= 0x06,
 	SIERRA_PACKET_INVALID		= 0x11,
 	SIERRA_PACKET_NAK		= 0x15,
+	SIERRA_PACKET_CANCEL		= 0x18,
 	SIERRA_PACKET_COMMAND		= 0x1b,
 	SIERRA_PACKET_WRONG_SPEED	= 0x8c,
 	SIERRA_PACKET_SESSION_ERROR	= 0xfc,
@@ -595,6 +596,7 @@ sierra_read_packet (Camera *camera, unsigned char *packet, GPContext *context)
 		case ACK:
 		case SIERRA_PACKET_INVALID:
 		case SIERRA_PACKET_NAK:
+		case SIERRA_PACKET_CANCEL:
 		case SIERRA_PACKET_SESSION_ERROR:
 		case SIERRA_PACKET_SESSION_END:
 		case SIERRA_PACKET_WRONG_SPEED:
@@ -794,6 +796,7 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 			GP_DEBUG ("Transmission successful.");
 			return GP_OK;
 		case SIERRA_PACKET_INVALID:
+		case SIERRA_PACKET_CANCEL:
 			gp_context_error (context, _("Packet was rejected "
 				"by camera. Please contact "
 				"%s."), MAIL_GPHOTO_DEVEL);
