@@ -464,8 +464,9 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 		if (camera->pl->flags & SIERRA_NO_BLOCK_WRITE) {
 			for (x = 0; x < length; x++)
 				CHECK (gp_port_write(camera->port, &packet[x], 1));
-		} else
+		} else {
 			CHECK (gp_port_write (camera->port, packet, length));
+		}
 	}
 
 	return GP_OK;
