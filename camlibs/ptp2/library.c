@@ -2957,6 +2957,10 @@ camera_abilities (CameraAbilitiesList *list)
 		a.folder_operations	= GP_FOLDER_OPERATION_PUT_FILE |
 					GP_FOLDER_OPERATION_MAKE_DIR |
 					GP_FOLDER_OPERATION_REMOVE_DIR;
+		if (models[i].usb_vendor == 0x4b0) {
+			/* make it clear nikons cannot upload */
+			a.folder_operations	&= ~GP_FOLDER_OPERATION_PUT_FILE;
+		}
 		CR (gp_abilities_list_append (list, a));
 	}
 	for (i = 0; i < sizeof(mtp_models)/sizeof(mtp_models[0]); i++) {
