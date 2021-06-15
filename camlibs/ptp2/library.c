@@ -6382,7 +6382,9 @@ camera_trigger_capture (Camera *camera, GPContext *context)
                	_("Sorry, your camera does not support generic capture"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_FUJI) {
+		C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	}
 	return GP_OK;
 }
 
