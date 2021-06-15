@@ -585,6 +585,7 @@ ptp_fujiptpip_getresp (PTPParams* params, PTPContainer* resp)
 	return PTP_RC_OK;
 }
 
+#define fujiptpip_initcmd_packet_size		82
 #define fujiptpip_initcmd_protocolversion	8
 #define fujiptpip_initcmd_guid			12
 #define fujiptpip_initcmd_name			28
@@ -594,7 +595,7 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 {
 	char		hostname[100];
 	unsigned char*	cmdrequest;
-	unsigned int	i;
+	unsigned int	i, namelen;
 	int 		len, ret;
 	unsigned char	guid[16];
 
@@ -607,16 +608,20 @@ ptp_fujiptpip_init_command_request (PTPParams* params)
 	if (!GetComputerNameA(hostname, &hostname_size))
 		return PTP_RC_GeneralError;
 #endif
-	len = fujiptpip_initcmd_name + (strlen(hostname)+1)*2;
+	len = fujiptpip_initcmd_packet_size; // Fuji X-Acquire always sends packets of fixed length 82. At least the X-T4 just closes the socket when sending packets of other lengths.
+	namelen = (len - fujiptpip_initcmd_name - 1) / 2; // Length in UCS-2 characters, excluding the 0 byte at the end.
+	if(strlen(hostname) < namelen)
+		namelen = strlen(hostname);
 
 	cmdrequest = malloc(len);
+	memset(cmdrequest, 0, len);
 	htod32a(&cmdrequest[fujiptpip_type],PTPIP_INIT_COMMAND_REQUEST);
 	htod32a(&cmdrequest[fujiptpip_len],len);
 
 	htod32a(&cmdrequest[fujiptpip_initcmd_protocolversion], 0x8f53e4f2);	/* magic number */
 
 	memcpy(&cmdrequest[fujiptpip_initcmd_guid], guid, 16);
-	for (i=0;i<strlen(hostname)+1;i++) {
+	for (i=0;i<namelen;i++) {
 		/* -> ucs-2 in little endian */
 		cmdrequest[fujiptpip_initcmd_name+i*2] = hostname[i];
 		cmdrequest[fujiptpip_initcmd_name+i*2+1] = 0;
