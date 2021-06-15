@@ -6365,6 +6365,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		/* poll camera until it is ready */
 		propval.u16 = 0x0000;
 		while (propval.u16 == 0x0000) {
+			usleep(1000);
 			C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_FUJI_CurrentState, &propval, PTP_DTC_UINT16));
 		}
 	}
