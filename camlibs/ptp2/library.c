@@ -6368,6 +6368,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			usleep(1000);
 			C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_FUJI_CurrentState, &propval, PTP_DTC_UINT16));
 		}
+		return GP_OK;
 	}
 
 #if 0
@@ -6382,9 +6383,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
                	_("Sorry, your camera does not support generic capture"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
-	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_FUJI) {
-		C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
-	}
+	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
 	return GP_OK;
 }
 
