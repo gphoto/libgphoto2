@@ -195,7 +195,7 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 		GP_LOG_DATA ((char*)xhdr+curread, ret, "ptpip/generic_read header:");
 		curread += ret;
 		if (ret == 0) {
-			GP_LOG_E ("End of stream after reading %d bytes of ptpipheader", ret);
+			GP_LOG_E ("End of stream after reading %d bytes of ptpipheader", curread);
 			return PTP_RC_GeneralError;
 		}
 	}
@@ -773,7 +773,7 @@ ptp_fujiptpip_init_event (PTPParams* params, const char *address)
 #endif
 			continue;
 		}
-		GP_LOG_E ("could not connect event");
+		GP_LOG_E ("could not connect jpeg");
 		PTPSOCK_CLOSE (params->jpgfd);
 		return GP_ERROR_IO;
 	} while (1);
