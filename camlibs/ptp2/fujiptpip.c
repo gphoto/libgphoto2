@@ -905,7 +905,7 @@ ptp_fujiptpip_jpeg (PTPParams* params, unsigned char** xdata, unsigned int *xsiz
 int
 ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	char 		*addr, *s, *p;
-	int		port, eventport;
+	int		port, eventport, connect_tries;
 	struct sockaddr_in	saddr;
 	uint16_t	ret;
 
@@ -1000,20 +1000,32 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 		PTPSOCK_CLOSE (params->jpgfd);
 		return GP_ERROR_IO;
 	}
-	ret = ptp_fujiptpip_init_command_request (params);
-	if (ret != PTP_RC_OK) {
-		PTPSOCK_CLOSE (params->cmdfd);
-		PTPSOCK_CLOSE (params->evtfd);
-		PTPSOCK_CLOSE (params->jpgfd);
-		return translate_ptp_result (ret);
-	}
-	ret = ptp_fujiptpip_init_command_ack (params);
-	if (ret != PTP_RC_OK) {
-		PTPSOCK_CLOSE (params->cmdfd);
-		PTPSOCK_CLOSE (params->evtfd);
-		PTPSOCK_CLOSE (params->jpgfd);
-		return translate_ptp_result (ret);
-	}
+	connect_tries = 0;
+	do {
+		ret = ptp_fujiptpip_init_command_request (params);
+		if (ret != PTP_RC_OK) {
+			PTPSOCK_CLOSE (params->cmdfd);
+			PTPSOCK_CLOSE (params->evtfd);
+			PTPSOCK_CLOSE (params->jpgfd);
+			return translate_ptp_result (ret);
+		}
+		connect_tries++;
+		ret = ptp_fujiptpip_init_command_ack (params);
+		if (ret == PTP_RC_AccessDenied && connect_tries < 2) {
+#ifdef WIN32
+			Sleep(500);
+#else
+			usleep(500*1000);
+#endif
+			continue;
+		}
+		if (ret != PTP_RC_OK) {
+			PTPSOCK_CLOSE (params->cmdfd);
+			PTPSOCK_CLOSE (params->evtfd);
+			PTPSOCK_CLOSE (params->jpgfd);
+			return translate_ptp_result (ret);
+		}
+	} while(connect_tries < 2);
 	GP_LOG_D ("fujiptpip connected!");
 	return GP_OK;
 }
