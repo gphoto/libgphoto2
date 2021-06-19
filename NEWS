@@ -2,6 +2,18 @@ libgphoto2 2.5.27.1 development snapshot
 
 ptp2:
 * olympus: wait time was twice as long as required if no events arrived
+* Sigma Fp: added basic beta support for capture, live view and config.
+* Canon EOS: handle newer EOS R series reporting of configs (ISO, Aperture, Shutterspeed)
+* fuji:
+  * ptpip improvements
+  * bug fixes
+  * some Fuji cameras have now liveview only for webcam (need new firmware)
+* various small fixes
+* New ids:
+  * Sony Alpha-RX1R II, ILCE-7C
+  * Nikon Coolpix B500
+  * Canon EOS M50m2
+  * Fuji X-Pro3, GFX 100S, X100V
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.27 release
