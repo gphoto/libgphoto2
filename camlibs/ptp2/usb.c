@@ -464,8 +464,9 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		if (report_progress && ((bytes_read-res)/CONTEXT_BLOCK_SIZE < bytes_read/CONTEXT_BLOCK_SIZE))
 			gp_context_progress_update (context, progress_id, bytes_read/CONTEXT_BLOCK_SIZE);
 		/* Only cancel transfers larger than 1MB. as
-		 * canceling did not work on eos_get_viewfinder of 200kb */
-		if ((bytes_read > 1024*1024) && gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
+		 * canceling did not work on eos_get_viewfinder of 200kb
+		 * NOTE: >= to match the BLOBSIZE read */
+		if ((bytes_read >= 1024*1024) && gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 			ret = PTP_ERROR_CANCEL;
 			break;
 		}
