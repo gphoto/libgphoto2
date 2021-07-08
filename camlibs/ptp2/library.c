@@ -3623,7 +3623,7 @@ enable_liveview:
 		}
 
 		/* look for the JPEG SOI marker (0xFFD8) in data */
-		jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, size);
+		jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, ximage + size - jpgStartPtr);
 		while(jpgStartPtr && ((jpgStartPtr+1) < (ximage + size))) {
 			if(*(jpgStartPtr + 1) == 0xd8) { /* SOI found */
 				break;
