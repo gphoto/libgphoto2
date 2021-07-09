@@ -1329,10 +1329,20 @@ fallback:										\
 			GP_LOG_D("posnew %d, posorig %d, value %d", posnew, posorig, value);	\
 			if (posnew == posorig)						\
 				break;							\
+			/*
+			Note: Sony seems to report values in an enum that are not
+			actually supported under certain configurations (e.g. ISO).
+			If we use `posnew - posorig` to ask camera to jump to the
+			required position, it will end up overshooting, and on the next
+			cycle will try to move by the same `posnew - posorig` in the
+			opposite direction, overshoot again, and so on infinitely.
+			Instead, we have to ask camera to +/- values one by one and read
+			back the value it _actually_ switched to each time.
+			*/ \
 			if (posnew > posorig)						\
-				propval.u8 = posnew-posorig;				\
+				propval.u8 = 0x01;				\
 			else								\
-				propval.u8 = 0x100-(posorig-posnew);			\
+				propval.u8 = 0xff;			\
 		} else {								\
 			if (value == origval)						\
 				break;							\
