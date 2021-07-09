@@ -3240,7 +3240,7 @@ camera_capture_stream_preview (Camera *camera, CameraFile *file, GPContext *cont
 					break;
 				} else { /* go on looking (starting at next byte) */
 					jpgStartPtr++;
-					jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, data + size - jpgStartPtr);
+					jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, size - (jpgStartPtr - data));
 				}
 			}
 			if(!jpgStartPtr) { /* no SOI -> no JPEG */
@@ -3537,7 +3537,7 @@ enable_liveview:
 						break;
 					} else { /* go on looking (starting at next byte) */
 						jpgStartPtr++;
-						jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, data + size - jpgStartPtr);
+						jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, size - (jpgStartPtr - data));
 					}
 				}
 				if(!jpgStartPtr) { /* no SOI -> no JPEG */
@@ -3546,14 +3546,14 @@ enable_liveview:
 				}
 				/* if SOI found, start looking for EOI marker (0xFFD9) one byte after SOI
 				   (just to be sure we will not go beyond the end of the data array) */
-				jpgEndPtr = (unsigned char*)memchr(jpgStartPtr+1, 0xff, data+size-jpgStartPtr-1);
+				jpgEndPtr = (unsigned char*)memchr(jpgStartPtr+1, 0xff, size-(jpgStartPtr-data)-1);
 				while(jpgEndPtr && ((jpgEndPtr+1) < (data + size))) {
 					if(*(jpgEndPtr + 1) == 0xd9) { /* EOI found */
 						jpgEndPtr += 2;
 						break;
 					} else { /* go on looking (starting at next byte) */
 						jpgEndPtr++;
-						jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, data + size - jpgEndPtr);
+						jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, size - (jpgEndPtr-data));
 					}
 				}
 				if(!jpgEndPtr) { /* no EOI -> no JPEG */
@@ -3629,7 +3629,7 @@ enable_liveview:
 				break;
 			} else { /* go on looking (starting at next byte) */
 				jpgStartPtr++;
-				jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, ximage + size - jpgStartPtr);
+				jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, size - (jpgStartPtr - ximage));
 			}
 		}
 		if(!jpgStartPtr) { /* no SOI -> no JPEG */
@@ -3645,7 +3645,7 @@ enable_liveview:
 				break;
 			} else { /* go on looking (starting at next byte) */
 				jpgEndPtr++;
-				jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, ximage + size - jpgEndPtr);
+				jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, size - (jpgEndPtr - ximage));
 			}
 		}
 		if(!jpgEndPtr) { /* no EOI -> no JPEG */
@@ -3767,7 +3767,7 @@ enable_liveview:
 				break;
 			} else { /* go on looking (starting at next byte) */
 				jpgStartPtr++;
-				jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, ximage + size - jpgStartPtr);
+				jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, size - (jpgStartPtr - ximage));
 			}
 		}
 		if(!jpgStartPtr) { /* no SOI -> no JPEG */
@@ -3783,7 +3783,7 @@ enable_liveview:
 				break;
 			} else { /* go on looking (starting at next byte) */
 				jpgEndPtr++;
-				jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, ximage + size - jpgEndPtr);
+				jpgEndPtr = (unsigned char*)memchr(jpgEndPtr, 0xff, size - (jpgEndPtr - ximage));
 			}
 		}
 		if(!jpgEndPtr) { /* no EOI -> no JPEG */
@@ -3856,7 +3856,7 @@ enable_liveview:
 				break;
 			} else { /* go on looking (starting at next byte) */
 				jpgStartPtr++;
-				jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, ximage + size - jpgStartPtr);
+				jpgStartPtr = (unsigned char*)memchr(jpgStartPtr, 0xff, size - (jpgStartPtr-ximage));
 			}
 		}
 		if(!jpgStartPtr) { /* no SOI -> no JPEG */
