@@ -1298,6 +1298,7 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 	inttype			origval;						\
 	time_t			start,end;						\
 	int			tries = 100;	/* 100 steps allowed towards the new value */	\
+	int			firstloop = 1;						\
 											\
 	GP_LOG_D("setting 0x%04x to 0x%08x", prop, value);				\
 											\
@@ -1329,20 +1330,22 @@ fallback:										\
 			GP_LOG_D("posnew %d, posorig %d, value %d", posnew, posorig, value);	\
 			if (posnew == posorig)						\
 				break;							\
-			/*
-			Note: Sony seems to report values in an enum that are not
-			actually supported under certain configurations (e.g. ISO).
-			If we use `posnew - posorig` to ask camera to jump to the
-			required position, it will end up overshooting, and on the next
-			cycle will try to move by the same `posnew - posorig` in the
-			opposite direction, overshoot again, and so on infinitely.
-			Instead, we have to ask camera to +/- values one by one and read
-			back the value it _actually_ switched to each time.
-			*/ \
+			/*								\
+			Note: Sony seems to report values in an enum that are not	\
+			actually supported under certain configurations (e.g. ISO).	\
+			If we use `posnew - posorig` to ask camera to jump to the	\
+			required position, it will end up overshooting, and on the next	\
+			cycle will try to move by the same `posnew - posorig` in the	\
+			opposite direction, overshoot again, and so on infinitely.	\
+			Instead, we have to ask camera to +/- values one by one and read	\
+			back the value it _actually_ switched to each time.		\
+			Update: try the large jump first, if that does not work, use single jumps \
+			*/ 								\
 			if (posnew > posorig)						\
-				propval.u8 = 0x01;				\
+				propval.u8 = firstloop?(posnew-posorig):0x01;		\
 			else								\
-				propval.u8 = 0xff;			\
+				propval.u8 = firstloop?(0x100-(posorig-posnew)):0xff;	\
+			firstloop = 0;							\
 		} else {								\
 			if (value == origval)						\
 				break;							\
