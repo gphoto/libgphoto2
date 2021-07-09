@@ -2924,6 +2924,77 @@ _put_Fuji_Bulb(CONFIG_PUT_ARGS)
 	return GP_OK;
 }
 
+#define SONY_ISO_MASK 0x00ffffffU
+#define SONY_ISO_NR_SHIFT 24
+
+static void _stringify_Sony_ISO(uint32_t raw_iso, char *buf) {
+	char *buf_pos = buf;
+
+	uint32_t base_iso = raw_iso & SONY_ISO_MASK;
+	if (base_iso == SONY_ISO_MASK) {
+		buf_pos += sprintf(buf_pos,_("Auto ISO"));
+	} else {
+		buf_pos += sprintf(buf_pos,"%d",base_iso);
+	}
+
+	uint8_t noise_reduction = raw_iso >> SONY_ISO_NR_SHIFT;
+	if (noise_reduction) {
+		buf_pos += sprintf(buf_pos, " ");
+		buf_pos += sprintf(buf_pos,_("Multi Frame Noise Reduction"));
+		if (noise_reduction == 2) {
+			// Distinguish Standard vs High modes for MFNR.
+			buf_pos += sprintf(buf_pos,"+");
+		}
+	}
+}
+
+static int _parse_Sony_ISO(const char *buf, uint32_t *raw_iso) {
+	const char *s;
+	int len;
+
+	if (sscanf(buf, "%d%n", raw_iso, &len) == 0) {
+		s = _("Auto ISO");
+		len = strlen(s);
+
+		if (strncmp(buf, s, len) != 0) {
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		*raw_iso = SONY_ISO_MASK;
+	}
+	buf += len;
+
+	// If this is the end of string, we're done - no MFNR.
+	if (*buf == 0)
+		return GP_OK;
+
+	// Otherwise value should be followed by space...
+	if (*buf != ' ')
+		return GP_ERROR_BAD_PARAMETERS;
+	buf++;
+
+	// ...and by the actual MFNR string.
+	s = _("Multi Frame Noise Reduction");
+	len = strlen(s);
+	if (strncmp(buf, s, len) != 0)
+		return GP_ERROR_BAD_PARAMETERS;
+	buf += len;
+
+	uint8_t noise_reduction = 1;
+
+	if (*buf == '+') {
+		// If there's a `+`, it's a High mode for MFNR.
+		noise_reduction = 2;
+		buf++;
+	}
+
+	// There is still something unrecognized in the end of the string.
+	if (*buf != 0)
+		return GP_ERROR_BAD_PARAMETERS;
+
+	*raw_iso |= noise_reduction << SONY_ISO_NR_SHIFT;
+	return GP_OK;
+}
+
 static int
 _get_Sony_ISO(CONFIG_GET_ARGS) {
 	int	i,isset=0;
@@ -2938,17 +3009,8 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x00ffffffU) {
-			sprintf(buf,_("Auto ISO"));
-		} else if (dpd->FORM.Enum.SupportedValue[i].u32 == 0x01ffffffU) {
-			sprintf(buf,_("Auto ISO Multi Frame Noise Reduction"));
-		} else {
-			if (dpd->FORM.Enum.SupportedValue[i].u32 & 0xff000000) {
-				sprintf(buf,_("%d Multi Frame Noise Reduction"),dpd->FORM.Enum.SupportedValue[i].u32 & 0xffff);
-			} else {
-				sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u32);
-			}
-		}
+		_stringify_Sony_ISO(dpd->FORM.Enum.SupportedValue[i].u32, buf);
+
 		gp_widget_add_choice (*widget,buf);
 		if (dpd->FORM.Enum.SupportedValue[i].u32 == dpd->CurrentValue.u32) {
 			isset=1;
@@ -2956,17 +3018,7 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 		}
 	}
 	if (!isset) {
-		if (dpd->CurrentValue.u32 == 0x00ffffffU)
-			sprintf(buf,_("Auto ISO"));
-		else if (dpd->CurrentValue.u32 == 0x01ffffffU)
-			sprintf(buf,_("Auto ISO Multi Frame Noise Reduction"));
-		else {
-			if (dpd->CurrentValue.u32 & 0xff000000) {
-				sprintf(buf,_("%d Multi Frame Noise Reduction"),dpd->CurrentValue.u32 & 0xffff);
-			} else {
-				sprintf(buf,"%d",dpd->CurrentValue.u32);
-			}
-		}
+		_stringify_Sony_ISO(dpd->CurrentValue.u32, buf);
 		gp_widget_set_value (*widget,buf);
 	}
 	return GP_OK;
@@ -2976,58 +3028,30 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 static int
 _put_Sony_ISO(CONFIG_PUT_ARGS)
 {
-	char 		*value;
-	uint32_t	u;
+	const char	*value;
+	uint32_t	raw_iso;
 	PTPParams	*params = &(camera->pl->params);
 
 	CR (gp_widget_get_value(widget, &value));
-	if (!strcmp(value,_("Auto ISO"))) {
-		u = 0x00ffffff;
-		goto setiso;
-	}
-	if (!strcmp(value,_("Auto ISO Multi Frame Noise Reduction"))) {
-		u = 0x01ffffff;
-		goto setiso;
-	}
+	CR (_parse_Sony_ISO(value, &raw_iso));
 
-	if (!sscanf(value, "%ud", &u))
-		return GP_ERROR;
+	propval->u32 = raw_iso;
 
-	if (strstr(value,_("Multi Frame Noise Reduction")))
-		u |= 0x1000000;
-
-setiso:
-	propval->u32 = u;
-
-	return _put_sony_value_u32(params, dpd->DevicePropertyCode, u, 1);
+	return _put_sony_value_u32(params, dpd->DevicePropertyCode, raw_iso, 1);
 }
 
 /* new method, can just set the value via setcontroldevicea */
 static int
 _put_Sony_ISO2(CONFIG_PUT_ARGS)
 {
-	char 		*value;
-	uint32_t	u;
+	const char 	*value;
+	uint32_t	raw_iso;
 	PTPParams	*params = &(camera->pl->params);
 
 	CR (gp_widget_get_value(widget, &value));
-	if (!strcmp(value,_("Auto ISO"))) {
-		u = 0x00ffffff;
-		goto setiso;
-	}
-	if (!strcmp(value,_("Auto ISO Multi Frame Noise Reduction"))) {
-		u = 0x01ffffff;
-		goto setiso;
-	}
+	CR (_parse_Sony_ISO(value, &raw_iso));
 
-	if (!sscanf(value, "%ud", &u))
-		return GP_ERROR;
-
-	if (strstr(value,_("Multi Frame Noise Reduction")))
-		u |= 0x1000000;
-
-setiso:
-	propval->u32 = u;
+	propval->u32 = raw_iso;
 
 	return translate_ptp_result (ptp_sony_setdevicecontrolvaluea(params, dpd->DevicePropertyCode, propval, PTP_DTC_UINT32));
 }

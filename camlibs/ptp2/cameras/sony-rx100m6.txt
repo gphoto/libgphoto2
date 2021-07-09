@@ -216,23 +216,23 @@ Choice: 66 12800 Multi Frame Noise Reduction
 Choice: 67 16000 Multi Frame Noise Reduction
 Choice: 68 25600 Multi Frame Noise Reduction
 Choice: 69 51200 Multi Frame Noise Reduction
-Choice: 70 36864 Multi Frame Noise Reduction
-Choice: 71 8192 Multi Frame Noise Reduction
-Choice: 72 16384 Multi Frame Noise Reduction
-Choice: 73 65535 Multi Frame Noise Reduction
-Choice: 74 100 Multi Frame Noise Reduction
-Choice: 75 200 Multi Frame Noise Reduction
-Choice: 76 400 Multi Frame Noise Reduction
-Choice: 77 800 Multi Frame Noise Reduction
-Choice: 78 1600 Multi Frame Noise Reduction
-Choice: 79 3200 Multi Frame Noise Reduction
-Choice: 80 6400 Multi Frame Noise Reduction
-Choice: 81 12800 Multi Frame Noise Reduction
-Choice: 82 25600 Multi Frame Noise Reduction
-Choice: 83 51200 Multi Frame Noise Reduction
-Choice: 84 36864 Multi Frame Noise Reduction
-Choice: 85 8192 Multi Frame Noise Reduction
-Choice: 86 16384 Multi Frame Noise Reduction
+Choice: 70 102400 Multi Frame Noise Reduction
+Choice: 71 204800 Multi Frame Noise Reduction
+Choice: 72 409600 Multi Frame Noise Reduction
+Choice: 73 Auto ISO Multi Frame Noise Reduction+
+Choice: 74 100 Multi Frame Noise Reduction+
+Choice: 75 200 Multi Frame Noise Reduction+
+Choice: 76 400 Multi Frame Noise Reduction+
+Choice: 77 800 Multi Frame Noise Reduction+
+Choice: 78 1600 Multi Frame Noise Reduction+
+Choice: 79 3200 Multi Frame Noise Reduction+
+Choice: 80 6400 Multi Frame Noise Reduction+
+Choice: 81 12800 Multi Frame Noise Reduction+
+Choice: 82 25600 Multi Frame Noise Reduction+
+Choice: 83 51200 Multi Frame Noise Reduction+
+Choice: 84 102400 Multi Frame Noise Reduction+
+Choice: 85 204800 Multi Frame Noise Reduction+
+Choice: 86 409600 Multi Frame Noise Reduction+
 END
 /main/imgsettings/colortemperature
 Label: Color Temperature
