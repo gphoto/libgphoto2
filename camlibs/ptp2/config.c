@@ -1309,11 +1309,13 @@ _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useen
 		return GP_OK;								\
 	}										\
 fallback:										\
+	useenumorder = useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration) && dpd.FORM.Enum.NumberOfValues; \
 	do {										\
+		int posorig = -1, posnew = -1, posnow = -1; \
 		origval = dpd.CurrentValue.bits;					\
 		/* if it is a ENUM, the camera will walk through the ENUM */		\
-		if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration) && dpd.FORM.Enum.NumberOfValues) {		\
-			int i, posorig = -1, posnew = -1;				\
+		if (useenumorder) {		\
+			int i;				\
 											\
 			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
 				if (origval == dpd.FORM.Enum.SupportedValue[i].bits)	\
@@ -1378,11 +1380,27 @@ fallback:										\
 			time(&end);							\
 		} while (end-start <= 3);						\
 											\
-		if (propval.u8 == 0x01 && dpd.CurrentValue.bits > value) {		\
-			GP_LOG_D ("We overshooted value, maybe not exact match possible. Break!");	\
-			break;								\
-		}									\
-		if (propval.u8 == 0xff && dpd.CurrentValue.bits < value) {		\
+		int overshoot = 0; \
+		if (useenumorder) { \
+			for (int i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
+				if (dpd.CurrentValue.bits == dpd.FORM.Enum.SupportedValue[i].bits) {	\
+					posnow = i;					\
+					break;						\
+				}							\
+			}								\
+			GP_LOG_D("posnow %d, value %d", posnow, dpd.CurrentValue.bits);	\
+			\
+			/*
+			 If we made a small +-1 adjustment, check for overshoot.
+			 However, use enum position instead of value itself for comparisons as enums
+			 are not always sorted (e.g. Auto ISO has higher numerical value but comes earlier).
+		    */ \
+			overshoot = propval.u8 == 0x01 && posnow > posnew || propval.u8 == 0xff && posnow < posnew; \
+		} else { \
+			overshoot = propval.u8 == 0x01 && dpd.CurrentValue.bits > value || propval.u8 == 0xff && dpd.CurrentValue.bits < value; \
+		} \
+		\
+		if (overshoot) {		\
 			GP_LOG_D ("We overshooted value, maybe not exact match possible. Break!");	\
 			break;								\
 		}									\
@@ -1396,21 +1414,12 @@ fallback:										\
 			break;								\
 		}									\
 		/* We did not get there. Did we hit 0? */				\
-		if (useenumorder && (dpd.FormFlag & PTP_DPFF_Enumeration)) {		\
-			int i, posnow = -1;						\
-											\
-			for (i=0;i<dpd.FORM.Enum.NumberOfValues;i++) {			\
-				if (dpd.CurrentValue.bits == dpd.FORM.Enum.SupportedValue[i].bits) {	\
-					posnow = i;					\
-					break;						\
-				}							\
-			}								\
+		if (useenumorder) {		\
 			if (posnow == -1) {						\
 				GP_LOG_D ("Now value is not in enumeration, falling back to ordered tries.");\
 				useenumorder = 0;					\
 				goto fallback;						\
 			}								\
-			GP_LOG_D("posnow %d, value %d", posnow, dpd.CurrentValue.bits);	\
 			if ((posnow == 0) && (propval.u8 == 0xff)) {			\
 				gp_context_error (context, _("Sony was not able to set the new value, is it valid?"));	\
 				GP_LOG_D ("hit bottom of enumeration, not good.");	\
