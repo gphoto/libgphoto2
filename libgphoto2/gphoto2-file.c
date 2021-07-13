@@ -1099,6 +1099,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 		GP_MIME_CRW,  "crw",
 		GP_MIME_CR2,  "cr2",
 		GP_MIME_CR3,  "cr3",
+		GP_MIME_ARW,  "arw",
 		GP_MIME_NEF,  "nef",
 		GP_MIME_TXT,  "txt",
 		NULL};
