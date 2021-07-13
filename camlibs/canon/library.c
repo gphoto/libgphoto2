@@ -1911,6 +1911,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_TEXT, _("Camera Model"), &t);
 	gp_widget_set_name (t, "model");
 	gp_widget_set_value (t, camera->pl->ident);
+	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Date and Time"), &t);
@@ -1923,6 +1924,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	} else {
 		gp_widget_set_value (t, _("Error"));
 	}
+	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
 	gp_widget_new (GP_WIDGET_TEXT, _("Firmware Version"), &t);
@@ -1930,6 +1932,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	sprintf (firm, "%i.%i.%i.%i", camera->pl->firmwrev[3], camera->pl->firmwrev[2],
 		 camera->pl->firmwrev[1], camera->pl->firmwrev[0]);
 	gp_widget_set_value (t, firm);
+	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
 	canon_get_batt_status (camera, &pwr_status, &pwr_source, context);
@@ -1948,6 +1951,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_TEXT, _("Power"), &t);
 	gp_widget_set_name (t, "power");
 	gp_widget_set_value (t, power_str);
+	gp_widget_set_readonly (t, 1);
 	gp_widget_append (section, t);
 
 

@@ -10734,6 +10734,9 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 
 						GP_LOG_D ("Getting function prop '%s' / 0x%04x", cursub->label, cursub->type );
 						ret = cursub->getfunc (camera, &widget, cursub, NULL);
+						if (ret == GP_OK && cursub->putfunc == _put_None) {
+							gp_widget_set_readonly(widget, 1);
+						}
 						if (mode == MODE_SINGLE_GET) {
 							*outwidget = widget;
 							free (setprops);
@@ -10769,6 +10772,9 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
+				if (cursub->putfunc == _put_None) {
+					gp_widget_set_readonly(widget, 1);
+				}
 				if (mode == MODE_SINGLE_GET) {
 					*outwidget = widget;
 					free (setprops);
@@ -10794,6 +10800,9 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 				if (ret != GP_OK) {
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
+				}
+				if (cursub->putfunc == _put_None) {
+					gp_widget_set_readonly(widget, 1);
 				}
 				if (mode == MODE_SINGLE_GET) {
 					*outwidget = widget;
