@@ -5068,6 +5068,14 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 			x = dpd->FORM.Enum.SupportedValue[i].u32 >> 16;
 			y = dpd->FORM.Enum.SupportedValue[i].u32 & 0xffff;
 
+			// Sony reports high shutter speeds as 300/10, 250/10, etc.
+			// Normalize them to integers for better output and to match
+			// `sony_shuttertable` format.
+			if (y == 10 && x % 10 == 0) {
+				x /= 10;
+				y = 1;
+			}
+
 			if (y == 1)
 				sprintf (buf, "%d",x);
 			else
@@ -5095,6 +5103,13 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 	} else {
 		x = dpd->CurrentValue.u32>>16;
 		y = dpd->CurrentValue.u32&0xffff;
+
+		// Normalize current value from 300/10, 250/10 etc. to integers too.
+		if (y == 10 && x % 10 == 0) {
+			x /= 10;
+			y = 1;
+		}
+
 		if (y == 1)
 			sprintf (buf, "%d",x);
 		else
