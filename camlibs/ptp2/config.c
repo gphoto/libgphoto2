@@ -1395,9 +1395,9 @@ fallback:										\
 			 However, use enum position instead of value itself for comparisons as enums
 			 are not always sorted (e.g. Auto ISO has higher numerical value but comes earlier).
 		    */ \
-			overshoot = propval.u8 == 0x01 && posnow > posnew || propval.u8 == 0xff && posnow < posnew; \
-		} else { \
-			overshoot = propval.u8 == 0x01 && dpd.CurrentValue.bits > value || propval.u8 == 0xff && dpd.CurrentValue.bits < value; \
+			overshoot = ((propval.u8 == 0x01) && (posnow > posnew)) || ((propval.u8 == 0xff) && (posnow < posnew)); \
+		} else { 								\
+			overshoot = ((propval.u8 == 0x01) && (dpd.CurrentValue.bits > value)) || ((propval.u8 == 0xff) && (dpd.CurrentValue.bits < value)); \
 		} \
 		\
 		if (overshoot) {		\
