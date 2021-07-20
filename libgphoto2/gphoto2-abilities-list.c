@@ -88,6 +88,8 @@ gp_message_codeset (const char *codeset)
 	return bind_textdomain_codeset (GETTEXT_PACKAGE, codeset);
 }
 
+char *gp_abilities_list_camlibs_override = NULL;
+
 /**
  * \brief Allocate the memory for a new abilities list.
  *
@@ -303,7 +305,7 @@ int
 gp_abilities_list_load (CameraAbilitiesList *list, GPContext *context)
 {
 	const char *camlib_env = getenv(CAMLIBDIR_ENV);
-	const char *camlibs = (camlib_env != NULL)?camlib_env:CAMLIBS;
+	const char *camlibs = (camlib_env != NULL)?camlib_env:((gp_abilities_list_camlibs_override != NULL)?gp_abilities_list_camlibs_override:CAMLIBS);
 	C_PARAMS (list);
 
 	CHECK_RESULT (gp_abilities_list_load_dir (list, camlibs, context));
@@ -645,6 +647,18 @@ gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 	return (GP_OK);
 }
 
+void
+gp_abilities_list_set_camlibs_override (const char *dir)
+{
+	if (gp_abilities_list_camlibs_override != NULL) {
+		free (gp_abilities_list_camlibs_override);
+		gp_abilities_list_camlibs_override = NULL;
+	}
+
+	if (dir != NULL) {
+		gp_abilities_list_camlibs_override = strdup(dir);
+	}
+}
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 

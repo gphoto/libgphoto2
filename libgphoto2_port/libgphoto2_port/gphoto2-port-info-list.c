@@ -98,6 +98,8 @@ gp_port_message_codeset (const char *codeset) {
 	return bind_textdomain_codeset (GETTEXT_PACKAGE, codeset);
 }
 
+char *gp_port_info_list_iolibs_override = NULL;
+
 /**
  * \brief Create a new GPPortInfoList
  *
@@ -275,7 +277,7 @@ int
 gp_port_info_list_load (GPPortInfoList *list)
 {
 	const char *iolibs_env = getenv(IOLIBDIR_ENV);
-	const char *iolibs = (iolibs_env != NULL)?iolibs_env:IOLIBS;
+	const char *iolibs = (iolibs_env != NULL)?iolibs_env:((gp_port_info_list_iolibs_override != NULL)?gp_port_info_list_iolibs_override:IOLIBS);
 	int result;
 
 	C_PARAMS (list);
@@ -479,6 +481,18 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
 	return GP_OK;
 }
 
+void
+gp_port_info_list_set_iolibs_override (const char *dir)
+{
+	if (gp_port_info_list_iolibs_override != NULL) {
+		free (gp_port_info_list_iolibs_override);
+		gp_port_info_list_iolibs_override = NULL;
+        }
+
+	if (dir != NULL) {
+		gp_port_info_list_iolibs_override = strdup(dir);
+	}
+}
 
 /**
  * \brief Get name of a specific port entry

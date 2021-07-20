@@ -27,6 +27,7 @@ LIBGPHOTO2_5_0 {
 	gp_port_info_list_lookup_name;
 	gp_port_info_list_lookup_path;
 	gp_port_info_list_new;
+	gp_port_info_list_set_iolibs_override;
 	gp_port_library_version;
 	gp_port_message_codeset;
 	gp_port_new;
