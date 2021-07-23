@@ -3690,6 +3690,7 @@ enable_liveview:
 
 		while (tries--) {
 			ret = ptp_getobjectinfo (params, preview_object, &oi);
+			ptp_free_objectinfo(&oi);
 			if (ret == PTP_RC_OK) break;
 			if (ret == PTP_RC_InvalidObjectHandle) {
 				/* 1000 x 10 tries was not enough for the S10 ... make the wait a bit longer
@@ -4222,6 +4223,7 @@ capturetriggered:
 				sprintf (path->name, "capt%04d.jpg", params->capcnt++);
 			}
 			ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
+			ptp_free_objectinfo(&oi);
 			if (ret != GP_OK) {
 				GP_LOG_E ("failed to add object\n");
 				return ret;
@@ -4497,6 +4499,7 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 				/* remember for later deletion */
 				if (oi.ObjectFormat == PTP_OFC_Association) {
 					assochandle = event.Param1;
+					ptp_free_objectinfo(&oi);
 					continue;
 				}
 
@@ -4511,8 +4514,10 @@ camera_olympus_xml_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 					ret = ptp_deleteobject (params, assochandle, PTP_OFC_Association);
 					if (ret != PTP_RC_OK)
 						GP_LOG_E ("capture 2: delete folder %08x, ret 0x%04x", assochandle, ret);
+					ptp_free_objectinfo(&oi);
 					return res;
 				}
+				ptp_free_objectinfo(&oi);
 				GP_LOG_E ("capture 2: unknown OFC 0x%04x for 0x%x", oi.ObjectFormat, event.Param1);
 			}
 		}
@@ -4722,6 +4727,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
 		/* delete last / or we get confused later. */
 		path->folder[ strlen(path->folder)-1 ] = '\0';
+		ptp_free_objectinfo(&oi);
 		return gp_filesystem_append (camera->fs, path->folder, path->name, context);
 	} else {
 		if (xmode == CANON_TRANSFER_CARD) {
@@ -4729,7 +4735,9 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		}
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 		sprintf (path->name, "capt%04d.jpg", params->capcnt++);
-		return add_objectid_and_upload (camera, path, context, newobject, &oi);
+		ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
+		ptp_free_objectinfo(&oi);
+		return ret;
 	}
 }
 
@@ -4743,6 +4751,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	uint32_t	newobject = 0;
 	PTPDevicePropDesc	dpd;
 	struct timeval	event_start;
+	int		ret;
 
 	if (params->deviceinfo.Model && (
 		!strcmp(params->deviceinfo.Model, "ZV-1")		||
@@ -4897,7 +4906,9 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		sprintf (path->name, "capt%04d.arw", params->capcnt++);
 	else
 		sprintf (path->name, "capt%04d.jpg", params->capcnt++);
-	return add_objectid_and_upload (camera, path, context, newobject, &oi);
+	ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
+	ptp_free_objectinfo (&oi);
+	return ret;
 }
 
 static int
@@ -4909,6 +4920,7 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	uint32_t	newobject = 0;
 	struct timeval	event_start;
 	PTPDevicePropDesc	dpd;
+	int		res;
 
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_QX_OperatingMode, &dpd));
 
@@ -5023,6 +5035,7 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 			newobject = 0xffffc001;
 			break;
 		}
+		ptp_free_objectinfo (&oi);
 
 		C_PTP (ptp_sony_qx_getalldevicepropdesc (params)); /* avoid caching */
 		/* 30 seconds are maximum capture time currently, so use 30 seconds + 5 seconds image saving at most. */
@@ -5054,7 +5067,9 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 		sprintf (path->name, "capt%04d.arw", params->capcnt++);
 	else
 		sprintf (path->name, "capt%04d.jpg", params->capcnt++);
-	return add_objectid_and_upload (camera, path, context, newobject, &oi);
+	res = add_objectid_and_upload (camera, path, context, newobject, &oi);
+	ptp_free_objectinfo (&oi);
+	return res;
 }
 
 static int
@@ -6662,13 +6677,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 						/* delete last / or we get confused later. */
 						path->folder[ strlen(path->folder)-1 ] = '\0';
 						gp_filesystem_append (camera->fs, path->folder, path->name, context);
-
 					} else {
 						C_MEM (path = malloc (sizeof(CameraFilePath)));
 						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
 						sprintf (path->name, "capt%04d.jpg", params->capcnt++);
 						add_objectid_and_upload (camera, path, context, newobject, &oi);
 					}
+					ptp_free_objectinfo (&oi);
 					*eventdata = path;
 					*eventtype = GP_EVENT_FILE_ADDED;
 					return GP_OK;
@@ -6800,9 +6815,11 @@ downloadnow:
 					C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
 					ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
+						ptp_free_objectinfo (&oi);
 						gp_file_free (file);
 						return ret;
 					}
+					ptp_free_objectinfo (&oi);
 					ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
 					if (ret != GP_OK) {
 						gp_file_free (file);
@@ -7016,9 +7033,11 @@ sonyout:
 				C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
 				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
 				if (ret != GP_OK) {
+					ptp_free_objectinfo (&oi);
 					gp_file_free (file);
 					return ret;
 				}
+				ptp_free_objectinfo (&oi);
 				ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
 				if (ret != GP_OK) {
 					gp_file_free (file);
@@ -7157,6 +7176,8 @@ handleregular:
 				sprintf (path->name, "capt%04d.jpg", params->capcnt++);
 
 			CR (add_objectid_and_upload (camera, path, context, event.Param1, &oi));
+
+			ptp_free_objectinfo (&oi);
 			*eventtype = GP_EVENT_FILE_ADDED;
 			*eventdata = path;
 			return GP_OK;
