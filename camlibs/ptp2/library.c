@@ -3603,6 +3603,8 @@ enable_liveview:
 				continue;
 			}
 
+			ptp_free_objectinfo(&oi);
+
 			ret = ptp_getobject_with_size(params, preview_object, &ximage, &size);
 			if (ret == PTP_RC_OK)
 				break;
