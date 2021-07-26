@@ -1325,6 +1325,12 @@ static struct {
 
 	/* Elijah Parker, mail@timelapseplus.com */
 	{"Sony:DSC-A7r IV (Control)",		0x054c, 0x0ccc, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Ingvar Stepanyan <rreverser@google.com> */
+	{"Sony:Alpha-A6600 (MTP)",	0x054c, 0x0d0f, 0},
+	{"Sony:Alpha-A6600 (PC Control)",	0x054c, 0x0d10, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Elijah Parker, mail@timelapseplus.com */
 	{"Sony:DSC-A7S III (Control)",		0x054c, 0x0d18, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* via email */
