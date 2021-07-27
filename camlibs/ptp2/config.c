@@ -3715,7 +3715,11 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 
 	{ N_("Intelligent Auto"),		0x8000, PTP_VENDOR_SONY},
 	{ N_("Superior Auto"),			0x8001, PTP_VENDOR_SONY},
-	{ N_("Movie"),				0x8050, PTP_VENDOR_SONY},
+	{ N_("Movie (P)"),				0x8050, PTP_VENDOR_SONY},
+	{ N_("Movie (A)"),				0x8051, PTP_VENDOR_SONY},
+	{ N_("Movie (S)"),				0x8052, PTP_VENDOR_SONY},
+	{ N_("Movie (M)"),				0x8053, PTP_VENDOR_SONY},
+	{ N_("Movie (Scene)"),			0x8054, PTP_VENDOR_SONY},
 	{ N_("Tele-zoom Cont. Priority AE"),	0x8031, PTP_VENDOR_SONY},
 	{ N_("Sweep Panorama"),			0x8041, PTP_VENDOR_SONY},
 	{ N_("Intelligent Auto Flash Off"),	0x8060, PTP_VENDOR_SONY},
@@ -3726,6 +3730,7 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Night Scene"),			0x8013, PTP_VENDOR_SONY},
 	{ N_("Hand-held Twilight"),		0x8016, PTP_VENDOR_SONY},
 	{ N_("Night Portrait"),			0x8017, PTP_VENDOR_SONY},
+	{ N_("Anti Motion Blur"),		0x8018, PTP_VENDOR_SONY},
 	{ N_("Picture Effect"),			0x8070, PTP_VENDOR_SONY},
 	{ N_("S&Q"),				0x8084, PTP_VENDOR_SONY}, /* on A7III */
 };
