@@ -1027,10 +1027,12 @@ ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *
 	getset = dtoh8a(&data[PTP_dpd_Sony_GetSet]);
 
 	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, changemethod %d getset %d", dpd->DevicePropertyCode, dpd->DataType, changemethod, getset);
+	/* our investigations seem not correct ... some with 2/0 are settable */
 	switch (getset) {
 	case 0:	/* read only */
 	case 2: /* camera side only */
-		dpd->GetSet=0;
+		/* FIXME: dpd->GetSet=0; seems not right ... some values still can be set */
+		dpd->GetSet=1;
 		break;
 	case 1: /* writeable */
 		dpd->GetSet=1;
