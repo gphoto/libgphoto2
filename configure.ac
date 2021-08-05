@@ -329,6 +329,9 @@ AC_HEADER_DIRENT
 AC_HEADER_STDC
 # after _HEADER_STDC
 AC_CHECK_HEADERS([sys/param.h sys/mman.h sys/select.h locale.h memory.h getopt.h unistd.h mcheck.h limits.h sys/time.h langinfo.h])
+AC_CHECK_LIB(mman, mmap, [
+	AM_CONDITIONAL([HAVE_MMAN_LIB], [test x$ac_cv_lib_mman_mmap = xyes])
+	])
 AC_C_INLINE([])
 AC_C_CONST([])
 dnl FIXME: AC_STRUCT_TIMEZONE
