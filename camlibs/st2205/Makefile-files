@@ -10,3 +10,7 @@ st2205_la_LDFLAGS = $(camlib_ldflags)
 st2205_la_DEPENDENCIES = $(camlib_dependencies)
 st2205_la_LIBADD = $(camlib_libadd) @LIBGD_LIBS@ $(LTLIBICONV)
 st2205_la_CFLAGS = @LIBGD_CFLAGS@
+
+if HAVE_MMAN_LIB
+st2205_la_LIBADD += -lmman
+endif

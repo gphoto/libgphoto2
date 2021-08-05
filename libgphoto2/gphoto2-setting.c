@@ -37,7 +37,7 @@
 #ifdef WIN32
 /* Win32 headers may use interface as a define; temporarily correct this */
 #define interface struct
-#include <Shlobj.h>
+#include <shlobj.h>
 #undef interface
 #endif
 
