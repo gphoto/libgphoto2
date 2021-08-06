@@ -329,9 +329,19 @@ AC_HEADER_DIRENT
 AC_HEADER_STDC
 # after _HEADER_STDC
 AC_CHECK_HEADERS([sys/param.h sys/mman.h sys/select.h locale.h memory.h getopt.h unistd.h mcheck.h limits.h sys/time.h langinfo.h])
-AC_CHECK_LIB(mman, mmap, [
-	AM_CONDITIONAL([HAVE_MMAN_LIB], [test x$ac_cv_lib_mman_mmap = xyes])
-	])
+
+dnl If sys/mman.h is present, check whether mmap requires the mman
+dnl library (see camlibs/st2205/st2205.c st2205_malloc_page_aligned()).
+MMAP_LIBS=""
+AS_VAR_IF([ac_cv_header_sys_mman_h], [yes], [dnl
+gp_saved_LIBS="$LIBS"
+LIBS=""
+AC_SEARCH_LIBS([mmap], [mman])
+MMAP_LIBS="$LIBS"
+LIBS="$gp_saved_LIBS"
+])dnl
+AC_SUBST([MMAP_LIBS])
+
 AC_C_INLINE([])
 AC_C_CONST([])
 dnl FIXME: AC_STRUCT_TIMEZONE
