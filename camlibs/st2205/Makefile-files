@@ -11,6 +11,6 @@ st2205_la_DEPENDENCIES = $(camlib_dependencies)
 st2205_la_LIBADD = $(camlib_libadd) @LIBGD_LIBS@ $(LTLIBICONV)
 st2205_la_CFLAGS = @LIBGD_CFLAGS@
 
-if HAVE_MMAN_LIB
-st2205_la_LIBADD += -lmman
-endif
+# On systems such as mingw/Windows, mmap(2) is not part of the
+# standard library and needs an explicit library to link against.
+st2205_la_LIBADD += $(MMAP_LIBS)
