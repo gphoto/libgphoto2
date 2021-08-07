@@ -2067,6 +2067,7 @@ static struct deviceproptableu16 canon_eos_autoexposuremode[] = {
 	{ N_("HDR art bold"),		0x0026, 0 },	/* EOS M6 Mark 2 */
 	{ N_("HDR art embossed"),	0x0027, 0 },	/* EOS M6 Mark 2 */
 	{ N_("Panning"),		0x002d, 0 },	/* EOS M6 Mark 2 */
+	{ N_("HDR"),			0x0031, 0 },
 	{ N_("Self Portrait"),		0x0032, 0 },	/* EOS M6 Mark 2 */
 	{ N_("Hybrid Auto"),		0x0033, 0 },	/* EOS M6 Mark 2 */
 	{ N_("Smooth skin"),		0x0034, 0 },	/* EOS M6 Mark 2 */
