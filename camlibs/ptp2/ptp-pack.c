@@ -2315,6 +2315,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case PTP_DPC_CANON_EOS_LvAfSystem:
 				case PTP_DPC_CANON_EOS_OneShotRawOn:
 				case PTP_DPC_CANON_EOS_FlashChargingState:
+				case PTP_DPC_CANON_EOS_MovieServoAF:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */

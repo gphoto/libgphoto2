@@ -6994,6 +6994,12 @@ static struct deviceproptableu8 nikon_facedetection[] = {
 };
 GENERIC8TABLE(Nikon_FaceDetection,nikon_facedetection)
 
+static struct deviceproptableu32 canon_eos_movieservoaf[] = {
+	{ N_("Off"),	0x0, 0 },
+	{ N_("On"),	0x1, 0 },
+};
+GENERIC32TABLE(Canon_EOS_MovieServoAF,canon_eos_movieservoaf)
+
 static int
 _get_BatteryLevel(CONFIG_GET_ARGS) {
 	unsigned char value_float , start, end;
@@ -10393,6 +10399,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Sensor Crop"),                    "sensorcrop",               PTP_DPC_SONY_SensorCrop,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_SensorCrop,               _put_Sony_SensorCrop },
 	{ N_("HDMI Output Data Depth"),         "hdmioutputdatadepth",      PTP_DPC_NIKON_HDMIOutputDataDepth,      PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDMIDataDepth,           _put_Nikon_HDMIDataDepth },
 	{ N_("Face Detection"),                 "facedetection",            PTP_DPC_NIKON_FaceDetection,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FaceDetection,           _put_Nikon_FaceDetection },
+	{ N_("Movie Servo AF"),                 "movieservoaf",             PTP_DPC_CANON_EOS_MovieServoAF,         PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_Canon_EOS_MovieServoAF,        _put_Canon_EOS_MovieServoAF },
 
 	{ 0,0,0,0,0,0,0 },
 };
