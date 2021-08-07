@@ -2048,9 +2048,13 @@ static struct deviceproptableu16 canon_eos_autoexposuremode[] = {
 	{ N_("Closeup"),	0x000e, 0 },
 	{ N_("Flash Off"),	0x000f, 0 },
 
+	{ N_("C2"),			0x0010, 0 },
+	{ N_("C3"),			0x0011, 0 },
+	{ N_("Movie"),			0x0014, 0 },
 	{ N_("Auto"),			0x0016, 0 },	/* EOS M6 Mark 2 */
 	{ N_("Handheld Night Scene"),	0x0017, 0 },	/* EOS M6 Mark 2 */
 	{ N_("HDR Backlight Control"),	0x0018, 0 },	/* EOS M6 Mark 2 */
+	{ N_("SCN"),			0x0019, 0 },
 	{ N_("Food"),			0x001b, 0 },	/* EOS M6 Mark 2 */
 	{ N_("Grainy B/W"),		0x001e, 0 },	/* EOS M6 Mark 2 */
 	{ N_("Soft focus"),		0x001f, 0 },	/* EOS M6 Mark 2 */
