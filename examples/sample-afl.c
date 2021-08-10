@@ -174,10 +174,15 @@ int main(int argc, char **argv) {
 	ret = gp_abilities_list_detect (abilities, gpinfolist, list, context);
 	if (ret < GP_OK) return ret;
 
+	gp_port_info_list_free (gpinfolist);
+	gp_abilities_list_free (abilities);
+
 	fprintf(stderr, "detect list has count %d\n", gp_list_count(list));
 
 	ret = gp_list_get_name(list, 0, &name);
 	if (ret < GP_OK) goto out;
+
+	gp_list_free (list);
 
 	ret = sample_open_camera (&camera, name, buf, context);
         if (ret < GP_OK) {
@@ -211,6 +216,7 @@ int main(int argc, char **argv) {
 		fprintf (stderr,"Could not get config.\n");
 		goto out;
 	}
+	gp_widget_free (rootwidget);
 #endif
 	printf ("OK, %s\n", summary.text);
 
@@ -219,7 +225,7 @@ int main(int argc, char **argv) {
 		printf ("Could not get storage info.\n");
 		goto out;
 	}
-
+	free(storageinfo);
 
 	ret = gp_camera_trigger_capture (camera, context);
 	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
