@@ -39,7 +39,7 @@ extern "C" {
 
 #ifdef WIN32
 #ifndef CAMLIBS
-#define CAMLIBS "."
+#define CAMLIBS "./libgphoto2"
 #endif
 #endif
 

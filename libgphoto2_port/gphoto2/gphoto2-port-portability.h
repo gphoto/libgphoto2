@@ -38,7 +38,7 @@
 # include <direct.h>
 
 # ifndef IOLIBS
-#  define IOLIBS			"."
+#  define IOLIBS		"./libgphoto2_port"
 # endif
 # define strcasecmp		_stricmp
 # ifndef snprintf

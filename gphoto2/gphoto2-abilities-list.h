@@ -196,6 +196,11 @@ const char *gp_message_codeset (const char *);
  */
 #ifdef _GPHOTO2_INTERNAL_CODE
 #define CAMLIBDIR_ENV "CAMLIBS"
+#ifdef WIN32
+#ifndef CAMLIBS
+#define CAMLIBS "./libgphoto2"
+#endif
+#endif
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
 
