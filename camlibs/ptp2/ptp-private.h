@@ -34,7 +34,7 @@ int camera_prepare_capture (Camera *camera, GPContext *context);
 int camera_unprepare_capture (Camera *camera, GPContext *context);
 int camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int value);
 int have_prop(Camera *camera, uint16_t vendor, uint16_t prop);
-
+int camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, char **content, GPContext *context);
 
 /* library.c */
 int translate_ptp_result (uint16_t result);

@@ -4771,7 +4771,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		 * but nothing worked except waiting.
 		 * This might not be required when having manual focusing according to https://github.com/gphoto/gphoto2/issues/349 
 		 */
-		
+
 		while (time_since (params->starttime) < 2500) {
 			/* drain the queue first */
 			if (ptp_get_one_event(params, &event)) {
@@ -5226,7 +5226,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		/* clear path, so we get defined results even without object info */
 		path->name[0]   = '\0';
 		path->folder[0] = '\0';
-	
+
 		C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles));
 
 		/* if (handles.n == params->handles.n)
@@ -7237,11 +7237,27 @@ handleregular:
 		CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
 		print_debug_deviceinfo(params, &params->deviceinfo);
 		break;
-	case PTP_EC_DevicePropChanged:
+	case PTP_EC_DevicePropChanged: {
+		char			*name, *content;
+		PTPDevicePropDesc	dpd;
+
 		*eventtype = GP_EVENT_UNKNOWN;
-		C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-		sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
+		/* cached devprop should hafve been flushed I think... */
+		C_PTP_REP (ptp_generic_getdevicepropdesc (params, event.Param1&0xffff, &dpd));
+
+		ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
+		if (ret == GP_OK) {
+			C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"")+strlen(name)+1+1));
+			sprintf (*eventdata, "PTP Property %04x changed, \"%s\"", event.Param1 & 0xffff, name);
+			free (name);
+			free (content);
+		} else {
+			C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
+			sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
+		}
+		ptp_free_devicepropdesc (&dpd);
 		break;
+	}
 	case PTP_EC_ObjectRemoved:
 		ptp_remove_object_from_cache(params, event.Param1);
 		gp_filesystem_reset (camera->fs);

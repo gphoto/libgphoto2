@@ -11353,3 +11353,157 @@ camera_set_single_config (Camera *camera, const char *confname, CameraWidget *wi
 {
 	return _set_config (camera, confname, widget, context);
 }
+
+int
+camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, char **content, GPContext *context)
+{
+	unsigned int	menuno, submenuno;
+	int 		ret;
+	PTPParams	*params = &camera->pl->params;
+	CameraAbilities	ab;
+	uint16_t	propid = dpd->DevicePropertyCode;
+	CameraWidget	*widget;
+
+	*name = NULL;
+	*content = NULL;
+
+	SET_CONTEXT(camera, context);
+
+	memset (&ab, 0, sizeof(ab));
+	gp_camera_get_abilities (camera, &ab);
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		(ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
+		 ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)
+		)
+	) {
+		if (!params->eos_captureenabled)
+			camera_prepare_capture (camera, context);
+		ptp_check_eos_events (params);
+		/* Otherwise the camera will auto-shutdown */
+		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn))
+			C_PTP (ptp_canon_eos_keepdeviceon (params));
+	}
+
+	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
+		if (!menus[menuno].submenus) { /* Custom menu ... not exposed to by-property method */
+			continue;
+		}
+		if ((menus[menuno].usb_vendorid != 0) && (ab.port == GP_PORT_USB)) {
+			if (menus[menuno].usb_vendorid != ab.usb_vendor)
+				continue;
+			if (	menus[menuno].usb_productid &&
+				(menus[menuno].usb_productid != ab.usb_product)
+			)
+				continue;
+			GP_LOG_D ("usb vendor/product specific path entered");
+		}
+
+		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
+			struct submenu *cursub = menus[menuno].submenus+submenuno;
+			widget = NULL;
+
+			if (	have_prop(camera,cursub->vendorid,cursub->propid) &&
+				(cursub->propid == propid)
+			) {
+
+				/* ok, looking good */
+				if (	((cursub->propid & 0x7000) == 0x5000) ||
+					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
+				) {
+					if (cursub->type != dpd->DataType) {
+						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd->DataType );
+						/* str is incompatible to all others */
+						if ((PTP_DTC_STR == cursub->type) || (PTP_DTC_STR == dpd->DataType))
+							continue;
+						/* array is not compatible to non-array */
+						if (((cursub->type ^ dpd->DataType) & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
+							continue;
+						/* FIXME: continue to search here instead of below? */
+						continue;
+					}
+					ret = cursub->getfunc (camera, &widget, cursub, dpd);
+
+					if (ret != GP_OK) {
+						/* the type might not have matched, try the next */
+						GP_LOG_E ("Widget get of property '%s' failed, trying to see if we have another...", cursub->label);
+						continue;
+					}
+					ret = gp_widget_get_name (widget, (const char**)name);
+					/* FIXME: decode value */
+					gp_widget_free (widget);
+					return GP_OK;
+				}
+				continue;
+			}
+			/* Canon EOS special handling */
+			if (	have_eos_prop(params,cursub->vendorid,cursub->propid) &&
+				(cursub->propid == propid)
+			) {
+				GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
+				ret = cursub->getfunc (camera, &widget, cursub, dpd);
+				if (ret != GP_OK) {
+					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
+					continue;
+				}
+				ret = gp_widget_get_name (widget, (const char**)name);
+				/* FIXME: decode value */
+				gp_widget_free (widget);
+				return GP_OK;
+			}
+			/* Sigma FP special handling */
+			if (have_sigma_prop(params,cursub->vendorid,cursub->propid) &&
+				(cursub->propid == propid)
+			) {
+				GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
+				ret = cursub->getfunc (camera, &widget, cursub, dpd);
+				if (ret != GP_OK) {
+					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
+					continue;
+				}
+				ret = gp_widget_get_name (widget, (const char**)name);
+				/* FIXME: decode value */
+				gp_widget_free (widget);
+				return GP_OK;
+			}
+		}
+	}
+
+	if (have_prop(camera, params->deviceinfo.VendorExtensionID, propid)) {
+		char			buf[21], *label;
+
+		sprintf(buf,"%04x", propid);
+
+		label = (char*)ptp_get_property_description(params, propid);
+		if (!label) {
+			sprintf (buf, N_("PTP Property 0x%04x"), propid);
+			label = buf;
+		}
+		*name = strdup (label);
+		switch (dpd->DataType) {
+#define X(dtc,val,fmt) 							\
+		case dtc:						\
+			sprintf (buf, fmt, dpd->CurrentValue.val);	\
+			*content = strdup (buf);				\
+			return GP_OK;					\
+
+		X(PTP_DTC_INT8,i8,"%d")
+		X(PTP_DTC_UINT8,u8,"%d")
+		X(PTP_DTC_INT16,i16,"%d")
+		X(PTP_DTC_UINT16,u16,"%d")
+		X(PTP_DTC_INT32,i32,"%d")
+		X(PTP_DTC_UINT32,u32,"%d")
+		X(PTP_DTC_INT64,i64,"%ld")
+		X(PTP_DTC_UINT64,u64,"%ld")
+#undef X
+		case PTP_DTC_STR:
+			*content = strdup (dpd->CurrentValue.str);
+			return GP_OK;
+		default:
+			sprintf(buf, "Unknown type 0x%04x", dpd->DataType);
+			*content = strdup (buf);
+			return GP_OK;
+		}
+	}
+	/* not found */
+	return GP_ERROR_BAD_PARAMETERS;
+}
