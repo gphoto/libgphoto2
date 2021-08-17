@@ -6594,11 +6594,12 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventdata = path;
 					return GP_OK;
 				}
-				case PTP_CANON_EOS_CHANGES_TYPE_PROPERTY:
+				case PTP_CANON_EOS_CHANGES_TYPE_PROPERTY: {
+					char			*name, *content;
+					PTPDevicePropDesc	dpd;
+
 					*eventtype = GP_EVENT_UNKNOWN;
 					if (PTP_DPC_CANON_EOS_FocusInfoEx == entry.u.propid) {
-						PTPDevicePropDesc	dpd;
-
 						if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
 							C_MEM (*eventdata = malloc(strlen("FocusInfo ")+strlen(dpd.CurrentValue.str)+1));
 							sprintf (*eventdata, "FocusInfo %s", dpd.CurrentValue.str);
@@ -6606,9 +6607,22 @@ camera_wait_for_event (Camera *camera, int timeout,
 							return GP_OK;
 						}
 					}
-					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-					sprintf (*eventdata, "PTP Property %04x changed", entry.u.propid);
+					/* cached devprop should have been flushed I think... */
+					C_PTP_REP (ptp_canon_eos_getdevicepropdesc (params, entry.u.propid, &dpd));
+
+					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
+					if (ret == GP_OK) {
+						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"")+strlen(name)+1+1));
+						sprintf (*eventdata, "PTP Property %04x changed, \"%s\"", entry.u.propid, name);
+						free (name);
+						free (content);
+					} else {
+						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
+						sprintf (*eventdata, "PTP Property %04x changed", entry.u.propid);
+					}
+					ptp_free_devicepropdesc (&dpd);
 					return GP_OK;
+				}
 				case PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS:
 					/* if we do capture stuff, camerastatus will turn to 0 when done */
 					if (entry.u.status == 0) {
@@ -7082,11 +7096,27 @@ sonyout:
 					newobject = event.Param1;
 					goto downloadomdfile;
 				case PTP_EC_Olympus_DevicePropChanged:
-				case PTP_EC_Olympus_DevicePropChanged_New:
+				case PTP_EC_Olympus_DevicePropChanged_New: {
+					char			*name, *content;
+					PTPDevicePropDesc	dpd;
+
 					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed to 0x012345678")+1));
-					sprintf (*eventdata, "PTP Property %04x changed to 0x%08x", event.Param1, event.Param2);
+					/* cached devprop should hafve been flushed I think... */
+					C_PTP_REP (ptp_generic_getdevicepropdesc (params, event.Param1&0xffff, &dpd));
+
+					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
+					if (ret == GP_OK) {
+						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"")+strlen(name)+1+1));
+						sprintf (*eventdata, "PTP Property %04x changed, \"%s\"", event.Param1 & 0xffff, name);
+						free (name);
+						free (content);
+					} else {
+						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
+						sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
+					}
+					ptp_free_devicepropdesc (&dpd);
 					return GP_OK;
+				}
 				default:
 					*eventtype = GP_EVENT_UNKNOWN;
 					C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
