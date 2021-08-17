@@ -6610,6 +6610,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* cached devprop should have been flushed I think... */
 					C_PTP_REP (ptp_canon_eos_getdevicepropdesc (params, entry.u.propid, &dpd));
 
+					dpd.DevicePropertyCode = entry.u.propid;
 					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 					if (ret == GP_OK) {
 						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"")+strlen(name)+1+1));
