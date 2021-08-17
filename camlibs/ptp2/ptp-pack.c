@@ -1983,6 +1983,7 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint16_t proptype)
 	params->canon_props[j].size = 0;
 	params->canon_props[j].data = NULL;
 	memset (&params->canon_props[j].dpd,0,sizeof(params->canon_props[j].dpd));
+	params->canon_props[j].dpd.DevicePropertyCode = proptype;
 	params->canon_props[j].dpd.GetSet = 1;
 	params->canon_props[j].dpd.FormFlag = PTP_DPFF_None;
 	params->nrofcanon_props = j+1;
