@@ -11401,7 +11401,9 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 		}
 
 		for (submenuno = 0; menus[menuno].submenus[submenuno].name ; submenuno++ ) {
-			struct submenu *cursub = menus[menuno].submenus+submenuno;
+			struct submenu		*cursub = menus[menuno].submenus+submenuno;
+			CameraWidgetType	type;
+
 			widget = NULL;
 
 			if (	have_prop(camera,cursub->vendorid,cursub->propid) &&
@@ -11412,6 +11414,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 				if (	((cursub->propid & 0x7000) == 0x5000) ||
 					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
 				) {
+
 					if (cursub->type != dpd->DataType) {
 						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd->DataType );
 						/* str is incompatible to all others */
@@ -11431,7 +11434,30 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 						continue;
 					}
 					ret = gp_widget_get_name (widget, (const char**)name);
-					/* FIXME: decode value */
+					*name = strdup(*name);
+					ret = gp_widget_get_type (widget, &type);
+					switch (type) {
+					case GP_WIDGET_RADIO:
+					case GP_WIDGET_MENU:
+					case GP_WIDGET_TEXT: {
+						char *val;
+						gp_widget_get_value (widget, &val);
+						*content = strdup(val);
+						break;
+					}
+					case GP_WIDGET_RANGE: {
+						char buf[20];
+						float fval;
+						gp_widget_get_value (widget, &fval);
+						sprintf(buf,"%f",fval);
+						*content = strdup(buf);
+						break;
+					}
+					default:
+						*content = strdup("Unhandled type");
+						/* FIXME: decode value ... ? date? toggle? */
+						break;
+					}
 					gp_widget_free (widget);
 					return GP_OK;
 				}
@@ -11448,7 +11474,30 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					continue;
 				}
 				ret = gp_widget_get_name (widget, (const char**)name);
-				/* FIXME: decode value */
+				*name = strdup(*name);
+				ret = gp_widget_get_type (widget, &type);
+				switch (type) {
+				case GP_WIDGET_RADIO:
+				case GP_WIDGET_MENU:
+				case GP_WIDGET_TEXT: {
+					char *val;
+					gp_widget_get_value (widget, &val);
+					*content = strdup(val);
+					break;
+				}
+				case GP_WIDGET_RANGE: {
+					char buf[20];
+					float fval;
+					gp_widget_get_value (widget, &fval);
+					sprintf(buf,"%f",fval);
+					*content = strdup(buf);
+					break;
+				}
+				default:
+					*content = strdup("Unhandled type");
+					/* FIXME: decode value ... ? date? toggle? */
+					break;
+				}
 				gp_widget_free (widget);
 				return GP_OK;
 			}
@@ -11463,7 +11512,30 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					continue;
 				}
 				ret = gp_widget_get_name (widget, (const char**)name);
-				/* FIXME: decode value */
+				*name = strdup(*name);
+				ret = gp_widget_get_type (widget, &type);
+				switch (type) {
+				case GP_WIDGET_RADIO:
+				case GP_WIDGET_MENU:
+				case GP_WIDGET_TEXT: {
+					char *val;
+					gp_widget_get_value (widget, &val);
+					*content = strdup(val);
+					break;
+				}
+				case GP_WIDGET_RANGE: {
+					char buf[20];
+					float fval;
+					gp_widget_get_value (widget, &fval);
+					sprintf(buf,"%f",fval);
+					*content = strdup(buf);
+					break;
+				}
+				default:
+					*content = strdup("Unhandled type");
+					/* FIXME: decode value ... ? date? toggle? */
+					break;
+				}
 				gp_widget_free (widget);
 				return GP_OK;
 			}
