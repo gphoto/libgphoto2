@@ -11406,15 +11406,15 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 
 			widget = NULL;
 
-			if (	have_prop(camera,cursub->vendorid,cursub->propid) &&
-				(cursub->propid == propid)
+			if (	(cursub->propid == propid) &&
+				have_prop(camera,cursub->vendorid,cursub->propid)
 			) {
 
 				/* ok, looking good */
 				if (	((cursub->propid & 0x7000) == 0x5000) ||
 					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
 				) {
-
+					GP_LOG_D ("Getting table based PTP property '%s' / 0x%04x", cursub->label, cursub->propid );
 					if (cursub->type != dpd->DataType) {
 						GP_LOG_E ("Type of property '%s' expected: 0x%04x got: 0x%04x", cursub->label, cursub->type, dpd->DataType );
 						/* str is incompatible to all others */
@@ -11464,10 +11464,10 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 				continue;
 			}
 			/* Canon EOS special handling */
-			if (	have_eos_prop(params,cursub->vendorid,cursub->propid) &&
-				(cursub->propid == propid)
+			if (	(cursub->propid == propid) &&
+				have_eos_prop(params,cursub->vendorid,cursub->propid)
 			) {
-				GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
+				GP_LOG_D ("Getting EOS property '%s' / 0x%04x", cursub->label, cursub->propid );
 				ret = cursub->getfunc (camera, &widget, cursub, dpd);
 				if (ret != GP_OK) {
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
@@ -11505,7 +11505,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 			if (have_sigma_prop(params,cursub->vendorid,cursub->propid) &&
 				(cursub->propid == propid)
 			) {
-				GP_LOG_D ("Getting property '%s' / 0x%04x", cursub->label, cursub->propid );
+				GP_LOG_D ("Getting Sigma property '%s' / 0x%04x", cursub->label, cursub->propid );
 				ret = cursub->getfunc (camera, &widget, cursub, dpd);
 				if (ret != GP_OK) {
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
@@ -11545,6 +11545,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 	if (have_prop(camera, params->deviceinfo.VendorExtensionID, propid)) {
 		char			buf[21], *label;
 
+		GP_LOG_D ("Getting generic PTP property 0x%04x", propid );
 		sprintf(buf,"%04x", propid);
 
 		label = (char*)ptp_get_property_description(params, propid);
