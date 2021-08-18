@@ -6613,8 +6613,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 					dpd.DevicePropertyCode = entry.u.propid;
 					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 					if (ret == GP_OK) {
-						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"")+strlen(name)+1+1));
-						sprintf (*eventdata, "PTP Property %04x changed, \"%s\"", entry.u.propid, name);
+						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"\" to \"\"")+strlen(name)+1+strlen(content?content:"")));
+						sprintf (*eventdata, "PTP Property %04x changed, \"%s\" to \"%s\"", entry.u.propid, name, content?content:"");
 						free (name);
 						free (content);
 					} else {
@@ -7107,8 +7107,8 @@ sonyout:
 
 					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 					if (ret == GP_OK) {
-						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"")+strlen(name)+1+1));
-						sprintf (*eventdata, "PTP Property %04x changed, \"%s\"", event.Param1 & 0xffff, name);
+						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"\" to \"\"")+strlen(name)+1+strlen(content?content:"")));
+						sprintf (*eventdata, "PTP Property %04x changed, \"%s\" to \"%s\"", event.Param1 & 0xffff, name, content?content:"");
 						free (name);
 						free (content);
 					} else {
@@ -7278,8 +7278,8 @@ handleregular:
 
 		ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 		if (ret == GP_OK) {
-			C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"")+strlen(name)+1+1));
-			sprintf (*eventdata, "PTP Property %04x changed, \"%s\"", event.Param1 & 0xffff, name);
+			C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"\" to \"\"")+strlen(name)+1+strlen(content?content:"")));
+			sprintf (*eventdata, "PTP Property %04x changed, \"%s\" to \"%s\"", event.Param1 & 0xffff, name, content?content:"");
 			free (name);
 			free (content);
 		} else {
