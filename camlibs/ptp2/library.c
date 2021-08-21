@@ -3713,7 +3713,7 @@ enable_liveview:
 		free (ximage);
 
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
-		gp_file_set_name (file, "sony_preview.jpg");
+		gp_file_set_name (file, "preview.jpg");
 		gp_file_set_mtime (file, time(NULL));
 
 		SET_CONTEXT_P(params, NULL);
