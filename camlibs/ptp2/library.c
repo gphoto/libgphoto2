@@ -3201,35 +3201,41 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 
 /* find JPEGs in data blobs helper ... as most preview data is encapsulated */
 static int
-find_jpeg_in_data(const unsigned char *data, unsigned long size, unsigned char **startptr, unsigned char **endptr)
+save_jpeg_in_data_to_preview(const unsigned char *data, unsigned long size, CameraFile *file)
 {
-	/* look for the JPEG SOI marker (0xFFD8) in data */
-	*startptr = (unsigned char*)memchr(data, 0xff, size);
-	while(*startptr && ((*startptr+1) < (data + size))) {
-		if(*(*startptr + 1) == 0xd8) { /* SOI found */
-			break;
-		} else { /* go on looking (starting at next byte) */
-			(*startptr)++;
-			*startptr = (unsigned char*)memchr(*startptr, 0xff, size - (*startptr - data));
-		}
-	}
-	if(!*startptr)	/* no SOI -> no JPEG */
-		return GP_ERROR;
-	if (!endptr)	/* also look for the end ? */
-		return GP_OK;
+	unsigned char *startptr = NULL;
+	unsigned char *endptr = NULL;
 
-	*endptr = (unsigned char*)memchr(*startptr+1, 0xff, size-(*startptr-data)-1);
-	while(*endptr && ((*endptr+1) < (data + size))) {
-		if(*(*endptr + 1) == 0xd9) { /* EOI found */
-			*endptr += 2;
+	/* look for the JPEG SOI marker (0xFFD8) in data */
+	startptr = (unsigned char*)memchr(data, 0xff, size);
+	while(startptr && ((startptr+1) < (data + size))) {
+		if(*(startptr + 1) == 0xd8) { /* SOI found */
 			break;
 		} else { /* go on looking (starting at next byte) */
-			(*endptr)++;
-			*endptr = (unsigned char*)memchr(*endptr, 0xff, size - (*endptr-data));
+			startptr++;
+			startptr = (unsigned char*)memchr(startptr, 0xff, size - (startptr - data));
 		}
 	}
-	if(!*endptr) /* no SOI -> no JPEG */
+	if(!startptr)	/* no SOI -> no JPEG */
 		return GP_ERROR;
+
+	endptr = (unsigned char*)memchr(startptr+1, 0xff, size-(startptr-data)-1);
+	while(endptr && ((endptr+1) < (data + size))) {
+		if(*(endptr + 1) == 0xd9) { /* EOI found */
+			endptr += 2;
+			break;
+		} else { /* go on looking (starting at next byte) */
+			endptr++;
+			endptr = (unsigned char*)memchr(endptr, 0xff, size - (endptr-data));
+		}
+	}
+	if(!endptr) /* no SOI -> no JPEG */
+		return GP_ERROR;
+
+	gp_file_append (file, (char*)startptr, endptr - startptr);
+	gp_file_set_mime_type (file, GP_MIME_JPEG);
+	gp_file_set_name (file, "preview.jpg");
+	gp_file_set_mtime (file, time(NULL));
 	return GP_OK;
 }
 
@@ -3272,20 +3278,14 @@ camera_capture_stream_preview (Camera *camera, CameraFile *file, GPContext *cont
 
 		C_PTP (ptp_leica_getstreamdata (params, &data, &size));
 		if (propval.u32 == 0x47504a4d) { /* MJPG */
-			unsigned char	*jpgStartPtr;
 			int		ret;
 
-			ret = find_jpeg_in_data(data,size, &jpgStartPtr, NULL);
-
+			ret = save_jpeg_in_data_to_preview (data, size, file);
 			if(ret < GP_OK) { /* no SOI -> no JPEG */
+				free (data);
 				gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
 				return GP_ERROR;
 			}
-
-			/* assume ff d9 is at the end for now */
-			gp_file_append (file, (char*)jpgStartPtr, size - (jpgStartPtr - data));
-			gp_file_set_mime_type (file, GP_MIME_JPEG);
-			gp_file_set_name (file, "preview.jpg");
 		} else {
 			gp_file_append (file, (char*)data, size);
 		}
@@ -3308,7 +3308,7 @@ camera_capture_stream_preview (Camera *camera, CameraFile *file, GPContext *cont
 static int
 camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 {
-	unsigned char	*data = NULL, *jpgStartPtr = NULL, *jpgEndPtr = NULL;
+	unsigned char	*data = NULL, *jpgStartPtr = NULL;
 	uint32_t	size = 0;
 	uint16_t	ret;
 	PTPParams *params = &camera->pl->params;
@@ -3567,17 +3567,12 @@ enable_liveview:
 					continue;
 				}
 				/* look for the JPEG SOI marker (0xFFD8) in data */
-				res = find_jpeg_in_data(data,size, &jpgStartPtr, &jpgEndPtr);
+				res = save_jpeg_in_data_to_preview (data, size, file);
+				free (data); /* FIXME: perhaps handle the 128 byte header data too. */
 				if(res < GP_OK) { /* no SOI -> no JPEG */
 					gp_context_error (context, _("Sorry, your Nikon camera does not seem to return a JPEG image in LiveView mode"));
 					return GP_ERROR;
 				}
-				gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
-				free (data); /* FIXME: perhaps handle the 128 byte header data too. */
-				gp_file_set_mime_type (file, GP_MIME_JPEG);     /* always */
-				/* Add an arbitrary file name so caller won't crash */
-				gp_file_set_name (file, "preview.jpg");
-				gp_file_set_mtime (file, time(NULL));
 				break;
 			}
 			if (ret == PTP_RC_DeviceBusy) {
@@ -3637,18 +3632,13 @@ enable_liveview:
 				jpgStartPtr = ximage + offset;
 		}
 
-		res = find_jpeg_in_data(jpgStartPtr, size - (jpgStartPtr-ximage), &jpgStartPtr, &jpgEndPtr);
+		res = save_jpeg_in_data_to_preview(jpgStartPtr, size - (jpgStartPtr-ximage), file);
+		free (ximage); /* FIXME: perhaps handle the 128 byte header data too. */
+
 		if(res < GP_OK) { /* no SOI -> no JPEG */
 			gp_context_error (context, _("Sorry, your Sony camera does not seem to return a JPEG image in LiveView mode"));
 			return GP_ERROR;
 		}
-		gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
-		free (ximage); /* FIXME: perhaps handle the 128 byte header data too. */
-
-		gp_file_set_mime_type (file, GP_MIME_JPEG);
-		gp_file_set_name (file, "sony_preview.jpg");
-		gp_file_set_mtime (file, time(NULL));
-
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
@@ -3753,19 +3743,12 @@ enable_liveview:
 			}
 		}
 		/* look for the JPEG SOI marker (0xFFD8) in data */
-		res = find_jpeg_in_data(ximage, size, &jpgStartPtr, &jpgEndPtr);
-
+		res = save_jpeg_in_data_to_preview (ximage, size, file);
+		free (ximage); /* FIXME: perhaps handle the 128 byte header data too. */
 		if(res < GP_OK) { /* no SOI -> no JPEG */
 			gp_context_error (context, _("Sorry, your Panasonic camera does not seem to return a JPEG image in LiveView mode"));
 			return GP_ERROR;
 		}
-		gp_file_append (file, (char*)jpgStartPtr, jpgEndPtr-jpgStartPtr);
-		free (ximage); /* FIXME: perhaps handle the 128 byte header data too. */
-
-		gp_file_set_mime_type (file, GP_MIME_JPEG);
-		gp_file_set_name (file, "preview.jpg");
-		gp_file_set_mtime (file, time(NULL));
-
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
@@ -3820,18 +3803,12 @@ enable_liveview:
 		if (size < 4) return GP_ERROR;
 
 		/* look for the JPEG SOI marker (0xFFD8) in data */
-		res = find_jpeg_in_data(ximage, size, &jpgStartPtr, NULL);
+		res = save_jpeg_in_data_to_preview (ximage, size, file);
+		free (ximage);
 		if(res < GP_OK) { /* no SOI -> no JPEG */
 			gp_context_error (context, _("Sorry, your Panasonic camera does not seem to return a JPEG image in LiveView mode"));
 			return GP_ERROR;
 		}
-
-		gp_file_append (file, (char*)jpgStartPtr, size - (jpgStartPtr-ximage));
-		free (ximage);
-
-		gp_file_set_mime_type (file, GP_MIME_JPEG);
-		gp_file_set_name (file, "preview.jpg");
-		gp_file_set_mtime (file, time(NULL));
 		SET_CONTEXT_P(params, NULL);
 		return GP_OK;
 	}
