@@ -3189,6 +3189,7 @@ static void debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi)
 /* Add new object to internal driver structures. issued when creating
  * folder, uploading objects, or captured images.
  */
+static int get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char *folder);
 static int
 add_object (Camera *camera, uint32_t handle, GPContext *context)
 {
@@ -3197,6 +3198,23 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 
 	C_PTP (ptp_object_want (params, handle, 0, &ob));
 	return GP_OK;
+}
+
+static int
+add_object_to_fs_and_path (Camera *camera, uint32_t handle, PTPObjectInfo *oi, CameraFilePath *path, GPContext *context)
+{
+	PTPObject *ob;
+	PTPParams *params = &camera->pl->params;
+
+	C_PTP (ptp_object_want (params, handle, 0, &ob));
+
+	strcpy  (path->name,  oi->Filename);
+	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi->StorageID);
+	get_folder_from_handle (camera, oi->StorageID, oi->ParentObject, path->folder);
+	/* delete last / or we get confused later. */
+	path->folder[ strlen(path->folder)-1 ] = '\0';
+
+	return gp_filesystem_append (camera->fs, path->folder, path->name, context);
 }
 
 /* find JPEGs in data blobs helper ... as most preview data is encapsulated */
@@ -4178,17 +4196,9 @@ capturetriggered:
 				}
 			}
 		} else { /* capture to card branch */
-			CR (add_object (camera, newobject, context));
-			strcpy  (path->name,  oi.Filename);
-			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
-			get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
-			/* delete last / or we get confused later. */
-			path->folder[ strlen(path->folder)-1 ] = '\0';
-
+			ret = add_object_to_fs_and_path (camera, newobject, &oi, path, context);
 			ptp_free_objectinfo(&oi);
-
-			/* not doing the rest of the burst loop ... */
-			return gp_filesystem_append (camera->fs, path->folder, path->name, context);
+			return ret;
 		}
 	}
 	ptp_check_event (params);
@@ -4653,14 +4663,9 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (xmode != CANON_TRANSFER_CARD) {
 			fprintf (stderr,"parentobject is 0x%x, but not in card mode?\n", oi.ParentObject);
 		}
-		CR (add_object (camera, newobject, context));
-		strcpy  (path->name,  oi.Filename);
-		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
-		get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
-		/* delete last / or we get confused later. */
-		path->folder[ strlen(path->folder)-1 ] = '\0';
+		ret = add_object_to_fs_and_path (camera, newobject, &oi, path, context);
 		ptp_free_objectinfo(&oi);
-		return gp_filesystem_append (camera->fs, path->folder, path->name, context);
+		return ret;
 	} else {
 		if (xmode == CANON_TRANSFER_CARD) {
 			fprintf (stderr,"parentobject is 0, but not in memory mode?\n");
@@ -6503,16 +6508,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 						break;
 					}
 					newobject = entry.u.object.oid;
-					add_object (camera, newobject, context);
 					C_MEM (path = malloc(sizeof(CameraFilePath)));
-					path->name[sizeof(path->name)-1] = '\0';
-					strncpy  (path->name,  entry.u.object.oi.Filename, sizeof (path->name)-1);
+					ret = add_object_to_fs_and_path (camera, newobject, &entry.u.object.oi, path, context);
 					free (entry.u.object.oi.Filename);
-					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)entry.u.object.oi.StorageID);
-					get_folder_from_handle (camera, entry.u.object.oi.StorageID, entry.u.object.oi.ParentObject, path->folder);
-					/* delete last / or we get confused later. */
-					path->folder[ strlen(path->folder)-1 ] = '\0';
-					gp_filesystem_append (camera->fs, path->folder, path->name, context);
+					if (ret != GP_OK) {
+						free (path);
+						return ret;
+					}
 					if (entry.u.object.oi.ObjectFormat == PTP_OFC_Association)	/* not sure if we would get folder changed */
 						*eventtype = GP_EVENT_FOLDER_ADDED;
 					else
@@ -6616,14 +6618,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 					C_PTP (ptp_getobjectinfo (params, newobject, &oi));
 
 					if (oi.ParentObject != 0) {
-						CR (add_object (camera, newobject, context));
 						C_MEM (path = malloc (sizeof(CameraFilePath)));
-						strcpy  (path->name,  oi.Filename);
-						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
-						get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
-						/* delete last / or we get confused later. */
-						path->folder[ strlen(path->folder)-1 ] = '\0';
-						gp_filesystem_append (camera->fs, path->folder, path->name, context);
+						ret = add_object_to_fs_and_path (camera, newobject, &oi, path, context);
+						if (ret != GP_OK) {
+							ptp_free_objectinfo (&oi);
+							free (path);
+							return ret;
+						}
 					} else {
 						C_MEM (path = malloc (sizeof(CameraFilePath)));
 						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
