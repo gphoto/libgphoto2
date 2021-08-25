@@ -3615,12 +3615,14 @@ enable_liveview:
 		uint32_t	preview_object = 0xffffc002; /* this is where the liveview image is accessed */
 		unsigned char	*ximage = NULL;
 		int		tries = 50;
-		int		res;
+		int		res, oldtimeout;
 
 #if 0
 		/* this times out, with 0.3 seconds wait ... bad */
 		ptp_check_event (params); 	/* will stall for some reason */
 #endif
+		CR (gp_port_get_timeout (camera->port, &oldtimeout));
+		CR (gp_port_set_timeout (camera->port, 1*1000));
 		do {
 			PTPObjectInfo oi;
 
@@ -3640,6 +3642,7 @@ enable_liveview:
 				C_PTP (ret);
 			usleep(20*1000);
 		} while (tries--);
+		CR (gp_port_set_timeout (camera->port, oldtimeout));
 
 		jpgStartPtr = ximage;
 		/* There is an initial blob, and we had a case where 0xff 0xd8 was in the initial blob
