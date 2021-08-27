@@ -127,9 +127,12 @@ camlibs, you can use
 
 and
 
-    make CAMLIBS="sillycam.la doofuscam.la" install-camlibs
+    make GP_CAMLIB_SET="sillycam.la doofuscam.la" install-camlibs
 
-respectively.
+respectively or
+
+    make -C camlibs GP_CAMLIB_SET="sillycam.la doofuscam.la" all
+    make -C camlibs GP_CAMLIB_SET="sillycam.la doofuscam.la" install
 
 Compiling all camlibs is sped up considerably on *N* CPU core
 computers using `make -j`*N*.
