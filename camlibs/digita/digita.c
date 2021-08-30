@@ -31,9 +31,6 @@
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
-#ifdef OS2
-#include <db.h>
-#endif
 
 #define GP_MODULE "digita"
 

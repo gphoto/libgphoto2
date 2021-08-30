@@ -28,15 +28,6 @@
 extern "C" {
 #endif
 
-#ifdef OS2
-#  include <db.h>
-#  include <sys/param.h>
-#  define CAMLIBS     getenv("CAMLIBS")
-#  define RTLD_LAZY   0x001
-#  define VERSION     "2"
-#  define usleep(t)   _sleep2(((t)+500)/ 1000)
-#endif
-
 #ifdef WIN32
 #ifndef CAMLIBS
 #define CAMLIBS "."

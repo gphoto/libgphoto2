@@ -29,9 +29,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#ifdef OS2
-#include <db.h>
-#endif
 
 #include "gphoto2-endian.h"
 #include "digita.h"

@@ -1,5 +1,8 @@
 libgphoto2 2.5.27.1 development snapshot
 
+general:
+* OS/2 support removed (broken and unused since at least 2006)
+
 ptp2:
 * olympus: wait time was twice as long as required if no events arrived
 * Sigma Fp: added basic beta support for capture, live view and config.

@@ -28,9 +28,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
-#ifdef OS2
-#include <db.h>
-#endif
 
 #include "digita.h"
 #include "gphoto2-endian.h"

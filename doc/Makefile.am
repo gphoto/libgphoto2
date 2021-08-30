@@ -1,6 +1,6 @@
 SUBDIRS = api
 
-old_EXTRA_DIST = DAEMON build_OS2.txt 					\
+old_EXTRA_DIST = DAEMON 						\
 	camlib_devel.lyx 						\
 	camlib_devel-portmon.eps camlib_devel-repeater.eps 		\
 	camlib_devel.sgml camlib_devel.txt camlib_devel-y.eps 		\

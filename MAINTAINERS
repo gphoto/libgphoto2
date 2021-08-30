@@ -18,8 +18,6 @@ libgphoto2:
 				     PORTS
 --------------------------------------------------------------------------------
 
-OS/2:
-	Bart van Leeuwen <bart_van_leeuwen@netage.nl>
 *BSD:
 	Arnaud Launay <asl@launay.org>
 

@@ -34,9 +34,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
-#ifdef OS2
-#include <db.h>
-#endif
 
 #include <gphoto2/gphoto2.h>
 

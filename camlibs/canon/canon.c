@@ -30,10 +30,6 @@
 #include <time.h>
 #endif
 
-#ifdef OS2
-#include <db.h>
-#endif
-
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port-log.h>
 

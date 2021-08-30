@@ -1,7 +1,5 @@
 # -*- Makefile -*-
 
-EXTRA_DIST += usb/usb-os2.c
-
 EXTRA_LTLIBRARIES += usb.la
 
 usb_la_LDFLAGS = $(iolib_ldflags)

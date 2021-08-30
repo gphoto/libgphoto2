@@ -146,11 +146,7 @@ get_mime_type (const char *filename)
         dot = strrchr(filename, '.');
         if (dot) {
 		for (x = 0; mime_table[x].extension; x++) {
-#ifdef OS2
-			if (!stricmp(mime_table[x].extension, dot+1))
-#else
 			if (!strcasecmp (mime_table[x].extension, dot+1))
-#endif
 				return (mime_table[x].mime_type);
                 }
 	}

@@ -21,9 +21,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #endif /* CANON_EXPERIMENTAL_UPLOAD */
-#ifdef OS2
-#include <db.h>
-#endif
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

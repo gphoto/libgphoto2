@@ -174,12 +174,6 @@
 #define GP_PORT_SERIAL_RANGE_HIGH       4
 #endif
 
-#ifdef OS2
-#define GP_PORT_SERIAL_PREFIX   "COM%i"
-#define GP_PORT_SERIAL_RANGE_LOW   1
-#define GP_PORT_SERIAL_RANGE_HIGH  4
-#endif
-
 /* IRIX */
 #if defined(__sgi)
 #define GP_PORT_SERIAL_PREFIX "/dev/ttyd%i"
@@ -304,9 +298,6 @@ gp_port_library_list (GPPortInfoList *list)
 	char path[1024], prefix[1024];
 	int x;
 	struct stat s;
-#ifdef OS2
-	int r, fh, option;
-#endif
 
 	/* Copy in the serial port prefix */
 	strcpy (prefix, GP_PORT_SERIAL_PREFIX);
@@ -322,15 +313,6 @@ gp_port_library_list (GPPortInfoList *list)
 
 		sprintf (path, prefix, x);
 
-		/* OS/2 seems to need an additional check */
-#ifdef OS2
-		r = DosOpen (path, &fh, &option, 0, 0, 1,
-			     OPEN_FLAGS_FAIL_ON_ERROR |
-			     OPEN_SHARE_DENYREADWRITE, 0);
-		DosClose(fh);
-		if (r)
-			continue;
-#endif
 		/* Very first of all, if the device node is not there,
 		 * there is no need to try locking. */
 		if ((stat (path, &s) == -1) && ((errno == ENOENT) || (errno == ENODEV)))
@@ -396,9 +378,6 @@ static int
 gp_port_serial_open (GPPort *dev)
 {
 	int result, max_tries = 5, i;
-#ifdef OS2
-	int fd;
-#endif
 	char *port;
 	GPPortInfo	info;
 
@@ -429,10 +408,6 @@ gp_port_serial_open (GPPort *dev)
 
 #if defined(__FreeBSD__) || defined(__APPLE__) || defined(__DragonFly__) || defined(__MidnightBSD__)
 	dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_NONBLOCK);
-#elif OS2
-	fd = open (port, O_RDWR | O_BINARY);
-	dev->pl->fd = open (port, O_RDWR | O_BINARY);
-	close(fd);
 #else
 	if (dev->pl->fd == -1)
 		dev->pl->fd = open (port, O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
@@ -525,12 +500,10 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
         }
 
         /* wait till all bytes are really sent */
-#ifndef OS2
 #ifdef HAVE_TERMIOS_H
         tcdrain (dev->pl->fd);
 #else
         ioctl (dev->pl->fd, TCDRAIN, 0);
-#endif
 #endif
         return GP_OK;
 }
@@ -796,15 +769,10 @@ static int
 gp_port_serial_check_speed (GPPort *dev)
 {
 	speed_t speed;
-#ifdef OS2
-	ULONG rc;
-	ULONG   ulParmLen = 2;     /* Maximum size of the parameter packet */
-#else
 #ifdef HAVE_TERMIOS_H
 	struct termios tio;
 #else
 	struct sgttyb ttyb;
-#endif
 #endif
 
 	/*
@@ -821,19 +789,6 @@ gp_port_serial_check_speed (GPPort *dev)
 	GP_LOG_D ("Setting baudrate to %d...", dev->settings.serial.speed);
 	speed = gp_port_serial_baudconv (dev->settings.serial.speed);
 
-#ifdef OS2
-	rc = DosDevIOCtl (dev->pl->fd,       /* Device handle               */
-			  0x0001,            /* Serial-device control       */
-			  0x0043,            /* Sets bit rate               */
-			  (PULONG) &(dev->settings.serial.speed),
-			  sizeof(baudrate),  /* Max. size of parameter list */
-			  &ulParmLen,        /* Size of parameter packet    */
-			  NULL,              /* No data packet              */
-			  0,                 /* Maximum size of data packet */
-			  NULL);             /* Size of data packet         */
-	if(rc != 0)
-		printf("DosDevIOCtl baudrate error:%d\n",rc);
-#else /* !OS2 */
 #ifdef HAVE_TERMIOS_H
         if (tcgetattr(dev->pl->fd, &tio) < 0) {
 		gp_port_set_error (dev, _("Could not set the baudrate to %d"),
@@ -913,7 +868,6 @@ gp_port_serial_check_speed (GPPort *dev)
                 perror("ioctl(TIOCSETP)");
                 return GP_ERROR_IO_SERIAL_SPEED;
         }
-#endif
 #endif
 
 	dev->pl->baudrate = dev->settings.serial.speed;

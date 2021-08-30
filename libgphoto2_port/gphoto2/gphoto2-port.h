@@ -28,10 +28,6 @@
 
 /* For portability */
 #include <gphoto2/gphoto2-port-portability.h>
-#ifdef OS2
-#include <gphoto2/gphoto2-port-portability-os2.h>
-#include <os2.h>
-#endif
 
 #ifdef __cplusplus
 extern "C" {

@@ -27,9 +27,6 @@
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
-#ifdef OS2
-#include <db.h>
-#endif
 
 #include <gphoto2/gphoto2.h>
 #include "gphoto2-endian.h"
