@@ -50,7 +50,7 @@ DISTCLEANFILES = libgphoto2/gphoto2-endian.h
 
 # we use just ONE .PHONY target in order not to confuse automake
 
-.PHONY: rpm cvs-tags source-code-check install-drivers
+.PHONY: rpm source-code-check install-drivers
 
 ########################################################################
 # source code check maintenance task
@@ -128,8 +128,3 @@ else
 rpm:
 	@echo "Dummy $@ target"
 endif
-
-# add CVS tags - used only by the project maintainer to tag the files of a
-# released version
-cvs-tags: Makefile
-	@echo cvs tag "@PACKAGE@-$$(echo '@VERSION@' | sed -e 's/\./_/g' -e 's/rc/-rc/g')"
