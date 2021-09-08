@@ -566,8 +566,7 @@ AC_SUBST([camlibdocdir], ['${docdir}/camlibs'])
 dnl --------------------------------------------------------------------
 dnl initialize convenience packaging
 dnl --------------------------------------------------------------------
-GPKG_CHECK_RPM()dnl Check wether to package for a system using RPM
-GPKG_CHECK_LINUX()dnl Check wether to package for a linux system
+GPKG_CHECK_LINUX()dnl Check whether to package for a linux system
 
 
 dnl --------------------------------------------------------------------
@@ -652,8 +651,6 @@ tests/Makefile
 packaging/Makefile
 packaging/linux-hotplug/Makefile
 packaging/generic/Makefile
-packaging/rpm/Makefile
-packaging/rpm/package.spec
 po/Makefile.in
 doc/Makefile
 doc/Doxyfile
@@ -677,7 +674,7 @@ AS_IF([test "x$CDPATH" != "x"], [dnl
 
     #=========================================================#
     # You have CDPATH set. You may have to run "unset CDPATH" #
-    # before running "make dist" or "make rpm".               #
+    # before running "make dist".                             #
     #=========================================================#
 ])
 ])dnl

@@ -50,7 +50,7 @@ DISTCLEANFILES = libgphoto2/gphoto2-endian.h
 
 # we use just ONE .PHONY target in order not to confuse automake
 
-.PHONY: rpm source-code-check install-drivers
+.PHONY: source-code-check install-drivers
 
 ########################################################################
 # source code check maintenance task
@@ -110,21 +110,3 @@ update-po:
 # re-building of the build system files.
 
 ACLOCAL_AMFLAGS = -I auto-m4 -I gphoto-m4
-
-
-########################################################################
-# The following rules are only interesting if you want to create
-# distribution packages (as source tarballs or system specific packages)
-
-if ENABLE_RPM
-
-# create RPM packages
-rpm: Makefile
-	$(MAKE) $(AM_MAKEFLAGS) dist
-	cd packaging/rpm && $(MAKE) $(AM_MAKEFLAGS) rpm
-	@echo "The RPM packages should now be found in packaging/rpm/RPMS"
-
-else
-rpm:
-	@echo "Dummy $@ target"
-endif
