@@ -2,6 +2,7 @@ libgphoto2 2.5.27.1 development snapshot
 
 general:
 * OS/2 support removed (broken and unused since at least 2006)
+* remove built-in rpm packaging (use distro packaging instead)
 
 ptp2:
 * Nikon j1: capture fixed

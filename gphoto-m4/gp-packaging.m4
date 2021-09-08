@@ -1,25 +1,3 @@
-AC_DEFUN([GPKG_CHECK_RPM],
-[
-AC_ARG_WITH([rpmbuild],
-[AS_HELP_STRING([--with-rpmbuild=PATH],
-[Program to use for building RPMs])])
-
-AC_MSG_CHECKING([for rpmbuild or rpm])
-if test -x "${with_rpmbuild}"
-then
-    RPMBUILD="${with_rpmbuild}"
-    AC_MSG_RESULT([${RPMBUILD} (from parameter)])
-else
-    AC_MSG_RESULT([using autodetection])
-    AC_CHECK_PROGS(RPMBUILD, [rpmbuild rpm], false)
-    AC_MSG_CHECKING([for rpmbuild or rpm])
-    AC_MSG_RESULT([${RPMBUILD} (autodetected)])
-fi
-AC_SUBST([RPMBUILD])
-AM_CONDITIONAL([ENABLE_RPM], [test "$RPMBUILD" != "false"])
-
-])
-
 AC_DEFUN([GPKG_CHECK_LINUX],
 [
 	# effective_target has to be determined in advance
