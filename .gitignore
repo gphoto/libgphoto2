@@ -48,7 +48,9 @@ Makefile.in
 /auto-aux/
 /auto-m4/
 /autom4te.cache/
+/camlibs/all-cfg-camlibs
 /camlibs/all-def-camlibs
+/camlibs/all-mkf-camlibs
 /camlibs/all-src-camlibs
 /config.h
 /config.h.in
@@ -102,6 +104,9 @@ Makefile.in
 /libgphoto2_port/stamp-h1
 /libgphoto2_port/test/test-gp-port
 /libgphoto2_port/test/test-port-list
+/libgphoto2_port/test/test-port-list.log
+/libgphoto2_port/test/test-port-list.trs
+/libgphoto2_port/test/test-suite.log
 /libtool
 /packaging/generic/print-camera-list
 /packaging/rpm/package.spec
@@ -121,6 +126,9 @@ Makefile.in
 /README
 /stamp-h1
 /tests/ddb/check-ddb.sh
+/tests/print-libgphoto2-version
+/tests/test-camera-list
+/tests/test-endian
 /tests/test-filesys
 /tests/test-gphoto2
 +.vscode/
