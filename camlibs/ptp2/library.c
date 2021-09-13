@@ -2429,8 +2429,8 @@ static struct {
 	/* https://github.com/gphoto/gphoto2/issues/247, from logfile */
 	{"Canon:EOS 1500D",          		0x04a9, 0x32e1, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
-	/* from timelapse-VIEW */
-	{"Canon:EOS R2",          		0x04a9, 0x32e2, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
+	/* from Enno at SUSE */
+	{"Canon:EOS RP",          		0x04a9, 0x32e2, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
 	/* https://github.com/gphoto/libgphoto2/issues/316 */
 	{"Canon:PowerShot SX740 HS",		0x04a9, 0x32e4, PTP_CAP|PTP_CAP_PREVIEW},
@@ -3216,6 +3216,10 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, PTPObjectInfo *oi, C
 	/* delete last / or we get confused later. */
 	path->folder[ strlen(path->folder)-1 ] = '\0';
 
+	if (ob->oi.ObjectFormat == PTP_OFC_Association)
+		/* FIXME: gp_filesystem_reset */
+		return GP_OK;
+	/* The gp_filesystem_append function only appends files */
 	return gp_filesystem_append (camera->fs, path->folder, path->name, context);
 }
 
@@ -4202,6 +4206,7 @@ capturetriggered:
 			}
 		} else { /* capture to card branch */
 			ret = add_object_to_fs_and_path (camera, newobject, &oi, path, context);
+			/* this has handled adding an association earlier */
 			ptp_free_objectinfo(&oi);
 			return ret;
 		}
@@ -4669,6 +4674,9 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			fprintf (stderr,"parentobject is 0x%x, but not in card mode?\n", oi.ParentObject);
 		}
 		ret = add_object_to_fs_and_path (camera, newobject, &oi, path, context);
+		/* FIXME: consistent handling of association add ... perhaps try another event loop turnaroundloop turnaround  */
+		if (oi.ObjectFormat == PTP_OFC_Association)
+			gp_filesystem_reset (camera->fs);
 		ptp_free_objectinfo(&oi);
 		return ret;
 	} else {
@@ -6520,10 +6528,12 @@ camera_wait_for_event (Camera *camera, int timeout,
 						free (path);
 						return ret;
 					}
-					if (entry.u.object.oi.ObjectFormat == PTP_OFC_Association)	/* not sure if we would get folder changed */
+					if (entry.u.object.oi.ObjectFormat == PTP_OFC_Association) {	/* not sure if we would get folder changed */
 						*eventtype = GP_EVENT_FOLDER_ADDED;
-					else
+						gp_filesystem_reset (camera->fs);
+					} else {
 						*eventtype = (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) ? GP_EVENT_FILE_ADDED : GP_EVENT_FILE_CHANGED;
+					}
 					*eventdata = path;
 					return GP_OK;
 				}
