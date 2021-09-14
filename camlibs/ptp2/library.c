@@ -1336,6 +1336,9 @@ static struct {
 	/* via email */
 	{"Sony:ILCE-7C (Control)",		0x054c, 0x0d2b, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* via email */
+	{"Sony:ZV-E10 (Control)",		0x054c, 0x0d97, PTP_CAP|PTP_CAP_PREVIEW},
+
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
