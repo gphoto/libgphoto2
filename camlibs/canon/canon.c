@@ -1284,7 +1284,9 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
  * canon_int_find_new_image:
  * @camera: Camera * to this camera
  * @initial_state: Camera directory dump before image capture
+ * @initial_state_len: Lengt of before dump 
  * @final_state: Directory dump after image capture
+ * @final_state_len: Length of after dump
  * @path: Will be filled in with the path and filename of the captured
  *        image, in canonical gphoto2 format.
  *
@@ -1293,8 +1295,11 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
  * and its pathname is decoded into the given CameraFilePath.
  *
  */
-void canon_int_find_new_image ( Camera *camera, unsigned char *initial_state, unsigned char *final_state,
-                           CameraFilePath *path )
+void canon_int_find_new_image (
+		Camera *camera,
+		unsigned char *initial_state, unsigned int initial_state_length,
+		unsigned char *final_state, unsigned int final_state_length,
+		CameraFilePath *path )
 {
         char *old_entry = (char *)initial_state, *new_entry = (char *)final_state;
 
@@ -1633,12 +1638,13 @@ canon_int_capture_image (Camera *camera, CameraFilePath *path,
                 }
 
                 /* Find new file name in camera directory */
-                canon_int_find_new_image ( camera, initial_state, final_state, path );
+                canon_int_find_new_image ( camera, initial_state, initial_state_len, final_state, final_state_len, path );
 
 		/* Save this state to the camera directory state */
 		if (camera->pl->directory_state)
 			free (camera->pl->directory_state);
 		camera->pl->directory_state = final_state;
+		camera->pl->directory_state_length = final_state_len;
 
                 free ( initial_state );
                 break;

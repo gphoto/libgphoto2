@@ -940,11 +940,11 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 	unsigned char *final_state = NULL; /* For comparing
 					     * before/after
 					     * directories */
-	unsigned int directory_state_len, final_state_len;
+	unsigned int final_state_len;
         int status = GP_OK;
 
 	if (!camera->pl->directory_state)
-		status = canon_usb_list_all_dirs ( camera, &camera->pl->directory_state, &directory_state_len, context );
+		status = canon_usb_list_all_dirs ( camera, &camera->pl->directory_state, &camera->pl->directory_state_length, context );
 	if (status < GP_OK) {
 		GP_DEBUG ("canon_usb_wait_for_event: status %d", status);
 		return status;
@@ -967,7 +967,7 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 		if (status < GP_OK)
 			return status;
 		/* Find new file name in camera directory */
-		canon_int_find_new_image ( camera, camera->pl->directory_state, final_state, path );
+		canon_int_find_new_image ( camera, camera->pl->directory_state, camera->pl->directory_state_length, final_state, final_state_len, path );
 		if (path->folder[0] != '/') {
 			free (path);
 			*eventtype = GP_EVENT_UNKNOWN;
@@ -976,6 +976,7 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 		}
 		free ( camera->pl->directory_state );
 		camera->pl->directory_state = final_state;
+		camera->pl->directory_state_length = final_state_len;
 		return GP_OK;
 	}
 	default:
@@ -1022,11 +1023,8 @@ canon_usb_capture_dialogue (Camera *camera, unsigned int *return_length, int *ph
                 *return_length = 0;
 
 	/* for later wait_event */
-	if (!camera->pl->directory_state) {
-		unsigned int directory_state_len;
-
-		status = canon_usb_list_all_dirs ( camera, &camera->pl->directory_state, &directory_state_len, context );
-	}
+	if (!camera->pl->directory_state)
+		status = canon_usb_list_all_dirs ( camera, &camera->pl->directory_state, &camera->pl->directory_state_length, context );
 
         GP_DEBUG ("canon_usb_capture_dialogue()");
 

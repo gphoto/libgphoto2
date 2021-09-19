@@ -497,6 +497,7 @@ struct _CameraPrivateLibrary
 	int cached_ready;       /* whether the camera is ready to rock */
 
 	unsigned char *directory_state;	/* directory content state for wait_for_event */
+	unsigned int directory_state_length;	/* length of directory content state for wait_for_event */
 
 	long image_key, thumb_length, image_length; /* For immediate download of captured image */
 	long image_b_key, image_b_length; /* For immediate download of secondary captured image */
@@ -722,7 +723,7 @@ int canon_int_get_zoom(Camera *camera, unsigned char *zoom_level, unsigned char 
  */
 int canon_int_get_release_params (Camera *camera, GPContext *context);
 
-void canon_int_find_new_image ( Camera *camera, unsigned char *initial_state, unsigned char *final_state, CameraFilePath *path );
+void canon_int_find_new_image ( Camera *camera, unsigned char *initial_state, unsigned int initial_state_length, unsigned char *final_state, unsigned int final_state_length, CameraFilePath *path );
 
 
 /* path conversion - needs drive letter, and therefore cannot be moved
