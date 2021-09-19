@@ -1309,9 +1309,13 @@ void canon_int_find_new_image (
 
         path->folder[0] = 0; /* Start with null pathname string. */
         GP_DEBUG ( "canon_int_find_new_image: starting directory compare" );
-        while ( le16atoh ( old_entry+CANON_DIRENT_ATTRS ) != 0
-                || le32atoh ( old_entry + CANON_DIRENT_SIZE ) != 0
-                || le32atoh ( old_entry + CANON_DIRENT_TIME ) != 0 ) {
+        while ( (((new_entry - (char*)final_state) < final_state_length) &&
+		((old_entry - (char*)initial_state) < initial_state_length)) &&
+		(	le16atoh ( old_entry + CANON_DIRENT_ATTRS ) != 0 ||
+			le32atoh ( old_entry + CANON_DIRENT_SIZE ) != 0 ||
+			le32atoh ( old_entry + CANON_DIRENT_TIME ) != 0
+		)
+	) {
                 char *old_name = old_entry + CANON_DIRENT_NAME,
                         *new_name = new_entry + CANON_DIRENT_NAME;
                 GP_DEBUG ( " old entry \"%s\", attr = 0x%02x, size=%i",
