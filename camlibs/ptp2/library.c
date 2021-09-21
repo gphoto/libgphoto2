@@ -6931,16 +6931,23 @@ sonyout:
 		do {
 			PTPObjectHandles	handles;
 			unsigned int		i;
-			PTPObject		*oi;
 
 			if (ptp_get_one_event (params, &event))
 				goto handleregular;
 			C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles));
 			for (i=handles.n;i--;) {
+				PTPObject	*ob;
+				PTPObjectInfo	oi;
+
 				if (params->inliveview == 1 && handles.Handler[i] == 0x80000001) /* Ignore preview image object handle while liveview is active */
 					continue;
-				if (PTP_RC_OK == ptp_object_find (params, handles.Handler[i], &oi)) /* already have it */
+				if (PTP_RC_OK == ptp_object_find (params, handles.Handler[i], &ob)) /* already have it */
 					continue;
+				/* might be a just deleted entry , seen in https://github.com/gphoto/gphoto2/issues/456 */
+				memset (&oi,0,sizeof(oi));
+				if (PTP_RC_DeviceBusy == ptp_getobjectinfo (params, handles.Handler[i], &oi))
+					continue;
+				ptp_free_objectinfo (&oi);
 				event.Code = PTP_EC_ObjectAdded;
 				event.Param1 = handles.Handler[i];
 				free (handles.Handler);
