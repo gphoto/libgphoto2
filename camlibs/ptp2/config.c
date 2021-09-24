@@ -1734,6 +1734,36 @@ _put_Canon_ZoomRange(CONFIG_PUT_ARGS)
 	return (GP_OK);
 }
 
+static int
+_get_Canon_EOS_ZoomRange(CONFIG_GET_ARGS) {
+	float	f, t, b, s;
+
+/*
+	if (!(dpd->FormFlag & PTP_DPFF_Range))
+		return GP_ERROR;
+*/
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	f = (float)dpd->CurrentValue.u32;
+	b = 0.0;
+	t = 1000.0;
+	s = 1.0;
+	gp_widget_set_range (*widget, b, t, s);
+	gp_widget_set_value (*widget, &f);
+	return GP_OK;
+}
+
+static int
+_put_Canon_EOS_ZoomRange(CONFIG_PUT_ARGS)
+{
+	float	f;
+
+	CR (gp_widget_get_value(widget, &f));
+	propval->u32 = (unsigned int)f;
+	return GP_OK;
+}
+
+
 /* This seems perhaps focal length * 1.000.000 */
 static int
 _get_Sony_Zoom(CONFIG_GET_ARGS) {
@@ -10201,7 +10231,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Long Exp Noise Reduction"),       "longexpnr",                PTP_DPC_NIKON_1_LongExposureNoiseReduction, PTP_VENDOR_NIKON, PTP_DTC_UINT8, _get_Nikon_OnOff_UINT8,            _put_Nikon_OnOff_UINT8 },
 	{ N_("Auto Focus Mode 2"),              "autofocusmode2",           PTP_DPC_NIKON_A4AFActivation,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Zoom"),                           "zoom",                     PTP_DPC_CANON_Zoom,                     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ZoomRange,               _put_Canon_ZoomRange },
-	{ N_("Zoom"),                           "zoom",                     PTP_DPC_CANON_EOS_PowerZoomPosition,    PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                           _put_INT },
+	{ N_("Zoom"),                           "zoom",                     PTP_DPC_CANON_EOS_PowerZoomPosition,    PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_Canon_EOS_ZoomRange,           _put_Canon_EOS_ZoomRange },
 	{ N_("Zoom"),                           "zoom",                     PTP_DPC_SONY_Zoom,    	            PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_Zoom,                     _put_Sony_Zoom },
 	{ N_("Zoom Speed"),                     "zoomspeed",                PTP_DPC_CANON_EOS_PowerZoomSpeed,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                           _put_INT },
 	{ N_("Assist Light"),                   "assistlight",              PTP_DPC_CANON_AssistLight,              PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_AssistLight,             _put_Canon_AssistLight },
