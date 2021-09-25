@@ -1313,6 +1313,9 @@
   { "Qualcomm (for PhiComm)", 0x05c6, "C230w (MTP)",
       0x9039, DEVICE_FLAGS_ANDROID_BUGS },
 
+  /* https://github.com/libmtp/libmtp/issues/78 */
+  { "OnePlus", 0x05c6, "OnePlus 7Pro (MTP)",
+      0xf000, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1513/ */
   { "Qualcomm (for OnePlus)", 0x05c6, "One Plus 2 (A2003) (MTP)",
       0xf003, DEVICE_FLAGS_ANDROID_BUGS },
@@ -1700,6 +1703,9 @@
   /* hartmut001@users.sourceforge.net */
   { "Sony", 0x054c, "NW-A45 Walkman", 0x0c71,
       DEVICE_FLAGS_SONY_NWZ_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/81 */
+  { "Sony", 0x054c, "NW-ZX500", 0x0d01,
+      DEVICE_FLAGS_SONY_NWZ_BUGS },
   { "Sony", 0x054c, "DCR-SR75", 0x1294,
       DEVICE_FLAGS_SONY_NWZ_BUGS },
 
@@ -2005,6 +2011,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1849/ */
   { "SONY", 0x0fce, "Xperia I4312", 0x0207,
       DEVICE_FLAG_NONE },
+  /* https://sourceforge.net/p/libmtp/feature-requests/303/ */
+  { "SONY", 0x0fce, "Xperia 5 II Phone", 0x020d,
+      DEVICE_FLAG_NONE },
 
   /* https://bugs.kde.org/show_bug.cgi?id=387454 ... probably not in the ADB/CDROM method? */
   { "SONY", 0x0fce, "Xperia XA2 (Jolla Sailfish)", 0x0a07,
@@ -2156,6 +2165,8 @@
   { "SONY", 0x0fce, "Xperia 1 (J9110) MTP+CDROM", 0x4205,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia I4312 MTP+CDROM", 0x4207,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia 5 II Phone MTP+CDROM", 0x420d,
       DEVICE_FLAG_NONE },
 
   /*
@@ -2328,6 +2339,8 @@
   { "SONY", 0x0fce, "Xperia 1 (J9110) MTP+ADB", 0x5205,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia I4312 MTP+ADB", 0x5207,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia 5 II Phone MTP+ADB", 0x520d,
       DEVICE_FLAG_NONE },
 
   /*
@@ -2855,6 +2868,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1364/ */
   { "Asus", 0x0b05, "Zenfone 2 ZE551ML (MTP)", 0x5f03,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/75 */
+  { "Asus", 0x0b05, "Zenpad 10", 0x600f,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/255/ */
   { "Asus", 0x0b05, "Zenfone V (MTP)", 0x610f,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3083,6 +3099,9 @@
   /* Marcus parents */
   { "Lenovo", 0x17ef, "Tab 10", 0x7a50,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1903/ */
+  { "Lenovo", 0x17ef, "TB-8703F", 0x7a6b,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/33 */
   { "Lenovo", 0x17ef, "Tab4 10 Plus", 0x7ad0,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3099,6 +3118,9 @@
   { "Lenovo", 0x17ef, "Tab P10", 0x7bd3,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Lenovo", 0x17ef, "TB-X606F", 0x7c45,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/74 */
+  { "Lenovo", 0x17ef, "TB-X606F (Lenovo Tab M10 FHD Plus)", 0x7c46,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1736/ */
   { "Lenovo", 0x17ef, "P1060X", 0x9039,
@@ -3632,6 +3654,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1397/ */
   { "Xiaomi", 0x2717, "Mi-2s (id2) (MTP)", 0xff40,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1905/ */
+  { "Xiaomi", 0x0a9d, "POCO X3 Pro (MTP)", 0xff40,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1339/ */
   { "Xiaomi", 0x2717, "Mi-2s (MTP)", 0xff48,
