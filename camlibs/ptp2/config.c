@@ -11463,22 +11463,22 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 						GP_LOG_E ("Widget get of property '%s' failed, trying to see if we have another...", cursub->label);
 						continue;
 					}
-					ret = gp_widget_get_name (widget, (const char**)name);
+					CR (gp_widget_get_name (widget, (const char**)name));
 					*name = strdup(*name);
-					ret = gp_widget_get_type (widget, &type);
+					CR (gp_widget_get_type (widget, &type));
 					switch (type) {
 					case GP_WIDGET_RADIO:
 					case GP_WIDGET_MENU:
 					case GP_WIDGET_TEXT: {
 						char *val;
-						gp_widget_get_value (widget, &val);
+						CR (gp_widget_get_value (widget, &val));
 						*content = strdup(val);
 						break;
 					}
 					case GP_WIDGET_RANGE: {
 						char buf[20];
 						float fval;
-						gp_widget_get_value (widget, &fval);
+						CR (gp_widget_get_value (widget, &fval));
 						sprintf(buf,"%f",fval);
 						*content = strdup(buf);
 						break;
@@ -11503,22 +11503,22 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
-				ret = gp_widget_get_name (widget, (const char**)name);
+				CR (gp_widget_get_name (widget, (const char**)name));
 				*name = strdup(*name);
-				ret = gp_widget_get_type (widget, &type);
+				CR (gp_widget_get_type (widget, &type));
 				switch (type) {
 				case GP_WIDGET_RADIO:
 				case GP_WIDGET_MENU:
 				case GP_WIDGET_TEXT: {
 					char *val;
-					gp_widget_get_value (widget, &val);
+					CR (gp_widget_get_value (widget, &val));
 					*content = strdup(val);
 					break;
 				}
 				case GP_WIDGET_RANGE: {
 					char buf[20];
 					float fval;
-					gp_widget_get_value (widget, &fval);
+					CR (gp_widget_get_value (widget, &fval));
 					sprintf(buf,"%f",fval);
 					*content = strdup(buf);
 					break;
@@ -11541,22 +11541,22 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					GP_LOG_D ("Failed to parse value of property '%s' / 0x%04x: error code %d", cursub->label, cursub->propid, ret);
 					continue;
 				}
-				ret = gp_widget_get_name (widget, (const char**)name);
+				CR (gp_widget_get_name (widget, (const char**)name));
 				*name = strdup(*name);
-				ret = gp_widget_get_type (widget, &type);
+				CR (gp_widget_get_type (widget, &type));
 				switch (type) {
 				case GP_WIDGET_RADIO:
 				case GP_WIDGET_MENU:
 				case GP_WIDGET_TEXT: {
 					char *val;
-					gp_widget_get_value (widget, &val);
-					*content = strdup(val);
+					CR (gp_widget_get_value (widget, &val));
+					*content = strdup(val?val:"NULL");
 					break;
 				}
 				case GP_WIDGET_RANGE: {
 					char buf[20];
 					float fval;
-					gp_widget_get_value (widget, &fval);
+					CR (gp_widget_get_value (widget, &fval));
 					sprintf(buf,"%f",fval);
 					*content = strdup(buf);
 					break;
