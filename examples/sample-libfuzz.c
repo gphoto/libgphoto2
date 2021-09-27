@@ -15,8 +15,11 @@
 void errordumper(GPLogLevel level, const char *domain, const char *str,
                  void *data) {
 	/* Do not log ... but let it appear here so we discover debug paths */
-	fprintf(stderr, "%s:%s\n", domain, str);
+	//fprintf(stderr, "%s:%s\n", domain, str);
 }
+void contexterror (GPContext *context, const char *text, void *data) {
+}
+
 
 static int
 recursive_directory(Camera *camera, const char *folder, GPContext *context, int *foundfile) {
@@ -130,18 +133,22 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 	return GP_OK;
 }
 
+
+static GPPortInfoList		*gpinfolist = NULL;
+
 int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-	static int			initialized = 0;
-	Camera				*camera = NULL;
+	int			initialized = 0;
 	int				ret, storagecnt;
+	Camera			*camera = NULL;
 	CameraStorageInformation	*storageinfo;
 
 	GPPortInfo			pi;
-	static GPPortInfoList		*gpinfolist = NULL;
 	static GPContext		*context = NULL;
 	char				buf[200];
 	static const char		*name;
-	char				tmpfn[200];
+	static const char		*port;
+	char				*xpath;
+	char				tmpfn[200] = { 0 };
 
 	int				fd;
 	CameraWidget			*rootwidget;
@@ -149,41 +156,41 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 	CameraFile			*file;
 	/*CameraFilePath		path;*/
 	CameraList			*list;
-	static CameraAbilitiesList      *abilities = NULL;
 
         gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
 
-	if (!initialized) {
-		context = sample_create_context (); /* see context.c */
-
+	if (!gpinfolist) {
 		gp_port_info_list_new (&gpinfolist);
 		ret = gp_port_info_list_load (gpinfolist);
 		if (ret < GP_OK) return 0;
+	}
+	if (!context) {
+		context = sample_create_context (); /* see context.c */
+		gp_context_set_error_func (context, contexterror, NULL);
+	}
 
+	if (!initialized) {
 		/* Detect all the cameras that can be autodetected... */
 		ret = gp_list_new (&list);
 		if (ret < GP_OK) return 0;
 
-		/* Load all the camera drivers we have... */
-		ret = gp_abilities_list_new (&abilities);
-		if (ret < GP_OK) return ret;
-		ret = gp_abilities_list_load (abilities, context);
-		if (ret < GP_OK) return ret;
-		ret = gp_abilities_list_detect (abilities, gpinfolist, list, context);
-		if (ret < GP_OK) return ret;
-		/*fprintf(stderr, "detect list has count %d\n", gp_list_count(list));*/
+		gp_camera_autodetect (list, context);
 
+		//fprintf(stderr, "detect list has count %d\n", gp_list_count(list));
+		if (gp_list_count(list) < 1) goto out;
 
 		ret = gp_list_get_name(list, 0, &name);
 		if (ret < GP_OK) goto out;
-		gp_list_free (list);
+		ret = gp_list_get_value(list, 0, &port);
+		if (ret < GP_OK) goto out;
+		/*gp_list_free (list);*/
+		//fprintf(stderr,"camera %s detected at port %s.\n", name, port);
 
-		ret = sample_open_camera (&camera, name, "vusb:", context);
+		ret = sample_open_camera (&camera, name, port, context);
 		if (ret < GP_OK) {
-			fprintf(stderr,"camera %s at %s not found.\n", name, buf);
+			fprintf(stderr,"camera %s not found.\n", name);
 			goto out;
 		}
-
 		initialized = 1;
 	}
 	/* code that runs all the time */
@@ -193,39 +200,42 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 	write (fd, Data, Size);
 	close(fd);
 
-	strcpy(buf,"vusb:");
-	strcat(buf,tmpfn);
+	strcpy(buf,"vusb:"); strcat(buf,tmpfn);
 
-	fprintf(stderr,"setting path %s.\n", buf);
+	//fprintf(stderr,"setting path %s.\n", buf);
 
-	gp_camera_get_port_info (camera, &pi);
-	gp_port_info_set_path (pi, buf);
-	gp_camera_set_port_info (camera, pi);
+	ret = gp_port_info_list_lookup_path (gpinfolist, buf);
+	if (ret < GP_OK) goto out;
+	gp_port_info_list_get_info (gpinfolist, ret, &pi);
 
-	ret = gp_camera_init (camera, context);
+	ret = gp_camera_set_port_info (camera, pi);
 	if (ret < GP_OK) {
-		fprintf(stderr,"No camera auto detected.\n");
+		fprintf(stderr,"portinfo not set %d.\n", ret);
 		goto out;
 	}
 
-	/* AFL PART STARTS HERE */
+	ret = gp_camera_init (camera, context);
+	if (ret < GP_OK) {
+		//fprintf(stderr,"Camera not initialized %d.\n", ret);
+		goto out;
+	}
 
 	ret = recursive_directory(camera, "/", context, NULL);
 	if (ret < GP_OK) {
-		printf ("Could not recursive list files.\n");
+		//fprintf (stderr, "Could not recursive list files.\n");
 		goto out;
 	}
 
 	ret = gp_camera_get_summary (camera, &summary, context);
 	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
-		printf ("Could not get summary.\n");
+		//fprintf (stderr, "Could not get summary.\n");
 		goto out;
 	}
 
 #if 1
 	ret = gp_camera_get_config (camera, &rootwidget, context);
 	if (ret < GP_OK) {
-		fprintf (stderr,"Could not get config.\n");
+		//fprintf (stderr,"Could not get config.\n");
 		goto out;
 	}
 	gp_widget_free (rootwidget);
@@ -234,14 +244,14 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 
 	ret = gp_camera_get_storageinfo (camera, &storageinfo, &storagecnt, context);
 	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
-		printf ("Could not get storage info.\n");
+		//fprintf (stderr, "Could not get storage info.\n");
 		goto out;
 	}
 	free(storageinfo);
 
 	ret = gp_camera_trigger_capture (camera, context);
 	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
-		printf ("Could not trigger capture.\n");
+		//fprintf (stderr, "Could not trigger capture.\n");
 		goto out;
 	}
 
@@ -259,7 +269,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 	ret = gp_camera_capture_preview (camera, file, context);
 	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
 		gp_file_free (file);
-		printf ("Could not capture preview.\n");
+		//fprintf (stderr, "Could not capture preview.\n");
 		goto out;
 	}
 	gp_file_free (file);
@@ -275,9 +285,9 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 
 	/* AFL PART ENDS HERE */
 out:
-	gp_camera_exit (camera, context);
+	if (camera) gp_camera_exit (camera, context);
 	/*gp_context_unref (context);*/
 	/*gp_camera_free (camera);*/
-	unlink (tmpfn);
+	if (tmpfn[0]) unlink (tmpfn);
 	return 0;
 }
