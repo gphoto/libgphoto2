@@ -9514,7 +9514,7 @@ read64bit:		;
 		}
 
 		/* Apple iOS X does that for the root folder. */
-		if ((ob->oi.ParentObject == ob->oi.StorageID)) {
+		if (ob->oi.ParentObject == ob->oi.StorageID) {
 			PTPObject *parentob;
 
 			if (ptp_object_find (params, ob->oi.ParentObject, &parentob) != PTP_RC_OK) {
