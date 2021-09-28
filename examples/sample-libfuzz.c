@@ -1,3 +1,22 @@
+/*
+ * This is a sample for use by LibFuzzer.
+ *
+ * How to build:
+ * install clang
+ * CC="clang" CFLAGS="-fsanitize=address,fuzzer -O2 -g" ./configure --prefix=/usr --libdir=/usr/lib64
+ * make -k
+	(the binaries do not build with -fsanitize=fuzzer due to duplicate main)
+ * make -k install
+ * clang -fsanitize=address,fuzzer -O2 -g sample-libfuzz.c autodetect.c context.c -lgphoto2 -lgphoto2_port -o fuzzer
+ * mkdir CORPUS
+ * ./fuzzer -detect_leaks=0 CORPUS/
+ *
+ * FIXME:
+ * - currently this seems to have memory leaks, it slows down and gets more and more memory over time. 
+ *   restarting cures it for a while
+ * - It crashes on start in 80% of the cases. You might need retry multiple times to start it.
+ *   reason is i think the fuzzer creates a bitmap in an area where the loaded camlibs are mapped into after the fact.
+ */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -37,7 +56,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 
 	ret = gp_camera_folder_list_folders (camera, folder, list, context);
 	if (ret < GP_OK) {
-		printf ("Could not list folders.\n");
+		//fprintf (stderr, "Could not list folders.\n");
 		gp_list_free (list);
 		return ret;
 	}
@@ -58,13 +77,13 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 			strcat(buf, "/");
 		strcat(buf, newfolder);
 
-		fprintf(stderr,"newfolder=%s\n", newfolder);
+		//fprintf(stderr,"newfolder=%s\n", newfolder);
 
 		ret = recursive_directory (camera, buf, context, &havefile);
 		free (buf);
 		if (ret != GP_OK) {
 			gp_list_free (list);
-			printf ("Failed to recursively list folders.\n");
+			//fprintf (stderr, "Failed to recursively list folders.\n");
 			return ret;
 		}
 		if (havefile) /* only look for the first directory with a file */
@@ -75,7 +94,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 	ret = gp_camera_folder_list_files (camera, folder, list, context);
 	if (ret < GP_OK) {
 		gp_list_free (list);
-		printf ("Could not list files.\n");
+		//fprintf (stderr, "Could not list files.\n");
 		return ret;
 	}
 	gp_list_sort (list);
@@ -88,7 +107,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 	ret = gp_camera_file_get_info (camera, folder, newfile, &fileinfo, context);
 	if (ret != GP_OK) {
 		gp_list_free (list);
-		printf ("Could not get file info.\n");
+		//fprintf (stderr, "Could not get file info.\n");
 		return ret;
 	}
 
@@ -97,7 +116,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_NORMAL, file, context);
 	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
 		gp_list_free (list);
-		printf ("Could not get file.\n");
+		//fprintf (stderr, "Could not get file.\n");
 		return ret;
 	}
 	gp_file_unref (file);
@@ -106,7 +125,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 	ret = gp_camera_file_get (camera, folder, newfile, GP_FILE_TYPE_PREVIEW, file, context);
 	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
 		gp_list_free (list);
-		printf ("Could not get file preview.\n");
+		// fprintf (stderr, "Could not get file preview.\n");
 		return ret;
 	}
 	gp_file_unref (file);
@@ -137,9 +156,9 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 static GPPortInfoList		*gpinfolist = NULL;
 
 int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-	int			initialized = 0;
+	static int			initialized = 0;
 	int				ret, storagecnt;
-	Camera			*camera = NULL;
+	static Camera			*camera = NULL;
 	CameraStorageInformation	*storageinfo;
 
 	GPPortInfo			pi;
@@ -183,7 +202,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 		if (ret < GP_OK) goto out;
 		ret = gp_list_get_value(list, 0, &port);
 		if (ret < GP_OK) goto out;
-		/*gp_list_free (list);*/
 		//fprintf(stderr,"camera %s detected at port %s.\n", name, port);
 
 		ret = sample_open_camera (&camera, name, port, context);
@@ -240,7 +258,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 	}
 	gp_widget_free (rootwidget);
 #endif
-	printf ("OK, %s\n", summary.text);
+	//printf ("OK, %s\n", summary.text);
 
 	ret = gp_camera_get_storageinfo (camera, &storageinfo, &storagecnt, context);
 	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
