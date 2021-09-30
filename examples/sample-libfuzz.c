@@ -5,7 +5,7 @@
  * install clang
  * CC="clang" CFLAGS="-fsanitize=address,fuzzer -O2 -g" ./configure --prefix=/usr --libdir=/usr/lib64
  * make -k
-	(the binaries do not build with -fsanitize=fuzzer due to duplicate main)
+	(the executables do not build with -fsanitize=fuzzer due to duplicate main)
  * make -k install
  * clang -fsanitize=address,fuzzer -O2 -g sample-libfuzz.c autodetect.c context.c -lgphoto2 -lgphoto2_port -o fuzzer
  * mkdir CORPUS
