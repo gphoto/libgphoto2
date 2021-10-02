@@ -3,10 +3,11 @@
  *
  * How to build:
  * install clang
- * CC="clang" CFLAGS="-fsanitize=address,fuzzer -O2 -g" ./configure --prefix=/usr --libdir=/usr/lib64
- * make -k
-	(the executables do not build with -fsanitize=fuzzer due to duplicate main)
- * make -k install
+ * CC="clang" CFLAGS="-fsanitize=address,fuzzer-no-link -O2 -g" ./configure --prefix=/usr --libdir=/usr/lib64 --enable-vusb
+ * make
+ * sudo make install
+ * rm usb1.* from port drivers
+ * in examples/
  * clang -fsanitize=address,fuzzer -O2 -g sample-libfuzz.c autodetect.c context.c -lgphoto2 -lgphoto2_port -o fuzzer
  * mkdir CORPUS
  * ./fuzzer -detect_leaks=0 CORPUS/
