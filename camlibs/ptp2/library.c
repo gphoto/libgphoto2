@@ -3211,11 +3211,14 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, PTPObjectInfo *oi, C
 	PTPObject *ob;
 	PTPParams *params = &camera->pl->params;
 
-	C_PTP (ptp_object_want (params, handle, 0, &ob));
+	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 
-	strcpy  (path->name,  oi->Filename);
-	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi->StorageID);
-	get_folder_from_handle (camera, oi->StorageID, oi->ParentObject, path->folder);
+	strcpy  (path->name,  ob->oi.Filename);
+	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+
+	get_folder_from_handle (camera, oi->StorageID, ob->oi.ParentObject, path->folder);	/* might invalidate ob */
+
+	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 	/* delete last / or we get confused later. */
 	path->folder[ strlen(path->folder)-1 ] = '\0';
 
