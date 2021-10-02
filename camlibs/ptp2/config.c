@@ -3749,6 +3749,9 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Night Landscape"),0x8016, PTP_VENDOR_NIKON},
 	{ N_("Children"),	0x8017, PTP_VENDOR_NIKON},
 	{ N_("Automatic (No Flash)"),	0x8018, PTP_VENDOR_NIKON},
+	{ N_("U1"),		0x8050, PTP_VENDOR_NIKON},
+	{ N_("U2"),		0x8051, PTP_VENDOR_NIKON},
+	{ N_("U3"),		0x8052, PTP_VENDOR_NIKON},
 
 	{ N_("Intelligent Auto"),		0x8000, PTP_VENDOR_SONY},
 	{ N_("Superior Auto"),			0x8001, PTP_VENDOR_SONY},
