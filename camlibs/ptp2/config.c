@@ -4051,6 +4051,15 @@ static struct deviceproptableu8 nikon_1_exposure_program_modes[] = {
 };
 GENERIC8TABLE(NIKON_1_ExposureProgram,nikon_1_exposure_program_modes)
 
+static struct deviceproptableu8 nikon_usermode[] = {
+	{ "P",			19, 0 },
+	{ "S",			20, 0 },
+	{ "A",			21, 0 },
+	{ "M",			22, 0 },
+	{ N_("Auto"),		23, 0 },
+};
+GENERIC8TABLE(NIKON_UserMode,nikon_usermode)
+
 static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Single Shot"),		0x0001, 0 },
 	{ N_("Burst"),			0x0002, 0 },
@@ -10294,6 +10303,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Effect Mode"),                    "effectmode",               PTP_DPC_NIKON_EffectMode,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_EffectMode,              _put_NIKON_EffectMode },
 	{ N_("Exposure Program"),               "expprogram",               PTP_DPC_ExposureProgramMode,            0,                  PTP_DTC_UINT16, _get_ExposureProgram,               _put_ExposureProgram },
 	{ N_("Exposure Program"),               "expprogram2",              PTP_DPC_NIKON_1_Mode,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_1_ExposureProgram,       _put_NIKON_1_ExposureProgram },
+	{ N_("User Mode"),               	"usermode",                 PTP_DPC_NIKON_UserMode,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_UserMode,                _put_NIKON_UserMode },
 	{ N_("Scene Mode"),                     "scenemode",                PTP_DPC_NIKON_SceneMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_SceneMode,               _put_NIKON_SceneMode },
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_SONY_AspectRatio,               PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_AspectRatio,              _put_Sony_AspectRatio },
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_OLYMPUS_AspectRatio,            PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32,  _get_Olympus_AspectRatio,   _put_Olympus_AspectRatio },
