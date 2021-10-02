@@ -24,11 +24,12 @@ static void errordumper(GPLogLevel level, const char *domain, const char *str,
 
 static void
 camera_tether(Camera *camera, GPContext *context) {
-	int fd, retval;
-	CameraFile *file;
+	int		fd, retval;
+	CameraFile	*file;
 	CameraEventType	evttype;
 	CameraFilePath	*path;
-	void	*evtdata;
+	CameraFileInfo	info;
+	void		*evtdata;
 
 	printf("Tethering...\n");
 
@@ -40,6 +41,12 @@ camera_tether(Camera *camera, GPContext *context) {
 		case GP_EVENT_FILE_ADDED:
 			path = (CameraFilePath*)evtdata;
 			printf("File added on the camera: %s/%s\n", path->folder, path->name);
+
+			retval = gp_camera_file_get_info (camera, path->folder, path->name, &info, context);
+			printf ("	info reported flags: %d\n", info.file.fields);
+			printf ("	info reported mtime: %ld\n", info.file.mtime);
+			printf ("	info reported size: %ld\n", info.file.size);
+			printf ("	info reported type: %s\n", info.file.type);
 
 			fd = open (path->name, O_CREAT | O_WRONLY | O_BINARY, 0644);
 			retval = gp_file_new_from_fd(&file, fd);
