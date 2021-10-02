@@ -44,9 +44,9 @@ camera_tether(Camera *camera, GPContext *context) {
 
 			retval = gp_camera_file_get_info (camera, path->folder, path->name, &info, context);
 			printf ("	info reported flags: %d\n", info.file.fields);
-			printf ("	info reported mtime: %ld\n", info.file.mtime);
-			printf ("	info reported size: %ld\n", info.file.size);
-			printf ("	info reported type: %s\n", info.file.type);
+			if (info.file.fields & GP_FILE_INFO_MTIME) printf ("	info reported mtime: %ld\n", info.file.mtime);
+			if (info.file.fields & GP_FILE_INFO_SIZE) printf ("	info reported size: %ld\n", info.file.size);
+			if (info.file.fields & GP_FILE_INFO_TYPE) printf ("	info reported type: %s\n", info.file.type);
 
 			fd = open (path->name, O_CREAT | O_WRONLY | O_BINARY, 0644);
 			retval = gp_file_new_from_fd(&file, fd);
