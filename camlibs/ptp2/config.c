@@ -4051,6 +4051,7 @@ static struct deviceproptableu8 nikon_1_exposure_program_modes[] = {
 };
 GENERIC8TABLE(NIKON_1_ExposureProgram,nikon_1_exposure_program_modes)
 
+/* from z6 sdk */
 static struct deviceproptableu8 nikon_usermode[] = {
 	{ "P",			19, 0 },
 	{ "S",			20, 0 },
