@@ -34,7 +34,7 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 	static const char *shrt[] =
 		{
 			PACKAGE_VERSION,
-#if GP_CAMLIB_SET_IS_NONSTANDARD
+#ifdef GP_CAMLIB_SET_IS_NONSTANDARD
 			"NON-STANDARD CAMLIB SET"
 			" ("
 			GP_CAMLIB_SET
@@ -72,7 +72,7 @@ const char **gp_library_version(GPVersionVerbosity verbose)
 	static const char *verb[] =
 		{
 			PACKAGE_VERSION,
-#if GP_CAMLIB_SET_IS_NONSTANDARD
+#ifdef GP_CAMLIB_SET_IS_NONSTANDARD
 			"NON-STANDARD CAMLIB SET"
 #ifdef GP_CAMLIB_SET_SKIPPING
 			" SKIPPING SOME"

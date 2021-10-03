@@ -56,9 +56,9 @@ const char **gp_port_library_version(GPVersionVerbosity verbose)
 
 #ifdef HAVE_RESMGR
 			"resmgr locking",
-#elif HAVE_TTYLOCK
+#elif defined(HAVE_TTYLOCK)
 			"ttylock locking",
-#elif HAVE_LOCKDEV
+#elif defined(HAVE_LOCKDEV)
 			"lockdev locking",
 #else
 			"without locking",
