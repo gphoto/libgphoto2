@@ -205,7 +205,9 @@ main (int argc, char *argv[])
 	} else if (count == 0) {
 		/* Copied from gphoto2-abilities-list.c gp_abilities_list_load() */
 		const char *camlib_env = getenv(CAMLIBDIR_ENV);
-		const char *camlibs = (camlib_env != NULL)?camlib_env:CAMLIBS;
+		/*
+		 * const char *camlibs = (camlib_env != NULL)?camlib_env:CAMLIBS;
+		 */
 
 		printf("No camera drivers (camlibs) found in camlib dir:\n"
 		       "    CAMLIBS='%s', default='%s', used=%s\n",
