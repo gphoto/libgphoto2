@@ -2395,7 +2395,7 @@ static int
 get_info_func (CameraFilesystem __unused__ *fs, const char *folder,
 	       const char *filename,
 	       CameraFileInfo * info,
-	       void __unused__ *data, GPContext __unused__ *context)
+	       void *data, GPContext *context)
 {
 	Camera *camera = data;
 	GP_DEBUG ("get_info_func() called for '%s'/'%s'", folder, filename);
