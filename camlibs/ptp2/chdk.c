@@ -395,7 +395,7 @@ chdk_get_file_func (CameraFilesystem *fs, const char *folder, const char *filena
 	PTPDataHandler  	handler;
 	char 			*fn;
 
-	fn = malloc(1+strlen(folder)+1+strlen(filename)+1),
+	fn = malloc(1+strlen(folder)+1+strlen(filename)+1);
 	sprintf(fn,"A%s/%s",folder,filename);
 	ptp_init_camerafile_handler (&handler, file);
 	ret = ptp_chdk_download(params, fn, &handler);
