@@ -528,11 +528,14 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
 				di->OperationsSupported_len++;
 			}
-			if (strcmp(params->deviceinfo.Model,"V1")) { /* the Nikon V1 does not like it */
-				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
-				di->OperationsSupported_len++;
-			} else {
-				/* on V1 even the 90c7 getevents does not work https://github.com/gphoto/libgphoto2/issues/569 */
+
+			/* V1 and J1 are a less reliable then the newer 1 versions, no changecamera mode, no getevent, no initiatecapturerecinsdram */
+			if (	!strcmp(params->deviceinfo.Model,"V1") ||
+				!strcmp(params->deviceinfo.Model,"J1")
+			) {
+				/* on V1 and J1 even the 90c7 getevents does not work */
+				/* V1: see https://github.com/gphoto/libgphoto2/issues/569 */
+				/* J1: see https://github.com/gphoto/libgphoto2/issues/716 */
 				for (i=0;i<di->OperationsSupported_len;i++) {
 					if (di->OperationsSupported[i] == PTP_OC_NIKON_GetEvent) {
 						GP_LOG_D("On Nikon V1: disable NIKON_GetEvent as its unreliable");
@@ -543,6 +546,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 						di->OperationsSupported[i] = PTP_OC_InitiateCapture; /* overwrite */
 					}
 				}
+			} else {
+				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
+				di->OperationsSupported_len++;
 			}
 		}
 		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
