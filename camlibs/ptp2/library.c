@@ -4294,7 +4294,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				/* just add it to the filesystem, and return in CameraPath */
 				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
 				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
-				ret = ptp_object_want (params, entry.u.object.oid, 0, &ob);
+				ret = ptp_object_want (params, entry.u.object.oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 				if (ret != PTP_RC_OK)
 					continue;
 				strcpy  (path->name,  oi.Filename);
