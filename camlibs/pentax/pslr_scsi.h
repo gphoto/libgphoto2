@@ -70,9 +70,11 @@ typedef enum {
 /* This also could be used to specify FDTYPE HANDLE for Win32, but this seems tricky with includes */
 #ifdef LIBGPHOTO2
 #define FDTYPE GPPort*
+#define PRIFDTYPE "p"
 #else
 /* classic UNIX style handle */
 #define FDTYPE int
+#define PRIFDTYPE "d"
 #endif
 
 int scsi_read(FDTYPE sg_fd, uint8_t *cmd, uint32_t cmdLen,

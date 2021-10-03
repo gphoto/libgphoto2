@@ -1705,7 +1705,8 @@ static int _ipslr_write_args(uint8_t cmd_2, ipslr_handle_t *p, int n, ...) {
 }
 
 static int command(FDTYPE fd, int a, int b, int c) {
-    DPRINT("[C]\t\t\tcommand(fd=%x, %x, %x, %x)\n", fd, a, b, c);
+    DPRINT("[C]\t\t\tcommand(fd=%" PRIFDTYPE ", %x, %x, %x)\n",
+	   fd, a, b, c);
     uint8_t cmd[8] = {0xf0, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
     cmd[2] = a;
@@ -1732,7 +1733,7 @@ static int read_status(FDTYPE fd, uint8_t *buf) {
 }
 
 static int get_status(FDTYPE fd) {
-    DPRINT("[C]\t\t\tget_status(0x%x)\n", fd);
+    DPRINT("[C]\t\t\tget_status(%" PRIFDTYPE ")\n", fd);
 
     uint8_t statusbuf[8];
     memset(statusbuf,0,8);
@@ -1752,7 +1753,7 @@ static int get_status(FDTYPE fd) {
 }
 
 static int get_result(FDTYPE fd) {
-    DPRINT("[C]\t\t\tget_result(0x%x)\n", fd);
+    DPRINT("[C]\t\t\tget_result(%" PRIFDTYPE ")\n", fd);
     uint8_t statusbuf[8];
     while (1) {
         //DPRINT("read out status\n");
@@ -1776,7 +1777,7 @@ static int get_result(FDTYPE fd) {
 }
 
 static int read_result(FDTYPE fd, uint8_t *buf, uint32_t n) {
-    DPRINT("[C]\t\t\tread_result(0x%x, size=%d)\n", fd, n);
+    DPRINT("[C]\t\t\tread_result(%" PRIFDTYPE ", size=%d)\n", fd, n);
     uint8_t cmd[8] = {0xf0, 0x49, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     int r;
     uint32_t i;
