@@ -62,9 +62,10 @@ capture_to_memory(Camera *camera, GPContext *context, const char **ptr, unsigned
 
 static void
 capture_to_file(Camera *camera, GPContext *context, char *fn) {
-	int fd, retval;
-	CameraFile *file;
-	CameraFilePath camera_file_path;
+	int		fd, retval;
+	CameraFile	*file;
+	CameraFilePath	camera_file_path;
+	CameraFileInfo	info;
 
 	printf("Capturing.\n");
 
@@ -75,7 +76,14 @@ capture_to_file(Camera *camera, GPContext *context, char *fn) {
 	retval = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
 	printf("  Retval: %d\n", retval);
 
+
 	printf("Pathname on the camera: %s/%s\n", camera_file_path.folder, camera_file_path.name);
+
+	retval = gp_camera_file_get_info (camera, camera_file_path.folder, camera_file_path.name, &info, context);
+	printf ("       file info reported flags: %d\n", info.file.fields);
+	if (info.file.fields & GP_FILE_INFO_MTIME) printf ("    info reported mtime: %ld\n", info.file.mtime);
+	if (info.file.fields & GP_FILE_INFO_SIZE) printf ("     info reported size: %ld\n", info.file.size);
+	if (info.file.fields & GP_FILE_INFO_TYPE) printf ("     info reported type: %s\n", info.file.type);
 
 	fd = open(fn, O_CREAT | O_WRONLY | O_BINARY, 0644);
 	retval = gp_file_new_from_fd(&file, fd);
