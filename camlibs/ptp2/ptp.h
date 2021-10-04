@@ -3784,6 +3784,7 @@ struct _PTPParams {
 	unsigned int		nrofcanon_props;
 	int			canon_viewfinder_on;
 	int			canon_event_mode;
+	int			uilocked;
 
 	/* PTP: Canon EOS event queue */
 	PTPCanon_changes_entry	*backlogentries;

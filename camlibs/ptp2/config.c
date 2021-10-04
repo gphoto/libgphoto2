@@ -350,6 +350,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 			   "setdevicepropvalue of capturetarget to 0x%x failed", ct_val.u32);
 		if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 			uint16_t	ret;
+			int		uilocked = params->uilocked;
 
 			/* if we want to download the image from the device, we need to tell the camera
 			 * that we have enough space left. */
@@ -357,9 +358,11 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 			ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
 			 */
 
-			LOG_ON_PTP_E (ptp_canon_eos_setuilock (params));
+			if (!uilocked)
+				LOG_ON_PTP_E (ptp_canon_eos_setuilock (params));
 			ret = ptp_canon_eos_pchddcapacity(params, 0x0fffffff, 0x00001000, 0x00000001);
-			LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
+			if (!uilocked)
+				LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
 			/* not so bad if its just busy, would also fail later. */
 			if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
 			C_PTP (ret);
@@ -587,8 +590,12 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	/* then emits 911b and 911c ... not done yet ... */
 	CR (camera_canon_eos_update_capture_target(camera, context, 1));
 
-	if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_ResetUILock))
-		LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
+	if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_ResetUILock)) {
+		if (params->uilocked) {
+			LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
+			params->uilocked = 0;
+		}
+	}
 
 	/* Drain the rest set of the event data */
 	C_PTP (ptp_check_eos_events (params));
@@ -9233,10 +9240,16 @@ _put_Canon_EOS_UILock(CONFIG_PUT_ARGS)
 	GPContext *context = ((PTPData *) params->data)->context;
 
 	CR (gp_widget_get_value(widget, &val));
-	if (val)
-		C_PTP_REP (ptp_canon_eos_setuilock (params));
-	else
-		C_PTP_REP (ptp_canon_eos_resetuilock (params));
+
+	if (val) {
+		if (!params->uilocked)
+			C_PTP_REP (ptp_canon_eos_setuilock (params));
+		params->uilocked = 1;
+	} else {
+		if (params->uilocked)
+			C_PTP_REP (ptp_canon_eos_resetuilock (params));
+		params->uilocked = 0;
+	}
 	return GP_OK;
 }
 
