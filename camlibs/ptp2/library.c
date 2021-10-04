@@ -3069,6 +3069,7 @@ static int
 camera_exit (Camera *camera, GPContext *context)
 {
 	int exit_result = PTP_RC_OK;
+	int exit_gp_result = GP_OK;
 	if (camera->pl!=NULL) {
 		PTPParams *params = &camera->pl->params;
 		PTPContainer event;
@@ -3093,7 +3094,8 @@ camera_exit (Camera *camera, GPContext *context)
 				if (params->inliveview && ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder))
 					if ((exit_result = ptp_canon_eos_end_viewfinder (params)) != PTP_RC_OK)
 						goto exitfailed;
-				if ((exit_result = camera_unprepare_capture (camera, context)) != PTP_RC_OK)
+
+				if ((exit_gp_result = camera_unprepare_capture (camera, context)) < GP_OK)	/* note: gets gphoto resultcodes, not ptp retcodes */
 					goto exitfailed;
 			}
 			break;
@@ -3175,6 +3177,8 @@ exitfailed:
 		WSACleanup();
 	}
 #endif
+	if (exit_gp_result != GP_OK)
+		return exit_gp_result;
 	return translate_ptp_result(exit_result);
 }
 
