@@ -291,7 +291,7 @@ AM_CONDITIONAL(XMLTOPDF,$have_xmltopdf)
 AM_CONDITIONAL(XMLTOPS,$have_xmltops)
 
 # create list of supported formats
-AC_MSG_CHECKING([for manual formats to re­create])
+AC_MSG_CHECKING([for manual formats to re-create])
 xxx=""
 manual_html=""
 manual_pdf=""
