@@ -9,7 +9,7 @@
 	* library.c: We need to read a reply of 8 bytes, or the kernel
 	  reports data overflow.
 
-2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-16  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am: Don't use glib.
 
@@ -23,7 +23,7 @@
 	* jamcam.c, library.c, library.h: updated code to use new
 	  gp_file_progress instead of gp_camera_progress.
 
-2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-05  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* jamcam.c: Don't include <libgphoto2/*.>, include <*.h> instead.
 

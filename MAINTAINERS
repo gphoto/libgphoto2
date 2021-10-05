@@ -4,13 +4,13 @@ if I send 0xff as described in whatever/file.c), those are the guys to ask.
 
 libgphoto2_port:
 	Marcus Meissner <marcus@jet.franken.de>
-	Lutz Müller <lutz@users.sourceforge.net> (old maintainer)
+	Lutz MÃ¼ller <lutz@users.sourceforge.net> (old maintainer)
 	Scott Fritzinger <scottf@unr.edu>	(old maintainer)
 	Hubert Figuiere <hfiguiere@teaser.fr>	(old maintainer)
 
 libgphoto2:
 	Marcus Meissner <marcus@jet.franken.de>
-	Lutz Müller <lutz@users.sourceforge.net> (old maintainer)
+	Lutz MÃ¼ller <lutz@users.sourceforge.net> (old maintainer)
 	Scott Fritzinger <scottf@unr.edu>	(old maintainer)
 	Hubert Figuiere <hfiguiere@teaser.fr>	(old maintainer)
 
@@ -57,7 +57,7 @@ camlibs/gsmart:
 	Till Adam <till@adam-lilienthal.de>
 
 camlibs/gsmart300:
-	Jérôme Lodewyck <lodewyck@clipper.ens.fr>
+	JÃ©rÃ´me Lodewyck <lodewyck@clipper.ens.fr>
 	Till Adam <till@adam-lilienthal.de>
 
 camlibs/hp215:
@@ -79,7 +79,7 @@ camlibs/jl2005c:
 	Theodore Kilgore <kilgota@auburn.edu>
 
 camlibs/konica:
-	Lutz Müller <lutz@users.sf.net>
+	Lutz MÃ¼ller <lutz@users.sf.net>
 
 camlibs/kodak/dc120:
 	Scott Fritzinger <scottf@unr.edu>
@@ -200,11 +200,11 @@ flphoto:
 
 gtkam (http://www.topfrose.de):
 	Simple GTK front-end.
-	Lutz Müller <lutz@users.sourceforge.net>
+	Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 GnoCam (http://www.uni-karlsruhe.de/~urc8/GnoCam):
 	GNOME integration (nautilus)
-	Lutz Müller <lutz@users.sf.net>
+	Lutz MÃ¼ller <lutz@users.sf.net>
 
 QtKam (?):
 	Front-end for KDE

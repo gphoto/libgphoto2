@@ -24,7 +24,7 @@
 	* Added Concord EyeQ 4330 (has same id as Traveller 410z), reported by
 	  Christian Boltz <christian.boltz@nexgo.de>.
 
-2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+2002-10-03  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
 
@@ -32,7 +32,7 @@
 	
 	* Added Medion 9700 as submitted by Arjan van de Ven <arjanv@redhat.com>
 
-2002-07-05  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-05  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	Checked into CVS.
 

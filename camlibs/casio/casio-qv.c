@@ -1,6 +1,6 @@
 /* casio-qv.c
  *
- * Copyright © 2001 Lutz Müller
+ * Copyright Â© 2001 Lutz MÃ¼ller
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

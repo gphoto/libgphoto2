@@ -689,7 +689,7 @@
 
 	* usb.c: added fix for EOS D60 unlocking by Fredrik (reported to work)
 
-2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+2002-10-03  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
 
@@ -705,7 +705,7 @@
 
 	* canon.[ch]: support for PowerShot A100, A200
 	
-2002-07-29  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-29  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* canon.h: Make CVS compile again by adding CANON_PS_A100 to the
 	  enumeration.
@@ -788,7 +788,7 @@
 	  #ifdef OBSOLETE to make sources clean before gPhoto2
 	  2.0 is released.
 
-2002-01-08  christophe barbé <christophe.barbe.ml@online.fr>
+2002-01-08  christophe barbÃ© <christophe.barbe.ml@online.fr>
 
 	* usb.c: Change model detection to look at model name instead
 	  of USB vendor/product ID since this is required to make the
@@ -818,7 +818,7 @@
 
 	  Made canon_int_get_time() always return gphoto2 status codes.
 
-2002-01-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2002-01-15  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* *.c: gp_camera_status -> gp_context_status
 
@@ -830,12 +830,12 @@
 	* library.c: Fixed mkdir and rmdir functions which did not convert
 	  from gphoto paths to canon paths.
 
-2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2002-01-13  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* *.[c,h]: Replaces last call to gp_camera_set_error (I oversaw one
 	  hidden in the header file).
 
-2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2002-01-13  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* *.[c,h]: Replace calls to gp_camera_set_error by gp_context_error.
 
@@ -900,7 +900,7 @@
 
 	* canon.c, canon.h, serial.c, usb.c, util.c, util.h :
 
-	  Patch from Michel Dänzer <daenzer@debian.org>,
+	  Patch from Michel DÃ¤nzer <daenzer@debian.org>,
 
 	  Handle endian issues when communicating with the
 	  cameras by using the new _byteorder.h include

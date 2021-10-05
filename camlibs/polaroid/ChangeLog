@@ -88,7 +88,7 @@
 
 	* pdc700.c: Do not cast bween time_t* and int*.
 
-2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+2002-10-03  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
 
@@ -96,7 +96,7 @@
 
 	* pdc640.c: Added Jenoptik JD350v(ideo) USB support.
 
-2002-03-22  Lutz Müller <lutz@users.sourceforge.net>
+2002-03-22  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	Patch by Andrea Suatoni <a.suatoni@itaca.it>:
 
@@ -113,16 +113,16 @@
 	  camera's month datum is one-based but tm.tm_mon is
 	  zero-based.
 
-2002-01-15  Lutz Müller <lutz@users.sourceforge.net>
+2002-01-15  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* pdc700.c: Introduced a bug in last fix...
 
-2002-01-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2002-01-15  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* pdc700.c: When status is PDC_STATUS_FAIL, the camera will only 
 	  send the checksum, nothing else.
 
-2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2002-01-13  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* pdc700.c: Remove references to gp_camera_set_error.
 
@@ -130,20 +130,20 @@
 
 	* jd350e.c: Added definitions of MIN and MAX
 
-2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-05  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* pdc640.c: Includes again :-)
 
-2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-05  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* pdc320.h
 	* pdc640.c: Still fixing includes
 
-2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-05  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* pdc640.c: Fix includes.
 
-2001-11-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-11-28  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* pdc700.c: Rename PDC700_FIRST into PDC700_FAIL. Try to implement
 	  some error recovery strategy.

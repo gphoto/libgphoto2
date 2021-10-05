@@ -92,91 +92,91 @@
 		put file is possibly working too, but confuses the firmware 
 		and this driver a bit.
 
-2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+2002-10-03  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
 
-2002-07-20  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-20  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c:
 	* ricoh.[c,h]: Implement upload.
 
-2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-16  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.c: Simplify by using macros.
 
-2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-16  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	Patch by Martin Fischer <martin.fischer@inka.de>:
 
 	* ricoh.c (ricoh_set_date): Fix.
 
-2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-16  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c: The camera needs to be in record mode to set settings.
 
-2002-07-16  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-16  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	Patch from Martin Fischer <martin.fischer@inka.de>:
 
 	* ricoh.c: Bug Fixes.
 
-2002-07-11  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-11  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c: Initialize some variables to NULL.
 
-2002-07-11  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-11  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.c: Remove 3 direct calls to ricoh_send and ricoh_recv.
 
-2002-07-10  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-10  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c (camera_set_config): Fix bug (again).
 
-2002-07-10  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-10  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c (camera_set_config): Fix bug.
 
-2002-07-10  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-10  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	Patch by Martin Fischer <martin.fischer@inka.de>:
 
 	* ricoh.c (ricoh_get_pic_date): Corrected.
 	* library.c (get_info_func): Implemented.
 
-2002-07-05  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-05  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]:
 	* library.c: More settings.
 
-2002-07-02  LUtz Müller <lutz@users.sourceforge.net>
+2002-07-02  LUtz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]:
 	* library.c: Exposure setting.
 
-2002-07-02  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-02  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	Patch by Martin Fischer <martin.fischer@inka.de>:
 
 	* ricoh.c:
 	* library.c: Some bug fixes.
 
-2002-06-21  Lutz Müller <lutz@users.sourceforge.net>
+2002-06-21  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]:
 	* library.c: More settings.
 
-2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
+2002-06-20  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]
 	* library.c: First step towards support of settings.
 
-2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
+2002-06-20  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.h:
 	* library.c: Support a couple of other models.
 
-2002-06-20  Lutz Müller <lutz@users.sourceforge.net>
+2002-06-20  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	Lots of infos from Martin Fischer <martin.fischer@inka.de>:
 
@@ -185,43 +185,43 @@
 	  ricoh_bye. Fix typo in ricoh_get_pic_name. Remember the model
 	  that we get on ricoh_connect.
 
-2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+2002-06-19  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.c: Flesh out ricoh_get_pic_date.
 
-2002-06-19  Lutz Müller <lutz@users.sourceforge.net>
+2002-06-19  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.c: Simplify code by introducing ricoh_transmit. As a side 
 	  effect, this should improve error recovery, too.
 
 2002-06-18  Martin Fischer <martin.fischer@inka.de>
 
-	Patch adapted by Lutz Müller <lutz@users.sourceforge.net>.
+	Patch adapted by Lutz MÃ¼ller <lutz@users.sourceforge.net>.
 
 	* ricoh.[c,h]
 	* library.c: The driver supports GP_FILE_OPERATION_PREVIEW. 
 	  Support for Philips ESP80 was added. camera_about was added.
 	
-2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
+2002-03-14  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]
 	* library.c: This driver supports GP_FILE_OPERATION_DELETE and
 	  GP_OPERATION_CAPTURE_IMAGE. Support for
 	  configuration is still missing. Awaiting patches...
 
-2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
+2002-03-14  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]
 	* library.c: Remove CameraPrivateLibrary. Sure, that introduces 
 	  some communication overhead, but the code is cleaner this way.
 
-2002-03-14  Lutz Müller <lutz@users.sourceforge.net>
+2002-03-14  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	Submitted by <cliff@vixen.snipe444.org>. I fixed indentation.
 
 	* ricoh.[c,h]
 	* library.c: Make the driver functional.
 
-2002-01-31  Lutz Müller <lutz@users.sourceforge.net>
+2002-01-31  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* ricoh.[c,h]: More functions ported.

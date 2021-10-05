@@ -14,6 +14,6 @@
 
 	* Removed config.h as it clearly should not have been here.
 
-2002-02-13  Lutz Müller <lutz@users.sourceforge.net>
+2002-02-13  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* sonydsc1.c: Mark driver as EXPERIMENTAL - it is currently broken.

@@ -1,3 +1,3 @@
-2002-01-15  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2002-01-15  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* digita.c: Replace gp_camera_progress by gp_context_progress_*.

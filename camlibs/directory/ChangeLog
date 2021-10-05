@@ -36,19 +36,19 @@
 	appropriate to not leak.
 	(folder_list_func): same as above.
 
-2002-11-20  Lutz Müller <lutz@users.sourceforge.net>
+2002-11-20  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* directory.c: Additional debugging stuff.
 
-2002-11-04  Lutz Müller <lutz@users.sourceforge.net>
+2002-11-04  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* directory.c: Don't follow links.
 
-2002-07-17  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-17  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* directory.c: Improve user feedback by calling gp_context_idle.
 
-2002-02-26  Lutz Müller <lutz@users.sourceforge.net>
+2002-02-26  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* directory.c (delete_file_func): In case of error, tell the user
 	  what went wrong.
@@ -57,23 +57,23 @@
 
 	* directory.c: Now using MIME type macros.  Replaced // comment.
 
-2002-02-07  Lutz Müller <lutz@users.sourceforge.net>
+2002-02-07  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* directory.c: Detect *.jpeg files, too.
 
-2002-02-07  Lutz Müller <lutz@users.sourceforge.net>
+2002-02-07  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am:
 	* directory.c: Support GP_FILE_TYPE_EXIF ifdef HAVE_EXIF
 
-2001-12-29  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-29  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* directory.c: Even more debugging.
 
-2001-12-28  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-28  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* directory.c: Debugging stuff, file deletion.
 
-2001-11-27  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-11-27  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* directory.c: Support GP_FILE_TYPE_PREVIEW, too.

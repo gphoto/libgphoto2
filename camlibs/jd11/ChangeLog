@@ -33,6 +33,6 @@
 	  and draining of old data.
 	  Also use gp_file_progress correctly (hopefully).
 
-2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-05  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* serial.c: Include <bayer.h>, not "libgphoto2/bayer.h"
