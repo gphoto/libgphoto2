@@ -1,4 +1,4 @@
-2002-04-22  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-22  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c (post_func): Only put the camera back to 9600 bps if
 	  this is needed. And don't reset the camera before the speed change.
@@ -16,16 +16,16 @@
 
 	* fuji.c Remove 0xff escaping code now done by libgphoto2_port
 
-2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-21  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* fuji.c: Formatting.
 
-2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-21  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c:
 	* fuji.[c,h]: Implement upload and summary.
 
-2002-04-21  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-21  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c: A fuji_reset doesn't seem to reset the speed to 9600.
 
@@ -36,62 +36,62 @@
 	which does not support file-length query.
 	# fuji.h: Fixed FUJI_CMD_PIC_GET vs PIC_GET_THUMB swap.
 
-2002-04-19  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-19  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c: Don't make the check for supported commands fatal.
 
-2002-04-19  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-19  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c: If we tell the camera to switch to another speed, we
 	  need to change the port's speed, too.
 
-2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-18  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c
 	* fuji.[c,h]: Basic configuration support. Progress information.
 
-2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-18  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* PROTOCOL: Some notes.
 	* fuji.c: Fix calculation of packet length.
 
-2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-18  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c:
 	* fuji.[c,h]: Use the [pre,post]_func-tions.
 
-2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-18  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c:
 	* fuji.[c,h]: Check for supported commands.
 
-2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-18  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* fuji.c: Fix calculation of checksum.
 
-2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-18  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* fuji.c: For now, don't check the checksum.
 
-2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-18  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* fuji.c: Fix calculation of packet length.
 
-2002-04-18  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-18  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c:
 	* fuji.[c,h]: Implement fetching of previews.
 
-2002-04-17  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-17  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* fuji.c: Fix logic.
 
-2002-04-17  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-17  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* fuji.[c,h]:
 	* library.c: More functions. Needs testing.
 
-2002-04-16  Lutz Müller <lutz@users.sourceforge.net>
+2002-04-16  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c: New.
 	* fuji.[c,h]: Rewrite.

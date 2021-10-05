@@ -2,7 +2,7 @@
 	
 	* library.c: Added missing <sys/time.h> to make it compile.
 
-2002-01-19  Lutz Müller <lutz@users.sourceforge.net>
+2002-01-19  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.[c,h]
 	* dc3200.[c,h]: Fix includes.

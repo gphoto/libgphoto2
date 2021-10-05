@@ -77,7 +77,7 @@ typedef struct _rgbgamma {
  *   correction function would allow to influence the slope for small
  *   and for large values independently without incurring loss of
  *   accuracy/information. It should not be hard to construct such a
- *   thing. (Splines or Bézier or Triginometric/Hyperbolic functions
+ *   thing. (Splines or BÃ©zier or Triginometric/Hyperbolic functions
  *   could be used, e.g.)
  * - The below parameters have been found by lots of experiments with
  *   pictures taken at different light levels. They're optimized for

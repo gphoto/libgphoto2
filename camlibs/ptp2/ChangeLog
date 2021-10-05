@@ -2136,7 +2136,7 @@
 2002-10-16 Stephen H. Westin
 	* library.c: Nikon D100 has a PTP mode
 
-2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+2002-10-03  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
 
@@ -2179,7 +2179,7 @@
 	  prototype
 	  (all changes according to TODO, multi storage support)
 
-2002-01-16  Lutz Müller <lutz@users.sourceforge.net>
+2002-01-16  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c: No time for previews...
 
@@ -2188,7 +2188,7 @@
 	* ptp.c:  Fixed ptp_ek_sendfileobjectinfo to use packed structures
 	* library.: started implementation of upload file (for Kodak only!)
 
-2002-01-13  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2002-01-13  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* library.c: Remove references to gp_camera_set_error.
 
@@ -2235,7 +2235,7 @@
 2001-12-13 Mariusz Woloszyn
 	* added implementation of Object Format, fixing get_info_func
 
-2001-12-11  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-11  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* library.c: Add some debugging stuff.
 
@@ -2243,10 +2243,10 @@
 
 	* library.c: Updatet vendor & product numbers for Kodak DX-3900.
 
-2001-12-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-02  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* library.c: Fix warning
 
-2001-12-02  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-02  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* library.c: Fixed vendor/product if of HP PhotoSmart 318.

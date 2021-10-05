@@ -31,7 +31,7 @@
 	
 	* fixed compiler warnings, got rid of unnecessary global variables
 
-2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+2002-10-03  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
 

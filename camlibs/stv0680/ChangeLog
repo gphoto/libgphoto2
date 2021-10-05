@@ -24,7 +24,7 @@
 
 	* stv0680.c: Fixed long*/int* cast and some warnings.
 
-2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+2002-10-03  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
 
@@ -41,7 +41,7 @@
 	
 	* stv680.c: Added Konica e-Mini id.
 
-2002-07-30  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-30  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* library.c: Change "!= GP_OK" to "< GP_OK".
 
@@ -117,11 +117,11 @@
 	 
 	  (Done by Kevin, merged by me)
 
-2001-12-21  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-21  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* stv0680.c (camera_capture): Tell the filesystem about the new
 	  file.
 
-2001-12-05  Lutz Müller <urc8@rz.uni-karlsruhe.de>
+2001-12-05  Lutz MÃ¼ller <urc8@rz.uni-karlsruhe.de>
 
 	* library.c: Fix includes

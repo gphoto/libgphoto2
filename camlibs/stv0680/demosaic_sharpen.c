@@ -10,7 +10,7 @@
  *
  * Note: Interpolation techniques more intelligent than
  * bilinear inerpolation have been subject to investigations.
- * Those two links came from Jérôme Fenal:
+ * Those two links came from JÃ©rÃ´me Fenal:
  * http://ise.stanford.edu/class/psych221/99/dixiedog/vision.htm
  * http://www-ise.stanford.edu/~tingchen/main.htm
  *

@@ -18,7 +18,7 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  *
- * Modified by Aurélien Croc (AP²C) <programming@ap2c.com>
+ * Modified by AurÃ©lien Croc (APÂ²C) <programming@ap2c.com>
  * In particular : fix some bugs, and implementation of advanced
  * functions : delete some images, delete all images, capture new image,
  * update an image to the camera, get thumbnails, get information, get

@@ -64,7 +64,7 @@ gsmart mini support. His patches went in during the merge.
 
 Hartmut Henkel <hartmut_henkel@gmx.de> helped debug a crash with thumbnails.
 Rupert Levene <r.levene@lancaster.ac.uk> helped debug the merged camlib.
-Norbert Möndjen <Norbert.Moendjen@t-online.de> found out that the pencams
+Norbert MÃ¶ndjen <Norbert.Moendjen@t-online.de> found out that the pencams
 don't react well to the reset command.
 Walt Boring <waboring@3gstech.com> helped debug the above reset problem.
 John Feuerstein <bizkit@baze.de> helped figuring out and testing the 
@@ -113,7 +113,7 @@ Thanks from the spca504_flash README
 ------------------------------------
 This owes everything to the work of Mark Zimmermann <mark@foresthaven.com> whose
 pencamread tool I have simply ported to a gphoto2 camlib. The macam driver by
-Matthias Krauß was also helpful. All features are theirs, all bugs are mine.
+Matthias KrauÃŸ was also helpful. All features are theirs, all bugs are mine.
 
 I dont own a camera of this type, so I had to rely on Armin Janssen
 <unclebenz@foni.net> to tirelessly produce usb snoops, test and give feedback.

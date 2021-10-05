@@ -240,7 +240,7 @@ digi_decompress (unsigned char *out_data, unsigned char *data,
 }
 
 /* Brightness correction routine adapted from
- * camlibs/polaroid/jd350e.c, copyright © 2001 Michael Trawny
+ * camlibs/polaroid/jd350e.c, copyright Â© 2001 Michael Trawny
  * <trawny99@users.sourceforge.net>
  */
 

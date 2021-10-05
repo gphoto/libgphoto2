@@ -3,7 +3,7 @@
 	* *.[ch]: Fixed signedness warnings, use unsigned char*
 	  more consistently.
 
-2002-07-30  Lutz Müller <lutz@users.sourceforge.net>
+2002-07-30  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* rs232.c: Change != GP_OK to < GP_OK.
 

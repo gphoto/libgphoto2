@@ -2,7 +2,7 @@
  *
  * Fuji Camera library for the gphoto project.
  *
- * © 2001 Matthew G. Martin <matt.martin@ieee.org>
+ * Â© 2001 Matthew G. Martin <matt.martin@ieee.org>
  *     2002 Lutz Mueller <lutz@users.sourceforge.net>
  *
  * This routine works for Fuji DS-7 and DX-5,7,10 and

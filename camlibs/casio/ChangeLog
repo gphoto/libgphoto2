@@ -64,23 +64,23 @@
 
 	* PROTOCOL.txt: added protocol description
 
-2003-01-08  Lutz Müller <lutz@users.sourceforge.net>
+2003-01-08  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* casio-qv.c (camera_init): Cosmetic change.
 
-2002-10-03  Lutz Müller <lutz@users.sourceforge.net>
+2002-10-03  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* Makefile.am: -I$(top_builddir)/libgphoto2
 
-2002-09-19  Lutz Müller <lutz@users.sourceforge.net>
+2002-09-19  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* casio-qv.c (camera_init): Fix initialization.
 	* casio-qv-commands.[c,h] (QVgetthumb): New.
 
-2002-09-17  Lutz Müller <lutz@users.sourceforge.net>
+2002-09-17  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* casio-qv-commands.[c,h] (QVsetspeed): New.
 
-2002-09-16  Lutz Müller <lutz@users.sourceforge.net>
+2002-09-16  Lutz MÃ¼ller <lutz@users.sourceforge.net>
 
 	* casio-qv-commands.c (QVping): Fix.
