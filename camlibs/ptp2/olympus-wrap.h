@@ -18,11 +18,11 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __OLYMPUS_USBWRAP_H__
-#define __OLYMPUS_USBWRAP_H__
+#ifndef CAMLIBS_PTP2_OLYMPUS_WRAP_H
+#define CAMLIBS_PTP2_OLYMPUS_WRAP_H
 
 #include <gphoto2/gphoto2-port.h>
 
 uint16_t olympus_setup (PTPParams *params);
 
-#endif /* __OLYMPUS_USBWRAP_H__ */
+#endif /* !defined(CAMLIBS_PTP2_OLYMPUS_WRAP_H) */

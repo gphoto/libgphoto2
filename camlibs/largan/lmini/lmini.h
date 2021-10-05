@@ -20,8 +20,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef _LARGAN_LIBRARY_H_
-#define _LARGAN_LIBRARY_H_
+#ifndef CAMLIBS_LARGAN_LMINI_LMINI_H
+#define CAMLIBS_LARGAN_LMINI_LMINI_H
 
 #include <gphoto2/gphoto2.h>
 #include "gphoto2-endian.h"
@@ -53,4 +53,5 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 		uint8_t index, largan_pict_info * pict);
 int largan_erase (Camera *camera, int all);
 int largan_capture (Camera *camera);
-#endif
+
+#endif /* !defined(CAMLIBS_LARGAN_LMINI_LMINI_H) */

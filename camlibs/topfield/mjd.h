@@ -21,8 +21,8 @@
 
 */
 
-#ifndef _MJD_H
-#define _MJD_H 1
+#ifndef CAMLIBS_TOPFIELD_MJD_H
+#define CAMLIBS_TOPFIELD_MJD_H
 
 #include <time.h>
 #include <sys/types.h>
@@ -41,4 +41,4 @@ struct tf_datetime
 time_t tfdt_to_time(struct tf_datetime *dt);
 void time_to_tfdt(time_t t, struct tf_datetime *dt);
 
-#endif /* _MJD_H */
+#endif /* !defined(CAMLIBS_TOPFIELD_MJD_H) */

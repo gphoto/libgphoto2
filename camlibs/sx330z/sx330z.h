@@ -22,6 +22,9 @@
  * first try 6/2002 by Dominik Kuhlen  <dkuhlen@fhm.edu>
  */
 
+#ifndef CAMLIBS_SX330Z_SX330Z_H
+#define CAMLIBS_SX330Z_SX330Z_H
+
 
 #include <gphoto2/gphoto2-camera.h>
 #include <gphoto2/gphoto2-context.h>
@@ -135,3 +138,5 @@ int sx330z_delete_file(Camera *camera,GPContext *context,const char *filename);
  *  Exit camera
  */
 int camera_exit(Camera *camera, GPContext *context);
+
+#endif /* !defined(CAMLIBS_SX330Z_SX330Z_H) */

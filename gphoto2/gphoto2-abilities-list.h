@@ -22,8 +22,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_ABILITIES_LIST_H__
-#define __GPHOTO2_ABILITIES_LIST_H__
+#ifndef LIBGPHOTO2_GPHOTO2_ABILITIES_LIST_H
+#define LIBGPHOTO2_GPHOTO2_ABILITIES_LIST_H
 
 #include <gphoto2/gphoto2-context.h>
 #include <gphoto2/gphoto2-list.h>
@@ -203,4 +203,4 @@ const char *gp_message_codeset (const char *);
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_ABILITIES_LIST_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_ABILITIES_LIST_H) */

@@ -25,8 +25,9 @@
 /* Boston, MA  02110-1301  USA					*/
 /****************************************************************/
 
-#ifndef __GSMART300_H__
-#define __GSMART300_H__
+#ifndef CAMLIBS_GSMART300_GSMART300_H
+#define CAMLIBS_GSMART300_GSMART300_H
+
 #include <stdint.h>
 #include <gphoto2/gphoto2-camera.h>
 
@@ -65,4 +66,4 @@ int gsmart300_request_file (CameraPrivateLibrary * lib, CameraFile *file,
 int gsmart300_request_thumbnail (CameraPrivateLibrary * lib, CameraFile *file,
 			      unsigned int number, int *type);
 
-#endif /* __GSMART300_H__ */
+#endif /* !defined(CAMLIBS_GSMART300_GSMART300_H) */

@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_PENTAX_JS0N_H
+#define CAMLIBS_PENTAX_JS0N_H
+
 // key = string to match or null
 // klen = key length (or 0), or if null key then len is the array offset value
 // json = json object or array
@@ -14,3 +17,5 @@ const char *js0n(const char *key, size_t klen,
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+#endif /* !defined(CAMLIBS_PENTAX_JS0N_H) */

@@ -17,9 +17,9 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef __ULTRAPOCKET_H__
 
-#define __ULTRAPOCKET_H__ 1
+#ifndef CAMLIBS_SMAL_ULTRAPOCKET_H
+#define CAMLIBS_SMAL_ULTRAPOCKET_H
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
@@ -47,4 +47,4 @@ int ultrapocket_getpicture(Camera *camera, GPContext *context, unsigned char **p
 int ultrapocket_deletefile(Camera *camera, const char *filename);
 int ultrapocket_deleteall(Camera *camera);
 
-#endif
+#endif /* !defined(CAMLIBS_SMAL_ULTRAPOCKET_H) */

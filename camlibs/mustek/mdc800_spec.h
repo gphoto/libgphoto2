@@ -20,8 +20,8 @@
  * Definition of Commands and useful structs.
  */
 
-#ifndef DEFINE_MDC800_SPEC_H
-#define DEFINE_MDC800_SPEC_H
+#ifndef CAMLIBS_MUSTEK_MDC800_SPEC_H
+#define CAMLIBS_MUSTEK_MDC800_SPEC_H
 
 
 #define ANSWER_COMMIT 			 0xbb
@@ -69,4 +69,4 @@
 #define COMMAND_SET_EXPOSURE_MODE	 0x50
 #define COMMAND_GET_EXPOSURE_MODE	 0x51
 
-#endif
+#endif /* !defined(CAMLIBS_MUSTEK_MDC800_SPEC_H) */

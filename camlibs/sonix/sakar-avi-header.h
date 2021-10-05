@@ -1,5 +1,5 @@
-#ifndef __SAKAR_AVI_HEADER_H
-#define __SAKAR_AVI_HEADER_H
+#ifndef CAMLIBS_SONIX_SAKAR_AVI_HEADER_H
+#define CAMLIBS_SONIX_SAKAR_AVI_HEADER_H
 
 #define SAKAR_AVI_FRAME_HEADER_LENGTH	8
 static const unsigned char SakarAviFrameHeader[SAKAR_AVI_FRAME_HEADER_LENGTH] = {
@@ -73,4 +73,4 @@ static const unsigned char SakarAviHeader[SAKAR_AVI_HEADER_LENGTH] = {
 	0x6D, 0x6F, 0x76, 0x69  /* 0xda: movi */
 };
 
-#endif /* __SAKAR_AVI_HEADER_H */
+#endif /* !defined(CAMLIBS_SONIX_SAKAR_AVI_HEADER_H) */

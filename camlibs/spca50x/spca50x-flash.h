@@ -14,8 +14,8 @@
  *  based on work by: Mark A. Zimmerman <mark@foresthaven.com>
  */
 
-#ifndef __SPCA50X_FLASH_H__
-#define __SPCA50X_FLASH_H__
+#ifndef CAMLIBS_SPCA50X_SPCA50X_FLASH_H
+#define CAMLIBS_SPCA50X_SPCA50X_FLASH_H
 
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
@@ -39,4 +39,4 @@ int spca50x_flash_delete_all (CameraPrivateLibrary *pl, GPContext *context);
 int spca500_flash_delete_file (CameraPrivateLibrary *pl, int index);
 int spca500_flash_capture (CameraPrivateLibrary *pl);
 
-#endif
+#endif /* !defined(CAMLIBS_SPCA50X_SPCA50X_FLASH_H) */

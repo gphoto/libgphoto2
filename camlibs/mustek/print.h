@@ -20,8 +20,10 @@
 	Defines some PrintMacros. They are need to disable much
 	outputs they were used during development.
 */
-#ifndef DEFINE_PRINT_H
-#define DEFINE_PRINT_H
+
+#ifndef CAMLIBS_MUSTEK_PRINT_H
+#define CAMLIBS_MUSTEK_PRINT_H
+
 #include <stdio.h>
 
 /* Message or Errors from the gphoto API */
@@ -40,5 +42,5 @@
 #define printCError			if (1) printf
 
 
-#endif
+#endif /* !defined(CAMLIBS_MUSTEK_PRINT_H) */
 

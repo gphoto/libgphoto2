@@ -13,8 +13,8 @@
  *  Author: Peter Kajberg <pbk@odense.kollegienet.dk>
  */
 
-#ifndef __PCCAM600_H__
-#define __PCCAM600_H__
+#ifndef CAMLIBS_PCCAM600_PCCAM600_H
+#define CAMLIBS_PCCAM600_PCCAM600_H
 
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
@@ -43,5 +43,6 @@ int pccam600_read_data(GPPort *port, unsigned char *buffer);
 int pccam600_get_file(GPPort *port, GPContext *context, int index);
 int pccam600_get_mem_info(GPPort *port, GPContext *context, int *totalmem,
 			  int *freemem);
-#endif /* __PCCAM600_H__ */
+
+#endif /* !defined(CAMLIBS_PCCAM600_PCCAM600_H) */
 

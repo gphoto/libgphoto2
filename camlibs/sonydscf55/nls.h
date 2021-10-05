@@ -16,8 +16,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef NLS_H
-#define NLS_H
+#ifndef CAMLIBS_SONYDSCF55_NLS_H
+#define CAMLIBS_SONYDSCF55_NLS_H
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -38,4 +38,4 @@
 #  define N_(String) (String)
 #endif
 
-#endif				/* NLS_H */
+#endif /* !defined(CAMLIBS_SONYDSCF55_NLS_H) */

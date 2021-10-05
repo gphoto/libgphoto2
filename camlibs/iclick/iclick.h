@@ -21,8 +21,8 @@
 
 
 
-#ifndef __ICLICK_H__
-#define __ICLICK_H__
+#ifndef CAMLIBS_ICLICK_ICLICK_H
+#define CAMLIBS_ICLICK_ICLICK_H
 
 #include <gphoto2/gphoto2-port.h>
 
@@ -90,5 +90,5 @@ int icl_get_start                     (CameraPrivateLibrary *, int entry);
 int icl_get_size                      (CameraPrivateLibrary *, int entry);
 int icl_get_width_height              (CameraPrivateLibrary *, int entry, int *w, int *h);
 
-#endif
+#endif /* !defined(CAMLIBS_ICLICK_ICLICK_H) */
 

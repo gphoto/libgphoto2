@@ -22,8 +22,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_CONTEXT_H__
-#define __GPHOTO2_CONTEXT_H__
+#ifndef LIBGPHOTO2_GPHOTO2_CONTEXT_H
+#define LIBGPHOTO2_GPHOTO2_CONTEXT_H
 
 #include <stdarg.h>
 
@@ -135,4 +135,4 @@ void         gp_context_progress_stop   (GPContext *context, unsigned int id);
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_CONTEXT_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_CONTEXT_H) */

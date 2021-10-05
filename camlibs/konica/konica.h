@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __KONICA_H__
-#define __KONICA_H__
+#ifndef CAMLIBS_KONICA_KONICA_H
+#define CAMLIBS_KONICA_KONICA_H
 
 #include <gphoto2/gphoto2-port.h>
 #include <gphoto2/gphoto2-context.h>
@@ -377,4 +377,4 @@ int k_localization_data_put             (GPPort *device, GPContext *,
 
 int k_cancel (GPPort *device, GPContext *, KCommand *command);
 
-#endif /* __KONICA_H__ */
+#endif /* !defined(CAMLIBS_KONICA_KONICA_H) */

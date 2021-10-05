@@ -17,8 +17,9 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef SONY_H
-#define SONY_H
+
+#ifndef CAMLIBS_SONYDSCF55_SONY_H
+#define CAMLIBS_SONYDSCF55_SONY_H
 
 #define SONY_CAMERA_ID "sonydscf55"
 
@@ -66,7 +67,7 @@ int sony_image_info(Camera * camera, int imageid, SonyFileType file_type, Camera
 int sony_file_name_get(Camera *camera, int imageid, SonyFileType file_type, char buf[13]);
 int sony_is_mpeg_file_name(const char * file_name);
 
-#endif /* SONY_H */
+#endif /* !defined(CAMLIBS_SONYDSCF55_SONY_H) */
 
 /*
  * Local Variables:

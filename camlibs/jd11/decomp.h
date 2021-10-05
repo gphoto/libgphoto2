@@ -18,8 +18,10 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef _JD11_DECOMP_H
-#define _JD11_DECOMP_H
+#ifndef CAMLIBS_JD11_DECOMP_H
+#define CAMLIBS_JD11_DECOMP_H
+
 extern void picture_decomp_v1(unsigned char *compressed,unsigned char *uncompressed,int width,int height);
 extern void picture_decomp_v2(unsigned char *compressed,unsigned char *uncompressed,int width,int height);
-#endif
+
+#endif /* !defined(CAMLIBS_JD11_DECOMP_H) */

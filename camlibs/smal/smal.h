@@ -17,9 +17,9 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef __SMAL_H__
 
-#define __SMAL_H__ 1
+#ifndef CAMLIBS_SMAL_SMAL_H
+#define CAMLIBS_SMAL_SMAL_H
 
 #define USB_VENDOR_ID_SMAL        0x0dca
 #define USB_DEVICE_ID_ULTRAPOCKET 0x0002
@@ -45,5 +45,4 @@ struct _CameraPrivateLibrary {
     up_badge_type up_type;
 };
 
-
-#endif
+#endif /* !defined(CAMLIBS_SMAL_SMAL_H) */

@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_POLAROID_JPEGHEAD_H
+#define CAMLIBS_POLAROID_JPEGHEAD_H
+
 /* This file was added by Nathan Stenzel <nathanstenzel@users.sourceforge.net>
    It will only get rough rough images, but might do for now
    I may be working on the header by decoding the image into a stream "manually"
@@ -166,3 +169,5 @@ Start Of Scan: 3 components
  * I used this info to comment the jpeg header above
  * I honestly still don't understand it very well
  */
+
+#endif /* !defined(CAMLIBS_POLAROID_JPEGHEAD_H) */

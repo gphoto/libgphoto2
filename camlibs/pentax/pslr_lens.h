@@ -25,10 +25,12 @@
     and GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef PSLR_LENS_H
-#define PSLR_LENS_H
+
+#ifndef CAMLIBS_PENTAX_PSLR_LENS_H
+#define CAMLIBS_PENTAX_PSLR_LENS_H
 
 #include <stdint.h>
 
 const char *get_lens_name( uint32_t id1, uint32_t id2);
-#endif
+
+#endif /* !defined(CAMLIBS_PENTAX_PSLR_LENS_H) */

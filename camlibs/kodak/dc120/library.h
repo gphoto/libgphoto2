@@ -19,8 +19,8 @@
  */
 
 
-#ifndef _DC120_LIBRARY_H_
-#define _DC120_LIBRARY_H_
+#ifndef CAMLIBS_KODAK_DC120_LIBRARY_H
+#define CAMLIBS_KODAK_DC120_LIBRARY_H
 
 
 #define CAMERA_EPOC              852094800
@@ -70,4 +70,4 @@ int   dc120_file_action	 (Camera *camera, int action, int from_card, int album_n
 int dc120_capture (Camera *camera, CameraFilePath *path, GPContext *context);
 
 
-#endif /* _DC120_LIBRARY_H_ */
+#endif /* !defined(CAMLIBS_KODAK_DC120_LIBRARY_H) */

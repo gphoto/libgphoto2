@@ -24,8 +24,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PSLR_SCSI_H
-#define PSLR_SCSI_H
+#ifndef CAMLIBS_PENTAX_PSLR_SCSI_H
+#define CAMLIBS_PENTAX_PSLR_SCSI_H
 
 #include <stdint.h>
 #include <string.h>
@@ -90,4 +90,5 @@ pslr_result get_drive_info(char* drive_name, FDTYPE* device,
                            char* product_id, int product_id_size_max);
 
 void close_drive(FDTYPE *device);
-#endif
+
+#endif /* !defined(CAMLIBS_PENTAX_PSLR_SCSI_H) */

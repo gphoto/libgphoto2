@@ -40,8 +40,8 @@
  */
 
 
-#ifndef __JPEGDEC_H__
-#define __JPEGDEC_H__
+#ifndef CAMLIBS_AX203_TINYJPEG_H
+#define CAMLIBS_AX203_TINYJPEG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,7 +63,7 @@ int tinyjpeg_set_components(struct jdec_private *priv, unsigned char **component
 }
 #endif
 
-#endif
+#endif /* !defined(CAMLIBS_AX203_TINYJPEG_H) */
 
 
 

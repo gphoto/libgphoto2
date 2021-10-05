@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_PANASONIC_DC_H
+#define CAMLIBS_PANASONIC_DC_H
+
 /*
 	$Id$
 
@@ -112,3 +115,5 @@ void dsc_errorprint(int error, char *file, int line);
         }
 
 /* End of dc.h */
+
+#endif /* !defined(CAMLIBS_PANASONIC_DC_H) */

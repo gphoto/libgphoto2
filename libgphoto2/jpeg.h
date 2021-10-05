@@ -21,8 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_JPEG_H__
-#define __GPHOTO2_JPEG_H__
+#ifndef LIBGPHOTO2_JPEG_H
+#define LIBGPHOTO2_JPEG_H
 
 #include <gphoto2/gphoto2-file.h>
 
@@ -78,4 +78,5 @@ jpeg *gpi_jpeg_header(int width, int height,
     chunk *huff1, chunk *huff2, chunk *huff3, chunk *huff4);
 
 char gpi_jpeg_write(CameraFile *file, const char *name, jpeg *myjpeg);
-#endif
+
+#endif /* !defined(LIBGPHOTO2_JPEG_H) */

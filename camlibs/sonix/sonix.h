@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __SONIX_H__
-#define __SONIX_H__
+#ifndef CAMLIBS_SONIX_SONIX_H
+#define CAMLIBS_SONIX_SONIX_H
 
 #include <gphoto2/gphoto2-port.h>
 
@@ -55,5 +55,5 @@ int sonix_rows_reverse (unsigned char *imagedata, int width, int height);
 int sonix_cols_reverse (unsigned char *imagedata, int width, int height);
 int white_balance (unsigned char *data, unsigned int size, float saturation);
 
-#endif
+#endif /* !defined(CAMLIBS_SONIX_SONIX_H) */
 

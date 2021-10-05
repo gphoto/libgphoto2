@@ -1,5 +1,6 @@
-#ifndef __SAMPLES_H
-#define __SAMPLES_H
+#ifndef LIBGPHOTO2_SAMPLES_H
+#define LIBGPHOTO2_SAMPLES_H
+
 #include <gphoto2/gphoto2-camera.h>
 
 #ifdef __cplusplus
@@ -27,4 +28,4 @@ extern int camera_manual_focus (Camera *list, int tgt, GPContext *context);
 };
 #endif
 
-#endif
+#endif /* !defined(LIBGPHOTO2_SAMPLES_H) */

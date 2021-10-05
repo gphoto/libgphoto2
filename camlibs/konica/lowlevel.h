@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __KONICA_LOWLEVEL_H__
-#define __KONICA_LOWLEVEL_H__
+#ifndef CAMLIBS_KONICA_LOWLEVEL_H
+#define CAMLIBS_KONICA_LOWLEVEL_H
 
 #include <gphoto2/gphoto2-port.h>
 #include <gphoto2/gphoto2-context.h>
@@ -52,4 +52,4 @@ int l_send_receive (GPPort *, GPContext *,
 	unsigned int timeout,
 	unsigned char **image_buffer, unsigned int *image_buffer_size);
 
-#endif /* __KONICA_LOWLEVEL_H__ */
+#endif /* !defined(CAMLIBS_KONICA_LOWLEVEL_H) */

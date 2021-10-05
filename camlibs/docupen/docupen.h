@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_DOCUPEN_DOCUPEN_H
+#define CAMLIBS_DOCUPEN_DOCUPEN_H
+
 #include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -89,3 +92,5 @@ bool dp_init_calibration(Camera *camera, bool force);
 gdImagePtr dp_get_image_mono(struct dp_imagehdr *dp, void *data);
 gdImagePtr dp_get_image_grey(struct dp_imagehdr *dp, void *data, struct lut *lut);
 gdImagePtr dp_get_image_color(struct dp_imagehdr *dp, void *data, struct lut *lut);
+
+#endif /* !defined(CAMLIBS_DOCUPEN_DOCUPEN_H) */

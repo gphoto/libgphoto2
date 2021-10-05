@@ -40,8 +40,8 @@
  */
 
 
-#ifndef __TINYJPEG_INTERNAL_H_
-#define __TINYJPEG_INTERNAL_H_
+#ifndef CAMLIBS_AX203_TINYJPEG_INTERNAL_H
+#define CAMLIBS_AX203_TINYJPEG_INTERNAL_H
 
 #include <setjmp.h>
 
@@ -119,4 +119,4 @@ struct jdec_private
 #define IDCT tinyjpeg_idct_float
 void tinyjpeg_idct_float (struct component *compptr, uint8_t *output_buf, int stride);
 
-#endif
+#endif /* !defined(CAMLIBS_AX203_TINYJPEG_INTERNAL_H) */

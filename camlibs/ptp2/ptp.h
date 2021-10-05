@@ -20,8 +20,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __PTP_H__
-#define __PTP_H__
+#ifndef CAMLIBS_PTP2_PTP_H
+#define CAMLIBS_PTP2_PTP_H
 
 #include <stdarg.h>
 #include <time.h>
@@ -4859,4 +4859,4 @@ uint16_t ptp_leica_getstreamdata (PTPParams* params, unsigned char **data, unsig
 }
 #endif /* __cplusplus */
 
-#endif /* __PTP_H__ */
+#endif /* !defined(CAMLIBS_PTP2_PTP_H) */

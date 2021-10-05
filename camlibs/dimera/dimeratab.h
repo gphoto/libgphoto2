@@ -12,8 +12,9 @@
 
    $Id$
 */
-#ifndef DIMERATAB_H
-#define DIMERATAB_H
+
+#ifndef CAMLIBS_DIMERA_DIMERATAB_H
+#define CAMLIBS_DIMERA_DIMERATAB_H
 
 static const unsigned char red_table[256]={
 	/* 0 */
@@ -120,4 +121,4 @@ static const unsigned char blue_table[256]={
 	0xF7,0xF7,0xF7,0xF8,0xF8,0xF8,0xF9,0xF9,0xFA,0xFB,0xFB,0xFC,0xFC,0xFD,0xFD,0xFE,
 };
 
-#endif /* DIMERATAB_H */
+#endif /* !defined(CAMLIBS_DIMERA_DIMERATAB_H) */

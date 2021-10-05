@@ -20,7 +20,9 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __DLINK350F_H__
-#define __DLINK350F_H__
+#ifndef CAMLIBS_POLAROID_DLINK350F_H
+#define CAMLIBS_POLAROID_DLINK350F_H
+
 int dlink_dsc350f_postprocessing_and_flip_both (int width, int height, unsigned char* rgb);
-#endif
+
+#endif /* !defined(CAMLIBS_POLAROID_DLINK350F_H) */

@@ -14,8 +14,9 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef soundvision_H
-#define soundvision_H
+
+#ifndef CAMLIBS_SOUNDVISION_SOUNDVISION_H
+#define CAMLIBS_SOUNDVISION_SOUNDVISION_H
 
 #include <stdint.h>
 
@@ -117,5 +118,6 @@ int tiger_get_pic_size(CameraPrivateLibrary *dev, const char *filename);
 int tiger_get_thumb(CameraPrivateLibrary *dev, const char *filename,
 		                      unsigned char *data,int size);
 int tiger_get_thumb_size(CameraPrivateLibrary *dev, const char *filename);
-#endif
+
+#endif /* !defined(CAMLIBS_SOUNDVISION_SOUNDVISION_H) */
 

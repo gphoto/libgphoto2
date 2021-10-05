@@ -19,8 +19,8 @@
  */
 
 
-#ifndef __PTP_BUGS_H_
-#define __PTP_BUGS_H_
+#ifndef CAMLIBS_PTP2_PTP_BUGS_H
+#define CAMLIBS_PTP2_PTP_BUGS_H
 
 #include "device-flags.h"
 
@@ -47,4 +47,4 @@
 #define MTP_ZEN_BROKEN_HEADER(x) \
   ((x)->device_flags & (DEVICE_FLAG_IGNORE_HEADER_ERRORS))
 
-#endif
+#endif /* !defined(CAMLIBS_PTP2_PTP_BUGS_H) */

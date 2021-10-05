@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef STV0674_H
-#define STV0674_H
+#ifndef CAMLIBS_STV0674_STV0674_H
+#define CAMLIBS_STV0674_STV0674_H
 
 #define CMDID_SET_IMAGE 0x3
 #define CMDID_READ_IMAGE 0x5
@@ -34,4 +34,4 @@
 
 #define CMDID_IHAVENOIDEA 0x86
 
-#endif
+#endif /* !defined(CAMLIBS_STV0674_STV0674_H) */

@@ -21,6 +21,9 @@
 
 /* $Id$ */
 
+#ifndef CAMLIBS_MINOLTA_DIMAGEV_DIMAGEV_H
+#define CAMLIBS_MINOLTA_DIMAGEV_DIMAGEV_H
+
 #if defined HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -238,3 +241,5 @@ int dimagev_delete_picture(dimagev_t *dimagev, int file_number);
 int dimagev_delete_all(dimagev_t *dimagev);
 int dimagev_get_thumbnail(dimagev_t *dimagev, int file_number, CameraFile *file);
 unsigned char *dimagev_ycbcr_to_ppm(unsigned char *ycbcr);
+
+#endif /* !defined(CAMLIBS_MINOLTA_DIMAGEV_DIMAGEV_H) */

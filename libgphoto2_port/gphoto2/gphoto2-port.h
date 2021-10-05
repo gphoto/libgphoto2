@@ -21,8 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_PORT_H__
-#define __GPHOTO2_PORT_H__
+#ifndef LIBGPHOTO2_GPHOTO2_PORT_H
+#define LIBGPHOTO2_GPHOTO2_PORT_H
 
 #include <gphoto2/gphoto2-port-info-list.h>
 
@@ -245,4 +245,4 @@ typedef GPPortSettings gp_port_settings;
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_PORT_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_PORT_H) */

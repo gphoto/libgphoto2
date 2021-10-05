@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_PANASONIC_DC1580_H
+#define CAMLIBS_PANASONIC_DC1580_H
+
 /*
 	$Id$
 
@@ -51,3 +54,5 @@
 #define DSC2_BUF_CSUM		14
 
 /* End of dc1580.h */
+
+#endif /* !defined(CAMLIBS_PANASONIC_DC1580_H) */

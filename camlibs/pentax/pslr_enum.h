@@ -26,8 +26,9 @@
     and GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef PSLR_ENUM_H
-#define PSLR_ENUM_H
+
+#ifndef CAMLIBS_PENTAX_PSLR_ENUM_H
+#define CAMLIBS_PENTAX_PSLR_ENUM_H
 
 #include <stdint.h>
 
@@ -238,4 +239,4 @@ const char *get_pslr_raw_format_str( pslr_raw_format_t value );
 
 const char *get_pslr_scene_mode_str( pslr_scene_mode_t value );
 
-#endif
+#endif /* !defined(CAMLIBS_PENTAX_PSLR_ENUM_H) */

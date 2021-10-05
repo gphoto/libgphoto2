@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef STV0680_H
-#define STV0680_H
+#ifndef CAMLIBS_STV0680_STV0680_H
+#define CAMLIBS_STV0680_STV0680_H
 
 #define CMDID_CLEAR_COMMS_ERROR           0x80
 struct stv680_error_info {
@@ -171,4 +171,4 @@ int stv0680_try_cmd(GPPort *port, unsigned char cmd,
                 unsigned char *response, unsigned char response_len);
 
 
-#endif
+#endif /* !defined(CAMLIBS_STV0680_STV0680_H) */

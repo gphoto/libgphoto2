@@ -16,8 +16,8 @@
  * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _IO_H
-#define _IO_H
+#ifndef CAMLIBS_MUSTEK_IO_H
+#define CAMLIBS_MUSTEK_IO_H
 
 /* Maximum Number of tries, before a command is given up */
 #define MDC800_DEFAULT_COMMAND_RETRY			4
@@ -45,4 +45,5 @@ int mdc800_io_sendCommand(GPPort *, unsigned char ,unsigned char,unsigned char,u
 
 /* Helper Function for rs232 and usb */
 int mdc800_io_getCommandTimeout(unsigned char);
-#endif
+
+#endif /* !defined(CAMLIBS_MUSTEK_IO_H) */

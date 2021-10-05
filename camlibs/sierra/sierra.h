@@ -17,6 +17,10 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
+
+#ifndef CAMLIBS_SIERRA_SIERRA_H
+#define CAMLIBS_SIERRA_SIERRA_H
+
 typedef enum {
 	SIERRA_MODEL_DEFAULT,
 	SIERRA_MODEL_EPSON,
@@ -64,3 +68,5 @@ struct CameraDescriptor;
 		return (res);				\
 	}						\
 }
+
+#endif /* !defined(CAMLIBS_SIERRA_SIERRA_H) */

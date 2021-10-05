@@ -1,5 +1,5 @@
-#ifndef __SPCA50X_AVI_HEADER_H
-#define __SPCA50X_AVI_HEADER_H
+#ifndef CAMLIBS_SPCA50X_SPCA50X_AVI_HEADER_H
+#define CAMLIBS_SPCA50X_SPCA50X_AVI_HEADER_H
 
 #define SPCA50X_AVI_FRAME_HEADER_LENGTH	8
 static const uint8_t SPCA50xAviFrameHeader[SPCA50X_AVI_FRAME_HEADER_LENGTH] = {
@@ -73,4 +73,4 @@ static const uint8_t SPCA50xAviHeader[SPCA50X_AVI_HEADER_LENGTH] = {
 	0x6D, 0x6F, 0x76, 0x69  /* 0xda: movi */
 };
 
-#endif /* __SPCA50X_AVI_HEADER_H */
+#endif /* !defined(CAMLIBS_SPCA50X_SPCA50X_AVI_HEADER_H) */

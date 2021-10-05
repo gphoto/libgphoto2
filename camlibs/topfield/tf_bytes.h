@@ -21,8 +21,8 @@
 
 */
 
-#ifndef _TF_BYTES_H
-#define _TF_BYTES_H 1
+#ifndef CAMLIBS_TOPFIELD_TF_BYTES_H
+#define CAMLIBS_TOPFIELD_TF_BYTES_H
 
 #include <stdint.h>
 
@@ -36,4 +36,4 @@ void put_u16(void *addr, unsigned short val);
 void put_u32(void *addr, unsigned int val);
 void put_u64(void *addr, uint64_t val);
 
-#endif /* _TF_BYTES_H */
+#endif /* !defined(CAMLIBS_TOPFIELD_TF_BYTES_H) */

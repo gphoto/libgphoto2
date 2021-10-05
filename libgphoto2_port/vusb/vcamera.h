@@ -19,8 +19,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __VCAMERA_H__
-#define __VCAMERA_H__
+#ifndef IOLIBS_VUSB_VCAMERA_H
+#define IOLIBS_VUSB_VCAMERA_H
 
 #undef FUZZ_PTP
 
@@ -76,4 +76,4 @@ typedef struct vcamera {
 
 vcamera *vcamera_new(vcameratype);
 
-#endif
+#endif /* !defined(IOLIBS_VUSB_VCAMERA_H) */

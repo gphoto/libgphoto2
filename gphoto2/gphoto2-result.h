@@ -21,8 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_RESULT_H__
-#define __GPHOTO2_RESULT_H__
+#ifndef LIBGPHOTO2_GPHOTO2_RESULT_H
+#define LIBGPHOTO2_GPHOTO2_RESULT_H
 
 /* Additional error codes are defined here */
 #include <gphoto2/gphoto2-port-result.h>
@@ -138,4 +138,4 @@ const char *gp_result_as_string      (int result);
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_RESULT_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_RESULT_H) */

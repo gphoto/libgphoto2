@@ -21,8 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __COMMAND_H__
-#define __COMMAND_H__
+#ifndef CAMLIBS_SONYDSCF1_COMMAND_H
+#define CAMLIBS_SONYDSCF1_COMMAND_H
 
 int	F1ok (GPPort*);
 long	F1getdata (GPPort*,char *, unsigned char *);
@@ -36,4 +36,5 @@ long	F1fseek (GPPort *,long, int);
 unsigned long	F1finfo (GPPort *,char *);
 int	F1fclose (GPPort *);
 int	F1deletepicture (GPPort*,int);
-#endif /* __COMMAND_H__ */
+
+#endif /* !defined(CAMLIBS_SONYDSCF1_COMMAND_H) */

@@ -1,5 +1,5 @@
-#ifndef __CHDK_PTP_H
-#define __CHDK_PTP_H
+#ifndef CAMLIBS_PTP2_CHDK_PTP_H
+#define CAMLIBS_PTP2_CHDK_PTP_H
 
 // CHDK PTP protocol interface (can also be used in client PTP programs)
 
@@ -627,4 +627,4 @@ enum ptp_chdk_script_msg_status {
     PTP_CHDK_S_MSGSTATUS_BADID,  // specified ID is not running
 };
 
-#endif // __CHDK_PTP_H
+#endif /* !defined(CAMLIBS_PTP2_CHDK_PTP_H) */

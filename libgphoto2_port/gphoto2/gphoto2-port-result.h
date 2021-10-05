@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_PORT_RESULT_H__
-#define __GPHOTO2_PORT_RESULT_H__
+#ifndef LIBGPHOTO2_GPHOTO2_PORT_RESULT_H
+#define LIBGPHOTO2_GPHOTO2_PORT_RESULT_H
 
 /* Return values. gphoto2-port should only return values from 0 to -99 */
 /**
@@ -129,5 +129,5 @@ const char *gp_port_result_as_string (int result);
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_PORT_RESULT_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_PORT_RESULT_H) */
 

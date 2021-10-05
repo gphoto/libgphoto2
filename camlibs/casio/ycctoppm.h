@@ -18,10 +18,10 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __CASIO_QV_YCCTOPPM_H__
-#define __CASIO_QV_YCCTOPPM_H__
+#ifndef CAMLIBS_CASIO_YCCTOPPM_H
+#define CAMLIBS_CASIO_YCCTOPPM_H
 
 int QVycctoppm(const unsigned char *ycc, long int yccSize, int width, int height, int ratew, unsigned char **ppm, long int *ppmSize);
 
-#endif
+#endif /* !defined(CAMLIBS_CASIO_YCCTOPPM_H) */
 

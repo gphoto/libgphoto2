@@ -20,8 +20,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __CLICKSMART_H__
-#define __CLICKSMART_H__
+#ifndef CAMLIBS_CLICKSMART310_CLICKSMART_H
+#define CAMLIBS_CLICKSMART310_CLICKSMART_H
 
 #include <gphoto2/gphoto2-port.h>
 
@@ -49,4 +49,4 @@ int create_jpeg_from_data 	(unsigned char * dst, unsigned char * src,
 					int omit_escape);
 
 
-#endif
+#endif /* !defined(CAMLIBS_CLICKSMART310_CLICKSMART_H) */

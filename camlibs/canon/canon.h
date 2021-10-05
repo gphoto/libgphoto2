@@ -5,8 +5,8 @@
  *
  */
 
-#ifndef _CANON_H
-#define _CANON_H
+#ifndef CAMLIBS_CANON_CANON_H
+#define CAMLIBS_CANON_CANON_H
 
 #ifdef CANON_EXPERIMENTAL_UPLOAD
 # ifdef __GCC__
@@ -738,7 +738,7 @@ int canon_int_extract_jpeg_thumb (unsigned char *data, const unsigned int datale
 /* for the macros abbreviating gp_log* */
 #define GP_MODULE "canon"
 
-#endif /* _CANON_H */
+#endif /* !defined(CAMLIBS_CANON_CANON_H) */
 
 /*
  * Local Variables:

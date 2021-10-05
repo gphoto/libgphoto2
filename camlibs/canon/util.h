@@ -4,8 +4,8 @@
  *
  ****************************************************************************/
 
-#ifndef _CANON_UTIL_H
-#define _CANON_UTIL_H
+#ifndef CAMLIBS_CANON_UTIL_H
+#define CAMLIBS_CANON_UTIL_H
 
 #include "gphoto2-endian.h"
 
@@ -33,7 +33,7 @@ int is_cr2 (const char *name);
 
 const char *filename2mimetype(const char *filename);
 
-#endif /* _CANON_UTIL_H */
+#endif /* !defined(CAMLIBS_CANON_UTIL_H) */
 
 /****************************************************************************
  *

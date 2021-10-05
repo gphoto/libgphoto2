@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __mars_H__
-#define __mars_H__
+#ifndef CAMLIBS_MARS_MARS_H
+#define CAMLIBS_MARS_MARS_H
 
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
@@ -50,5 +50,5 @@ int histogram (unsigned char *data, unsigned int size, int *htable_r,
                                         int *htable_g, int *htable_b);
 int mars_white_balance (unsigned char *data, unsigned int size, float saturation,
                                         float image_gamma);
-#endif
 
+#endif /* !defined(CAMLIBS_MARS_MARS_H) */

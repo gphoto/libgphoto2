@@ -18,8 +18,8 @@
 
 */
 
-#ifndef __L859_H__
-#define __L859_H__
+#ifndef CAMLIBS_PANASONIC_L859_L859_H
+#define CAMLIBS_PANASONIC_L859_L859_H
 
 #include <gphoto2/gphoto2-camera.h>
 
@@ -50,4 +50,4 @@ struct _CameraPrivateLibrary {
 #define L859_CMD_DELETE_ALL     0xef
 #define L859_CMD_DELETE_ACK     0x15
 
-#endif /* __L859_H__ */
+#endif /* !defined(CAMLIBS_PANASONIC_L859_L859_H) */

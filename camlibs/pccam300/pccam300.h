@@ -24,8 +24,8 @@
 /****************************************************************/
 
 
-#ifndef __PCCAM300_H__
-#define __PCCAM300_H__
+#ifndef CAMLIBS_PCCAM300_PCCAM300_H
+#define CAMLIBS_PCCAM300_PCCAM300_H
 
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
@@ -53,4 +53,4 @@ enum {
 };
 
 
-#endif /* __PCCAM300_H__ */
+#endif /* !defined(CAMLIBS_PCCAM300_PCCAM300_H) */

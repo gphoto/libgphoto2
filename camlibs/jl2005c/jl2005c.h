@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __jl2005c_H__
-#define __jl2005c_H__
+#ifndef CAMLIBS_JL2005C_JL2005C_H
+#define CAMLIBS_JL2005C_JL2005C_H
 
 #include <unistd.h>
 #include <gphoto2/gphoto2-port.h>
@@ -58,5 +58,5 @@ int jl2005c_delete_all (Camera *camera, GPPort *port);
 
 
 
-#endif
+#endif /* !defined(CAMLIBS_JL2005C_JL2005C_H) */
 

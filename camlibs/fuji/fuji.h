@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __FUJI_H__
-#define __FUJI_H__
+#ifndef CAMLIBS_FUJI_FUJI_H
+#define CAMLIBS_FUJI_FUJI_H
 
 #include <gphoto2/gphoto2-context.h>
 #include <gphoto2/gphoto2-camera.h>
@@ -125,4 +125,4 @@ typedef enum _FujiSpeed FujiSpeed;
 
 int fuji_set_speed (Camera *camera, FujiSpeed speed, GPContext *context);
 
-#endif /* __FUJI_H__ */
+#endif /* !defined(CAMLIBS_FUJI_FUJI_H) */

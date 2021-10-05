@@ -23,8 +23,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_CAMERA_H__
-#define __GPHOTO2_CAMERA_H__
+#ifndef LIBGPHOTO2_GPHOTO2_CAMERA_H
+#define LIBGPHOTO2_GPHOTO2_CAMERA_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -481,4 +481,4 @@ void         gp_camera_stop_timeout      (Camera *camera, unsigned int id);
 #endif /* __cplusplus */
 
 
-#endif /* __GPHOTO2_CAMERA_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_CAMERA_H) */

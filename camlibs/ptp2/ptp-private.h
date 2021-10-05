@@ -18,6 +18,9 @@
  * Boston, MA  02110-1301  USA
  */
 
+#ifndef CAMLIBS_PTP2_PTP_PRIVATE_H
+#define CAMLIBS_PTP2_PTP_PRIVATE_H
+
 /* ptp2 camlib private functions */
 #include <gphoto2/gphoto2-library.h>
 
@@ -162,3 +165,5 @@ struct _PTPData {
 	GPContext *context;
 };
 typedef struct _PTPData PTPData;
+
+#endif /* !defined(CAMLIBS_PTP2_PTP_PRIVATE_H) */

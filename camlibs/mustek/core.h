@@ -16,8 +16,8 @@
  * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef _MUSTEK_CORE_H
-#define _MUSTEK_CORE_H
+#ifndef CAMLIBS_MUSTEK_CORE_H
+#define CAMLIBS_MUSTEK_CORE_H
 
 #include "io.h"
 #include "mdc800_spec.h"
@@ -91,4 +91,5 @@ int mdc800_getExposureMode (Camera*,int *);
 int mdc800_enableMenu (Camera *,int);
 
 int mdc800_number_of_pictures (Camera *camera, int *nrofpics);
-#endif
+
+#endif /* !defined(CAMLIBS_MUSTEK_CORE_H) */

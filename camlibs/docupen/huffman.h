@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_DOCUPEN_HUFFMAN_H
+#define CAMLIBS_DOCUPEN_HUFFMAN_H
+
 struct decoder {
 	unsigned char *data;
 	int length;
@@ -21,3 +24,5 @@ enum {
 	DECODER_WHITE,
 	DECODER_EOL
 };
+
+#endif /* !defined(CAMLIBS_DOCUPEN_HUFFMAN_H) */

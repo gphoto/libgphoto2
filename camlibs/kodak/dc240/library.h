@@ -23,8 +23,8 @@
   Kodak DC 240/280/3400/5000 driver.
  */
 
-#ifndef __DC240_LIBRARY_H__
-#define __DC240_LIBRARY_H__
+#ifndef CAMLIBS_KODAK_DC240_LIBRARY_H
+#define CAMLIBS_KODAK_DC240_LIBRARY_H
 
 #define DC240_ACTION_PREVIEW    (uint8_t)0x93
 #define DC240_ACTION_IMAGE      (uint8_t)0x9A
@@ -121,4 +121,4 @@ int   dc240_capture	 (Camera *camera, CameraFilePath *path,
 			  GPContext *context);
 int   dc240_packet_set_size (Camera *camera, short int size);
 
-#endif /*__DC240_LIBRARY_H__*/
+#endif /* !defined(CAMLIBS_KODAK_DC240_LIBRARY_H) */

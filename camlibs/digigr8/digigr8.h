@@ -14,8 +14,8 @@
  * COPYING in the main source tree of libgphoto2.
  */
 
-#ifndef __DIGIGR8_H__
-#define __DIGIGR8_H__
+#ifndef CAMLIBS_DIGIGR8_DIGIGR8_H
+#define CAMLIBS_DIGIGR8_DIGIGR8_H
 
 #include <gphoto2/gphoto2-port.h>
 
@@ -49,5 +49,5 @@ int
 white_balance (unsigned char *data, unsigned int size, float saturation);
 
 
-#endif
+#endif /* !defined(CAMLIBS_DIGIGR8_DIGIGR8_H) */
 

@@ -21,8 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __BAYER_H__
-#define __BAYER_H__
+#ifndef LIBGPHOTO2_BAYER_H
+#define LIBGPHOTO2_BAYER_H
 
 /**
  * \brief how the bayer CCD array is laid out
@@ -58,4 +58,4 @@ int gp_ahd_decode (unsigned char *input, int w, int h, unsigned char *output,
 		     BayerTile tile);
 int gp_ahd_interpolate (unsigned char *image, int w, int h, BayerTile tile);
 
-#endif /* __BAYER_H__ */
+#endif /* !defined(LIBGPHOTO2_BAYER_H) */

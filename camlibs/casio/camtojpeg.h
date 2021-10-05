@@ -18,10 +18,10 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __CASIO_QV_CAMTOJPEG_H__
-#define __CASIO_QV_CAMTOJPEG_H__
+#ifndef CAMLIBS_CASIO_CAMTOJPEG_H
+#define CAMLIBS_CASIO_CAMTOJPEG_H
 
 int QVcamtojpeg(const unsigned char *cam, long int camSize, unsigned char **jpeg, long int *jpegSize);
 int QVfinecamtojpeg(const unsigned char *cam, long int camSize, unsigned char **jpeg, long int *jpegSize);
 
-#endif
+#endif /* !defined(CAMLIBS_CASIO_CAMTOJPEG_H) */

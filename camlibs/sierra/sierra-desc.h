@@ -35,8 +35,8 @@
  * description (string).
  */
 
-#ifndef __SIERRA_DESC_H__
-#define __SIERRA_DESC_H__
+#ifndef CAMLIBS_SIERRA_SIERRA_DESC_H
+#define CAMLIBS_SIERRA_SIERRA_DESC_H
 
 #define	SIZE_ADDR(type, var)	(sizeof(var)/sizeof(type)), (type*) var
 
@@ -153,4 +153,4 @@ extern const CameraDescType cp4300_cam_desc;
  */
 extern const CameraDescType ep3000z_cam_desc;
 
-#endif /* __SIERRA_DESC_H__ */
+#endif /* !defined(CAMLIBS_SIERRA_SIERRA_DESC_H) */

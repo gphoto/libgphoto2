@@ -1,5 +1,3 @@
-#ifndef _HP215_H
-#define _HP215_H
 /*****************************************************************************
  *  Copyright (C) 2002  Jason Surprise <thesurprises1@attbi.com>             *
  *                2003  Enno Bartels   <ennobartels@t-online.de>             *
@@ -23,6 +21,9 @@
  *  Boston, MA  02110-1301  USA						     *
  *****************************************************************************/
 
+#ifndef CAMLIBS_HP215_HP215_H
+#define CAMLIBS_HP215_HP215_H
+
 #define STX 0x02
 #define ETX 0x03
 #define EOT 0x04
@@ -42,4 +43,5 @@ typedef struct
   unsigned int year;
 
 } t_date;
-#endif
+
+#endif /* !defined(CAMLIBS_HP215_HP215_H) */

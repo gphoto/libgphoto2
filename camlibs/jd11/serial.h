@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef _JD11_SERIAL_H
-#define _JD11_SERIAL_H
+#ifndef CAMLIBS_JD11_SERIAL_H
+#define CAMLIBS_JD11_SERIAL_H
 
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
@@ -39,4 +39,4 @@ extern int jd11_get_rgb(GPPort *port, float *red, float *green, float *blue);
 #define IMGHEADER "P6\n# gPhoto2 JD11 thumbnail image\n640 480 255\n"
 #define THUMBHEADER "P5\n# gPhoto2 JD11 thumbnail image\n64 48 255\n"
 
-#endif
+#endif /* !defined(CAMLIBS_JD11_SERIAL_H) */

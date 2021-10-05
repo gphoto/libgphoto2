@@ -9,8 +9,8 @@
  *
  */
 
-#ifndef MESALIB_H
-#define MESALIB_H
+#ifndef CAMLIBS_DIMERA_MESALIB_H
+#define CAMLIBS_DIMERA_MESALIB_H
 
 #include <stdint.h>
 #include <gphoto2/gphoto2-port.h>
@@ -172,4 +172,4 @@ mesa_read_image_info( GPPort *port, int i, struct mesa_image_info *info );
 uint8_t *
 mesa_get_image( GPPort *port, int image );
 
-#endif /* MESALIB_H */
+#endif /* !defined(CAMLIBS_DIMERA_MESALIB_H) */

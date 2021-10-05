@@ -22,8 +22,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __IMG_ENHANCE_H__
-#define __IMG_ENHANCE_H__
+#ifndef CAMLIBS_JL2005C_IMG_ENHANCE_H
+#define CAMLIBS_JL2005C_IMG_ENHANCE_H
 
 
 int
@@ -32,4 +32,4 @@ histogram(unsigned char *data, unsigned int size, int *htable_r,
 int
 white_balance(unsigned char *data, unsigned int size, float saturation);
 
-#endif
+#endif /* !defined(CAMLIBS_JL2005C_IMG_ENHANCE_H) */

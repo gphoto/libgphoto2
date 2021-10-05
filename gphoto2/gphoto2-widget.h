@@ -21,8 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_WIDGET_H__
-#define __GPHOTO2_WIDGET_H__
+#ifndef LIBGPHOTO2_GPHOTO2_WIDGET_H
+#define LIBGPHOTO2_GPHOTO2_WIDGET_H
 
 #include <gphoto2/gphoto2-context.h>
 
@@ -130,4 +130,4 @@ int     gp_widget_get_readonly   (CameraWidget *widget, int *readonly);
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_WIDGET_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_WIDGET_H) */

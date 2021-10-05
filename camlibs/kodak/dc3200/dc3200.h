@@ -29,8 +29,8 @@
  *                                                  *
  ****************************************************/
 
-#ifndef __DC3200_H__
-#define __DC3200_H__
+#ifndef CAMLIBS_KODAK_DC3200_DC3200_H
+#define CAMLIBS_KODAK_DC3200_DC3200_H
 
 #include <gphoto2/gphoto2-camera.h>
 
@@ -51,4 +51,4 @@ struct _CameraPrivateLibrary {
 
 int check_last_use(Camera *camera);
 
-#endif
+#endif /* !defined(CAMLIBS_KODAK_DC3200_DC3200_H) */

@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __jl2005a_H__
-#define __jl2005a_H__
+#ifndef CAMLIBS_JL2005A_JL2005A_H
+#define CAMLIBS_JL2005A_JL2005A_H
 
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
@@ -52,5 +52,5 @@ int jl2005a_shortquery(GPPort *port, int n);
 int jl2005a_decompress (unsigned char *inp, unsigned char *outp, int width,
 				int height);
 
-#endif
+#endif /* !defined(CAMLIBS_JL2005A_JL2005A_H) */
 

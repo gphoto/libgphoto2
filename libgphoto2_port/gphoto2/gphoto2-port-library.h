@@ -21,8 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_PORT_LIBRARY_H__
-#define __GPHOTO2_PORT_LIBRARY_H__
+#ifndef LIBGPHOTO2_GPHOTO2_PORT_LIBRARY_H
+#define LIBGPHOTO2_GPHOTO2_PORT_LIBRARY_H
 
 #include <gphoto2/gphoto2-port-info-list.h>
 #include <gphoto2/gphoto2-port.h>
@@ -100,4 +100,4 @@ int gp_port_library_list       (GPPortInfoList *list);
 
 GPPortOperations *gp_port_library_operations (void);
 
-#endif /* __GPHOTO2_PORT_LIBRARY_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_PORT_LIBRARY_H) */

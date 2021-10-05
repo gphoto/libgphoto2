@@ -24,8 +24,9 @@
 /* Boston, MA  02110-1301  USA					*/
 /****************************************************************/
 
-#ifndef __SPCA50X_SDRAM_H__
-#define __SPCA50X_SDRAM_H__
+#ifndef CAMLIBS_SPCA50X_SPCA50X_SDRAM_H
+#define CAMLIBS_SPCA50X_SPCA50X_SDRAM_H
+
 #include <gphoto2/gphoto2-camera.h>
 
 int spca50x_sdram_get_info (CameraPrivateLibrary * lib);
@@ -39,4 +40,4 @@ int spca50x_sdram_request_thumbnail (CameraPrivateLibrary * lib,
 		uint8_t ** buf, unsigned int *len,
 		unsigned int number, int *type);
 
-#endif /* __SPCA50X_SDRAM_H__ */
+#endif /* !defined(CAMLIBS_SPCA50X_SPCA50X_SDRAM_H) */

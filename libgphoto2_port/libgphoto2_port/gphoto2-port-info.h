@@ -21,8 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef GPHOTO_PORT_INFO_H
-#define GPHOTO_PORT_INFO_H
+#ifndef LIBGPHOTO2_GPHOTO2_PORT_INFO_H
+#define LIBGPHOTO2_GPHOTO2_PORT_INFO_H
 
 /**
  * \internal GPPortInfo:
@@ -37,4 +37,5 @@ struct _GPPortInfo {
 	/* Private */
 	char *library_filename;	/**< \brief Internal pathname of the port driver. Do not use outside of the port library. */
 };
-#endif
+
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_PORT_INFO_H) */

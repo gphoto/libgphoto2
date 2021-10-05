@@ -21,8 +21,9 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef __GPHOTO2_H__
-#define __GPHOTO2_H__
+
+#ifndef LIBGPHOTO2_GPHOTO2_H
+#define LIBGPHOTO2_GPHOTO2_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,4 +47,4 @@ extern "C" {
 }
 #endif
 
-#endif /* __GPHOTO2_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_H) */

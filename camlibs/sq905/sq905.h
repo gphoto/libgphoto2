@@ -1,5 +1,5 @@
-#ifndef __SQ905_H__
-#define __SQ905_H__
+#ifndef CAMLIBS_SQ905_SQ905_H
+#define CAMLIBS_SQ905_SQ905_H
 
 #include <gphoto2/gphoto2-port.h>
 
@@ -58,5 +58,6 @@ sq_preprocess		(SQModel model, int comp_ratio,
 int
 sq_decompress 		(SQModel model, unsigned char *output, unsigned char *data,
 				int w, int h);
-#endif
+
+#endif /* !defined(CAMLIBS_SQ905_SQ905_H) */
 

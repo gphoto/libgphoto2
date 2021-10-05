@@ -23,8 +23,8 @@
 /* Boston, MA  02110-1301  USA					*/
 /****************************************************************/
 
-#ifndef __LIBRARY_H__
-#define __LIBRARY_H__
+#ifndef CAMLIBS_JAMCAM_LIBRARY_H
+#define CAMLIBS_JAMCAM_LIBRARY_H
 
 #define	RETRIES			10
 
@@ -46,4 +46,4 @@ struct jamcam_file *jamcam_file_info(Camera *camera, int number);
 int jamcam_request_image(Camera *camera, CameraFile *file, char *buf, unsigned int *len, int number, GPContext *context );
 int jamcam_request_thumbnail(Camera *camera, CameraFile *file, char *buf, unsigned int *len, int number, GPContext *context );
 
-#endif /* __LIBRARY_H__ */
+#endif /* !defined(CAMLIBS_JAMCAM_LIBRARY_H) */

@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_PORT_VERSION_H__
-#define __GPHOTO2_PORT_VERSION_H__
+#ifndef LIBGPHOTO2_GPHOTO2_PORT_VERSION_H
+#define LIBGPHOTO2_GPHOTO2_PORT_VERSION_H
 
 typedef enum {
   GP_VERSION_SHORT = 0,
@@ -38,7 +38,7 @@ const char **gp_port_library_version(GPVersionVerbosity verbose);
 }
 #endif
 
-#endif /* __GPHOTO2_PORT_VERSION_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_PORT_VERSION_H) */
 
 /*
  * Local Variables:

@@ -1,5 +1,3 @@
-#ifndef _SATURATE_H
-#define _SATURATE_H
 /* The GIMP -- an image manipulation program
  * Copyright 1995 Spencer Kimball and Peter Mattis
  *
@@ -18,6 +16,9 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
+
+#ifndef CAMLIBS_STV0680_SATURATE_H
+#define CAMLIBS_STV0680_SATURATE_H
 
 #define RED_PIX          0
 #define GREEN_PIX        1
@@ -64,4 +65,5 @@ struct _HueSaturationDialog
 };
 
 extern void stv680_hue_saturation( int width, int height, unsigned char *srcPR, unsigned char *destPR);
-#endif
+
+#endif /* !defined(CAMLIBS_STV0680_SATURATE_H) */

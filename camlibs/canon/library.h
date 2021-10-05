@@ -4,8 +4,8 @@
  *
  ****************************************************************************/
 
-#ifndef _LIBRARY_H
-#define _LIBRARY_H
+#ifndef CAMLIBS_CANON_LIBRARY_H
+#define CAMLIBS_CANON_LIBRARY_H
 
 /****************************************************************************
  *
@@ -29,7 +29,7 @@ void clear_readiness(Camera *camera);
 
 #define GP_MODULE "canon"
 
-#endif /* _LIBRARY_H */
+#endif /* !defined(CAMLIBS_CANON_LIBRARY_H) */
 
 /****************************************************************************
  *

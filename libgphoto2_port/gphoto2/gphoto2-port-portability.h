@@ -17,8 +17,9 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef __GPHOTO2_PORT_PORTABILITY_H__
-#define __GPHOTO2_PORT_PORTABILITY_H__
+
+#ifndef LIBGPHOTO2_GPHOTO2_PORT_PORTABILITY_H
+#define LIBGPHOTO2_GPHOTO2_PORT_PORTABILITY_H
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 
@@ -141,5 +142,6 @@ int		 gp_system_is_dir	(const char *dirname);
  ************************************************************************/
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
-#endif /* ifndef __GPHOTO2_PORT_PORTABILITY_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_PORT_PORTABILITY_H) */
+
 /* end of file */

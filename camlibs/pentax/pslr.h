@@ -33,8 +33,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PSLR_H
-#define PSLR_H
+#ifndef CAMLIBS_PENTAX_PSLR_H
+#define CAMLIBS_PENTAX_PSLR_H
 
 #include "pslr_enum.h"
 #include "pslr_scsi.h"
@@ -234,4 +234,5 @@ char *copyright(void);
 void write_debug( const char* message, ... );
 
 int debug_onoff(ipslr_handle_t *p, char debug_mode);
-#endif
+
+#endif /* !defined(CAMLIBS_PENTAX_PSLR_H) */

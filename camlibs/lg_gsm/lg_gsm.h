@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __LG_GSM_H__
-#define __LG_GSM_H__
+#ifndef CAMLIBS_LG_GSM_LG_GSM_H
+#define CAMLIBS_LG_GSM_LG_GSM_H
 
 #include <gphoto2/gphoto2-port.h>
 
@@ -34,5 +34,5 @@ unsigned int lg_gsm_get_picture_size  (GPPort *port, int pic);
 int lg_gsm_read_picture_data (GPPort *port, char *data, unsigned int size, unsigned int n);
 int lg_gsm_list_files (GPPort *port, CameraList *list);
 
-#endif
+#endif /* !defined(CAMLIBS_LG_GSM_LG_GSM_H) */
 

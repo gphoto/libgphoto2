@@ -1,7 +1,7 @@
-#ifndef __LARGAN_CCD_H__
-#define __LARGAN_CCD_H__
+#ifndef CAMLIBS_LARGAN_LMINI_LMINI_CCD_H
+#define CAMLIBS_LARGAN_LMINI_LMINI_CCD_H
 
 void largan_ccd2dib(char *pData, char *pDib, long dwDibRowBytes, int nCcdFactor);
 
-#endif
+#endif /* !defined(CAMLIBS_LARGAN_LMINI_LMINI_CCD_H) */
 

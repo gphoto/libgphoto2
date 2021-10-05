@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __LIBRARY_H__
-#define __LIBRARY_H__
+#ifndef CAMLIBS_SIERRA_LIBRARY_H
+#define CAMLIBS_SIERRA_LIBRARY_H
 
 #include <gphoto2/gphoto2-camera.h>
 
@@ -151,4 +151,5 @@ int camera_set_config_cam_desc	  (Camera *camera, CameraWidget *window,
 				   GPContext *context);
 int camera_get_config_cam_desc	  (Camera *camera, CameraWidget **window,
 				   GPContext *context);
-#endif /* __LIBRARY_H__ */
+
+#endif /* !defined(CAMLIBS_SIERRA_LIBRARY_H) */

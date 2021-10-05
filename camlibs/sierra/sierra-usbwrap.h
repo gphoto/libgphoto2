@@ -18,12 +18,12 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __SIERRA_USBWRAP_H__
-#define __SIERRA_USBWRAP_H__
+#ifndef CAMLIBS_SIERRA_SIERRA_USBWRAP_H
+#define CAMLIBS_SIERRA_SIERRA_USBWRAP_H
 
 #include <gphoto2/gphoto2-port.h>
 
 int usb_wrap_write_packet (GPPort *dev, unsigned int type, char *sierra_msg,      int sierra_len);
 int usb_wrap_read_packet  (GPPort *dev, unsigned int type, char *sierra_response, int sierra_len);
 
-#endif /* __SIERRA_USBWRAP_H__ */
+#endif /* !defined(CAMLIBS_SIERRA_SIERRA_USBWRAP_H) */

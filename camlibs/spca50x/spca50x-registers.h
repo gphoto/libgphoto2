@@ -24,8 +24,8 @@
 /* Boston, MA  02110-1301  USA					*/
 /****************************************************************/
 
-#ifndef __SPCA50X_REGISTERS_H__
-#define __SPCA50X_REGISTERS_H__
+#ifndef CAMLIBS_SPCA50X_SPCA50X_REGISTERS_H
+#define CAMLIBS_SPCA50X_SPCA50X_REGISTERS_H
 
 
 /* ---- Register ---- */
@@ -81,4 +81,4 @@ SPCA50xCamMode;
 #define SPCA50X_REG_I2C_rStatus		0x2a06
 
 
-#endif /* __SPCA50X_REGISTERS_H__ */
+#endif /* !defined(CAMLIBS_SPCA50X_SPCA50X_REGISTERS_H) */

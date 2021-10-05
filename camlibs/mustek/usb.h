@@ -19,8 +19,9 @@
 /*
  	Header for USB Interface
 */
-#ifndef _USB_H
-#define _USB_H
+
+#ifndef CAMLIBS_MUSTEK_USB_H
+#define CAMLIBS_MUSTEK_USB_H
 
 #define MDC800_USB_ENDPOINT_COMMAND  0x01
 #define MDC800_USB_ENDPOINT_STATUS   0x82
@@ -29,4 +30,4 @@
 
 int mdc800_usb_sendCommand (GPPort*,unsigned char* , unsigned char * , int );
 
-#endif
+#endif /* !defined(CAMLIBS_MUSTEK_USB_H) */

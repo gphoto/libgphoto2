@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_POLAROID_JD350E_BLUE_H
+#define CAMLIBS_POLAROID_JD350E_BLUE_H
+
 /* jd350e_blue.h
  *
  * White balancing curve for indoor / electric light pictures
@@ -85,3 +88,5 @@ static  unsigned jd350e_blue_curve [] = {
   252, 252, 253, 253,
   253, 253, 253, 254,
   254, 254, 254, 255};
+
+#endif /* !defined(CAMLIBS_POLAROID_JD350E_BLUE_H) */

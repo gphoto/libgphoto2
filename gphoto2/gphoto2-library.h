@@ -22,8 +22,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_LIBRARY_H__
-#define __GPHOTO2_LIBRARY_H__
+#ifndef LIBGPHOTO2_GPHOTO2_LIBRARY_H
+#define LIBGPHOTO2_GPHOTO2_LIBRARY_H
 
 #include <gphoto2/gphoto2-abilities-list.h>
 #include <gphoto2/gphoto2-camera.h>
@@ -77,4 +77,4 @@ int camera_init 	(Camera *camera, GPContext *context);
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_LIBRARY_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_LIBRARY_H) */

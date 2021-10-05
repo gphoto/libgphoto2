@@ -23,8 +23,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_FILE_H__
-#define __GPHOTO2_FILE_H__
+#ifndef LIBGPHOTO2_GPHOTO2_FILE_H
+#define LIBGPHOTO2_GPHOTO2_FILE_H
 
 #include <time.h>
 #include <stdint.h>
@@ -174,4 +174,4 @@ int gp_file_slurp             (CameraFile*, char *data,
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_FILE_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_FILE_H) */

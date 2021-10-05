@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __CASIO_QV_COMMANDS_H__
-#define __CASIO_QV_COMMANDS_H__
+#ifndef CAMLIBS_CASIO_CASIO_QV_COMMANDS_H
+#define CAMLIBS_CASIO_CASIO_QV_COMMANDS_H
 
 #include <gphoto2/gphoto2-library.h>
 
@@ -42,4 +42,4 @@ int QVcapture  (Camera *camera);
 int QVreset    (Camera *camera);
 int QVsetspeed (Camera *camera, int speed);
 
-#endif /* __CASIO_QV_COMMANDS_H__ */
+#endif /* !defined(CAMLIBS_CASIO_CASIO_QV_COMMANDS_H) */

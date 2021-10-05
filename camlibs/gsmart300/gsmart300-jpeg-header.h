@@ -1,5 +1,5 @@
-#ifndef __GSMART_300_JPEG_HEADER_H
-#define __GSMART_300_JPEG_HEADER_H
+#ifndef CAMLIBS_GSMART300_GSMART300_JPEG_HEADER_H
+#define CAMLIBS_GSMART300_GSMART300_JPEG_HEADER_H
 
 /*
  *  Start from 0 -> 588
@@ -118,4 +118,4 @@ static uint8_t Gsmart_300_QTable[10][64]=
 	   59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59, 59 },
 };
 
-#endif /* __GSMART_300_JPEG_HEADER_H */
+#endif /* !defined(CAMLIBS_GSMART300_GSMART300_JPEG_HEADER_H) */

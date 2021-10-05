@@ -23,6 +23,11 @@
 
 */
 
+#ifndef CAMLIBS_TOPFIELD_CRC16_H
+#define CAMLIBS_TOPFIELD_CRC16_H
+
 #include <sys/types.h>
 
 unsigned short crc16_ansi(const void *data, size_t size);
+
+#endif /* !defined(CAMLIBS_TOPFIELD_CRC16_H) */

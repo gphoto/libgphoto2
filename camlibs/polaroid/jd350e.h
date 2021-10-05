@@ -21,9 +21,11 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __JD350E_H__
-#define __JD350E_H__
+#ifndef CAMLIBS_POLAROID_JD350E_H
+#define CAMLIBS_POLAROID_JD350E_H
+
 int jd350e_postprocessing(int width, int height, unsigned char* rgb);
 int jd350e_postprocessing_and_flip(int width, int height, unsigned char* rgb);
 int trust350fs_postprocessing(int width, int height, unsigned char* rgb);
-#endif
+
+#endif /* !defined(CAMLIBS_POLAROID_JD350E_H) */

@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBRARY_H
-#define LIBRARY_H
+#ifndef CAMLIBS_STV0680_LIBRARY_H
+#define CAMLIBS_STV0680_LIBRARY_H
 
 #include <gphoto2/gphoto2-port.h>
 
@@ -34,4 +34,4 @@ int stv0680_capture_preview   (GPPort *device, char **data, int *size);
 int stv0680_capture	      (GPPort *port);
 int stv0680_delete_all	      (GPPort *port);
 
-#endif
+#endif /* !defined(CAMLIBS_STV0680_LIBRARY_H) */

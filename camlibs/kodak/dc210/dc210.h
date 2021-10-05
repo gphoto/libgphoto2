@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef _DC210_H_
-#define _DC210_H_
+#ifndef CAMLIBS_KODAK_DC210_DC210_H
+#define CAMLIBS_KODAK_DC210_DC210_H
 
 typedef enum {
 	DC210_TOGGLE_OFF = 0,
@@ -235,5 +235,5 @@ int dc210_format_callback(Camera * camera, CameraWidget * widget, GPContext * co
 int dc210_debug_callback(Camera * camera, CameraWidget * widget, GPContext * context);
 #endif
 
-#endif /* _DC210_H_ */
+#endif /* !defined(CAMLIBS_KODAK_DC210_DC210_H) */
 

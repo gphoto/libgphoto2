@@ -1,5 +1,5 @@
-#ifndef __LIVE_VIEW_H
-#define __LIVE_VIEW_H
+#ifndef CAMLIBS_PTP2_CHDK_LIVE_VIEW_H
+#define CAMLIBS_PTP2_CHDK_LIVE_VIEW_H
 
 // Note: used in modules and platform independent code.
 // Do not add platform dependent stuff in here (#ifdef/#endif compile options or camera dependent values)
@@ -107,4 +107,4 @@ typedef struct {
     int bmo_desc_start; // added in protocol 2.2
 } lv_data_header;
 
-#endif // __LIVE_VIEW_H
+#endif /* !defined(CAMLIBS_PTP2_CHDK_LIVE_VIEW_H) */

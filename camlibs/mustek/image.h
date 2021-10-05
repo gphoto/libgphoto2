@@ -19,10 +19,11 @@
 /*
  * JPeg corrections table
  */
-#ifndef DEFINE_IMAGE_H
-#define DEFINE_IMAGE_H
+
+#ifndef CAMLIBS_MUSTEK_IMAGE_H
+#define CAMLIBS_MUSTEK_IMAGE_H
 
 int mdc800_correctImageData (unsigned char*, int,int,int );
 
 
-#endif
+#endif /* !defined(CAMLIBS_MUSTEK_IMAGE_H) */

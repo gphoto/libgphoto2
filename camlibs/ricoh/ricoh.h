@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __RICOH_H__
-#define __RICOH_H__
+#ifndef CAMLIBS_RICOH_RICOH_H
+#define CAMLIBS_RICOH_RICOH_H
 
 #include <time.h>
 
@@ -200,4 +200,4 @@ typedef enum _RicohCompression RicohCompression;
 int ricoh_get_compression (Camera *, GPContext *, RicohCompression *);
 int ricoh_set_compression (Camera *, GPContext *, RicohCompression);
 
-#endif /* __RICOH_H__ */
+#endif /* !defined(CAMLIBS_RICOH_RICOH_H) */

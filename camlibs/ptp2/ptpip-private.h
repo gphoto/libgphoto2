@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef PTPIP_PRIVATE_H
-#define PTPIP_PRIVATE_H
+#ifndef CAMLIBS_PTP2_PTPIP_PRIVATE_H
+#define CAMLIBS_PTP2_PTPIP_PRIVATE_H
 
 /* Definitions for PTP/IP to work with WinSock and regular BSD-style sockets */
 #ifdef WIN32
@@ -56,4 +56,4 @@ void ptpip_perror(const char *what);
 int ptpip_get_socket_error(void);
 void ptpip_set_socket_error(int err);
 
-#endif
+#endif /* !defined(CAMLIBS_PTP2_PTPIP_PRIVATE_H) */

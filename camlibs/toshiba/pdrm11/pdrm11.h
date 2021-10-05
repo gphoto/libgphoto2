@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __PDRM11_H__
-#define __PDRM11_H__
+#ifndef CAMLIBS_TOSHIBA_PDRM11_PDRM11_H
+#define CAMLIBS_TOSHIBA_PDRM11_PDRM11_H
 
 #include "config.h"
 #include <gphoto2/gphoto2.h>
@@ -83,4 +83,4 @@ int pdrm11_delete_file(GPPort *port, int picNum);
 
 
 
-#endif /* __PDRM11_H__ */
+#endif /* !defined(CAMLIBS_TOSHIBA_PDRM11_PDRM11_H) */

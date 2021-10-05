@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_PANASONIC_DC1000_H
+#define CAMLIBS_PANASONIC_DC1000_H
+
 /*
 	$Id$
 
@@ -48,3 +51,5 @@
 #define DSC1_BUF_DATA		17
 
 /* End of dc1000.h */
+
+#endif /* !defined(CAMLIBS_PANASONIC_DC1000_H) */

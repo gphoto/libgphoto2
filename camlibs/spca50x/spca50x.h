@@ -24,8 +24,9 @@
 /* Boston, MA  02110-1301  USA					*/
 /****************************************************************/
 
-#ifndef __SPCA50X_H__
-#define __SPCA50X_H__
+#ifndef CAMLIBS_SPCA50X_SPCA50X_H
+#define CAMLIBS_SPCA50X_SPCA50X_H
+
 #include <stdint.h>
 #include <gphoto2/gphoto2-camera.h>
 
@@ -91,4 +92,4 @@ int create_jpeg_from_data (uint8_t * dst, uint8_t * src, unsigned int qIndex,
 				   int original_size, int *size,
 				   int omit_huffman_table, int omit_escape);
 
-#endif /* __SPCA50X_H__ */
+#endif /* !defined(CAMLIBS_SPCA50X_SPCA50X_H) */

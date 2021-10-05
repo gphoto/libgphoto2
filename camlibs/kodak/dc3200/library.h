@@ -29,8 +29,8 @@
  *                                                  *
  ****************************************************/
 
-#ifndef __LIBRARY_H__
-#define __LIBRARY_H__
+#ifndef CAMLIBS_KODAK_DC3200_LIBRARY_H
+#define CAMLIBS_KODAK_DC3200_LIBRARY_H
 
 #include <gphoto2/gphoto2-camera.h>
 
@@ -95,4 +95,4 @@ int dc3200_clear_read_buffer(Camera *camera);
 int dump_buffer(unsigned char * buffer, int len, char *title, int bytesperline);
 unsigned long bytes_to_l(int a, int b, int c, int d);
 
-#endif
+#endif /* !defined(CAMLIBS_KODAK_DC3200_LIBRARY_H) */

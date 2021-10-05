@@ -17,8 +17,10 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef __ST2205_H__
-#define __ST2205_H__
+
+#ifndef CAMLIBS_ST2205_ST2205_H
+#define CAMLIBS_ST2205_ST2205_H
+
 #include "config.h"
 
 #include <stdio.h>
@@ -184,4 +186,4 @@ int
 st2205_rgb24_to_rgb565(CameraPrivateLibrary *pl, int **src,
 	unsigned char *dest);
 
-#endif
+#endif /* !defined(CAMLIBS_ST2205_ST2205_H) */

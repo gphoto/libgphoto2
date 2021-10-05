@@ -18,13 +18,13 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __jl2005bcd_decompress_H__
-#define __jl2005bcd_decompress_H__
+#ifndef CAMLIBS_JL2005C_JL2005BCD_DECOMPRESS_H
+#define CAMLIBS_JL2005C_JL2005BCD_DECOMPRESS_H
 
 
 int
 jl2005bcd_decompress(unsigned char *output, unsigned char *input,
 					int inputsize, int get_thumbnail);
 
-#endif
+#endif /* !defined(CAMLIBS_JL2005C_JL2005BCD_DECOMPRESS_H) */
 

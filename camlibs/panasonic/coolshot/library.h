@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_PANASONIC_COOLSHOT_LIBRARY_H
+#define CAMLIBS_PANASONIC_COOLSHOT_LIBRARY_H
+
 /****************************************************************/
 /* library.h  - Gphoto2 library for accessing the Panasonic     */
 /*              Coolshot KXL-600A & KXL-601A digital cameras.   */
@@ -33,3 +36,5 @@ int coolshot_file_count		(Camera *camera);
 int coolshot_request_image (Camera *camera, CameraFile *file, char *buf, int *len, int number, GPContext *context);
 int coolshot_request_thumbnail (Camera *camera, CameraFile *file, char *buf, int *len, int number, GPContext *context);
 int coolshot_build_thumbnail (char *data, int *size);
+
+#endif /* !defined(CAMLIBS_PANASONIC_COOLSHOT_LIBRARY_H) */

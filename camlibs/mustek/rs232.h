@@ -15,12 +15,13 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-#ifndef _RS232_H
-#define _RS232_H
+
+#ifndef CAMLIBS_MUSTEK_RS232_H
+#define CAMLIBS_MUSTEK_RS232_H
 
 int mdc800_rs232_sendCommand(GPPort*,unsigned char* , unsigned char * , int );
 int mdc800_rs232_waitForCommit(GPPort*,char commandid);
 int mdc800_rs232_receive(GPPort*,unsigned char * , int );
 int mdc800_rs232_download(GPPort*,unsigned char *, int);
 
-#endif
+#endif /* !defined(CAMLIBS_MUSTEK_RS232_H) */

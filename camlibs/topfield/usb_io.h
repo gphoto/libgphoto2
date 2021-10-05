@@ -24,8 +24,8 @@
 
 */
 
-#ifndef _USB_IO_H
-#define _USB_IO_H 1
+#ifndef CAMLIBS_TOPFIELD_USB_IO_H
+#define CAMLIBS_TOPFIELD_USB_IO_H
 
 #include <gphoto2/gphoto2-camera.h>
 #include <sys/types.h>
@@ -111,4 +111,4 @@ ssize_t send_cmd_hdd_create_dir(Camera *camera, char *path, GPContext *context);
 ssize_t get_tf_packet(Camera *camera, struct tf_packet *packet, GPContext *context);
 ssize_t send_tf_packet(Camera *camera, struct tf_packet *packet, GPContext *context);
 
-#endif /* _USB_IO_H */
+#endif /* !defined(CAMLIBS_TOPFIELD_USB_IO_H) */

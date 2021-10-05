@@ -20,8 +20,9 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef __GPHOTO2_VERSION_H__
-#define __GPHOTO2_VERSION_H__
+
+#ifndef LIBGPHOTO2_GPHOTO2_VERSION_H
+#define LIBGPHOTO2_GPHOTO2_VERSION_H
 
 #include <gphoto2/gphoto2-port-version.h>
 
@@ -35,4 +36,4 @@ const char **gp_library_version(GPVersionVerbosity verbose);
 }
 #endif
 
-#endif /* __GPHOTO2_VERSION_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_VERSION_H) */

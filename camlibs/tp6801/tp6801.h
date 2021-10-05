@@ -17,8 +17,10 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef __TP6801_H__
-#define __TP6801_H__
+
+#ifndef CAMLIBS_TP6801_TP6801_H
+#define CAMLIBS_TP6801_TP6801_H
+
 #include "config.h"
 
 #include <stdio.h>
@@ -126,4 +128,4 @@ tp6801_set_time_and_date(Camera *camera, struct tm *t);
 int
 tp6801_filesize(Camera *camera);
 
-#endif
+#endif /* !defined(CAMLIBS_TP6801_TP6801_H) */

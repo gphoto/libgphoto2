@@ -21,8 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __GPHOTO2_PORT_INFO_LIST_H__
-#define __GPHOTO2_PORT_INFO_LIST_H__
+#ifndef LIBGPHOTO2_GPHOTO2_PORT_INFO_LIST_H
+#define LIBGPHOTO2_GPHOTO2_PORT_INFO_LIST_H
 
 /**
  * \brief The gphoto port type.
@@ -110,4 +110,4 @@ const char *gp_port_message_codeset (const char*);
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_PORT_INFO_LIST_H__ */
+#endif /* !defined(LIBGPHOTO2_GPHOTO2_PORT_INFO_LIST_H) */

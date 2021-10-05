@@ -18,8 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef __AOX_H__
-#define __AOX_H__
+#ifndef CAMLIBS_AOX_AOX_H
+#define CAMLIBS_AOX_AOX_H
 
 #include <gphoto2/gphoto2-port.h>
 
@@ -37,5 +37,5 @@ int aox_get_num_hi_pics   (Info *info);
 int aox_get_picture_size  (GPPort *port, int lo, int hi, int n, int k);
 int aox_read_picture_data (GPPort *port, char *data, int size, int n);
 
-#endif
+#endif /* !defined(CAMLIBS_AOX_AOX_H) */
 

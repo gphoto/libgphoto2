@@ -17,8 +17,10 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#ifndef __AX203_H__
-#define __AX203_H__
+
+#ifndef CAMLIBS_AX203_AX203_H
+#define CAMLIBS_AX203_AX203_H
+
 #include "config.h"
 
 #include <stdio.h>
@@ -204,4 +206,4 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 
 #endif
 
-#endif
+#endif /* !defined(CAMLIBS_AX203_AX203_H) */

@@ -16,8 +16,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef commands_H
-#define commands_H
+#ifndef CAMLIBS_SOUNDVISION_COMMANDS_H
+#define CAMLIBS_SOUNDVISION_COMMANDS_H
 
 
 int32_t soundvision_send_command(uint32_t command, uint32_t argument,
@@ -28,4 +28,4 @@ int32_t soundvision_send_file_command(const char *filename,
 
 int32_t soundvision_read(CameraPrivateLibrary *dev, void *buffer, int len);
 
-#endif
+#endif /* !defined(CAMLIBS_SOUNDVISION_COMMANDS_H) */

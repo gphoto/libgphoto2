@@ -4,8 +4,8 @@
  *
  ****************************************************************************/
 
-#ifndef _SERIAL_H
-#define _SERIAL_H
+#ifndef CAMLIBS_CANON_SERIAL_H
+#define CAMLIBS_CANON_SERIAL_H
 
 /****************************************************************************
  *
@@ -312,7 +312,7 @@ typedef enum {
 
 
 
-#endif /* _SERIAL_H */
+#endif /* !defined(CAMLIBS_CANON_SERIAL_H) */
 
 /****************************************************************************
  *

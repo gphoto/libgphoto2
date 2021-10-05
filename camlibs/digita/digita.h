@@ -19,8 +19,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef DIGITA_H
-#define DIGITA_H
+#ifndef CAMLIBS_DIGITA_DIGITA_H
+#define CAMLIBS_DIGITA_DIGITA_H
 
 #include <gphoto2/gphoto2.h>
 
@@ -165,5 +165,5 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera);
 /* usb.c */
 int digita_usb_open(CameraPrivateLibrary *dev, Camera *camera);
 
-#endif
+#endif /* !defined(CAMLIBS_DIGITA_DIGITA_H) */
 

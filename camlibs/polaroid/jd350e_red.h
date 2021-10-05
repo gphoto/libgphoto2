@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_POLAROID_JD350E_RED_H
+#define CAMLIBS_POLAROID_JD350E_RED_H
+
 /* jd350e_red.h
  *
  * White balancing curve for daylight images (experimental)
@@ -85,3 +88,5 @@
   254, 254, 254, 254,
   254, 254, 254, 254,
   254, 254, 254, 255};
+
+#endif /* !defined(CAMLIBS_POLAROID_JD350E_RED_H) */

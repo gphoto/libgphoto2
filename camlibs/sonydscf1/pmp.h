@@ -1,3 +1,6 @@
+#ifndef CAMLIBS_SONYDSCF1_PMP_H
+#define CAMLIBS_SONYDSCF1_PMP_H
+
 /* pmp.h
  *
  * Copyright (C) M. Adam Kendall <joker@penguinpub.com>
@@ -45,3 +48,5 @@
 #define PMP_SPEED 0x66
 
 #define PMP_FLASH 0x76
+
+#endif /* !defined(CAMLIBS_SONYDSCF1_PMP_H) */

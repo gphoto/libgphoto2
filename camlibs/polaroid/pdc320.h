@@ -1,5 +1,5 @@
-#ifndef __GPHOTO2_PDC320_H__
-#define __GPHOTO2_PDC320_H__
+#ifndef CAMLIBS_POLAROID_PDC320_H
+#define CAMLIBS_POLAROID_PDC320_H
 
 #include <jpeg.h>
 
@@ -70,4 +70,5 @@ static struct {
     "\xBA\xC2\xC3\xC4\xC5\xC6\xC7\xC8" "\xC9\xCA\xD2\xD3\xD4\xD5\xD6\xD7" \
     "\xD8\xD9\xDA\xE1\xE2\xE3\xE4\xE5" "\xE6\xE7\xE8\xE9\xEA\xF1\xF2\xF3" \
     "\xF4\xF5\xF6\xF7\xF8\xF9\xFA"
-#endif
+
+#endif /* !defined(CAMLIBS_POLAROID_PDC320_H) */

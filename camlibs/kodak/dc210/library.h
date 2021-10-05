@@ -19,8 +19,8 @@
  */
 
 
-#ifndef _DC210_LIBRARY_H_
-#define _DC210_LIBRARY_H_
+#ifndef CAMLIBS_KODAK_DC210_LIBRARY_H
+#define CAMLIBS_KODAK_DC210_LIBRARY_H
 
 #define DC210_CMD_OKAY         0
 #define DC210_WRITE_ERROR     -1
@@ -55,6 +55,6 @@ static int dc210_read_dummy_packet(Camera * camera);
 static int dc210_test_command(Camera * camera, unsigned char cmdbyte, unsigned char *databytes);
 #endif
 
-#endif /* _DC210_LIBRARY_H_ */
+#endif /* !defined(CAMLIBS_KODAK_DC210_LIBRARY_H) */
 
 

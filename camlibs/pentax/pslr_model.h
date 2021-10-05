@@ -32,8 +32,9 @@
     and GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef PSLR_MODEL_H
-#define PSLR_MODEL_H
+
+#ifndef CAMLIBS_PENTAX_PSLR_MODEL_H
+#define CAMLIBS_PENTAX_PSLR_MODEL_H
 
 #include "pslr_enum.h"
 #include "pslr_scsi.h"
@@ -210,4 +211,4 @@ void hexdump(uint8_t *buf, uint32_t bufLen);
 void hexdump_debug(uint8_t *buf, uint32_t bufLen);
 const char* int_to_binary( uint16_t x );
 
-#endif
+#endif /* !defined(CAMLIBS_PENTAX_PSLR_MODEL_H) */

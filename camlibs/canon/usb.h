@@ -4,8 +4,8 @@
  *
  ****************************************************************************/
 
-#ifndef _CANON_USB_H
-#define _CANON_USB_H
+#ifndef CAMLIBS_CANON_USB_H
+#define CAMLIBS_CANON_USB_H
 
 /**
  * USB_BULK_READ_SIZE
@@ -282,7 +282,8 @@ int canon_usb_ready (Camera *camera, GPContext *context);
 int canon_usb_wait_for_event (Camera *camera, int timeout,
 			CameraEventType *eventtype, void **eventdata,
 			GPContext *context);
-#endif /* _CANON_USB_H */
+
+#endif /* !defined(CAMLIBS_CANON_USB_H) */
 
 /****************************************************************************
  *
