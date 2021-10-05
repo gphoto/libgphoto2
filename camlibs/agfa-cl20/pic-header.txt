@@ -12,7 +12,7 @@
 		03 medium
 		05 highest
 
-00000020  02 78 01 67 02 23 06 50  01 e0 00 60 00 6c 05 00  |.x.g.#.P.à.`.l..|
+00000020  02 78 01 67 02 23 06 50  01 e0 00 60 00 6c 05 00  |.x.g.#.P.Ã .`.l..|
 	     --    --  
 			this sometimes changes, but I don't know why...
 

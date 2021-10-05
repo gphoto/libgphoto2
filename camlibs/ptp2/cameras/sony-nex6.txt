@@ -150,7 +150,7 @@ Current: 1
 Sorry, your camera does not support generic capture
 ERROR: Could not capture image.
 ERROR: Could not capture.
- ** Error (-6: «Operación no soportada») ***
+ ** Error (-6: Â«OperaciÃ³n no soportadaÂ») ***
 
 Device info:
 Manufacturer: Sony Corporation
