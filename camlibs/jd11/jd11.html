@@ -1,7 +1,7 @@
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
    <meta name="GENERATOR" content="Mozilla/4.61C-CCK-MCD Caldera Systems OpenLinux [en] (X11; I; Linux 2.2.14 i586) [Netscape]">
    <meta name="license" content="GPL v2">
    <title>Reverse Engineering the JD11 (JenCam 11) </title>
@@ -125,7 +125,7 @@ character.
 	<td>
 		The packetreader. It is called in a loop after querying the
 		imagesize. If 201 bytes are read, the 201th byte is the checksum
-		(sum of 0-199)&0xff, otherwise there is no checksum.<br>
+		(sum of 0-199)&amp;0xff, otherwise there is no checksum.<br>
 		Returns the 200 bytes read.
 	</td>
 </tr>
@@ -297,7 +297,7 @@ Both give pretty grayscale pictures, but are not yet in color.
 The high quality format uses a very different compression.<p>
 It just compacts all 8bit values to 6bit by shortening out the 2 least
 significant bits.
-So we just restore them (AAAA AABB BBBB CCCC CCDD DDDD -> AAAAAA00, BBBBBB00,
+So we just restore them (AAAA AABB BBBB CCCC CCDD DDDD -&gt; AAAAAA00, BBBBBB00,
 CCCCCC00, DDDDDD00) and get the same grayscale images as with the lowquality
 compression.
 
