@@ -4,10 +4,11 @@ general:
 * OS/2 support removed (broken and unused since at least 2006)
 
 ptp2:
-* olympus: wait time was twice as long as required if no events arrived
+* Nikon j1: capture fixed
+* Olympus: wait time was twice as long as required if no events arrived
 * Sigma Fp: added basic beta support for capture, live view and config.
 * Canon EOS: handle newer EOS R series reporting of configs (ISO, Aperture, Shutterspeed)
-* fuji:
+* Fuji:
   * ptpip improvements
   * bug fixes
   * some Fuji cameras have now liveview only for webcam (need new firmware)
