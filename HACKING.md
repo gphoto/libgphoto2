@@ -80,14 +80,17 @@ Header Files
 Please use the following layout:
 
     /* Licence, author, etc. */
-    #ifndef __FILE_NAME_H__
-    #define __FILE_NAME_H__
+    #ifndef LIBGPHOTO2_FILE_NAME_H
+    #define LIBGPHOTO2_FILE_NAME_H
 
     #include <whatever is needed for the _header_>
 
     /* Declarations */
 
-    #endif /* __FILE_NAME_H__ */
+    #endif /* !defined(LIBGPHOTO2_FILE_NAME_H) */
+
+The include guard macro starting with the project name should avoid
+potential naming conflicts with another project's `file_name.h`.
 
 
 Camlib
