@@ -4,7 +4,7 @@
  * based on Docupen tools by Florian Heinz <fh@cronon-ag.de>
  */
 #include <gphoto2/gphoto2-library.h>
-#include <gphoto2-endian.h>
+#include <libgphoto2/gphoto2-endian.h>
 #include "docupen.h"
 
 static char cmd_datalen[]  = { 0x55, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1a };

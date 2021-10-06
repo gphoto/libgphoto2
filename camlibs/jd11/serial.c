@@ -30,7 +30,7 @@
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
 
-#include <bayer.h>
+#include <libgphoto2/bayer.h>
 
 #include "serial.h"
 #include "decomp.h"

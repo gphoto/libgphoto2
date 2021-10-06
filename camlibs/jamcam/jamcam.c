@@ -30,8 +30,8 @@
 #include <string.h>
 
 #include <gphoto2/gphoto2.h>
-#include <bayer.h>
-#include <gamma.h>
+#include <libgphoto2/bayer.h>
+#include <libgphoto2/gamma.h>
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

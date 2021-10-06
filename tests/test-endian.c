@@ -24,7 +24,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <gphoto2-endian.h>
+#include <libgphoto2/gphoto2-endian.h>
 #include <gphoto2/gphoto2-filesys.h>
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port-log.h>

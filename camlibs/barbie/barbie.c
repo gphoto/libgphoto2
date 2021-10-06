@@ -29,7 +29,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <bayer.h>
+
+#include <libgphoto2/bayer.h>
 #include <gphoto2/gphoto2.h>
 
 #ifdef ENABLE_NLS

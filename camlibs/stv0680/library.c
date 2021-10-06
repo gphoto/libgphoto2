@@ -32,7 +32,7 @@
 #include "sharpen.h"
 #include "bayer.h"
 #include "saturate.h"
-#include "../../libgphoto2/bayer.h"
+#include "libgphoto2/bayer.h"
 #include "demosaic_sharpen.h"
 
 #ifdef ENABLE_NLS

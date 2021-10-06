@@ -34,10 +34,10 @@
 #include "config.h"
 
 #ifdef HAVE_LIBJPEG
-#include "gphoto2-endian.h"
+#include "libgphoto2/gphoto2-endian.h"
 #include "jl2005bcd_decompress.h"
 #include "jpeg_memsrcdest.h"
-#include <bayer.h>
+#include <libgphoto2/bayer.h>
 #include "img_enhance.h"
 #include <math.h>
 

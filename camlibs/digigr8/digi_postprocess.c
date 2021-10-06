@@ -26,7 +26,7 @@
 
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
-#include <gamma.h>
+#include <libgphoto2/gamma.h>
 #include "digigr8.h"
 
 #define GP_MODULE "digigr8"

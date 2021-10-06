@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 #include <gphoto2/gphoto2.h>
-#include "gphoto2-endian.h"
+#include "libgphoto2/gphoto2-endian.h"
 
 #include "soundvision.h"
 #include "commands.h"

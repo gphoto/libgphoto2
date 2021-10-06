@@ -24,8 +24,8 @@
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
-#include <bayer.h>
-#include <gamma.h>
+#include <libgphoto2/bayer.h>
+#include <libgphoto2/gamma.h>
 
 #include "smal.h"
 #include "ultrapocket.h"

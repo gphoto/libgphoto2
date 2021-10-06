@@ -26,7 +26,7 @@
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
-#include <bayer.h>
+#include <libgphoto2/bayer.h>
 
 #include "jd350e.h"
 #include "dlink350f.h"

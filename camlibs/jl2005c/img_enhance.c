@@ -30,8 +30,9 @@
 #include <fcntl.h>
 #include <string.h>
 #include <math.h>
-#include <gamma.h>
-#include <bayer.h>
+
+#include <libgphoto2/gamma.h>
+#include <libgphoto2/bayer.h>
 #include "img_enhance.h"
 
 #include <gphoto2/gphoto2.h>

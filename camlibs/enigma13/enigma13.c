@@ -28,7 +28,7 @@
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-result.h>
-#include "gphoto2-endian.h"
+#include "libgphoto2/gphoto2-endian.h"
 
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 #define sleep(x)
