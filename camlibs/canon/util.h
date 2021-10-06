@@ -7,7 +7,7 @@
 #ifndef CAMLIBS_CANON_UTIL_H
 #define CAMLIBS_CANON_UTIL_H
 
-#include "gphoto2-endian.h"
+#include "libgphoto2/gphoto2-endian.h"
 
 #ifndef TRUE
 #define TRUE 1

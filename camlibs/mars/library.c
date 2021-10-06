@@ -24,8 +24,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <bayer.h>
-#include <gamma.h>
+
+#include <libgphoto2/bayer.h>
+#include <libgphoto2/gamma.h>
 
 #include <gphoto2/gphoto2.h>
 

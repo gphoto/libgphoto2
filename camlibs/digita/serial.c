@@ -30,7 +30,7 @@
 #include <errno.h>
 #include <string.h>
 
-#include "gphoto2-endian.h"
+#include "libgphoto2/gphoto2-endian.h"
 #include "digita.h"
 
 #define GP_MODULE "digita"

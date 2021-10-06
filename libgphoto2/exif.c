@@ -24,7 +24,7 @@
 
 /* Contained some EXIF functions previously. We now defer to libexif usage. */
 
-#include "exif.h"
+#include "libgphoto2/exif.h"
 
 #include <stdio.h>
 

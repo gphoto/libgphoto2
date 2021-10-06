@@ -44,7 +44,7 @@
 #include <gphoto2/gphoto2-port-library.h>
 #include <gphoto2/gphoto2-port-log.h>
 
-#include "gphoto2-port-info.h"
+#include "libgphoto2_port/gphoto2-port-info.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>

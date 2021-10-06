@@ -24,7 +24,7 @@
 #define CAMLIBS_LARGAN_LMINI_LMINI_H
 
 #include <gphoto2/gphoto2.h>
-#include "gphoto2-endian.h"
+#include "libgphoto2/gphoto2-endian.h"
 
 
 typedef enum {

@@ -75,7 +75,6 @@ camlib_libadd += $(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port
 
 AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
 AM_CPPFLAGS += -I$(top_srcdir)/libgphoto2_port
-AM_CPPFLAGS += -I$(top_srcdir)/libgphoto2 -I$(top_builddir)/libgphoto2
 
 
 ########################################################################

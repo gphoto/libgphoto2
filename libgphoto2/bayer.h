@@ -25,7 +25,7 @@
 #define LIBGPHOTO2_BAYER_H
 
 
-#include "bayer-types.h"
+#include "libgphoto2/bayer-types.h"
 
 
 int gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,

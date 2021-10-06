@@ -29,7 +29,7 @@
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
 #include <iconv.h>
 #endif
-#include "gphoto2-endian.h"
+#include "libgphoto2/gphoto2-endian.h"
 #include "device-flags.h"
 
 #ifdef __cplusplus

@@ -1,9 +1,10 @@
 lib_LTLIBRARIES = libgphoto2_port.la
 
 libgphoto2_port_la_CPPFLAGS = 		\
-	-I$(srcdir) -I$(top_srcdir)	\
+	-I$(top_srcdir)			\
+	-I$(top_srcdir)/libgphoto2_port \
 	$(AM_CPPFLAGS) $(CPPFLAGS)	\
-	$(LTDLINCL)					
+	$(LTDLINCL)
 
 # Notes about the list of exported symbols:
 #    gp_* also contains internal symbols which are intended for

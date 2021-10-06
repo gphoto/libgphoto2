@@ -30,7 +30,7 @@ INSTALL_TESTS_ENVIRONMENT = env \
 
 
 # Default CPPFLAGS to use
-AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)  -I$(top_srcdir)/libgphoto2_port -I$(top_srcdir)/libgphoto2 -I$(top_builddir)/libgphoto2
+AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)  -I$(top_srcdir)/libgphoto2_port
 
 
 # Test endianness conversions

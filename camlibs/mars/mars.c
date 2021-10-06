@@ -29,11 +29,12 @@
 #include <fcntl.h>
 #include <string.h>
 #include <math.h>
-#include <gamma.h>
+
+#include <libgphoto2/gamma.h>
 
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
-#include "gphoto2-endian.h"
+#include "libgphoto2/gphoto2-endian.h"
 
 #include "mars.h"
 

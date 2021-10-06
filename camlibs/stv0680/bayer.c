@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+
 #include "bayer.h"
 
 /* Enhanced by Kurt Garloff to do scaling and debayering at the same time. */

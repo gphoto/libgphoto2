@@ -1,7 +1,7 @@
 #ifndef CAMLIBS_POLAROID_PDC320_H
 #define CAMLIBS_POLAROID_PDC320_H
 
-#include <jpeg.h>
+#include <libgphoto2/jpeg.h>
 
 static const jpeg_quantization_table chrominance = {
   3,  2,  2,  3,  5,  8, 10, 12,
