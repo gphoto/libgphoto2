@@ -22,7 +22,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "bayer.h"
+#include "stv0680-bayer.h"
 
 /* Enhanced by Kurt Garloff to do scaling and debayering at the same time. */
 void bayer_unshuffle_preview(unsigned int w, unsigned int h, unsigned int scale, unsigned char *raw, unsigned char *output)

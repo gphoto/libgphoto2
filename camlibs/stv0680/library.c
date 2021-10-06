@@ -30,7 +30,7 @@
 #include "stv0680.h"
 #include "library.h"
 #include "sharpen.h"
-#include "bayer.h"
+#include "stv0680-bayer.h"
 #include "saturate.h"
 #include "libgphoto2/bayer.h"
 #include "demosaic_sharpen.h"
