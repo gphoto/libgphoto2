@@ -27,4 +27,3 @@ void light_enhance(unsigned int vw, unsigned int vh, unsigned int coarse, unsign
 		   unsigned char avg_pix_val, unsigned char *output);
 
 #endif /* !defined(CAMLIBS_STV0680_BAYER_H) */
-
