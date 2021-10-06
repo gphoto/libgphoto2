@@ -10,7 +10,7 @@ EXTRA_LTLIBRARIES += stv0680.la
 stv0680_la_SOURCES = \
 	stv0680/stv0680.c stv0680/stv0680.h \
 	stv0680/library.c stv0680/library.h \
-	stv0680/bayer.c stv0680/bayer.h \
+	stv0680/stv0680-bayer.c stv0680/stv0680-bayer.h \
 	stv0680/sharpen.c stv0680/sharpen.h \
 	stv0680/saturate.c stv0680/saturate.h \
 	stv0680/demosaic_sharpen.h stv0680/demosaic_sharpen.c
