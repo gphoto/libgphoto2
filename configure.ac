@@ -460,18 +460,7 @@ GP_UDEV([true])
 dnl ---------------------------------------------------------------------------
 dnl camlib installation directory
 dnl ---------------------------------------------------------------------------
-AC_MSG_CHECKING([where to install camlibs])
-AC_ARG_WITH([camlibdir],[AS_HELP_STRING(
-	[--with-camlibdir=<path>],
-	[install camlibs in directory <path>])dnl
-],[
-	camlibdir="$withval"
-],[
-	camlibdir="\${libdir}/${PACKAGE_TARNAME}/${PACKAGE_VERSION}"
-])
-AC_MSG_RESULT([${camlibdir}])
-AC_SUBST([camlibdir])
-AM_CPPFLAGS="$AM_CPPFLAGS -DCAMLIBS=\\\"\$(camlibdir)\\\""
+GP_DRIVERDIR([camlibdir], [CAMLIBS], [camlibs])
 
 
 dnl ---------------------------------------------------------------------------

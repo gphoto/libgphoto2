@@ -463,24 +463,11 @@ fi
 # ----------------------------------------------------------------------
 
 
-dnl AC_SUBST([iolibdir],["\$(libdir)/\$(PACKAGE_TARNAME)/\$(VERSION)"])
-dnl AM_CPPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"${iolibdir}\\\""
-
 dnl ---------------------------------------------------------------------------
 dnl iolib installation directory
 dnl ---------------------------------------------------------------------------
-AC_MSG_CHECKING([where to install io (port) libraries])
-AC_ARG_WITH([iolibdir],[AS_HELP_STRING(
-        [--with-iolibdir=<path>],
-        [install io (port) libraries in directory <path>])dnl
-],[
-        iolibdir="$withval"
-],[
-        iolibdir="\${libdir}/${PACKAGE_TARNAME}/${PACKAGE_VERSION}"
-])
-AC_MSG_RESULT([${iolibdir}])
-AC_SUBST([iolibdir])
-AM_CPPFLAGS="$AM_CPPFLAGS -DIOLIBS=\\\"\$(iolibdir)\\\""
+
+GP_DRIVERDIR([iolibdir], [IOLIBS], [iolibs (port libraries)])
 
 
 dnl ---------------------------------------------------------------------------
