@@ -1,5 +1,5 @@
 dnl Process this file with autoreconf to produce a configure script.
-AC_PREREQ(2.59)
+AC_PREREQ(2.62)
 AC_INIT([libgphoto2 port access library], [0.12.0], [gphoto-devel@lists.sourceforge.net], [libgphoto2_port])
 AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2-port-version.c])
 AC_CONFIG_HEADERS([config.h])
