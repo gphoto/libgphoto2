@@ -389,7 +389,19 @@ dnl Checks for header files.
 dnl ---------------------------------------------------------------------------
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS([sys/param.h sys/mman.h sys/select.h locale.h memory.h getopt.h unistd.h mcheck.h limits.h sys/time.h langinfo.h])
+AC_CHECK_HEADERS([m4_normalize([
+  sys/param.h
+  sys/mman.h
+  sys/select.h
+  locale.h
+  memory.h
+  getopt.h
+  unistd.h
+  mcheck.h
+  limits.h
+  sys/time.h
+  langinfo.h
+])])
 
 dnl If sys/mman.h is present, check whether mmap requires the mman
 dnl library (see camlibs/st2205/st2205.c st2205_malloc_page_aligned()).
@@ -439,7 +451,12 @@ tm.tm_gmtoff;
   AC_MSG_RESULT([no])
 ])
 
-AC_CHECK_HEADERS([sys/mount.h sys/statvfs.h sys/user.h sys/vfs.h], [], [], [
+AC_CHECK_HEADERS([m4_normalize([
+  sys/mount.h
+  sys/statvfs.h
+  sys/user.h
+  sys/vfs.h
+])], [], [], [dnl
 #include <sys/types.h>
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
