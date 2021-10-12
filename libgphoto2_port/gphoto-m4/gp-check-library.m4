@@ -342,7 +342,8 @@ if test "x${[userdef_][$1]}" = "xno" && test "x${[have_][$1]}" = "xyes"; then
 	AC_MSG_CHECKING([for function ][$5][ in ][$2])
 	LIBS_save="$LIBS"
 	LIBS="${[$1]_LIBS}"
-	AC_TRY_LINK_FUNC([$5],[],[have_][$1][=no])
+	AC_LINK_IFELSE([AC_LANG_CALL([], [$5])],
+	               [], [have_][$1][=no])
 	LIBS="$LIBS_save"
 	AC_MSG_RESULT([${[have_][$1]}])
 fi
