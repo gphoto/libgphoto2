@@ -162,33 +162,30 @@ AC_C_INLINE([])
 AC_C_CONST([])
 
 AC_CHECK_HEADERS([m4_normalize([
-  stdlib.h
-  unistd.h
-  stdio.h
-  fcntl.h
-  errno.h
-  sys/time.h
-  sys/param.h
-  sys/select.h
-  termios.h
-  sgetty.h
-  ttold.h
-  ioctl-types.h
-  fcntl.h
-  sgtty.h
-  sys/ioctl.h
-  sys/time.h
-  termio.h
-  unistd.h
-  endian.h
-  byteswap.h
   asm/io.h
+  byteswap.h
+  endian.h
+  errno.h
+  fcntl.h
+  ioctl-types.h
+  limits.h
   mntent.h
+  scsi/sg.h
+  sgetty.h
+  sgtty.h
+  stdio.h
+  stdlib.h
+  sys/file.h
+  sys/ioctl.h
   sys/mntent.h
   sys/mnttab.h
-  scsi/sg.h
-  limits.h
-  sys/file.h
+  sys/param.h
+  sys/select.h
+  sys/time.h
+  termio.h
+  termios.h
+  ttold.h
+  unistd.h
 ])])
 
 dnl FIXME: Provide regex.h with the corresponding object code for
@@ -243,12 +240,12 @@ mt.mnt_mountp;
 
 dnl Checks for library functions.
 AC_CHECK_FUNCS([m4_normalize([
-  setmntent
   endmntent
-  strerror
-  snprintf
-  vsnprintf
   flock
+  setmntent
+  snprintf
+  strerror
+  vsnprintf
 ])])
 
 dnl Check if TIOCM_RTS is included in one of several possible files
