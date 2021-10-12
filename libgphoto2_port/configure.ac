@@ -220,14 +220,26 @@ dnl Checks for library functions.
 AC_CHECK_FUNCS([setmntent endmntent strerror snprintf vsnprintf flock])
 
 dnl Check if TIOCM_RTS is included in one of several possible files
-AC_TRY_COMPILE([#include <termios.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE([HAVE_RTS_IOCTL], [1], [Define if you have TIOCM_RTS.]))
-AC_TRY_COMPILE([#include <termio.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE([HAVE_RTS_IOCTL], [1], [Define if you have TIOCM_RTS.]))
-AC_TRY_COMPILE([#include <ioctl-types.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE([HAVE_RTS_IOCTL], [1], [Define if you have TIOCM_TRS.]))
-AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE([HAVE_RTS_IOCTL], [1], [Define if you have TIOCM_TRS.]))
+gp_found_tiocm_rts=no
+AC_DEFUN([GP_TRY_TIOCM_RTS], [dnl
+  AS_VAR_IF([gp_found_tiocm_rts], [no], [dnl
+    AC_COMPILE_IFELSE([dnl
+      AC_LANG_PROGRAM([[#include <$1>]], [[
+        int foo = TIOCM_RTS;
+      ]])
+    ], [dnl
+      gp_found_tiocm_rts=yes
+    ])
+  ])
+])dnl
+GP_TRY_TIOCM_RTS([termios.h])
+GP_TRY_TIOCM_RTS([termio.h])
+GP_TRY_TIOCM_RTS([ioctl-types.h])
+GP_TRY_TIOCM_RTS([sys/ioctl.h])
+AS_VAR_IF([gp_found_tiocm_rts], [yes], [dnl
+  AC_DEFINE([HAVE_RTS_IOCTL], [1],
+            [Define if you have TIOCM_TRS.])
+])
 
 # Check for va_copy()
 GP_VA_COPY
