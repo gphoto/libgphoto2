@@ -331,7 +331,10 @@ if $try_ttylock; then
 	AC_CHECK_HEADER([lockdev.h])
 	AC_CHECK_HEADER([ttylock.h], [dnl
 		lockdev_result="no"
-		AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
+		AC_LINK_IFELSE([dnl
+			AC_LANG_PROGRAM([[#include <ttylock.h>
+			                ]], [[ttylocked("/dev/foo");]])
+		], [dnl
 			lockdev_result="no"
 			AC_DEFINE([HAVE_TTYLOCK], [1],
 			          [Define if you have ttylock based tty locking.])
@@ -339,7 +342,10 @@ if $try_ttylock; then
 			try_lockdev=false,
 			save_LIBS="$LIBS"
 			LIBS="$LIBS -llockdev"
-			AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
+			AC_LINK_IFELSE([dnl
+				AC_LANG_PROGRAM([[#include <ttylock.h>
+				                ]], [[ttylocked ("/dev/foo");]])
+			], [dnl
 				lockdev_result="yes"
 				AC_DEFINE([HAVE_TTYLOCK], [1],
 				          [Define if you have ttylock based tty locking.])
