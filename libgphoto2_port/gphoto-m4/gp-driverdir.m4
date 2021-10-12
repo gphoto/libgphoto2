@@ -61,9 +61,10 @@ AC_SUBST([$1])
 
 AC_ARG_VAR([DEFAULT_][$2],
            [default location to look for ][$3][ at runtime (if not given, use ${$1})])
+AC_MSG_CHECKING([default location to look for $3])
 AS_VAR_IF([DEFAULT_][$2], [], [dnl
 	DEFAULT_$2="\${$1}"
-	AC_MSG_RESULT([value of camlibdir (default)])
+	AC_MSG_RESULT([value of $1 (default)])
 ], [dnl
 	AC_MSG_RESULT([${DEFAULT_$2} (set explicitly)])
 ])
