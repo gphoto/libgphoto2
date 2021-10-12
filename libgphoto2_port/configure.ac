@@ -564,15 +564,15 @@ AC_SUBST([AM_LDFLAGS])
 # Create output files
 # ---------------------------------------------------------------------------
 AC_CONFIG_FILES([
-Makefile
-po/Makefile.in
-libgphoto2_port/Makefile
-libgphoto2_port.pc
-libgphoto2_port-uninstalled.pc
-gphoto2-port-config
-tests/Makefile
-doc/Makefile
-gphoto-m4/Makefile
+  Makefile
+  po/Makefile.in
+  libgphoto2_port/Makefile
+  libgphoto2_port.pc
+  libgphoto2_port-uninstalled.pc
+  gphoto2-port-config
+  tests/Makefile
+  doc/Makefile
+  gphoto-m4/Makefile
 ])
 AC_OUTPUT
 
