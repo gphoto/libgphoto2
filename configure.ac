@@ -32,6 +32,28 @@ AM_INIT_AUTOMAKE([
 ])
 
 
+dnl Notable tool releases and why they are important for us:
+dnl
+dnl   autoconf 2012-04-25 2.69    (what libexif requires)
+dnl   autoconf 2006-04-12 2.59c   (introduces localedir)
+dnl
+dnl   automake 2013-12-24 1.14.1  (what libexif requires)
+dnl   automake 2013-06-20 1.14    (introduces %reldir%, implies AM_PROG_CC_C_O)
+dnl   automake 2013-05-15 1.13.2  (bugfix for handling multiple m4 macro dirs)
+dnl   automake 2012-04-25 1.12    (introduces AM_PROG_AR)
+dnl   automake 2009-05-17 1.11    (introduces AM_SILENT_RULES, pkglibexecdir)
+dnl   automake 2005-07-10 1.9.6   (fixes filename-length-max=99)
+dnl   automake 2004-07-28 1.9     (libgphoto2 requirement since 2.2.1.3 2006-09-28)
+dnl
+dnl   gettext  2014-06-10 0.19.1  (allows building without updating *.po)
+dnl   gettext  2013-07-07 0.18.3  (what libexif requires)
+dnl   gettext  2012-12-08 0.18.2
+dnl   gettext  2004-01-30 0.14.1
+dnl
+dnl   libtool  2014-10-27 2.4.3
+dnl   libtool  2011-10-18 2.4.2
+
+
 # Use the silent-rules feature when possible.
 m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
 AM_SILENT_RULES([no])
