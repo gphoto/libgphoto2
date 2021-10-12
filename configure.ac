@@ -1,5 +1,5 @@
 dnl Process this file with autoreconf to produce a configure script.
-AC_PREREQ(2.62)
+AC_PREREQ([2.62])
 
 dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
@@ -237,7 +237,8 @@ GP_CONFIG_MSG([Compiler],[${CC}])
 GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
 GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
 
-AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
+AC_DEFINE_UNQUOTED([HAVE_CC], ["$CC"],
+                   [The C compiler we are using])
 
 
 dnl ---------------------------------------------------------------------------
@@ -291,23 +292,24 @@ AC_COMPILE_IFELSE([dnl
 		asm(".symver f2, f@@VER2");
 	]],[])dnl
 ],[
-	AC_DEFINE([HAVE_ASM_SYMVERS],1,[Define if there is asm .symver support.])
+	AC_DEFINE([HAVE_ASM_SYMVERS], [1],
+	          [Define if there is asm .symver support.])
 	VERSIONMAPLDFLAGS="-Wl,--version-script=\$(srcdir)/libgphoto2.ver"
-	AC_MSG_RESULT(yes)
+	AC_MSG_RESULT([yes])
 ],[
 	VERSIONMAPLDFLAGS=""
-	AC_MSG_RESULT(no)
+	AC_MSG_RESULT([no])
 ])
-AC_SUBST(VERSIONMAPLDFLAGS)
+AC_SUBST([VERSIONMAPLDFLAGS])
 
 dnl ---------------------------------------------------------------------------
 dnl FIXME: What is this good for?
 dnl Replace `main' with a function in -libs:
 dnl ---------------------------------------------------------------------------
-AC_CHECK_LIB(ibs, main)
+AC_CHECK_LIB([ibs], [main])
 
 dnl we use some libm functions in some drivers, so just add -lm
-AC_CHECK_LIB(m, sqrt)
+AC_CHECK_LIB([m], [sqrt])
 
 
 dnl ---------------------------------------------------------------------------
@@ -328,12 +330,15 @@ dnl check for ws2_32
 dnl ---------------------------------------------------------------------------
 LIBWS232=""
 libws232_msg="no"
-AC_SUBST(LIBWS232)
-AC_ARG_WITH([ws232], AS_HELP_STRING([--without-ws232], [Build without ws2_32 library (default: no)]))
-AS_IF([test "x$with_ws232" != "xno"], [
-	AC_CHECK_LIB(ws2_32,WSAStartup,[
-		AC_CHECK_HEADER(winsock.h,[
-			AC_DEFINE(HAVE_LIBWS232,1,[define if we found LIBWS232 and its headers])
+AC_SUBST([LIBWS232])
+AC_ARG_WITH([ws232],
+            [AS_HELP_STRING([--without-ws232],
+	                    [Build without ws2_32 library (default: no)])])
+AS_IF([test "x$with_ws232" != "xno"], [dnl
+	AC_CHECK_LIB([ws2_32], [WSAStartup], [dnl
+		AC_CHECK_HEADER([winsock.h], [dnl
+			AC_DEFINE([HAVE_LIBWS232], [1],
+			          [define if we found LIBWS232 and its headers])
 			LIBWS232="-lws2_32"
 			libws232_msg="yes"
 		])
@@ -422,21 +427,22 @@ AC_LANG_PROGRAM([[
 struct tm tm;
 tm.tm_gmtoff;
 ]])dnl
-],[
-AC_DEFINE(HAVE_TM_GMTOFF,1,whether struct tm has tm_gmtoff field)
-AC_MSG_RESULT(yes)
-],[
-AC_MSG_RESULT(no)
+], [dnl
+  AC_DEFINE([HAVE_TM_GMTOFF], [1],
+            [whether struct tm has tm_gmtoff field])
+  AC_MSG_RESULT([yes])
+], [dnl
+  AC_MSG_RESULT([no])
 ])
 
-AC_CHECK_HEADERS([sys/mount.h sys/statvfs.h sys/user.h sys/vfs.h],,,[
+AC_CHECK_HEADERS([sys/mount.h sys/statvfs.h sys/user.h sys/vfs.h], [], [], [
 #include <sys/types.h>
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
 #endif
 ])
 
-AC_CHECK_MEMBERS([struct statvfs.f_blocks],,,[
+AC_CHECK_MEMBERS([struct statvfs.f_blocks], [], [], [
 #ifdef HAVE_SYS_STATVFS_H
 # include <sys/statvfs.h>
 #endif
@@ -653,11 +659,11 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 	ExifContent *ec0, *ec1;
 	ec0 = &ed.ifd[0];
 	ec1 = &ed.ifd[1];
-]])], [
-   AC_DEFINE([HAVE_LIBEXIF_IFD],1,
+]])], [dnl
+   AC_DEFINE([HAVE_LIBEXIF_IFD], [1],
 	     [whether we use a version of libexif with ExifData.ifd[[]]])
    AC_MSG_RESULT([yes])
-], [
+], [dnl
    AC_MSG_RESULT([no])
 ])
 CPPFLAGS="$CPPFLAGS_save"
