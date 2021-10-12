@@ -203,10 +203,10 @@ dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-stringop-truncation])
 dnl ---------------------------------------------------------------------------
 dnl Turn on (almost) all warnings when using gcc
 dnl ---------------------------------------------------------------------------
-if test "x$GCC" = "xyes"; then
+AS_VAR_IF([GCC], [yes], [dnl
 	AC_SUBST([NO_UNUSED_CFLAGS], [-Wno-unused])
-fi
-AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
+])
+AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = xyes])
 
 # Activate internal code
 AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
@@ -343,7 +343,7 @@ AC_SUBST([LIBWS232])
 AC_ARG_WITH([ws232],
             [AS_HELP_STRING([--without-ws232],
 	                    [Build without ws2_32 library (default: no)])])
-AS_IF([test "x$with_ws232" != "xno"], [dnl
+AS_VAR_IF([with_ws232], [no], [], [dnl
 	AC_CHECK_LIB([ws2_32], [WSAStartup], [dnl
 		AC_CHECK_HEADER([winsock.h], [dnl
 			AC_DEFINE([HAVE_LIBWS232], [1],
@@ -483,9 +483,11 @@ dnl ---------------------------------------------------------------------------
 
 AC_SUBST([PACKAGE_TARNAME])
 
-if test "x${utilsdir}" = "x"; then utilsdir="\${libdir}/\${PACKAGE_TARNAME}"; fi
-AC_ARG_VAR([utilsdir],[Directory where utilities like print-camera-list will be installed])
-AC_SUBST([utilsdir])
+AC_ARG_VAR([utilsdir],
+           [Directory where utilities like print-camera-list will be installed])
+AS_VAR_IF([utilsdir], [], [dnl
+  utilsdir="\${libdir}/\${PACKAGE_TARNAME}"
+])
 
 GP_UDEV([true])
 
@@ -605,8 +607,11 @@ GPKG_CHECK_LINUX()dnl Check whether to package for a linux system
 dnl --------------------------------------------------------------------
 dnl guess directory to install *.pc into
 dnl --------------------------------------------------------------------
-pkgconfigdir='${libdir}/pkgconfig'
-AC_SUBST([pkgconfigdir])
+AC_ARG_VAR([pkgconfigdir],
+           [where to install pkg-config *.pc files to])
+AS_VAR_IF([pkgconfigdir], [], [dnl
+  pkgconfigdir='${libdir}/pkgconfig'
+])
 
 
 dnl ---------------------------------------------------------------------------
@@ -648,16 +653,16 @@ CPPFLAGS="$CPPFLAGS_save"
 dnl ---------------------------------------------------------------------------
 dnl Configure subprojects
 dnl ---------------------------------------------------------------------------
-if test -d "$srcdir/libgphoto2_port"; then
+AS_IF([test -d "$srcdir/libgphoto2_port"], [dnl
 	AC_CONFIG_SUBDIRS([libgphoto2_port])
-else
+], [dnl
 	AC_MSG_ERROR([
 ******************************************************
 *** Hey, where have you hidden my libgphoto2_port? ***
 *** I needed that!                                 ***
 ******************************************************
 ])
-fi
+])
 
 
 # ---------------------------------------------------------------------------
@@ -690,7 +695,7 @@ AC_CONFIG_FILES([
 ])
 AC_OUTPUT
 
-AS_IF([test "x$CDPATH" != "x"], [dnl
+AS_VAR_IF([CDPATH], [], [], [dnl
   AC_MSG_WARN([
 
     #=========================================================#

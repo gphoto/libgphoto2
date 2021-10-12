@@ -147,9 +147,9 @@ AC_CHECK_FUNC([gettext], [gettext_without_libintl=true])
 # we don't have to check for gettext in libintl. Otherwise
 # we may even require libintl.
 dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
-if test "x$gettext_without_libintl" != xtrue && test "x$USE_NLS" = xyes; then
+AS_IF([test "x$gettext_without_libintl" != xtrue && test "x$USE_NLS" = xyes], [dnl
   AC_CHECK_LIB([intl], [gettext], [INTLLIBS="$INTLLIBS -lintl"])
-fi
+])
 
 
 dnl ---------------------------------------------------------------------------
@@ -292,34 +292,30 @@ try_ttylock=true
 try_lockdev=true
 try_resmgr=true
 
-if test "$ac_cv_header_sgtty_h" = "no"
-then
+AS_VAR_IF([ac_cv_header_sgtty_h], [no], [dnl
   have_serial=false
   serial_msg=no
-fi
+])
 
 AC_ARG_ENABLE([serial],
 	[AS_HELP_STRING([--disable-serial],
 			[do not compile in SERIAL support])],
 [dnl
-	if test x$enableval = xno; then
+	AS_VAR_IF([enableval], [no], [dnl
 		have_serial=false
 		serial_msg=no
 		try_ttylock=false
 		try_lockdev=false
 		try_resmgr=false
-	fi
+	])
 ])
-if $have_serial; then
+AS_IF([$have_serial], [dnl
 	IOLIB_LIST="$IOLIB_LIST serial"
 	AC_DEFINE([HAVE_SERIAL], [1],
 	          [Whether you have serial support enabled])
-fi
+])
 GP_CONFIG_MSG([Serial ports])
 GP_CONFIG_MSG([Serial support],[$serial_msg])
-
-SERIAL_LIBS=""
-if $have_serial; then
 
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
@@ -332,16 +328,20 @@ AC_ARG_ENABLE([$1],
 [AS_HELP_STRING([--disable-][$1],
 		[do not use ][$1][ library])
 ], [dnl
-	if test x$enableval = xno; then
-		try_[$1]=false
-	fi
+  AS_VAR_IF([enableval], [no], [dnl
+    try_[$1]=false
+  ])
 ])
 ])dnl
+
+SERIAL_LIBS=""
+AS_IF([$have_serial], [dnl
+
 GP_SERLOCK([ttylock])dnl
 GP_SERLOCK([lockdev])dnl
 
 ttylock_msg=no
-if $try_ttylock; then
+AS_IF([$try_ttylock], [dnl
 	AC_CHECK_HEADER([lockdev.h])
 	AC_CHECK_HEADER([ttylock.h], [dnl
 		lockdev_result="no"
@@ -375,11 +375,11 @@ if $try_ttylock; then
 # include <lockdev.h>
 #endif
 	])
-fi
+])
 GP_CONFIG_MSG([ttylock locking],[${ttylock_msg}])
 
 lockdev_msg=no
-if $try_lockdev; then
+AS_IF([$try_lockdev], [dnl
 	AC_CHECK_LIB([lockdev], [dev_lock], [dnl
 		AC_CHECK_HEADER([lockdev.h], [dnl
 			AC_DEFINE([HAVE_LOCKDEV], [1],
@@ -388,10 +388,10 @@ if $try_lockdev; then
 			SERIAL_LIBS=-llockdev
 		])
 	])
-fi
+])
 GP_CONFIG_MSG([lockdev locking],[${lockdev_msg}])
 
-fi # have_serial
+])dnl $have_serial
 
 AC_SUBST([SERIAL_LIBS])
 
@@ -442,18 +442,20 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 	  IOLIB_LIST="$IOLIB_LIST usb"
 	  ;;
           *-linux*)
-	  if test "x$have_LIBUSB1" != xyes; then
+	  AS_VAR_IF([have_LIBUSB1], [yes], [dnl
+		GP_CONFIG_MSG([libusb0 support],
+		              [detected, but disabled (libusb1 support is enabled)])
+          ], [dnl
 		IOLIB_LIST="$IOLIB_LIST usb usbdiskdirect usbscsi"
-          else
-		GP_CONFIG_MSG([libusb0 support],[detected, but disabled (libusb1 support is enabled)])
-          fi
+          ])
 	  ;;
 	  *)
-	  if test "x$have_LIBUSB1" != xyes; then
+	  AS_VAR_IF([have_LIBUSB1], [yes], [dnl
+		GP_CONFIG_MSG([libusb0 support],
+		              [detected, but disabled (libusb1 support is enabled)])
+          ], [dnl
 		IOLIB_LIST="$IOLIB_LIST usb"
-          else
-		GP_CONFIG_MSG([libusb0 support],[detected, but disabled (libusb1 support is enabled)])
-          fi
+          ])
 	  ;;
 	esac
 ], [],
@@ -471,9 +473,9 @@ AC_ARG_ENABLE([disk],
 	[enable_disk=yes])
 
 dnl disk port also works everywhere, but it's not really necessary
-if test "x$enable_disk" = "xyes"; then
+AS_VAR_IF([enable_disk], [yes], [dnl
 	IOLIB_LIST="$IOLIB_LIST disk"
-fi
+])
 
 AC_ARG_ENABLE([vusb],
 	[AS_HELP_STRING([--enable-vusb],
@@ -485,9 +487,9 @@ AC_ARG_ENABLE([vusb],
 )
 
 dnl disk port also works everywhere, but it's not really necessary
-if test "x$enable_vusb" = "xyes"; then
+AS_VAR_IF([enable_vusb], [yes], [dnl
 	IOLIB_LIST="$IOLIB_LIST vusb"
-fi
+])
 
 AC_ARG_ENABLE([ptpip],
 	[AS_HELP_STRING([--disable-ptpip],
@@ -568,10 +570,10 @@ GP_BUILD_GTK_DOCS()dnl
 dnl ---------------------------------------------------------------------------
 dnl Turn on all warnings when using gcc
 dnl ---------------------------------------------------------------------------
-if test "$GCC" = "yes"; then
+AS_VAR_IF([GCC], [yes], [dnl
 	CFLAGS="$CFLAGS -Wall"
 	CFLAGS="$CFLAGS -Wmissing-declarations -Wmissing-prototypes"
-fi
+])
 
 # Activate internal code
 AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
