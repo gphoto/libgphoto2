@@ -330,9 +330,7 @@ dnl ---------------------------------------------------------------------------
 dnl Checks for header files.
 dnl ---------------------------------------------------------------------------
 AC_HEADER_DIRENT
-# before _HEADER_STDC
 AC_HEADER_STDC
-# after _HEADER_STDC
 AC_CHECK_HEADERS([sys/param.h sys/mman.h sys/select.h locale.h memory.h getopt.h unistd.h mcheck.h limits.h sys/time.h langinfo.h])
 
 dnl If sys/mman.h is present, check whether mmap requires the mman
