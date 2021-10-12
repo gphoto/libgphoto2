@@ -205,7 +205,7 @@ dnl AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # if gettext() doesn't require linking against libintl,
 # we don't have to check for gettext in libintl. Otherwise
 # we may even require libintl.
-dnl if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
+dnl if test "x$gettext_without_libintl" != xtrue && test "x$USE_NLS" = xyes; then
 dnl        AC_CHECK_LIB([intl], [gettext], [INTLLIBS="$INTLLIBS -lintl"])
 dnl fi
 

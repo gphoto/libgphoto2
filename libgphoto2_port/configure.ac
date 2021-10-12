@@ -137,7 +137,7 @@ AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # we don't have to check for gettext in libintl. Otherwise
 # we may even require libintl.
 dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
-if test "$gettext_without_libintl" != "true" -a "$USE_NLS" = "yes"; then
+if test "x$gettext_without_libintl" != xtrue && test "x$USE_NLS" = xyes; then
         AC_CHECK_LIB(intl, gettext, [INTLLIBS="$INTLLIBS -lintl"])
 fi
 
@@ -425,7 +425,7 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 		[http://libusb.sourceforge.net/]
 )
 dnl depends on libusb's availability
-GP_UDEV([test "x$have_LIBUSB" = xyes -o "x$have_LIBUSB1" = xyes])
+GP_UDEV([test "x$have_LIBUSB" = xyes || test "x$have_LIBUSB1" = xyes])
 
 
 AC_ARG_ENABLE([disk],
