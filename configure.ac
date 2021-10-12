@@ -390,17 +390,17 @@ dnl ---------------------------------------------------------------------------
 AC_HEADER_DIRENT
 AC_HEADER_STDC
 AC_CHECK_HEADERS([m4_normalize([
-  sys/param.h
-  sys/mman.h
-  sys/select.h
-  locale.h
-  memory.h
   getopt.h
-  unistd.h
-  mcheck.h
-  limits.h
-  sys/time.h
   langinfo.h
+  limits.h
+  locale.h
+  mcheck.h
+  memory.h
+  sys/mman.h
+  sys/param.h
+  sys/select.h
+  sys/time.h
+  unistd.h
 ])])
 
 dnl If sys/mman.h is present, check whether mmap requires the mman
@@ -432,20 +432,20 @@ AC_CHECK_FUNCS([m4_normalize([
   getenv
   getopt
   getopt_long
-  mkdir
-  setenv
-  strdup
-  strncpy
-  strcpy
-  snprintf
-  sprintf
-  vsnprintf
   gmtime_r
-  statvfs
+  inet_aton
   localtime_r
   lstat
-  inet_aton
+  mkdir
   rand_r
+  setenv
+  snprintf
+  sprintf
+  statvfs
+  strcpy
+  strdup
+  strncpy
+  vsnprintf
 ])])
 
 dnl Find out how to get struct tm
