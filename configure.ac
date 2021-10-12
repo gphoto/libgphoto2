@@ -697,24 +697,24 @@ GP_SET_CLEAN_FILES
 # Create output files
 # ---------------------------------------------------------------------------
 AC_CONFIG_FILES([
-Makefile
-gphoto2-config
-camlibs/Makefile
-camlibs/canon/doc/Makefile
-camlibs/konica/localization/Makefile
-gphoto-m4/Makefile
-libgphoto2/Makefile
-libgphoto2.pc
-libgphoto2-uninstalled.pc
-examples/Makefile
-tests/Makefile
-packaging/Makefile
-packaging/generic/Makefile
-po/Makefile.in
-doc/Makefile
-doc/Doxyfile
-doc/Doxyfile-internals
-doc/api/Makefile
+  Makefile
+  gphoto2-config
+  camlibs/Makefile
+  camlibs/canon/doc/Makefile
+  camlibs/konica/localization/Makefile
+  gphoto-m4/Makefile
+  libgphoto2/Makefile
+  libgphoto2.pc
+  libgphoto2-uninstalled.pc
+  examples/Makefile
+  tests/Makefile
+  packaging/Makefile
+  packaging/generic/Makefile
+  po/Makefile.in
+  doc/Makefile
+  doc/Doxyfile
+  doc/Doxyfile-internals
+  doc/api/Makefile
 ])
 AC_OUTPUT
 
