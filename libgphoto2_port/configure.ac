@@ -225,12 +225,12 @@ GP_VA_COPY
 dnl ---------------------------------------------------------------------------
 dnl libexif: The virtual usb camera driver can use libexif for extracting thumbnails
 dnl	     out of EXIF data. Similarly, it can extract the mtime of
-dnl	     a file. 
+dnl	     a file.
 dnl	     libexif is available from
 dnl	     http://www.sourceforge.net/projects/libexif
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBEXIF],[libexif],[>= 0.6.13],
-		 [libexif/exif-data.h],[exif_data_new],[
+GP_CHECK_LIBRARY([LIBEXIF], [libexif], [>= 0.6.13],
+                 [libexif/exif-data.h], [exif_data_new], [dnl
 AC_MSG_CHECKING([whether we use a version of libexif with ExifData.ifd[[]]])
 # Check for libexif version
 dnl FIXME: Use AC_CHECK_MEMBER?
@@ -255,7 +255,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
    AC_MSG_RESULT([no])
 ])
 CPPFLAGS="$CPPFLAGS_save"
-],[],[default-on],[http://www.sourceforge.net/projects/libexif])dnl
+], [], [default-on], [https://github.com/libexif/libexif])dnl
 
 
 
@@ -385,8 +385,8 @@ dnl ---------------------------------------------------------------------------
 dnl libusb1
 dnl ---------------------------------------------------------------------------
 GP_CONFIG_MSG([USB ports])
-GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
-		[libusb.h],[libusb_init],[
+GP_CHECK_LIBRARY([LIBUSB1], [libusb-1.0], [>= 1.0.0],
+                 [libusb.h], [libusb_init], [dnl
         case "$host" in
           *-linux*)
 	  IOLIB_LIST="$IOLIB_LIST usb1 usbdiskdirect usbscsi"
@@ -432,9 +432,10 @@ GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 		[default-on],
 		[http://libusb.sourceforge.net/]
 )
+
 # We select the old libusb 0 only if we are not doing libusb1
-GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
-		[usb.h],[usb_open],[
+GP_CHECK_LIBRARY([LIBUSB], [libusb], [>= 0.1.5],
+                 [usb.h], [usb_open], [dnl
 	case "$host" in
 	  *-*-mingw* | *-*-cygwin* | *-*-msvc* )
 	  dnl Windows itself has usb.h we mis-detect, in that case remove access to the other usb.h

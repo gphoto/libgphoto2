@@ -362,29 +362,26 @@ GP_CONFIG_MSG([Winsocket support (for PTP/IP)], [${libws232_msg}])
 dnl ---------------------------------------------------------------------------
 dnl check for libxml2
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBXML2],[libxml-2.0],[>= 2.0],
-                [libxml/parser.h],[xmlFirstElementChild],[],[],
-                [default-on],
-                [http://xmlsoft.org]
-)
+GP_CHECK_LIBRARY([LIBXML2], [libxml-2.0], [>= 2.0],
+                 [libxml/parser.h], [xmlFirstElementChild], [], [],
+                 [default-on],
+                 [http://xmlsoft.org])
 GP_CONFIG_MSG([XML support for Olympus E series], [${have_LIBXML2}])
 
-GP_CHECK_LIBRARY([LIBCURL],[libcurl],[>= 7.1],
-		[curl/curl.h],[curl_easy_init],[],[],
-                [default-on],
-		[https://www.curl.org]
-)
+GP_CHECK_LIBRARY([LIBCURL], [libcurl], [>= 7.1],
+                 [curl/curl.h], [curl_easy_init], [], [],
+                 [default-on],
+                 [https://www.curl.org])
 GP_CONFIG_MSG([CURL support for Lumix Wifi], [${have_LIBCURL}])
 
 dnl ---------------------------------------------------------------------------
 dnl check for libgd
 dnl they call it "gdlib" ... confusing.
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBGD],[gdlib],[>= 2.0],[gd.h],[gdImageCreateTrueColor],[
+GP_CHECK_LIBRARY([LIBGD], [gdlib], [>= 2.0], [gd.h], [gdImageCreateTrueColor], [dnl
 	# gdlib-config --libs upstream does not include -lgd, but only the dependencies
 	LIBGD_LIBS="-lgd $LIBGD_LIBS"
-
-],[],[default-on],[http://www.libgd.org/])
+], [], [default-on], [http://www.libgd.org/])
 GP_CONFIG_MSG([libGD conversion support], [${have_LIBGD}])
 
 dnl ---------------------------------------------------------------------------
@@ -615,12 +612,12 @@ AS_VAR_IF([pkgconfigdir], [], [dnl
 dnl ---------------------------------------------------------------------------
 dnl libexif: The CameraFilesystem can use libexif for extracting thumbnails
 dnl	     out of EXIF data. Similarly, it can extract the mtime of
-dnl	     a file. 
+dnl	     a file.
 dnl	     libexif is available from
 dnl	     http://www.sourceforge.net/projects/libexif
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBEXIF],[libexif],[>= 0.6.13],
-		 [libexif/exif-data.h],[exif_data_new],[
+GP_CHECK_LIBRARY([LIBEXIF], [libexif], [>= 0.6.13],
+                 [libexif/exif-data.h], [exif_data_new], [dnl
 AC_MSG_CHECKING([whether we use a version of libexif with ExifData.ifd[[]]])
 # Check for libexif version
 dnl FIXME: Use AC_CHECK_MEMBER?
@@ -645,7 +642,7 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
    AC_MSG_RESULT([no])
 ])
 CPPFLAGS="$CPPFLAGS_save"
-],[],[default-on],[http://www.sourceforge.net/projects/libexif])dnl
+], [], [default-on], [https://github.com/libexif/libexif])dnl
 
 
 dnl ---------------------------------------------------------------------------

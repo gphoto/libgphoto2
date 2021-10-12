@@ -1,13 +1,13 @@
 # gp-check-library.m4 - generic library check                  -*- Autoconf -*-
-# serial 14
+# serial 15
 dnl | Increment the above serial number every time you edit this file.
 dnl | When it finds multiple m4 files with the same name,
 dnl | aclocal will use the one with the highest serial.
 dnl
-dnl @synopsis GP_CHECK_LIBRARY([VARNAMEPART],[libname],[VERSION-REQUIREMENT],
-dnl                            [headername],[functionname],
-dnl                            [ACTION-IF-FOUND],[ACTION-IF-NOT-FOUND],
-dnl                            [OPTIONAL-REQUIRED-ETC],[WHERE-TO-GET-IT])
+dnl @synopsis GP_CHECK_LIBRARY([VARNAMEPART], [libname], [VERSION-REQUIREMENT],
+dnl                            [headername], [functionname],
+dnl                            [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND],
+dnl                            [OPTIONAL-REQUIRED-ETC], [WHERE-TO-GET-IT])
 dnl
 dnl Checks for the presence of a certain library.
 dnl
