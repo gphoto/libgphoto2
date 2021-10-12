@@ -217,9 +217,15 @@ mt.mnt_mountp;
 ])
 
 
-
 dnl Checks for library functions.
-AC_CHECK_FUNCS([setmntent endmntent strerror snprintf vsnprintf flock])
+AC_CHECK_FUNCS([m4_normalize([
+  setmntent
+  endmntent
+  strerror
+  snprintf
+  vsnprintf
+  flock
+])])
 
 dnl Check if TIOCM_RTS is included in one of several possible files
 gp_found_tiocm_rts=no
