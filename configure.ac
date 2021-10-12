@@ -390,11 +390,11 @@ dnl If sys/mman.h is present, check whether mmap requires the mman
 dnl library (see camlibs/st2205/st2205.c st2205_malloc_page_aligned()).
 MMAP_LIBS=""
 AS_VAR_IF([ac_cv_header_sys_mman_h], [yes], [dnl
-gp_saved_LIBS="$LIBS"
-LIBS=""
-AC_SEARCH_LIBS([mmap], [mman])
-MMAP_LIBS="$LIBS"
-LIBS="$gp_saved_LIBS"
+  gp_saved_LIBS="$LIBS"
+  LIBS=""
+  AC_SEARCH_LIBS([mmap], [mman])
+  MMAP_LIBS="$LIBS"
+  LIBS="$gp_saved_LIBS"
 ])dnl
 AC_SUBST([MMAP_LIBS])
 
