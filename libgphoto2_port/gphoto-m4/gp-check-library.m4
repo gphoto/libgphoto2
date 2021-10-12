@@ -401,14 +401,14 @@ fi
 AM_CONDITIONAL([HAVE_][$1], [test "x$have_[$1]" = "xyes"])
 if test "x$have_[$1]" = "xyes"; then
 	AC_DEFINE([HAVE_][$1], 1, [whether we compile with ][$2][ support])
-	GP_CONFIG_MSG([$2],[yes])dnl
+	GP_CONFIG_MSG([$2], [yes])dnl
 	AC_MSG_CHECKING([$2][ library flags])
 	AC_MSG_RESULT(["${[$1][_LIBS]}"])
 	AC_MSG_CHECKING([$2][ cpp flags])
 	AC_MSG_RESULT(["${[$1][_CFLAGS]}"])
 else
 	[REQUIREMENTS_FOR_][$1][=]
-	GP_CONFIG_MSG([$2],[no])dnl
+	GP_CONFIG_MSG([$2], [no])dnl
 fi
 dnl AC_SUBST is done implicitly by AC_ARG_VAR above.
 dnl AC_SUBST([$1][_LIBS])
