@@ -47,6 +47,10 @@ dnl   libtool  2011-10-18 2.4.2
 
 AM_SILENT_RULES([no])
 
+dnl Every compile example will be using the C language unless
+dnl something else is said explicitly.
+AC_LANG([C])
+
 
 dnl Flag all GP_ strings in result as error unless specifically allowed.
 m4_pattern_forbid([^_?GP_])dnl
@@ -194,9 +198,6 @@ GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-unused-parameter])
 dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-format-overflow])
 dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-format-truncation])
 dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-stringop-truncation])
-
-dnl Every compile example after here will be using the C language
-AC_LANG([C])
 
 
 dnl ---------------------------------------------------------------------------
