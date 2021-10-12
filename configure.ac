@@ -440,40 +440,6 @@ dnl Create a header file containing NetBSD-style byte swapping macros
 AC_NEED_BYTEORDER_H([libgphoto2/gphoto2-endian.h])
 
 
-dnl ---------------------------------------------------------------------------
-dnl Old libtool stuff left here for reference purposes. For now.
-dnl dnl ---------------------------------------------------------------------------
-dnl dnl Check for libtool: lt_dlforeachfile has been introduced in 
-dnl dnl		       libtool-1.4. However, there are still systems out
-dnl dnl		       there running libtool-1.3. For those, we will need
-dnl dnl		       dlopen. Note that on some systems (e.g. FreeBSD)
-dnl dnl		       -ldl isn't needed.
-dnl dnl ---------------------------------------------------------------------------
-dnl AC_PROG_LIBTOOL
-dnl have_ltdl=false
-dnl ltdl_msg="no"
-dnl try_ltdl=false
-dnl AC_ARG_WITH(ltdl, [  --with-ltdl             Use ltdl],[
-dnl         if test x$withval = xyes; then
-dnl 		try_ltdl=true
-dnl 	fi])
-dnl if $try_ltdl; then
-dnl 	AC_CHECK_LIB(ltdl, lt_dlforeachfile,[
-dnl 		AC_CHECK_HEADER(ltdl.h,[
-dnl 			AC_DEFINE(HAVE_LTDL,1,[whether we use libltdl])
-dnl 			LTDL_LIBS="-lltdl"
-dnl 			ltdl_msg="yes"
-dnl 			have_ltdl=true])])
-dnl fi
-dnl if ! $have_ltdl; then
-dnl 	AC_CHECK_FUNC(dlopen,,[
-dnl 		AC_CHECK_LIB(dl, dlopen,[LTDL_LIBS="-ldl"],[AC_ERROR([
-dnl *** Could not determine how to handle
-dnl *** shared libraries!])])])
-dnl fi
-dnl AC_SUBST(LTDL_LIBS)
-
-
 dnl should be obsolete (we're not using grep and tr any more)
 dnl dnl Solaris hack for grep and tr
 dnl [
