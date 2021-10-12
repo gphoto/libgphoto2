@@ -1,5 +1,5 @@
 dnl Process this file with autoreconf to produce a configure script.
-AC_PREREQ(2.62)
+AC_PREREQ([2.62])
 
 AC_INIT([libgphoto2 port access library],
         [0.12.0],
@@ -26,7 +26,7 @@ AM_INIT_AUTOMAKE([
   subdir-objects
 ])
 
-AC_LANG(C)
+AC_LANG([C])
 
 # Use the silent-rules feature when possible.
 m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
@@ -112,7 +112,8 @@ GP_CONFIG_MSG([Compiler],[${CC}])
 GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
 GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
 
-AC_DEFINE_UNQUOTED(HAVE_CC,"$CC",[The C compiler we're using])
+AC_DEFINE_UNQUOTED([HAVE_CC], ["$CC"],
+                   [The C compiler we're using])
 
 AM_CPPFLAGS=""
 
@@ -149,14 +150,14 @@ GP_GETTEXT_FLAGS()
 AC_SUBST([localedir],["\$(datadir)/locale"])
 AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
 
-AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
+AC_CHECK_FUNC([gettext], [gettext_without_libintl=true])
 # same trick as with libdl in libgphoto2:
 # if gettext() doesn't require linking against libintl,
 # we don't have to check for gettext in libintl. Otherwise
 # we may even require libintl.
 dnl AC_CHECK_LIB(intl, gettext, [LIBS="$LIBS -lintl"])
 if test "x$gettext_without_libintl" != xtrue && test "x$USE_NLS" = xyes; then
-        AC_CHECK_LIB(intl, gettext, [INTLLIBS="$INTLLIBS -lintl"])
+  AC_CHECK_LIB([intl], [gettext], [INTLLIBS="$INTLLIBS -lintl"])
 fi
 
 
@@ -169,17 +170,19 @@ AC_HEADER_STDC
 AC_C_INLINE([])
 AC_C_CONST([])
 
-AC_CHECK_HEADERS(stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h	\
+AC_CHECK_HEADERS([stdlib.h unistd.h stdio.h fcntl.h errno.h sys/time.h	\
 	sys/param.h sys/select.h termios.h sgetty.h ttold.h ioctl-types.h	\
 	fcntl.h sgtty.h sys/ioctl.h sys/time.h termio.h unistd.h	\
 	endian.h byteswap.h asm/io.h mntent.h sys/mntent.h sys/mnttab.h \
-	scsi/sg.h limits.h sys/file.h)
-	
-dnl FIXME: Provide regex.h with the corresponding object code for 
+	scsi/sg.h limits.h sys/file.h])
+
+dnl FIXME: Provide regex.h with the corresponding object code for
 dnl        platforms which do not have it, e.g. Windows.
 AC_CHECK_HEADER([regex.h],
-                [AC_DEFINE([HAVE_REGEX],1,[whether we have regex.h])],[])
-AC_CHECK_LIB([regex],[regexec])
+                [AC_DEFINE([HAVE_REGEX], [1],
+		           [whether we have regex.h])],
+		[])
+AC_CHECK_LIB([regex], [regexec])
 
 AC_MSG_CHECKING([for asm .symver support])
 AC_COMPILE_IFELSE([dnl
@@ -190,16 +193,17 @@ AC_COMPILE_IFELSE([dnl
 		void f2() {}
 		asm(".symver f1, f@VER1");
 		asm(".symver f2, f@@VER2");
-	]],[])dnl
-],[
-	AC_DEFINE([HAVE_ASM_SYMVERS],1,[Define if there is asm .symver support.])
+	]], [[]])dnl
+], [dnl
+	AC_DEFINE([HAVE_ASM_SYMVERS], [1],
+	          [Define if there is asm .symver support.])
 	VERSIONMAPLDFLAGS="-Wl,--version-script=\$(srcdir)/libgphoto2_port.ver"
-	AC_MSG_RESULT(yes)
-],[
+	AC_MSG_RESULT([yes])
+], [dnl
 	VERSIONMAPLDFLAGS=""
-	AC_MSG_RESULT(no)
+	AC_MSG_RESULT([no])
 ])
-AC_SUBST(VERSIONMAPLDFLAGS)
+AC_SUBST([VERSIONMAPLDFLAGS])
 
 dnl Check for mnt_mountp in struct mnttab
 AC_MSG_CHECKING([for mnt_mountp in struct mnttab])
@@ -213,27 +217,28 @@ AC_LANG_PROGRAM([[
 struct mnttab mt;
 mt.mnt_mountp;
 ]])dnl
-],[
-AC_DEFINE(HAVE_MNTTAB,1,whether struct mnttag has mnt_mountp field)
-AC_MSG_RESULT(yes)
-],[
-AC_MSG_RESULT(no)
+], [dnl
+  AC_DEFINE([HAVE_MNTTAB], [1],
+            [whether struct mnttag has mnt_mountp field])
+  AC_MSG_RESULT([yes])
+], [dnl
+  AC_MSG_RESULT([no])
 ])
 
 
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS(setmntent endmntent strerror snprintf vsnprintf flock)
+AC_CHECK_FUNCS([setmntent endmntent strerror snprintf vsnprintf flock])
 
 dnl Check if TIOCM_RTS is included in one of several possible files
 AC_TRY_COMPILE([#include <termios.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_RTS.]))
+			AC_DEFINE([HAVE_RTS_IOCTL], [1], [Define if you have TIOCM_RTS.]))
 AC_TRY_COMPILE([#include <termio.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_RTS.]))
+			AC_DEFINE([HAVE_RTS_IOCTL], [1], [Define if you have TIOCM_RTS.]))
 AC_TRY_COMPILE([#include <ioctl-types.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_TRS.]))
+			AC_DEFINE([HAVE_RTS_IOCTL], [1], [Define if you have TIOCM_TRS.]))
 AC_TRY_COMPILE([#include <sys/ioctl.h>], [int foo = TIOCM_RTS;],
-			AC_DEFINE(HAVE_RTS_IOCTL,1,[Define if you have TIOCM_TRS.]))
+			AC_DEFINE([HAVE_RTS_IOCTL], [1], [Define if you have TIOCM_TRS.]))
 
 # Check for va_copy()
 GP_VA_COPY
@@ -263,11 +268,11 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
 	ExifContent *ec0, *ec1;
 	ec0 = &ed.ifd[0];
 	ec1 = &ed.ifd[1];
-]])], [
-   AC_DEFINE([HAVE_LIBEXIF_IFD],1,
+]])], [dnl
+   AC_DEFINE([HAVE_LIBEXIF_IFD], [1],
 	     [whether we use a version of libexif with ExifData.ifd[[]]])
    AC_MSG_RESULT([yes])
-], [
+], [dnl
    AC_MSG_RESULT([no])
 ])
 CPPFLAGS="$CPPFLAGS_save"
@@ -293,7 +298,7 @@ fi
 AC_ARG_ENABLE([serial],
 	[AS_HELP_STRING([--disable-serial],
 			[do not compile in SERIAL support])],
-[
+[dnl
 	if test x$enableval = xno; then
 		have_serial=false
 		serial_msg=no
@@ -304,7 +309,8 @@ AC_ARG_ENABLE([serial],
 ])
 if $have_serial; then
 	IOLIB_LIST="$IOLIB_LIST serial"
-	AC_DEFINE([HAVE_SERIAL],1,[Whether you have serial support enabled])
+	AC_DEFINE([HAVE_SERIAL], [1],
+	          [Whether you have serial support enabled])
 fi
 GP_CONFIG_MSG([Serial ports])
 GP_CONFIG_MSG([Serial support],[$serial_msg])
@@ -322,7 +328,7 @@ AC_DEFUN([GP_SERLOCK],[dnl
 AC_ARG_ENABLE([$1],
 [AS_HELP_STRING([--disable-][$1],
 		[do not use ][$1][ library])
-],[
+], [dnl
 	if test x$enableval = xno; then
 		try_[$1]=false
 	fi
@@ -334,18 +340,20 @@ GP_SERLOCK([lockdev])dnl
 ttylock_msg=no
 if $try_ttylock; then
 	AC_CHECK_HEADER([lockdev.h])
-	AC_CHECK_HEADER([ttylock.h],[
+	AC_CHECK_HEADER([ttylock.h], [dnl
 		lockdev_result="no"
 		AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
 			lockdev_result="no"
-			AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
+			AC_DEFINE([HAVE_TTYLOCK], [1],
+			          [Define if you have ttylock based tty locking.])
 			ttylock_msg=yes
 			try_lockdev=false,
 			save_LIBS="$LIBS"
 			LIBS="$LIBS -llockdev"
 			AC_TRY_LINK([#include <ttylock.h>],[ttylocked ("/dev/foo");],[
 				lockdev_result="yes"
-				AC_DEFINE(HAVE_TTYLOCK,1,[Define if you have ttylock based tty locking.])
+				AC_DEFINE([HAVE_TTYLOCK], [1],
+				          [Define if you have ttylock based tty locking.])
 				ttylock_msg=yes
 				try_lockdev=false
 				SERIAL_LIBS=-llockdev
@@ -354,7 +362,7 @@ if $try_ttylock; then
 		])
 		AC_MSG_CHECKING([if ttylock needs lockdev])
 		AC_MSG_RESULT([${lockdev_result}])
-	],[],[#ifdef HAVE_LOCKDEV_H
+	], [], [#ifdef HAVE_LOCKDEV_H
 # include <lockdev.h>
 #endif
 	])
@@ -363,9 +371,10 @@ GP_CONFIG_MSG([ttylock locking],[${ttylock_msg}])
 
 lockdev_msg=no
 if $try_lockdev; then
-	AC_CHECK_LIB(lockdev, dev_lock,[
-		AC_CHECK_HEADER(lockdev.h,[
-			AC_DEFINE(HAVE_LOCKDEV,1,[Define if you have dev_lock/lockdev based locking.])
+	AC_CHECK_LIB([lockdev], [dev_lock], [dnl
+		AC_CHECK_HEADER([lockdev.h], [dnl
+			AC_DEFINE([HAVE_LOCKDEV], [1],
+			          [Define if you have dev_lock/lockdev based locking.])
 			lockdev_msg=yes
 			SERIAL_LIBS=-llockdev
 		])
@@ -385,7 +394,7 @@ dnl ---------------------------------------------------------------------------
 dnl libpthread is dynamically linked by libusb, which is dynamically loaded
 dnl but newer Linux systems need it on startup, not later. So link libgphoto2_port
 dnl against libpthread
-AC_CHECK_LIB(pthread, pthread_create)
+AC_CHECK_LIB([pthread], [pthread_create])
 
 dnl ---------------------------------------------------------------------------
 dnl libusb1
@@ -406,12 +415,12 @@ GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 	# note that the library is not always named libusb-1.0.so , e.g. on freebsd it is not.
 	save_LIBS="$LIBS"
 	LIBS="$LIBS $LIBUSB1_LIBS"
-	AC_CHECK_FUNC(libusb_strerror, [
-		AC_DEFINE(HAVE_LIBUSB_STRERROR,1,[Define if libusb-1.0 has libusb_strerror])
+	AC_CHECK_FUNC([libusb_strerror], [dnl
+		AC_DEFINE([HAVE_LIBUSB_STRERROR], [1],
+		          [Define if libusb-1.0 has libusb_strerror])
 	])
 	LIBS="$save_LIBS"
-
-],[],
+], [],
 		[default-on],
 		[http://libusb.sourceforge.net/]
 )
@@ -438,7 +447,7 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
           fi
 	  ;;
 	esac
-],[],
+], [],
 		[default-on],
 		[http://libusb.sourceforge.net/]
 )
@@ -447,8 +456,10 @@ GP_UDEV([test "x$have_LIBUSB" = xyes || test "x$have_LIBUSB1" = xyes])
 
 
 AC_ARG_ENABLE([disk],
-	AS_HELP_STRING([--disable-disk], [disable the 'disk' port driver]),
-	,enable_disk=yes)
+	[AS_HELP_STRING([--disable-disk],
+	                [disable the 'disk' port driver])],
+	[],
+	[enable_disk=yes])
 
 dnl disk port also works everywhere, but it's not really necessary
 if test "x$enable_disk" = "xyes"; then
@@ -456,8 +467,9 @@ if test "x$enable_disk" = "xyes"; then
 fi
 
 AC_ARG_ENABLE([vusb],
-	AS_HELP_STRING([--enable-vusb], [enable the 'vusb' virtual USB port driver]),
-	,[
+	[AS_HELP_STRING([--enable-vusb],
+	                [enable the 'vusb' virtual USB port driver])],
+	[], [dnl
 		enable_vusb=no
 		GP_CONFIG_MSG([virtual USB support],[disabled, no virtual PTP test camera])
 	]
@@ -469,12 +481,15 @@ if test "x$enable_vusb" = "xyes"; then
 fi
 
 AC_ARG_ENABLE([ptpip],
-	AS_HELP_STRING([--disable-ptpip], [disable the 'ptpip' port driver for TCP/IP connected PTP cameras]),
-	,enable_ptpip=yes)
+	[AS_HELP_STRING([--disable-ptpip],
+	                [disable the 'ptpip' port driver for TCP/IP connected PTP cameras])],
+	[], [dnl
+		enable_ptpip=yes
+])
 dnl ptpip - works 'everywhere' with TCP/IP stack.
-if test "x$enable_ptpip" = "xyes"; then
+AS_VAR_IF([enable_ptpip], [yes], [dnl
 	IOLIB_LIST="$IOLIB_LIST ptpip"
-fi
+])
 
 # ----------------------------------------------------------------------
 # Define IOLIB stuff
@@ -514,20 +529,22 @@ AC_SUBST([pkgconfigdir])
 dnl ----------------------------------------------------------------------
 dnl GNU regex?
 dnl ----------------------------------------------------------------------
-AC_CHECK_FUNC(re_compile_pattern,
-              AC_DEFINE(HAVE_GNU_REGEX,1,[Define if you have GNU regex.])
-)
+AC_CHECK_FUNC([re_compile_pattern],
+              [AC_DEFINE([HAVE_GNU_REGEX], [1],
+	                 [Define if you have GNU regex.])])
 
 
 dnl ----------------------------------------------------------------------
 dnl disable debugging if requested
 dnl ----------------------------------------------------------------------
 AC_ARG_ENABLE([debug],
-  AS_HELP_STRING([--disable-debug],[do not include debugging code]),
-[
-  if test "$enableval" = "no"; then
-    AC_DEFINE(DISABLE_DEBUGGING,1,[Define if you want to disabled debugging.])
-  fi
+  [AS_HELP_STRING([--disable-debug],
+                  [do not include debugging code])],
+  [dnl
+    AS_VAR_IF([enableval], [no], [dnl
+      AC_DEFINE([DISABLE_DEBUGGING], [1],
+                [Define if you want to disabled debugging.])
+    ])
 ])
 
 
