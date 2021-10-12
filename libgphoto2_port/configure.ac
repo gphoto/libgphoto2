@@ -104,10 +104,10 @@ GP_LIBLTDL
 
 # report on compiler/libtool setup
 GP_CONFIG_MSG([Build])
-GP_CONFIG_MSG([Source directory],[${srcdir}])
-GP_CONFIG_MSG([Compiler],[${CC}])
-GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
-GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
+GP_CONFIG_MSG([Source directory], [${srcdir}])
+GP_CONFIG_MSG([Compiler],         [${CC}])
+GP_CONFIG_MSG([libltdl includes], [$LTDLINCL])
+GP_CONFIG_MSG([libltdl library],  [$LIBLTDL])
 
 AC_DEFINE_UNQUOTED([HAVE_CC], ["$CC"],
                    [The C compiler we're using])
@@ -291,7 +291,7 @@ AS_IF([$have_serial], [dnl
 	          [Whether you have serial support enabled])
 ])
 GP_CONFIG_MSG([Serial ports])
-GP_CONFIG_MSG([Serial support],[$serial_msg])
+GP_CONFIG_MSG([Serial support], [$serial_msg])
 
 dnl -----------------------------------------
 dnl Serial port locking: We try to use either
@@ -352,7 +352,7 @@ AS_IF([$try_ttylock], [dnl
 #endif
 	])
 ])
-GP_CONFIG_MSG([ttylock locking],[${ttylock_msg}])
+GP_CONFIG_MSG([ttylock locking], [${ttylock_msg}])
 
 lockdev_msg=no
 AS_IF([$try_lockdev], [dnl
@@ -365,7 +365,7 @@ AS_IF([$try_lockdev], [dnl
 		])
 	])
 ])
-GP_CONFIG_MSG([lockdev locking],[${lockdev_msg}])
+GP_CONFIG_MSG([lockdev locking], [${lockdev_msg}])
 
 ])dnl $have_serial
 
@@ -481,7 +481,8 @@ AC_ARG_ENABLE([vusb],
 	                [enable the 'vusb' virtual USB port driver])],
 	[], [dnl
 		enable_vusb=no
-		GP_CONFIG_MSG([virtual USB support],[disabled, no virtual PTP test camera])
+		GP_CONFIG_MSG([virtual USB support],
+		              [disabled, no virtual PTP test camera])
 	]
 )
 

@@ -59,10 +59,6 @@ dnl Flag all GP_ strings in result as error unless specifically allowed.
 m4_pattern_forbid([^_?GP_])dnl
 
 
-GP_CHECK_SHELL_ENVIRONMENT
-GP_CONFIG_MSG([Build])
-GP_CONFIG_MSG([Source code location],[${srcdir}])
-
 dnl ---------------------------------------------------------------------------
 dnl Advanced information about versioning:
 dnl   * "Writing shared libraries" by Mike Hearn
@@ -103,6 +99,11 @@ AC_SUBST([LIBGPHOTO2_CURRENT_MIN],
          [`expr $LIBGPHOTO2_CURRENT - $LIBGPHOTO2_AGE`])
 AC_SUBST([LIBGPHOTO2_VERSION_INFO],
          [$LIBGPHOTO2_CURRENT:$LIBGPHOTO2_REVISION:$LIBGPHOTO2_AGE])
+
+
+GP_CHECK_SHELL_ENVIRONMENT
+GP_CONFIG_MSG([Build])
+GP_CONFIG_MSG([Source code location], [${srcdir}])
 
 
 dnl ---------------------------------------------------------------------------
@@ -265,9 +266,9 @@ GP_LIBLTDL
 
 
 # report on compiler/libtool setup
-GP_CONFIG_MSG([Compiler],[${CC}])
-GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
-GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
+GP_CONFIG_MSG([Compiler],         [${CC}])
+GP_CONFIG_MSG([libltdl includes], [$LTDLINCL])
+GP_CONFIG_MSG([libltdl library],  [$LIBLTDL])
 
 AC_DEFINE_UNQUOTED([HAVE_CC], ["$CC"],
                    [The C compiler we are using])
@@ -356,7 +357,7 @@ AS_VAR_IF([with_ws232], [no], [], [dnl
 		])
 	])
 ])
-GP_CONFIG_MSG([Winsocket support (for PTP/IP)],[${libws232_msg}])
+GP_CONFIG_MSG([Winsocket support (for PTP/IP)], [${libws232_msg}])
 
 dnl ---------------------------------------------------------------------------
 dnl check for libxml2
@@ -366,14 +367,14 @@ GP_CHECK_LIBRARY([LIBXML2],[libxml-2.0],[>= 2.0],
                 [default-on],
                 [http://xmlsoft.org]
 )
-GP_CONFIG_MSG([XML support for Olympus E series],[${have_LIBXML2}])
+GP_CONFIG_MSG([XML support for Olympus E series], [${have_LIBXML2}])
 
 GP_CHECK_LIBRARY([LIBCURL],[libcurl],[>= 7.1],
 		[curl/curl.h],[curl_easy_init],[],[],
                 [default-on],
 		[https://www.curl.org]
 )
-GP_CONFIG_MSG([CURL support for Lumix Wifi],[${have_LIBCURL}])
+GP_CONFIG_MSG([CURL support for Lumix Wifi], [${have_LIBCURL}])
 
 dnl ---------------------------------------------------------------------------
 dnl check for libgd
@@ -384,7 +385,7 @@ GP_CHECK_LIBRARY([LIBGD],[gdlib],[>= 2.0],[gd.h],[gdImageCreateTrueColor],[
 	LIBGD_LIBS="-lgd $LIBGD_LIBS"
 
 ],[],[default-on],[http://www.libgd.org/])
-GP_CONFIG_MSG([libGD conversion support],[${have_LIBGD}])
+GP_CONFIG_MSG([libGD conversion support], [${have_LIBGD}])
 
 dnl ---------------------------------------------------------------------------
 dnl Checks for header files.
