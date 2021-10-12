@@ -23,38 +23,43 @@ dnl #endif
 dnl
 AC_DEFUN([GP_VA_COPY],[dnl
 dnl
-AC_CHECK_HEADER([stdarg.h],[],[
+AC_CHECK_HEADER([stdarg.h], [], [dnl
 	AC_MSG_ERROR([
 Building $PACKAGE_NAME requires <stdarg.h>.
 ])
 ])
 dnl
 have_va_copy=no
-AC_TRY_LINK([
-	#include <stdarg.h>
-],[
-	va_list a,b;
-	va_copy(a,b);
-],[
-	have_va_copy="va_copy"
-],[
-	AC_TRY_LINK([
-		#include <stdarg.h>
-	],[
-		va_list a,b;
-		__va_copy(a,b);
-	],[
-		have_va_copy="__va_copy"
-		AC_DEFINE([va_copy],[__va_copy],[__va_copy() was the originally proposed name])
-	])
+AS_VAR_IF([have_va_copy], [no], [dnl
+  AC_LINK_IFELSE([
+    AC_LANG_PROGRAM([[#include <stdarg.h>]], [[
+      va_list a,b;
+      va_copy(a,b);
+    ]])
+  ], [dnl
+    have_va_copy="va_copy"
+  ])
+])
+AS_VAR_IF([have_va_copy], [no], [dnl
+  AC_LINK_IFELSE([
+    AC_LANG_PROGRAM([[#include <stdarg.h>]], [[
+      va_list a,b;
+      __va_copy(a,b);
+    ]])
+  ], [dnl
+    have_va_copy="__va_copy"
+    AC_DEFINE([va_copy], [__va_copy],
+              [__va_copy() was the originally proposed name])
+  ])
 ])
 dnl
 AC_MSG_CHECKING([for va_copy() or replacement])
 AC_MSG_RESULT([$have_va_copy])
 dnl
-if test "x$have_va_copy" != "xno"; then
-	AC_DEFINE([HAVE_VA_COPY],1,[Whether we have the va_copy() function])
-fi
+AS_VAR_IF([have_va_copy], [no], [], [dnl
+	AC_DEFINE([HAVE_VA_COPY], [1],
+	          [Whether we have the va_copy() function])
+])
 ])dnl
 dnl
 dnl
