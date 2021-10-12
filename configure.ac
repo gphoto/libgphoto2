@@ -431,7 +431,25 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS([getenv getopt getopt_long mkdir setenv strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r statvfs localtime_r lstat inet_aton rand_r])
+AC_CHECK_FUNCS([m4_normalize([
+  getenv
+  getopt
+  getopt_long
+  mkdir
+  setenv
+  strdup
+  strncpy
+  strcpy
+  snprintf
+  sprintf
+  vsnprintf
+  gmtime_r
+  statvfs
+  localtime_r
+  lstat
+  inet_aton
+  rand_r
+])])
 
 dnl Find out how to get struct tm
 AC_STRUCT_TM
