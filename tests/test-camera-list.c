@@ -130,6 +130,23 @@ typedef enum {
 static OutputFormat format = FMT_HEADED_TEXT;
 
 
+static
+const char usage[] = ""
+	"Usage: %s [--debug] --format=FORMAT\n"
+	"\n"
+	"Prints list of cameras supported by libgphoto2 in a certain output format.\n"
+	"\n"
+	"List of FORMAT values\n"
+	"  text      Text table with headers (the default)\n"
+	"  flattext  Text table without headers\n"
+	"  csv       Comma Separated Values (CSV) without headers\n"
+	"  xml       Custom demo XML schema\n"
+	"  count     Just print the number of cameras in the list\n"
+	"  camlibs   Text table of just the camlibs\n"
+	"            Pipe this through `| sort | uniq` to get a useful output.\n"
+	;
+
+
 /* #define DEBUG_OUTPUT */
 
 
@@ -160,6 +177,10 @@ parse_command_line (const int argc, char *argv[])
 			format = FMT_COUNT;
 		} else if (strcmp(argv[i], "--format=camlibs") == 0) {
 			format = FMT_FLAT_CAMLIBS;
+		} else if (strcmp(argv[i], "--help") == 0) {
+			const char * const bn = path_basename(argv[0]);
+			printf(usage, bn);
+			exit(0);
 		} else {
 			const char * const bn = path_basename(argv[0]);
 			printf("Unknown command line parameter %d: \"%s\"\n",
