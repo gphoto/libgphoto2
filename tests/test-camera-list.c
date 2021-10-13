@@ -73,7 +73,8 @@ debug_func (GPLogLevel level, const char *domain, const char *str,
 static void
 print_headline (void)
 {
-	printf("No.|%-20s|%-20s|%s\n",
+	printf("%-4s|%-20s|%-20s|%s\n",
+	       "No.",
 	       "camlib",
 	       "driver name",
 	       "camera model");
@@ -83,7 +84,8 @@ print_headline (void)
 static void
 print_hline (void)
 {
-	printf("---+%-20s+%-20s+%s\n",
+	printf("%-4s+%-20s+%-20s+%s\n",
+	       "----",
 	       "--------------------",
 	       "--------------------",
 	       "-------------------------------------------");
@@ -245,10 +247,10 @@ main (int argc, char *argv[])
 		fmt_str = "%d,%s,%s,%s\n";
 		break;
 	case FMT_FLAT_TEXT:
-		fmt_str = "%3d|%-20s|%-20s|%s\n";
+		fmt_str = "%4d|%-20s|%-20s|%s\n";
 		break;
 	case FMT_HEADED_TEXT:
-		fmt_str = "%3d|%-20s|%-20s|%s\n";
+		fmt_str = "%4d|%-20s|%-20s|%s\n";
 		break;
 	case FMT_XML:
 		fmt_str = "  <camera name=\"%4$s\" entry_number=\"%1$d\">\n"
