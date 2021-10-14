@@ -3156,6 +3156,10 @@ exitfailed:
 		if (params->cd_locale_to_ucs2 != (iconv_t)-1) iconv_close(params->cd_locale_to_ucs2);
 #endif
 
+		if (camera->port->type == GP_PORT_PTPIP) {
+			ptp_ptpip_disconnect (params);
+		}
+
 		free (params->data);
 		free (camera->pl); /* also frees params */
 		params = NULL;

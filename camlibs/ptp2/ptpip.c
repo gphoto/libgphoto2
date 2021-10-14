@@ -852,6 +852,24 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 }
 
 int
+ptp_ptpip_disconnect (PTPParams* params) {
+	if (params->cmdfd != PTPSOCK_INVALID) {
+		PTPSOCK_CLOSE (params->cmdfd);
+		params->cmdfd = PTPSOCK_INVALID;
+	}
+	if (params->evtfd != PTPSOCK_INVALID) {
+		PTPSOCK_CLOSE (params->evtfd);
+		params->evtfd = PTPSOCK_INVALID;
+	}
+	if (params->jpgfd != PTPSOCK_INVALID) {
+		PTPSOCK_CLOSE (params->jpgfd);
+		params->jpgfd = PTPSOCK_INVALID;
+	}
+	GP_LOG_D ("ptpip disconnected!");
+	return GP_OK;
+}
+
+int
 ptpip_connect_with_timeout (int fd, const struct sockaddr *address, socklen_t address_len, int seconds, int milliseconds) {
 	int res = 0;
 	struct timeval tv;

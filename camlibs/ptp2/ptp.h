@@ -3853,6 +3853,7 @@ uint16_t ptp_usb_control_device_status_request (PTPParams *params);
 
 
 int      ptp_ptpip_connect	(PTPParams* params, const char *port);
+int      ptp_ptpip_disconnect	(PTPParams* params);
 uint16_t ptp_ptpip_sendreq	(PTPParams* params, PTPContainer* req, int dataphase);
 uint16_t ptp_ptpip_senddata	(PTPParams* params, PTPContainer* ptp,
 				uint64_t size, PTPDataHandler *handler);
