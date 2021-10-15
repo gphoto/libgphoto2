@@ -33,6 +33,14 @@ INSTALL_TESTS_ENVIRONMENT = env \
 AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)  -I$(top_srcdir)/libgphoto2_port
 
 
+# Test i18n
+check_PROGRAMS     += test-i18n
+test_i18n_SOURCES   = test-i18n.c
+test_i18n_CPPFLAGS  = $(AM_CPPFLAGS)
+test_i18n_CFLAGS    = $(AM_CFLAGS)
+test_i18n_LDADD     = $(INTLLIBS)
+
+
 # Test endianness conversions
 TESTS              += test-endian
 check_PROGRAMS     += test-endian
