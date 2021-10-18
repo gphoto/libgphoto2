@@ -105,7 +105,6 @@ dnl Try catching unexpanded macros in the output.
 dnl ######################################################################
 m4_pattern_forbid([GP_SET_])dnl
 m4_pattern_forbid([_GP_SET_])dnl
-m4_pattern_allow([GP_SET_EOF])dnl
 dnl
 dnl
 dnl ######################################################################
@@ -245,11 +244,11 @@ dnl ######################################################################
 AC_DEFUN([GP_SET_ADD_ALL], [dnl
 AC_REQUIRE([_GP_SET_INIT])dnl
 _GP_SET_CHECK([$1])dnl
-cat>>"_GP_SET_FILENAME([$1])"<<_GP_EOF
+cat>>"_GP_SET_FILENAME([$1])"<<EOF
 m4_foreach([myvar], [m4_shift($@)], [dnl
 myvar
 ])dnl
-_GP_EOF
+EOF
 ])dnl
 dnl
 dnl
@@ -327,17 +326,17 @@ AC_REQUIRE([_GP_SET_INIT])dnl
 AC_REQUIRE([_GP_SET_CHECK_INIT])dnl
 AC_REQUIRE([_GP_SET_CANONICALIZE_INIT])dnl
 AC_REQUIRE([GP_PROG_COMM])dnl
-cat>confset_a.txt<<GP_EOF
+cat>confset_a.txt<<EOF
 x
 y
-GP_EOF
-cat>confset_b.txt<<GP_EOF
+EOF
+cat>confset_b.txt<<EOF
 y
 z
-GP_EOF
-cat>confset_res_23.txt<<GP_EOF
+EOF
+cat>confset_res_23.txt<<EOF
 x
-GP_EOF
+EOF
 AC_MSG_CHECKING([whether comm -23 works])
 AS_IF([${COMM} -23 confset_a.txt confset_b.txt > confset_diff_23.txt], [dnl
   AS_IF([${CMP} confset_diff_23.txt confset_res_23.txt > /dev/null 2>&1], [dnl
