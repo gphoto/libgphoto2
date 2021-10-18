@@ -34,19 +34,8 @@
 #define THUMBNAIL_HEIGHT 36
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
+#include "libgphoto2/i18n.h"
+
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,

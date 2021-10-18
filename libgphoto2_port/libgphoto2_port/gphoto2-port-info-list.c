@@ -45,27 +45,8 @@
 #include <gphoto2/gphoto2-port-log.h>
 
 #include "libgphoto2_port/gphoto2-port-info.h"
+#include "libgphoto2_port/i18n.h"
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define bind_textdomain_codeset(Domain,codeset) (codeset)
-#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
 
 /**
  * \internal GPPortInfoList:
@@ -95,7 +76,8 @@ struct _GPPortInfoList {
  */
 const char*
 gp_port_message_codeset (const char *codeset) {
-	return bind_textdomain_codeset (GETTEXT_PACKAGE, codeset);
+	return bind_textdomain_codeset (GETTEXT_PACKAGE_LIBGPHOTO2_PORT,
+					codeset);
 }
 
 /**
@@ -117,7 +99,7 @@ gp_port_info_list_new (GPPortInfoList **list)
 	 * We put this in here because everybody needs to call this function
 	 * before accessing ports...
 	 */
-	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2_PORT, LOCALEDIR);
 
 	C_MEM (*list = calloc (1, sizeof (GPPortInfoList)));
 

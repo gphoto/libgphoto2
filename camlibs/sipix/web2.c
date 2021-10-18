@@ -26,19 +26,8 @@
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
+#include "libgphoto2/i18n.h"
+
 
 #define WEB2_SELECT_PICTURE	0xb2
 #define WEB2_GET_NUMPICS	0xb6

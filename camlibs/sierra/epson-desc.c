@@ -26,7 +26,11 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <gphoto2/gphoto2-library.h>
+
+#include "libgphoto2/i18n.h"
+
 #include "sierra.h"
 #include "library.h"
 #include "sierra-desc.h"
@@ -51,24 +55,6 @@
  * other data is stored here.
  */
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
 
 /*
  * Register 1: resolution/size.

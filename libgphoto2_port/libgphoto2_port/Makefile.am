@@ -58,3 +58,5 @@ libgphoto2_port_la_DEPENDENCIES = \
 #       characters of path length.
 EXTRA_DIST = \
 	libgphoto2_port.ver
+
+EXTRA_DIST += i18n.h

@@ -50,6 +50,8 @@
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
 
+#include "libgphoto2/i18n.h"
+
 
 #define GP_MODULE "lumix"
 
@@ -62,31 +64,6 @@
 		return (res); 	\
 	}                      	\
 }
-
-
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-/**
-* This define is the string translation macro used in
-* libgphoto2. It will resolve to a dcgettext() function call and
-* does both the translation itself and also marks up the string
-* for the collector (xgettext).
-*/
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-/**
-* This is the noop translation macro, which does not translate the
-* string, but marks it up for the extraction of translatable strings.
-*/
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
 
 
 char* CDS_Control  = ":60606/Server0/CDS_control";

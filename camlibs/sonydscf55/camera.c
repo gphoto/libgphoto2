@@ -25,11 +25,14 @@
 #include <gphoto2/gphoto2.h>
 #include <sys/types.h>
 
-#include "sony.h"
-#include "nls.h"
 #include <gphoto2/gphoto2-camera.h>
 
+#include "libgphoto2/i18n.h"
+
+#include "sony.h"
+
 #define GP_MODULE "sonydscf55"
+
 
 struct ModelInfo {
 	SonyModel model_id;

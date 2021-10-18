@@ -23,13 +23,13 @@ dnl
 AC_DEFUN([GP_GETTEXT_HACK], [dnl
 AC_BEFORE([$0], [AM_GNU_GETTEXT])dnl
 AC_BEFORE([$0], [AM_GNU_GETTEXT_VERSION])dnl
-m4_if([$1],[],[GETTEXT_PACKAGE="${PACKAGE_TARNAME}"],[GETTEXT_PACKAGE="$1"])
-AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"],
+m4_if([$2],[],[$1="${PACKAGE_TARNAME}"],[$1="$2"])
+AC_DEFINE_UNQUOTED([$1], ["${$1}"],
                    [The gettext domain we're using])
-AC_SUBST([GETTEXT_PACKAGE])
-sed_cmds="s|^DOMAIN.*|DOMAIN = ${GETTEXT_PACKAGE}|"
-m4_if([$2],[],[],[sed_cmds="${sed_cmds};s|^COPYRIGHT_HOLDER.*|COPYRIGHT_HOLDER = $2|"])
-m4_ifval([$3],[
+AC_SUBST([$1])
+sed_cmds="s|^DOMAIN.*|DOMAIN = ${$1}|"
+m4_if([$3],[],[],[sed_cmds="${sed_cmds};s|^COPYRIGHT_HOLDER.*|COPYRIGHT_HOLDER = $3|"])
+m4_ifval([$4],[
 if test -n "$PACKAGE_BUGREPORT"; then
    sed_mb="${PACKAGE_BUGREPORT}"
 else
@@ -41,7 +41,7 @@ else
 ])
 fi
 ],[
-sed_mb="$3"
+sed_mb="$4"
 ])
 sed_cmds="${sed_cmds};s|^MSGID_BUGS_ADDRESS.*|MSGID_BUGS_ADDRESS = ${sed_mb}|"
 # Not so sure whether this hack is all *that* evil...

@@ -36,25 +36,8 @@
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-library.h>
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define bind_textdomain_codeset(Domain,Charset) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
+#include "libgphoto2/i18n.h"
+
 
 /** \internal */
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
@@ -85,7 +68,7 @@ const char*
 gp_message_codeset (const char *codeset)
 {
 	gp_port_message_codeset (codeset);
-	return bind_textdomain_codeset (GETTEXT_PACKAGE, codeset);
+	return bind_textdomain_codeset (GETTEXT_PACKAGE_LIBGPHOTO2, codeset);
 }
 
 /**
@@ -109,7 +92,7 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 	 * an other way without introducing a global initialization
 	 * function...
 	 */
-	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+	bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2, LOCALEDIR);
 
 	C_MEM (*list = calloc (1, sizeof (CameraAbilitiesList)));
 

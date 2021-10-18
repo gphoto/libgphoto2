@@ -28,26 +28,10 @@
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port-log.h>
 
+#include "libgphoto2/i18n.h"
+
 #include "lowlevel.h"
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
 
 #define GP_MODULE "konica"
 #define CHECK_NULL(r)     {if (!(r)) return (GP_ERROR_BAD_PARAMETERS);}

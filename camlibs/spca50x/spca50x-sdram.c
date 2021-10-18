@@ -34,31 +34,16 @@
 #include <gphoto2/gphoto2.h>
 #include "libgphoto2/gphoto2-endian.h"
 
+#include "libgphoto2/i18n.h"
+
 #include "spca50x.h"
 #include "spca50x-sdram.h"
 #include "spca50x-registers.h"
 #include "spca50x-avi-header.h"
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define textdomain(String) (String)
-#  define gettext(String) (String)
-#  define dgettext(Domain,Message) (Message)
-#  define dcgettext(Domain,Message,Type) (Message)
-#  define bindtextdomain(Domain,Directory) (Domain)
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
 
 #define GP_MODULE "spca50x"
+
 static int spca50x_mode_set_idle (CameraPrivateLibrary * lib);
 static int spca50x_is_idle (CameraPrivateLibrary * lib);
 static int spca50x_mode_set_download (CameraPrivateLibrary * lib);

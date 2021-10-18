@@ -31,23 +31,11 @@
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-port.h>
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  ifdef gettext_noop
-#    define _(String) dgettext (GETTEXT_PACKAGE, String)
-#    define N_(String) gettext_noop (String)
-#  else
-#    define _(String) (String)
-#    define N_(String) (String)
-#  endif
-#else
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
+#include "libgphoto2/i18n.h"
 
 #include "dc120.h"
 #include "library.h"
+
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 

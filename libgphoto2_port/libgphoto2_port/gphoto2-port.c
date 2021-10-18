@@ -40,20 +40,7 @@
 
 #include "libgphoto2_port/gphoto2-port-info.h"
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-#      define N_(String) gettext_noop (String)
-#  else
-#      define N_(String) (String)
-#  endif
-#else
-#  define _(String) (String)
-#  define N_(String) (String)
-#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
-#endif
+#include "libgphoto2_port/i18n.h"
 
 #define CHECK_RESULT(result) {int r=(result); if (r<0) return (r);}
 #define CHECK_SUPP(p,t,o) {if (!(o)) {gp_port_set_error ((p), _("The operation '%s' is not supported by this device"), (t)); return (GP_ERROR_NOT_SUPPORTED);}}

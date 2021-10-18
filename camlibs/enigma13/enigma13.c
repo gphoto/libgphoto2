@@ -30,24 +30,14 @@
 #include <gphoto2/gphoto2-result.h>
 #include "libgphoto2/gphoto2-endian.h"
 
+#include "libgphoto2/i18n.h"
+
+
 #ifdef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 #define sleep(x)
 #define usleep(x)
 #endif
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (GETTEXT_PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
 
 #define ENIGMA13_BLK_FLASH_ALIGN 0x2000
 #define ENIGMA13_BLK_CARD_ALIGN 0x4000

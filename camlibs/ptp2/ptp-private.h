@@ -87,7 +87,7 @@ inline static int log_on_ptp_error_helper( int _r, const char* _func, const char
 	if (c_ptp_rep_ret != PTP_RC_OK) {\
 		const char* ptp_err_str = ptp_strerror(c_ptp_rep_ret, params->deviceinfo.VendorExtensionID);\
 		GP_LOG_E ("'%s' failed: '%s' (0x%04x)", #RESULT, ptp_err_str, c_ptp_rep_ret);\
-		gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE, ptp_err_str));\
+		gp_context_error (context, "%s", dgettext(GETTEXT_PACKAGE_LIBGPHOTO2, ptp_err_str));\
 		return translate_ptp_result (c_ptp_rep_ret);\
 	}\
 } while(0)
@@ -100,7 +100,7 @@ inline static int log_on_ptp_error_helper( int _r, const char* _func, const char
 		snprintf(fmt_str, sizeof(fmt_str), "%s%s%s", "'%s' failed: ", MSG, " (0x%04x: %s)");\
 		GP_LOG_E (fmt_str, #RESULT, ##__VA_ARGS__, c_ptp_rep_msg_ret, ptp_err_str);\
 		snprintf(fmt_str, sizeof(fmt_str), "%s%s", MSG, " (0x%04x: %s)");\
-		gp_context_error (context, fmt_str, ##__VA_ARGS__, c_ptp_rep_msg_ret, dgettext(GETTEXT_PACKAGE, ptp_err_str));\
+		gp_context_error (context, fmt_str, ##__VA_ARGS__, c_ptp_rep_msg_ret, dgettext(GETTEXT_PACKAGE_LIBGPHOTO2, ptp_err_str));\
 		return translate_ptp_result (c_ptp_rep_msg_ret);\
 	}\
 } while(0)
