@@ -220,10 +220,8 @@ AC_LIBTOOL_DLOPEN
 AC_PROG_LIBTOOL
 
 dnl We are using our own libltdl checks instead of AC_WITH_LTDL
-dnl because we do not want to ship our own copy of libltdl any more.
-dnl Not shipping libltdl makes it possible to ditch our own autogen.sh
-dnl and relying on standard autoconf's "autoreconf".
-GP_LIB_LTDL
+dnl because we do not want to ship our own copy of libltdl.
+GP_LIBLTDL
 
 
 # report on compiler/libtool setup
