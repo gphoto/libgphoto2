@@ -20,6 +20,11 @@ AC_LANG(C)
 m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
 AM_SILENT_RULES([no])
 
+
+dnl Flag all GP_ strings in result as error unless specifically allowed.
+m4_pattern_forbid([^_?GP_])dnl
+
+
 dnl ---------------------------------------------------------------------------
 dnl Advanced information about versioning:
 dnl   * "Writing shared libraries" by Mike Hearn

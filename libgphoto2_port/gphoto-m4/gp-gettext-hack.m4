@@ -33,6 +33,7 @@ m4_ifval([$4],[
 if test -n "$PACKAGE_BUGREPORT"; then
    sed_mb="${PACKAGE_BUGREPORT}"
 else
+   m4_pattern_allow([GP_GETTEXT_HACK])dnl
    AC_MSG_ERROR([
 *** Your configure.{ac,in} is wrong.
 *** Either define PACKAGE_BUGREPORT (by using the 4-parameter AC INIT syntax)
