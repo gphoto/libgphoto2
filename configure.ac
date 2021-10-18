@@ -25,6 +25,11 @@ AM_INIT_AUTOMAKE([-Wall foreign 1.9 dist-bzip2 dist-xz check-news subdir-objects
 m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
 AM_SILENT_RULES([no])
 
+
+dnl Flag all GP_ strings in result as error unless specifically allowed.
+m4_pattern_forbid([^_?GP_])dnl
+
+
 GP_CHECK_SHELL_ENVIRONMENT
 GP_CONFIG_MSG([Build])
 GP_CONFIG_MSG([Source code location],[${srcdir}])
