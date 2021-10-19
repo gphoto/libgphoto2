@@ -649,7 +649,6 @@ libgphoto2-uninstalled.pc
 examples/Makefile
 tests/Makefile
 packaging/Makefile
-packaging/linux-hotplug/Makefile
 packaging/generic/Makefile
 po/Makefile.in
 doc/Makefile

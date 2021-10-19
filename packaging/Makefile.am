@@ -1,1 +1,1 @@
-SUBDIRS = linux-hotplug generic
+SUBDIRS = generic
