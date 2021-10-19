@@ -656,16 +656,6 @@ doc/Makefile
 doc/Doxyfile
 doc/Doxyfile-internals
 doc/api/Makefile
-],[
-dnl This relies on this code being called for each of the above files
-dnl with ac_file set to the filename.
-case "$ac_file" in #(
-*.sh)
-	if test -f "$ac_file"; then
-		chmod +x "$ac_file"
-	fi
-	;;
-esac
 ])
 AC_OUTPUT
 
