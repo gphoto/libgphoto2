@@ -58,7 +58,3 @@ libgphoto2_port_la_DEPENDENCIES = \
 #       characters of path length.
 EXTRA_DIST = \
 	libgphoto2_port.ver
-
-../libltdl/libltdlc.la:
-	cd ../libltdl && $(MAKE) $(AM_MAKEFLAGS) libltdlc.la
-
