@@ -52,12 +52,12 @@ iolib_LTLIBRARIES = $(IOLIB_LTLIST)
 ########################################################################
 # Define the compile/link/etc. flags common to all iolibs in one place,
 # i.e. here.
-iolib_dependencies = $(top_srcdir)/iolib.sym
+iolib_dependencies = $(top_srcdir)/iolib.sym $(libgphoto2_port_la)
 iolib_ldflags = -module -no-undefined -avoid-version \
 	-export-dynamic \
         -export-symbols $(top_srcdir)/iolib.sym \
 	-rpath '$(iolibdir)'
-iolib_libadd = $(top_builddir)/libgphoto2_port/libgphoto2_port.la
+iolib_libadd = $(libgphoto2_port_la)
 
 AM_CPPFLAGS += -I$(top_srcdir)
 

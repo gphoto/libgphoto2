@@ -681,6 +681,16 @@ CPPFLAGS="$CPPFLAGS_save"
 
 
 dnl ---------------------------------------------------------------------------
+dnl Make it easier to possibly move the libraries around
+dnl ---------------------------------------------------------------------------
+
+AC_SUBST([libgphoto2_port_la],
+         ['${top_builddir}/libgphoto2_port/libgphoto2_port/libgphoto2_port.la'])
+AC_SUBST([libgphoto2_la],
+         ['${top_builddir}/libgphoto2/libgphoto2.la'])
+
+
+dnl ---------------------------------------------------------------------------
 dnl Configure subprojects
 dnl ---------------------------------------------------------------------------
 AS_IF([test -d "$srcdir/libgphoto2_port"], [dnl

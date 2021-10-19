@@ -615,6 +615,14 @@ AC_SUBST([AM_CXXFLAGS])
 AC_SUBST([AM_LDFLAGS])
 
 
+dnl ---------------------------------------------------------------------------
+dnl Make it easier to possibly move the libraries around
+dnl ---------------------------------------------------------------------------
+
+AC_SUBST([libgphoto2_port_la],
+         ['${top_builddir}/libgphoto2_port/libgphoto2_port.la'])
+
+
 # ---------------------------------------------------------------------------
 # Create output files
 # ---------------------------------------------------------------------------
