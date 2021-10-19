@@ -95,6 +95,12 @@ else
 fi
 ])dnl
 dnl
+dnl
+m4_ifndef([PKG_PROG_PKG_CONFIG], [dnl
+ m4_fatal([PKG_PROG_PKG_CONFIG not found, do you have pkg-config installed with pkg.m4?])
+])
+dnl
+dnl
 AC_DEFUN([_GP_CHECK_LIBRARY],[
 # ----------------------------------------------------------------------
 # [GP_CHECK_LIBRARY]([$1],[$2],[$3],
@@ -105,8 +111,9 @@ m4_ifval([$9],[dnl
 ])dnl
 # ----------------------------------------------------------------------
 dnl
+dnl
 AC_REQUIRE([GP_CONFIG_MSG])dnl
-AC_REQUIRE([GP_PKG_CONFIG])dnl
+AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
 AC_REQUIRE([_GP_CHECK_LIBRARY_SOEXT])dnl
 # Use _CFLAGS and _LIBS given to configure.
 # This makes it possible to set these vars in a configure script
