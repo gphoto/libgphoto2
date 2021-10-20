@@ -7262,6 +7262,49 @@ handleregular:
 		ptp_free_devicepropdesc (&dpd);
 		break;
 	}
+	case PTP_EC_ObjectInfoChanged: {
+		PTPObject	*ob;
+		uint16_t	ofc;
+		uint32_t	oldstorage, oldparent;
+		char		*oldfn;
+
+		C_PTP_REP (ptp_object_want (params, event.Param1, 0, &ob));
+		oldparent = ob->oi.ParentObject;
+		oldstorage = ob->oi.StorageID;
+		oldfn = strdup(ob->oi.Filename?ob->oi.Filename:"<null>");
+
+		ob->flags &= ~PTPOBJECT_OBJECTINFO_LOADED;
+		C_PTP_REP (ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+
+		C_MEM (path = malloc(sizeof(CameraFilePath)));
+		path->name[0]='\0';
+		path->folder[0]='\0';
+
+		strcpy  (path->name,  ob->oi.Filename);
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
+		ofc = ob->oi.ObjectFormat;
+		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+		/* ob could be invalid now, reload it or dont use it... */
+		/* delete last / or we get confused later. */
+		path->folder[ strlen(path->folder)-1 ] = '\0';
+
+		/* did the location or name of the file changed in the filesystem? Then we can only reset the fs and refetch the layout */
+		if (	(oldparent != ob->oi.ParentObject) &&
+			(oldstorage != ob->oi.StorageID) &&
+			(strcmp(oldfn,ob->oi.Filename) != 0)
+		)
+			gp_filesystem_reset (camera->fs);
+		free (oldfn);
+
+		if (ofc == PTP_OFC_Association) { /* new folder? would be weird here? */
+			*eventtype = GP_EVENT_FOLDER_ADDED;
+			*eventdata = path;
+		} else {
+			*eventtype = GP_EVENT_FILE_CHANGED;
+			*eventdata = path;
+		}
+		break;
+	}
 	case PTP_EC_ObjectRemoved:
 		ptp_remove_object_from_cache(params, event.Param1);
 		gp_filesystem_reset (camera->fs);
