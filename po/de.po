@@ -84,7 +84,6 @@ msgid "Your USB picture frame has a AX203 chipset\n"
 msgstr "Der USB-Bilderrahmen hat einen AX203 Chipsatz.\n"
 
 #: camlibs/ax203/library.c:108
-#, fuzzy
 msgid ""
 "AX203 based picture frames come with a variety of resolutions.\n"
 "The gphoto driver for these devices allows you to download,\n"
@@ -95,7 +94,6 @@ msgstr ""
 "löschen von Bildern."
 
 #: camlibs/ax203/library.c:121
-#, fuzzy
 msgid ""
 "AX203 USB picture frame driver\n"
 "Hans de Goede <hdegoede@redhat.com>\n"
@@ -4381,7 +4379,6 @@ msgid "Preset"
 msgstr "Voreinstellung"
 
 #: camlibs/ptp2/config.c:1317
-#, fuzzy
 msgid "Natural light auto"
 msgstr "Natürliches Licht Automatisch"
 
@@ -4465,17 +4462,14 @@ msgid "Underwater: Auto"
 msgstr "Unterwasser: Automatisch"
 
 #: camlibs/ptp2/config.c:1347
-#, fuzzy
 msgid "Tungsten 2"
 msgstr "Kunstlicht - Glühlampe"
 
 #: camlibs/ptp2/config.c:1350
-#, fuzzy
 msgid "Fluorescent: White"
 msgstr "Fluoreszenz: Weiss"
 
 #: camlibs/ptp2/config.c:1351
-#, fuzzy
 msgid "Fluorescent: Tungsten"
 msgstr "Fluoreszenz: Tageslicht"
 
@@ -4526,9 +4520,8 @@ msgid "Medium Normal JPEG+RAW"
 msgstr "Medium Normal JPEG+RAW"
 
 #: camlibs/ptp2/config.c:1390
-#, fuzzy
 msgid "Small Normal JPEG+RAW"
-msgstr "Small Normal JPEG+RAW"
+msgstr "Klein Normal JPEG+RAW"
 
 #: camlibs/ptp2/config.c:1395
 msgid "Single frame"
@@ -4645,18 +4638,16 @@ msgid "High (disabled in manual exposure)"
 msgstr ""
 
 #: camlibs/ptp2/config.c:1824
-#, fuzzy
 msgid "x1"
-msgstr "1"
+msgstr "x1"
 
 #: camlibs/ptp2/config.c:1825
-#, fuzzy
 msgid "x2"
 msgstr "2"
 
 #: camlibs/ptp2/config.c:1826
 msgid "x3"
-msgstr ""
+msgstr "x3"
 
 #: camlibs/ptp2/config.c:1834
 msgid "red eye suppression"
@@ -4863,18 +4854,16 @@ msgid "MOBILE"
 msgstr "Mobiltelefon"
 
 #: camlibs/ptp2/config.c:2145
-#, fuzzy
 msgid "TFT + MOBILE"
-msgstr "TFT + PC"
+msgstr "TFT + Mobiltelefon"
 
 #: camlibs/ptp2/config.c:2146
 msgid "PC + MOBILE"
 msgstr "PC + Mobiltelefon"
 
 #: camlibs/ptp2/config.c:2147
-#, fuzzy
 msgid "TFT + PC + MOBILE"
-msgstr "TFT + PC"
+msgstr "TFT + PC + Mobiltelefon"
 
 #: camlibs/ptp2/config.c:2148
 msgid "MOBILE2"
@@ -5347,52 +5336,44 @@ msgid "Quiet Release"
 msgstr "Leises Auslösen"
 
 #: camlibs/ptp2/config.c:3326
-#, fuzzy
 msgid "Continuous Quiet Release"
-msgstr "Leises Auslösen"
+msgstr "Kontinuierliches leises Auslösen"
 
 #: camlibs/ptp2/config.c:3329
 msgid "Selftimer 2s"
 msgstr "Selbstauslöser 2s"
 
 #: camlibs/ptp2/config.c:3330
-#, fuzzy
 msgid "Selftimer 5s"
-msgstr "Selbstauslöser 2s"
+msgstr "Selbstauslöser 5s"
 
 #: camlibs/ptp2/config.c:3331
 msgid "Selftimer 10s"
 msgstr "Selbstauslöser 10s"
 
 #: camlibs/ptp2/config.c:3332
-#, fuzzy
 msgid "Selftimer 10s 3 Pictures"
-msgstr "Selbstauslöser 10s"
+msgstr "Selbstauslöser 10s 3 Bilder"
 
 #: camlibs/ptp2/config.c:3333
-#, fuzzy
 msgid "Selftimer 10s 5 Pictures"
-msgstr "Selbstauslöser 10s"
+msgstr "Selbstauslöser 10s 5 Bilder"
 
 #: camlibs/ptp2/config.c:3334
-#, fuzzy
 msgid "Selftimer 5s 3 Pictures"
-msgstr "Selbstauslöser 2s"
+msgstr "Selbstauslöser 5s 3 Bilder"
 
 #: camlibs/ptp2/config.c:3335
-#, fuzzy
 msgid "Selftimer 5s 5 Pictures"
-msgstr "Selbstauslöser 2s"
+msgstr "Selbstauslöser 2s 5 Bilder"
 
 #: camlibs/ptp2/config.c:3336
-#, fuzzy
 msgid "Selftimer 2s 3 Pictures"
-msgstr "Selbstauslöser 2s"
+msgstr "Selbstauslöser 2s 3 Bilder"
 
 #: camlibs/ptp2/config.c:3337
-#, fuzzy
 msgid "Selftimer 2s 5 Pictures"
-msgstr "Selbstauslöser 2s"
+msgstr "Selbstauslöser 2s 5 Bilder"
 
 #: camlibs/ptp2/config.c:3339
 #, fuzzy
@@ -6401,24 +6382,20 @@ msgid "Shadow"
 msgstr "Schatten"
 
 #: camlibs/ptp2/config.c:4629
-#, fuzzy
 msgid "Custom WB 2"
-msgstr "Benutzerdefiniert"
+msgstr "Benutzerdefinierter Weißabgleich 2"
 
 #: camlibs/ptp2/config.c:4630
-#, fuzzy
 msgid "Custom WB 3"
-msgstr "Benutzerdefiniert"
+msgstr "Benutzerdefinierter Weißabgleich 3"
 
 #: camlibs/ptp2/config.c:4631
-#, fuzzy
 msgid "Custom WB 4"
-msgstr "Benutzerdefiniert"
+msgstr "Benutzerdefinierter Weißabgleich 4"
 
 #: camlibs/ptp2/config.c:4632
-#, fuzzy
 msgid "Custom WB 5"
-msgstr "Benutzerdefiniert"
+msgstr "Benutzerdefinierter Weißabgleich 5"
 
 #: camlibs/ptp2/config.c:4633
 #, fuzzy
@@ -6586,43 +6563,36 @@ msgid "TIFF (RGB)"
 msgstr "TIFF (RGB)"
 
 #: camlibs/ptp2/config.c:5207
-#, fuzzy
 msgid "JPEG Basic*"
-msgstr "JPEG Basic"
+msgstr "JPEG Basic*"
 
 #: camlibs/ptp2/config.c:5209
-#, fuzzy
 msgid "JPEG Normal*"
-msgstr "JPEG Normal"
+msgstr "JPEG Normal*"
 
 #: camlibs/ptp2/config.c:5211
-#, fuzzy
 msgid "JPEG Fine*"
-msgstr "JPEG Fein"
+msgstr "JPEG Fein*"
 
 #: camlibs/ptp2/config.c:5212
 msgid "TIFF"
-msgstr ""
+msgstr "TIFF"
 
 #: camlibs/ptp2/config.c:5215
-#, fuzzy
 msgid "NEF+Basic*"
 msgstr "NEF+Basic"
 
 #: camlibs/ptp2/config.c:5217
-#, fuzzy
 msgid "NEF+Normal*"
-msgstr "NEF+Normal"
+msgstr "NEF+Normal*"
 
 #: camlibs/ptp2/config.c:5219
-#, fuzzy
 msgid "NEF+Fine*"
-msgstr "NEF+Fein"
+msgstr "NEF+Fein*"
 
 #: camlibs/ptp2/config.c:5234
-#, fuzzy
 msgid "Extra Fine"
-msgstr "Extra hoch"
+msgstr "Extra fein"
 
 #: camlibs/ptp2/config.c:5236
 msgid "RAW+JPEG"
@@ -7003,35 +6973,30 @@ msgid "Nikon enable liveview failed"
 msgstr "Anschalten der Nikon LiveView fehlgeschlagen"
 
 #: camlibs/ptp2/config.c:7071
-#, fuzzy
 msgid "Temperature 1"
-msgstr "Farbtemperatur"
+msgstr "Farbtemperatur 1"
 
 #: camlibs/ptp2/config.c:7072
-#, fuzzy
 msgid "Temperature 2"
-msgstr "Farbtemperatur"
+msgstr "Farbtemperatur 2"
 
 #: camlibs/ptp2/config.c:7073
-#, fuzzy
 msgid "Temperature 3"
-msgstr "Farbtemperatur"
+msgstr "Farbtemperatur 3"
 
 #: camlibs/ptp2/config.c:7074
-#, fuzzy
 msgid "Temperature 4"
-msgstr "Farbtemperatur"
+msgstr "Farbtemperatur 4"
 
 #: camlibs/ptp2/config.c:7075
-#, fuzzy
 msgid "Automatic C"
-msgstr "Automatisch"
+msgstr "Automatisch C"
 
 #: camlibs/ptp2/config.c:7094 camlibs/ptp2/config.c:7131
 #: camlibs/ptp2/config.c:7147
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown 0x%04x"
-msgstr "Unbekannt: 0x%04x\n"
+msgstr "Unbekannt 0x%04x"
 
 #: camlibs/ptp2/config.c:7422
 msgid "Internal RAM"
@@ -7123,12 +7088,10 @@ msgid "Create Wifi profile"
 msgstr "Lege WiFI Profil an"
 
 #: camlibs/ptp2/config.c:8072
-#, fuzzy
 msgid "Auto-Focus"
-msgstr "Nicht im Fokus"
+msgstr "Auto Fokus"
 
 #: camlibs/ptp2/config.c:8073
-#, fuzzy
 msgid "Manual-Focus"
 msgstr "Manueller Fokus"
 
@@ -7150,9 +7113,8 @@ msgid "UI Lock"
 msgstr "UILock"
 
 #: camlibs/ptp2/config.c:8082
-#, fuzzy
 msgid "Popup Flash"
-msgstr "Kein Blitz"
+msgstr "Aufklappblitz"
 
 #: camlibs/ptp2/config.c:8083
 msgid "Drive Nikon DSLR Autofocus"
@@ -8910,14 +8872,12 @@ msgid "Copyright Info"
 msgstr "Copyright Information"
 
 #: camlibs/ptp2/ptp.c:5164
-#, fuzzy
 msgid "Supported Streams"
-msgstr "Unterstützte Thumbnail Größe"
+msgstr "Unterstützte Datenströme"
 
 #: camlibs/ptp2/ptp.c:5165
-#, fuzzy
 msgid "Enabled Streams"
-msgstr "Ungültiger Status"
+msgstr "Aktivierte Datenströme"
 
 #: camlibs/ptp2/ptp.c:5166
 msgid "Video Format"
@@ -9886,9 +9846,8 @@ msgid "Focus status"
 msgstr "Fokus Status"
 
 #: camlibs/ptp2/ptp.c:5832
-#, fuzzy
 msgid "Objects in memory"
-msgstr "Kein Speicherplatz vorhanden"
+msgstr "Objekte im Speicher"
 
 #: camlibs/ptp2/ptp.c:5833
 #, fuzzy
@@ -9897,7 +9856,7 @@ msgstr "Belichtungszeit"
 
 #: camlibs/ptp2/ptp.c:5836
 msgid "AB Filter"
-msgstr ""
+msgstr "AB Filter"
 
 #: camlibs/ptp2/ptp.c:5839
 msgid "Still Image"
@@ -10536,7 +10495,7 @@ msgstr ""
 #: camlibs/ptp2/ptp.c:6819
 #, fuzzy
 msgid "Get Vendor Extension Maps"
-msgstr "Hersteller Erweiterung"
+msgstr "Hersteller Erweiterung Listen"
 
 #: camlibs/ptp2/ptp.c:6820
 msgid "Get Vendor Device Info"
