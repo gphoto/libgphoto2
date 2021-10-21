@@ -274,6 +274,9 @@ AM_GNU_GETTEXT([external])
 AM_ICONV()
 GP_GETTEXT_FLAGS()
 
+AC_SUBST([localedir],["\$(datadir)/locale"])
+AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
+
 dnl FIXME: We have to make sure this works first
 dnl AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 # same trick as with libdl:
@@ -283,9 +286,6 @@ dnl AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
 dnl if test "x$gettext_without_libintl" != xtrue && test "x$USE_NLS" = xyes; then
 dnl        AC_CHECK_LIB([intl], [gettext], [INTLLIBS="$INTLLIBS -lintl"])
 dnl fi
-
-AC_SUBST([localedir],["\$(datadir)/locale"])
-AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
 
 AC_SYS_LARGEFILE
 

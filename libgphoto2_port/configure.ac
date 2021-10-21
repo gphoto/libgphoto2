@@ -136,14 +136,14 @@ dnl AC_SUBST(BUILD_INCLUDED_LIBINTL)
 dnl USE_INCLUDED_LIBINTL=no
 dnl AC_SUBST(USE_INCLUDED_LIBINTL)
 
+ALL_LINGUAS="cs da de es eu fi fr it ja nl pl pt_BR ru sk sr sv uk vi zh_CN zh_TW"
 GP_GETTEXT_HACK([GETTEXT_PACKAGE_LIBGPHOTO2_PORT],
                 [${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT_MIN}],
                 [Lutz Mueller and others],
                 [${MAIL_GPHOTO_TRANSLATION}])
-ALL_LINGUAS="cs da de es eu fi fr it ja nl pl pt_BR ru sk sr sv uk vi zh_CN zh_TW"
+AM_PO_SUBDIRS()
 AM_GNU_GETTEXT_VERSION([0.14.1])
 AM_GNU_GETTEXT([external])
-AM_PO_SUBDIRS()
 AM_ICONV()
 GP_GETTEXT_FLAGS()
 
