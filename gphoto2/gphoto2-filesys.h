@@ -242,6 +242,9 @@ int gp_filesystem_append           (CameraFilesystem *fs, const char *folder,
 int gp_filesystem_set_info_noop    (CameraFilesystem *fs,
 				    const char *folder, const char *filename,
 				    CameraFileInfo info, GPContext *context);
+int gp_filesystem_set_info_dirty   (CameraFilesystem *fs,
+				    const char *folder, const char *filename,
+				    GPContext *context);
 int gp_filesystem_set_file_noop    (CameraFilesystem *fs,
 				    const char *folder, const char *filename,
 				    CameraFileType type,

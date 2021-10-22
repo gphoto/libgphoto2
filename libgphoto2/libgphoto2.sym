@@ -117,6 +117,7 @@ gp_filesystem_reset
 gp_filesystem_set_file_noop
 gp_filesystem_set_info
 gp_filesystem_set_info_noop
+gp_filesystem_set_info_dirty
 gp_filesystem_set_funcs
 gp_file_unref
 gp_gamma_correct_single
