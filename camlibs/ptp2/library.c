@@ -7302,6 +7302,7 @@ handleregular:
 		} else {
 			*eventtype = GP_EVENT_FILE_CHANGED;
 			*eventdata = path;
+			gp_filesystem_set_info_dirty (camera->fs, path->folder, path->name, context);
 		}
 		break;
 	}

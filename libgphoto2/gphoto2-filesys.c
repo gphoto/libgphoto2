@@ -2353,6 +2353,37 @@ gp_filesystem_set_info_noop (CameraFilesystem *fs,
 }
 
 /**
+ * \brief Mark the file info as dirty
+ * \param fs a #CameraFilesystem
+ * \param folder the foldername
+ * \param filename the filename
+ * \param context a #GPContext
+ *
+ * Mark the file info as dirty, so that the next attempt
+ * to retrieve the file info will query the camera driver
+ * instead of possibly returning cached data.
+ *
+ * \return a gphoto2 error code
+ **/
+int gp_filesystem_set_info_dirty    (CameraFilesystem *fs,
+				    const char *folder, const char *filename,
+				    GPContext *context)
+{
+	CameraFilesystemFolder	*f;
+	CameraFilesystemFile	*xfile;
+
+	C_PARAMS (fs && folder);
+	CC (context);
+	CA (folder, context);
+
+	/* Search folder and file */
+	CR (lookup_folder_file (fs, folder, filename, &f, &xfile, context));
+
+	xfile->info_dirty = 1;
+	return (GP_OK);
+}
+
+/**
  * \brief Set information about a file
  * \param fs a #CameraFilesystem
  * \param folder foldername where the file resides
