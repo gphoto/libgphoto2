@@ -588,7 +588,6 @@ AC_CONFIG_FILES([
   gphoto2-port-config
   tests/Makefile
   doc/Makefile
-  gphoto-m4/Makefile
 ])
 AC_OUTPUT
 

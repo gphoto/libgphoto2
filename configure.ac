@@ -665,7 +665,6 @@ AC_CONFIG_FILES([
   camlibs/Makefile
   camlibs/canon/doc/Makefile
   camlibs/konica/localization/Makefile
-  gphoto-m4/Makefile
   libgphoto2/Makefile
   libgphoto2.pc
   libgphoto2-uninstalled.pc
