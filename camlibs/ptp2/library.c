@@ -6557,6 +6557,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 						gp_filesystem_reset (camera->fs);
 					} else {
 						*eventtype = (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) ? GP_EVENT_FILE_ADDED : GP_EVENT_FILE_CHANGED;
+						if (*eventtype == GP_EVENT_FILE_CHANGED) {
+							ob->flags &= ~PTPOBJECT_OBJECTINFO_LOADED;
+							C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+							gp_filesystem_set_info_dirty (camera->fs, path->folder, path->name, context);
+						}
 					}
 					*eventdata = path;
 					return GP_OK;
