@@ -255,7 +255,6 @@ dnl ---------------------------------------------------------------------------
 dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------
 
-ALL_LINGUAS="cs da de es eu fr hu it ja nl pl ru sv uk vi zh_CN"
 GP_GETTEXT_HACK([GETTEXT_PACKAGE_LIBGPHOTO2],
                 [${PACKAGE}-${LIBGPHOTO2_CURRENT_MIN}],
                 [The gPhoto Team],
