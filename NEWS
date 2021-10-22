@@ -3,6 +3,8 @@ libgphoto2 2.5.27.1 development snapshot
 general:
 * OS/2 support removed (broken and unused since at least 2006)
 * remove built-in rpm packaging (use distro packaging instead)
+* remove linux-hotplug rule creation (removed from distros around 2006)
+* remaining text which was iso-8859 is UTF-8 now (except one po file)
 
 ptp2:
 * Nikon j1: capture fixed
