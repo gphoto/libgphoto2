@@ -6,21 +6,37 @@ general:
 * remove linux-hotplug rule creation (removed from distros around 2006)
 * remaining text which was iso-8859 is UTF-8 now (except one po file)
 
+
 ptp2:
-* Nikon j1: capture fixed
-* Olympus: wait time was twice as long as required if no events arrived
+* Nikon J1: capture fixed
+* Olympus: fixed that wait time was twice as long as required if no events arrived
 * Sigma Fp: added basic beta support for capture, live view and config.
-* Canon EOS: handle newer EOS R series reporting of configs (ISO, Aperture, Shutterspeed)
+* Sony:
+  * mark all widgets as read-write again, read-only logic was not 100% correct
+  * speed-ups and fixes to the stepping based config setting
+* Canon EOS
+  * handle newer EOS R series reporting of configs (ISO, Aperture, Shutterspeed)
+  * track UI lock state to avoid device busy reports
+  * fixed "zoom" range settings (for lenses with powered zoom, also for today Powershot)
 * Fuji:
   * ptpip improvements
   * bug fixes
   * some Fuji cameras have now liveview only for webcam (need new firmware)
 * various small fixes
 * New ids:
-  * Sony Alpha-RX1R II, ILCE-7C
+  * Sony Alpha-RX1R II, ILCE-7C, ZV-E10, A6600
   * Nikon Coolpix B500
   * Canon EOS M50m2
   * Fuji X-Pro3, GFX 100S, X100V
+
+canon:
+* fixed wait event crashes
+* correctly mark read only config widgets as read-only
+
+pentax:
+* fix PEF raw files for non-K100D
+
+translations:
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.27 release
