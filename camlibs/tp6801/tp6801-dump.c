@@ -17,10 +17,12 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include <errno.h>
 #include <sys/ioctl.h>
 #include <scsi/sg.h>
@@ -28,6 +30,7 @@
 #define READ 0
 #define WRITE 1
 
+static
 void tp6801_send_cmd(int fd, int rw, int cmd, int offset, unsigned char *data, int data_size)
 {
     int i;
@@ -69,16 +72,19 @@ void tp6801_send_cmd(int fd, int rw, int cmd, int offset, unsigned char *data, i
     }
 }
 
+static
 void eeprom_read(int fd, int offset, unsigned char *data, int data_size)
 {
     tp6801_send_cmd(fd, READ, 0xc1, offset, data, data_size);
 }
 
+static
 void eeprom_erase_block(int fd, int offset)
 {
     tp6801_send_cmd(fd, READ, 0xc6, offset, NULL, 0);
 }
 
+static
 void eeprom_program_page(int fd, int offset, unsigned char *data)
 {
     tp6801_send_cmd(fd, WRITE, 0xcb, offset, data, 256);
