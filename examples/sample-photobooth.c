@@ -10,6 +10,8 @@
 #include <stdarg.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h>
+
 #include <gphoto2/gphoto2.h>
 
 #include "samples.h"
