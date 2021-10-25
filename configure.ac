@@ -310,22 +310,10 @@ dnl AC_MSG_ERROR([gp-set.m4 testsuite done.])
 
 
 dnl ---------------------------------------------------------------------------
-dnl check for libjpeg
+dnl libjpeg (from libjpeg-turbo or a number of other implementations)
 dnl ---------------------------------------------------------------------------
-LIBJPEG=""
-libjpeg_msg="no"
-AC_SUBST(LIBJPEG)
-AC_ARG_WITH([jpeg], AS_HELP_STRING([--without-jpeg], [Build without jpeg library (default: no)]))
-AS_IF([test "x$with_jpeg" != "xno"], [
-	AC_CHECK_LIB(jpeg,jpeg_start_decompress,[
-		AC_CHECK_HEADER(jpeglib.h,[
-			AC_DEFINE(HAVE_LIBJPEG,1,[define if we found LIBJPEG and its headers])
-			LIBJPEG="-ljpeg"
-			libjpeg_msg="yes"
-		])
-	])
-])
-GP_CONFIG_MSG([JPEG mangling support],[${libjpeg_msg}])
+GP_LIBJPEG
+
 
 dnl ---------------------------------------------------------------------------
 dnl check for ws2_32

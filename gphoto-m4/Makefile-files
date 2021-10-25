@@ -14,6 +14,7 @@ EXTRA_DIST += %reldir%/gp-documentation.m4
 EXTRA_DIST += %reldir%/gp-driverdir.m4
 EXTRA_DIST += %reldir%/gp-gettext-hack.m4
 EXTRA_DIST += %reldir%/gp-internal-docs.m4
+EXTRA_DIST += %reldir%/gp-libjpeg.m4
 EXTRA_DIST += %reldir%/gp-libltdl.m4
 EXTRA_DIST += %reldir%/gp-manual-docbook-xml.m4
 EXTRA_DIST += %reldir%/gp-manual-documentation.m4

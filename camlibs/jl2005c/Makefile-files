@@ -16,4 +16,5 @@ jl2005c_la_SOURCES = jl2005c/library.c\
 		    jl2005c/img_enhance.h
 jl2005c_la_LDFLAGS = $(camlib_ldflags)
 jl2005c_la_DEPENDENCIES = $(camlib_dependencies)
-jl2005c_la_LIBADD = $(camlib_libadd) @LIBJPEG@
+jl2005c_la_LIBADD = $(camlib_libadd) $(LIBJPEG_LIBS)
+jl2005c_la_CPPFLAGS = $(AM_CPPFLAGS) $(LIBJPEG_CFLAGS)
