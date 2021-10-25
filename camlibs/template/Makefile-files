@@ -12,6 +12,9 @@
 #
 # And as the last step, you need to add it to configure.ac:
 #   * GP_CAMLIB([foobar])dnl
+#
+# Also, do not forget to add any *.c source files containing
+# translated strings to POTFILES.in.
 
 EXTRA_DIST += template/ChangeLog
 
