@@ -103,6 +103,10 @@ dnl Determine the most pedantic compiler flags we can find for both
 dnl C and C++, so that we can test that the libgphoto2 headers compile
 dnl with those flags.
 dnl --------------------------------------------------------------------
+dnl
+dnl
+GP_WITH_EMPTY_CONFDEFS_H([dnl
+dnl
 GP_PEDANTIC_COMPILER_FLAGS([C90],   [C],   [-std=c90])
 GP_PEDANTIC_COMPILER_FLAGS([C99],   [C],   [-std=c99])
 GP_PEDANTIC_COMPILER_FLAGS([C11],   [C],   [-std=c11])
@@ -113,13 +117,65 @@ GP_PEDANTIC_COMPILER_FLAGS([CXX11], [C++], [-std=c++11])
 GP_PEDANTIC_COMPILER_FLAGS([CXX14], [C++], [-std=c++14])
 GP_PEDANTIC_COMPILER_FLAGS([CXX17], [C++], [-std=c++17])
 GP_PEDANTIC_COMPILER_FLAGS([CXX20], [C++], [-std=c++20])
+dnl
 
-GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wall])
-GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wextra])
-GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wno-unused-parameter])
-GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wno-format-overflow])
-GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wno-format-truncation])
-GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wno-stringop-truncation])
+dnl --------------------------------------------------------------------
+dnl The goals here are twofold:
+dnl
+dnl   * Produce as many compiler warnings as possible to find
+dnl     potential problems in our own code.
+dnl
+dnl   * Make sure our API header files are as broadly compatible as
+dnl     possible.
+dnl
+dnl We want our library and driver code to compile with the lowest
+dnl possible number of warnings, and the pedantic compilation tests to
+dnl compile with zero warnings (-Werror) so we do not limit the users
+dnl of our API in their use of compiler warnings.
+dnl
+dnl If, for some reason, you need to build without all these compiler
+dnl warnings, run the build while setting CFLAGS to an empty string:
+dnl
+dnl     $ make all check CFLAGS=
+dnl --------------------------------------------------------------------
+
+dnl * gcc exits non-zero when it encounters an unknown warning option
+dnl * clang by default ignores unknown warning option
+dnl * clang with -Werror=unknown-warning-option will exit non-zero
+dnl   when it encounters an unknown warning option
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Werror=unknown-warning-option])
+
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wall])
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wextra])
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Weverything])
+
+dnl We used to have these two defined for GCC instead of the whole -Wextra
+dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wmissing-declarations])
+dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wmissing-prototypes])
+
+dnl clang finds the underscores in all the "struct _Foo" definitions
+dnl which means they fall into the reserved category. Before we can
+dnl think about renaming those idenifiers, we need to verify they are
+dnl not part of our public API.
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-error=reserved-identifier])
+
+dnl clang finds "/** comments using \deprecated */" without a
+dnl corresponding __attribute__(( deprecated )). We need a good header
+dnl file defining such compiler and standard library specific
+dnl attributes purely as C preprocessor macros without configure
+dnl involvement before we can change anything about this in the public
+dnl API's include files.
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-error=documentation-deprecated-sync])
+
+dnl We used to have these four... no idea why, though. Stop reporting
+dnl unused parameters for now, as those are VERY numerous and not much
+dnl of a security risk, unlike the format and string warnings.
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-unused-parameter])
+dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-format-overflow])
+dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-format-truncation])
+dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-stringop-truncation])
+
+])dnl GP_WITH_EMPTY_CONFDEFS_H
 
 dnl Every compile example after here will be using the C language
 AC_LANG([C])
@@ -129,9 +185,6 @@ dnl ---------------------------------------------------------------------------
 dnl Turn on (almost) all warnings when using gcc
 dnl ---------------------------------------------------------------------------
 if test "x$GCC" = "xyes"; then
-	# CFLAGS="$CFLAGS --std=c99 -Wall -Wextra -Werror -pedantic"
-	CFLAGS="$CFLAGS -Wall -Wmissing-declarations -Wmissing-prototypes"
-	LDFLAGS="$LDFLAGS"
 	AC_SUBST([NO_UNUSED_CFLAGS], [-Wno-unused])
 fi
 AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
