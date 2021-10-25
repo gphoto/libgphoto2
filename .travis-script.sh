@@ -55,7 +55,7 @@ then
     echo "\"make check\" successful."
 else
     s="$?"
-    for log in libgphoto2_port/test/test-suite.log test/test-suite.log
+    for log in libgphoto2_port/tests/test-suite.log tests/test-suite.log
     do
 	echo "### BEGIN LOG: $log ###"
 	cat "$log"

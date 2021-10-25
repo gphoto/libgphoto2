@@ -107,6 +107,11 @@ Makefile.in
 /libgphoto2_port/test/test-port-list.log
 /libgphoto2_port/test/test-port-list.trs
 /libgphoto2_port/test/test-suite.log
+/libgphoto2_port/tests/test-gp-port
+/libgphoto2_port/tests/test-port-list
+/libgphoto2_port/tests/test-port-list.log
+/libgphoto2_port/tests/test-port-list.trs
+/libgphoto2_port/tests/test-suite.log
 /libtool
 /packaging/generic/print-camera-list
 /packaging/rpm/package.spec

@@ -26,7 +26,7 @@ bin_SCRIPTS = gphoto2-port-config
 
 # The . stands for the current dir, i.e. the iolibs to build.
 # Make sure the iolibs are built before running tests on them.
-SUBDIRS = po libgphoto2_port . test doc gphoto-m4
+SUBDIRS = po libgphoto2_port . tests doc gphoto-m4
 
 
 ########################################################################

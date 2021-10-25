@@ -555,7 +555,7 @@ libgphoto2_port/Makefile
 libgphoto2_port.pc
 libgphoto2_port-uninstalled.pc
 gphoto2-port-config
-test/Makefile
+tests/Makefile
 doc/Makefile
 gphoto-m4/Makefile
 ])
