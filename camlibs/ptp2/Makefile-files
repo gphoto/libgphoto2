@@ -6,7 +6,7 @@ camlibdoc_DATA += ptp2/README.ptp2
 
 EXTRA_LTLIBRARIES += ptp2.la
 
-ptp2_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBXML2_CFLAGS)
+ptp2_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBXML2_CFLAGS) $(LIBJPEG_CFLAGS)
 ptp2_la_CFLAGS = $(AM_CFLAGS) $(CFLAGS) $(LIBXML2_CFLAGS) -Wshadow
 ptp2_la_SOURCES = \
 	ptp2/ptp.c ptp2/ptp.h ptp2/chdk_ptp.h ptp2/chdk_live_view.h \
@@ -17,4 +17,4 @@ ptp2_la_SOURCES = \
 	ptp2/chdk.c ptp2/fujiptpip.c ptp2/ptpip-private.h
 ptp2_la_LDFLAGS = $(camlib_ldflags)
 ptp2_la_DEPENDENCIES = $(camlib_dependencies)
-ptp2_la_LIBADD = $(camlib_libadd) $(LTLIBICONV) $(LIBXML2_LIBS) @LIBJPEG@ @LIBWS232@
+ptp2_la_LIBADD = $(camlib_libadd) $(LTLIBICONV) $(LIBXML2_LIBS) $(LIBJPEG_LIBS) @LIBWS232@
