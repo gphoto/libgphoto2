@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-camera.h>
 #include <gphoto2/gphoto2-list.h>
@@ -14,8 +16,6 @@
 #include <gphoto2/gphoto2-port-portability.h>
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-version.h>
-
-#include <stdio.h>
 
 #ifdef __STDC_VERSION__
 unsigned long stdc_version = __STDC_VERSION__;
