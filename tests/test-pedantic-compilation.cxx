@@ -17,6 +17,7 @@
 #include <gphoto2/gphoto2-port-result.h>
 #include <gphoto2/gphoto2-port-version.h>
 
+static
 unsigned long cxx_version = __cplusplus;
 
 int main()

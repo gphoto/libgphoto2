@@ -18,6 +18,7 @@
 #include <gphoto2/gphoto2-port-version.h>
 
 #ifdef __STDC_VERSION__
+static
 unsigned long stdc_version = __STDC_VERSION__;
 #endif
 
