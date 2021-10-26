@@ -111,6 +111,7 @@ GP_PEDANTIC_COMPILER_FLAGS([CXX98], [C++], [-std=c++98])
 GP_PEDANTIC_COMPILER_FLAGS([CXX11], [C++], [-std=c++11])
 GP_PEDANTIC_COMPILER_FLAGS([CXX14], [C++], [-std=c++14])
 GP_PEDANTIC_COMPILER_FLAGS([CXX17], [C++], [-std=c++17])
+GP_PEDANTIC_COMPILER_FLAGS([CXX20], [C++], [-std=c++20])
 
 dnl --------------------------------------------------------------------
 dnl The goals here are twofold:

@@ -184,6 +184,19 @@ test_pedantic_cxx17_CXXFLAGS = $(GP_PEDANTIC_CXXFLAGS_CXX17)
 test_pedantic_cxx17_LDADD    =
 test_pedantic_cxx17_LDFLAGS  =
 
+if HAVE_CXX
+if GP_HAVE_PEDANTIC_FLAGS_CXX20
+TESTS                       += test-pedantic-cxx20
+check_PROGRAMS              += test-pedantic-cxx20
+endif
+endif
+EXTRA_PROGRAMS              += test-pedantic-cxx20
+test_pedantic_cxx20_SOURCES  = test-pedantic-compilation.cxx
+test_pedantic_cxx20_CPPFLAGS = $(generic_pedantic_cppflags)
+test_pedantic_cxx20_CXXFLAGS = $(GP_PEDANTIC_CXXFLAGS_CXX20)
+test_pedantic_cxx20_LDADD    =
+test_pedantic_cxx20_LDFLAGS  =
+
 
 ########################################################################
 # Implement the checks for the installed library
