@@ -19,9 +19,8 @@ dnl
 dnl You can leave out the GP_GETTEXT_HACK parameters if you want to,
 dnl GP_GETTEXT_HACK will try fall back to sensible values in that case:
 dnl
-
-AC_DEFUN([GP_GETTEXT_HACK],
-[
+dnl
+AC_DEFUN([GP_GETTEXT_HACK], [dnl
 AC_BEFORE([$0], [AM_GNU_GETTEXT])dnl
 AC_BEFORE([$0], [AM_GNU_GETTEXT_VERSION])dnl
 m4_if([$2],[],[$1="${PACKAGE_TARNAME}"],[$1="$2"])
@@ -53,8 +52,10 @@ if test -f "${srcdir}/po/Makevars.template"; then
 else
    AC_MSG_RESULT([no])
 fi
-])
-
+])dnl
+dnl
+dnl
+dnl
 AC_DEFUN([GP_GETTEXT_FLAGS],
 [
 AC_REQUIRE([AM_GNU_GETTEXT])
@@ -66,7 +67,9 @@ GP_CONFIG_MSG([Use translations],[${USE_NLS}])
 if test "x$USE_NLS" = "xyes" && test "${BUILD_INCLUDED_LIBINTL}"; then
    GP_CONFIG_MSG([Use included libintl],[${BUILD_INCLUDED_LIBINTL}])
 fi
-])
+])dnl
+dnl
+dnl
 
 dnl Please do not remove this:
 dnl filetype: 71ff3941-a5ae-4677-a369-d7cb01f92c81
