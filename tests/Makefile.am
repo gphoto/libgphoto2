@@ -132,6 +132,17 @@ test_pedantic_c11_CFLAGS   = $(GP_PEDANTIC_CFLAGS_C11)
 test_pedantic_c11_LDADD    =
 test_pedantic_c11_LDFLAGS  =
 
+if GP_HAVE_PEDANTIC_FLAGS_C2X
+TESTS                     += test-pedantic-c2x
+check_PROGRAMS            += test-pedantic-c2x
+endif
+EXTRA_PROGRAMS            += test-pedantic-c2x
+test_pedantic_c2x_SOURCES  = test-pedantic-compilation.c
+test_pedantic_c2x_CPPFLAGS = $(generic_pedantic_cppflags)
+test_pedantic_c2x_CFLAGS   = $(GP_PEDANTIC_CFLAGS_C2X)
+test_pedantic_c2x_LDADD    =
+test_pedantic_c2x_LDFLAGS  =
+
 if HAVE_CXX
 if GP_HAVE_PEDANTIC_FLAGS_CXX98
 TESTS                       += test-pedantic-cxx98
@@ -183,6 +194,19 @@ test_pedantic_cxx17_CPPFLAGS = $(generic_pedantic_cppflags)
 test_pedantic_cxx17_CXXFLAGS = $(GP_PEDANTIC_CXXFLAGS_CXX17)
 test_pedantic_cxx17_LDADD    =
 test_pedantic_cxx17_LDFLAGS  =
+
+if HAVE_CXX
+if GP_HAVE_PEDANTIC_FLAGS_CXX20
+TESTS                       += test-pedantic-cxx20
+check_PROGRAMS              += test-pedantic-cxx20
+endif
+endif
+EXTRA_PROGRAMS              += test-pedantic-cxx20
+test_pedantic_cxx20_SOURCES  = test-pedantic-compilation.cxx
+test_pedantic_cxx20_CPPFLAGS = $(generic_pedantic_cppflags)
+test_pedantic_cxx20_CXXFLAGS = $(GP_PEDANTIC_CXXFLAGS_CXX20)
+test_pedantic_cxx20_LDADD    =
+test_pedantic_cxx20_LDFLAGS  =
 
 
 ########################################################################

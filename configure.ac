@@ -106,11 +106,13 @@ dnl --------------------------------------------------------------------
 GP_PEDANTIC_COMPILER_FLAGS([C90],   [C],   [-std=c90])
 GP_PEDANTIC_COMPILER_FLAGS([C99],   [C],   [-std=c99])
 GP_PEDANTIC_COMPILER_FLAGS([C11],   [C],   [-std=c11])
+GP_PEDANTIC_COMPILER_FLAGS([C2X],   [C],   [-std=c2x])
 dnl
 GP_PEDANTIC_COMPILER_FLAGS([CXX98], [C++], [-std=c++98])
 GP_PEDANTIC_COMPILER_FLAGS([CXX11], [C++], [-std=c++11])
 GP_PEDANTIC_COMPILER_FLAGS([CXX14], [C++], [-std=c++14])
 GP_PEDANTIC_COMPILER_FLAGS([CXX17], [C++], [-std=c++17])
+GP_PEDANTIC_COMPILER_FLAGS([CXX20], [C++], [-std=c++20])
 
 GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wall])
 GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS],[-Wextra])
