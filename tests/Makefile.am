@@ -92,57 +92,7 @@ test_camera_list_LDADD   = \
 
 
 ########################################################################
-# Old pedantic compilation test
-########################################################################
-
-if HAVE_GCC
-PEDANTIC_CFLAGS   = -std=c99 -pedantic-errors -W -Wall -Wextra -Werror
-PEDANTIC_CXXFLAGS = -std=c++98 -pedantic-errors -W -Wall -Wextra -Werror
-else
-PEDANTIC_CFLAGS   =
-PEDANTIC_CXXFLAGS =
-endif
-
-TESTS += test-pedantic-c
-check_PROGRAMS += test-pedantic-c
-test_pedantic_c_SOURCES = test-pedantic-compilation.c
-test_pedantic_c_CPPFLAGS = \
-	$(AM_CPPFLAGS) $(CPPFLAGS) \
-	-U_GPHOTO2_INTERNAL_CODE
-test_pedantic_c_CFLAGS = \
-	$(AM_CFLAGS) $(PEDANTIC_CFLAGS) $(CFLAGS) \
-	-U_GPHOTO2_INTERNAL_CODE
-test_pedantic_c_LDADD = \
-	$(top_builddir)/libgphoto2/libgphoto2.la \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
-	$(LIBLTDL) \
-	$(LIBEXIF_LIBS) \
-	$(INTLLIBS)
-
-
-if HAVE_CXX
-check_PROGRAMS += test-pedantic-cxx
-TESTS += test-pedantic-cxx
-else
-EXTRA_PROGRAMS += test-pedantic-cxx
-endif
-test_pedantic_cxx_SOURCES = test-pedantic-compilation.cxx
-test_pedantic_cxx_CPPFLAGS = \
-	$(AM_CPPFLAGS) $(CPPFLAGS) \
-	-U_GPHOTO2_INTERNAL_CODE
-test_pedantic_cxx_CXXFLAGS = \
-	$(AM_CXXFLAGS) $(PEDANTIC_CXXFLAGS) $(CXXFLAGS) \
-	-U_GPHOTO2_INTERNAL_CODE
-test_pedantic_cxx_LDADD = \
-	$(top_builddir)/libgphoto2/libgphoto2.la \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
-	$(LIBLTDL) \
-	$(LIBEXIF_LIBS) \
-	$(INTLLIBS)
-
-
-########################################################################
-# Test pendantic compilation for multiple language standard
+# Test pedantic compilation for multiple language standard
 ########################################################################
 
 generic_pedantic_cppflags =
