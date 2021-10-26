@@ -102,88 +102,87 @@ generic_pedantic_cppflags += -I$(top_srcdir)
 if GP_HAVE_PEDANTIC_FLAGS_C90
 TESTS                     += test-pedantic-c90
 check_PROGRAMS            += test-pedantic-c90
+endif
+EXTRA_PROGRAMS            += test-pedantic-c90
 test_pedantic_c90_SOURCES  = test-pedantic-compilation.c
 test_pedantic_c90_CPPFLAGS = $(generic_pedantic_cppflags)
 test_pedantic_c90_CFLAGS   = $(GP_PEDANTIC_CFLAGS_C90)
 test_pedantic_c90_LDADD    =
 test_pedantic_c90_LDFLAGS  =
-endif
 
 if GP_HAVE_PEDANTIC_FLAGS_C99
 TESTS                     += test-pedantic-c99
 check_PROGRAMS            += test-pedantic-c99
+endif
+EXTRA_PROGRAMS            += test-pedantic-c99
 test_pedantic_c99_SOURCES  = test-pedantic-compilation.c
 test_pedantic_c99_CPPFLAGS = $(generic_pedantic_cppflags)
 test_pedantic_c99_CFLAGS   = $(GP_PEDANTIC_CFLAGS_C99)
 test_pedantic_c99_LDADD    =
 test_pedantic_c99_LDFLAGS  =
-endif
 
 if GP_HAVE_PEDANTIC_FLAGS_C11
 TESTS                     += test-pedantic-c11
 check_PROGRAMS            += test-pedantic-c11
+endif
+EXTRA_PROGRAMS            += test-pedantic-c11
 test_pedantic_c11_SOURCES  = test-pedantic-compilation.c
 test_pedantic_c11_CPPFLAGS = $(generic_pedantic_cppflags)
 test_pedantic_c11_CFLAGS   = $(GP_PEDANTIC_CFLAGS_C11)
 test_pedantic_c11_LDADD    =
 test_pedantic_c11_LDFLAGS  =
-endif
 
-if GP_HAVE_PEDANTIC_FLAGS_CXX98
 if HAVE_CXX
+if GP_HAVE_PEDANTIC_FLAGS_CXX98
 TESTS                       += test-pedantic-cxx98
 check_PROGRAMS              += test-pedantic-cxx98
-else
-EXTRA_PROGRAMS              += test-pedantic-cxx98
 endif
+endif
+EXTRA_PROGRAMS              += test-pedantic-cxx98
 test_pedantic_cxx98_SOURCES  = test-pedantic-compilation.cxx
 test_pedantic_cxx98_CPPFLAGS = $(generic_pedantic_cppflags)
 test_pedantic_cxx98_CXXFLAGS = $(GP_PEDANTIC_CXXFLAGS_CXX98)
 test_pedantic_cxx98_LDADD    =
 test_pedantic_cxx98_LDFLAGS  =
-endif
 
-if GP_HAVE_PEDANTIC_FLAGS_CXX11
 if HAVE_CXX
+if GP_HAVE_PEDANTIC_FLAGS_CXX11
 TESTS                       += test-pedantic-cxx11
 check_PROGRAMS              += test-pedantic-cxx11
-else
-EXTRA_PROGRAMS              += test-pedantic-cxx11
 endif
+endif
+EXTRA_PROGRAMS              += test-pedantic-cxx11
 test_pedantic_cxx11_SOURCES  = test-pedantic-compilation.cxx
 test_pedantic_cxx11_CPPFLAGS = $(generic_pedantic_cppflags)
 test_pedantic_cxx11_CXXFLAGS = $(GP_PEDANTIC_CXXFLAGS_CXX11)
 test_pedantic_cxx11_LDADD    =
 test_pedantic_cxx11_LDFLAGS  =
-endif
 
-if GP_HAVE_PEDANTIC_FLAGS_CXX14
 if HAVE_CXX
+if GP_HAVE_PEDANTIC_FLAGS_CXX14
 TESTS                       += test-pedantic-cxx14
 check_PROGRAMS              += test-pedantic-cxx14
-else
-EXTRA_PROGRAMS              += test-pedantic-cxx14
 endif
+endif
+EXTRA_PROGRAMS              += test-pedantic-cxx14
 test_pedantic_cxx14_SOURCES  = test-pedantic-compilation.cxx
 test_pedantic_cxx14_CPPFLAGS = $(generic_pedantic_cppflags)
 test_pedantic_cxx14_CXXFLAGS = $(GP_PEDANTIC_CXXFLAGS_CXX14)
 test_pedantic_cxx14_LDADD    =
 test_pedantic_cxx14_LDFLAGS  =
-endif
 
-if GP_HAVE_PEDANTIC_FLAGS_CXX17
 if HAVE_CXX
+if GP_HAVE_PEDANTIC_FLAGS_CXX17
 TESTS                       += test-pedantic-cxx17
 check_PROGRAMS              += test-pedantic-cxx17
-else
-EXTRA_PROGRAMS              += test-pedantic-cxx17
 endif
+endif
+EXTRA_PROGRAMS              += test-pedantic-cxx17
 test_pedantic_cxx17_SOURCES  = test-pedantic-compilation.cxx
 test_pedantic_cxx17_CPPFLAGS = $(generic_pedantic_cppflags)
 test_pedantic_cxx17_CXXFLAGS = $(GP_PEDANTIC_CXXFLAGS_CXX17)
 test_pedantic_cxx17_LDADD    =
 test_pedantic_cxx17_LDFLAGS  =
-endif
 
 
 ########################################################################
