@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: libgphoto2 master\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-28 09:57+0200\n"
-"PO-Revision-Date: 2021-10-22 16:38+0200\n"
-"Last-Translator: marcus <marcus@jet.franken.de>\n"
+"PO-Revision-Date: 2021-10-28 14:08+0200\n"
+"Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -4739,7 +4739,7 @@ msgstr ""
 #: camlibs/ptp2/chdk.c:1349
 #, c-format
 msgid "CHDK get live data failed: incomplete data (%d bytes) returned"
-msgstr ""
+msgstr "CHDK get live data fehlgeschlagen: nur %d Byte zurückgeliefert"
 
 #: camlibs/ptp2/config.c:170
 msgid "CHDK did not leave recording mode."
@@ -5049,7 +5049,7 @@ msgstr "Schwarz & Weiß + Grünfilter"
 
 #: camlibs/ptp2/config.c:1558
 msgid "Classic Chrome"
-msgstr ""
+msgstr "Klassisches Chrome"
 
 #: camlibs/ptp2/config.c:1559
 msgid "ACROS"
@@ -5077,7 +5077,7 @@ msgstr "Klassisches Negativ"
 
 #: camlibs/ptp2/config.c:1565
 msgid "ETERNA BLEACH BYPASS"
-msgstr ""
+msgstr "ETERNA BLEACH BYPASS"
 
 #: camlibs/ptp2/config.c:1571
 msgid "USB"
@@ -5234,9 +5234,8 @@ msgid "Hybrid Auto"
 msgstr "Hybrid Automatik"
 
 #: camlibs/ptp2/config.c:2093
-#, fuzzy
 msgid "Smooth skin"
-msgstr "Weichzeichnen"
+msgstr "Glatte Haut"
 
 #: camlibs/ptp2/config.c:2094
 msgid "Fv"
@@ -5244,19 +5243,19 @@ msgstr "Fv"
 
 #: camlibs/ptp2/config.c:2100
 msgid "Standard (disabled in manual exposure)"
-msgstr ""
+msgstr "Standard (abgeschaltet bei manueller Aufnahme)"
 
 #: camlibs/ptp2/config.c:2102
 msgid "Low (disabled in manual exposure)"
-msgstr ""
+msgstr "Niedrig (abgeschaltet bei manueller Aufnahme)"
 
 #: camlibs/ptp2/config.c:2104
 msgid "Off (disabled in manual exposure)"
-msgstr ""
+msgstr "Aus (abgeschaltet in manueller Aufnahme)"
 
 #: camlibs/ptp2/config.c:2106
 msgid "High (disabled in manual exposure)"
-msgstr ""
+msgstr "Hoch (abgeschaltet in manueller Aufnahme)"
 
 #: camlibs/ptp2/config.c:2107
 msgid "x1"
@@ -5325,9 +5324,8 @@ msgid "XGA"
 msgstr "XGA"
 
 #: camlibs/ptp2/config.c:2162
-#, fuzzy
 msgid "Application"
-msgstr "Applikationsmodus"
+msgstr "Applikation"
 
 #: camlibs/ptp2/config.c:2184 camlibs/ptp2/config.c:2203
 #: camlibs/ptp2/config.c:2215 camlibs/ptp2/config.c:2463
@@ -5672,9 +5670,8 @@ msgid "Continuous"
 msgstr "Kontinuierlich"
 
 #: camlibs/ptp2/config.c:2745 camlibs/ptp2/library.c:7558
-#, fuzzy
 msgid "Video"
-msgstr "Video OUT"
+msgstr "Video"
 
 #: camlibs/ptp2/config.c:2748
 msgid "Single: Silent shooting"
@@ -5705,14 +5702,12 @@ msgid "Continuous silent"
 msgstr "Kontinuierlich leise"
 
 #: camlibs/ptp2/config.c:2755
-#, fuzzy
 msgid "Silent HS continuous"
-msgstr "Kontinuierlich"
+msgstr "Schnell kontinuierlich leise "
 
 #: camlibs/ptp2/config.c:2756
-#, fuzzy
 msgid "Silent LS continuous"
-msgstr "Kontinuierlich"
+msgstr "Langsam kontinuierlich leise"
 
 #: camlibs/ptp2/config.c:2830 camlibs/ptp2/config.c:9197
 msgid ""
@@ -5724,28 +5719,25 @@ msgstr ""
 
 #: camlibs/ptp2/config.c:2841
 msgid "Shoot"
-msgstr ""
+msgstr "Aufnahme"
 
 # Langzeitbelichtung?
 #: camlibs/ptp2/config.c:2842
-#, fuzzy
 msgid "Bulb On"
-msgstr "Langzeitbelichtung"
+msgstr "Langzeitbelichtung An"
 
 # Langzeitbelichtung?
 #: camlibs/ptp2/config.c:2843
-#, fuzzy
 msgid "Bulb Off"
-msgstr "Langzeitbelichtung"
+msgstr "Langzeitbelichtung Aus"
 
 #: camlibs/ptp2/config.c:2844
-#, fuzzy
 msgid "AF"
-msgstr "AF-S"
+msgstr "AF"
 
 #: camlibs/ptp2/config.c:2845
 msgid "Cancel AF"
-msgstr ""
+msgstr "Breche AF ab"
 
 #: camlibs/ptp2/config.c:2911 camlibs/ptp2/config.c:2958
 #: camlibs/ptp2/library.c:5094
@@ -5772,7 +5764,7 @@ msgstr "Rauschunterdrückung bei Auto ISO Mehr Bild"
 #: camlibs/ptp2/config.c:3443 camlibs/ptp2/config.c:3471
 #: camlibs/ptp2/config.c:4529 camlibs/ptp2/config.c:4574
 #: camlibs/ptp2/config.c:4615 camlibs/ptp2/config.c:4668
-#, fuzzy, c-format
+#, c-format
 msgid "Time"
 msgstr "Selbstauslöser"
 
@@ -5828,7 +5820,7 @@ msgstr "U2"
 
 #: camlibs/ptp2/config.c:3744
 msgid "U3"
-msgstr ""
+msgstr "U3"
 
 #: camlibs/ptp2/config.c:3746
 msgid "Intelligent Auto"
@@ -5836,44 +5828,39 @@ msgstr "Intelligent Automatik"
 
 #: camlibs/ptp2/config.c:3747
 msgid "Superior Auto"
-msgstr ""
+msgstr "Überlegen Automatik"
 
 #: camlibs/ptp2/config.c:3748
-#, fuzzy
 msgid "Movie (P)"
-msgstr "Film"
+msgstr "Film (P)"
 
 #: camlibs/ptp2/config.c:3749
-#, fuzzy
 msgid "Movie (A)"
-msgstr "Film"
+msgstr "Film (A)"
 
 #: camlibs/ptp2/config.c:3750
-#, fuzzy
 msgid "Movie (S)"
-msgstr "Film"
+msgstr "Film (S)"
 
 #: camlibs/ptp2/config.c:3751
-#, fuzzy
 msgid "Movie (M)"
-msgstr "Film"
+msgstr "Film (M)"
 
 #: camlibs/ptp2/config.c:3752
-#, fuzzy
 msgid "Movie (Scene)"
-msgstr "Film Bildschirmgrösse"
+msgstr "Film (Szene)"
 
 #: camlibs/ptp2/config.c:3753
 msgid "Tele-zoom Cont. Priority AE"
-msgstr ""
+msgstr "Kontinuierlicher Tele-Zoom Priorität AE"
 
 #: camlibs/ptp2/config.c:3754
 msgid "Sweep Panorama"
-msgstr ""
+msgstr "Schwenkpanorama"
 
 #: camlibs/ptp2/config.c:3755
 msgid "Intelligent Auto Flash Off"
-msgstr ""
+msgstr "Intelligent Automatisch Blitz Aus"
 
 #: camlibs/ptp2/config.c:3756
 msgid "Sports Action"
@@ -5893,7 +5880,7 @@ msgstr "Freihand bei Dämmerung"
 
 #: camlibs/ptp2/config.c:3763
 msgid "Anti Motion Blur"
-msgstr ""
+msgstr "Anti Bewegungsunschärfe"
 
 #: camlibs/ptp2/config.c:3764 camlibs/ptp2/ptp.c:7393
 msgid "Picture Effect"
@@ -5901,7 +5888,7 @@ msgstr "Bild Effekt"
 
 #: camlibs/ptp2/config.c:3765
 msgid "S&Q"
-msgstr ""
+msgstr "S&Q"
 
 #: camlibs/ptp2/config.c:3770
 msgid "Night landscape"
@@ -5975,19 +5962,16 @@ msgid "3 EV"
 msgstr "3 EV"
 
 #: camlibs/ptp2/config.c:3937
-#, fuzzy
 msgid "1/3 EV"
-msgstr "3 EV"
+msgstr "1/3 EV"
 
 #: camlibs/ptp2/config.c:3938
-#, fuzzy
 msgid "1/2 EV"
-msgstr "2 EV"
+msgstr "1/2 EV"
 
 #: camlibs/ptp2/config.c:3939
-#, fuzzy
 msgid "2/3 EV"
-msgstr "3 EV"
+msgstr "2/3 EV"
 
 #: camlibs/ptp2/config.c:3958 camlibs/ptp2/config.c:3989
 #: camlibs/ptp2/config.c:6630 camlibs/ptp2/config.c:6645
@@ -5996,56 +5980,55 @@ msgstr "Extra hoch"
 
 #: camlibs/ptp2/config.c:3963
 msgid "2 images (normal and under)"
-msgstr ""
+msgstr "2 Bilder (normal und unterhalb)"
 
 #: camlibs/ptp2/config.c:3964
 msgid "2 images (normal and over)"
-msgstr ""
+msgstr "2 Bilder (normal und oberhalb)"
 
 #: camlibs/ptp2/config.c:3965
 msgid "3 images (normal and 2 unders)"
-msgstr ""
+msgstr "3 Bilder (normal und 2 unterhalb)"
 
 #: camlibs/ptp2/config.c:3966
 msgid "3 images (normal and 2 overs)"
-msgstr ""
+msgstr "3 Bilder (normal und 2 oberhalb)"
 
 #: camlibs/ptp2/config.c:3967
 msgid "3 images (normal, under and over)"
-msgstr ""
+msgstr "3 Bilder (normal, unter- und oberhalb)"
 
 #: camlibs/ptp2/config.c:3968
 msgid "5 images (normal, 2 unders and 2 overs)"
-msgstr ""
+msgstr "5 Bilder (normal, 2 unter- und 2 oberhalb)"
 
 #: camlibs/ptp2/config.c:3969
 msgid "7 images (normal, 3 unders and 3 overs)"
-msgstr ""
+msgstr "7 Bilder (normal, 3 unter- und 3 oberhalb)"
 
 #: camlibs/ptp2/config.c:3970
 msgid "9 images (normal, 4 unders and 4 overs)"
-msgstr ""
+msgstr "9 Bilder (normal, 4 unter- und 4 oberhalb)"
 
 #: camlibs/ptp2/config.c:3971 camlibs/ptp2/config.c:3980
-#, fuzzy
 msgid "0 image"
-msgstr "Bild"
+msgstr "Kein Bild"
 
 #: camlibs/ptp2/config.c:3976
 msgid "2 shots (Off -> User setting)"
-msgstr ""
+msgstr "2 Bilder (Aus -> Benutzerdefiniert)"
 
 #: camlibs/ptp2/config.c:3977
 msgid "3 shots (Off -> Low -> User setting)"
-msgstr ""
+msgstr "3 Bilder (Aus -> Niedrig -> Benutzerdefiniert)"
 
 #: camlibs/ptp2/config.c:3978
 msgid "4 shots (Off -> Low -> Normal -> High)"
-msgstr ""
+msgstr "4 Bilder (Aus -> Niedrig -> Normal -> Hoch)"
 
 #: camlibs/ptp2/config.c:3979
 msgid "5 shots (Off -> Low -> Normal -> High -> Extra High)"
-msgstr ""
+msgstr "5 Bilder (Aus -> Niedrig -> Normal -> Hoch -> Extra Hoch)"
 
 #: camlibs/ptp2/config.c:4005 camlibs/ptp2/config.c:4024
 msgid "Scene"
@@ -6154,192 +6137,156 @@ msgid "Selftimer 2s 5 Pictures"
 msgstr "Selbstauslöser 2s 5 Bilder"
 
 #: camlibs/ptp2/config.c:4077
-#, fuzzy
 msgid "Continuous Hi+ Speed"
-msgstr "Kontinuierlicher Langsame Geschwindigkeit"
+msgstr "Kontinuierlich Hohe Geschwindigkeit"
 
 #: camlibs/ptp2/config.c:4078
-#, fuzzy
 msgid "Continuous Med Speed"
-msgstr "Kontinuierlicher Langsame Geschwindigkeit"
+msgstr "Kontinuierlich Mittlere Geschwindigkeit"
 
 #: camlibs/ptp2/config.c:4080
-#, fuzzy
 msgid "Bracketing C 0.3 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 3 Bilder und 0.3 Schritte"
 
 #: camlibs/ptp2/config.c:4081
-#, fuzzy
 msgid "Bracketing C 0.3 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 5 Bilder und 0.3 Schritte"
 
 #: camlibs/ptp2/config.c:4082
-#, fuzzy
 msgid "Bracketing C 0.3 Steps 9 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 9 Bilder und 0.3 Schritte"
 
 #: camlibs/ptp2/config.c:4084
-#, fuzzy
 msgid "Bracketing C 0.5 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 3 Bilder und 0.5 Schritte"
 
 #: camlibs/ptp2/config.c:4085
-#, fuzzy
 msgid "Bracketing C 0.5 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 5 Bilder und 0.5 Schritte"
 
 #: camlibs/ptp2/config.c:4086
-#, fuzzy
 msgid "Bracketing C 0.5 Steps 9 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 9 Bilder und 0.5 Schritte"
 
 #: camlibs/ptp2/config.c:4088
-#, fuzzy
 msgid "Bracketing C 0.7 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 3 Bilder und 0.7 Schritte"
 
 #: camlibs/ptp2/config.c:4089
-#, fuzzy
 msgid "Bracketing C 0.7 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 5 Bilder und 0.7 Schritte"
 
 #: camlibs/ptp2/config.c:4090
-#, fuzzy
 msgid "Bracketing C 0.7 Steps 9 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 9 Bilder und 0.7 Schritte"
 
 #: camlibs/ptp2/config.c:4092
-#, fuzzy
 msgid "Bracketing C 1.0 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 3 Bilder und 1.0 Schritte"
 
 #: camlibs/ptp2/config.c:4093
-#, fuzzy
 msgid "Bracketing C 1.0 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 5 Bilder und 1.0 Schritte"
 
 #: camlibs/ptp2/config.c:4094
-#, fuzzy
 msgid "Bracketing C 1.0 Steps 9 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 9 Bilder und 1.0 Schritte"
 
 #: camlibs/ptp2/config.c:4096
-#, fuzzy
 msgid "Bracketing C 2.0 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 3 Bilder und 2.0 Schritte"
 
 #: camlibs/ptp2/config.c:4097
-#, fuzzy
 msgid "Bracketing C 2.0 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 5 Bilder und 2.0 Schritte"
 
 #: camlibs/ptp2/config.c:4099
-#, fuzzy
 msgid "Bracketing C 3.0 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 3 Bilder und 3.0 Schritte"
 
 #: camlibs/ptp2/config.c:4100
-#, fuzzy
 msgid "Bracketing C 3.0 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe C 5 Bilder und 3.0 Schritte"
 
 #: camlibs/ptp2/config.c:4102
-#, fuzzy
 msgid "Bracketing S 0.3 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 3 Bilder und 0.3 Schritte"
 
 #: camlibs/ptp2/config.c:4103
-#, fuzzy
 msgid "Bracketing S 0.3 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 5 Bilder und 0.3 Schritte"
 
 #: camlibs/ptp2/config.c:4104
-#, fuzzy
 msgid "Bracketing S 0.3 Steps 9 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 9 Bilder und 0.3 Schritte"
 
 #: camlibs/ptp2/config.c:4106
-#, fuzzy
 msgid "Bracketing S 0.5 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 3 Bilder und 0.5 Schritte"
 
 #: camlibs/ptp2/config.c:4107
-#, fuzzy
 msgid "Bracketing S 0.5 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 5 Bilder und 0.5 Schritte"
 
 #: camlibs/ptp2/config.c:4108
-#, fuzzy
 msgid "Bracketing S 0.5 Steps 9 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 9 Bilder und 0.5 Schritte"
 
 #: camlibs/ptp2/config.c:4110
-#, fuzzy
 msgid "Bracketing S 0.7 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 3 Bilder und 0.7 Schritte"
 
 #: camlibs/ptp2/config.c:4111
-#, fuzzy
 msgid "Bracketing S 0.7 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 5 Bilder und 0.7 Schritte"
 
 #: camlibs/ptp2/config.c:4112
-#, fuzzy
 msgid "Bracketing S 0.7 Steps 9 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 9 Bilder und 0.7 Schritte"
 
 #: camlibs/ptp2/config.c:4114
-#, fuzzy
 msgid "Bracketing S 1.0 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 3 Bilder und 1.0 Schritte"
 
 #: camlibs/ptp2/config.c:4115
-#, fuzzy
 msgid "Bracketing S 1.0 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 5 Bilder und 1.0 Schritte"
 
 #: camlibs/ptp2/config.c:4116
-#, fuzzy
 msgid "Bracketing S 1.0 Steps 9 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 9 Bilder und 1.0 Schritte"
 
 #: camlibs/ptp2/config.c:4118
-#, fuzzy
 msgid "Bracketing S 2.0 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 3 Bilder und 1.0 Schritte"
 
 #: camlibs/ptp2/config.c:4119
-#, fuzzy
 msgid "Bracketing S 2.0 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 5 Bilder und 2.0 Schritte"
 
 #: camlibs/ptp2/config.c:4120
-#, fuzzy
 msgid "Bracketing S 3.0 Steps 3 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 3 Bilder und 3.0 Schritte"
 
 #: camlibs/ptp2/config.c:4121
-#, fuzzy
 msgid "Bracketing S 3.0 Steps 5 Pictures"
-msgstr "Belichtungsreihe Anzahl und Schritte"
+msgstr "Belichtungsreihe S 5 Bilder und 3.0 Schritte"
 
 #: camlibs/ptp2/config.c:4122
 msgid "Bracketing WB Lo"
-msgstr "Belichtungsreihe Whitebalance Low"
+msgstr "Belichtungsreihe Whitebalance Niedrig"
 
 #: camlibs/ptp2/config.c:4123
-#, fuzzy
 msgid "Bracketing DRO Lo"
-msgstr "Belichtungsreihe Whitebalance Low"
+msgstr "Belichtungsreihe DRO Niedrig"
 
 #: camlibs/ptp2/config.c:4124
 msgid "Bracketing WB Hi"
-msgstr "Belichtungsreihe Whitebalance High"
+msgstr "Belichtungsreihe Whitebalance Hoch"
 
 #: camlibs/ptp2/config.c:4125
-#, fuzzy
 msgid "Bracketing DRO Hi"
-msgstr "Belichtungsreihe Whitebalance High"
+msgstr "Belichtungsreihe DRO Hoch"
 
 #: camlibs/ptp2/config.c:4134 camlibs/ptp2/ptp.c:7730
 msgid "Centre-spot"
@@ -6371,7 +6318,6 @@ msgid "Dynamic-area AF"
 msgstr "Dynamischer Bereich AF"
 
 #: camlibs/ptp2/config.c:4141
-#, fuzzy
 msgid "Group-dynamic AF"
 msgstr "Gruppendynamischer AF"
 
@@ -6396,58 +6342,48 @@ msgid "3D Tracking"
 msgstr "3D Verfolgung"
 
 #: camlibs/ptp2/config.c:4157
-#, fuzzy
 msgid "Dynamic-area AF (25 points)"
-msgstr "Dynamischer Bereich AF"
+msgstr "Dynamischer Bereich AF (25 Punkte)"
 
 #: camlibs/ptp2/config.c:4158
-#, fuzzy
 msgid "Single-point AF"
-msgstr "Einzel AF"
+msgstr "Einzel Punkt AF"
 
 #: camlibs/ptp2/config.c:4159
-#, fuzzy
 msgid "Auto-area AF"
-msgstr "Normaler Bereich AF"
+msgstr "Auto-Bereich AF"
 
 #: camlibs/ptp2/config.c:4160
-#, fuzzy
 msgid "3D-tracking"
-msgstr "3D Verfolgung"
+msgstr "3D-Verfolgung"
 
 #: camlibs/ptp2/config.c:4161
-#, fuzzy
 msgid "Dynamic-area AF (72 points)"
-msgstr "Dynamischer Bereich AF"
+msgstr "Dynamischer Bereich AF (72 Punkte)"
 
 #: camlibs/ptp2/config.c:4162
-#, fuzzy
 msgid "Dynamic-area AF (153 points)"
-msgstr "Dynamischer Bereich AF"
+msgstr "Dynamischer Bereich AF (153 Punkte)"
 
 #: camlibs/ptp2/config.c:4163
-#, fuzzy
 msgid "Group-area AF"
 msgstr "Gruppendynamischer AF"
 
 #: camlibs/ptp2/config.c:4164
-#, fuzzy
 msgid "Dynamic-area AF (9 points)"
-msgstr "Dynamischer Bereich AF"
+msgstr "Dynamischer Bereich AF (9 Punkte)"
 
 #: camlibs/ptp2/config.c:4166
 msgid "Pinpoint AF"
-msgstr ""
+msgstr "Stecknadel AF"
 
 #: camlibs/ptp2/config.c:4167
-#, fuzzy
 msgid "Wide-area AF (S)"
-msgstr "Weitwinkel AF"
+msgstr "Weitwinkel AF (S)"
 
 #: camlibs/ptp2/config.c:4168
-#, fuzzy
 msgid "Wide-area AF (L)"
-msgstr "Weitwinkel AF"
+msgstr "Weitwinkel AF (L)"
 
 #: camlibs/ptp2/config.c:4173
 msgid "sRGB (portrait)"
@@ -6509,41 +6445,35 @@ msgstr "ESP"
 
 #: camlibs/ptp2/config.c:4263
 msgid "Spot+Highlights"
-msgstr ""
+msgstr "Punkt + Highlights"
 
 #: camlibs/ptp2/config.c:4264
-#, fuzzy
 msgid "Spot+Shadows"
-msgstr "Schatten"
+msgstr "Punkt + Schatten"
 
 #: camlibs/ptp2/config.c:4266
-#, fuzzy
 msgid "Multi"
 msgstr "Mehrpunkt"
 
 #: camlibs/ptp2/config.c:4267
-#, fuzzy
 msgid "Center"
 msgstr "Zentrum"
 
 #: camlibs/ptp2/config.c:4268
 msgid "Entire Screen Avg."
-msgstr ""
+msgstr "Durschnitt über ganzes Bild"
 
 #: camlibs/ptp2/config.c:4269
-#, fuzzy
 msgid "Spot Standard"
-msgstr "Standard"
+msgstr "Punkt Standard"
 
 #: camlibs/ptp2/config.c:4270
-#, fuzzy
 msgid "Spot Large"
-msgstr "Groß"
+msgstr "Punkt Groß"
 
 #: camlibs/ptp2/config.c:4271
-#, fuzzy
 msgid "Highlight"
-msgstr "Hoch"
+msgstr "Highlight"
 
 #: camlibs/ptp2/config.c:4276
 msgid "Automatic Flash"
@@ -6607,7 +6537,7 @@ msgstr "Hinterer Vorhang Sync"
 
 #: camlibs/ptp2/config.c:4294
 msgid "Wireless Sync"
-msgstr ""
+msgstr "Drahtloses Synchronisieren"
 
 #: camlibs/ptp2/config.c:4295 camlibs/sierra/epson-desc.c:141
 #: camlibs/sierra/sierra.c:1014 camlibs/sierra/sierra.c:1025
@@ -6653,12 +6583,12 @@ msgstr "unendlich"
 #: camlibs/ptp2/config.c:4525 camlibs/ptp2/config.c:4570
 #, c-format
 msgid "x 200"
-msgstr ""
+msgstr "x 200"
 
 #: camlibs/ptp2/config.c:4611 camlibs/ptp2/config.c:4664
-#, fuzzy, c-format
+#, c-format
 msgid "Composite"
-msgstr "Kompression"
+msgstr "Composite"
 
 #: camlibs/ptp2/config.c:4882 camlibs/ptp2/config.c:5604
 #: camlibs/ptp2/config.c:5665
@@ -6666,9 +6596,8 @@ msgid "bulb"
 msgstr "Langzeitbelichtung"
 
 #: camlibs/ptp2/config.c:4939
-#, fuzzy
 msgid "Sync"
-msgstr "Langsamer Sync"
+msgstr "Sync"
 
 #: camlibs/ptp2/config.c:5480 camlibs/ptp2/config.c:5510
 msgid "Face-priority AF"
@@ -6687,14 +6616,12 @@ msgid "Subject-tracking AF"
 msgstr "Subjektfolgender AF"
 
 #: camlibs/ptp2/config.c:5484 camlibs/ptp2/config.c:5514
-#, fuzzy
 msgid "Spot-area AF"
-msgstr "Normaler Bereich AF"
+msgstr "Punkt Bereich AF"
 
 #: camlibs/ptp2/config.c:5490 camlibs/ptp2/config.c:5500
-#, fuzzy
 msgid "Entire Display"
-msgstr "Anzeige"
+msgstr "Ganze Anzeige"
 
 #: camlibs/ptp2/config.c:5491 camlibs/ptp2/config.c:5501
 #: camlibs/ptp2/config.c:7115
@@ -6713,36 +6640,33 @@ msgstr "100%"
 
 #: camlibs/ptp2/config.c:5494
 msgid "200%"
-msgstr ""
+msgstr "200%"
 
 #: camlibs/ptp2/config.c:5502
 msgid "33%"
-msgstr ""
+msgstr "33%"
 
 #: camlibs/ptp2/config.c:5504
 msgid "66%"
-msgstr ""
+msgstr "66%"
 
 #: camlibs/ptp2/config.c:5519
 msgid "Single-servo AF"
 msgstr "Einzel AF"
 
 #: camlibs/ptp2/config.c:5520
-#, fuzzy
 msgid "Continuous-servo AF"
-msgstr "Kontinuierlicher AF"
+msgstr "Kontinuierlich gefahrener AF"
 
 #: camlibs/ptp2/config.c:5521
 msgid "Full-time-servo AF"
 msgstr "Kontinuierlicher AF"
 
 #: camlibs/ptp2/config.c:5522
-#, fuzzy
 msgid "Manual Focus (fixed)"
-msgstr "Manueller Fokus"
+msgstr "Manueller Fokus (fixiert)"
 
 #: camlibs/ptp2/config.c:5523
-#, fuzzy
 msgid "Manual Focus (selection)"
 msgstr "MF (selektiert)"
 
@@ -6812,14 +6736,12 @@ msgid "12 mm"
 msgstr "12 mm"
 
 #: camlibs/ptp2/config.c:5581
-#, fuzzy
 msgid "15 mm"
-msgstr "15 Minuten"
+msgstr "15 mm"
 
 #: camlibs/ptp2/config.c:5582
-#, fuzzy
 msgid "20 mm"
-msgstr "10 mm"
+msgstr "20 mm"
 
 #: camlibs/ptp2/config.c:5588
 msgid "1/60"
@@ -7183,15 +7105,15 @@ msgstr "Kontinuierlicher AF"
 
 #: camlibs/ptp2/config.c:5810
 msgid "C-AF"
-msgstr ""
+msgstr "C-AF"
 
 #: camlibs/ptp2/config.c:5811
 msgid "S-AF+MF"
-msgstr ""
+msgstr "S-AF+MF"
 
 #: camlibs/ptp2/config.c:5815
 msgid "DMF"
-msgstr ""
+msgstr "DMF"
 
 #: camlibs/ptp2/config.c:5849
 msgid "One Shot"
@@ -7244,49 +7166,40 @@ msgid "Shadow"
 msgstr "Schatten"
 
 #: camlibs/ptp2/config.c:5895
-#, fuzzy
 msgid "Custom Whitebalance: PC-1"
-msgstr "Benutzerdefinierter Weißabgleich PC-1"
+msgstr "Benutzerdefinierter Weißabgleich: PC-1"
 
 #: camlibs/ptp2/config.c:5896
-#, fuzzy
 msgid "Custom Whitebalance: PC-2"
-msgstr "Benutzerdefinierter Weißabgleich PC-2"
+msgstr "Benutzerdefinierter Weißabgleich: PC-2"
 
 #: camlibs/ptp2/config.c:5897
-#, fuzzy
 msgid "Custom Whitebalance: PC-3"
-msgstr "Benutzerdefinierter Weißabgleich PC-3"
+msgstr "Benutzerdefinierter Weißabgleich: PC-3"
 
 #: camlibs/ptp2/config.c:5899
-#, fuzzy
 msgid "Manual 3"
-msgstr "Manuell 2"
+msgstr "Manuell 3"
 
 #: camlibs/ptp2/config.c:5900
-#, fuzzy
 msgid "Manual 4"
-msgstr "Manuell 2"
+msgstr "Manuell 4"
 
 #: camlibs/ptp2/config.c:5901
-#, fuzzy
 msgid "Manual 5"
-msgstr "Manuell 2"
+msgstr "Manuell 5"
 
 #: camlibs/ptp2/config.c:5902
-#, fuzzy
 msgid "Custom Whitebalance: PC-4"
-msgstr "Benutzerdefinierter Weißabgleich PC-1"
+msgstr "Benutzerdefinierter Weißabgleich: PC-4"
 
 #: camlibs/ptp2/config.c:5903
-#, fuzzy
 msgid "Custom Whitebalance: PC-5"
-msgstr "Benutzerdefinierter Weißabgleich PC-1"
+msgstr "Benutzerdefinierter Weißabgleich: PC-5"
 
 #: camlibs/ptp2/config.c:5904
-#, fuzzy
 msgid "AWB White"
-msgstr "Schwarz & Weiß"
+msgstr "Automatische Whitebalance Weiß"
 
 #: camlibs/ptp2/config.c:5991
 msgid "Low sharpening"
@@ -7297,33 +7210,28 @@ msgid "Black & white"
 msgstr "Schwarz und Weiss"
 
 #: camlibs/ptp2/config.c:6000
-#, fuzzy
 msgid "AE bracket"
-msgstr "ADL Abstufung"
+msgstr "AE Abstufung"
 
 #: camlibs/ptp2/config.c:6001
-#, fuzzy
 msgid "ISO bracket"
-msgstr "Weißabgleichabstufung"
+msgstr "ISO Abstufung"
 
 #: camlibs/ptp2/config.c:6002
-#, fuzzy
 msgid "WB bracket"
 msgstr "Weißabgleichabstufung"
 
 #: camlibs/ptp2/config.c:6003
-#, fuzzy
 msgid "FE bracket"
-msgstr "Weißabgleichabstufung"
+msgstr "FE Abstufung"
 
 #: camlibs/ptp2/config.c:6004
-#, fuzzy
 msgid "Bracket off"
-msgstr "Abstufungsmodus"
+msgstr "Abstufungsmodus aus"
 
 #: camlibs/ptp2/config.c:6009
 msgid "implicit auto"
-msgstr ""
+msgstr "automatisch impliziert"
 
 #: camlibs/ptp2/config.c:6249 camlibs/ptp2/ptp.c:7836
 msgid "AE & Flash"
@@ -7508,26 +7416,22 @@ msgid "Extra Fine"
 msgstr "Extra fein"
 
 #: camlibs/ptp2/config.c:6739
-#, fuzzy
 msgid "RAW+JPEG (Std)"
-msgstr "RAW+JPEG"
+msgstr "RAW+JPEG (Standard)"
 
 #: camlibs/ptp2/config.c:6740
-#, fuzzy
 msgid "RAW+JPEG (Fine)"
-msgstr "RAW + JPEG Fein"
+msgstr "RAW + JPEG (Fein)"
 
 #: camlibs/ptp2/config.c:6741
-#, fuzzy
 msgid "RAW+JPEG (X.Fine)"
-msgstr "RAW + JPEG Fein"
+msgstr "RAW + JPEG (Extra Fein)"
 
 #: camlibs/ptp2/config.c:6750
 msgid "RAW+JPEG"
 msgstr "RAW+JPEG"
 
 #: camlibs/ptp2/config.c:6793
-#, fuzzy
 msgid "Multi-Shot"
 msgstr "Mehrpunkt"
 
@@ -7706,7 +7610,6 @@ msgid "AE lock (hold)"
 msgstr "AE Lock halten"
 
 #: camlibs/ptp2/config.c:6992
-#, fuzzy
 msgid "Bracketing burst"
 msgstr "Belichtungsreihe"
 
@@ -7729,7 +7632,7 @@ msgstr "Anzeigen"
 
 #: camlibs/ptp2/config.c:6997
 msgid "Access top item in MY MENU"
-msgstr ""
+msgstr "Zugriff auf oberstes Item in MY MENU"
 
 #: camlibs/ptp2/config.c:6998
 msgid "+NEF (RAW)"
@@ -7737,7 +7640,7 @@ msgstr "+NEF (Raw)"
 
 #: camlibs/ptp2/config.c:6999
 msgid "Framing grid"
-msgstr ""
+msgstr "Bildbereich Raster"
 
 #: camlibs/ptp2/config.c:7000 camlibs/ptp2/config.c:10493
 #: camlibs/ptp2/config.c:10556 camlibs/ptp2/config.c:10581
@@ -7763,20 +7666,19 @@ msgstr "Starte Filmaufnahme"
 
 #: camlibs/ptp2/config.c:7011
 msgid "On (image review excluded)"
-msgstr ""
+msgstr "An (Bild review ausgenommen)"
 
 #: camlibs/ptp2/config.c:7031
-#, fuzzy
 msgid "Face detection"
-msgstr "Flimmer Vermeidung"
+msgstr "Gesichtserkennung"
 
 #: camlibs/ptp2/config.c:7032
 msgid "Face and pupil detection"
-msgstr ""
+msgstr "Gesichts- und Pupillen Erkennung"
 
 #: camlibs/ptp2/config.c:7033
 msgid "Animal detection"
-msgstr ""
+msgstr "Tier Erkennung"
 
 #: camlibs/ptp2/config.c:7114
 msgid "75%"
@@ -7788,7 +7690,7 @@ msgstr "Unbekannter Wert"
 
 #: camlibs/ptp2/config.c:7276
 msgid "Nikon changeafarea works only in LiveView mode."
-msgstr ""
+msgstr "Nikon changeafarea funktioniert nur im Liveview Modus."
 
 #: camlibs/ptp2/config.c:7292
 msgid "Nikon autofocus drive did not focus."
@@ -7892,75 +7794,78 @@ msgstr "Weit %d"
 
 #: camlibs/ptp2/config.c:8074 camlibs/ptp2/library.c:3540
 msgid "Liveview cannot start: Battery exhausted"
-msgstr ""
+msgstr "Liveview kann nicht starten: Batterie fast leer"
 
 #: camlibs/ptp2/config.c:8075 camlibs/ptp2/library.c:3541
 msgid "Liveview cannot start: Temperature too high"
-msgstr ""
+msgstr "Liveview kann nicht starten: Temperatur zu hoch"
 
 #: camlibs/ptp2/config.c:8076 camlibs/ptp2/library.c:3542
 msgid "Liveview cannot start: TTL error"
-msgstr ""
+msgstr "Liveview kann nicht starten: TTL Fehler"
 
 #: camlibs/ptp2/config.c:8077 camlibs/ptp2/library.c:3543
 msgid "Liveview cannot start: In Mirror-up operation"
-msgstr ""
+msgstr "Liveview kann nicht starten: Mirror-Up Operation läuft"
 
 #: camlibs/ptp2/config.c:8078 camlibs/ptp2/library.c:3544
 msgid "Liveview cannot start: Lens is retracting"
-msgstr ""
+msgstr "Liveview kann nicht starten: Objektiv fährt ein"
 
 #: camlibs/ptp2/config.c:8079 camlibs/ptp2/library.c:3545
 msgid "Liveview cannot start: Minimum aperture warning"
-msgstr ""
+msgstr "Lieview kann nicht starten: Warnung minimum Blende"
 
 #: camlibs/ptp2/config.c:8080 camlibs/ptp2/library.c:3546
 msgid "Liveview cannot start: Processing of shooting operation"
-msgstr ""
+msgstr "Liveview kann nicht starten: Bearbeiten von Aufnahme läuft"
 
 #: camlibs/ptp2/config.c:8081 camlibs/ptp2/library.c:3547
 msgid "Liveview cannot start: Sequence error"
-msgstr ""
+msgstr "Liveview kann nicht starten: Sequenz Fehler"
 
 #: camlibs/ptp2/config.c:8082 camlibs/ptp2/library.c:3548
 msgid "Liveview cannot start: Exposure Program Mode is not P/A/S/M"
 msgstr ""
+"Liveview kann nicht starten: Belichtungsprogrammmodus ist nicht P/A/S/M"
 
 #: camlibs/ptp2/config.c:8083 camlibs/ptp2/library.c:3549
 msgid "Liveview cannot start: Bulb warning"
-msgstr ""
+msgstr "Liveview kann nicht starten: Langzeitbelichtungsmodus aktiv"
 
 #: camlibs/ptp2/config.c:8084 camlibs/ptp2/library.c:3550
 msgid "Liveview cannot start: Card unformatted"
-msgstr ""
+msgstr "Liview kann nicht starten: Karte nicht formatiert"
 
 #: camlibs/ptp2/config.c:8085 camlibs/ptp2/library.c:3551
 msgid "Liveview cannot start: Card error"
-msgstr ""
+msgstr "Liveview kann nicht starten: Kartenfehler"
 
 #: camlibs/ptp2/config.c:8086 camlibs/ptp2/library.c:3552
 msgid "Liveview cannot start: Card protected"
-msgstr ""
+msgstr "Liveview kann nicht starten: Karte schreibgeschützt"
 
 #: camlibs/ptp2/config.c:8087 camlibs/ptp2/library.c:3553
 msgid ""
 "Liveview cannot start: Recording destination card, but no card or card "
 "protected"
 msgstr ""
+"Liveview kann nicht starten: Aufnahmeziel ist Karte, aber entweder keine"
+" Karte vorhanden oder Karte schreibgeschützt"
 
 #: camlibs/ptp2/config.c:8088 camlibs/ptp2/config.c:8089
 #: camlibs/ptp2/library.c:3554 camlibs/ptp2/library.c:3555
 msgid "Liveview cannot start: Pending unretrieved SDRAM image"
-msgstr ""
+msgstr "Liveview kann nicht starten: Noch nicht runtergeladene SDRAM Bilder"
 
 #: camlibs/ptp2/config.c:8090 camlibs/ptp2/library.c:3556
 msgid "Liveview cannot start: Fully pressed button"
-msgstr ""
+msgstr "Liveview kann nicht starten: Knopf voll gedrückt"
 
 #: camlibs/ptp2/config.c:8092 camlibs/ptp2/library.c:3557
 #, c-format
 msgid "Liveview cannot start: code 0x%08x"
-msgstr ""
+msgstr "Liveview kann nicht starten: Code 0x%08x"
 
 #: camlibs/ptp2/config.c:8101 camlibs/ptp2/config.c:8419
 #: camlibs/ptp2/config.c:8421 camlibs/ptp2/library.c:3564
@@ -7970,184 +7875,166 @@ msgid "Nikon enable liveview failed"
 msgstr "Anschalten der Nikon LiveView fehlgeschlagen"
 
 #: camlibs/ptp2/config.c:8305 camlibs/ptp2/config.c:8345
-#, fuzzy
 msgid "Movie prohibit conditions: "
-msgstr "Live View Verhinderungszustand"
+msgstr "Film Verhinderungszustand:"
 
 #: camlibs/ptp2/config.c:8313
-#, fuzzy
 msgid "Not in application mode"
-msgstr "Applikationsmodus"
+msgstr "Nicht im Applikationsmodus"
 
 #: camlibs/ptp2/config.c:8314
 msgid "Set liveview selector is enabled"
-msgstr ""
+msgstr "Liveview Selektor ist angeschaltet"
 
 #: camlibs/ptp2/config.c:8315 camlibs/ptp2/config.c:8316
-#, fuzzy
 msgid "In enlarged liveview"
-msgstr "Anschalten der Nikon LiveView fehlgeschlagen"
+msgstr "In gezoomter Liveview"
 
 #: camlibs/ptp2/config.c:8317 camlibs/ptp2/config.c:8361
-#, fuzzy
 msgid "Card protected"
-msgstr "Datei ist schreibgeschützt."
+msgstr "Datei ist schreibgeschützt"
 
 #: camlibs/ptp2/config.c:8318
-#, fuzzy
 msgid "Already in movie recording"
-msgstr "Starte Filmaufnahme"
+msgstr "Filmaufnahme läuft bereits"
 
 #: camlibs/ptp2/config.c:8319
 msgid "Images / movies not yet record in buffer"
-msgstr ""
+msgstr "Bilder / Filme noch nicht im Buffer aufgenommen"
 
 #: camlibs/ptp2/config.c:8320
-#, fuzzy
 msgid "Card full"
-msgstr "Speicherkarte"
+msgstr "Karte voll"
 
 #: camlibs/ptp2/config.c:8321
-#, fuzzy
 msgid "Card not formatted"
 msgstr "Karte ist nicht formatiert"
 
 #: camlibs/ptp2/config.c:8322 camlibs/ptp2/config.c:8362
-#, fuzzy
 msgid "Card error"
-msgstr "Iris Fehler."
+msgstr "Karten Fehler"
 
 #: camlibs/ptp2/config.c:8327
-#, fuzzy
 msgid "No movie prohibit conditions"
-msgstr "Live View Verhinderungszustand"
+msgstr "Keine Film Verhinderungszustände"
 
 #: camlibs/ptp2/config.c:8352
-#, fuzzy
 msgid "Sequence error"
-msgstr "9 Bilder Reihe"
+msgstr "Sequenz Fehler"
 
 #: camlibs/ptp2/config.c:8353
 msgid "Fully pressed button"
-msgstr ""
+msgstr "Voll gedrückter Knopf"
 
 #: camlibs/ptp2/config.c:8354
-#, fuzzy
 msgid "Minimum aperture warning"
-msgstr "Ungültige Blende"
+msgstr "Warnung minimale Blende"
 
 #: camlibs/ptp2/config.c:8355
-#, fuzzy
 msgid "Battery exhausted"
-msgstr "Batterie leer, Kamera aus."
+msgstr "Batterie fast leer"
 
 #: camlibs/ptp2/config.c:8356
-#, fuzzy
 msgid "TTL error"
-msgstr "PTP: Ein/Ausgabefehler"
+msgstr "TTL Fehler"
 
 #: camlibs/ptp2/config.c:8357
 msgid "Pending unretrieved SDRAM image"
-msgstr ""
+msgstr "Noch nicht heruntergeladene SDRAM Bilder"
 
 #: camlibs/ptp2/config.c:8358
 msgid "Recording destination card, but no card or card protected"
-msgstr ""
+msgstr "Aufnahmeziel Karte, aber keine Karte oder Karte schreibgeschützt"
 
 #: camlibs/ptp2/config.c:8359
 msgid "Processing of shooting operation"
-msgstr ""
+msgstr "Aufnahme wird bearbeitet"
 
 #: camlibs/ptp2/config.c:8360
-#, fuzzy
 msgid "Temperature too high"
-msgstr "Farbtemperatur 1"
+msgstr "Temperatur zu hoch"
 
 #: camlibs/ptp2/config.c:8363
-#, fuzzy
 msgid "Card unformatted"
 msgstr "Karte ist nicht formatiert"
 
 #: camlibs/ptp2/config.c:8364
 msgid "Bulb warning"
-msgstr ""
+msgstr "Bulb Modus"
 
 #: camlibs/ptp2/config.c:8365
 msgid "In Mirror-up operation"
-msgstr ""
+msgstr "Mirror-Up Operation läuft"
 
 #: camlibs/ptp2/config.c:8366
-#, fuzzy
 msgid "Lens is retracting"
-msgstr "Info Anzeige Einstellung"
+msgstr "Objektiv fährt ein"
 
 #: camlibs/ptp2/config.c:8367
-#, fuzzy
 msgid "Exposure Program Mode is not P/A/S/M"
-msgstr "Belichtungsprogrammmodus"
+msgstr "Belichtungsprogrammmodus ist nicht P/A/S/M"
 
 #: camlibs/ptp2/config.c:8371
 msgid "Liveview should not be prohibited"
-msgstr ""
+msgstr "Liveview sollte nicht verhindert sein"
 
 #: camlibs/ptp2/config.c:8428
 msgid "Movie recording cannot start: Camera is not in application mode."
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: Kamera ist nicht im Applikationsmodus"
 
 #: camlibs/ptp2/config.c:8429
 msgid "Movie recording cannot start: Set liveview selector is enabled."
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: Liveview Selektor aktiviert"
 
 #: camlibs/ptp2/config.c:8430
 msgid "Movie recording cannot start: In enlarged liveview."
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: In gezoomter Liveview"
 
 #: camlibs/ptp2/config.c:8431
 msgid "Movie recording cannot start: Card protected."
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: Karte schreibgeschützt."
 
 #: camlibs/ptp2/config.c:8432
 msgid "Movie recording cannot start: Already in movie recording."
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: Aufnahme läuft bereits."
 
 #: camlibs/ptp2/config.c:8433
 msgid "Movie recording cannot start: Images / movies not yet record in buffer."
 msgstr ""
+"Filmaufnahme kann nicht starten: Bilder / Filme noch nicht im Aufnahme Buffer."
 
 #: camlibs/ptp2/config.c:8434
 msgid "Movie recording cannot start: Card full."
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: Karte voll."
 
 #: camlibs/ptp2/config.c:8435
 msgid "Movie recording cannot start: Card not formatted."
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: Karte nicht formatiert"
 
 #: camlibs/ptp2/config.c:8436
 msgid "Movie recording cannot start: Card error."
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: Kartenfehler"
 
 #: camlibs/ptp2/config.c:8437
 msgid "Movie recording cannot start: No card."
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: Keine Karte"
 
 #: camlibs/ptp2/config.c:8438
 #, c-format
 msgid "Movie recording cannot start: code 0x%08x"
-msgstr ""
+msgstr "Filmaufnahme kann nicht starten: Code 0x%08x"
 
 #: camlibs/ptp2/config.c:8880
 msgid "Flourescent"
 msgstr "Kunstlicht - Fluoreszenzlampe"
 
 #: camlibs/ptp2/config.c:8883
-#, fuzzy
 msgid "White set"
-msgstr "Zeit gesetzt"
+msgstr "Weiße Umgebung"
 
 #: camlibs/ptp2/config.c:8884
-#, fuzzy
 msgid "Black White"
-msgstr "Schwarz & Weiß"
+msgstr "Schwarz Weiß"
 
 #: camlibs/ptp2/config.c:8890
 msgid "Temperature 1"
@@ -8166,14 +8053,12 @@ msgid "Temperature 4"
 msgstr "Farbtemperatur 4"
 
 #: camlibs/ptp2/config.c:8894
-#, fuzzy
 msgid "Automatic Cool"
-msgstr "Automatisch C"
+msgstr "Automatisch Kalt"
 
 #: camlibs/ptp2/config.c:8895
-#, fuzzy
 msgid "Automatic Warm"
-msgstr "Automatischer Makro"
+msgstr "Automatisch Warm"
 
 #: camlibs/ptp2/config.c:8916 camlibs/ptp2/config.c:8948
 #: camlibs/ptp2/config.c:8964
@@ -8186,9 +8071,9 @@ msgid "large"
 msgstr "groß"
 
 #: camlibs/ptp2/config.c:9314
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown thumb size value '%s'."
-msgstr "Unbekannter Wert %04x"
+msgstr "Unbekannte Vorschau Größe '%s'."
 
 #: camlibs/ptp2/config.c:9322
 msgid "Internal RAM"
@@ -8280,9 +8165,8 @@ msgid "Create Wifi profile"
 msgstr "Lege WiFI Profil an"
 
 #: camlibs/ptp2/config.c:10023
-#, fuzzy
 msgid "Synchronize camera date and time with PC (UTC)"
-msgstr "Kamera Datum und Zeit mit dem PC synchronisieren"
+msgstr "Kamera Datum und Zeit mit dem PC synchronisieren (UTC)"
 
 #: camlibs/ptp2/config.c:10026
 msgid "Auto-Focus"
@@ -8323,9 +8207,8 @@ msgid "Drive Canon DSLR Autofocus"
 msgstr "Fahre Canon DSLR Autofokus"
 
 #: camlibs/ptp2/config.c:10040
-#, fuzzy
 msgid "Drive Fuji Autofocus"
-msgstr "Fahre NIKON DSLR Autofokus"
+msgstr "Fahre Fuji Autofokus"
 
 #: camlibs/ptp2/config.c:10041
 msgid "Drive Nikon DSLR Manual focus"
@@ -8390,13 +8273,12 @@ msgid "Movie Capture"
 msgstr "Film Aufnahme"
 
 #: camlibs/ptp2/config.c:10060
-#, fuzzy
 msgid "Movie Mode"
-msgstr "Film Sound"
+msgstr "Film Modus"
 
 #: camlibs/ptp2/config.c:10061
 msgid "PTP Opcode"
-msgstr ""
+msgstr "PTP Kommando"
 
 #: camlibs/ptp2/config.c:10066 camlibs/ptp2/config.c:10094
 msgid "Serial Number"
@@ -8436,19 +8318,16 @@ msgid "Battery Level"
 msgstr "Batterie Ladezustand"
 
 #: camlibs/ptp2/config.c:10082
-#, fuzzy
 msgid "Mirror Up Status"
-msgstr "Spiegel hochklappen"
+msgstr "Status Spiegel Hochklappen"
 
 #: camlibs/ptp2/config.c:10083
-#, fuzzy
 msgid "Mirror Up Shooting Count"
-msgstr "Spiegel hochklappen"
+msgstr "Aufnahme Anzahl mit Spiegel hochgeklappt"
 
 #: camlibs/ptp2/config.c:10084
-#, fuzzy
 msgid "Continuous Shooting Count"
-msgstr "Kontinuierliche Aufnamen"
+msgstr "Kontinuierliche Aufnahme Zahl"
 
 #: camlibs/ptp2/config.c:10085 camlibs/ptp2/config.c:10086
 #: camlibs/ptp2/config.c:10087 camlibs/ptp2/ptp.c:6743
@@ -9418,7 +9297,7 @@ msgstr "Weise Vorschau Knopf zu"
 #: camlibs/ptp2/config.c:10558 camlibs/ptp2/config.c:10566
 #: camlibs/ptp2/config.c:10593
 msgid "Continuous Shooting Speed Slow"
-msgstr "Langsame Kontinuierliche Aufname"
+msgstr "Langsame Kontinuierliche Aufnahme"
 
 #: camlibs/ptp2/config.c:10495 camlibs/ptp2/config.c:10543
 msgid "Movie Resolution"
@@ -9868,7 +9747,7 @@ msgstr "Nikon Aufnahme 1, "
 
 #: camlibs/ptp2/library.c:7647
 msgid "Nikon Capture 2, "
-msgstr "Nikon Aufname 2, "
+msgstr "Nikon Aufnahme 2, "
 
 #: camlibs/ptp2/library.c:7649
 msgid "Nikon Capture 3, "
@@ -10311,9 +10190,8 @@ msgid "MirrorUpCapture Already Started"
 msgstr "PTP-Aufnahme bereits beendet"
 
 #: camlibs/ptp2/ptp.c:5990
-#, fuzzy
 msgid "Invalid SBAttribute Value"
-msgstr "Ungültiger Status"
+msgstr "Ungültiger SBAttribute Wert"
 
 #: camlibs/ptp2/ptp.c:5992 camlibs/ptp2/ptp.c:5997
 msgid "Unknown Command"
@@ -10336,96 +10214,80 @@ msgid "Camera Not Ready"
 msgstr "Kamera nicht bereit"
 
 #: camlibs/ptp2/ptp.c:5999
-#, fuzzy
 msgid "Lens Cover Closed"
 msgstr "Objektivkappe aufgesetzt"
 
 #: camlibs/ptp2/ptp.c:6000
-#, fuzzy
 msgid "Low Battery"
-msgstr "Batterie"
+msgstr "Niedriger Batteriestand"
 
 #: camlibs/ptp2/ptp.c:6001
-#, fuzzy
 msgid "Object Not Ready"
-msgstr "Kamera nicht bereit"
+msgstr "Objekt nicht bereit"
 
 #: camlibs/ptp2/ptp.c:6002
-#, fuzzy
 msgid "Cannot Make Object"
-msgstr "Objekt verkürzen"
+msgstr "Kann Objekt nicht anlegen"
 
 #: camlibs/ptp2/ptp.c:6003
-#, fuzzy
 msgid "Memory Status Not Ready"
-msgstr "Kamera nicht bereit"
+msgstr "Speicherstatus nicht bereit"
 
 #: camlibs/ptp2/ptp.c:6006
-#, fuzzy
 msgid "Invalid ObjectPropCode"
-msgstr "PTP-Ungültiger Object Formatcode"
+msgstr "Ungültiger ObjectPropCode"
 
 #: camlibs/ptp2/ptp.c:6007
-#, fuzzy
 msgid "Invalid ObjectProp Format"
-msgstr "PTP-Ungültiger Object Formatcode"
+msgstr "Ungültiges ObjectProp Format"
 
 #: camlibs/ptp2/ptp.c:6008
-#, fuzzy
 msgid "Invalid ObjectProp Value"
-msgstr "PTP-Ungültiger Geräteeigenschaftswert"
+msgstr "Ungültiger ObjectProp Wert"
 
 #: camlibs/ptp2/ptp.c:6009
-#, fuzzy
 msgid "Invalid ObjectReference"
-msgstr "PTP-Ungültiges Object Handle"
+msgstr "Ungültiges Object Referenz"
 
 #: camlibs/ptp2/ptp.c:6010
-#, fuzzy
 msgid "Invalid Dataset"
-msgstr "Ungültiger Status"
+msgstr "Ungültiger Datensatz"
 
 #: camlibs/ptp2/ptp.c:6011
-#, fuzzy
 msgid "Specification By Group Unsupported"
-msgstr "PTP- Spezifikation durch Format nicht unterstützt"
+msgstr " Spezifikation durch Gruppe nicht unterstützt"
 
 #: camlibs/ptp2/ptp.c:6012
-#, fuzzy
 msgid "Specification By Depth Unsupported"
-msgstr "PTP- Spezifikation durch Format nicht unterstützt"
+msgstr "Spezifikation durch Tiefe nicht unterstützt"
 
 #: camlibs/ptp2/ptp.c:6013
 msgid "Object Too Large"
-msgstr ""
+msgstr "Objekt zu groß"
 
 #: camlibs/ptp2/ptp.c:6014
-#, fuzzy
 msgid "ObjectProp Not Supported"
-msgstr "Setzen der PTP-Geräteeigenschaft nicht unterstützt"
+msgstr "ObjectProp nicht unterstützt"
 
 #: camlibs/ptp2/ptp.c:6015
-#, fuzzy
 msgid "Invalid Media Session ID"
-msgstr "Media-Sitzung öffnen"
+msgstr "Ungültige Media Sitzungs ID"
 
 #: camlibs/ptp2/ptp.c:6016
 msgid "Media Session Limit Reached"
-msgstr ""
+msgstr "Medien Sitzung Limit erreicht"
 
 #: camlibs/ptp2/ptp.c:6017
 msgid "No More Data"
-msgstr ""
+msgstr "Keine Daten mehr"
 
 #: camlibs/ptp2/ptp.c:6018
-#, fuzzy
 msgid "Invalid WFC Syntax"
-msgstr "Ungültiger Status"
+msgstr "Ungültige WFC Syntax"
 
 #: camlibs/ptp2/ptp.c:6019
-#, fuzzy
 msgid "WFC Version Not Supported"
-msgstr "PTP-Operation nicht unterstützt"
+msgstr "WFC Version nicht unterstützt"
 
 #: camlibs/ptp2/ptp.c:6021
 msgid "PTP No Device"
@@ -10718,7 +10580,7 @@ msgstr "Modell ID"
 
 #: camlibs/ptp2/ptp.c:6190
 msgid "EOS Fixed Movie Switch"
-msgstr ""
+msgstr "EOS Fixierte Filmschalter"
 
 #: camlibs/ptp2/ptp.c:6431
 msgid "Shooting Bank"
@@ -11203,7 +11065,6 @@ msgid "Raw Bit Mode"
 msgstr "RAW Bit Modus"
 
 #: camlibs/ptp2/ptp.c:6797
-#, fuzzy
 msgid "Fluorescent Type"
 msgstr "Fluoreszenztyp"
 
@@ -11348,14 +11209,12 @@ msgid "Change Pic Ctrl Item"
 msgstr "Ändere Pic Ctrl Item"
 
 #: camlibs/ptp2/ptp.c:6934
-#, fuzzy
 msgid "Camera Language"
-msgstr "Kamera Hersteller"
+msgstr "Kamera Sprache"
 
 #: camlibs/ptp2/ptp.c:6936
-#, fuzzy
 msgid "Release without SD card"
-msgstr "Auslösen ohne CF Karte"
+msgstr "Auslösen ohne SD Karte"
 
 #: camlibs/ptp2/ptp.c:6944
 msgid "Image Compression"
@@ -11426,7 +11285,6 @@ msgid "Focus Areas"
 msgstr "Fokus Bereich"
 
 #: camlibs/ptp2/ptp.c:7172
-#, fuzzy
 msgid "Focus Point"
 msgstr "Fokuspunkt"
 
@@ -11451,9 +11309,8 @@ msgid "Objects in memory"
 msgstr "Objekte im Speicher"
 
 #: camlibs/ptp2/ptp.c:7391
-#, fuzzy
 msgid "Expose Index"
-msgstr "Belichtungszeit"
+msgstr ""
 
 #: camlibs/ptp2/ptp.c:7394
 msgid "AB Filter"
@@ -11464,17 +11321,14 @@ msgid "Still Image"
 msgstr "Standbild"
 
 #: camlibs/ptp2/ptp.c:7410
-#, fuzzy
 msgid "Near Far"
-msgstr "Nah 1"
+msgstr "Nah und Fern"
 
 #: camlibs/ptp2/ptp.c:7411
-#, fuzzy
 msgid "AF Area Position"
-msgstr "AF-Bereichspunkt"
+msgstr "AF Bereichspunkt"
 
 #: camlibs/ptp2/ptp.c:7412
-#, fuzzy
 msgid "Date Time"
 msgstr "Datum und Zeit"
 
@@ -11684,7 +11538,7 @@ msgstr "Einzelbildaufnahme"
 
 #: camlibs/ptp2/ptp.c:8112
 msgid "Continuous Shooting"
-msgstr "Kontinuierliche Aufnamen"
+msgstr "Kontinuierliche Aufnahmen"
 
 #: camlibs/ptp2/ptp.c:8113
 msgid "Timer (Single) Shooting"
@@ -12102,20 +11956,19 @@ msgstr "Open Capture starten"
 
 #: camlibs/ptp2/ptp.c:8482
 msgid "Start Enumerate Handles"
-msgstr ""
+msgstr "Beginne Aufzählung von Handles"
 
 #: camlibs/ptp2/ptp.c:8483
 msgid "Enumerate Handles"
-msgstr ""
+msgstr "Zähle Handles auf"
 
 #: camlibs/ptp2/ptp.c:8484
 msgid "Stop Enumerate Handles"
-msgstr ""
+msgstr "Stoppe Aufzählung von Handles"
 
 #: camlibs/ptp2/ptp.c:8485
-#, fuzzy
 msgid "Get Vendor Extension Maps"
-msgstr "Hersteller Erweiterung Listen"
+msgstr "Hole Hersteller Erweiterung Listen"
 
 #: camlibs/ptp2/ptp.c:8486
 msgid "Get Vendor Device Info"
@@ -12123,21 +11976,19 @@ msgstr "Device Hersteller Informationen abfragen"
 
 #: camlibs/ptp2/ptp.c:8487
 msgid "Get Resized Image Object"
-msgstr ""
+msgstr "Hole skaliertes Bild"
 
 #: camlibs/ptp2/ptp.c:8488
-#, fuzzy
 msgid "Get Filesystem Manifest"
-msgstr "Schnelles Dateisystem"
+msgstr "Hole Schnellen Dateisysteminhalt"
 
 #: camlibs/ptp2/ptp.c:8489
-#, fuzzy
 msgid "Get Stream Info"
-msgstr "Speicher Information abfragen"
+msgstr "Datenstrom Information"
 
 #: camlibs/ptp2/ptp.c:8490
 msgid "Get Stream"
-msgstr ""
+msgstr "Hole Datenstrom"
 
 #: camlibs/ptp2/ptp.c:8494
 msgid "Get object properties supported"
@@ -13759,7 +13610,7 @@ msgstr ""
 #: camlibs/st2205/library.c:73
 #, c-format
 msgid "Your USB picture frame has a ST2205 chipset\n"
-msgstr "Der USB Bilder Rahmer hat einen ST2205 Chipsatz.\n"
+msgstr "Der USB Bilder Rahmen hat einen ST2205 Chipsatz.\n"
 
 #: camlibs/st2205/library.c:82
 msgid ""
@@ -13972,30 +13823,28 @@ msgstr ""
 "Toshiba pdr-m11 Treiber.\n"
 
 #: camlibs/tp6801/library.c:84
-#, fuzzy, c-format
+#, c-format
 msgid "Your USB picture frame has a TP6801 chipset\n"
-msgstr "Der USB Bilder Rahmer hat einen ST2205 Chipsatz.\n"
+msgstr "Der USB Bilder Rahmen hat einen TP6801 Chipsatz.\n"
 
 #: camlibs/tp6801/library.c:93
-#, fuzzy
 msgid ""
 "TP6801 based picture frames come with a variety of resolutions.\n"
 "The gphoto driver for these devices allows you to download,\n"
 "upload and delete pictures from the picture frame."
 msgstr ""
-"ST2205 basierte Bilderrahmen haben viele mögliche Auflösungen.\n"
+"TP6801 basierte Bilderrahmen haben viele mögliche Auflösungen.\n"
 "Dieser Treiber erlaubt das Herunterladen, Hochladen und Löschen von Bildern\n"
 "vom Bilderrahmen."
 
 #: camlibs/tp6801/library.c:106
-#, fuzzy
 msgid ""
 "TP6801 USB picture frame driver\n"
 "Hans de Goede <hdegoede@redhat.com>\n"
 "This driver allows you to download, upload and delete pictures\n"
 "from the picture frame."
 msgstr ""
-"Treiber für ST2205 USB Bilder Rahmen\n"
+"Treiber für TP6801 USB Bilder Rahmen\n"
 "Hans de Goede <hdegoede@redhat.com>\n"
 "Dieser Treiber erlaubt das Herunterladen, Hochladen und Löschen von Bildern\n"
 "vom Bilderrahmen."
