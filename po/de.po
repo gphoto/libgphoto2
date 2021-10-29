@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 master\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-28 09:57+0200\n"
-"PO-Revision-Date: 2021-10-29 15:06+0200\n"
+"PO-Revision-Date: 2021-10-29 15:22+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -3689,7 +3689,7 @@ msgid ""
 "http://www.ap2c.com\n"
 "Support for the french Konica Q-M150."
 msgstr ""
-"Konica Q-M150 Library\n"
+"Konica Q-M150 Treiber\n"
 "Marcus Meissner <marcus@jet.franken.de>\n"
 "Aurelien Croc (AP2C) <programming@ap2c.com>\n"
 "http://www.ap2c.com\n"
@@ -3983,7 +3983,7 @@ msgid ""
 msgstr ""
 "Batteriepegel:\t\t%s\n"
 "Anzahl der Bilder:\t%d\n"
-"Min verbl. Kapazität:   %d\n"
+"Min verbleibende Kapazität:   %d\n"
 "Beschäftigt:\t\t%s\n"
 "Blitz ladend:\t\t%s\n"
 "Linsenstatus:\t\t"
@@ -4023,7 +4023,7 @@ msgstr "Normal\n"
 #: camlibs/minolta/dimagev/dimagev.c:362
 #, c-format
 msgid "Lens direction does not match flash light\n"
-msgstr "Linsenrichtung paßt nicht zum Blitz\n"
+msgstr "Linsenrichtung passt nicht zum Blitz\n"
 
 #: camlibs/minolta/dimagev/dimagev.c:365
 #, c-format
@@ -4106,7 +4106,7 @@ msgstr "CompactFlash-Karte erkannt\n"
 
 #: camlibs/mustek/mdc800.c:216
 msgid "No Compact Flash Card detected\n"
-msgstr "Keine CompactFlash-Karte erkann\n"
+msgstr "Keine CompactFlash-Karte erkannt\n"
 
 #: camlibs/mustek/mdc800.c:220
 msgid "Current Mode: Camera Mode\n"
@@ -4133,7 +4133,7 @@ msgid ""
 msgstr ""
 "Mustek MDC-800 gPhoto2-Bibliothek\n"
 "Henning Zabel <henning@uni-paderborn.de>\n"
-"Portiert auf gphoto2 von Marcus Meißner <marcus@jet.franken.de>\n"
+"Portiert auf gPhoto2 von Marcus Meißner <marcus@jet.franken.de>\n"
 "Unterstützt das serielle und das USB-Protokoll."
 
 #: camlibs/panasonic/coolshot/coolshot.c:245
@@ -4160,7 +4160,7 @@ msgid ""
 "File size is %ld bytes. The size of the largest file possible to upload is: "
 "%i bytes."
 msgstr ""
-"Dateigröße ist %ld bytes. Größtmögliche Datei für das Hochladen ist %i bytes."
+"Dateigröße ist %ld Bytes. Größtmögliche Datei für das Hochladen ist %i Bytes."
 
 #: camlibs/panasonic/dc1000.c:457 camlibs/panasonic/dc1580.c:576
 #: camlibs/ricoh/ricoh.c:838
@@ -4432,8 +4432,8 @@ msgid ""
 "Polaroid 640SE testing was done by Michael Golden <naugrim@juno.com>."
 msgstr ""
 "Bibliothek zum Zugriff auf verschiedene Polaroid Kameras.\n"
-"Originalauthor Peter Desnoyers <pjd@fred.cambridge.ma.us>, angepaßt für "
-"gphoto2 durch Nathan Stenzel <nathanstenzel@users.sourceforge.net> und Lutz "
+"Originalautor Peter Desnoyers <pjd@fred.cambridge.ma.us>, angepasst für "
+"gPhoto2 durch Nathan Stenzel <nathanstenzel@users.sourceforge.net> und Lutz "
 "Müller <lutz@users.sf.net>.\n"
 "Polaroid 640SE Tests durch Michael Golden <naugrim@juno.com>."
 
@@ -4450,8 +4450,8 @@ msgid ""
 "JD350e by Michael Trawny <trawny99@users.sourceforge.net>. Bugfixes by "
 "Marcus Meissner <marcus@jet.franken.de>."
 msgstr ""
-"Bibliothek zum Zugriff auf GrandTek 98x basierte Kameras.Original Author: "
-"Chris Byrne <adapt@ihug.co.nz>, Anpassung für gphoto2 durch Lutz Müller "
+"Bibliothek zum Zugriff auf GrandTek 98x basierte Kameras.Original Autor: "
+"Chris Byrne <adapt@ihug.co.nz>, Anpassung für gPhoto2 durch Lutz Müller "
 "<lutz@users.sf.net>. Verbesserung im Protokoll und Bild Nachbearbeitung für "
 "Jenoptik JD350e durch Michael Trawny <trawny99@users.sourceforge.net>. "
 "Bugfixes von Marcus Meißner <marcus@jet.franken.de>."
@@ -4483,7 +4483,7 @@ msgstr "fein"
 #: camlibs/sierra/sierra.c:1609 camlibs/sierra/sierra.c:1617
 #: camlibs/sierra/sierra.c:1827
 msgid "superfine"
-msgstr "superfein"
+msgstr "super fein"
 
 #: camlibs/polaroid/pdc700.c:155 camlibs/ptp2/config.c:2115
 #: camlibs/ptp2/config.c:6010 camlibs/ptp2/config.c:6625
@@ -4570,8 +4570,8 @@ msgid ""
 "Lantzer <rlantzer@umr.edu> for gphoto-4.x. Adapted for gphoto2 by Lutz "
 "Mueller <lutz@users.sf.net>."
 msgstr ""
-"Bibliothek zum Zugriff auf die Polaroid DC700 Kamera. Originaler Author Ryan "
-"Lantzer <rlantzer@umr.edu> für gphoto 4.x. Angepaßt für gphoto2 durch Lutz "
+"Bibliothek zum Zugriff auf die Polaroid DC700 Kamera. Originaler Autor Ryan "
+"Lantzer <rlantzer@umr.edu> für gPhoto 4.x. Angepasst für gPhoto2 durch Lutz "
 "Müller <lutz@users.sf.net>."
 
 #: camlibs/polaroid/pdc700.c:972 camlibs/ptp2/config.c:1570
@@ -4954,7 +4954,7 @@ msgstr "Kunstlicht - Glühlampe"
 
 #: camlibs/ptp2/config.c:1494
 msgid "Fluorescent: White"
-msgstr "Fluoreszenz: Weiss"
+msgstr "Fluoreszenz: Weiß"
 
 #: camlibs/ptp2/config.c:1495
 msgid "Fluorescent: Tungsten"
@@ -4997,11 +4997,11 @@ msgstr "RAW + JPEG Normal"
 
 #: camlibs/ptp2/config.c:1531
 msgid "Large Fine JPEG+RAW"
-msgstr "Large Fine JPEG+RAW"
+msgstr "Groß Fein JPEG+RAW"
 
 #: camlibs/ptp2/config.c:1532
 msgid "Large Normal JPEG+RAW"
-msgstr "Large Normal JPEG+RAW"
+msgstr "Groß Normal JPEG+RAW"
 
 #: camlibs/ptp2/config.c:1533
 msgid "Medium Normal JPEG+RAW"
@@ -5037,7 +5037,7 @@ msgstr "PROVIA/Standard"
 
 #: camlibs/ptp2/config.c:1549
 msgid "Velvia/Vivid"
-msgstr "Velvia/Vivid"
+msgstr "Velvia/Lebhaft"
 
 #: camlibs/ptp2/config.c:1550
 msgid "ASTIA/Soft"
@@ -5149,7 +5149,7 @@ msgstr "Lock"
 #: camlibs/ptp2/config.c:3762 camlibs/ptp2/config.c:3786
 #: camlibs/ptp2/config.c:4035 camlibs/ptp2/ptp.c:7721
 msgid "Night Portrait"
-msgstr "Nachtportrait"
+msgstr "Nacht Portrait"
 
 #: camlibs/ptp2/config.c:2065 camlibs/ptp2/config.c:3737
 #: camlibs/ptp2/config.c:3784 camlibs/ptp2/config.c:4002
@@ -5184,7 +5184,7 @@ msgstr "C3"
 
 #: camlibs/ptp2/config.c:2075
 msgid "Handheld Night Scene"
-msgstr "Handgehaltene Nachtlandschaft"
+msgstr "Hand gehaltene Nachtlandschaft"
 
 #: camlibs/ptp2/config.c:2076
 msgid "HDR Backlight Control"
@@ -5409,7 +5409,7 @@ msgstr "Mittelpunkt/Gewichtete Messung"
 
 #: camlibs/ptp2/config.c:2350
 msgid "Spot metering interlocked with AF frame"
-msgstr "Punktmessung mit AutoFokus Rahmen"
+msgstr "Punktmessung mit Autofokus Rahmen"
 
 #: camlibs/ptp2/config.c:2351
 msgid "Multi spot"
@@ -10176,7 +10176,7 @@ msgstr "Operation abgelehnt"
 
 #: camlibs/ptp2/ptp.c:5994
 msgid "Lens Cover Present"
-msgstr "Objektivkappe aufgesetzt"
+msgstr "Objektiv kappe aufgesetzt"
 
 #: camlibs/ptp2/ptp.c:5995
 msgid "Battery Low"
@@ -10188,7 +10188,7 @@ msgstr "Kamera nicht bereit"
 
 #: camlibs/ptp2/ptp.c:5999
 msgid "Lens Cover Closed"
-msgstr "Objektivkappe aufgesetzt"
+msgstr "Objektiv kappe aufgesetzt"
 
 #: camlibs/ptp2/ptp.c:6000
 msgid "Low Battery"
@@ -10220,7 +10220,7 @@ msgstr "Ungültiger ObjectProp Wert"
 
 #: camlibs/ptp2/ptp.c:6009
 msgid "Invalid ObjectReference"
-msgstr "Ungültiges Object Referenz"
+msgstr "Ungültiges Objekt Referenz"
 
 #: camlibs/ptp2/ptp.c:6010
 msgid "Invalid Dataset"
