@@ -216,6 +216,7 @@ AC_ARG_WITH([camlibs],[AS_HELP_STRING(
 	m4_set_contents(gp_m4s_camlib_set_standard, [ ]).
 	['outdated' is a set of camlibs for very old cameras: ]dnl
 	m4_set_contents(gp_m4s_camlib_set_outdated, [ ]).dnl
+	['everything' is the set including every camlib. ]dnl
 	[You can add or remove camlibs or camlib sets by appending ]dnl
 	[them to the list with a + or - sign in front.])],
 	[gp_sh_with_camlibs="${withval}"],
