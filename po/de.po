@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 master\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2021-10-28 09:57+0200\n"
-"PO-Revision-Date: 2021-10-29 15:22+0200\n"
+"PO-Revision-Date: 2021-10-30 15:30+0200\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -10457,7 +10457,7 @@ msgstr "Aufnahmespeicherziel"
 
 #: camlibs/ptp2/ptp.c:6159
 msgid "Name Prefix"
-msgstr "Namensprefix"
+msgstr "Namenspräfix"
 
 #: camlibs/ptp2/ptp.c:6160
 msgid "Size Quality Mode"
@@ -10465,7 +10465,7 @@ msgstr "Bildgröße und -qualität"
 
 #: camlibs/ptp2/ptp.c:6161
 msgid "Supported Thumb Size"
-msgstr "Unterstützte Thumbnail Größe"
+msgstr "Unterstützte Vorschau Größe"
 
 #: camlibs/ptp2/ptp.c:6162
 msgid "Size of Output Data from Camera"
@@ -10489,7 +10489,7 @@ msgstr "UNIX Zeit"
 
 #: camlibs/ptp2/ptp.c:6169
 msgid "Camera Body ID"
-msgstr "Kamera Body ID"
+msgstr "Kamera Gehäuse ID"
 
 #: camlibs/ptp2/ptp.c:6171
 msgid "Disp Av"
@@ -10673,7 +10673,7 @@ msgstr "Copyright aktivieren"
 
 #: camlibs/ptp2/ptp.c:6549
 msgid "Exposure ISO Step"
-msgstr "Belichtungs ISO Schritt"
+msgstr "Belichtung ISO Schritt"
 
 #: camlibs/ptp2/ptp.c:6551
 msgid "Exposure Step"
@@ -10689,15 +10689,15 @@ msgstr "Mittelpunkt/Gewichtet Bereich"
 
 #: camlibs/ptp2/ptp.c:6559
 msgid "Exposure Base Matrix"
-msgstr "Belichtungs Basis Matrix"
+msgstr "Belichtung Basis Matrix"
 
 #: camlibs/ptp2/ptp.c:6561
 msgid "Exposure Base Center"
-msgstr "Belichtungs Basis Zentrum"
+msgstr "Belichtung Basis Zentrum"
 
 #: camlibs/ptp2/ptp.c:6563
 msgid "Exposure Base Spot"
-msgstr "Belichtungs Basis Punkt"
+msgstr "Belichtung Basis Punkt"
 
 #: camlibs/ptp2/ptp.c:6565
 msgid "Live View AF Area"
@@ -10709,7 +10709,7 @@ msgstr "Zeit für automatische Sensor Abschaltung"
 
 #: camlibs/ptp2/ptp.c:6575
 msgid "Self Timer Delay"
-msgstr "Selbstauslöserzeit"
+msgstr "Selbstauslösezeit"
 
 #: camlibs/ptp2/ptp.c:6579
 msgid "Img Conf Time"
@@ -10729,7 +10729,7 @@ msgstr "Abstand bei Mehrfachbelichtung"
 
 #: camlibs/ptp2/ptp.c:6589
 msgid "Exposure delay mode"
-msgstr "Belichtungs Verzögerungs Modus"
+msgstr "Belichtung Verzögerung Modus"
 
 #: camlibs/ptp2/ptp.c:6591 camlibs/ptp2/ptp.c:6932
 msgid "Long Exposure Noise Reduction"
@@ -10790,11 +10790,11 @@ msgstr "Photo Info. Playback"
 
 #: camlibs/ptp2/ptp.c:6634
 msgid "Assign Func. Button"
-msgstr "Weise Func. Button zu"
+msgstr "Weise Funktions. Button zu"
 
 #: camlibs/ptp2/ptp.c:6636
 msgid "Customise Command Dials"
-msgstr "Passe Kommando Dials an"
+msgstr "Passe Kommando Räder an"
 
 #: camlibs/ptp2/ptp.c:6640
 msgid "Aperture Setting"
@@ -10815,7 +10815,7 @@ msgstr "Mittlerer Button Zoom Faktor"
 
 #: camlibs/ptp2/ptp.c:6650
 msgid "Function Button 2"
-msgstr "Funktions Knopf 2"
+msgstr "Funktion Knopf 2"
 
 #: camlibs/ptp2/ptp.c:6654
 msgid "Normal AF On"
@@ -10843,7 +10843,7 @@ msgstr "Manuell gesetzte Objektivnummer"
 
 #: camlibs/ptp2/ptp.c:6666
 msgid "Movie Screen Size"
-msgstr "Film Bildschirmgrösse"
+msgstr "Film Bildschirmgröße"
 
 #: camlibs/ptp2/ptp.c:6668
 msgid "Movie Voice"
@@ -10867,15 +10867,15 @@ msgstr "Aktivierung der Abstufung"
 
 #: camlibs/ptp2/ptp.c:6682
 msgid "Exposure Bracketing Step"
-msgstr "Belichtungs Abstufung Schritt"
+msgstr "Belichtung Abstufung Schritt"
 
 #: camlibs/ptp2/ptp.c:6684
 msgid "Exposure Bracketing Program"
-msgstr "Belichtungs Abstufung Programm"
+msgstr "Belichtung Abstufung Programm"
 
 #: camlibs/ptp2/ptp.c:6686
 msgid "Auto Exposure Bracket Count"
-msgstr "Automatische Belichtungs Abstufung Anzahl"
+msgstr "Automatische Belichtung Abstufung Anzahl"
 
 #: camlibs/ptp2/ptp.c:6687
 msgid "White Balance Bracket Step"
@@ -11015,19 +11015,19 @@ msgstr "Belichtungskorrektur des externen Blitzes"
 
 #: camlibs/ptp2/ptp.c:6783
 msgid "BW Filler Effect"
-msgstr "Schwarz/Weiss Filtereffekt"
+msgstr "Schwarz/Weiß Filtereffekt"
 
 #: camlibs/ptp2/ptp.c:6785
 msgid "BW Sharpness"
-msgstr "Schwarz/Weiss Schärfe"
+msgstr "Schwarz/Weiß Schärfe"
 
 #: camlibs/ptp2/ptp.c:6787
 msgid "BW Contrast"
-msgstr "Schwarz/Weiss Kontrast"
+msgstr "Schwarz/Weiß Kontrast"
 
 #: camlibs/ptp2/ptp.c:6789
 msgid "BW Setting Type"
-msgstr "Schwarz/Weiss Einstellungsart"
+msgstr "Schwarz/Weiß Einstellungsart"
 
 #: camlibs/ptp2/ptp.c:6791
 msgid "Slot 2 Save Mode"
@@ -11087,7 +11087,7 @@ msgstr "Auto FP"
 
 #: camlibs/ptp2/ptp.c:6843
 msgid "Warning Display"
-msgstr "Warnungs Anzeige"
+msgstr "Warnung Anzeige"
 
 #: camlibs/ptp2/ptp.c:6845
 msgid "Battery Cell Kind"
@@ -11095,7 +11095,7 @@ msgstr "Batterietyp"
 
 #: camlibs/ptp2/ptp.c:6847
 msgid "ISO Auto High Limit"
-msgstr "ISO Auto High Limit"
+msgstr "ISO Auto Hoch Limit"
 
 #: camlibs/ptp2/ptp.c:6851
 msgid "Continuous Speed High"
@@ -11123,7 +11123,7 @@ msgstr "Anzeige"
 
 #: camlibs/ptp2/ptp.c:6863
 msgid "Cell Kind Priority"
-msgstr "Battery Typ Priorität"
+msgstr "Batterie Typ Priorität"
 
 #: camlibs/ptp2/ptp.c:6865
 msgid "Bracketing Frames and Steps"
@@ -11147,11 +11147,11 @@ msgstr "Live View Verhinderungszustand"
 
 #: camlibs/ptp2/ptp.c:6877
 msgid "Exposure Display Status"
-msgstr "Belichtungs Anzeige Status"
+msgstr "Belichtung Anzeige Status"
 
 #: camlibs/ptp2/ptp.c:6879
 msgid "Exposure Indicate Status"
-msgstr "Belichtungs Indikator Status"
+msgstr "Belichtung Indikator Status"
 
 #: camlibs/ptp2/ptp.c:6881
 msgid "Info Display Error Status"
@@ -11159,7 +11159,7 @@ msgstr "Info Anzeige Fehler Status"
 
 #: camlibs/ptp2/ptp.c:6883
 msgid "Exposure Indicate Lightup"
-msgstr "Belichtungs Indikator Aufleuchten"
+msgstr "Belichtung Indikator Aufleuchten"
 
 #: camlibs/ptp2/ptp.c:6889
 msgid "Flash MRepeat Value"
@@ -11387,7 +11387,7 @@ msgstr "Unbenutzt"
 
 #: camlibs/ptp2/ptp.c:7891
 msgid "SDRam"
-msgstr "SDRam"
+msgstr "SDRAM"
 
 #: camlibs/ptp2/ptp.c:7893
 msgid "USB 1.1"
@@ -11594,7 +11594,7 @@ msgstr "Höher 2"
 
 #: camlibs/ptp2/ptp.c:8198
 msgid "Standard Development Parameters"
-msgstr "Standart Entwicklungsparameter"
+msgstr "Standard Entwicklungsparameter"
 
 #: camlibs/ptp2/ptp.c:8199
 msgid "Development Parameters 1"
@@ -11686,7 +11686,7 @@ msgstr "Abstrakte Audio Video Wiedergabeliste"
 
 #: camlibs/ptp2/ptp.c:8366
 msgid "Abstract Contact Group"
-msgstr "Abstrakte Addressen Gruppe"
+msgstr "Abstrakte Adressen Gruppe"
 
 #: camlibs/ptp2/ptp.c:8367
 msgid "Abstract Message Folder"
@@ -11698,11 +11698,11 @@ msgstr "Abstrakte Produktion mit Kapiteln"
 
 #: camlibs/ptp2/ptp.c:8369
 msgid "Abstract Audio Playlist"
-msgstr "Astrakte Audio Wiedergabeliste"
+msgstr "Abstrakte Audio Wiedergabeliste"
 
 #: camlibs/ptp2/ptp.c:8370
 msgid "Abstract Video Playlist"
-msgstr "Astrakte Video Wiedergabeliste"
+msgstr "Abstrakte Video Wiedergabeliste"
 
 #: camlibs/ptp2/ptp.c:8371
 msgid "Abstract Mediacast"
@@ -11738,7 +11738,7 @@ msgstr "Abstraktes Dokument"
 
 #: camlibs/ptp2/ptp.c:8379
 msgid "XMLDocument"
-msgstr "XMLDokument"
+msgstr "XML Dokument"
 
 #: camlibs/ptp2/ptp.c:8380
 msgid "Microsoft Word Document"
@@ -11766,7 +11766,7 @@ msgstr "Abstrakte Nachricht"
 
 #: camlibs/ptp2/ptp.c:8386
 msgid "Undefined Contact"
-msgstr "Undefinierter Addressbucheintrag"
+msgstr "Undefinierter Adressbucheintrag"
 
 #: camlibs/ptp2/ptp.c:8387
 msgid "Abstract Contact"
@@ -11798,7 +11798,7 @@ msgstr "vCalendar2"
 
 #: camlibs/ptp2/ptp.c:8394
 msgid "Undefined Windows Executable"
-msgstr "Undefiniertes Windows Executable"
+msgstr "Undefiniertes Windows Programm"
 
 #: camlibs/ptp2/ptp.c:8395
 msgid "Media Cast"
@@ -11851,7 +11851,7 @@ msgstr "Objekt holen"
 
 #: camlibs/ptp2/ptp.c:8462
 msgid "Get thumbnail"
-msgstr "Thumbnail holen"
+msgstr "Vorschau holen"
 
 #: camlibs/ptp2/ptp.c:8463
 msgid "Delete object"
@@ -11907,7 +11907,7 @@ msgstr "Device Property Wert zurücksetzen"
 
 #: camlibs/ptp2/ptp.c:8476
 msgid "Terminate open capture"
-msgstr "Open Capture beenden"
+msgstr "Offene Aufnahme beenden"
 
 #: camlibs/ptp2/ptp.c:8477
 msgid "Move object"
@@ -11923,7 +11923,7 @@ msgstr "Teilobjekt holen"
 
 #: camlibs/ptp2/ptp.c:8480
 msgid "Initiate open capture"
-msgstr "Open Capture starten"
+msgstr "Offene Aufnahme starten"
 
 #: camlibs/ptp2/ptp.c:8482
 msgid "Start Enumerate Handles"
@@ -11963,7 +11963,7 @@ msgstr "Hole Datenstrom"
 
 #: camlibs/ptp2/ptp.c:8494
 msgid "Get object properties supported"
-msgstr "Unterstützte Objekt Properties abfragen"
+msgstr "Unterstützte Objekt Eigenschaften abfragen"
 
 #: camlibs/ptp2/ptp.c:8495
 msgid "Get object property description"
@@ -12007,15 +12007,15 @@ msgstr "Firmware des Geräts aktualisieren"
 
 #: camlibs/ptp2/ptp.c:8505
 msgid "Skip to next position in playlist"
-msgstr "Zur nächsten Position in der Wiedergabeliste skippen"
+msgstr "Zur nächsten Position in der Wiedergabeliste springen"
 
 #: camlibs/ptp2/ptp.c:8508
 msgid "Get secure time challenge"
-msgstr "Secure Time Challenge holen"
+msgstr "Sichere Time Challenge holen"
 
 #: camlibs/ptp2/ptp.c:8509
 msgid "Get secure time response"
-msgstr "Secure Time Anfrage holen"
+msgstr "Sichere Time Anfrage holen"
 
 #: camlibs/ptp2/ptp.c:8510
 msgid "Set license response"
@@ -12039,7 +12039,7 @@ msgstr "Meter Response holen"
 
 #: camlibs/ptp2/ptp.c:8515
 msgid "Clean data store"
-msgstr "Daten Store löschen"
+msgstr "Daten Speicher löschen"
 
 #: camlibs/ptp2/ptp.c:8516
 msgid "Get license state"
