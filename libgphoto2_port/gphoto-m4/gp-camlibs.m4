@@ -240,8 +240,9 @@ AS_VAR_IF([gp_sh_with_camlibs], [canon], [dnl
     # Autoselecting the 'ptp2' driver in addition to the 'canon'   #
     # driver to prevent unnecessary support requests.              #
     #==============================================================#
-  GP_SLEEP([5])
-])])dnl
+])
+	GP_SLEEP([5])
+])dnl
 
 dnl set -x
 
