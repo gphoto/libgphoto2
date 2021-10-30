@@ -212,7 +212,7 @@ AC_ARG_WITH([camlibs],[AS_HELP_STRING(
 	[Compile camera drivers (camlibs) in <list>. ]dnl
 	[Camlibs may be separated with commas. ]dnl
 	[CAUTION: DRIVER NAMES AND CAMERA NAMES MAY DIFFER. ]dnl
-	['standard' is the default is a standard set of camlibs: ]dnl
+	['standard' is the default and is a standard set of camlibs: ]dnl
 	m4_set_contents(gp_m4s_camlib_set_standard, [ ]).
 	['outdated' is a set of camlibs for very old cameras: ]dnl
 	m4_set_contents(gp_m4s_camlib_set_outdated, [ ]).dnl
