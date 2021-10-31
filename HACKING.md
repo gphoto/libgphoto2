@@ -256,7 +256,8 @@ Portability
 Please remember that people will be running gphoto2 on a wide variety
 of operating systems and CPUs and will be compiling it on a wide
 variety of C compilers.  As you write your code, be sure not to make
-any assumptions in your code that aren't in the ANSI C89 standard.
+any assumptions in your code that aren't in the C99 standard.
+
 If your code absolutely needs some feature or header file that isn't
 available everywhere, write an autoconf test so that the configure
 script will detect if that feature is available at compile time and
@@ -334,21 +335,21 @@ for more details.
 
   gcc is a great C compiler, but it isn't installed on everybody's
   systems (yet!).  Avoid use of proprietary gcc language extensions
-  and features that aren't available in ANSI C89 compilers.  Sure,
+  and features that aren't available in C99 compilers.  Sure,
   there's probably some code that would be more elegant using a gcc
   language extension, but somebody, somewhere will be denied the use
   of the best digital camera application in existence because of it.
 
-  This also applies to new standard C features that appeared in the
-  C99 specification of the language.  There is not much support yet in
-  the installed base of C compilers to allow unrestricted use, but
-  this will change as time goes by.  In the meantime, use `autoconf`
-  to detect if the feature is available at run-time and act
+  This also applies to new standard C features that appeared in later
+  specification of the C language.  There is varying support in the
+  installed base of C compilers to allow unrestricted use, but this
+  will change as time goes by.  In the meantime, use `autoconf` to
+  detect if the feature is available at run-time and act
   appropriately.
 
   Although one-line comments starting with `//` have been available in
   most compilers for several years, they were only officially added to
-  the ANSI C99 spec and some compilers out there still don't support
+  the C99 spec and some compilers out there still don't support
   them.  The `inline` keyword also falls into the same category, but
   configure tests for this feature at compile time and supplies the
   appropriate inline keyword as a macro.  Finally, don't add
