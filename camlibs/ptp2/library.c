@@ -3537,23 +3537,23 @@ enable_liveview:
 
 				if (cond.u32) {
 					/* we could have multiple reasons, but just report the first one. by decreasing order of possibility */
-					if (cond.u32 & (1<<8)) { gp_context_error (context, _("Liveview cannot start: Battery exhausted")); return GP_ERROR; }
-					if (cond.u32 & (1<<17)){ gp_context_error (context, _("Liveview cannot start: Temperature too high")); return GP_ERROR; }
-					if (cond.u32 & (1<<9)) { gp_context_error (context, _("Liveview cannot start: TTL error")); return GP_ERROR; }
-					if (cond.u32 & (1<<22)){ gp_context_error (context, _("Liveview cannot start: In Mirror-up operation")); return GP_ERROR; }
-					if (cond.u32 & (1<<24)){ gp_context_error (context, _("Liveview cannot start: Lens is retracting")); return GP_ERROR; }
-					if (cond.u32 & (1<<5)) { gp_context_error (context, _("Liveview cannot start: Minimum aperture warning")); return GP_ERROR; }
-					if (cond.u32 & (1<<15)){ gp_context_error (context, _("Liveview cannot start: Processing of shooting operation")); return GP_ERROR; }
-					if (cond.u32 & (1<<2)) { gp_context_error (context, _("Liveview cannot start: Sequence error")); return GP_ERROR; }
-					if (cond.u32 & (1<<31)) { gp_context_error (context, _("Liveview cannot start: Exposure Program Mode is not P/A/S/M")); return GP_ERROR; }
-					if (cond.u32 & (1<<21)) { gp_context_error (context, _("Liveview cannot start: Bulb warning")); return GP_ERROR; }
-					if (cond.u32 & (1<<20)) { gp_context_error (context, _("Liveview cannot start: Card unformatted")); return GP_ERROR; }
-					if (cond.u32 & (1<<19)) { gp_context_error (context, _("Liveview cannot start: Card error")); return GP_ERROR; }
-					if (cond.u32 & (1<<18)) { gp_context_error (context, _("Liveview cannot start: Card protected")); return GP_ERROR; }
-					if (cond.u32 & (1<<14)) { gp_context_error (context, _("Liveview cannot start: Recording destination card, but no card or card protected")); return GP_ERROR; }
-					if (cond.u32 & (1<<12)) { gp_context_error (context, _("Liveview cannot start: Pending unretrieved SDRAM image")); return GP_ERROR; }
-					if (cond.u32 & (1<<12)) { gp_context_error (context, _("Liveview cannot start: Pending unretrieved SDRAM image")); return GP_ERROR; }
-					if (cond.u32 & (1<<4)) { gp_context_error (context, _("Liveview cannot start: Fully pressed button")); return GP_ERROR; }
+					if (cond.u32 & (1<<8)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Battery exhausted")); return GP_ERROR; }
+					if (cond.u32 & (1<<17)){ gp_context_error (context, _("Liveview cannot start: %s"),_("Temperature too high")); return GP_ERROR; }
+					if (cond.u32 & (1<<9)) { gp_context_error (context, _("Liveview cannot start: %s"),_("TTL error")); return GP_ERROR; }
+					if (cond.u32 & (1<<22)){ gp_context_error (context, _("Liveview cannot start: %s"),_("In Mirror-up operation")); return GP_ERROR; }
+					if (cond.u32 & (1<<24)){ gp_context_error (context, _("Liveview cannot start: %s"),_("Lens is retracting")); return GP_ERROR; }
+					if (cond.u32 & (1<<5)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Minimum aperture warning")); return GP_ERROR; }
+					if (cond.u32 & (1<<15)){ gp_context_error (context, _("Liveview cannot start: %s"),_("Processing of shooting operation")); return GP_ERROR; }
+					if (cond.u32 & (1<<2)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Sequence error")); return GP_ERROR; }
+					if (cond.u32 & (1<<31)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Exposure Program Mode is not P/A/S/M")); return GP_ERROR; }
+					if (cond.u32 & (1<<21)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Bulb warning")); return GP_ERROR; }
+					if (cond.u32 & (1<<20)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Card unformatted")); return GP_ERROR; }
+					if (cond.u32 & (1<<19)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Card error")); return GP_ERROR; }
+					if (cond.u32 & (1<<18)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Card protected")); return GP_ERROR; }
+					if (cond.u32 & (1<<14)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Recording destination card, but no card or card protected")); return GP_ERROR; }
+					if (cond.u32 & (1<<12)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Pending unretrieved SDRAM image")); return GP_ERROR; }
+					if (cond.u32 & (1<<12)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Pending unretrieved SDRAM image")); return GP_ERROR; }
+					if (cond.u32 & (1<<4)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Fully pressed button")); return GP_ERROR; }
 					gp_context_error (context, _("Liveview cannot start: code 0x%08x"), cond.u32);
 					return GP_ERROR;
 				}
