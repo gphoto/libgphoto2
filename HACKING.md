@@ -101,11 +101,11 @@ before you commit any changes, double check with the author that your
 changes won't break the driver.
 
 If you want to write a driver for gphoto2, the easiest way to do so
-would be to copy over the contents of camlibs/template and fill in
+would be to copy over the contents of `camlibs/template/` and fill in
 your code.
 
 Use something like `CHECK_RESULT` (see for example
-`libgphoto2/filesys.c`).
+`libgphoto2/gphoto2-filesys.c`).
 
 Let's say you write a driver called sillycam. Please set up a file
 called `library.c` containing all gphoto2-specific code (like
@@ -154,7 +154,7 @@ my_func (int arg)
 
 	/*
 	 * This is a multiline
-	 * comment. Use TAB for 
+	 * comment. Use TAB for
 	 * indentation!
 	 */
 	res = gp_some_action (var);
@@ -178,9 +178,9 @@ my_func (int arg)
 }
 ```
 
-Please always check the return value of `gp_`-functions! We defined some
-handy macros all over the place (like `CHECK_RESULT`) - by using those,
-you'll avoid lots of `if () {} else {}`.
+Please always check the return value of `gp_`-functions! We have
+defined some handy macros all over the place (like `CHECK_RESULT`) -
+by using those, you'll avoid lots of `if () {} else {}`.
 
 Emacs users may define and use a `gphoto-c-mode` by putting the
 following stuff into their `.emacs` file:
@@ -195,7 +195,7 @@ following stuff into their `.emacs` file:
       (c-set-style "linux")
       (setq indent-tabs-mode t)
       (font-lock-mode))
-    
+
     ;;
     (setq auto-mode-alist (cons '("/home/user/src/gphoto.*\\.[ch]$" . gphoto-c-mode)
                            auto-mode-alist))
@@ -320,7 +320,7 @@ for more details.
   at once.
 
   The macros have the form `AANN[a]toh` or `htoAANN[a]`, where `AA` is
-  `le` (little-endian) or `be` (big-endian), `NN` is `16` or `32`
+  `le` (little-endian) or `be` (big-endian), `NN` is `16`, `32`, or `64`
   (bits in the word) and `a`, if present, means that the preceding
   type is located in a byte array, not an integer. `h` refers to
   `host`, and could be big or little-endian depending on the current
