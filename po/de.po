@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libgphoto2 master\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2021-10-28 09:57+0200\n"
-"PO-Revision-Date: 2021-10-30 15:30+0200\n"
+"POT-Creation-Date: 2021-10-31 11:54+0100\n"
+"PO-Revision-Date: 2021-10-31 11:54+0100\n"
 "Last-Translator: Marcus Meissner <marcus@jet.franken.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -2026,17 +2026,18 @@ msgstr ""
 "Docupen Scanner kann keine einzelnen Bilder herunterladen oder löschen,\n"
 "sondern nur alle auf einmal. Als Workaround wird eine Cache Datei benutzt\n"
 "die den Scanner Speicher zwischenspeichert. Dieser Cache wird durch jeden\n"
-"Download befüllt, so das der Download des ersten Bildes sehr lange dauern"
-" wird,\n"
-"wenn der Cache entweder leer oder ungültig ist. Der Cache wird verworfen,"
-" wenn\n"
-"der benutzte Speicher im Scanner und die Cache Größe nicht mehr"
-" übereinstimmen.\n"
+"Download befüllt, so das der Download des ersten Bildes sehr lange dauern "
+"wird,\n"
+"wenn der Cache entweder leer oder ungültig ist. Der Cache wird verworfen, "
+"wenn\n"
+"der benutzte Speicher im Scanner und die Cache Größe nicht mehr "
+"übereinstimmen.\n"
 "Der Cache befindet ist in ~/.cache/docupen-SERIAL.bin\n"
 "\n"
-"Der Scanner hat eine sehr kurze Auto-Power-Down Zeit (8 Sekunden), auch wenn\n"
-"er an USB angebunden ist. Das heißt er muss vor jeder gPhoto2 Operation"
-" angeschaltet\n"
+"Der Scanner hat eine sehr kurze Auto-Power-Down Zeit (8 Sekunden), auch "
+"wenn\n"
+"er an USB angebunden ist. Das heißt er muss vor jeder gPhoto2 Operation "
+"angeschaltet\n"
 "werden, und in manchen Situationen erfordern das man Knöpfe drückt um\n"
 "das Abschalten zu verhindern."
 
@@ -2205,8 +2206,8 @@ msgstr ""
 #, c-format
 msgid "Unsupported port type: %d. This driver only works with USB cameras.\n"
 msgstr ""
-"Nicht unterstützter Port Typ: %d. Dieser Treiber unterstützt nur"
-" USB-Kameras.\n"
+"Nicht unterstützter Port Typ: %d. Dieser Treiber unterstützt nur USB-"
+"Kameras.\n"
 
 #: camlibs/gsmart300/library.c:227 camlibs/spca50x/library.c:618
 msgid "Could not reset camera.\n"
@@ -2248,8 +2249,8 @@ msgstr ""
 "Marcus Meißner <marcus@jet.franken.de>\n"
 "Treiber für die HP Photosmart 215 Kamera.\n"
 "Entwickelt auf Basis des hp215 Programms.\n"
-"Dieser Treiber erlaubt Download von Bildern und Vorschauen, sowie das Löschen "
-"von Bildern.\n"
+"Dieser Treiber erlaubt Download von Bildern und Vorschauen, sowie das "
+"Löschen von Bildern.\n"
 
 #: camlibs/iclick/library.c:104
 #, c-format
@@ -3036,6 +3037,7 @@ msgid "Card is not formatted"
 msgstr "Karte ist nicht formatiert"
 
 #: camlibs/kodak/dc240/library.c:606 camlibs/ptp2/config.c:8323
+#: camlibs/ptp2/config.c:8437
 msgid "No card"
 msgstr "Keine Karte vorhanden"
 
@@ -4642,8 +4644,8 @@ msgid ""
 msgstr ""
 "PTP2 / CHDK Treiber\n"
 "(c) 2015-%d Marcus Meißner <marcus@jet.franken.de>.\n"
-"Dieser Treiber ist ein PTP Treiber der das CHDK  Addon für Canon Kameras"
-" unterstützt.\n"
+"Dieser Treiber ist ein PTP Treiber der das CHDK  Addon für Canon Kameras "
+"unterstützt.\n"
 "\n"
 "Enjoy!"
 
@@ -7813,73 +7815,72 @@ msgstr "Nah %d"
 msgid "Far %d"
 msgstr "Weit %d"
 
-#: camlibs/ptp2/config.c:8074 camlibs/ptp2/library.c:3540
+#: camlibs/ptp2/config.c:8074
 msgid "Liveview cannot start: Battery exhausted"
 msgstr "Liveview kann nicht starten: Batterie fast leer"
 
-#: camlibs/ptp2/config.c:8075 camlibs/ptp2/library.c:3541
+#: camlibs/ptp2/config.c:8075
 msgid "Liveview cannot start: Temperature too high"
 msgstr "Liveview kann nicht starten: Temperatur zu hoch"
 
-#: camlibs/ptp2/config.c:8076 camlibs/ptp2/library.c:3542
+#: camlibs/ptp2/config.c:8076
 msgid "Liveview cannot start: TTL error"
 msgstr "Liveview kann nicht starten: TTL Fehler"
 
-#: camlibs/ptp2/config.c:8077 camlibs/ptp2/library.c:3543
+#: camlibs/ptp2/config.c:8077
 msgid "Liveview cannot start: In Mirror-up operation"
 msgstr "Liveview kann nicht starten: Mirror-Up Operation läuft"
 
-#: camlibs/ptp2/config.c:8078 camlibs/ptp2/library.c:3544
+#: camlibs/ptp2/config.c:8078
 msgid "Liveview cannot start: Lens is retracting"
 msgstr "Liveview kann nicht starten: Objektiv fährt ein"
 
-#: camlibs/ptp2/config.c:8079 camlibs/ptp2/library.c:3545
+#: camlibs/ptp2/config.c:8079
 msgid "Liveview cannot start: Minimum aperture warning"
 msgstr "Lieview kann nicht starten: Warnung minimum Blende"
 
-#: camlibs/ptp2/config.c:8080 camlibs/ptp2/library.c:3546
+#: camlibs/ptp2/config.c:8080
 msgid "Liveview cannot start: Processing of shooting operation"
 msgstr "Liveview kann nicht starten: Bearbeiten von Aufnahme läuft"
 
-#: camlibs/ptp2/config.c:8081 camlibs/ptp2/library.c:3547
+#: camlibs/ptp2/config.c:8081
 msgid "Liveview cannot start: Sequence error"
 msgstr "Liveview kann nicht starten: Sequenz Fehler"
 
-#: camlibs/ptp2/config.c:8082 camlibs/ptp2/library.c:3548
+#: camlibs/ptp2/config.c:8082
 msgid "Liveview cannot start: Exposure Program Mode is not P/A/S/M"
 msgstr ""
 "Liveview kann nicht starten: Belichtungsprogrammmodus ist nicht P/A/S/M"
 
-#: camlibs/ptp2/config.c:8083 camlibs/ptp2/library.c:3549
+#: camlibs/ptp2/config.c:8083
 msgid "Liveview cannot start: Bulb warning"
 msgstr "Liveview kann nicht starten: Langzeitbelichtungsmodus aktiv"
 
-#: camlibs/ptp2/config.c:8084 camlibs/ptp2/library.c:3550
+#: camlibs/ptp2/config.c:8084
 msgid "Liveview cannot start: Card unformatted"
 msgstr "Liview kann nicht starten: Karte nicht formatiert"
 
-#: camlibs/ptp2/config.c:8085 camlibs/ptp2/library.c:3551
+#: camlibs/ptp2/config.c:8085
 msgid "Liveview cannot start: Card error"
 msgstr "Liveview kann nicht starten: Kartenfehler"
 
-#: camlibs/ptp2/config.c:8086 camlibs/ptp2/library.c:3552
+#: camlibs/ptp2/config.c:8086
 msgid "Liveview cannot start: Card protected"
 msgstr "Liveview kann nicht starten: Karte schreibgeschützt"
 
-#: camlibs/ptp2/config.c:8087 camlibs/ptp2/library.c:3553
+#: camlibs/ptp2/config.c:8087
 msgid ""
 "Liveview cannot start: Recording destination card, but no card or card "
 "protected"
 msgstr ""
-"Liveview kann nicht starten: Aufnahmeziel ist Karte, aber entweder keine"
-" Karte vorhanden oder Karte schreibgeschützt"
+"Liveview kann nicht starten: Aufnahmeziel ist Karte, aber entweder keine "
+"Karte vorhanden oder Karte schreibgeschützt"
 
 #: camlibs/ptp2/config.c:8088 camlibs/ptp2/config.c:8089
-#: camlibs/ptp2/library.c:3554 camlibs/ptp2/library.c:3555
 msgid "Liveview cannot start: Pending unretrieved SDRAM image"
 msgstr "Liveview kann nicht starten: Noch nicht runtergeladene SDRAM Bilder"
 
-#: camlibs/ptp2/config.c:8090 camlibs/ptp2/library.c:3556
+#: camlibs/ptp2/config.c:8090
 msgid "Liveview cannot start: Fully pressed button"
 msgstr "Liveview kann nicht starten: Knopf voll gedrückt"
 
@@ -7895,7 +7896,7 @@ msgstr "Liveview kann nicht starten: Code 0x%08x"
 msgid "Nikon enable liveview failed"
 msgstr "Anschalten der Nikon LiveView fehlgeschlagen"
 
-#: camlibs/ptp2/config.c:8305 camlibs/ptp2/config.c:8345
+#: camlibs/ptp2/config.c:8305
 msgid "Movie prohibit conditions: "
 msgstr "Film Verhinderungszustand:"
 
@@ -7903,35 +7904,38 @@ msgstr "Film Verhinderungszustand:"
 msgid "Not in application mode"
 msgstr "Nicht im Applikationsmodus"
 
-#: camlibs/ptp2/config.c:8314
+#: camlibs/ptp2/config.c:8314 camlibs/ptp2/config.c:8429
 msgid "Set liveview selector is enabled"
 msgstr "Liveview Selektor ist angeschaltet"
 
 #: camlibs/ptp2/config.c:8315 camlibs/ptp2/config.c:8316
+#: camlibs/ptp2/config.c:8430
 msgid "In enlarged liveview"
 msgstr "In gezoomter Liveview"
 
 #: camlibs/ptp2/config.c:8317 camlibs/ptp2/config.c:8361
+#: camlibs/ptp2/config.c:8431 camlibs/ptp2/library.c:3552
 msgid "Card protected"
 msgstr "Datei ist schreibgeschützt"
 
-#: camlibs/ptp2/config.c:8318
+#: camlibs/ptp2/config.c:8318 camlibs/ptp2/config.c:8432
 msgid "Already in movie recording"
 msgstr "Filmaufnahme läuft bereits"
 
-#: camlibs/ptp2/config.c:8319
+#: camlibs/ptp2/config.c:8319 camlibs/ptp2/config.c:8433
 msgid "Images / movies not yet record in buffer"
 msgstr "Bilder / Filme noch nicht im Buffer aufgenommen"
 
-#: camlibs/ptp2/config.c:8320
+#: camlibs/ptp2/config.c:8320 camlibs/ptp2/config.c:8434
 msgid "Card full"
 msgstr "Karte voll"
 
-#: camlibs/ptp2/config.c:8321
+#: camlibs/ptp2/config.c:8321 camlibs/ptp2/config.c:8435
 msgid "Card not formatted"
 msgstr "Karte ist nicht formatiert"
 
 #: camlibs/ptp2/config.c:8322 camlibs/ptp2/config.c:8362
+#: camlibs/ptp2/config.c:8436 camlibs/ptp2/library.c:3551
 msgid "Card error"
 msgstr "Karten Fehler"
 
@@ -7939,59 +7943,64 @@ msgstr "Karten Fehler"
 msgid "No movie prohibit conditions"
 msgstr "Keine Film Verhinderungszustände"
 
-#: camlibs/ptp2/config.c:8352
+#: camlibs/ptp2/config.c:8345
+msgid "Live View prohibit conditions: "
+msgstr "Live View Verhinderungszustand: "
+
+#: camlibs/ptp2/config.c:8352 camlibs/ptp2/library.c:3547
 msgid "Sequence error"
 msgstr "Sequenz Fehler"
 
-#: camlibs/ptp2/config.c:8353
+#: camlibs/ptp2/config.c:8353 camlibs/ptp2/library.c:3556
 msgid "Fully pressed button"
 msgstr "Voll gedrückter Knopf"
 
-#: camlibs/ptp2/config.c:8354
+#: camlibs/ptp2/config.c:8354 camlibs/ptp2/library.c:3545
 msgid "Minimum aperture warning"
 msgstr "Warnung minimale Blende"
 
-#: camlibs/ptp2/config.c:8355
+#: camlibs/ptp2/config.c:8355 camlibs/ptp2/library.c:3540
 msgid "Battery exhausted"
 msgstr "Batterie fast leer"
 
-#: camlibs/ptp2/config.c:8356
+#: camlibs/ptp2/config.c:8356 camlibs/ptp2/library.c:3542
 msgid "TTL error"
 msgstr "TTL Fehler"
 
-#: camlibs/ptp2/config.c:8357
+#: camlibs/ptp2/config.c:8357 camlibs/ptp2/library.c:3554
+#: camlibs/ptp2/library.c:3555
 msgid "Pending unretrieved SDRAM image"
 msgstr "Noch nicht heruntergeladene SDRAM Bilder"
 
-#: camlibs/ptp2/config.c:8358
+#: camlibs/ptp2/config.c:8358 camlibs/ptp2/library.c:3553
 msgid "Recording destination card, but no card or card protected"
 msgstr "Aufnahmeziel Karte, aber keine Karte oder Karte schreibgeschützt"
 
-#: camlibs/ptp2/config.c:8359
+#: camlibs/ptp2/config.c:8359 camlibs/ptp2/library.c:3546
 msgid "Processing of shooting operation"
 msgstr "Aufnahme wird bearbeitet"
 
-#: camlibs/ptp2/config.c:8360
+#: camlibs/ptp2/config.c:8360 camlibs/ptp2/library.c:3541
 msgid "Temperature too high"
 msgstr "Temperatur zu hoch"
 
-#: camlibs/ptp2/config.c:8363
+#: camlibs/ptp2/config.c:8363 camlibs/ptp2/library.c:3550
 msgid "Card unformatted"
 msgstr "Karte ist nicht formatiert"
 
-#: camlibs/ptp2/config.c:8364
+#: camlibs/ptp2/config.c:8364 camlibs/ptp2/library.c:3549
 msgid "Bulb warning"
 msgstr "Bulb Modus"
 
-#: camlibs/ptp2/config.c:8365
+#: camlibs/ptp2/config.c:8365 camlibs/ptp2/library.c:3543
 msgid "In Mirror-up operation"
 msgstr "Mirror-Up Operation läuft"
 
-#: camlibs/ptp2/config.c:8366
+#: camlibs/ptp2/config.c:8366 camlibs/ptp2/library.c:3544
 msgid "Lens is retracting"
 msgstr "Objektiv fährt ein"
 
-#: camlibs/ptp2/config.c:8367
+#: camlibs/ptp2/config.c:8367 camlibs/ptp2/library.c:3548
 msgid "Exposure Program Mode is not P/A/S/M"
 msgstr "Belichtungsprogrammmodus ist nicht P/A/S/M"
 
@@ -7999,51 +8008,23 @@ msgstr "Belichtungsprogrammmodus ist nicht P/A/S/M"
 msgid "Liveview should not be prohibited"
 msgstr "Liveview sollte nicht verhindert sein"
 
+#: camlibs/ptp2/config.c:8428 camlibs/ptp2/config.c:8429
+#: camlibs/ptp2/config.c:8430 camlibs/ptp2/config.c:8431
+#: camlibs/ptp2/config.c:8432 camlibs/ptp2/config.c:8433
+#: camlibs/ptp2/config.c:8434 camlibs/ptp2/config.c:8435
+#: camlibs/ptp2/config.c:8436 camlibs/ptp2/config.c:8437
+#, c-format
+msgid "Movie recording cannot start: %s."
+msgstr "Filmaufnahme kann nicht starten: %s."
+
 #: camlibs/ptp2/config.c:8428
-msgid "Movie recording cannot start: Camera is not in application mode."
-msgstr "Filmaufnahme kann nicht starten: Kamera ist nicht im Applikationsmodus"
-
-#: camlibs/ptp2/config.c:8429
-msgid "Movie recording cannot start: Set liveview selector is enabled."
-msgstr "Filmaufnahme kann nicht starten: Liveview Selektor aktiviert"
-
-#: camlibs/ptp2/config.c:8430
-msgid "Movie recording cannot start: In enlarged liveview."
-msgstr "Filmaufnahme kann nicht starten: In gezoomter Liveview"
-
-#: camlibs/ptp2/config.c:8431
-msgid "Movie recording cannot start: Card protected."
-msgstr "Filmaufnahme kann nicht starten: Karte schreibgeschützt."
-
-#: camlibs/ptp2/config.c:8432
-msgid "Movie recording cannot start: Already in movie recording."
-msgstr "Filmaufnahme kann nicht starten: Aufnahme läuft bereits."
-
-#: camlibs/ptp2/config.c:8433
-msgid "Movie recording cannot start: Images / movies not yet record in buffer."
-msgstr ""
-"Filmaufnahme kann nicht starten: Bilder / Filme noch nicht im Aufnahme Buffer."
-
-#: camlibs/ptp2/config.c:8434
-msgid "Movie recording cannot start: Card full."
-msgstr "Filmaufnahme kann nicht starten: Karte voll."
-
-#: camlibs/ptp2/config.c:8435
-msgid "Movie recording cannot start: Card not formatted."
-msgstr "Filmaufnahme kann nicht starten: Karte nicht formatiert"
-
-#: camlibs/ptp2/config.c:8436
-msgid "Movie recording cannot start: Card error."
-msgstr "Filmaufnahme kann nicht starten: Kartenfehler"
-
-#: camlibs/ptp2/config.c:8437
-msgid "Movie recording cannot start: No card."
-msgstr "Filmaufnahme kann nicht starten: Keine Karte"
+msgid "Camera is not in application mode"
+msgstr "Kamera ist nicht im Applikationsmodus"
 
 #: camlibs/ptp2/config.c:8438
 #, c-format
-msgid "Movie recording cannot start: code 0x%08x"
-msgstr "Filmaufnahme kann nicht starten: Code 0x%08x"
+msgid "Movie recording cannot start: code 0x%08x."
+msgstr "Filmaufnahme kann nicht starten: Code 0x%08x."
 
 #: camlibs/ptp2/config.c:8880
 msgid "Flourescent"
@@ -9469,6 +9450,19 @@ msgstr "Diese Kamera unterstützt nicht den Canon Viewfinder Modus"
 msgid "Sorry, your Nikon camera does not support LiveView mode"
 msgstr "Diese Nikon Kamera unterstützt nicht den LiveView Modus"
 
+#: camlibs/ptp2/library.c:3540 camlibs/ptp2/library.c:3541
+#: camlibs/ptp2/library.c:3542 camlibs/ptp2/library.c:3543
+#: camlibs/ptp2/library.c:3544 camlibs/ptp2/library.c:3545
+#: camlibs/ptp2/library.c:3546 camlibs/ptp2/library.c:3547
+#: camlibs/ptp2/library.c:3548 camlibs/ptp2/library.c:3549
+#: camlibs/ptp2/library.c:3550 camlibs/ptp2/library.c:3551
+#: camlibs/ptp2/library.c:3552 camlibs/ptp2/library.c:3553
+#: camlibs/ptp2/library.c:3554 camlibs/ptp2/library.c:3555
+#: camlibs/ptp2/library.c:3556
+#, c-format
+msgid "Liveview cannot start: %s"
+msgstr "Liveview kann nicht starten: %s"
+
 #: camlibs/ptp2/library.c:3617
 msgid "Nikon disable liveview failed"
 msgstr "Beenden der LiveView fehlgeschlagen"
@@ -9491,8 +9485,8 @@ msgstr "Diese Kamera unterstützt keine Nikon spezifische Aufnahme von Bildern"
 #: camlibs/ptp2/library.c:4019 camlibs/ptp2/library.c:6043
 msgid "Failed to enable liveview on a Nikon 1, but it is required for capture"
 msgstr ""
-"Liveview konnte auf dieser Nikon 1 nicht aktiviert werden, wird aber für"
-" Aufnahme benötigt"
+"Liveview konnte auf dieser Nikon 1 nicht aktiviert werden, wird aber für "
+"Aufnahme benötigt"
 
 #: camlibs/ptp2/library.c:4252
 msgid "Sorry, your Canon camera does not support Canon EOS Capture"
@@ -12103,7 +12097,7 @@ msgstr "Derzeitige Zeitposition setzen"
 
 #: camlibs/ptp2/ptp.c:8539
 msgid "Send Registration Request"
-msgstr "Registrierungs Request sende"
+msgstr "Registrierungsanfrage senden"
 
 #: camlibs/ptp2/ptp.c:8540
 msgid "Get Registration Response"
@@ -12131,7 +12125,7 @@ msgstr "WFC Objekt bearbeiten"
 
 #: camlibs/ptp2/ptp.c:8550
 msgid "Get Partial Object (64bit Offset)"
-msgstr "Hole Partialles Objekt (64bit Offset)"
+msgstr "Hole Partielles Objekt (64bit Offset)"
 
 #: camlibs/ptp2/ptp.c:8551
 msgid "Send Partial Object"
@@ -12143,19 +12137,19 @@ msgstr "Objekt verkürzen"
 
 #: camlibs/ptp2/ptp.c:8553
 msgid "Begin Edit Object"
-msgstr "Edit Objekt beginnen"
+msgstr "Objekt Modifikation beginnen"
 
 #: camlibs/ptp2/ptp.c:8554
 msgid "End Edit Object"
-msgstr "Edit Objekt beenden"
+msgstr "Objekt Modifikation beenden"
 
 #: camlibs/ptp2/ptp.c:8961
 msgid "Unknown PTP_OC"
-msgstr "Unbekannter PTP_OC"
+msgstr "Unbekannter PTP OpCode"
 
 #: camlibs/ptp2/ptp.c:8982
 msgid "Unknown VendorExtensionID"
-msgstr "Unbekannte Hersteller Erweiterungs ID"
+msgstr "Unbekannte Hersteller Erweiterungen ID"
 
 #: camlibs/ricoh/g3.c:361
 msgid "Downloading movie..."
@@ -12371,7 +12365,7 @@ msgstr "Allgemein"
 
 #: camlibs/ricoh/library.c:425
 msgid "Copyright (max. 20 characters)"
-msgstr "Copyright (max. 20 Zeichen)"
+msgstr "Copyright (maximal 20 Zeichen)"
 
 #: camlibs/ricoh/library.c:439
 msgid "Pictures"
@@ -12476,8 +12470,8 @@ msgid ""
 "enhanced the port."
 msgstr ""
 "Der Samsung digimax 800k-Treiber wurde von James McKenzie <james@fishsoup."
-"dhs.org> für gphoto geschrieben. Lutz Müller <lutz@users.sourceforge.net> "
-"portierte den Treiber nach gphoto2. Marcus Meißner <marcus@jet.franken.de> "
+"dhs.org> für gPhoto geschrieben. Lutz Müller <lutz@users.sourceforge.net> "
+"portierte den Treiber nach gPhoto2. Marcus Meißner <marcus@jet.franken.de> "
 "vollendete und verbesserte die Portierung."
 
 #: camlibs/sierra/epson-desc.c:71 camlibs/sierra/nikon-desc.c:79
@@ -12593,13 +12587,13 @@ msgid ""
 "  please send a mail to the gphoto developer mailing list (in English)\n"
 msgstr ""
 "Einige Kommentare über Epson-Kameras:\n"
-"- einige Parameter sind nicht fernsteuerbar:\n"
+"- einige Parameter sind nicht fern-steuerbar:\n"
 "  * Zoom\n"
 "  * Fokus\n"
 "  * Benutzer-Weißabgleich\n"
 "- Die Konfiguration wurde mit einer PhotoPC 3000z rückentwickelt.\n"
 "  Wenn Ihre Kamera anders reagiert, dann senden Sie bitte\n"
-"  eine Mail an die gphoto developer Mailing Liste (auf Englisch).\n"
+"  eine Mail an die gPhoto Entwickler Mailing Liste (auf Englisch).\n"
 
 #: camlibs/sierra/library.c:133 camlibs/sierra/library.c:1376
 msgid "No memory card present"
@@ -12787,7 +12781,7 @@ msgstr "LCD-Helligkeit"
 
 #: camlibs/sierra/nikon-desc.c:394 camlibs/sierra/olympus-desc.c:715
 msgid "LCD Auto Shut Off (seconds)"
-msgstr "Autom. Abschaltung des LCD (in Sekunden)"
+msgstr "Automatische Abschaltung des LCD (in Sekunden)"
 
 #: camlibs/sierra/nikon-desc.c:478
 msgid "Center-Weighted"
@@ -12858,7 +12852,7 @@ msgstr ""
 "\n"
 "        Der optische Zoom funktioniert nicht richtig.\n"
 "\n"
-"        Nicht alle Konfigurationseinstllungen\n"
+"        Nicht alle Konfigurationseinstellungen\n"
 "        können korrekt gelesen oder geschrieben werden,\n"
 "        z.B. die Feineinstellung des Weißabgleichs oder\n"
 "        die Spracheinstellung.\n"
@@ -12880,7 +12874,7 @@ msgstr ""
 "Nikon Coolpix 995:\n"
 "    Kamerakonfiguration für diese Kamera ist\n"
 "    unvollständig, bitten kontaktieren Sie die\n"
-"    Entwickler auf der gphoto Entwickler Mailingliste,\n"
+"    Entwickler auf der gPhoto Entwickler Mailingliste,\n"
 "    wenn Sie mithelfen möchten.\n"
 "\n"
 "    Das Herunterladen sollte korrekt funktionieren.\n"
@@ -14026,6 +14020,72 @@ msgstr "Unbekannter Fehler des Kamera-Treibers"
 #: libgphoto2/gphoto2-result.c:78
 msgid "Unknown error"
 msgstr "Unbekannter Fehler"
+
+#, fuzzy
+#~ msgid "Set liveview selector is enabled."
+#~ msgstr "Liveview Selektor ist angeschaltet"
+
+#, fuzzy
+#~ msgid "In enlarged liveview."
+#~ msgstr "In gezoomter Liveview"
+
+#, fuzzy
+#~ msgid "Card protected."
+#~ msgstr "Datei ist schreibgeschützt"
+
+#, fuzzy
+#~ msgid "Already in movie recording."
+#~ msgstr "Filmaufnahme läuft bereits"
+
+#, fuzzy
+#~ msgid "Images / movies not yet record in buffer."
+#~ msgstr "Bilder / Filme noch nicht im Buffer aufgenommen"
+
+#, fuzzy
+#~ msgid "Card full."
+#~ msgstr "Karte voll"
+
+#, fuzzy
+#~ msgid "Card not formatted."
+#~ msgstr "Karte ist nicht formatiert"
+
+#, fuzzy
+#~ msgid "Card error."
+#~ msgstr "Karten Fehler"
+
+#~ msgid "No card."
+#~ msgstr "Keine Karte vorhanden."
+
+#~ msgid "Movie recording cannot start: Camera is not in application mode."
+#~ msgstr ""
+#~ "Filmaufnahme kann nicht starten: Kamera ist nicht im Applikationsmodus"
+
+#~ msgid "Movie recording cannot start: Set liveview selector is enabled."
+#~ msgstr "Filmaufnahme kann nicht starten: Liveview Selektor aktiviert"
+
+#~ msgid "Movie recording cannot start: In enlarged liveview."
+#~ msgstr "Filmaufnahme kann nicht starten: In gezoomter Liveview"
+
+#~ msgid "Movie recording cannot start: Card protected."
+#~ msgstr "Filmaufnahme kann nicht starten: Karte schreibgeschützt."
+
+#~ msgid "Movie recording cannot start: Already in movie recording."
+#~ msgstr "Filmaufnahme kann nicht starten: Aufnahme läuft bereits."
+
+#~ msgid ""
+#~ "Movie recording cannot start: Images / movies not yet record in buffer."
+#~ msgstr ""
+#~ "Filmaufnahme kann nicht starten: Bilder / Filme noch nicht im Aufnahme "
+#~ "Buffer."
+
+#~ msgid "Movie recording cannot start: Card full."
+#~ msgstr "Filmaufnahme kann nicht starten: Karte voll."
+
+#~ msgid "Movie recording cannot start: Card not formatted."
+#~ msgstr "Filmaufnahme kann nicht starten: Karte nicht formatiert"
+
+#~ msgid "Movie recording cannot start: Card error."
+#~ msgstr "Filmaufnahme kann nicht starten: Kartenfehler"
 
 #, c-format
 #~ msgid "Unknown value %04d"
