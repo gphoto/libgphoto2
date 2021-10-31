@@ -1,5 +1,5 @@
 dnl Process this file with autoreconf to produce a configure script.
-AC_PREREQ([2.62])
+AC_PREREQ([2.69])
 
 dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
