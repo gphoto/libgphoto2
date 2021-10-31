@@ -34,3 +34,10 @@ fi
 AM_CONDITIONAL(ENABLE_PSTOIMG, $have_pstoimg)
 
 ])
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

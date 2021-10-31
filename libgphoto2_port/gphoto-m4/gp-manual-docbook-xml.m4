@@ -44,3 +44,10 @@ fi
 
 AM_CONDITIONAL(XMLTO, $have_xmlto)
 ])
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

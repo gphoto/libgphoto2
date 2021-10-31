@@ -46,3 +46,9 @@ printenv | grep -E '^(LC_|LANG)'
 dnl
 ])dnl
 dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:
