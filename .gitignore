@@ -93,7 +93,6 @@ Makefile.in
 /libgphoto2_port/po/insert-header.sin
 /libgphoto2_port/po/libgphoto2_port-12.pot
 /libgphoto2_port/po/Makefile.in.in
-/libgphoto2_port/po/Makevars
 /libgphoto2_port/po/Makevars.template
 /libgphoto2_port/po/POTFILES
 /libgphoto2_port/po/quot.sed
@@ -120,7 +119,6 @@ Makefile.in
 /po/insert-header.sin
 /po/libgphoto2-6.pot
 /po/Makefile.in.in
-/po/Makevars
 /po/Makevars.template
 /po/POTFILES
 /po/quot.sed

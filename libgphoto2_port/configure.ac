@@ -118,17 +118,16 @@ dnl ---------------------------------------------------------------------------
 dnl i18n support
 dnl ---------------------------------------------------------------------------
 
-GP_GETTEXT_HACK([GETTEXT_PACKAGE_LIBGPHOTO2_PORT],
-                [${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT_MIN}],
-                [Lutz Mueller and others],
-                [${MAIL_GPHOTO_TRANSLATION}])
+GP_GETTEXT_SETUP([GETTEXT_PACKAGE_LIBGPHOTO2_PORT],
+                 [${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT_MIN}],
+                 [po])
 AM_PO_SUBDIRS()
-AM_GNU_GETTEXT_VERSION([0.14.1])
+AM_GNU_GETTEXT_VERSION([0.18.3])
 AM_GNU_GETTEXT([external])
 AM_ICONV()
-GP_GETTEXT_FLAGS()
 
-AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
+GP_CONFIG_MSG([Use translations],
+              [${USE_NLS}])
 
 AC_CHECK_FUNC([gettext], [gettext_without_libintl=true])
 # same trick as with libdl in libgphoto2:

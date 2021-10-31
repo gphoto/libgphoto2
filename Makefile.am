@@ -103,6 +103,16 @@ git-checkout-po:
 update-po:
 	@for d in $(PO_SUBDIRS); do (cd "$$d" && $(MAKE) $(AM_MAKEFLAGS) update-po)  || exit 1; done
 
+@GP_GETTEXT_SETUP_MK@
+
+# Dummy target to force Automake to make the all target depend on it
+all-local:
+	@:
+
+# Dummy target to force Automake to make the distclean target depend on it
+distclean-local:
+	@:
+
 
 ########################################################################
 # The following default options for aclocal and automake

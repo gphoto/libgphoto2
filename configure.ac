@@ -273,17 +273,16 @@ dnl ---------------------------------------------------------------------------
 dnl i18n support (including some hacks)
 dnl ---------------------------------------------------------------------------
 
-GP_GETTEXT_HACK([GETTEXT_PACKAGE_LIBGPHOTO2],
-                [${PACKAGE}-${LIBGPHOTO2_CURRENT_MIN}],
-                [The gPhoto Team],
-                [${MAIL_GPHOTO_TRANSLATION}])
+GP_GETTEXT_SETUP([GETTEXT_PACKAGE_LIBGPHOTO2],
+                 [${PACKAGE}-${LIBGPHOTO2_CURRENT_MIN}],
+                 [po])
 AM_PO_SUBDIRS()
-AM_GNU_GETTEXT_VERSION([0.14.1])
+AM_GNU_GETTEXT_VERSION([0.18.3])
 AM_GNU_GETTEXT([external])
 AM_ICONV()
-GP_GETTEXT_FLAGS()
 
-AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
+GP_CONFIG_MSG([Use translations],
+              [${USE_NLS}])
 
 dnl FIXME: We have to make sure this works first
 dnl AC_CHECK_FUNC(gettext, gettext_without_libintl=true)
