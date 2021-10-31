@@ -447,4 +447,12 @@ esac
 
 cat >> "$1" << EOF
 #endif /*__BYTEORDER_H*/
-EOF])
+EOF
+])dnl
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

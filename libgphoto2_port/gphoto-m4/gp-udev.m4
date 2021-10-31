@@ -7,3 +7,10 @@ AC_ARG_VAR([udevscriptdir],[Directory where udev scripts like check-ptp-camera w
 AC_SUBST([udevscriptdir])
 AM_CONDITIONAL([HAVE_UDEV],[if echo "$host"|grep -i linux >/dev/null ; then $1; fi ])
 ])dnl
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:
