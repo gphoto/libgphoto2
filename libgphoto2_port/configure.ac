@@ -146,7 +146,6 @@ AM_GNU_GETTEXT([external])
 AM_ICONV()
 GP_GETTEXT_FLAGS()
 
-AC_SUBST([localedir],["\$(datadir)/locale"])
 AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
 
 AC_CHECK_FUNC([gettext], [gettext_without_libintl=true])
