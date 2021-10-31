@@ -168,6 +168,7 @@ dnl GP_SET_DUMP_ALL
 dnl   Dump all sets to stdout. Intended for helping with debugging.
 dnl ######################################################################
 AC_DEFUN([GP_SET_DUMP_ALL], [dnl
+AC_REQUIRE([AC_PROG_SED])dnl
 AC_REQUIRE([_GP_SET_INIT])dnl
 for setfile in gp-set-file--*
 do
