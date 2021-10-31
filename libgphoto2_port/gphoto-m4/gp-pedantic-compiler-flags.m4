@@ -7,12 +7,16 @@ dnl ####################################################################
 dnl GP_CONDITIONAL_COMPILE_FLAGS(FLAG_VAR, FLAGS)
 dnl ####################################################################
 AC_DEFUN([GP_CONDITIONAL_COMPILE_FLAGS], [dnl
+dnl
 # BEGIN $0($@)
-AS_VAR_IF([$1], [], [dnl
-  $1="$2"
-], [dnl
-  $1="[$]{$1} $2"
-])
+dnl
+m4_case([$1],
+        [CFLAGS],   [AC_LANG_PUSH([C])],
+        [CXXFLAGS], [AC_LANG_PUSH([C++])],
+        [m4_fatal([wrong compiler flag])])dnl
+dnl
+saved_$1="${$1}"
+AS_VAR_IF([$1], [], [$1="$2"], [$1="[$]{$1} $2"])
 AC_MSG_CHECKING([whether $1="[$]$1" compiles])
 AC_COMPILE_IFELSE([m4_case([$1], [CFLAGS], [dnl
 AC_LANG_SOURCE([[
@@ -47,7 +51,12 @@ int main(int argc, char *argv[])
   : "Added flag $2 to $1 and it does not work"
   AC_MSG_RESULT([no])
   gp_have_pedantic_compiler=no
+  $1="$saved_$1"
 ])
+m4_case([$1],
+        [CFLAGS],   [AC_LANG_POP([C])],
+        [CXXFLAGS], [AC_LANG_POP([C++])],
+        [m4_fatal([wrong compiler flag])])dnl
 # END $0($@)
 ])dnl
 dnl

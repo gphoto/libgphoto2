@@ -22,3 +22,10 @@ if $try_gtkdoc; then
 fi
 AM_CONDITIONAL(ENABLE_GTK_DOC, $have_gtkdoc)
 ])
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

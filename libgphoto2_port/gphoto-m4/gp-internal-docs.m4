@@ -27,3 +27,10 @@ AC_MSG_CHECKING([whether to create internal code docs])
 AC_MSG_RESULT([${set_enable_internal_docs}])
 AM_CONDITIONAL([ENABLE_INTERNAL_DOCS], [test "x${set_enable_internal_docs}" = "xyes"])
 ])dnl
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

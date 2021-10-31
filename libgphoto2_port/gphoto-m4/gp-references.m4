@@ -46,3 +46,10 @@ GP_REF(	[MAIL_GPHOTO_TRANSLATION],
 	[gphoto translation mailing list])
 
 ])
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

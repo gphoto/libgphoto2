@@ -38,3 +38,10 @@ fi
 AM_CONDITIONAL(ENABLE_FIGURES, $have_fig2dev)
 
 ])
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

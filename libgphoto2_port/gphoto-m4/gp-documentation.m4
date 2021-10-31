@@ -4,7 +4,7 @@ dnl
 dnl determines documentation "root directory", i.e. the directory
 dnl where all documentation will be placed in
 dnl
-
+dnl
 AC_DEFUN([GP_CHECK_DOC_DIR],
 [
 AC_BEFORE([$0], [GP_BUILD_GTK_DOCS])dnl
@@ -86,7 +86,7 @@ if $try_gtkdoc; then
 	fi
 fi
 AM_CONDITIONAL([ENABLE_GTK_DOC], [$have_gtkdoc])
-GP_CONFIG_MSG([build API docs with gtk-doc],[$gtkdoc_msg])
+GP_CONFIG_MSG([build API docs with gtk-doc], [$gtkdoc_msg])
 
 
 # ---------------------------------------------------------------------------
@@ -110,4 +110,10 @@ apidocdir="${htmldir}/api"
 AC_SUBST([apidocdir])
 
 ])dnl
-
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

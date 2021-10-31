@@ -40,9 +40,9 @@ fi
 
 # We're only interested in the target CPU, but it's not always set
 effective_target="$target"
-if test "x$effective_target" = xNONE || test "x$effective_target" = x ; then
+AS_IF([test "x$effective_target" = xNONE || test "x$effective_target" = x], [dnl
 	effective_target="$host"
-fi
+])
 AC_SUBST(effective_target)
 
 cat > "$1" << EOF
@@ -447,4 +447,12 @@ esac
 
 cat >> "$1" << EOF
 #endif /*__BYTEORDER_H*/
-EOF])
+EOF
+])dnl
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

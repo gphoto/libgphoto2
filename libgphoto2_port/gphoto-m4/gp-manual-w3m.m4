@@ -43,3 +43,10 @@ fi
 AM_CONDITIONAL([HAVE_W3M], [$have_w3m])
 
 ])
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

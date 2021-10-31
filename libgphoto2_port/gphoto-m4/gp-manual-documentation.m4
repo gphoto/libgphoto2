@@ -327,3 +327,10 @@ then
 fi
 
 ])dnl
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

@@ -56,4 +56,10 @@ AC_DEFUN([GPKG_CHECK_LINUX],
 	AC_SUBST([hotplugdocdir])
 	AC_SUBST([hotplugusermapdir])
 ])
-
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

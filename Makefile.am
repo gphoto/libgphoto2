@@ -8,8 +8,8 @@ bin_SCRIPTS = gphoto2-config
 EXTRA_DIST = MAINTAINERS TESTERS installcheck.mk
 EXTRA_DIST += HACKING.md SECURITY.md
 
-# Note: @subdirs@ lists all the directories from AC_CONFIG_SUBDIRS()
-SUBDIRS = @subdirs@ libgphoto2 camlibs tests examples po packaging doc gphoto-m4
+# Note: $(subdirs) lists all the directories from AC_CONFIG_SUBDIRS()
+SUBDIRS = $(subdirs) libgphoto2 camlibs tests examples po packaging doc
 
 EXTRA_DIST    += libgphoto2.pc.in
 pkgconfig_DATA = libgphoto2.pc
@@ -106,7 +106,9 @@ update-po:
 
 ########################################################################
 # The following default options for aclocal and automake
-# are required in the top level Makefile.am for the automatic 
+# are required in the top level Makefile.am for the automatic
 # re-building of the build system files.
 
-ACLOCAL_AMFLAGS = -I auto-m4 -I gphoto-m4
+ACLOCAL_AMFLAGS = -I auto-m4 -I libgphoto2_port/gphoto-m4
+
+include libgphoto2_port/gphoto-m4/Makefile-files
