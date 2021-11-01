@@ -130,12 +130,23 @@ Makefile.in
 /po/stamp-po
 /README
 /stamp-h1
+/tests/*.log
+/tests/*.trs
 /tests/ddb/check-ddb.sh
 /tests/print-libgphoto2-version
 /tests/test-camera-list
 /tests/test-endian
 /tests/test-filesys
 /tests/test-gphoto2
+/tests/test-pedantic-c11
+/tests/test-pedantic-c2x
+/tests/test-pedantic-c90
+/tests/test-pedantic-c99
+/tests/test-pedantic-cxx11
+/tests/test-pedantic-cxx14
+/tests/test-pedantic-cxx17
+/tests/test-pedantic-cxx20
+/tests/test-pedantic-cxx98
 +.vscode/
 
 /tmpwrk*/
