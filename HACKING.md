@@ -356,3 +356,8 @@ for more details.
   compiler-specific flags to make files directly, as many of them are
   specific to one compiler and will cause the build to fail when using
   another.
+
+
+* printf(3) format strings containing "%m" should only be used in
+  system specific code for systems which actually support "%m", like
+  Linux/glibc or FreeBSD. MacOSX for example does NOT support "%m".
