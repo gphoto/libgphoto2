@@ -10,27 +10,21 @@ AC_CONFIG_SRCDIR([libgphoto2_port/gphoto2-port-version.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([auto-m4])
 AC_CONFIG_AUX_DIR([auto-aux])
-dnl Working around bug in automake <= 1.9.6:
-dnl  - Please do not add filename-length-max=99 here.
-dnl  - Otherwise "make distdir" will fail in libgphoto2
-dnl The generated Makefile rule fails to remove the absolute part at
-dnl the beginning of the /path/to/buildroot/PACKAGE-VERSION/foo/bar
-dnl before determining the string length. However, the only relevant
-dnl string to determine the length of would be PACKAGE-VERSION/foo/bar
 AM_INIT_AUTOMAKE([
   -Wall
   gnu
-  1.9
+  1.14
   dist-bzip2
   check-news
   subdir-objects
 ])
 
+
+AM_SILENT_RULES([no])
+
+
 AC_LANG([C])
 
-# Use the silent-rules feature when possible.
-m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
-AM_SILENT_RULES([no])
 
 
 dnl Flag all GP_ strings in result as error unless specifically allowed.
@@ -79,8 +73,7 @@ dnl ---------------------------------------------------------------------------
 AC_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
-AM_PROG_CC_C_O
-m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+AM_PROG_AR
 
 
 dnl Something with the sequences is not quite alright yet.
