@@ -3,6 +3,8 @@
 EXTRA_DIST += %reldir%/README.md
 EXTRA_DIST += %reldir%/gphoto-m4-sync
 
+EXTRA_DIST += %reldir%/gp-asm-symver-ifelse.m4
+EXTRA_DIST += %reldir%/gp-asm-symver-support.m4
 EXTRA_DIST += %reldir%/gp-byteorder.m4
 EXTRA_DIST += %reldir%/gp-camlibs.m4
 EXTRA_DIST += %reldir%/gp-check-doxygen.m4

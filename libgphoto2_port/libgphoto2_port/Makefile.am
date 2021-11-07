@@ -1,10 +1,24 @@
-lib_LTLIBRARIES = libgphoto2_port.la
+EXTRA_DIST =
 
-libgphoto2_port_la_CPPFLAGS = 		\
-	-I$(top_srcdir)			\
-	-I$(top_srcdir)/libgphoto2_port \
-	$(AM_CPPFLAGS) $(CPPFLAGS)	\
-	$(LTDLINCL)
+
+# included by all *.c files containing translated string literals as
+# libgphoto2_port/i18n.h
+EXTRA_DIST += i18n.h
+
+
+lib_LTLIBRARIES                  = libgphoto2_port.la
+libgphoto2_port_la_CFLAGS        =
+libgphoto2_port_la_CPPFLAGS      =
+libgphoto2_port_la_DEPENDENCIES  =
+libgphoto2_port_la_LDFLAGS       =
+libgphoto2_port_la_LIBADD        =
+libgphoto2_port_la_SOURCES       =
+
+libgphoto2_port_la_CPPFLAGS     += -I$(top_srcdir)
+libgphoto2_port_la_CPPFLAGS     += -I$(top_srcdir)/libgphoto2_port
+libgphoto2_port_la_CPPFLAGS     += $(AM_CPPFLAGS)
+
+libgphoto2_port_la_LDFLAGS      += -no-undefined
 
 # Notes about the list of exported symbols:
 #    gp_* also contains internal symbols which are intended for
@@ -25,38 +39,35 @@ libgphoto2_port_la_CPPFLAGS = 		\
 #
 # Yes, this is messy, but we are going to clean this up.
 
-libgphoto2_port_la_LDFLAGS = \
-	-no-undefined \
-	@VERSIONMAPLDFLAGS@ \
-	-version-info @LIBGPHOTO2_PORT_VERSION_INFO@
+# EXTRA_DIST                      += libgphoto2_port.sym
+EXTRA_DIST                      += libgphoto2_port.ver
+if HAVE_ASM_SYMVER
+libgphoto2_port_la_DEPENDENCIES += $(srcdir)/libgphoto2_port.ver
+libgphoto2_port_la_LDFLAGS      += -Wl,--version-script=$(srcdir)/libgphoto2_port.ver
+# else
+# libgphoto2_port_la_DEPENDENCIES += $(srcdir)/libgphoto2_port.sym
+# libgphoto2_port_la_LDFLAGS      += -export-symbols $(srcdir)/libgphoto2_port.sym
+endif
 
-libgphoto2_port_la_LIBADD = \
-	$(LIBLTDL) 			\
-	$(INTLLIBS)
+libgphoto2_port_la_LDFLAGS      += -version-info @LIBGPHOTO2_PORT_VERSION_INFO@
+
 # The libtool docs describe these params, but they don't build.
 #	"-dlopen" self \
 #	"-dlopen" $(top_builddir)/serial/....la \
 #	"-dlopen" $(top_builddir)/usb/....la
 
-libgphoto2_port_la_SOURCES =		\
-	gphoto2-port-info-list.c	\
-	gphoto2-port-info.h		\
-	gphoto2-port-log.c		\
-	gphoto2-port-version.c		\
-	gphoto2-port.c 			\
-	gphoto2-port-portability.c	\
-	gphoto2-port-result.c
+libgphoto2_port_la_CPPFLAGS     += $(LTDLINCL)
+libgphoto2_port_la_LIBADD       += $(LIBLTDL)
 
-libgphoto2_port_la_DEPENDENCIES = \
-	$(top_srcdir)/gphoto2/gphoto2-port-version.h		\
-	$(top_srcdir)/gphoto2/gphoto2-port-library.h		\
-	$(srcdir)/libgphoto2_port.ver
+libgphoto2_port_la_LIBADD       += $(INTLLIBS)
 
-# Note: If you have problem with this file not being put into
-#       the source tarball correctly at "make dist", this may
-#       be the result of tar not creating archives with >99
-#       characters of path length.
-EXTRA_DIST = \
-	libgphoto2_port.ver
+libgphoto2_port_la_SOURCES      += gphoto2-port-info-list.c
+libgphoto2_port_la_SOURCES      += gphoto2-port-info.h
+libgphoto2_port_la_SOURCES      += gphoto2-port-log.c
+libgphoto2_port_la_SOURCES      += gphoto2-port-version.c
+libgphoto2_port_la_SOURCES      += gphoto2-port.c
+libgphoto2_port_la_SOURCES      += gphoto2-port-portability.c
+libgphoto2_port_la_SOURCES      += gphoto2-port-result.c
 
-EXTRA_DIST += i18n.h
+libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-version.h
+libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-library.h

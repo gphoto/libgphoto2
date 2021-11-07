@@ -184,26 +184,7 @@ AC_CHECK_HEADER([regex.h],
 		[])
 AC_CHECK_LIB([regex], [regexec])
 
-AC_MSG_CHECKING([for asm .symver support])
-AC_COMPILE_IFELSE([dnl
-	AC_LANG_PROGRAM([[
-		void f1(void);
-		void f1() {}
-		void f2(void);
-		void f2() {}
-		asm(".symver f1, f@VER1");
-		asm(".symver f2, f@@VER2");
-	]], [[]])dnl
-], [dnl
-	AC_DEFINE([HAVE_ASM_SYMVERS], [1],
-	          [Define if there is asm .symver support.])
-	VERSIONMAPLDFLAGS="-Wl,--version-script=\$(srcdir)/libgphoto2_port.ver"
-	AC_MSG_RESULT([yes])
-], [dnl
-	VERSIONMAPLDFLAGS=""
-	AC_MSG_RESULT([no])
-])
-AC_SUBST([VERSIONMAPLDFLAGS])
+GP_ASM_SYMVER_SUPPORT
 
 dnl Check for mnt_mountp in struct mnttab
 AC_MSG_CHECKING([for mnt_mountp in struct mnttab])

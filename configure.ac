@@ -289,26 +289,7 @@ AM_CPPFLAGS="$AM_CPPFLAGS -DLOCALEDIR=\\\"${localedir}\\\""
 
 AC_SYS_LARGEFILE
 
-AC_MSG_CHECKING([for asm .symver support])
-AC_COMPILE_IFELSE([dnl
-	AC_LANG_PROGRAM([[
-		void f1(void);
-		void f1() {}
-		void f2(void);
-		void f2() {}
-		asm(".symver f1, f@VER1");
-		asm(".symver f2, f@@VER2");
-	]],[])dnl
-],[
-	AC_DEFINE([HAVE_ASM_SYMVERS], [1],
-	          [Define if there is asm .symver support.])
-	VERSIONMAPLDFLAGS="-Wl,--version-script=\$(srcdir)/libgphoto2.ver"
-	AC_MSG_RESULT([yes])
-],[
-	VERSIONMAPLDFLAGS=""
-	AC_MSG_RESULT([no])
-])
-AC_SUBST([VERSIONMAPLDFLAGS])
+GP_ASM_SYMVER_SUPPORT
 
 dnl ---------------------------------------------------------------------------
 dnl FIXME: What is this good for?
