@@ -23,6 +23,8 @@ AM_INIT_AUTOMAKE([
 AM_SILENT_RULES([no])
 
 
+dnl Every compile example will be using the C language unless
+dnl something else is said explicitly.
 AC_LANG([C])
 
 
