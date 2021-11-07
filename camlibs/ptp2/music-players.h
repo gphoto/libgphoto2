@@ -881,6 +881,10 @@
   { "A&K", 0x4102, "SR15", 0x1213,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
+  /* https://github.com/libmtp/libmtp/issues/85  ... */
+  { "A&K", 0x4102, "SE180", 0x1230,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
+    DEVICE_FLAG_OGG_IS_UNKNOWN },
   // Reported by Scott Call
   // Assume this actually supports OGG though it reports it doesn't.
   { "iRiver", 0x4102, "H10 20GB", 0x2101,
@@ -2414,16 +2418,24 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Motorola", 0x22b8, "Moto G (ID1)", 0x2e76,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1841/ */
+  { "Motorola", 0x22b8, "Moto Z2 (XT1789)", 0x2e81,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Motorola", 0x22b8, "Moto G (ID2)", 0x2e82,
       DEVICE_FLAGS_ANDROID_BUGS & ~(DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL|DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST)},
+  /* https://github.com/gphoto/gphoto2/issues/463 */
+  { "Motorola", 0x22b8, "XT1032", 0x2e83,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1030/, PTP Id */
   { "Motorola", 0x22b8, "Moto G (XT1032)", 0x2e84,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1477/ */
   { "Motorola", 0x22b8, "Moto Maxx (XT1225)", 0x2ea4,
       DEVICE_FLAGS_ANDROID_BUGS },
-  /* https://sourceforge.net/p/libmtp/bugs/1841/ */
-  { "Motorola", 0x22b8, "Moto Z2 (XT1789)", 0x2e81,
+  /* https://sourceforge.net/p/libmtp/bugs/1183/ */
+  { "Motorola", 0x22b8, "Droid Turbo (XT1254)", 0x2ea5,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  { "Motorola", 0x22b8, "Droid Turbo Verizon", 0x2ea8,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/feature-requests/189/ */
   { "Motorola", 0x22b8, "MB632", 0x2dff,
@@ -2509,11 +2521,6 @@
   { "Motorola", 0x22b8, "XT890/907/Razr (MTP)", 0x710d,
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Motorola", 0x22b8, "XT890/907/Razr (MTP+ADB)", 0x710e,
-      DEVICE_FLAGS_ANDROID_BUGS },
-  /* https://sourceforge.net/p/libmtp/bugs/1183/ */
-  { "Motorola", 0x22b8, "Droid Turbo (XT1254)", 0x2ea5,
-      DEVICE_FLAGS_ANDROID_BUGS },
-  { "Motorola", 0x22b8, "Droid Turbo Verizon", 0x2ea8,
       DEVICE_FLAGS_ANDROID_BUGS },
   /*
    * XT890/907/Razr
@@ -3576,6 +3583,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1900/ */
   { "Onyx", 0x2207, "Boox Nova Pro", 0x0015,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/82 */
+  { "Supernote", 0x2207, "A5X", 0x0031,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Kobo
@@ -3966,6 +3976,8 @@
   { "Caterpillar", 0x04b7, "Cat S31", 0x88d0, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1814/ */
   { "Caterpillar", 0x04b7, "Cat S61", 0x88d6, DEVICE_FLAGS_ANDROID_BUGS },
+  /* owned by Marcus */
+  { "Caterpillar", 0x04b7, "Cat S62 Pro", 0x88f1, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://sourceforge.net/p/libmtp/bugs/682/ */
   { "Pegatron", 0x1d4d, "Chagall (ADB)", 0x5035, DEVICE_FLAGS_ANDROID_BUGS },
@@ -4034,6 +4046,8 @@
 
   /* https://sourceforge.net/p/libmtp/bugs/1423/ */
   { "OnePlus", 0x2a70, "ONE A2001", 0x9011, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1910/ */
+  { "OnePlus", 0x2a70, "OnePlus 9 5G", 0x9012, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1450/ */
   { "OnePlus", 0x2a70, "OnePlus 2 A2005", 0xf003, DEVICE_FLAGS_ANDROID_BUGS },
 
@@ -4191,6 +4205,9 @@
 
   /* https://github.com/libmtp/libmtp/issues/72 https://sourceforge.net/p/libmtp/bugs/1895/ */
   { "Mudita", 0x3310, "Pure Phone", 0x0100, DEVICE_FLAG_NONE },
+
+  /* https://sourceforge.net/p/libmtp/bugs/1911/ */
+  { "Oculus", 0x2833, "Quest", 0x0183, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* qemu 3.0.0 hw/usb/dev-mtp.c */
   { "QEMU", 0x46f4, "Virtual MTP", 0x0004, DEVICE_FLAG_NONE }
