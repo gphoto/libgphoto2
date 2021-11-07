@@ -2070,6 +2070,7 @@ static struct deviceproptableu16 canon_eos_autoexposuremode[] = {
 
 	{ N_("C2"),			0x0010, 0 },
 	{ N_("C3"),			0x0011, 0 },
+	{ N_("Creative Auto"),		0x0013, 0 },
 	{ N_("Movie"),			0x0014, 0 },
 	{ N_("Auto"),			0x0016, 0 },	/* EOS M6 Mark 2 */
 	{ N_("Handheld Night Scene"),	0x0017, 0 },	/* EOS M6 Mark 2 */
