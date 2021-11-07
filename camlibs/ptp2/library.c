@@ -2898,6 +2898,9 @@ is_mtp_capable(Camera *camera) {
 	PTPParams *params = &camera->pl->params;
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT)
 		return 1;
+	/* these are also lowercase. */
+	if (params->deviceinfo.Manufacturer && !strcmp(params->deviceinfo.Manufacturer,"motorola"))
+		return 1;
 	/*
 	if (camera->pl->bugs & PTP_MTP)
 		return 1;
