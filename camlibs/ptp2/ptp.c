@@ -9733,3 +9733,11 @@ ptp_add_object_to_cache(PTPParams *params, uint32_t handle)
 	PTPObject *ob;
 	return ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED|PTPOBJECT_MTPPROPLIST_LOADED, &ob);
 }
+
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
