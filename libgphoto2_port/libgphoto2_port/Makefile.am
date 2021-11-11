@@ -6,6 +6,9 @@ EXTRA_DIST =
 EXTRA_DIST += i18n.h
 
 
+EXTRA_DIST += compiletime-assert.h
+
+
 lib_LTLIBRARIES                  = libgphoto2_port.la
 libgphoto2_port_la_CFLAGS        =
 libgphoto2_port_la_CPPFLAGS      =
