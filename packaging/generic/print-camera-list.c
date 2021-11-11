@@ -1404,13 +1404,13 @@ static const output_format_t formats[] = {
 	},
 	{"udev-rules",
 	 "udev rules file",
-	 "For modes \"pre-0.98\" and \"0.98\" (and later), put it into\n"
+	 "For versions \"pre-0.98\" and \"0.98\" (and later), put it into\n"
 	 "        /etc/udev/rules.d/90-libgphoto2.rules, set file mode, owner, group\n"
-	 "        or add script to run. This rule files also uses the\n"
+	 "        or add script to run. This rules file also uses the\n"
 	 "        check-ptp-camera script included in libgphoto2 source. Either put it to\n"
 	 "        /lib/udev/check-ptp-camera or adjust the path in the generated rules file.\n"
 	 "        If you give a script parameter, the mode, owner, group parameters will be ignored.\n"
-	 "        For mode \"136\" put it into /lib/udev/rules.d/40-libgphoto2.rules;\n"
+	 "        For version \"136\" put it into /lib/udev/rules.d/40-libgphoto2.rules;\n"
 	 "        you can still use mode/owner/group, but the preferred mode of operation\n"
 	 "        is to use udev-extras for dynamic access permissions.\n"
 	"	  Available versions of the rule generator: 0.98, 136, 175, 201.\n",
