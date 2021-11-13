@@ -524,7 +524,6 @@ AC_ARG_ENABLE([debug],
 # gtk-doc?
 # ----------------------------------------------------------------------
 GP_CONFIG_MSG([Documentation])
-GP_CHECK_DOC_DIR()dnl
 GP_BUILD_GTK_DOCS()dnl
 
 

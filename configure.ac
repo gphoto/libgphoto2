@@ -28,7 +28,7 @@ AM_INIT_AUTOMAKE([
 dnl Notable tool releases and why they are important for us:
 dnl
 dnl   autoconf 2012-04-25 2.69    (what libexif requires)
-dnl   autoconf 2006-04-12 2.59c   (introduces localedir)
+dnl   autoconf 2006-04-12 2.59c   (introduces localedir, docdir, htmldir)
 dnl
 dnl   automake 2013-12-24 1.14.1  (what libexif requires)
 dnl   automake 2013-06-20 1.14    (introduces %reldir%, implies AM_PROG_CC_C_O)
@@ -579,7 +579,6 @@ GP_CAMLIBS_DEFINE()dnl
 dnl --------------------------------------------------------------------
 dnl documentation
 dnl --------------------------------------------------------------------
-GP_CHECK_DOC_DIR()dnl
 GP_CHECK_DOXYGEN()dnl
 GP_INTERNAL_DOCS()dnl
 GP_BUILD_GTK_DOCS()dnl

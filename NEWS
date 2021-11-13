@@ -5,7 +5,8 @@ general:
 * remove built-in rpm packaging (use distro packaging instead)
 * remove linux-hotplug rule creation (removed from distros around 2006)
 * remaining text which was iso-8859 is UTF-8 now (except one po file)
-
+* To override docdir and htmldir, use configure arguments --docdir=
+  and --htmldir= instead of --with-doc-dir= and --with-html-dir=
 
 ptp2:
 * Nikon J1: capture fixed
