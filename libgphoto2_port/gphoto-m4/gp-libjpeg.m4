@@ -21,10 +21,10 @@ dnl
 AC_DEFUN([GP_LIBJPEG], [dnl
 dnl
 AC_MSG_CHECKING([whether to build with libjpeg])
-AC_ARG_WITH([jpeg], [dnl
-  AS_HELP_STRING([--without-jpeg],
-                 [Build without libjpeg (default: with libjpeg)])
-], [dnl just keep the with-jpeg however it is given
+AC_ARG_WITH([jpeg],
+            [AS_HELP_STRING([--without-jpeg],
+                            [Build without libjpeg (default: with libjpeg)])],
+            [dnl just keep the with-jpeg however it is given
   AS_VAR_IF([with_jpeg], [no], [], [dnl
     AC_MSG_ERROR([
 Unhandled value given to --with-jpeg / --without-jpeg: '$with_jpeg'

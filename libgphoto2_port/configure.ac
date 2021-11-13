@@ -299,7 +299,7 @@ AC_DEFUN([GP_SERLOCK],[dnl
 # $0([$1])
 AC_ARG_ENABLE([$1],
 [AS_HELP_STRING([--disable-][$1],
-		[do not use ][$1][ library])
+                [do not use ][$1][ library])dnl
 ], [dnl
 	if test x$enableval = xno; then
 		try_[$1]=false
