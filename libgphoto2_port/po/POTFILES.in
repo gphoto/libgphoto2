@@ -1,3 +1,4 @@
+# List of source files which contain translatable strings.
 libgphoto2_port/gphoto2-port-info-list.c
 libgphoto2_port/gphoto2-port-log.c
 libgphoto2_port/gphoto2-port-result.c

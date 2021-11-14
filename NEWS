@@ -1,5 +1,8 @@
 libgphoto2 2.5.29.1 development snapshot
 
+general:
+* fix parallel builds by requiring gettext 0.19.1 for builds from git (PR #797)
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.29 release
 

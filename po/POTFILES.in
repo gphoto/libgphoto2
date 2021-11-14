@@ -1,3 +1,4 @@
+# List of source files which contain translatable strings.
 camlibs/adc65/adc65.c
 camlibs/agfa-cl20/agfa_cl20.c
 camlibs/aox/library.c
