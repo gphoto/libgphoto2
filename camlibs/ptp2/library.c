@@ -3218,8 +3218,8 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, PTPObjectInfo *oi, C
 	strcpy  (path->name,  ob->oi.Filename);
 	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 
-	get_folder_from_handle (camera, oi->StorageID, ob->oi.ParentObject, path->folder);	/* might invalidate ob */
-
+	get_folder_from_handle (camera, oi->StorageID, ob->oi.ParentObject, path->folder);
+	/* might invalidate ob, so refetch */
 	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 	/* delete last / or we get confused later. */
 	path->folder[ strlen(path->folder)-1 ] = '\0';
@@ -5155,6 +5155,9 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 					strcpy  (path->name,  ob->oi.Filename);
 					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+					/* above might invalidate "ob" pointer, so refetch it */
+					ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+
 					/* delete last / or we get confused later. */
 					path->folder[ strlen(path->folder)-1 ] = '\0';
 					add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
@@ -5221,6 +5224,8 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			strcpy  (path->name,  ob->oi.Filename);
 			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 			get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+			/* above might invalidate "ob" pointer, so refetch it */
+			ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 			/* delete last / or we get confused later. */
 			path->folder[ strlen(path->folder)-1 ] = '\0';
 			add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
@@ -5330,6 +5335,8 @@ downloadfile:
 		strcpy  (path->name,  ob->oi.Filename);
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+		/* get_folder_from_handle can invalidate ob pointer, so refetch it */
+		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 		/* delete last / or we get confused later. */
 		path->folder[ strlen(path->folder)-1 ] = '\0';
 
@@ -5409,6 +5416,8 @@ downloadfile:
 		strcpy  (path->name,  ob->oi.Filename);
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+		/* get_folder_from_handle can invalidate ob pointer, so refetch it */
+		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 		/* delete last / or we get confused later. */
 		path->folder[ strlen(path->folder)-1 ] = '\0';
 
@@ -5809,6 +5818,7 @@ out:
 		strcpy  (path->name,  ob->oi.Filename);
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+		/* ob might now be invalid! */
 		/* delete last / or we get confused later. */
 		path->folder[ strlen(path->folder)-1 ] = '\0';
 		return gp_filesystem_append (camera->fs, path->folder, path->name, context);
@@ -6511,6 +6521,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+					/* ob might now be invalid! */
 					/* delete last / or we get confused later. */
 					path->folder[ strlen(path->folder)-1 ] = '\0';
 
@@ -6733,7 +6744,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 					if (ob->oi.StorageID == 0) {
 						/* We would always get the same filename,
-					 * which will confuse the frontends */
+						 * which will confuse the frontends */
 						if (strstr(ob->oi.Filename,".NEF"))
 							sprintf (path->name, "capt%04d.nef", params->capcnt++);
 						else
@@ -7104,6 +7115,10 @@ downloadomdfile:
 			strcpy  (path->name,  ob->oi.Filename);
 			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 			get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+
+			/* get_folder_from_handle can invalidate ob pointer, so refetch it */
+			C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+
 			/* delete last / or we get confused later. */
 			path->folder[ strlen(path->folder)-1 ] = '\0';
 
@@ -7260,6 +7275,7 @@ handleregular:
 		char		*oldfn;
 
 		C_PTP_REP (ptp_object_want (params, event.Param1, 0, &ob));
+		/* objectinfo might not even be loaded yet, but this could be 0 / NULL ... but the compare will trigger */
 		oldparent = ob->oi.ParentObject;
 		oldstorage = ob->oi.StorageID;
 		oldfn = strdup(ob->oi.Filename?ob->oi.Filename:"<null>");
@@ -7274,7 +7290,12 @@ handleregular:
 		strcpy  (path->name,  ob->oi.Filename);
 		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 		ofc = ob->oi.ObjectFormat;
+
 		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
+
+		/* get_folder_from_handle can invalidate ob pointer, so refetch it */
+		C_PTP_REP (ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+
 		/* ob could be invalid now, reload it or dont use it... */
 		/* delete last / or we get confused later. */
 		path->folder[ strlen(path->folder)-1 ] = '\0';
