@@ -3208,17 +3208,18 @@ add_object (Camera *camera, uint32_t handle, GPContext *context)
 }
 
 static int
-add_object_to_fs_and_path (Camera *camera, uint32_t handle, PTPObjectInfo *oi, CameraFilePath *path, GPContext *context)
+add_object_to_fs_and_path (Camera *camera, uint32_t handle, CameraFilePath *path, GPContext *context)
 {
-	PTPObject *ob;
-	PTPParams *params = &camera->pl->params;
+	PTPObject	*ob;
+	PTPParams	*params = &camera->pl->params;
+	CameraFileInfo	info;
 
 	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 
 	strcpy  (path->name,  ob->oi.Filename);
 	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
 
-	get_folder_from_handle (camera, oi->StorageID, ob->oi.ParentObject, path->folder);
+	get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
 	/* might invalidate ob, so refetch */
 	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 	/* delete last / or we get confused later. */
@@ -3228,7 +3229,27 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, PTPObjectInfo *oi, C
 		/* FIXME: gp_filesystem_reset */
 		return GP_OK;
 	/* The gp_filesystem_append function only appends files */
-	return gp_filesystem_append (camera->fs, path->folder, path->name, context);
+	CR ( gp_filesystem_append (camera->fs, path->folder, path->name, context));
+
+	/* we also get the fs info for free, so just set it */
+	info.file.fields = GP_FILE_INFO_TYPE |
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+			GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+	strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
+	info.file.width		= ob->oi.ImagePixWidth;
+	info.file.height	= ob->oi.ImagePixHeight;
+	info.file.size		= ob->oi.ObjectCompressedSize;
+	info.file.mtime		= time(NULL);
+
+	info.preview.fields = GP_FILE_INFO_TYPE |
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+			GP_FILE_INFO_SIZE;
+	strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
+	info.preview.width	= ob->oi.ThumbPixWidth;
+	info.preview.height	= ob->oi.ThumbPixHeight;
+	info.preview.size	= ob->oi.ThumbCompressedSize;
+	GP_LOG_D ("setting fileinfo in fs");
+	return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 }
 
 /* find JPEGs in data blobs helper ... as most preview data is encapsulated */
@@ -4213,7 +4234,7 @@ capturetriggered:
 				}
 			}
 		} else { /* capture to card branch */
-			ret = add_object_to_fs_and_path (camera, newobject, &oi, path, context);
+			ret = add_object_to_fs_and_path (camera, newobject, path, context);
 			/* this has handled adding an association earlier */
 			ptp_free_objectinfo(&oi);
 			return ret;
@@ -4285,23 +4306,20 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				gp_filesystem_reset (camera->fs);
 				break;
 			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO: {
-				PTPObject	*ob;
+				int res;
 
 				/* just add it to the filesystem, and return in CameraPath */
 				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
-				ret = ptp_object_want (params, entry.u.object.oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-				if (ret != PTP_RC_OK)
-					continue;
-				strcpy  (path->name,  oi.Filename);
-				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)oi.StorageID);
-				get_folder_from_handle (camera, oi.StorageID, oi.ParentObject, path->folder);
-				/* delete last / or we get confused later. */
-				path->folder[ strlen(path->folder)-1 ] = '\0';
-				gp_filesystem_append (camera->fs, path->folder, path->name, context);
-				/* The camera might have rotated the folder from NNNCANON to NNN+1CANON , image probably comes next ... */
+				/* We have some form of objectinfo in entry.u.object.oi already, but we let the 
+				 * code refetch it via regular GetObjectInfo */
+
+				res = add_object_to_fs_and_path (camera, entry.u.object.oid, path, context);
+				if (res < GP_OK)
+					break;
+
 				if  (entry.u.object.oi.ObjectFormat == PTP_OFC_Association)
 					continue;
+				gp_filesystem_append (camera->fs, path->folder, path->name, context);
 				newobject = entry.u.object.oid;
 				break;/* for RAW+JPG mode capture, we just return the first image for now, and
 				       * let wait_for_event get the rest. */
@@ -4681,7 +4699,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (xmode != CANON_TRANSFER_CARD) {
 			fprintf (stderr,"parentobject is 0x%x, but not in card mode?\n", oi.ParentObject);
 		}
-		ret = add_object_to_fs_and_path (camera, newobject, &oi, path, context);
+		ret = add_object_to_fs_and_path (camera, newobject, path, context);
 		/* FIXME: consistent handling of association add ... perhaps try another event loop turnaroundloop turnaround  */
 		if (oi.ObjectFormat == PTP_OFC_Association)
 			gp_filesystem_reset (camera->fs);
@@ -5329,40 +5347,8 @@ downloadfile:
 	path->name[0]='\0';
 	path->folder[0]='\0';
 
-	if (newobject != 0) {
-		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-
-		strcpy  (path->name,  ob->oi.Filename);
-		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-		/* get_folder_from_handle can invalidate ob pointer, so refetch it */
-		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-		/* delete last / or we get confused later. */
-		path->folder[ strlen(path->folder)-1 ] = '\0';
-
-		CR (gp_filesystem_append (camera->fs, path->folder, path->name, context));
-
-		/* we also get the fs info for free, so just set it */
-		CameraFileInfo info;
-		info.file.fields = GP_FILE_INFO_TYPE |
-				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
-				GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
-		strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
-		info.file.width		= ob->oi.ImagePixWidth;
-		info.file.height	= ob->oi.ImagePixHeight;
-		info.file.size		= ob->oi.ObjectCompressedSize;
-		info.file.mtime		= time(NULL);
-
-		info.preview.fields = GP_FILE_INFO_TYPE |
-				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
-				GP_FILE_INFO_SIZE;
-		strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
-		info.preview.width	= ob->oi.ThumbPixWidth;
-		info.preview.height	= ob->oi.ThumbPixHeight;
-		info.preview.size	= ob->oi.ThumbCompressedSize;
-		GP_LOG_D ("setting fileinfo in fs");
-		return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
-	}
+	if (newobject != 0) /* NOTE: association add handled */
+		return add_object_to_fs_and_path (camera, newobject, path, context);
 	return GP_ERROR;
 }
 
@@ -5408,42 +5394,8 @@ downloadfile:
 	path->name[0]='\0';
 	path->folder[0]='\0';
 
-	if (newobject != 0) {
-		PTPObject	*ob;
-
-		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-
-		strcpy  (path->name,  ob->oi.Filename);
-		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-		/* get_folder_from_handle can invalidate ob pointer, so refetch it */
-		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-		/* delete last / or we get confused later. */
-		path->folder[ strlen(path->folder)-1 ] = '\0';
-
-		CR (gp_filesystem_append (camera->fs, path->folder, path->name, context));
-
-		/* we also get the fs info for free, so just set it */
-		CameraFileInfo info;
-		info.file.fields = GP_FILE_INFO_TYPE |
-				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
-				GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
-		strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
-		info.file.width		= ob->oi.ImagePixWidth;
-		info.file.height	= ob->oi.ImagePixHeight;
-		info.file.size		= ob->oi.ObjectCompressedSize;
-		info.file.mtime		= time(NULL);
-
-		info.preview.fields = GP_FILE_INFO_TYPE |
-				GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
-				GP_FILE_INFO_SIZE;
-		strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
-		info.preview.width	= ob->oi.ThumbPixWidth;
-		info.preview.height	= ob->oi.ThumbPixHeight;
-		info.preview.size	= ob->oi.ThumbCompressedSize;
-		GP_LOG_D ("setting fileinfo in fs");
-		return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
-	}
+	if (newobject != 0) /* FIXME: does not handle assocation adds I think */
+		return add_object_to_fs_and_path (camera, newobject, path, context);
 	return GP_ERROR;
 }
 
@@ -6543,7 +6495,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					}
 					newobject = entry.u.object.oid;
 					C_MEM (path = malloc(sizeof(CameraFilePath)));
-					ret = add_object_to_fs_and_path (camera, newobject, &entry.u.object.oi, path, context);
+					ret = add_object_to_fs_and_path (camera, newobject, path, context);
 					free (entry.u.object.oi.Filename);
 					if (ret != GP_OK) {
 						free (path);
@@ -6660,7 +6612,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 					if (oi.ParentObject != 0) {
 						C_MEM (path = malloc (sizeof(CameraFilePath)));
-						ret = add_object_to_fs_and_path (camera, newobject, &oi, path, context);
+						ret = add_object_to_fs_and_path (camera, newobject, path, context);
 						if (ret != GP_OK) {
 							ptp_free_objectinfo (&oi);
 							free (path);
@@ -6753,14 +6705,10 @@ camera_wait_for_event (Camera *camera, int timeout,
 						C_MEM (ob->oi.Filename = strdup (path->name));
 						strcpy (path->folder,"/");
 						goto downloadnow;
-					} else {
-						strcpy  (path->name,  ob->oi.Filename);
-						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-						get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-						path->folder[ strlen(path->folder)-1 ] = '\0';
 					}
-					/* ob pointer can be invalid now! */
-					/* delete last / or we get confused later. */
+
+					CR (add_object_to_fs_and_path (camera, event.Param1, path, context));
+
 					if (ofc == PTP_OFC_Association) { /* new folder! */
 						*eventtype = GP_EVENT_FOLDER_ADDED;
 						*eventdata = path;
@@ -6768,8 +6716,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 						/* if this was the last current event ... stop and return the folder add */
 						return GP_OK;
 					} else {
-						CR (gp_filesystem_append (camera->fs, path->folder,
-						path->name, context));
 						*eventtype = GP_EVENT_FILE_ADDED;
 						*eventdata = path;
 						return GP_OK;
