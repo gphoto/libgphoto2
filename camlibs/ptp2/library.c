@@ -5763,18 +5763,8 @@ out:
 	path->name[0]='\0';
 	path->folder[0]='\0';
 
-	if (newobject != 0) {
-		PTPObject	*ob;
-
-		C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-		strcpy  (path->name,  ob->oi.Filename);
-		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-		/* ob might now be invalid! */
-		/* delete last / or we get confused later. */
-		path->folder[ strlen(path->folder)-1 ] = '\0';
-		return gp_filesystem_append (camera->fs, path->folder, path->name, context);
-	}
+	if (newobject != 0) /* FIXME: check association handling */
+		return add_object_to_fs_and_path (camera, newobject, path, context);
 	return GP_ERROR;
 }
 
@@ -7054,43 +7044,11 @@ downloadomdfile:
 		path->folder[0]='\0';
 
 		if (newobject != 0) {
-			PTPObject	*ob = NULL;
+			CR (add_object_to_fs_and_path (camera, newobject, path, context));
 
-			C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-
-			strcpy  (path->name,  ob->oi.Filename);
-			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-			get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-
-			/* get_folder_from_handle can invalidate ob pointer, so refetch it */
-			C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-
-			/* delete last / or we get confused later. */
-			path->folder[ strlen(path->folder)-1 ] = '\0';
-
-			CR (gp_filesystem_append (camera->fs, path->folder, path->name, context));
-
-			/* we also get the fs info for free, so just set it */
-			info.file.fields = GP_FILE_INFO_TYPE |
-					GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
-					GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
-			strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
-			info.file.width		= ob->oi.ImagePixWidth;
-			info.file.height	= ob->oi.ImagePixHeight;
-			info.file.size		= ob->oi.ObjectCompressedSize;
-			info.file.mtime		= time(NULL);
-
-			info.preview.fields = GP_FILE_INFO_TYPE |
-					GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
-					GP_FILE_INFO_SIZE;
-			strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
-			info.preview.width	= ob->oi.ThumbPixWidth;
-			info.preview.height	= ob->oi.ThumbPixHeight;
-			info.preview.size	= ob->oi.ThumbCompressedSize;
-			GP_LOG_D ("setting fileinfo in fs");
 			*eventtype = GP_EVENT_FILE_ADDED;
 			*eventdata = path;
-			return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+			return GP_OK;
 		}
 		*eventtype = GP_EVENT_TIMEOUT;
 		return GP_OK;
