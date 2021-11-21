@@ -6682,7 +6682,6 @@ camera_wait_for_event (Camera *camera, int timeout,
 					path->folder[0]='\0';
 
 					ofc = ob->oi.ObjectFormat;
-					/* ob might be invalidated by get_folder_from_handle */
 
 					if (ob->oi.StorageID == 0) {
 						/* We would always get the same filename,
@@ -7117,27 +7116,20 @@ handleregular:
 		break;
 	case PTP_EC_ObjectAdded: {
 		PTPObject	*ob;
-		uint16_t	ofc;
 
 		C_MEM (path = malloc(sizeof(CameraFilePath)));
 		path->name[0]='\0';
 		path->folder[0]='\0';
 
+		CR (add_object_to_fs_and_path (camera, event.Param1, path, context));
+
 		C_PTP_REP (ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-		strcpy  (path->name,  ob->oi.Filename);
-		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-		ofc = ob->oi.ObjectFormat;
-		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-		/* ob could be invalid now, reload it or dont use it... */
-		/* delete last / or we get confused later. */
-		path->folder[ strlen(path->folder)-1 ] = '\0';
-		if (ofc == PTP_OFC_Association) { /* new folder! */
+
+		if (ob->oi.ObjectFormat == PTP_OFC_Association) { /* new folder! */
 			*eventtype = GP_EVENT_FOLDER_ADDED;
 			*eventdata = path;
 			gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
 		} else {
-			CR (gp_filesystem_append (camera->fs, path->folder,
-						  path->name, context));
 			*eventtype = GP_EVENT_FILE_ADDED;
 			*eventdata = path;
 		}
@@ -7185,24 +7177,15 @@ handleregular:
 		oldfn = strdup(ob->oi.Filename?ob->oi.Filename:"<null>");
 
 		ob->flags &= ~PTPOBJECT_OBJECTINFO_LOADED;
-		C_PTP_REP (ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+
 
 		C_MEM (path = malloc(sizeof(CameraFilePath)));
 		path->name[0]='\0';
 		path->folder[0]='\0';
 
-		strcpy  (path->name,  ob->oi.Filename);
-		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-		ofc = ob->oi.ObjectFormat;
+		CR (add_object_to_fs_and_path (camera, event.Param1, path, context));
 
-		get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-
-		/* get_folder_from_handle can invalidate ob pointer, so refetch it */
 		C_PTP_REP (ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-
-		/* ob could be invalid now, reload it or dont use it... */
-		/* delete last / or we get confused later. */
-		path->folder[ strlen(path->folder)-1 ] = '\0';
 
 		/* did the location or name of the file changed in the filesystem? Then we can only reset the fs and refetch the layout */
 		if (	(oldparent != ob->oi.ParentObject) &&
