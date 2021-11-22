@@ -1,3 +1,9 @@
+/** \file libgphoto2/i18n.h
+ * \brief Common include header for all C sources containing translated strings
+ *
+ * \todo Replace this file by the gettext.h file from gettext?
+ */
+
 #ifndef LIBGPHOTO2_I18N_H
 #define LIBGPHOTO2_I18N_H
 
