@@ -118,14 +118,6 @@ dnl ---------------------------------------------------------------------------
 dnl i18n support
 dnl ---------------------------------------------------------------------------
 
-dnl The following is a hack to get gphoto2 to build on gettext-0.10.35
-dnl systems - BUILD_INCLUDED_LIBINTL is set only in gettext-0.10.37 which is
-dnl the gettext version provided with gphoto2.
-dnl BUILD_INCLUDED_LIBINTL=no
-dnl AC_SUBST(BUILD_INCLUDED_LIBINTL)
-dnl USE_INCLUDED_LIBINTL=no
-dnl AC_SUBST(USE_INCLUDED_LIBINTL)
-
 GP_GETTEXT_HACK([GETTEXT_PACKAGE_LIBGPHOTO2_PORT],
                 [${PACKAGE}-${LIBGPHOTO2_PORT_CURRENT_MIN}],
                 [Lutz Mueller and others],
