@@ -146,11 +146,10 @@
    ... Fixed Canon EOS M and PowerShot SX capture, added Sony Alpha RX0
    and RX100M5A, added Canon EOS R, and some bugfixes.
 
-
-## change IRC topic of #gphoto in Freenode
+## change IRC topic of #gphoto in libera.chat
 
    /msg Chanserv topic #gphoto Digital cameras for Linux/UNIX/MacOS | http://gphoto.org/ | just ask | no webcams | newest 2.5.27
- 
+
 ## Make git ready for further development
 
    Rev NEWS and configure.ac versions to 2.5.27.1 devel release.
