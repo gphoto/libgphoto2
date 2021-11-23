@@ -1327,6 +1327,9 @@ static struct {
 
 	/* via email */
 	{"Sony:ZV-E10 (Control)",		0x054c, 0x0d97, PTP_CAP|PTP_CAP_PREVIEW},
+	
+	/* Thomas Schaad, napstertom@gmail.com */
+	{"Sony:ILCE-7RM3A (PC Control)",		0x054c, 0x0d9b, PTP_CAP|PTP_CAP_PREVIEW},
 
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
