@@ -7166,7 +7166,6 @@ handleregular:
 	}
 	case PTP_EC_ObjectInfoChanged: {
 		PTPObject	*ob;
-		uint16_t	ofc;
 		uint32_t	oldstorage, oldparent;
 		char		*oldfn;
 
@@ -7195,7 +7194,7 @@ handleregular:
 			gp_filesystem_reset (camera->fs);
 		free (oldfn);
 
-		if (ofc == PTP_OFC_Association) { /* new folder? would be weird here? */
+		if (ob->oi.ObjectFormat == PTP_OFC_Association) { /* new folder? would be weird here? */
 			*eventtype = GP_EVENT_FOLDER_ADDED;
 			*eventdata = path;
 		} else {
