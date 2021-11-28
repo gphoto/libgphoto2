@@ -241,7 +241,7 @@ __attribute__((__format__(printf,4,5)))
 
 #endif /* _GPHOTO2_INTERNAL_CODE */
 #ifdef __cplusplus
-};
+}
 #endif /* __cplusplus */
 
 #endif /* !defined(LIBGPHOTO2_GPHOTO2_PORT_LOG_H) */
