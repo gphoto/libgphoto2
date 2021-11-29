@@ -45,12 +45,13 @@ if test "x$effective_target" = xNONE || test "x$effective_target" = x ; then
 fi
 AC_SUBST(effective_target)
 
+m4_pattern_allow([GP_BYTEORDER_H])dnl
 cat > "$1" << EOF
 /* This file is generated automatically by configure */
 /* It is valid only for the system type ${effective_target} */
 
-#ifndef __BYTEORDER_H
-#define __BYTEORDER_H
+#ifndef GP_BYTEORDER_H
+#define GP_BYTEORDER_H
 
 EOF
 
@@ -446,5 +447,13 @@ esac
 ]
 
 cat >> "$1" << EOF
-#endif /*__BYTEORDER_H*/
-EOF])
+#endif /* GP_BYTEORDER_H */
+EOF
+])dnl
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

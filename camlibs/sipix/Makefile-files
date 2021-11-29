@@ -17,7 +17,8 @@ EXTRA_LTLIBRARIES += sipix_blink2.la
 sipix_blink2_la_SOURCES	= sipix/blink2.c
 sipix_blink2_la_LDFLAGS = $(camlib_ldflags)
 sipix_blink2_la_DEPENDENCIES = $(camlib_dependencies)
-sipix_blink2_la_LIBADD = $(camlib_libadd) @LIBJPEG@
+sipix_blink2_la_CPPFLAGS = $(AM_CPPFLAGS) $(LIBJPEG_CFLAGS)
+sipix_blink2_la_LIBADD = $(camlib_libadd) $(LIBJPEG_LIBS)
 
 
 EXTRA_LTLIBRARIES += sipix_web2.la

@@ -47,3 +47,10 @@ fi
 AM_CONDITIONAL(ENABLE_GRAPHS, $have_dot)
 
 ])
+dnl
+dnl
+dnl ####################################################################
+dnl
+dnl Local Variables:
+dnl mode: autoconf
+dnl End:

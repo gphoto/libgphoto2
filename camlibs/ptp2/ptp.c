@@ -30,13 +30,18 @@
 # include <libxml/parser.h>
 #endif
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdint.h>
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
+
+#include "libgphoto2_port/compiletime-assert.h"
 
 #ifdef ENABLE_NLS
 #  include <libintl.h>
@@ -59,27 +64,74 @@
 
 #define CHECK_PTP_RC(RESULT) do { uint16_t r = (RESULT); if (r != PTP_RC_OK) return r; } while(0)
 
-static inline void
-ptp_init_container(PTPContainer* ptp, uint16_t code, int n_param, ...)
+
+/* Initialize a PTPContainer struct. For the usage, see the PTP_CNT_INIT() macro below. */
+static inline
+void ptp_init_container(PTPContainer* ptp, int n_param, ...)
 {
 	va_list	args;
 	int	i;
 
 	memset(ptp, 0, sizeof(*ptp));
-	ptp->Code = code;
+	va_start(args, n_param);
+	/* verify the int value cannot have cut off the uint16_t value */
+	COMPILETIME_ASSERT(INT_MAX >= UINT16_MAX);
+	/* note that uint16_t can be promoted to an int, so va_arg
+	 * needs to be called with the int type */
+	ptp->Code   = (uint16_t)(va_arg(args, int));
 	ptp->Nparam = n_param;
 
-	va_start(args, n_param);
-	for (i=0; i<n_param; ++i)
+	/* Make certain the memory layout of PTPContainer matches what
+	 * the for loop code below expects.
+	 */
+	COMPILETIME_ASSERT((offsetof(PTPContainer, Param1) + sizeof(uint32_t))
+			   == offsetof(PTPContainer, Param2));
+	COMPILETIME_ASSERT((offsetof(PTPContainer, Param2) + sizeof(uint32_t))
+			   == offsetof(PTPContainer, Param3));
+	COMPILETIME_ASSERT((offsetof(PTPContainer, Param3) + sizeof(uint32_t))
+			   == offsetof(PTPContainer, Param4));
+	COMPILETIME_ASSERT((offsetof(PTPContainer, Param4) + sizeof(uint32_t))
+			   == offsetof(PTPContainer, Param5));
+
+	COMPILETIME_ASSERT((offsetof(PTPContainer, Param1) + 5*sizeof(uint32_t))
+			   == offsetof(PTPContainer, Nparam));
+
+	/* Silently ignore parameters past Param5 */
+	for (i=0; (i<n_param) && (i<5); ++i) {
 		(&ptp->Param1)[i] = va_arg(args, uint32_t);
+	}
 	va_end(args);
 }
 
-#define NARGS_SEQ(_1,_2,_3,_4,_5,_6,_7,_8,N,...) N
-#define NARGS(...) NARGS_SEQ(-1, ##__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
 
-#define PTP_CNT_INIT(PTP, CODE, ...) \
-	ptp_init_container(&PTP, CODE, NARGS(__VA_ARGS__), ##__VA_ARGS__)
+#define N_PARAM_SEQ(DUMMY,				\
+		    Pa, Pb, Pc, Pd, Pe,			\
+		    P0, P1, P2, P3, P4, P5,		\
+		    N, ...)				\
+	N
+
+
+#define N_PARAM(...)				\
+	N_PARAM_SEQ(__VA_ARGS__,		\
+		    "a", "b", "c", "d", "e",	\
+		    5U, 4U, 3U, 2U, 1U, 0U, NULL)
+
+
+/* Usage: PTP_CNT_INIT(PTP, CODE[, PARAM...])
+ *
+ * Together with ptp_init_container(), this basically is a shortcut to
+ * initializing a PTPContainer struct, but automatically counts the
+ * number of PTPContainer parameters (members Param1 through Param5)
+ * set.
+ *
+ * The valid number of parameters is 0 through 5.
+ */
+#define PTP_CNT_INIT(PTP, ...)						\
+	do {								\
+		const int n_param = N_PARAM(-666, __VA_ARGS__);		\
+		ptp_init_container(&PTP, n_param, __VA_ARGS__);		\
+	} while (0)
+
 
 static uint16_t ptp_exit_recv_memory_handler (PTPDataHandler*,unsigned char**,unsigned long*);
 static uint16_t ptp_init_recv_memory_handler(PTPDataHandler*);
@@ -9733,3 +9785,11 @@ ptp_add_object_to_cache(PTPParams *params, uint32_t handle)
 	PTPObject *ob;
 	return ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED|PTPOBJECT_MTPPROPLIST_LOADED, &ob);
 }
+
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */

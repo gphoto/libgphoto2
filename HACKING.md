@@ -101,11 +101,11 @@ before you commit any changes, double check with the author that your
 changes won't break the driver.
 
 If you want to write a driver for gphoto2, the easiest way to do so
-would be to copy over the contents of camlibs/template and fill in
+would be to copy over the contents of `camlibs/template/` and fill in
 your code.
 
 Use something like `CHECK_RESULT` (see for example
-`libgphoto2/filesys.c`).
+`libgphoto2/gphoto2-filesys.c`).
 
 Let's say you write a driver called sillycam. Please set up a file
 called `library.c` containing all gphoto2-specific code (like
@@ -154,7 +154,7 @@ my_func (int arg)
 
 	/*
 	 * This is a multiline
-	 * comment. Use TAB for 
+	 * comment. Use TAB for
 	 * indentation!
 	 */
 	res = gp_some_action (var);
@@ -178,9 +178,9 @@ my_func (int arg)
 }
 ```
 
-Please always check the return value of `gp_`-functions! We defined some
-handy macros all over the place (like `CHECK_RESULT`) - by using those,
-you'll avoid lots of `if () {} else {}`.
+Please always check the return value of `gp_`-functions! We have
+defined some handy macros all over the place (like `CHECK_RESULT`) -
+by using those, you'll avoid lots of `if () {} else {}`.
 
 Emacs users may define and use a `gphoto-c-mode` by putting the
 following stuff into their `.emacs` file:
@@ -195,7 +195,7 @@ following stuff into their `.emacs` file:
       (c-set-style "linux")
       (setq indent-tabs-mode t)
       (font-lock-mode))
-    
+
     ;;
     (setq auto-mode-alist (cons '("/home/user/src/gphoto.*\\.[ch]$" . gphoto-c-mode)
                            auto-mode-alist))
@@ -256,7 +256,8 @@ Portability
 Please remember that people will be running gphoto2 on a wide variety
 of operating systems and CPUs and will be compiling it on a wide
 variety of C compilers.  As you write your code, be sure not to make
-any assumptions in your code that aren't in the ANSI C89 standard.
+any assumptions in your code that aren't in the C99 standard.
+
 If your code absolutely needs some feature or header file that isn't
 available everywhere, write an autoconf test so that the configure
 script will detect if that feature is available at compile time and
@@ -320,7 +321,7 @@ for more details.
   at once.
 
   The macros have the form `AANN[a]toh` or `htoAANN[a]`, where `AA` is
-  `le` (little-endian) or `be` (big-endian), `NN` is `16` or `32`
+  `le` (little-endian) or `be` (big-endian), `NN` is `16`, `32`, or `64`
   (bits in the word) and `a`, if present, means that the preceding
   type is located in a byte array, not an integer. `h` refers to
   `host`, and could be big or little-endian depending on the current
@@ -334,24 +335,29 @@ for more details.
 
   gcc is a great C compiler, but it isn't installed on everybody's
   systems (yet!).  Avoid use of proprietary gcc language extensions
-  and features that aren't available in ANSI C89 compilers.  Sure,
+  and features that aren't available in C99 compilers.  Sure,
   there's probably some code that would be more elegant using a gcc
   language extension, but somebody, somewhere will be denied the use
   of the best digital camera application in existence because of it.
 
-  This also applies to new standard C features that appeared in the
-  C99 specification of the language.  There is not much support yet in
-  the installed base of C compilers to allow unrestricted use, but
-  this will change as time goes by.  In the meantime, use `autoconf`
-  to detect if the feature is available at run-time and act
+  This also applies to new standard C features that appeared in later
+  specification of the C language.  There is varying support in the
+  installed base of C compilers to allow unrestricted use, but this
+  will change as time goes by.  In the meantime, use `autoconf` to
+  detect if the feature is available at run-time and act
   appropriately.
 
   Although one-line comments starting with `//` have been available in
   most compilers for several years, they were only officially added to
-  the ANSI C99 spec and some compilers out there still don't support
+  the C99 spec and some compilers out there still don't support
   them.  The `inline` keyword also falls into the same category, but
   configure tests for this feature at compile time and supplies the
   appropriate inline keyword as a macro.  Finally, don't add
   compiler-specific flags to make files directly, as many of them are
   specific to one compiler and will cause the build to fail when using
   another.
+
+
+* printf(3) format strings containing "%m" should only be used in
+  system specific code for systems which actually support "%m", like
+  Linux/glibc or FreeBSD. MacOSX for example does NOT support "%m".

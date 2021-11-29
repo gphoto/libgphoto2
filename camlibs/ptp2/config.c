@@ -2070,6 +2070,7 @@ static struct deviceproptableu16 canon_eos_autoexposuremode[] = {
 
 	{ N_("C2"),			0x0010, 0 },
 	{ N_("C3"),			0x0011, 0 },
+	{ N_("Creative Auto"),		0x0013, 0 },
 	{ N_("Movie"),			0x0014, 0 },
 	{ N_("Auto"),			0x0016, 0 },	/* EOS M6 Mark 2 */
 	{ N_("Handheld Night Scene"),	0x0017, 0 },	/* EOS M6 Mark 2 */
@@ -8342,7 +8343,7 @@ _get_Nikon_LiveViewProhibitCondition(CONFIG_GET_ARGS) {
 	value.u32 = 0;
 	LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewProhibitCondition, &value, PTP_DTC_UINT32));
 	if (value.u32) {
-		strcpy(buf,N_("Movie prohibit conditions: "));
+		strcpy(buf,N_("Live View prohibit conditions: "));
 #define X(bit,str)					\
 		if (value.u32 & (1<<bit)) {		\
 			value.u32 &= ~(1<<bit);		\
@@ -8425,17 +8426,17 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 			value.u32 = 0;
 			LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_MovRecProhibitCondition, &value, PTP_DTC_UINT32));
 			if (value.u32) {
-				if (value.u32 & (1<<14)) { gp_context_error (context, _("Movie recording cannot start: Camera is not in application mode.")); return GP_ERROR; }
-				if (value.u32 & (1<<13)) { gp_context_error (context, _("Movie recording cannot start: Set liveview selector is enabled.")); return GP_ERROR; }
-				if (value.u32 & (1<<12)) { gp_context_error (context, _("Movie recording cannot start: In enlarged liveview.")); return GP_ERROR; }
-				if (value.u32 & (1<<11)) { gp_context_error (context, _("Movie recording cannot start: Card protected.")); return GP_ERROR; }
-				if (value.u32 & (1<<10)) { gp_context_error (context, _("Movie recording cannot start: Already in movie recording.")); return GP_ERROR; }
-				if (value.u32 & (1<< 9)) { gp_context_error (context, _("Movie recording cannot start: Images / movies not yet record in buffer.")); return GP_ERROR; }
-				if (value.u32 & (1<< 3)) { gp_context_error (context, _("Movie recording cannot start: Card full.")); return GP_ERROR; }
-				if (value.u32 & (1<< 2)) { gp_context_error (context, _("Movie recording cannot start: Card not formatted.")); return GP_ERROR; }
-				if (value.u32 & (1<< 1)) { gp_context_error (context, _("Movie recording cannot start: Card error.")); return GP_ERROR; }
-				if (value.u32 & (1<< 0)) { gp_context_error (context, _("Movie recording cannot start: No card.")); return GP_ERROR; }
-				gp_context_error (context, _("Movie recording cannot start: code 0x%08x"), value.u32);
+				if (value.u32 & (1<<14)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("Camera is not in application mode")); return GP_ERROR; }
+				if (value.u32 & (1<<13)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("Set liveview selector is enabled")); return GP_ERROR; }
+				if (value.u32 & (1<<12)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("In enlarged liveview")); return GP_ERROR; }
+				if (value.u32 & (1<<11)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("Card protected")); return GP_ERROR; }
+				if (value.u32 & (1<<10)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("Already in movie recording")); return GP_ERROR; }
+				if (value.u32 & (1<< 9)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("Images / movies not yet record in buffer")); return GP_ERROR; }
+				if (value.u32 & (1<< 3)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("Card full")); return GP_ERROR; }
+				if (value.u32 & (1<< 2)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("Card not formatted")); return GP_ERROR; }
+				if (value.u32 & (1<< 1)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("Card error")); return GP_ERROR; }
+				if (value.u32 & (1<< 0)) { gp_context_error (context, _("Movie recording cannot start: %s."),_("No card")); return GP_ERROR; }
+				gp_context_error (context, _("Movie recording cannot start: code 0x%08x."), value.u32);
 				return GP_ERROR;
 			}
 		}

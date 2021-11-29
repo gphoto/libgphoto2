@@ -182,13 +182,15 @@ int main(int argc, char **argv) {
 	ret = gp_list_get_name(list, 0, &name);
 	if (ret < GP_OK) goto out;
 
-	gp_list_free (list);
+	fprintf(stderr, "name is %s\n", name);
 
 	ret = sample_open_camera (&camera, name, buf, context);
         if (ret < GP_OK) {
 		fprintf(stderr,"camera %s at %s not found.\n", name, buf);
+		gp_list_free (list);
 		goto out;
 	}
+	gp_list_free (list);
 
 	ret = gp_camera_init (camera, context);
 	if (ret < GP_OK) {

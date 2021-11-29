@@ -23,6 +23,10 @@
 
 #include <stdarg.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /**
  * \brief Logging level
  * Specifies the logging severity level.
@@ -236,5 +240,8 @@ __attribute__((__format__(printf,4,5)))
 } while(0)
 
 #endif /* _GPHOTO2_INTERNAL_CODE */
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* !defined(LIBGPHOTO2_GPHOTO2_PORT_LOG_H) */
