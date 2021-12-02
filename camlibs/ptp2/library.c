@@ -2296,6 +2296,9 @@ static struct {
 	/* Andrés Farfán <nafraf@linuxmail.org> */
 	{"Canon:PowerShot SX510 HS",		0x04a9, 0x3277, PTPBUG_DELETE_SENDS_EVENT},
 
+	/* Wolfram Sang <wsa@kernel.org> */
+	{"Canon:Digital IXUS 132",		0x04a9, 0x327d, PTPBUG_DELETE_SENDS_EVENT},
+
 	/* thinkgareth <thinkgareth@users.sf.net> */
 	{"Canon:EOS 1200D",			0x04a9, 0x327f, PTP_CAP|PTP_CAP_PREVIEW},
 
