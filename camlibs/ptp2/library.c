@@ -1169,6 +1169,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/70 */
 	{"Sony:Alpha-A6300 (MTP)",    0x054c, 0x077a, 0},
 
+	/* gphoto-devel  email report */
+	{"Sony:DSC-HX80",	      0x054c, 0x0780, 0},
+
 	/* https://github.com/gphoto/libgphoto2/issues/190 */
 	{"Sony:Alpha-A6500",	      0x054c, 0x0784, 0},
 
