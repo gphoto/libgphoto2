@@ -98,6 +98,17 @@ git-checkout-po:
 		done; \
 	fi
 
+.PHONY: pull-translations
+if HAVE_RSYNC
+pull-translations:
+	$(RSYNC) -Lrtvz translationproject.org::tp/latest/libgphoto2/ $(top_srcdir)/po
+	$(RSYNC) -Lrtvz translationproject.org::tp/latest/libgphoto2_port/ $(top_srcdir)/libgphoto2_port/po
+else
+pull-translations:
+	echo "Error: Cannot pull translations: Could not find rsync at configure time."
+	exit 1
+endif
+
 # Run "make update-po" in all po/ subdirs
 .PHONY: update-po
 update-po:

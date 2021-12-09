@@ -8,7 +8,8 @@
 
 ## sync translations from translationproject
 
-   In the toplevel directory (of which `po/` is a subdirectory)
+   Run `make pull-translations` or manually run in the toplevel
+   directory (of which `po/` is a subdirectory)
 
     rsync -Lrtvz  translationproject.org::tp/latest/libgphoto2/  po
     rsync -Lrtvz  translationproject.org::tp/latest/libgphoto2_port/  libgphoto2_port/po

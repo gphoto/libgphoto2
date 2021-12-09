@@ -122,6 +122,12 @@ dnl compile when included into C++ source files.
 AM_CONDITIONAL([HAVE_CXX], [test "x$CXX" != "x" && test "x$CXX" != "xno"])
 
 
+dnl Not strictly necessary, but helps pulling translations.
+AC_ARG_VAR([RSYNC], [rsync file copying command])
+AC_PATH_PROG([RSYNC], [rsync], [no])
+AM_CONDITIONAL([HAVE_RSYNC], [test "x$RSYNC" != xno])
+
+
 dnl --------------------------------------------------------------------
 dnl Determine the most pedantic compiler flags we can find for both
 dnl C and C++, so that we can test that the libgphoto2 headers compile
