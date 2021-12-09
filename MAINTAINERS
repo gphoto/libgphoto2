@@ -232,8 +232,10 @@ Releases:
 	Marcus Meissner <marcus@jet.franken.de>
 
 Translation:
-	We use http://translationproject.org/
+	For most languages, we use http://translationproject.org/
 	packages: libgphoto2, libgphoto2_port, gphoto2, gtkam
+
+	For the "de" language, we maintain the translation ourselves.
 
 	Marcus Meissner <marcus@jet.franken.de>
 

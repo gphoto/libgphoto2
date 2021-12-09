@@ -1,5 +1,11 @@
 # How to prepare a release
 
+## update the locally maintained translation(s)
+
+   Run `make update-po`, then find which `**/po/*.po` files are
+   maintained locally (see the `MAINTAINERS` file), then edit and
+   commit those.
+
 ## sync translations from translationproject
 
    In the toplevel directory (of which po/ is a subdirectory)
