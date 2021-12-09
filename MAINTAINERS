@@ -231,9 +231,6 @@ Bug reports:
 Releases:
 	Marcus Meissner <marcus@jet.franken.de>
 
-Packaging (RPM):
-	Hans Ulrich Niedermann <gp@n-dimensional.de>
-
 Translation:
 	We use http://translationproject.org/
 	packages: libgphoto2, libgphoto2_port, gphoto2, gtkam
