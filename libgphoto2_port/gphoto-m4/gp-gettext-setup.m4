@@ -42,7 +42,7 @@ dnl into the include file and do not need to define it from a make
 dnl rule on the compiler command line.
 AC_DEFINE_UNQUOTED([$1], ["$2"], [text domain for string translations])
 dnl AM_CPPFLAGS="$AM_CPPFLAGS -D$1=\\\""'$2'"\\\""
-dnl AC_SUBST([$1], [$2])
+AC_SUBST([$1], [$2])
 dnl
 dnl
 dnl The following check will have "make all" print something like
@@ -52,7 +52,19 @@ dnl     Error: Inconsistent values for GETTEXT_PACKAGE_LIBGPHOTO2 and po/Makevar
 dnl if the consistency check has failed.
 dnl
 cat >>${GP_GETTEXT_SETUP_MK} <<EOF
-	@if \$(GREP) '^DOMAIN *= *$2\$\$' \`test -f '$3/Makevars' || echo '\$(srcdir)/'\`'$3/Makevars'; then :; else echo 'Error: Inconsistent values for $1 and po/Makevars DOMAIN'; exit 1; fi
+	@MAKEVARS_FILE="\$\$(test -f '$3/Makevars' || echo '\$(srcdir)/')$3/Makevars"; \
+	MAKEVARS_DOMAIN="\$\$(\$(SED) -n 's/^DOMAIN \{0,\}= \{0,\}//p' "\$\$MAKEVARS_FILE")"; \
+	MAKE_TIME_DOMAIN="\$($1)"; \
+	echo "  MAKEVARS_DOMAIN=\$\$MAKEVARS_DOMAIN"; \
+	echo "  $1=\$($1)"; \
+	if test "x\$\$MAKEVARS_DOMAIN" = "x\$($1)"; then \
+	     echo "Good: Matching gettext domain values (\$($1))"; \
+	elif test "x\$\$USE_NLS" = xyes; then \
+	     echo "Error: Mismatching gettext domain values (\$($1) vs \$\${MAKEVARS_DOMAIN})"; \
+	     exit 1; \
+	else \
+	     echo "Warning: Mismatching gettext domain values (\$($1) vs \$\${MAKEVARS_DOMAIN})"; \
+	fi
 EOF
 dnl
 ])dnl
