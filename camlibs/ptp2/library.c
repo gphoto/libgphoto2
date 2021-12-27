@@ -2616,7 +2616,7 @@ static struct {
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
 	{"Sea & Sea:5000G (PTP mode)",		0x05ca, 0x0327, 0},
 	/* Michael Steinhauser <mistr@online.de> */
-	{"Ricoh Caplio:R1v (PTP mode)",		0x05ca, 0x032b, 0},
+	{"Ricoh:Caplio R1v (PTP mode)",		0x05ca, 0x032b, 0},
 	{"Ricoh:Caplio R3 (PTP mode)",          0x05ca, 0x032f, 0},
 	/* Arthur Butler <arthurbutler@otters.ndo.co.uk> */
 	{"Ricoh:Caplio RR750 (PTP mode)",	0x05ca, 0x033d, 0},
