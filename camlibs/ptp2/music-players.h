@@ -2589,6 +2589,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Google Inc (for Toshiba)", 0x18d1, "Thrive 7/AT105", 0x7102,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/88 */
+  { "OnePlus", 0x18d1, "6T A6013", 0x7169,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Google Inc (for Lenovo)", 0x18d1, "Ideapad K1", 0x740a,
       DEVICE_FLAGS_ANDROID_BUGS },
   // Another OEM for Medion
@@ -3118,6 +3121,9 @@
   /* https://sourceforge.net/p/libmtp/feature-requests/296/ */
   { "Lenovo", 0x17ef, "TB-7304I", 0x7b3c,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1912/ */
+  { "Lenovo", 0x17ef, "TB-8304F1", 0x7b84,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1831/ */
   { "Lenovo", 0x17ef, "Tab4 10 (2nd ID)", 0x7bc7,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3540,6 +3546,9 @@
 
   { "Amazon", 0x1949, "Kindle Fire HD8 Plus", 0x0581,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1913/ */
+  { "Amazon", 0x1949, "Kindle Fire 10 Plus", 0x05e1,
+      DEVICE_FLAGS_ANDROID_BUGS },
   { "Amazon", 0x1949, "Fire Phone", 0x0800,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1876/ */
@@ -3676,6 +3685,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1445/ */
   { "Xiaomi", 0x2717, "Redmi 2 2014811 (MTP)", 0xff68,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/90 */
+  { "Xiaomi", 0x0a9d, "MI 9 M1902F1G", 0xff40,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
