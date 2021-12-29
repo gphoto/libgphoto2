@@ -7,8 +7,12 @@ general:
 * remaining text which was iso-8859 is UTF-8 now (except one po file)
 * To override docdir and htmldir, use configure arguments --docdir=
   and --htmldir= instead of --with-doc-dir= and --with-html-dir=
+* some code cleanups, especially handling of include files and i18n handling
 
 ptp2:
+* wait event
+  * property changes now reported with "'name' to 'value'" added
+  * object info changes now reported as FILE_CHANGED events (e.g. if you change protection flags)
 * Nikon J1: capture fixed
 * Olympus: fixed that wait time was twice as long as required if no events arrived
 * Sigma Fp: added basic beta support for capture, live view and config.
@@ -23,11 +27,11 @@ ptp2:
   * ptpip improvements
   * bug fixes
   * some Fuji cameras have now liveview only for webcam (need new firmware)
-* various small fixes
+* various small fixes and code cleanups
 * New ids:
-  * Sony Alpha-RX1R II, ILCE-7C, ZV-E10, A6600
-  * Nikon Coolpix B500
-  * Canon EOS M50m2
+  * Sony Alpha-RX1R II, ILCE-7C, ZV-E10, A6600, DSC HX-80, ILCE-7RM3A, ILCE-7RM4A, DSC-A7S III
+  * Nikon Coolpix B500, Zfc
+  * Canon EOS M50m2, Digital IXUS 132
   * Fuji X-Pro3, GFX 100S, X100V
 
 canon:
@@ -38,6 +42,7 @@ pentax:
 * fix PEF raw files for non-K100D
 
 translations:
+* updated german, french, polish, ukrainian
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.27 release
