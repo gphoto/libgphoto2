@@ -158,6 +158,30 @@
 
    /msg Chanserv topic #gphoto Digital cameras for Linux/UNIX/MacOS | http://gphoto.org/ | just ask | no webcams | newest 2.5.27
 
+## Announce to translation project
+
+   See https://translationproject.org/html/maintainers.html
+
+   Write an email to coordinator@translationproject.org
+
+   Subject: libgphoto2-2.5.28.pot
+
+
+   	Hi,
+	
+	libgphoto2 and libgphoto2_port translations domains are updated to 2.5.28.
+
+	Download location: https://sourceforge.net/projects/gphoto/files/libgphoto/2.5.28/libgphoto2-2.5.28.tar.bz2/download
+
+
+	Also gphoto2 was updated to 2.5.28:
+	https://sourceforge.net/projects/gphoto/files/gphoto/2.5.28/gphoto2-2.5.28.tar.bz2/download
+
+	Ciao, Marcus
+
+	Ciao, Marcus
+   
+
 ## Prepare git repo for further development
 
    Rev `NEWS` and `configure.ac` versions to 2.5.27.1 devel release.
