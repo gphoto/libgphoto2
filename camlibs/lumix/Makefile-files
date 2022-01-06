@@ -9,4 +9,4 @@ lumix_la_SOURCES = lumix/lumix.c
 lumix_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS) $(LIBXML2_CFLAGS) $(LIBCURL_CFLAGS)
 lumix_la_LDFLAGS = $(camlib_ldflags)
 lumix_la_DEPENDENCIES = $(camlib_dependencies)
-lumix_la_LIBADD = $(camlib_libadd) $(LIBCURL_LIBS) $(LIBXML2_LIBS)
+lumix_la_LIBADD = $(camlib_libadd) $(LIBCURL_LIBS) $(LIBXML2_LIBS) @LIBWS232@
