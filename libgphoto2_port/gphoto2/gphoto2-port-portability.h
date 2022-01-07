@@ -48,7 +48,9 @@
 
 #define __func__ __FUNCTION__
 
+#ifndef _SSIZE_T_DEFINED
 typedef SSIZE_T ssize_t;
+#endif
 
 /* Work-around for readdir() */
 typedef struct {
