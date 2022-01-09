@@ -74,6 +74,7 @@ Makefile.in
 /examples/sample-preview
 /examples/sample-tether
 /examples/sample-trigger-capture
+/gp-gettext-setup.mk
 /gphoto2-config
 /libgphoto2/gphoto2-endian.h
 /libgphoto2_port/ABOUT-NLS
@@ -86,6 +87,7 @@ Makefile.in
 /libgphoto2_port/config.log
 /libgphoto2_port/config.status
 /libgphoto2_port/configure
+/libgphoto2_port/gp-gettext-setup.mk
 /libgphoto2_port/gphoto2-port-config
 /libgphoto2_port/INSTALL
 /libgphoto2_port/libtool
