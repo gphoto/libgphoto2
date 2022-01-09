@@ -34,8 +34,9 @@
 # Debug files
 *.dSYM/
 
-# backup files
+# editor backup files and other editor specific artefacts
 *~
+.vscode/
 
 # auto generated files
 *.pc
@@ -145,6 +146,5 @@ Makefile.in
 /tests/test-pedantic-cxx17
 /tests/test-pedantic-cxx20
 /tests/test-pedantic-cxx98
-+.vscode/
 
 /tmpwrk*/
