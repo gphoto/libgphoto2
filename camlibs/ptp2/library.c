@@ -4746,6 +4746,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	int		ret;
 
 	if (params->deviceinfo.Model && (
+		!strcmp(params->deviceinfo.Model, "ZV-E10")		||
 		!strcmp(params->deviceinfo.Model, "ZV-1")		||
 		!strcmp(params->deviceinfo.Model, "DSC-RX100M7")	||
 		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")		||
