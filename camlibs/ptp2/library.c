@@ -1738,6 +1738,9 @@ static struct {
 	/* timelapse-VIEW */
 	{"Nikon:DSC D780",		  0x04b0, 0x0446, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* by email */
+	{"Nikon:DSC D6",		  0x04b0, 0x0447, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Thomas Schaad */
 	{"Nikon:Z5",                      0x04b0, 0x0448, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Nikon:Zfc",                     0x04b0, 0x044f, PTP_CAP|PTP_CAP_PREVIEW},
