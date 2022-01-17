@@ -4792,11 +4792,15 @@ uint16_t ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, 
 
 uint16_t ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode, unsigned char *value, uint16_t valuesize);
 uint16_t ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
+uint16_t ptp_panasonic_getrecordingstatus (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
 uint16_t ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint16_t valuesize, uint32_t *currentValue, uint32_t **propertyValueList, uint32_t *propertyValueListLength);
 uint16_t ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode);
 uint16_t ptp_panasonic_getcapturetarget (PTPParams *params, uint16_t *target);
 uint16_t ptp_panasonic_setcapturetarget (PTPParams *params, uint16_t target);
 uint16_t ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode);
+uint16_t ptp_panasonic_recordmode (PTPParams* params, uint16_t mode);
+uint16_t ptp_panasonic_startrecording (PTPParams* params);
+uint16_t ptp_panasonic_stoprecording (PTPParams* params);
 uint16_t ptp_panasonic_9401 (PTPParams* params, uint32_t x);
 
 uint16_t ptp_panasonic_9414_0d800012 (PTPParams* params, PanasonicLiveViewSize **liveviewsizes, unsigned int *nrofliveviewsizes);

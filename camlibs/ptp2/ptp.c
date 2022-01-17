@@ -1605,6 +1605,55 @@ ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode)
 }
 
 uint16_t
+ptp_panasonic_recordmode (PTPParams* params, uint16_t mode)
+{
+    PTPContainer   	ptp;
+    unsigned char  	data[10];
+    unsigned char	*xdata = data;
+    uint32_t 	propcode = 0x06000011;
+    uint32_t 	type = 2;
+
+    htod32a(data, propcode);	/* memcpy(data, &propcode, 4); */
+    htod32a(&data[4], type);	/* memcpy(&data[4], &type, 4); */
+    htod16a(&data[8], mode);	/* memcpy(&data[8], &mode, 2); */
+
+    PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_9409, propcode);
+    return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+}
+
+uint16_t
+ptp_panasonic_startrecording (PTPParams* params)
+{
+    PTPContainer   	ptp;
+    unsigned char  	data[8];
+    unsigned char	*xdata = data;
+    uint32_t 	propcode = 0x07000011;
+    uint32_t 	type = 0;
+
+    htod32a(data, propcode);	/* memcpy(data, &propcode, 4); */
+    htod32a(&data[4], type);	/* memcpy(&data[4], &type, 4); */
+
+    PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_MovieRecControl, propcode);
+    return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+}
+
+uint16_t
+ptp_panasonic_stoprecording (PTPParams* params)
+{
+    PTPContainer   	ptp;
+    unsigned char  	data[8];
+    unsigned char	*xdata = data;
+    uint32_t 	propcode = 0x07000012;
+    uint32_t 	type = 0;
+
+    htod32a(data, propcode);	/* memcpy(data, &propcode, 4); */
+    htod32a(&data[4], type);	/* memcpy(&data[4], &type, 4); */
+
+    PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_MovieRecControl, propcode);
+    return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+}
+
+uint16_t
 ptp_panasonic_getcapturetarget (PTPParams* params, uint16_t *target)
 {
 	PTPContainer    ptp;
@@ -1706,6 +1755,34 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	return ret;
 }
 
+    uint16_t
+ptp_panasonic_getrecordingstatus (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue)
+{
+    PTPContainer	ptp;
+    unsigned char	*data = NULL;
+    unsigned int 	size = 0;
+    uint16_t	ret = PTP_RC_OK;
+
+    PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_PollEvents, propcode);
+    CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+    if (!data) return PTP_RC_GeneralError;
+
+    if(size < 8) return PTP_RC_GeneralError;
+    *valuesize = dtoh32a( (data + 4) );
+
+    if(size < 8u + (*valuesize)) return PTP_RC_GeneralError;
+    if(*valuesize == 4) {
+        *currentValue = dtoh32a( (data + 8) );
+    } else if(*valuesize == 2) {
+        *currentValue = (uint32_t) dtoh16a( (data + 8) );
+    } else {
+        return PTP_RC_GeneralError;
+    }
+    //printf("ptp_panasonic_getdeviceproperty: size: %lu, valuesize: %d, currentValue: %lu\n", size, *valuesize, *currentValue);
+
+    free (data);
+    return ret;
+}
 
 uint16_t
 ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue)

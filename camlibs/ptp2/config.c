@@ -8898,6 +8898,383 @@ struct {
 };
 
 static int
+_put_Panasonic_AdjustGM(CONFIG_PUT_ARGS)
+{
+    PTPParams *params = &(camera->pl->params);
+    char *xval;
+    uint32_t val;
+
+    CR (gp_widget_get_value(widget, &xval));
+    int16_t adj;
+    sscanf (xval, "%hd", &adj);
+    if (adj < 0) {
+        adj = abs(adj) + 0x8000;
+    }
+    val = adj;
+
+    return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance_ADJ_GM, (unsigned char*)&val, 2));
+}
+
+static int
+_get_Panasonic_AdjustGM(CONFIG_GET_ARGS) {
+    uint32_t currentVal = 0;
+    char buf[32];
+    PTPParams *params = &(camera->pl->params);
+    GPContext *context = ((PTPData *) params->data)->context;
+
+    uint16_t valsize;
+    C_PTP_REP (ptp_panasonic_getdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance_ADJ_GM, &valsize, &currentVal));
+
+    //printf("retrieved %x with size %x\n", currentVal, valsize);
+    if (currentVal & 0x8000) {
+        currentVal = (currentVal & 0x7FFF) * -1;
+    }
+    sprintf(buf, "%d\n", currentVal);
+
+    gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+    gp_widget_set_name (*widget, menu->name);
+
+    gp_widget_set_value(*widget, &buf);
+    return GP_OK;
+}
+
+static int
+_put_Panasonic_AdjustAB(CONFIG_PUT_ARGS)
+{
+    PTPParams *params = &(camera->pl->params);
+    char *xval;
+    uint32_t val;
+
+    CR (gp_widget_get_value(widget, &xval));
+    int16_t adj;
+    sscanf (xval, "%hd", &adj);
+    if (adj < 0) {
+        adj = abs(adj) + 0x8000;
+    }
+    val = adj;
+
+    return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance_ADJ_AB, (unsigned char*)&val, 2));
+}
+
+static int
+_get_Panasonic_AdjustAB(CONFIG_GET_ARGS) {
+    uint32_t currentVal = 0;
+    char buf[32];
+    PTPParams *params = &(camera->pl->params);
+    GPContext *context = ((PTPData *) params->data)->context;
+
+    uint16_t valsize;
+    C_PTP_REP (ptp_panasonic_getdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance_ADJ_AB, &valsize, &currentVal));
+
+    //printf("retrieved %x with size %x\n", currentVal, valsize);
+    if (currentVal & 0x8000) {
+        currentVal = (currentVal & 0x7FFF) * -1;
+    }
+    sprintf(buf, "%d\n", currentVal);
+
+    gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+    gp_widget_set_name (*widget, menu->name);
+
+    gp_widget_set_value(*widget, &buf);
+    return GP_OK;
+}
+
+static int
+_put_Panasonic_ColorTemp(CONFIG_PUT_ARGS)
+{
+    PTPParams *params = &(camera->pl->params);
+    char *xval;
+    uint32_t val;
+
+    CR (gp_widget_get_value(widget, &xval));
+    uint16_t KSet;;
+    sscanf (xval, "%hd", &KSet);
+    val = KSet;
+
+    return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance_KSet, (unsigned char*)&val, 2));
+}
+
+static int
+_get_Panasonic_ColorTemp(CONFIG_GET_ARGS) {
+    uint32_t currentVal;
+    uint32_t listCount;
+    uint32_t *list;
+    uint32_t i;
+    int	valset = 0;
+    char	buf[32];
+    PTPParams *params = &(camera->pl->params);
+    GPContext *context = ((PTPData *) params->data)->context;
+
+    C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance_KSet, 2, &currentVal, &list, &listCount));
+
+    //printf("retrieved %lu property values\n", listCount);
+
+    gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+    gp_widget_set_name (*widget, menu->name);
+
+    for (i = 0; i < listCount; i++) {
+        sprintf(buf,_("%d"), list[i]);
+        if (list[i] == currentVal) {
+            gp_widget_set_value (*widget, buf);
+            valset = 1;
+        }
+
+        gp_widget_add_choice (*widget, buf);
+    }
+    free(list);
+    if (!valset) {
+        sprintf(buf,_("Unknown 0x%04x"), currentVal);
+        gp_widget_set_value (*widget, buf);
+    }
+    return GP_OK;
+}
+
+static
+struct {
+    char*	str;
+    uint16_t val;
+} panasonic_aftable[] = {
+    { N_("AF"),             0x0000	},
+    { N_("AF macro"),       0x0001	},
+    { N_("AF macro (D)"),   0x0002	},
+    { N_("MF"),             0x0003	},
+    { N_("AF_S"),           0x0004	},
+    { N_("AF_C"),           0x0005	},
+    { N_("AF_F"),           0x0006	},
+};
+
+static int
+_put_Panasonic_AFMode(CONFIG_PUT_ARGS)
+{
+    PTPParams *params = &(camera->pl->params);
+    char *xval;
+    uint32_t val;
+    uint32_t i;
+
+    CR (gp_widget_get_value(widget, &xval));
+
+    for (i=0;i<sizeof(panasonic_aftable)/sizeof(panasonic_aftable[0]);i++) {
+        if (!strcmp(panasonic_aftable[i].str, xval)) {
+            val = panasonic_aftable[i].val;
+            break;
+        }
+    }
+
+    return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_AFArea_AFModeParam, (unsigned char*)&val, 2));
+}
+
+static int
+_get_Panasonic_AFMode(CONFIG_GET_ARGS) {
+    uint32_t currentVal;
+    uint32_t listCount;
+    uint32_t *list;
+    uint32_t i, j;
+    int	valset = 0;
+    char	buf[32];
+    PTPParams *params = &(camera->pl->params);
+    GPContext *context = ((PTPData *) params->data)->context;
+
+    C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_AFArea_AFModeParam, 2, &currentVal, &list, &listCount));
+
+    //printf("retrieved %lu property values\n", listCount);
+
+    gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+    gp_widget_set_name (*widget, menu->name);
+
+    for (i = 0; i < listCount; i++) {
+        for (j=0;j<sizeof(panasonic_aftable)/sizeof(panasonic_aftable[0]);j++) {
+            sprintf(buf,_("%d"), list[i]);
+            if ((int)list[i] == (int)currentVal && j == (int)currentVal) {
+                gp_widget_set_value (*widget, panasonic_aftable[j].str);
+                valset = 1;
+                break;
+            }
+        }
+    }
+    for (j=0;j<sizeof(panasonic_aftable)/sizeof(panasonic_aftable[0]);j++) {
+        gp_widget_add_choice (*widget, panasonic_aftable[j].str);
+    }
+    free(list);
+    if (!valset) {
+        sprintf(buf,_("Unknown 0x%04x"), currentVal);
+        gp_widget_set_value (*widget, buf);
+    }
+    return GP_OK;
+}
+
+static
+struct {
+    char*	str;
+    uint16_t val;
+} panasonic_mftable[] = {
+    { N_("Stop"),        0x0000	},
+    { N_("Far fast"),    0x0001	},
+    { N_("Far slow"),    0x0002	},
+    { N_("Near slow"),   0x0003	},
+    { N_("Near fast"),   0x0004	},
+};
+
+static int
+_put_Panasonic_MFAdjust(CONFIG_PUT_ARGS)
+{
+    PTPParams *params = &(camera->pl->params);
+    char *xval;
+    uint32_t val = 0;
+    uint32_t i;
+
+    CR (gp_widget_get_value(widget, &xval));
+    for (i=0;i<sizeof(panasonic_mftable)/sizeof(panasonic_mftable[0]);i++) {
+        if(!strcmp(panasonic_mftable[i].str, xval)) {
+            val = panasonic_mftable[i].val;
+            break;
+        }
+    }
+
+    return translate_ptp_result (ptp_panasonic_manualfocusdrive (params, (uint16_t)val));
+}
+
+static int
+_get_Panasonic_MFAdjust(CONFIG_GET_ARGS) {
+    uint32_t i;
+    gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+    gp_widget_set_name (*widget,menu->name);
+
+    for (i=0;i<sizeof(panasonic_mftable)/sizeof(panasonic_mftable[0]);i++) {
+        gp_widget_add_choice (*widget, panasonic_mftable[i].str);
+    }
+    gp_widget_set_value (*widget, _("None"));
+    return GP_OK;
+}
+
+static
+struct {
+    char*	str;
+    uint16_t val;
+} panasonic_rmodetable[] = {
+    { N_("P"),   0x0000	},
+    { N_("A"),   0x0001	},
+    { N_("S"),   0x0002	},
+    { N_("M"),   0x0003	},
+};
+
+static int
+_get_Panasonic_ExpMode(CONFIG_GET_ARGS) {
+
+    uint32_t currentVal;
+    uint32_t listCount;
+    uint32_t *list;
+    uint32_t i,j;
+    int	valset = 0;
+    char	buf[32];
+    PTPParams *params = &(camera->pl->params);
+    GPContext *context = ((PTPData *) params->data)->context;
+
+    C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, 0x06000011, 2, &currentVal, &list, &listCount));
+
+    //printf("retrieved %lu property values\n", listCount);
+
+    gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+    gp_widget_set_name (*widget, menu->name);
+
+    for (j=0;j<sizeof(panasonic_rmodetable)/sizeof(panasonic_rmodetable[0]);j++) {
+        gp_widget_add_choice (*widget, panasonic_rmodetable[j].str);
+    }
+
+    for (i = 0; i < listCount; i++) {
+        for (j=0;j<sizeof(panasonic_rmodetable)/sizeof(panasonic_rmodetable[0]);j++) {
+            sprintf(buf,_("%d"), list[i]);
+            if ((int)list[i] == (int)currentVal && j == (int)currentVal) {
+                gp_widget_set_value (*widget, panasonic_rmodetable[j].str);
+                valset = 1;
+                break;
+            }
+    	}
+    }
+    free(list);
+    if (!valset) {
+        sprintf(buf,_("Unknown 0x%04x"), currentVal);
+        gp_widget_set_value (*widget, buf);
+    }
+    return GP_OK;
+}
+
+static int
+_put_Panasonic_ExpMode(CONFIG_PUT_ARGS)
+{
+    PTPParams *params = &(camera->pl->params);
+    char *xval;
+    uint32_t val = 0;
+    uint32_t i;
+
+    CR (gp_widget_get_value(widget, &xval));
+    for (i=0;i<sizeof(panasonic_rmodetable)/sizeof(panasonic_rmodetable[0]);i++) {
+        if(!strcmp(panasonic_rmodetable[i].str, xval)) {
+            val = panasonic_rmodetable[i].val;
+            break;
+        }
+    }
+
+    //printf("val : %d\n", val);
+    return translate_ptp_result (ptp_panasonic_recordmode(params, (uint16_t)val));
+}
+static
+struct {
+    char*	str;
+    uint16_t val;
+} panasonic_recordtable[] = {
+    { N_("Standby"),        0x0000	},
+    { N_("Recording"),      0x0001	},
+    { N_("Playing"),        0x0002	},
+    { N_("Other process."), 0x0003	},
+    { N_("Other playing"),  0x0004	},
+    { N_("Noise reduction"),0x0005	},
+    { N_("Displaying menu"),0x0006	},
+    { N_("Streaming"),   	0x0007	},
+};
+
+static int
+_get_Panasonic_Recording(CONFIG_GET_ARGS) {
+    uint32_t currentVal = 0;
+    char buf[32];
+    uint32_t i;
+    PTPParams *params = &(camera->pl->params);
+    GPContext *context = ((PTPData *) params->data)->context;
+
+    uint16_t valsize;
+    C_PTP_REP (ptp_panasonic_getrecordingstatus(params, 0x12000013, &valsize, &currentVal));
+
+    gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+    gp_widget_set_name (*widget, menu->name);
+
+    for(i = 0; i < sizeof(panasonic_recordtable) / sizeof(panasonic_recordtable[0]); i++) {
+        if (currentVal == panasonic_recordtable[i].val) {
+            strcpy(buf, panasonic_recordtable[i].str);
+        }
+    }
+
+    gp_widget_set_value(*widget, &buf);
+    return GP_OK;
+}
+
+    static int
+_put_Panasonic_Recording(CONFIG_PUT_ARGS)
+{
+    PTPParams *params = &(camera->pl->params);
+    char *xval;
+    uint32_t val = 0;
+    uint32_t i;
+
+    CR (gp_widget_get_value(widget, &xval));
+    if (!strcmp(xval, "start")) {
+        return translate_ptp_result (ptp_panasonic_startrecording(params));
+    } else if (!strcmp(xval, "stop")) {
+        return translate_ptp_result (ptp_panasonic_stoprecording(params));
+    } else {
+        return GP_ERROR;
+    }
+}
+
+static int
 _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
@@ -8925,7 +9302,7 @@ _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 	}
 	/* free(list); */
 	GP_LOG_D("setting whitebalance to 0x%04x", val);
-	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance, (unsigned char*)&val, 2));
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_WhiteBalance_Param, (unsigned char*)&val, 2));
 }
 
 static int
@@ -8939,7 +9316,7 @@ _get_Panasonic_Whitebalance(CONFIG_GET_ARGS) {
 	PTPParams *params = &(camera->pl->params);
 	GPContext *context = ((PTPData *) params->data)->context;
 
-	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance, 2, &currentVal, &list, &listCount));
+	C_PTP_REP (ptp_panasonic_getdevicepropertydesc(params, PTP_DPC_PANASONIC_WhiteBalance_Param, 2, &currentVal, &list, &listCount));
 
 	//printf("retrieved %lu property values\n", listCount);
 
@@ -8984,7 +9361,7 @@ _put_Panasonic_Exposure(CONFIG_PUT_ARGS)
 		val = (uint32_t)(0x8000 | (int)(((-f)*3)));
 	else
 		val = (uint32_t) (f*3);
-	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_Exposure, (unsigned char*)&val, 2));
+	return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_Exposure_Param, (unsigned char*)&val, 2));
 }
 
 static int
@@ -9011,11 +9388,13 @@ _get_Panasonic_Exposure(CONFIG_GET_ARGS) {
 			val = -(val & 0x7fff);
 		sprintf (buf, "%f", val/3.0);
 		gp_widget_add_choice (*widget, buf);
+		if ((int)list[i] == (int)currentVal) {
+			sprintf (buf, "%f", val/3.0);
+			gp_widget_set_value (*widget, &buf);
+		}
 	}
 	free(list);
 
-	sprintf (buf, "%f", (float)currentVal);
-	gp_widget_set_value (*widget, &buf);
 	return GP_OK;
 }
 
@@ -10259,6 +10638,13 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Compensation"),          "exposurecompensation",     PTP_DPC_CANON_EOS_ExpCompensation,      PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation2,        _put_Canon_ExpCompensation2 },
 	{ N_("Exposure Compensation"),		"exposurecompensation",	    0, 					    PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Exposure,         _put_Panasonic_Exposure },
 	{ N_("White Balance"),			"whitebalance",	    0, 					    	PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Whitebalance,         _put_Panasonic_Whitebalance },
+	{ N_("Color temperature"),              "colortemperature",         0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_ColorTemp,        _put_Panasonic_ColorTemp },
+	{ N_("Adjust A/B"),                     "whitebalanceadjustab",      0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_AdjustAB,         _put_Panasonic_AdjustAB }, 
+	{ N_("Adjust G/M"),                     "whitebalanceadjustgm",      0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_AdjustGM,         _put_Panasonic_AdjustGM }, 
+	{ N_("AF Mode"),                        "afmode",                   0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_AFMode,           _put_Panasonic_AFMode }, 
+	{ N_("MF Adjust"),                      "mfadjust",                 0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_MFAdjust,         _put_Panasonic_MFAdjust }, 
+	{ N_("Exp mode"),                       "expmode",                 0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_ExpMode,          _put_Panasonic_ExpMode }, 
+	{ N_("Start/Stop recording"),           "recording",                 0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Recording,       _put_Panasonic_Recording }, 
 	/* these cameras also have PTP_DPC_ExposureBiasCompensation, avoid overlap */
 	{ N_("Exposure Compensation"),          "exposurecompensation2",    PTP_DPC_NIKON_ExposureCompensation,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Compensation"),             "flashcompensation",        PTP_DPC_CANON_FlashCompensation,        PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ExpCompensation,         _put_Canon_ExpCompensation },
