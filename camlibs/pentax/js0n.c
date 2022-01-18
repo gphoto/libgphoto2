@@ -4,6 +4,14 @@
 #include <string.h> // one strncmp() is used to do key comparison, and a strlen(key) if no len passed in
 #include "js0n.h"
 
+
+#ifdef __clang__
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winitializer-overrides"
+
+#else /* to clang or not to clang */
+
 // gcc started warning for the init syntax used here, is not helpful so don't generate the spam, suppressing the warning is really inconsistently supported across versions
 #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #pragma GCC diagnostic push
@@ -12,6 +20,9 @@
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Winitializer-overrides"
 #pragma GCC diagnostic ignored "-Woverride-init"
+
+#endif /* to clang or not to clang */
+
 
 // only at depth 1, track start pointers to match key/value
 #define PUSH(i) if(depth == 1) { if(!index) { val = cur+i; }else{ if(klen && index == 1) start = cur+i; else index--; } }
@@ -158,6 +169,15 @@ const char *js0n(const char *key, size_t klen,
 
 }
 
+
+#ifdef __clang__
+
+#pragma clang diagnostic pop
+
+#else /* to clang or not to clang */
+
 #if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
 #pragma GCC diagnostic pop
 #endif
+
+#endif /* to clang or not to clang */
