@@ -11863,7 +11863,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 						continue;
 					}
 					CR (gp_widget_get_name (widget, (const char**)name));
-					*name = strdup(*name);
+					*name = strdup(*name?*name:"<null>");
 					CR (gp_widget_get_type (widget, &type));
 					switch (type) {
 					case GP_WIDGET_RADIO:
@@ -11871,7 +11871,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					case GP_WIDGET_TEXT: {
 						char *val;
 						CR (gp_widget_get_value (widget, &val));
-						*content = strdup(val);
+						*content = strdup(val?val:"<null>");
 						break;
 					}
 					case GP_WIDGET_RANGE: {
