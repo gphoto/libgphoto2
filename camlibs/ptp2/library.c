@@ -3738,8 +3738,10 @@ enable_liveview:
 
 		while (tries--) {
 			ret = ptp_getobjectinfo (params, preview_object, &oi);
-			ptp_free_objectinfo(&oi);
-			if (ret == PTP_RC_OK) break;
+			if (ret == PTP_RC_OK) {
+				ptp_free_objectinfo(&oi);
+				break;
+			}
 			if (ret == PTP_RC_InvalidObjectHandle) {
 				/* 1000 x 10 tries was not enough for the S10 ... make the wait a bit longer
 				 * see https://github.com/gphoto/libgphoto2/issues/603 */
