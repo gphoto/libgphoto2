@@ -12,4 +12,4 @@ Version: @VERSION@
 Requires: libgphoto2_port >= 0.10.0
 Requires.private: @REQUIREMENTS_FOR_LIBEXIF@
 Libs: -L${libdir} -lgphoto2 -lm
-Cflags: -I${includedir}/gphoto2
+Cflags: -I${includedir} -I${includedir}/gphoto2

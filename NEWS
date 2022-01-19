@@ -1,5 +1,9 @@
 libgphoto2 2.5.28.1 development snapshot
 
+general:
+* fixes build failures of libgphoto2 clients and builds using the
+  wrong libgphoto2 headers (issue #717)
+
 ptp2:
 * fixed a regression in Fuji preview capture which would lead to crashes
 * made the wait-event property extractor more robust (it sometimes gets NULL ptrs), hopefully fixing Sony crashes
