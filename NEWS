@@ -1,5 +1,9 @@
 libgphoto2 2.5.28.1 development snapshot
 
+ptp2:
+* fixed a regression in Fuji preview capture which would lead to crashes
+* made the wait-event property extractor more robust (it sometimes gets NULL ptrs), hopefully fixing Sony crashes
+
 translations:
 * updated polish, ukrainian
 ------------------------------------------------------------------------------
