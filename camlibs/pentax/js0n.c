@@ -10,6 +10,9 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Winitializer-overrides"
 
+/* allow GNU style [0 ... 255] range designators in initializers */
+#pragma clang diagnostic ignored "-Wgnu-designator"
+
 #else /* to clang or not to clang */
 
 // gcc started warning for the init syntax used here, is not helpful so don't generate the spam, suppressing the warning is really inconsistently supported across versions
@@ -20,6 +23,9 @@
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Winitializer-overrides"
 #pragma GCC diagnostic ignored "-Woverride-init"
+
+/* allow GNU style [0 ... 255] range designators in initializer */
+#pragma GCC diagnostic ignored "-Wpedantic"
 
 #endif /* to clang or not to clang */
 
