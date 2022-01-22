@@ -1040,6 +1040,8 @@ static struct {
 	{"HP:PhotoSmart M737 (PTP mode)", 0x03f0, 0x9602, 0},
 	/* https://bugs.launchpad.net/bugs/178916 */
 	{"HP:PhotoSmart R742 (PTP mode)", 0x03f0, 0x9702, 0},
+	/* private email */
+	{"HP:PhotoSmart E331 (PTP mode)", 0x03f0, 0x9a02, 0},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1814147&group_id=8874&atid=358874 */
 	{"HP:PhotoSmart M547 (PTP mode)", 0x03f0, 0x9b02, 0},
 
