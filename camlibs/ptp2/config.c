@@ -12000,7 +12000,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 		X(PTP_DTC_UINT64,u64,"%ld")
 #undef X
 		case PTP_DTC_STR:
-			*content = strdup (dpd->CurrentValue.str);
+			*content = strdup (dpd->CurrentValue.str?dpd->CurrentValue.str:"<null>");
 			return GP_OK;
 		default:
 			sprintf(buf, "Unknown type 0x%04x", dpd->DataType);
