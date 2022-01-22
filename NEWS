@@ -1,7 +1,7 @@
 libgphoto2 2.5.28.1 development snapshot
 
 general:
-* fixes build failures of libgphoto2 clients and builds using the
+* fixes build failures of libgphoto2 frontends and builds using the
   wrong libgphoto2 headers (issue #717)
 
 ptp2:

@@ -18,10 +18,27 @@ jobs:
     - name: autoreconf
       run: autoreconf -i -f
     - name: configure
-      run: ./configure
+      run: ./configure --prefix=$PWD/__prefix
     - name: make
       run: make
     - name: make check
       run: make check
     - name: make distcheck
       run: make distcheck
+    - name: make install
+      run: make install
+    - name: build and run example libgphoto2 frontend (ambs-lgp2-frontend)
+      run: |
+        set -x
+        abs_top_builddir="$PWD"
+        export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig"
+        export LD_LIBRARY_PATH="${abs_top_builddir}/__prefix/lib"
+        cd examples/ambs-lgp2-frontend
+        autoreconf -vis
+        ./configure --prefix="$PWD/__pref"
+        make
+        ldd ambs-lgp2-frontend
+        ./ambs-lgp2-frontend
+        make install
+        ldd __pref/bin/ambs-lgp2-frontend
+        __pref/bin/ambs-lgp2-frontend

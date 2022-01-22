@@ -1,0 +1,19 @@
+# autoreconf
+/aclocal.m4
+/auto-aux/
+/auto-config.h.in
+/autom4te.cache/
+/configure
+
+# ./configure
+/auto-config.h
+/config.log
+/config.status
+/stamp-h1
+
+# make
+/ambs-lgp2-frontend
+/ambs-lgp2-frontend.exe
+
+# make dist
+/ambs-lgp2-frontend-*.tar.gz
