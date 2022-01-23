@@ -3376,7 +3376,8 @@ static int sony_fnumbers[] = {
 
 static int
 _get_Sony_FNumber(CONFIG_GET_ARGS) {
-	unsigned int	i;
+	unsigned int	i, isset = 0;
+	char	buf[20];
 
 	GP_LOG_D ("get_Sony_FNumber");
 	if (!(dpd->FormFlag & (PTP_DPFF_Enumeration|PTP_DPFF_Range)))
@@ -3392,12 +3393,16 @@ _get_Sony_FNumber(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i=0;i<sizeof(sony_fnumbers)/sizeof(sony_fnumbers[0]); i++) {
-		char	buf[20];
-
 		sprintf(buf,"f/%g",sony_fnumbers[i]/100.0);
 		gp_widget_add_choice (*widget,buf);
-		if (sony_fnumbers[i] == dpd->CurrentValue.u16)
+		if (sony_fnumbers[i] == dpd->CurrentValue.u16) {
+			isset = 1;
 			gp_widget_set_value (*widget,buf);
+		}
+	}
+	if (!isset) {
+		sprintf(buf,"f/%g",dpd->CurrentValue.u16/100.0);
+		gp_widget_set_value (*widget,buf);
 	}
 	GP_LOG_D ("get_Sony_FNumber via range and table");
 	return GP_OK;
