@@ -30,6 +30,7 @@ jobs:
     - name: build and run example libgphoto2 frontend (ambs-lgp2-frontend)
       run: |
         set -x
+        exec 2>&1
         abs_top_builddir="$PWD"
         export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig"
         export LD_LIBRARY_PATH="${abs_top_builddir}/__prefix/lib"
