@@ -9089,7 +9089,7 @@ _get_Panasonic_AFMode(CONFIG_GET_ARGS) {
     for (i = 0; i < listCount; i++) {
         for (j=0;j<sizeof(panasonic_aftable)/sizeof(panasonic_aftable[0]);j++) {
             sprintf(buf,_("%d"), list[i]);
-            if ((int)list[i] == (int)currentVal && j == (int)currentVal) {
+            if ((list[i] == currentVal) && (j == currentVal)) {
                 gp_widget_set_value (*widget, panasonic_aftable[j].str);
                 valset = 1;
                 break;
@@ -9188,7 +9188,7 @@ _get_Panasonic_ExpMode(CONFIG_GET_ARGS) {
     for (i = 0; i < listCount; i++) {
         for (j=0;j<sizeof(panasonic_rmodetable)/sizeof(panasonic_rmodetable[0]);j++) {
             sprintf(buf,_("%d"), list[i]);
-            if ((int)list[i] == (int)currentVal && j == (int)currentVal) {
+            if ((list[i] == currentVal) && (j == currentVal)) {
                 gp_widget_set_value (*widget, panasonic_rmodetable[j].str);
                 valset = 1;
                 break;
@@ -9266,8 +9266,6 @@ _put_Panasonic_Recording(CONFIG_PUT_ARGS)
 {
     PTPParams *params = &(camera->pl->params);
     char *xval;
-    uint32_t val = 0;
-    uint32_t i;
 
     CR (gp_widget_get_value(widget, &xval));
     if (!strcmp(xval, "start")) {
