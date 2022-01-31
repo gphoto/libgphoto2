@@ -1,0 +1,73 @@
+Kamerazusammenfassung:
+Manufacturer: Sony Corporation
+Model: Sony Digital Still Camera
+  Version: 1.0
+  Serial Number: 0000000000000000nnnnnnnnnnnnnnnn
+Vendor Extension ID: 0x6 (0.96)
+Vendor Extension Description: FUJITSU PTP Extensions
+
+Capture Formats: 
+Display Formats: JPEG
+Supported MTP Object Properties:
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc08/DateCreated dc09/DateModified dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc87/Width dc88/Height dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00030001:
+	StorageDescription: None
+	VolumeLabel: None
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Only
+	Maximum Capability: 15464398848 (14748 MB)
+	Free Space (Bytes): 5693079552 (5429 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 0000000000000000nnnnnnnnnnnnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Sony Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: Sony Digital Still Camera
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: 1.0
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: FUJITSU PTP Extensions
+END
+/main/other/d407
+Label: Perceived Device Type
+Readonly: 1
+Type: TEXT
+Current: 1
+END
