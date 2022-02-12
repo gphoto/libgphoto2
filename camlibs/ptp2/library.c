@@ -4339,6 +4339,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				res = add_object_to_fs_and_path (camera, entry.u.object.oid, path, context);
 				if (res < GP_OK)
 					break;
+				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
 
 				if  (entry.u.object.oi.ObjectFormat == PTP_OFC_Association)
 					continue;
