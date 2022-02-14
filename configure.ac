@@ -177,7 +177,7 @@ GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Werror=unknown-warning-option])
 
 GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wall])
 GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wextra])
-GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Weverything])
+GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wmost])
 
 dnl We used to have these two defined for GCC instead of the whole -Wextra
 dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wmissing-declarations])
