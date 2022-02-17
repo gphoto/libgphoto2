@@ -7122,7 +7122,7 @@ sonyout:
 			if (ptp_get_one_event (params, &event))
 				goto handleregular;
 			C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles));
-			for (i=handles.n;i--;) {
+			for (i=0;i<handles.n;i++) {
 				PTPObject	*ob;
 				PTPObjectInfo	oi;
 
