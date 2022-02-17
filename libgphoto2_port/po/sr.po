@@ -1,362 +1,370 @@
 # Serbian translation of libgphoto2_port.
-# Copyright (C) 2012 Lutz Mueller and others
+# Copyright © 2012 Lutz Mueller and others
 # This file is distributed under the same license as the libgphoto2 package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012—2016.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2012–2022.
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port-2.5.10\n"
+"Project-Id-Version: libgphoto2_port-2.5.28\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-02-22 21:02+0100\n"
-"PO-Revision-Date: 2016-05-29 20:27+0200\n"
+"POT-Creation-Date: 2022-01-03 11:20+0100\n"
+"PO-Revision-Date: 2022-02-15 20:39+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:394
 msgid "Generic Port"
-msgstr "Општи прикључак"
+msgstr "Општи прикључник"
 
-#: libgphoto2_port/gphoto2-port-result.c:58
+#: libgphoto2_port/gphoto2-port-result.c:42
 msgid "No error"
 msgstr "Нема грешке"
 
-#: libgphoto2_port/gphoto2-port-result.c:60
+#: libgphoto2_port/gphoto2-port-result.c:44
 msgid "Unspecified error"
 msgstr "Непозната грешка"
 
-#: libgphoto2_port/gphoto2-port-result.c:62
+#: libgphoto2_port/gphoto2-port-result.c:46
 msgid "I/O problem"
 msgstr "У/И проблем"
 
-#: libgphoto2_port/gphoto2-port-result.c:64
+#: libgphoto2_port/gphoto2-port-result.c:48
 msgid "Bad parameters"
 msgstr "Лоши параметри"
 
-#: libgphoto2_port/gphoto2-port-result.c:66
+#: libgphoto2_port/gphoto2-port-result.c:50
 msgid "Unsupported operation"
 msgstr "Неподржана радња"
 
-#: libgphoto2_port/gphoto2-port-result.c:68
+#: libgphoto2_port/gphoto2-port-result.c:52
 msgid "Fixed limit exceeded"
 msgstr "Премашено је стално ограничење"
 
-#: libgphoto2_port/gphoto2-port-result.c:70
+#: libgphoto2_port/gphoto2-port-result.c:54
 msgid "Timeout reading from or writing to the port"
 msgstr "Истекло је време за читање или уписивање на прикључак"
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:56
 msgid "Serial port not supported"
 msgstr "Серијски прикључак није подржан"
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:58
 msgid "USB port not supported"
 msgstr "УСБ прикључак није подржан"
 
-#: libgphoto2_port/gphoto2-port-result.c:76
+#: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unknown port"
 msgstr "Непознат прикључак"
 
-#: libgphoto2_port/gphoto2-port-result.c:78
+#: libgphoto2_port/gphoto2-port-result.c:62
 msgid "Out of memory"
 msgstr "Нема више меморије"
 
-#: libgphoto2_port/gphoto2-port-result.c:80
+#: libgphoto2_port/gphoto2-port-result.c:64
 msgid "Error loading a library"
 msgstr "Грешка учитавања библиотеке"
 
-#: libgphoto2_port/gphoto2-port-result.c:82
+#: libgphoto2_port/gphoto2-port-result.c:66
 msgid "Error initializing the port"
 msgstr "Грешка покретања прикључка"
 
-#: libgphoto2_port/gphoto2-port-result.c:84
+#: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Error reading from the port"
 msgstr "Грешка читања са прикључка"
 
-#: libgphoto2_port/gphoto2-port-result.c:86
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Error writing to the port"
 msgstr "Грешка писања на прикључак"
 
-#: libgphoto2_port/gphoto2-port-result.c:88
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "Error updating the port settings"
 msgstr "Грешка освежавања подешавања прикључка"
 
-#: libgphoto2_port/gphoto2-port-result.c:90
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Error setting the serial port speed"
 msgstr "Грешка подешавања брзине серијског прикључка"
 
-#: libgphoto2_port/gphoto2-port-result.c:92
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Error clearing a halt condition on the USB port"
 msgstr "Грешка чишћења услова заустављања на УСБ прикључку"
 
-#: libgphoto2_port/gphoto2-port-result.c:94
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Could not find the requested device on the USB port"
 msgstr "Не могу да пронађем захтевани уређај на УСБ прикључку"
 
-#: libgphoto2_port/gphoto2-port-result.c:96
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Could not claim the USB device"
 msgstr "Не могу да остварим право на УСБ уређај"
 
-#: libgphoto2_port/gphoto2-port-result.c:98
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Could not lock the device"
 msgstr "Не могу да закључам уређај"
 
-#: libgphoto2_port/gphoto2-port-result.c:100
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "libhal error"
 msgstr "грешка хал библиотеке"
 
-#: libgphoto2_port/gphoto2-port-result.c:102
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Unknown error"
 msgstr "Непозната грешка"
 
-#: libgphoto2_port/gphoto2-port.c:59
+#: libgphoto2_port/gphoto2-port.c:46
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "Радња „%s“ није подржана овим уређајем"
 
-#: libgphoto2_port/gphoto2-port.c:60
+#: libgphoto2_port/gphoto2-port.c:47
 msgid "The port has not yet been initialized"
 msgstr "Прикључак још увек није покренут"
 
-#: libgphoto2_port/gphoto2-port.c:682
+#: libgphoto2_port/gphoto2-port.c:673
 msgid "low"
 msgstr "низак"
 
-#: libgphoto2_port/gphoto2-port.c:683
+#: libgphoto2_port/gphoto2-port.c:674
 msgid "high"
 msgstr "висок"
 
-#: libgphoto2_port/gphoto2-port.c:1211
+#: libgphoto2_port/gphoto2-port.c:1202
 msgid "No error description available"
 msgstr "Опис грешке није доступан"
 
-#: disk/disk.c:147 disk/disk.c:148 disk/disk.c:224 disk/disk.c:225
-#: disk/disk.c:265 disk/disk.c:288
+#: disk/disk.c:133 disk/disk.c:134 disk/disk.c:212 disk/disk.c:213
+#: disk/disk.c:253 disk/disk.c:276
 #, c-format
 msgid "Media '%s'"
 msgstr "Медиј „%s“"
 
-#: serial/unix.c:223
-#, c-format
-msgid "Could not lock device '%s'"
-msgstr "Не могу да закључам уређај „%s“"
-
-#: serial/unix.c:233 usbdiskdirect/linux.c:95
-#, c-format
-msgid "Device '%s' is locked by pid %d"
-msgstr "Уређај „%s“ је закључан пидом %d"
-
-#: serial/unix.c:236 usbdiskdirect/linux.c:98
-#, c-format
-msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "Уређај „%s“ не може бити закључан (закљ_уређ је вратио %d)"
-
-#: serial/unix.c:265
-#, c-format
-msgid "Device '%s' could not be unlocked."
-msgstr "Уређај „%s“ не може бити откључан."
-
-#: serial/unix.c:277 usbdiskdirect/linux.c:127
-#, c-format
-msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "Уређај „%s“ не може бити откључан јер је закључан пидом %d."
-
-#: serial/unix.c:281 usbdiskdirect/linux.c:131
-#, c-format
-msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "Уређај „%s“ не може бити откључан (откљ_уређ је вратио %d)"
-
-#: serial/unix.c:339
-#, c-format
-msgid "Serial Port %i"
-msgstr "Серијски прикључак %i"
-
-#: serial/unix.c:352
-msgid "Serial Port Device"
-msgstr "Уређај серијског прикључка"
-
-#: serial/unix.c:434
-#, c-format
-msgid "Failed to open '%s' (%s)."
-msgstr "Нисам успео да отворим „%s“ (%s)."
-
-#: serial/unix.c:454
-#, c-format
-msgid "Could not close '%s' (%s)."
-msgstr "Не могу да затворим „%s“ (%s)."
-
-#: serial/unix.c:510
-#, c-format
-msgid "Could not write to port (%s)"
-msgstr "Не могу да пишем на прикључку (%s)"
-
-#: serial/unix.c:587
-msgid "Parity error."
-msgstr "Грешка једнакости."
-
-#: serial/unix.c:591
-#, c-format
-msgid "Unexpected parity response sequence 0xff 0x%02x."
-msgstr "Неочекиван низ одговора једнакости 0xff 0x%02x."
-
-#: serial/unix.c:634
-#, c-format
-msgid "Unknown pin %i."
-msgstr "Непознат пин %i."
-
-#: serial/unix.c:656
-#, c-format
-msgid "Could not get level of pin %i (%s)."
-msgstr "Не могу да добавим ниво пина %i (%s)."
-
-#: serial/unix.c:692
-#, c-format
-msgid "Could not set level of pin %i to %i (%s)."
-msgstr "Не могу да подесим ниво пина %i на %i (%s)."
-
-#: serial/unix.c:719
-#, c-format
-msgid "Could not flush '%s' (%s)."
-msgstr "Не могу да преточим „%s“ (%s)."
-
-#: serial/unix.c:831
-#, c-format
-msgid "Could not set the baudrate to %d"
-msgstr "Не могу да подесим брзину преноса података на %d"
-
-#: usbdiskdirect/linux.c:234
-msgid "USB Mass Storage direct IO"
-msgstr "Непосредни УИ УСБ масовног складишта"
-
-#: usbdiskdirect/linux.c:285 usbscsi/linux.c:269
-#, c-format
-msgid "Failed to open '%s' (%m)."
-msgstr "Нисам успео да отворим „%s“ (%m)."
-
-#: usbdiskdirect/linux.c:299 usbscsi/linux.c:297
-#, c-format
-msgid "Could not close '%s' (%m)."
-msgstr "Не могу да затворим „%s“ (%m)."
-
-#: usbdiskdirect/linux.c:323
-#, c-format
-msgid "Could not seek to offset: %x on '%s' (%m)."
-msgstr "Не могу да премотам на померај: %x на „%s“ (%m)."
-
-#: usbdiskdirect/linux.c:345
-#, c-format
-msgid "Could not write to '%s' (%m)."
-msgstr "Не могу да запишем у „%s“ (%m)."
-
-#: usbdiskdirect/linux.c:366
-#, c-format
-msgid "Could not read from '%s' (%m)."
-msgstr "Не могу да читам са „%s“ (%m)."
-
-#: usb/libusb.c:260 libusb1/libusb1.c:373
+#: libusb1/libusb1.c:386 usb/libusb.c:248
 #, c-format
 msgid "Could not open USB device (%s)."
 msgstr "Не могу да отворим УСБ уређај (%s)."
 
-#: usb/libusb.c:273 libusb1/libusb1.c:382
+#: libusb1/libusb1.c:395 usb/libusb.c:261
 msgid "Camera is already in use."
 msgstr "Фото-апарат је већ у употреби."
 
-#: usb/libusb.c:281
-#, c-format
-msgid "Could not detach kernel driver '%s' of camera device."
-msgstr "Не могу да откачим управљачки програм језгра „%s“ фото-апарата."
+#: libusb1/libusb1.c:404
+msgid "Could not detach kernel driver of camera device."
+msgstr "Не могу да откачим управљачки програм језгра фото-апарата."
 
-#: usb/libusb.c:286 libusb1/libusb1.c:397
+#: libusb1/libusb1.c:410 usb/libusb.c:274
 msgid "Could not query kernel driver of device."
 msgstr "Не могу да пропитам управљачки програм језгра за уређај."
 
-#: usb/libusb.c:295 libusb1/libusb1.c:404
+#: libusb1/libusb1.c:417 usb/libusb.c:283
 #, c-format
 msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
 msgstr "Не могу да придобијем сучеље %d (%s). Уверите се да ниједан други програм (%s) или модул језгра (као што је %s) не користи уређај и да ви имате право на читање/писање на уређају."
 
-#: usb/libusb.c:307 libusb1/libusb1.c:415
+#: libusb1/libusb1.c:428 usb/libusb.c:295
 msgid "MacOS PTPCamera service"
 msgstr "Услуга ПТП фото-апарата МекОС-а"
 
-#: usb/libusb.c:309 libusb1/libusb1.c:417
+#: libusb1/libusb1.c:430 usb/libusb.c:297
 msgid "unknown libgphoto2 using program"
 msgstr "непозната библгфото2 користи програм"
 
-#: usb/libusb.c:326 libusb1/libusb1.c:484
+#: libusb1/libusb1.c:499 usb/libusb.c:314
 #, c-format
 msgid "Could not release interface %d (%s)."
 msgstr "Не могу да отпустим сучеље %d (%s)."
 
-#: usb/libusb.c:341 libusb1/libusb1.c:498
+#: libusb1/libusb1.c:513 usb/libusb.c:329
 #, c-format
 msgid "Could not reset USB port (%s)."
 msgstr "Не могу поново да подесим УСБ прикључак (%s)."
 
-#: usb/libusb.c:371
-#, c-format
-msgid "Could not close USB port (%s)."
-msgstr "Не могу да затворим УСБ прикључак (%s)."
+#: libusb1/libusb1.c:522
+msgid "Could not reattach kernel driver of camera device."
+msgstr "Не могу поново да прикачим управљачки програм језгра фото-апарата."
 
-#: usb/libusb.c:632 libusb1/libusb1.c:839
+#: libusb1/libusb1.c:956 usb/libusb.c:621
 #, c-format
 msgid "Could not set config %d/%d (%s)"
 msgstr "Не могу да подесим подешавања %d/%d (%s)"
 
-#: usb/libusb.c:663 libusb1/libusb1.c:868
+#: libusb1/libusb1.c:985 usb/libusb.c:652
 #, c-format
 msgid "Could not set altsetting from %d to %d (%s)"
 msgstr "Не могу да подесим подешавање заустављања са %d на %d (%s)"
 
-#: usb/libusb.c:752 libusb1/libusb1.c:1033
-#, c-format
-msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "Достављени ид продавца или производа (0x%x,0x%x) није исправан."
-
-#: usb/libusb.c:823 usb/libusb.c:909 libusb1/libusb1.c:1002
-#: libusb1/libusb1.c:1094
+#: libusb1/libusb1.c:1119 libusb1/libusb1.c:1211 usb/libusb.c:812
+#: usb/libusb.c:898
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Не могу да пронађем УСБ уређај (продавац 0x%x, производ 0x%x). Уверите се да је тај уређај прикључен на рачунар."
 
-#: usb/libusb.c:1202 libusb1/libusb1.c:1383
+#: libusb1/libusb1.c:1150 usb/libusb.c:741
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "Достављени ид продавца или производа (0x%x,0x%x) није исправан."
+
+#: libusb1/libusb1.c:1500 usb/libusb.c:1191
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Не могу да пронађем УСБ уређај (разред 0x%x, подразред 0x%x, протокол 0x%x). Уверите се да је тај уређај прикључен на рачунар."
 
-#: libusb1/libusb1.c:391
-msgid "Could not detach kernel driver of camera device."
-msgstr "Не могу да откачим управљачки програм језгра фото-апарата."
+#: ptpip/ptpip.c:161
+msgid "PTP/IP Connection"
+msgstr "ПТП/ИП веза"
 
-#: libusb1/libusb1.c:507
-msgid "Could not reattach kernel driver of camera device."
-msgstr "Не могу поново да прикачим управљачки програм језгра фото-апарата."
+#: ptpip/ptpip.c:174
+msgid "IP Connection"
+msgstr "ИП веза"
 
-#: usbscsi/linux.c:108
+#: serial/unix.c:209
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr "Не могу да закључам уређај „%s“"
+
+#: serial/unix.c:219 usbdiskdirect/linux.c:79
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "Уређај „%s“ је закључан пидом %d"
+
+#: serial/unix.c:222 usbdiskdirect/linux.c:82
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "Уређај „%s“ не може бити закључан (закљ_уређ је вратио %d)"
+
+#: serial/unix.c:251
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "Уређај „%s“ не може бити откључан."
+
+#: serial/unix.c:263 usbdiskdirect/linux.c:111
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "Уређај „%s“ не може бити откључан јер је закључан пидом %d."
+
+#: serial/unix.c:267 usbdiskdirect/linux.c:115
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "Уређај „%s“ не може бити откључан (откљ_уређ је вратио %d)"
+
+#: serial/unix.c:313
+#, c-format
+msgid "Serial Port %i"
+msgstr "Серијски прикључак %i"
+
+#: serial/unix.c:326
+msgid "Serial Port Device"
+msgstr "Уређај серијског прикључка"
+
+#: serial/unix.c:401
+#, c-format
+msgid "Failed to open '%s' (%s)."
+msgstr "Нисам успео да отворим „%s“ (%s)."
+
+#: serial/unix.c:421
+#, c-format
+msgid "Could not close '%s' (%s)."
+msgstr "Не могу да затворим „%s“ (%s)."
+
+#: serial/unix.c:477
+#, c-format
+msgid "Could not write to port (%s)"
+msgstr "Не могу да пишем на прикључку (%s)"
+
+#: serial/unix.c:552
+msgid "Parity error."
+msgstr "Грешка једнакости."
+
+#: serial/unix.c:556
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "Неочекиван низ одговора једнакости 0xff 0x%02x."
+
+#: serial/unix.c:599
+#, c-format
+msgid "Unknown pin %i."
+msgstr "Непознат пин %i."
+
+#: serial/unix.c:621
+#, c-format
+msgid "Could not get level of pin %i (%s)."
+msgstr "Не могу да добавим ниво пина %i (%s)."
+
+#: serial/unix.c:657
+#, c-format
+msgid "Could not set level of pin %i to %i (%s)."
+msgstr "Не могу да подесим ниво пина %i на %i (%s)."
+
+#: serial/unix.c:684
+#, c-format
+msgid "Could not flush '%s' (%s)."
+msgstr "Не могу да преточим „%s“ (%s)."
+
+#: serial/unix.c:778
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "Не могу да подесим брзину преноса података на %d"
+
+#: usb/libusb.c:269
+#, c-format
+msgid "Could not detach kernel driver '%s' of camera device."
+msgstr "Не могу да откачим управљачки програм језгра „%s“ фото-апарата."
+
+#: usb/libusb.c:359
+#, c-format
+msgid "Could not close USB port (%s)."
+msgstr "Не могу да затворим УСБ прикључак (%s)."
+
+#: usbdiskdirect/linux.c:218
+msgid "USB Mass Storage direct IO"
+msgstr "Непосредни УИ УСБ масовног складишта"
+
+#: usbdiskdirect/linux.c:269 usbscsi/linux.c:253
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "Нисам успео да отворим „%s“ (%m)."
+
+#: usbdiskdirect/linux.c:283 usbscsi/linux.c:281
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "Не могу да затворим „%s“ (%m)."
+
+#: usbdiskdirect/linux.c:307
+#, c-format
+msgid "Could not seek to offset: %x on '%s' (%m)."
+msgstr "Не могу да премотам на померај: %x на „%s“ (%m)."
+
+#: usbdiskdirect/linux.c:329
+#, c-format
+msgid "Could not write to '%s' (%m)."
+msgstr "Не могу да запишем у „%s“ (%m)."
+
+#: usbdiskdirect/linux.c:350
+#, c-format
+msgid "Could not read from '%s' (%m)."
+msgstr "Не могу да читам са „%s“ (%m)."
+
+#: usbscsi/linux.c:92
 #, c-format
 msgid "Device '%s' is locked by another app."
 msgstr "Уређај „%s“ је закључан неким другим програмом."
 
-#: usbscsi/linux.c:113
+#: usbscsi/linux.c:97
 #, c-format
 msgid "Failed to lock '%s' (%m)."
 msgstr "Нисам успео да закључам „%s“ (%m)."
 
-#: usbscsi/linux.c:129
+#: usbscsi/linux.c:113
 #, c-format
 msgid "Failed to unlock '%s' (%m)."
 msgstr "Нисам успео да откључам „%s“ (%m)."
 
-#: usbscsi/linux.c:230
+#: usbscsi/linux.c:214
 msgid "USB Mass Storage raw SCSI"
 msgstr "Сирови СЦСИ УСБ масовног складишта"
 
-#: usbscsi/linux.c:341
+#: usbscsi/linux.c:325
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
 msgstr "Не могу да пошаљем сцси наредбу на: „%s“ (%m)."
