@@ -980,6 +980,8 @@ static struct {
 	{"Kodak:Z990",   0x040a, 0x0613, 0},
 	/* ra4veiV6@lavabit.com */
 	{"Kodak:C1530",  0x040a, 0x0617, 0},
+	/* via email to gphoto-devel */
+	{"Kodak:M531",	0x040a, 0x0665, 0},
 
 	/* HP PTP cameras */
 #if 0
