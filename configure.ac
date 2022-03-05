@@ -6,7 +6,7 @@ dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.29 at least or higher!
 AC_INIT([libgphoto2 photo camera library],
-        [2.5.28.1],
+        [2.5.29],
         [gphoto-devel@lists.sourceforge.net],
         [libgphoto2])
 
