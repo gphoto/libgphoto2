@@ -7,9 +7,17 @@ general:
 ptp2:
 * fixed a regression in Fuji preview capture which would lead to crashes
 * made the wait-event property extractor more robust (it sometimes gets NULL ptrs), hopefully fixing Sony crashes
+* sony: fixed a crash in sony f-number
+* panasonic: added more configs adjustgm, adjustab, colortemp, afmode, mfadjust, expmode, recording
+* fixed some bugs caused by refactoring / memory leak fixes
+* added:
+  - Kodak m531
+  - HP Photosmart E331
+  - Nikon DSC 6
 
 translations:
-* updated polish, ukrainian
+* updated polish, ukrainian, russian, serbian
+* added romanian
 ------------------------------------------------------------------------------
 libgphoto2 2.5.28 release
 
