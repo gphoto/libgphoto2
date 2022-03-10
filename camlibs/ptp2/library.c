@@ -3254,6 +3254,9 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, CameraFilePath *path
 	/* The gp_filesystem_append function only appends files */
 	CR ( gp_filesystem_append (camera->fs, path->folder, path->name, context));
 
+	/* fetch ob pointer again, as gp_filesystem_append can change the object list */
+	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
