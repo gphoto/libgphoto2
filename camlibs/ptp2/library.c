@@ -3691,8 +3691,8 @@ enable_liveview:
 				usleep(50*1000);
 				continue;
 			}
-
-			ptp_free_objectinfo(&oi);
+			if (ret == PTP_RC_OK)
+				ptp_free_objectinfo(&oi);
 
 			ret = ptp_getobject_with_size(params, preview_object, &ximage, &size);
 			if (ret == PTP_RC_OK)
