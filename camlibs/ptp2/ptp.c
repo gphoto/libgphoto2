@@ -1625,32 +1625,20 @@ uint16_t
 ptp_panasonic_startrecording (PTPParams* params)
 {
     PTPContainer   	ptp;
-    unsigned char  	data[8];
-    unsigned char	*xdata = data;
     uint32_t 	propcode = 0x07000011;
-    uint32_t 	type = 0;
-
-    htod32a(data, propcode);	/* memcpy(data, &propcode, 4); */
-    htod32a(&data[4], type);	/* memcpy(&data[4], &type, 4); */
 
     PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_MovieRecControl, propcode);
-    return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+    return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
 uint16_t
 ptp_panasonic_stoprecording (PTPParams* params)
 {
     PTPContainer   	ptp;
-    unsigned char  	data[8];
-    unsigned char	*xdata = data;
     uint32_t 	propcode = 0x07000012;
-    uint32_t 	type = 0;
-
-    htod32a(data, propcode);	/* memcpy(data, &propcode, 4); */
-    htod32a(&data[4], type);	/* memcpy(&data[4], &type, 4); */
 
     PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_MovieRecControl, propcode);
-    return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+    return ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
 }
 
 uint16_t
