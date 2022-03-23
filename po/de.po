@@ -7745,11 +7745,11 @@ msgstr "Voll durchdrücken"
 
 #: camlibs/ptp2/config.c:7454 camlibs/ptp2/config.c:7512
 msgid "Release Half"
-msgstr "Halb durchdrücken"
+msgstr "Halb loslassen"
 
 #: camlibs/ptp2/config.c:7455 camlibs/ptp2/config.c:7514
 msgid "Release Full"
-msgstr "Voll auslösen"
+msgstr "Voll loslassen"
 
 #: camlibs/ptp2/config.c:7456 camlibs/ptp2/config.c:7494
 msgid "Immediate"
