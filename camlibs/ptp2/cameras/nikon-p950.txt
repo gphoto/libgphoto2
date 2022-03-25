@@ -1,0 +1,503 @@
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: P950
+  Version: COOLPIX P950   V1.2
+  Serial Number: 0000nnnnnnnn
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com: 1.0; microsoft.com/DeviceServices:1.0;
+
+Capture Formats: JPEG
+Display Formats: Undefined Type, Association/Directory, Script, DPOF, MPEG, Defined Type, JPEG, JFIF, Unknown(b982)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, Nikon Capture 3
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: 
+	VolumeLabel: 
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 63831015424 (60874 MB)
+	Free Space (Bytes): 53609496576 (51126 MB)
+	Free Space (Images): 2004
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [2,5,25,50,65,80,100] value: 100% (100)
+F-Number(0x5007):(read only) (type=0x4) Enumeration [340,630] value: f/4 (400)
+Focal Length(0x5008):(readwrite) (type=0x6) Enumeration [3500,4600,5300,6100,7300,8600,10500] value: 35 mm (3500)
+Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785,32786,32787] value: AF-S (32784)
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [1,2,3,4,32784,32790,32792,32848,32849] value: Auto (32784)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600] value: ISO 800 (800)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [2000,1666,1333,1000,666,333,0,-333,-666,-1000,-1333,-1666,-2000] value: 0,0 stops (0)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20220324T195041'
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,2] value: Single Shot (1)
+Live View AF Area(0xd05d):(readwrite) (type=0x2) Range [0 - 1, step 2] value: 2
+Lens Sort(0xd0e1):(read only) (type=0x2) Range [0 - 1, step 1] value: 1
+Min. Focal Length(0xd0e3):(read only) (type=0x6) 24 mm (2400)
+Max. Focal Length(0xd0e4):(read only) (type=0x6) 2000 mm (200000)
+Nikon Exposure Time(0xd100):(read only) (type=0x6) Enumeration [65596] value: 655860
+Live View Status(0xd1a2):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Live View Prohibit Condition(0xd1a4):(read only) (type=0x6) 16777216
+ExposureRemaining(0xd1f1):(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 2004
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) ''
+UseDeviceStageFlag(0xd303):(read only) (type=0x2) 1
+
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Nikon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/changeafarea
+Label: Set Nikon Autofocus area
+Readonly: 0
+Type: TEXT
+Current: 0x0
+END
+/main/actions/controlmode
+Label: Set Nikon Control Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/actions/viewfinder
+Label: Nikon Viewfinder
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1648147952
+Printable: do 24 mrt 19:52:32 2022
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/thumbsize
+Label: Thumb Size
+Readonly: 0
+Type: RADIO
+Current: 
+Choice: 0 normal
+Choice: 1 large
+END
+/main/settings/fastfs
+Label: Fast Filesystem
+Readonly: 0
+Type: TOGGLE
+Current: 1
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/autofocus
+Label: Autofocus
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: nnnnnnnnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 1
+Type: TEXT
+Current: Nikon Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: P950
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 1
+Type: TEXT
+Current: COOLPIX P950   V1.2
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 1
+Type: TEXT
+Current: microsoft.com: 1.0; microsoft.com/DeviceServices:1.0;
+END
+/main/status/Battery Level
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/status/availableshots
+Label: Available Shots
+Readonly: 1
+Type: RANGE
+Current: 2004
+Bottom: 0
+Top: 4,29497e+09
+Step: 1
+END
+/main/status/minfocallength
+Label: Focal Length Minimum
+Readonly: 1
+Type: TEXT
+Current: 24 mm
+END
+/main/status/maxfocallength
+Label: Focal Length Maximum
+Readonly: 1
+Type: TEXT
+Current: 2000 mm
+END
+/main/status/liveviewprohibit
+Label: Liveview Prohibit Condition
+Readonly: 1
+Type: TEXT
+Current: Live View prohibit conditions: Lens is retracting
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: 800
+Choice: 0 100
+Choice: 1 125
+Choice: 2 160
+Choice: 3 200
+Choice: 4 250
+Choice: 5 320
+Choice: 6 400
+Choice: 7 500
+Choice: 8 640
+Choice: 9 800
+Choice: 10 1000
+Choice: 11 1250
+Choice: 12 1600
+Choice: 13 2000
+Choice: 14 2500
+Choice: 15 3200
+Choice: 16 4000
+Choice: 17 5000
+Choice: 18 6400
+Choice: 19 8000
+Choice: 20 10000
+Choice: 21 12800
+Choice: 22 16000
+Choice: 23 20000
+Choice: 24 25600
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 2
+Choice: 1 1,666
+Choice: 2 1,333
+Choice: 3 1
+Choice: 4 0,666
+Choice: 5 0,333
+Choice: 6 0
+Choice: 7 -0,333
+Choice: 8 -0,666
+Choice: 9 -1
+Choice: 10 -1,333
+Choice: 11 -1,666
+Choice: 12 -2
+END
+/main/capturesettings/f-number
+Label: F-Number
+Readonly: 1
+Type: RADIO
+Current: (null)
+Choice: 0 f/3,4
+Choice: 1 f/6,3
+END
+/main/capturesettings/focallength
+Label: Focal Length
+Readonly: 0
+Type: RANGE
+Current: 35
+Bottom: 35
+Top: 105
+Step: 1
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 1
+Type: RADIO
+Current: AF-S
+Choice: 0 Manual
+Choice: 1 AF-S
+Choice: 2 AF-C
+Choice: 3 AF-A
+Choice: 4 Unknown value 8013
+END
+/main/capturesettings/expprogram
+Label: Exposure Program
+Readonly: 1
+Type: RADIO
+Current: Auto
+Choice: 0 M
+Choice: 1 P
+Choice: 2 A
+Choice: 3 S
+Choice: 4 Auto
+Choice: 5 Night Landscape
+Choice: 6 Automatic (No Flash)
+Choice: 7 U1
+Choice: 8 U2
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 0
+Type: RADIO
+Current: Single Shot
+Choice: 0 Single Shot
+Choice: 1 Burst
+END
+/main/capturesettings/shutterspeed2
+Label: Shutter Speed 2
+Readonly: 1
+Type: RADIO
+Current: 10/500
+Choice: 0 1/60
+END
+/main/capturesettings/liveviewafmode
+Label: Live View AF Mode
+Readonly: 0
+Type: RADIO
+Current: Normal-area AF
+Choice: 0 Face-priority AF
+Choice: 1 Normal-area AF
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 100
+Choice: 0 2
+Choice: 1 5
+Choice: 2 25
+Choice: 3 50
+Choice: 4 65
+Choice: 5 80
+Choice: 6 100
+END
+/main/other/5007
+Label: F-Number
+Readonly: 1
+Type: MENU
+Current: 400
+Choice: 0 340
+Choice: 1 630
+END
+/main/other/5008
+Label: Focal Length
+Readonly: 0
+Type: MENU
+Current: 3500
+Choice: 0 3500
+Choice: 1 4600
+Choice: 2 5300
+Choice: 3 6100
+Choice: 4 7300
+Choice: 5 8600
+Choice: 6 10500
+END
+/main/other/500a
+Label: Focus Mode
+Readonly: 1
+Type: MENU
+Current: 32784
+Choice: 0 1
+Choice: 1 32784
+Choice: 2 32785
+Choice: 3 32786
+Choice: 4 32787
+END
+/main/other/500e
+Label: Exposure Program Mode
+Readonly: 1
+Type: MENU
+Current: 32784
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 32784
+Choice: 5 32790
+Choice: 6 32792
+Choice: 7 32848
+Choice: 8 32849
+END
+/main/other/500f
+Label: Exposure Index (film speed ISO)
+Readonly: 0
+Type: MENU
+Current: 800
+Choice: 0 100
+Choice: 1 125
+Choice: 2 160
+Choice: 3 200
+Choice: 4 250
+Choice: 5 320
+Choice: 6 400
+Choice: 7 500
+Choice: 8 640
+Choice: 9 800
+Choice: 10 1000
+Choice: 11 1250
+Choice: 12 1600
+Choice: 13 2000
+Choice: 14 2500
+Choice: 15 3200
+Choice: 16 4000
+Choice: 17 5000
+Choice: 18 6400
+Choice: 19 8000
+Choice: 20 10000
+Choice: 21 12800
+Choice: 22 16000
+Choice: 23 20000
+Choice: 24 25600
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 2000
+Choice: 1 1666
+Choice: 2 1333
+Choice: 3 1000
+Choice: 4 666
+Choice: 5 333
+Choice: 6 0
+Choice: 7 -333
+Choice: 8 -666
+Choice: 9 -1000
+Choice: 10 -1333
+Choice: 11 -1666
+Choice: 12 -2000
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20220324T195232
+END
+/main/other/5013
+Label: Still Capture Mode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d05d
+Label: Live View AF Area
+Readonly: 0
+Type: RANGE
+Current: 2
+Bottom: 0
+Top: 1
+Step: 2
+END
+/main/other/d0e1
+Label: Lens Sort
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0e3
+Label: Min. Focal Length
+Readonly: 1
+Type: TEXT
+Current: 2400
+END
+/main/other/d0e4
+Label: Max. Focal Length
+Readonly: 1
+Type: TEXT
+Current: 200000
+END
+/main/other/d100
+Label: Nikon Exposure Time
+Readonly: 1
+Type: MENU
+Current: 655860
+Choice: 0 65596
+END
+/main/other/d1a2
+Label: Live View Status
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1a4
+Label: Live View Prohibit Condition
+Readonly: 1
+Type: TEXT
+Current: 16777216
+END
+/main/other/d1f1
+Label: ExposureRemaining
+Readonly: 1
+Type: RANGE
+Current: 2004
+Bottom: 0
+Top: 4,29497e+09
+Step: 1
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d303
+Label: UseDeviceStageFlag
+Readonly: 1
+Type: TEXT
+Current: 1
+END

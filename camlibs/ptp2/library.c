@@ -1606,6 +1606,8 @@ static struct {
 
 	/* Krystal Puga <krystalvp@gmail.com> */
 	{"Nikon:KeyMission 170", 	  0x04b0, 0x0364, PTP_CAP},
+	/* https://github.com/gphoto/libgphoto2/issues/780 */
+	{"Nikon:P950", 	  		  0x04b0, 0x036d, PTP_CAP|PTP_CAP_PREVIEW|PTP_NIKON_BROKEN_CAP},
 
 	/* Nikon D100 has a PTP mode: westin 2002.10.16 */
 	{"Nikon:DSC D100 (PTP mode)",     0x04b0, 0x0402, 0},
