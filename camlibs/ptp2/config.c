@@ -2487,6 +2487,8 @@ GENERIC8TABLE(Nikon1_ImageSize,nikon1_size)
 static struct deviceproptableu8 sony_aspectratio[] = {
 	{ N_("3:2"),		0x01, 0 },
 	{ N_("16:9"),		0x02, 0 },
+	{ N_("4:3"),		0x03, 0 },
+	{ N_("1:1"),		0x04, 0 },
 };
 GENERIC8TABLE(Sony_AspectRatio,sony_aspectratio)
 
@@ -6739,13 +6741,24 @@ static struct deviceproptableu8 compressionsetting[] = {
 	{ N_("NEF+Normal"),	0x06, PTP_VENDOR_NIKON },
 	{ N_("NEF+Fine"),	0x07, PTP_VENDOR_NIKON },
 
+	{ N_("Light"),			0x01, PTP_VENDOR_SONY },
 	{ N_("Standard"),		0x02, PTP_VENDOR_SONY },
 	{ N_("Fine"),			0x03, PTP_VENDOR_SONY },
 	{ N_("Extra Fine"),		0x04, PTP_VENDOR_SONY },
 	{ N_("RAW"),			0x10, PTP_VENDOR_SONY },
+	{ N_("RAW+JPEG (Light)"),	0x11, PTP_VENDOR_SONY },
 	{ N_("RAW+JPEG (Std)"),		0x12, PTP_VENDOR_SONY },
 	{ N_("RAW+JPEG (Fine)"),	0x13, PTP_VENDOR_SONY },
 	{ N_("RAW+JPEG (X.Fine)"),	0x14, PTP_VENDOR_SONY },
+	/* HEIF 4:2:0 4:2:2 is not exposed here */
+	{ N_("HEIF (Light)"),		0x31, PTP_VENDOR_SONY },
+	{ N_("HEIF (Std)"),		0x32, PTP_VENDOR_SONY },
+	{ N_("HEIF (Fine)"),		0x33, PTP_VENDOR_SONY },
+	{ N_("HEIF (X.Fine)"),		0x34, PTP_VENDOR_SONY },
+	{ N_("RAW+HEIF (Light)"),	0x41, PTP_VENDOR_SONY },
+	{ N_("RAW+HEIF (Std)"),		0x42, PTP_VENDOR_SONY },
+	{ N_("RAW+HEIF (Fine)"),	0x43, PTP_VENDOR_SONY },
+	{ N_("RAW+HEIF (X.Fine)"),	0x44, PTP_VENDOR_SONY },
 };
 GENERIC8TABLE(CompressionSetting,compressionsetting)
 
