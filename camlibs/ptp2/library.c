@@ -1303,10 +1303,6 @@ static struct {
 	{"Sony:Alpha-A7r III (PC Control)",	0x054c, 0x0c33, PTP_CAP|PTP_CAP_PREVIEW}, /* FIXME: crosscheck */
 	{"Sony:Alpha-A7 III (PC Control)",	0x054c, 0x0c34, PTP_CAP|PTP_CAP_PREVIEW}, /* FIXME: crosscheck */
 
-	/* https://github.com/gphoto/libgphoto2/pull/782 */
-	{"Sony:Alpha-A7 IV (MTP mode)",		0x054c, 0x0da6, 0},
-	{"Sony:Alpha-A7 IV (PC Control)",	0x054c, 0x0da7, PTP_CAP|PTP_CAP_PREVIEW},
-
 	/* jackden@gmail.com */
 	{"Sony:DSC-RX100M6 (PC Control)",  	0x054c, 0x0c38, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -1344,6 +1340,10 @@ static struct {
 
 	/* https://github.com/gphoto/libgphoto2/issues/749 */
 	{"Sony:ILCE-7RM4A (PC Control)",	0x054c, 0x0d9f, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* https://github.com/gphoto/libgphoto2/pull/782 */
+	{"Sony:Alpha-A7 IV (MTP mode)",		0x054c, 0x0da6, 0},
+	{"Sony:Alpha-A7 IV (PC Control)",	0x054c, 0x0da7, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
