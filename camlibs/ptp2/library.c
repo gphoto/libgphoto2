@@ -9831,11 +9831,14 @@ camera_init (Camera *camera, GPContext *context)
 	case PTP_VENDOR_SONY:
 		/* this seems to crash the HX100V and HX9V and NEX
 		 * https://github.com/gphoto/libgphoto2/issues/85
+		 * And locks up the ILCE-7M4
+		 * https://github.com/gphoto/libgphoto2/pull/782
 		 */
 		if (	ptp_operation_issupported(params, 0x9280)	&&
 			!strstr(params->deviceinfo.Model,"HX")		&&
 			!strstr(params->deviceinfo.Model,"NEX")		&&
-			!strstr(params->deviceinfo.Model,"QX")
+			!strstr(params->deviceinfo.Model,"QX")		&&
+			!strstr(params->deviceinfo.Model,"ILCE-7M4")
 		) {
 #if 0
 			C_PTP (ptp_sony_9280(params, 0x1,0,1,0,0));
