@@ -1,0 +1,735 @@
+Camera summary:
+Manufacturer: Sony Corporation
+Model: ILCE-7M4
+  Version: 1.00
+  Serial Number: 00000000000000001234567891234567
+Vendor Extension ID: 0x11 (1.0)
+Vendor Extension Description: Sony PTP Extensions
+
+Capture Formats: 
+Display Formats: Association/Directory, JPEG, ARW, MPEG, Unknown(b982), Unknown(b110)
+
+Device Capabilities:
+	File Download, No File Deletion, File Upload
+	No Image Capture, No Open Capture, Sony Capture
+
+Storage Devices Summary:
+
+Device Property Summary:
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [16,20,19,18,17,4,3,2,1] value: 20
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,32785,32784,6,32769,32770,32771,32772,7,32816,32786,32800,32801,32802] value: Automatic (2)
+F-Number(0x5007):(readwrite) (type=0x4) Range [560 - 3200, step 1] value: f/8 (800)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [] value: Manual Focus (1)
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [32769,32770,32772,32773,32771,32774] value: 32769
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [] value: Fill flash (3)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [] value: 0.0 stops (0)
+DOC Compensation(0xd200):(readwrite) (type=0x3) Enumeration [] value: 0
+DRangeOptimize(0xd201):(readwrite) (type=0x2) Enumeration [1,31,17,18,19,20,21] value: 31
+Image size(0xd203):(readwrite) (type=0x2) Enumeration [1,2,3] value: 1
+Shutter speed(0xd20d):(readwrite) (type=0x6) Range [73536 - 1966081, step 1] value: 327690
+Property 0xd20e:(readwrite) (type=0x2) Enumeration [] value: 14
+Color temperature(0xd20f):(readwrite) (type=0x4) Range [2500 - 9900, step 100] value: 5500
+Aspect Ratio(0xd211):(readwrite) (type=0x2) Enumeration [1,3,2,4] value: 1
+Focus status(0xd213):(readwrite) (type=0x2) Enumeration [] value: 1
+Property 0xd217:(readwrite) (type=0x2) Enumeration [] value: 1
+Battery Level(0xd218):(readwrite) (type=0x2) Range [255 - 100, step 1] value: 80
+ISO(0xd21e):(readwrite) (type=0x6) Enumeration [] value: 16777215
+Property 0xd21f:(readwrite) (type=0x2) Enumeration [] value: 1
+Property 0xd221:(readwrite) (type=0x2) Enumeration [] value: 1
+Capture Target(0xd222):(readwrite) (type=0x4) Enumeration [1,17,16] value: 1
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [] value: A (3)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,32784,2,32789,32786,32772,32771,32773,32776,32777,32780,32781,32782,32783,33591,34103,35127,33623,34135,35159,33655,34167,35191,33553,34065,35089,33569,34081,33585,34097,33590,34102,35126,33622,34134,35158,33654,34166,35190,33552,34064,35088,33568,34080,33584,34096,32808,32792,32809,32793] value: Continuous Low Speed (32784)
+Zoom(0xd214):(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 80716000
+Objects in memory(0xd215):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 0
+F-Number(0x5007):(readwrite) (type=0x4) Range [560 - 3200, step 1] value: f/8 (800)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [] value: 0.0 stops (0)
+DOC Compensation(0xd200):(readwrite) (type=0x3) Enumeration [] value: 0
+Shutter speed(0xd20d):(readwrite) (type=0x6) Range [73536 - 1966081, step 1] value: 327690
+ISO(0xd21e):(readwrite) (type=0x6) Enumeration [] value: 16777215
+Autofocus(0xd2c1): error 2002 on query.
+Capture(0xd2c2): error 2002 on query.
+Property 0xd2c3: error 2002 on query.
+Property 0xd2c4: error 2002 on query.
+Still Image(0xd2c7): error 2002 on query.
+Movie(0xd2c8): error 2002 on query.
+Property 0xd2c9: error 2002 on query.
+Still Image(0xd2c7): error 2002 on query.
+Property 0xd2cd: error 2002 on query.
+Property 0xd2ce: error 2002 on query.
+Property 0xd2cf: error 2002 on query.
+Property 0xd2d0: error 2002 on query.
+
+/main/actions/movie
+Label: Movie Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: sdram
+Choice: 0 sdram
+Choice: 1 card+sdram
+Choice: 2 card
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: 00000000000000001234567891234567
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 1
+Type: TEXT
+Current: Sony Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: ILCE-7M4
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 1
+Type: TEXT
+Current: 1.00
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 1
+Type: TEXT
+Current: Sony PTP Extensions
+END
+/main/imgsettings/imagesize
+Label: Image Size
+Readonly: 0
+Type: RADIO
+Current: Large
+Choice: 0 Large
+Choice: 1 Medium
+Choice: 2 Small
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: Auto ISO
+END
+/main/imgsettings/colortemperature
+Label: Color Temperature
+Readonly: 0
+Type: RANGE
+Current: 5500
+Bottom: 2500
+Top: 9900
+Step: 100
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Daylight
+Choice: 2 Shade
+Choice: 3 Cloudy
+Choice: 4 Tungsten
+Choice: 5 Fluorescent: Warm White
+Choice: 6 Fluorescent: Cold White
+Choice: 7 Fluorescent: Day White
+Choice: 8 Fluorescent: Daylight
+Choice: 9 Flash
+Choice: 10 Underwater: Auto
+Choice: 11 Choose Color Temperature
+Choice: 12 Preset 1
+Choice: 13 Preset 2
+Choice: 14 Preset 3
+END
+/main/capturesettings/zoom
+Label: Zoom
+Readonly: 0
+Type: RANGE
+Current: 80.716
+Bottom: 0
+Top: 4294.97
+Step: 1
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+END
+/main/capturesettings/flashmode
+Label: Flash Mode
+Readonly: 0
+Type: RADIO
+Current: Fill flash
+Choice: 0 Automatic Flash
+Choice: 1 Flash off
+Choice: 2 Fill flash
+Choice: 3 Red-eye automatic
+Choice: 4 Red-eye fill
+Choice: 5 External sync
+Choice: 6 Rear Curtain Sync
+Choice: 7 Wireless Sync
+Choice: 8 Slow Sync
+END
+/main/capturesettings/f-number
+Label: F-Number
+Readonly: 0
+Type: RADIO
+Current: f/8
+Choice: 0 f/1
+Choice: 1 f/1.1
+Choice: 2 f/1.2
+Choice: 3 f/1.4
+Choice: 4 f/1.6
+Choice: 5 f/1.8
+Choice: 6 f/2
+Choice: 7 f/2.2
+Choice: 8 f/2.5
+Choice: 9 f/2.8
+Choice: 10 f/3.2
+Choice: 11 f/3.5
+Choice: 12 f/4
+Choice: 13 f/4.5
+Choice: 14 f/5
+Choice: 15 f/5.6
+Choice: 16 f/6.3
+Choice: 17 f/7.1
+Choice: 18 f/8
+Choice: 19 f/9
+Choice: 20 f/10
+Choice: 21 f/11
+Choice: 22 f/13
+Choice: 23 f/14
+Choice: 24 f/16
+Choice: 25 f/18
+Choice: 26 f/20
+Choice: 27 f/22
+Choice: 28 f/25
+Choice: 29 f/29
+Choice: 30 f/32
+Choice: 31 f/36
+Choice: 32 f/42
+Choice: 33 f/45
+Choice: 34 f/50
+Choice: 35 f/57
+Choice: 36 f/64
+END
+/main/capturesettings/imagequality
+Label: Image Quality
+Readonly: 0
+Type: RADIO
+Current: RAW+JPEG (X.Fine)
+Choice: 0 RAW
+Choice: 1 RAW+JPEG (X.Fine)
+Choice: 2 RAW+JPEG (Fine)
+Choice: 3 RAW+JPEG (Std)
+Choice: 4 Unknown value 0011
+Choice: 5 Extra Fine
+Choice: 6 Fine
+Choice: 7 Standard
+Choice: 8 Unknown value 0001
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 0
+Type: RADIO
+Current: Manual
+Choice: 0 Undefined
+Choice: 1 Manual
+Choice: 2 Automatic
+Choice: 3 Automatic Macro
+Choice: 4 AF-A
+Choice: 5 AF-C
+Choice: 6 DMF
+END
+/main/capturesettings/expprogram
+Label: Exposure Program
+Readonly: 0
+Type: RADIO
+Current: A
+Choice: 0 M
+Choice: 1 P
+Choice: 2 A
+Choice: 3 S
+Choice: 4 Creative
+Choice: 5 Action
+Choice: 6 Portrait
+Choice: 7 Intelligent Auto
+Choice: 8 Superior Auto
+Choice: 9 Movie (P)
+Choice: 10 Movie (A)
+Choice: 11 Movie (S)
+Choice: 12 Movie (M)
+Choice: 13 Movie (Scene)
+Choice: 14 Tele-zoom Cont. Priority AE
+Choice: 15 Sweep Panorama
+Choice: 16 Intelligent Auto Flash Off
+Choice: 17 Sports Action
+Choice: 18 Macro
+Choice: 19 Landscape
+Choice: 20 Sunset
+Choice: 21 Night Scene
+Choice: 22 Hand-held Twilight
+Choice: 23 Night Portrait
+Choice: 24 Anti Motion Blur
+Choice: 25 Picture Effect
+Choice: 26 S&Q
+END
+/main/capturesettings/aspectratio
+Label: Aspect Ratio
+Readonly: 0
+Type: RADIO
+Current: 3:2
+Choice: 0 3:2
+Choice: 1 Unknown value 0003
+Choice: 2 16:9
+Choice: 3 Unknown value 0004
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 0
+Type: RADIO
+Current: Continuous Hi+ Speed
+Choice: 0 Single Shot
+Choice: 1 Continuous Hi+ Speed
+Choice: 2 Burst
+Choice: 3 Continuous Med Speed
+Choice: 4 Continuous Low Speed
+Choice: 5 Selftimer 10s
+Choice: 6 Selftimer 5s
+Choice: 7 Selftimer 2s
+Choice: 8 Selftimer 10s 3 Pictures
+Choice: 9 Selftimer 10s 5 Pictures
+Choice: 10 Selftimer 5s 3 Pictures
+Choice: 11 Selftimer 5s 5 Pictures
+Choice: 12 Selftimer 2s 3 Pictures
+Choice: 13 Selftimer 2s 5 Pictures
+Choice: 14 Bracketing C 0.3 Steps 3 Pictures
+Choice: 15 Bracketing C 0.3 Steps 5 Pictures
+Choice: 16 Bracketing C 0.3 Steps 9 Pictures
+Choice: 17 Bracketing C 0.5 Steps 3 Pictures
+Choice: 18 Bracketing C 0.5 Steps 5 Pictures
+Choice: 19 Bracketing C 0.5 Steps 9 Pictures
+Choice: 20 Bracketing C 0.7 Steps 3 Pictures
+Choice: 21 Bracketing C 0.7 Steps 5 Pictures
+Choice: 22 Bracketing C 0.7 Steps 9 Pictures
+Choice: 23 Bracketing C 1.0 Steps 3 Pictures
+Choice: 24 Bracketing C 1.0 Steps 5 Pictures
+Choice: 25 Bracketing C 1.0 Steps 9 Pictures
+Choice: 26 Bracketing C 2.0 Steps 3 Pictures
+Choice: 27 Bracketing C 2.0 Steps 5 Pictures
+Choice: 28 Bracketing C 3.0 Steps 3 Pictures
+Choice: 29 Bracketing C 3.0 Steps 5 Pictures
+Choice: 30 Bracketing S 0.3 Steps 3 Pictures
+Choice: 31 Bracketing S 0.3 Steps 5 Pictures
+Choice: 32 Bracketing S 0.3 Steps 9 Pictures
+Choice: 33 Bracketing S 0.5 Steps 3 Pictures
+Choice: 34 Bracketing S 0.5 Steps 5 Pictures
+Choice: 35 Bracketing S 0.5 Steps 9 Pictures
+Choice: 36 Bracketing S 0.7 Steps 3 Pictures
+Choice: 37 Bracketing S 0.7 Steps 5 Pictures
+Choice: 38 Bracketing S 0.7 Steps 9 Pictures
+Choice: 39 Bracketing S 1.0 Steps 3 Pictures
+Choice: 40 Bracketing S 1.0 Steps 5 Pictures
+Choice: 41 Bracketing S 1.0 Steps 9 Pictures
+Choice: 42 Bracketing S 2.0 Steps 3 Pictures
+Choice: 43 Bracketing S 2.0 Steps 5 Pictures
+Choice: 44 Bracketing S 3.0 Steps 3 Pictures
+Choice: 45 Bracketing S 3.0 Steps 5 Pictures
+Choice: 46 Bracketing WB Hi
+Choice: 47 Bracketing WB Lo
+Choice: 48 Bracketing DRO Hi
+Choice: 49 Bracketing DRO Lo
+END
+/main/capturesettings/exposuremetermode
+Label: Exposure Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Multi
+Choice: 0 Multi
+Choice: 1 Center
+Choice: 2 Spot Standard
+Choice: 3 Spot Large
+Choice: 4 Entire Screen Avg.
+Choice: 5 Highlight
+END
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Readonly: 0
+Type: RADIO
+Current: 4/10
+Choice: 0 30
+Choice: 1 25
+Choice: 2 20
+Choice: 3 15
+Choice: 4 13
+Choice: 5 10
+Choice: 6 8
+Choice: 7 6
+Choice: 8 5
+Choice: 9 4
+Choice: 10 32/10
+Choice: 11 25/10
+Choice: 12 2
+Choice: 13 16/10
+Choice: 14 13/10
+Choice: 15 1
+Choice: 16 8/10
+Choice: 17 6/10
+Choice: 18 5/10
+Choice: 19 4/10
+Choice: 20 1/3
+Choice: 21 1/4
+Choice: 22 1/5
+Choice: 23 1/6
+Choice: 24 1/8
+Choice: 25 1/10
+Choice: 26 1/13
+Choice: 27 1/15
+Choice: 28 1/20
+Choice: 29 1/25
+Choice: 30 1/30
+Choice: 31 1/40
+Choice: 32 1/50
+Choice: 33 1/60
+Choice: 34 1/80
+Choice: 35 1/100
+Choice: 36 1/125
+Choice: 37 1/160
+Choice: 38 1/200
+Choice: 39 1/250
+Choice: 40 1/320
+Choice: 41 1/400
+Choice: 42 1/500
+Choice: 43 1/640
+Choice: 44 1/800
+Choice: 45 1/1000
+Choice: 46 1/1250
+Choice: 47 1/1600
+Choice: 48 1/2000
+Choice: 49 1/2500
+Choice: 50 1/3200
+Choice: 51 1/4000
+Choice: 52 1/5000
+Choice: 53 1/6400
+Choice: 54 1/8000
+Choice: 55 1/10000
+Choice: 56 1/12500
+Choice: 57 1/16000
+Choice: 58 1/20000
+Choice: 59 1/25000
+Choice: 60 1/32000
+Choice: 61 Bulb
+END
+/main/other/5004
+Label: Compression Setting
+Readonly: 0
+Type: MENU
+Current: 20
+Choice: 0 16
+Choice: 1 20
+Choice: 2 19
+Choice: 3 18
+Choice: 4 17
+Choice: 5 4
+Choice: 6 3
+Choice: 7 2
+Choice: 8 1
+END
+/main/other/5005
+Label: White Balance
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 32785
+Choice: 3 32784
+Choice: 4 6
+Choice: 5 32769
+Choice: 6 32770
+Choice: 7 32771
+Choice: 8 32772
+Choice: 9 7
+Choice: 10 32816
+Choice: 11 32786
+Choice: 12 32800
+Choice: 13 32801
+Choice: 14 32802
+END
+/main/other/5007
+Label: F-Number
+Readonly: 0
+Type: RANGE
+Current: 800
+Bottom: 560
+Top: 3200
+Step: 1
+END
+/main/other/500a
+Label: Focus Mode
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/500b
+Label: Exposure Metering Mode
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 32769
+Choice: 1 32770
+Choice: 2 32772
+Choice: 3 32773
+Choice: 4 32771
+Choice: 5 32774
+END
+/main/other/500c
+Label: Flash Mode
+Readonly: 0
+Type: MENU
+Current: 3
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+END
+/main/other/d200
+Label: DOC Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+END
+/main/other/d201
+Label: DRangeOptimize
+Readonly: 0
+Type: MENU
+Current: 31
+Choice: 0 1
+Choice: 1 31
+Choice: 2 17
+Choice: 3 18
+Choice: 4 19
+Choice: 5 20
+Choice: 6 21
+END
+/main/other/d203
+Label: Image size
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d20d
+Label: Shutter speed
+Readonly: 0
+Type: RANGE
+Current: 262154
+Bottom: 73536
+Top: 1.96608e+06
+Step: 1
+END
+/main/other/d20e
+Label: PTP Property 0xd20e
+Readonly: 0
+Type: MENU
+Current: 15
+END
+/main/other/d20f
+Label: Color temperature
+Readonly: 0
+Type: RANGE
+Current: 5500
+Bottom: 2500
+Top: 9900
+Step: 100
+END
+/main/other/d211
+Label: Aspect Ratio
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+Choice: 2 2
+Choice: 3 4
+END
+/main/other/d213
+Label: Focus status
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d217
+Label: PTP Property 0xd217
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d218
+Label: Battery Level
+Readonly: 0
+Type: MENU
+Current: 82
+END
+/main/other/d21e
+Label: ISO
+Readonly: 0
+Type: MENU
+Current: 16777215
+END
+/main/other/d21f
+Label: PTP Property 0xd21f
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d221
+Label: PTP Property 0xd221
+Readonly: 0
+Type: MENU
+Current: 1
+END
+/main/other/d222
+Label: Capture Target
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 17
+Choice: 2 16
+END
+/main/other/500e
+Label: Exposure Program Mode
+Readonly: 0
+Type: MENU
+Current: 3
+END
+/main/other/5013
+Label: Still Capture Mode
+Readonly: 0
+Type: MENU
+Current: 32784
+Choice: 0 1
+Choice: 1 32784
+Choice: 2 2
+Choice: 3 32789
+Choice: 4 32786
+Choice: 5 32772
+Choice: 6 32771
+Choice: 7 32773
+Choice: 8 32776
+Choice: 9 32777
+Choice: 10 32780
+Choice: 11 32781
+Choice: 12 32782
+Choice: 13 32783
+Choice: 14 33591
+Choice: 15 34103
+Choice: 16 35127
+Choice: 17 33623
+Choice: 18 34135
+Choice: 19 35159
+Choice: 20 33655
+Choice: 21 34167
+Choice: 22 35191
+Choice: 23 33553
+Choice: 24 34065
+Choice: 25 35089
+Choice: 26 33569
+Choice: 27 34081
+Choice: 28 33585
+Choice: 29 34097
+Choice: 30 33590
+Choice: 31 34102
+Choice: 32 35126
+Choice: 33 33622
+Choice: 34 34134
+Choice: 35 35158
+Choice: 36 33654
+Choice: 37 34166
+Choice: 38 35190
+Choice: 39 33552
+Choice: 40 34064
+Choice: 41 35088
+Choice: 42 33568
+Choice: 43 34080
+Choice: 44 33584
+Choice: 45 34096
+Choice: 46 32808
+Choice: 47 32792
+Choice: 48 32809
+Choice: 49 32793
+END
+/main/other/d214
+Label: Zoom
+Readonly: 0
+Type: RANGE
+Current: 8.0716e+07
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d215
+Label: Objects in memory
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/5007
+Label: F-Number
+Readonly: 0
+Type: RANGE
+Current: 800
+Bottom: 560
+Top: 3200
+Step: 1
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+END
+/main/other/d200
+Label: DOC Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+END
+/main/other/d20d
+Label: Shutter speed
+Readonly: 0
+Type: RANGE
+Current: 262154
+Bottom: 73536
+Top: 1.96608e+06
+Step: 1
+END
+/main/other/d21e
+Label: ISO
+Readonly: 0
+Type: MENU
+Current: 16777215
+END
