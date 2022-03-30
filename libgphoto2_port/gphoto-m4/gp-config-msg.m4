@@ -1,3 +1,9 @@
+# gp-config-msg.m4 - define config message summary             -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl
 dnl GP_CONFIG_INIT
 dnl      use default LHS width (called implicitly if not called explicitly)

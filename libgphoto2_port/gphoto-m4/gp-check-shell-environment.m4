@@ -1,3 +1,9 @@
+# gp-check-shell-environment.m4 - check for sane shell environ -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl @synopsis GP_CHECK_SHELL_ENVIRONMENT([SHOW-LOCALE-VARS])
 dnl 
 dnl Check that the shell environment is sane.

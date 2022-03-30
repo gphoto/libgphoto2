@@ -1,3 +1,9 @@
+# gp-documentation.m4 - whether to build our gtk-doc docs      -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl ####################################################################
 dnl check whether to build docs and where to:
 dnl

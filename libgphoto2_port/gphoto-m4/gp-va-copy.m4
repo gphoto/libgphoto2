@@ -1,3 +1,9 @@
+# gp-va-copy.m4 - check for va_copy                            -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl @synopsis GP_VA_COPY
 dnl
 dnl Checks whether one of these compiles and links:

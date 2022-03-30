@@ -1,3 +1,9 @@
+# gp-sleep.m4 - look for the sleep(1) tool                     -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl ####################################################################
 dnl GP_SLEEP(delay_in_whole_seconds)
 dnl   If the SLEEP variable is set to "no" or empty or is unset,

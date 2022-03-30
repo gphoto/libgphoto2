@@ -1,3 +1,9 @@
+# gp-asm-symver-support.m4 - check for asm .symver; def macros -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl ####################################################################
 dnl If compiler supports asm .symver, define HAVE_ASM_SYMVER C preprocessor macro and Automake conditional
 dnl ####################################################################

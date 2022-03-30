@@ -1,3 +1,9 @@
+# gp-manual-graphviz.m4 - look for graphviz dot tool; check it -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl ---------------------------------------------------------------------------
 dnl dot: This program is needed for processing images. If not found,
 dnl          documentation can still be built, but without figures.

@@ -1,3 +1,9 @@
+# gp-check-popt.m4 - check for libpopt                         -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl @synopsis GP_CHECK_POPT(FLAG)
 dnl
 dnl Check whether libpopt is available.

@@ -1,3 +1,9 @@
+# gp-libltdl.m4 - check for libltdl (from libtool)             -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl Written by Hans Ulrich Niedermann
 dnl LDFLAGS vs LIBS fix by Dan Nicholson
 dnl

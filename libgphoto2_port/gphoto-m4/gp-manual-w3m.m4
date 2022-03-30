@@ -1,3 +1,9 @@
+# gp-manual-w3m.m4 - look for w3m tool for html>txt conversion -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl ---------------------------------------------------------------------------
 dnl w3m: This program is needed for converting HTML to text.
 dnl ---------------------------------------------------------------------------

@@ -1,3 +1,9 @@
+# gp-packaging.m4 - help with packaging libgphoto2 for distros -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 AC_DEFUN([GPKG_CHECK_LINUX],
 [
 	# effective_target has to be determined in advance

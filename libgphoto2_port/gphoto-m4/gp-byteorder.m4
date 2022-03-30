@@ -1,3 +1,9 @@
+# gp-byteorder.m4 - check byteorder and provide functions      -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl AC_NEED_BYTEORDER_H ( HEADER-TO-GENERATE )
 dnl Originally written by Dan Fandrich <dan@coneharvesters.com>
 dnl My contribution is hereby placed into the public domain.

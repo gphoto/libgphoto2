@@ -1,3 +1,9 @@
+# gp-check-doxygen.m4 - check for doxygen tool                 -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl ####################################################################
 dnl doxygen related stuff
 dnl look for tools

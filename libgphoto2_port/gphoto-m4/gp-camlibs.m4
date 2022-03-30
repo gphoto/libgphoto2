@@ -1,3 +1,9 @@
+# gp-camlibs.m4 - define camlibs and camlib infrastructure     -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl ####################################################################
 dnl
 dnl GP_CAMLIB & Co.

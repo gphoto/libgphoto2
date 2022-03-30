@@ -1,3 +1,9 @@
+# gp-manual-docbook-xml.m4 - look for xmlto and related things -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl ------------------------------------------------------------------------
 dnl try to find xmlto (required for generation of man pages and html docs)
 dnl ------------------------------------------------------------------------

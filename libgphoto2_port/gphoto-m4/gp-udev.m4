@@ -1,3 +1,9 @@
+# gp-udev.m4 - check for udev                                  -*- Autoconf -*-
+# serial 13
+dnl | Increment the above serial number every time you edit this file.
+dnl | When it finds multiple m4 files with the same name,
+dnl | aclocal will use the one with the highest serial.
+dnl
 dnl Determines whether UDEV code should be compiled.
 dnl $1 contains shell code that returns 0 if all other prerequisites (like
 dnl libusb) are available.
