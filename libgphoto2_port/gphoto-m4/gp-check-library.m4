@@ -1,5 +1,5 @@
 # gp-check-library.m4 - generic library check                  -*- Autoconf -*-
-# serial 13
+# serial 14
 dnl | Increment the above serial number every time you edit this file.
 dnl | When it finds multiple m4 files with the same name,
 dnl | aclocal will use the one with the highest serial.
@@ -76,6 +76,9 @@ dnl     This will change the calling conventions, so be aware of that.
 dnl   * Give names of a header file and function name and to a test
 dnl     compilation.
 dnl
+m4_pattern_forbid([PKG_PROG_PKG_CONFIG])dnl
+m4_pattern_forbid([PKG_CHECK_MODULES])dnl
+dnl
 AC_DEFUN([_GP_CHECK_LIBRARY_SOEXT],[dnl
 AC_MSG_CHECKING([for dynamic library extension])
 soext=""
@@ -100,11 +103,6 @@ else
 	AC_MSG_RESULT([${soext}])
 fi
 ])dnl
-dnl
-dnl
-m4_ifndef([PKG_PROG_PKG_CONFIG], [dnl
- m4_fatal([PKG_PROG_PKG_CONFIG not found, do you have pkg-config installed with pkg.m4?])
-])
 dnl
 dnl
 AC_DEFUN([_GP_CHECK_LIBRARY],[
