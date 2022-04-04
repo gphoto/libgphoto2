@@ -1,0 +1,1108 @@
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: Z 9
+  Version: V1.11
+  Serial Number: 0000000000000000000000000nnnnnnn
+Vendor Extension ID: 0xa (1.10)
+Vendor Extension Description: Microsoft.com/DeviceServices: 1.0
+
+Capture Formats: JPEG Undefined Type
+Display Formats: JPEG, Undefined Type, Association/Directory, MS Wave, TIFF, Script, Apple Quicktime, Unknown(b982)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, Nikon Capture 1, Nikon Capture 2, Nikon Capture 3
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: 
+	VolumeLabel: NIKON Z 9   [Slot 1]
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 127968477184 (122040 MB)
+	Free Space (Bytes): 71586545664 (68270 MB)
+	Free Space (Images): 840
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [1 - 100, step 1] value: 60% (60)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'8256x5504',
+	'6192x4128',
+	'4128x2752'
+	] value: '8256x5504'
+Compression Setting(0x5004):(read only) (type=0x2) Enumeration [0,1,2,3,4,5,7,8,9,10,11,12,13] value: 13
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32786,32787,32790] value: Automatic (2)
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [140,160,180,200,220,250,280,320,350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600] value: f/1.4 (140)
+Focal Length(0x5008):(read only) (type=0x6) Range [2800 - 2800, step 1] value: 28 mm (2800)
+Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785,32787] value: 32787
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [2,3,4,32784] value: Multi-spot (3)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [2] value: Flash off (2)
+Exposure Time(0x500d):(read only) (type=0x6) Enumeration [40] value: 0.0004 sec (40)
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: M (1)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [32,40,50,64,80,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200] value: ISO 64 (64)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0.0 stops (0)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20220404T145017'
+Still Capture Mode(0x5013):(read only) (type=0x4) Enumeration [1,2,32784,32785,33024] value: Single Shot (1)
+Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 65535, step 1] value: 1
+Artist(0x501e):(read only) (type=0xffff) ''
+Copyright Info(0x501f):(read only) (type=0xffff) ''
+UseDeviceStageFlag(0xd303):(read only) (type=0x2) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+Property 0xd407:(read only) (type=0x6) 1
+
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Nikon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/manualfocusdrive
+Label: Drive Nikon DSLR Manual focus
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -32767
+Top: 32767
+Step: 1
+END
+/main/actions/changeafarea
+Label: Set Nikon Autofocus area
+Readonly: 0
+Type: TEXT
+Current: 0x0
+END
+/main/actions/controlmode
+Label: Set Nikon Control Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/actions/viewfinder
+Label: Nikon Viewfinder
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/movie
+Label: Movie Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1649076641
+Printable: Mon 04 Apr 2022 14:50:41 CEST
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/thumbsize
+Label: Thumb Size
+Readonly: 0
+Type: RADIO
+Current: 
+Choice: 0 normal
+Choice: 1 large
+END
+/main/settings/fastfs
+Label: Fast Filesystem
+Readonly: 0
+Type: TOGGLE
+Current: 1
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/autofocus
+Label: Autofocus
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 0000000000000000000000000nnnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Nikon Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: Z 9
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: V1.11
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: Microsoft.com/DeviceServices: 1.0
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 60%
+END
+/main/imgsettings/imagesize
+Label: Image Size
+Readonly: 0
+Type: RADIO
+Current: 8256x5504
+Choice: 0 8256x5504
+Choice: 1 6192x4128
+Choice: 2 4128x2752
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: 64
+Choice: 0 32
+Choice: 1 40
+Choice: 2 50
+Choice: 3 64
+Choice: 4 80
+Choice: 5 100
+Choice: 6 125
+Choice: 7 160
+Choice: 8 200
+Choice: 9 250
+Choice: 10 320
+Choice: 11 400
+Choice: 12 500
+Choice: 13 640
+Choice: 14 800
+Choice: 15 1000
+Choice: 16 1250
+Choice: 17 1600
+Choice: 18 2000
+Choice: 19 2500
+Choice: 20 3200
+Choice: 21 4000
+Choice: 22 5000
+Choice: 23 6400
+Choice: 24 8000
+Choice: 25 10000
+Choice: 26 12800
+Choice: 27 16000
+Choice: 28 20000
+Choice: 29 25600
+Choice: 30 32000
+Choice: 31 40000
+Choice: 32 51200
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Daylight
+Choice: 2 Fluorescent
+Choice: 3 Tungsten
+Choice: 4 Flash
+Choice: 5 Cloudy
+Choice: 6 Shade
+Choice: 7 Color Temperature
+Choice: 8 Preset
+Choice: 9 Natural light auto
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 -5
+Choice: 1 -4.666
+Choice: 2 -4.333
+Choice: 3 -4
+Choice: 4 -3.666
+Choice: 5 -3.333
+Choice: 6 -3
+Choice: 7 -2.666
+Choice: 8 -2.333
+Choice: 9 -2
+Choice: 10 -1.666
+Choice: 11 -1.333
+Choice: 12 -1
+Choice: 13 -0.666
+Choice: 14 -0.333
+Choice: 15 0
+Choice: 16 0.333
+Choice: 17 0.666
+Choice: 18 1
+Choice: 19 1.333
+Choice: 20 1.666
+Choice: 21 2
+Choice: 22 2.333
+Choice: 23 2.666
+Choice: 24 3
+Choice: 25 3.333
+Choice: 26 3.666
+Choice: 27 4
+Choice: 28 4.333
+Choice: 29 4.666
+Choice: 30 5
+END
+/main/capturesettings/flashmode
+Label: Flash Mode
+Readonly: 0
+Type: RADIO
+Current: Flash off
+Choice: 0 Flash off
+END
+/main/capturesettings/f-number
+Label: F-Number
+Readonly: 0
+Type: RADIO
+Current: f/1.4
+Choice: 0 f/1.4
+Choice: 1 f/1.6
+Choice: 2 f/1.8
+Choice: 3 f/2
+Choice: 4 f/2.2
+Choice: 5 f/2.5
+Choice: 6 f/2.8
+Choice: 7 f/3.2
+Choice: 8 f/3.5
+Choice: 9 f/4
+Choice: 10 f/4.5
+Choice: 11 f/5
+Choice: 12 f/5.6
+Choice: 13 f/6.3
+Choice: 14 f/7.1
+Choice: 15 f/8
+Choice: 16 f/9
+Choice: 17 f/10
+Choice: 18 f/11
+Choice: 19 f/13
+Choice: 20 f/14
+Choice: 21 f/16
+END
+/main/capturesettings/imagequality
+Label: Image Quality
+Readonly: 1
+Type: RADIO
+Current: Unknown value 000d
+Choice: 0 JPEG Basic
+Choice: 1 JPEG Normal
+Choice: 2 JPEG Fine
+Choice: 3 Unknown value 0003
+Choice: 4 NEF (Raw)
+Choice: 5 NEF+Basic
+Choice: 6 NEF+Fine
+Choice: 7 Unknown value 0008
+Choice: 8 Unknown value 0009
+Choice: 9 Unknown value 000a
+Choice: 10 Unknown value 000b
+Choice: 11 Unknown value 000c
+Choice: 12 Unknown value 000d
+END
+/main/capturesettings/focallength
+Label: Focal Length
+Readonly: 1
+Type: RANGE
+Current: 28
+Bottom: 28
+Top: 28
+Step: 0.01
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 1
+Type: RADIO
+Current: Unknown value 8013
+Choice: 0 Manual
+Choice: 1 AF-S
+Choice: 2 AF-C
+Choice: 3 Unknown value 8013
+END
+/main/capturesettings/expprogram
+Label: Exposure Program
+Readonly: 0
+Type: RADIO
+Current: M
+Choice: 0 M
+Choice: 1 P
+Choice: 2 A
+Choice: 3 S
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 1
+Type: RADIO
+Current: Single Shot
+Choice: 0 Single Shot
+Choice: 1 Burst
+Choice: 2 Continuous Low Speed
+Choice: 3 Timer
+Choice: 4 Unknown value 8100
+END
+/main/capturesettings/exposuremetermode
+Label: Exposure Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Multi Spot
+Choice: 0 Center Weighted
+Choice: 1 Multi Spot
+Choice: 2 Center Spot
+Choice: 3 Unknown value 8010
+END
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Readonly: 1
+Type: RADIO
+Current: 0.0040s
+Choice: 0 0.0040s
+END
+/main/capturesettings/burstnumber
+Label: Burst Number
+Readonly: 0
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 65535
+Step: 1
+END
+/main/capturesettings/applicationmode
+Label: Application Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 60
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+Choice: 13 14
+Choice: 14 15
+Choice: 15 16
+Choice: 16 17
+Choice: 17 18
+Choice: 18 19
+Choice: 19 20
+Choice: 20 21
+Choice: 21 22
+Choice: 22 23
+Choice: 23 24
+Choice: 24 25
+Choice: 25 26
+Choice: 26 27
+Choice: 27 28
+Choice: 28 29
+Choice: 29 30
+Choice: 30 31
+Choice: 31 32
+Choice: 32 33
+Choice: 33 34
+Choice: 34 35
+Choice: 35 36
+Choice: 36 37
+Choice: 37 38
+Choice: 38 39
+Choice: 39 40
+Choice: 40 41
+Choice: 41 42
+Choice: 42 43
+Choice: 43 44
+Choice: 44 45
+Choice: 45 46
+Choice: 46 47
+Choice: 47 48
+Choice: 48 49
+Choice: 49 50
+Choice: 50 51
+Choice: 51 52
+Choice: 52 53
+Choice: 53 54
+Choice: 54 55
+Choice: 55 56
+Choice: 56 57
+Choice: 57 58
+Choice: 58 59
+Choice: 59 60
+Choice: 60 61
+Choice: 61 62
+Choice: 62 63
+Choice: 63 64
+Choice: 64 65
+Choice: 65 66
+Choice: 66 67
+Choice: 67 68
+Choice: 68 69
+Choice: 69 70
+Choice: 70 71
+Choice: 71 72
+Choice: 72 73
+Choice: 73 74
+Choice: 74 75
+Choice: 75 76
+Choice: 76 77
+Choice: 77 78
+Choice: 78 79
+Choice: 79 80
+Choice: 80 81
+Choice: 81 82
+Choice: 82 83
+Choice: 83 84
+Choice: 84 85
+Choice: 85 86
+Choice: 86 87
+Choice: 87 88
+Choice: 88 89
+Choice: 89 90
+Choice: 90 91
+Choice: 91 92
+Choice: 92 93
+Choice: 93 94
+Choice: 94 95
+Choice: 95 96
+Choice: 96 97
+Choice: 97 98
+Choice: 98 99
+Choice: 99 100
+END
+/main/other/5003
+Label: Image Size
+Readonly: 0
+Type: MENU
+Current: 8256x5504
+Choice: 0 8256x5504
+Choice: 1 6192x4128
+Choice: 2 4128x2752
+END
+/main/other/5004
+Label: Compression Setting
+Readonly: 1
+Type: MENU
+Current: 13
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+END
+/main/other/5005
+Label: White Balance
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 5
+Choice: 3 6
+Choice: 4 7
+Choice: 5 32784
+Choice: 6 32785
+Choice: 7 32786
+Choice: 8 32787
+Choice: 9 32790
+END
+/main/other/5007
+Label: F-Number
+Readonly: 0
+Type: MENU
+Current: 140
+Choice: 0 140
+Choice: 1 160
+Choice: 2 180
+Choice: 3 200
+Choice: 4 220
+Choice: 5 250
+Choice: 6 280
+Choice: 7 320
+Choice: 8 350
+Choice: 9 400
+Choice: 10 450
+Choice: 11 500
+Choice: 12 560
+Choice: 13 630
+Choice: 14 710
+Choice: 15 800
+Choice: 16 900
+Choice: 17 1000
+Choice: 18 1100
+Choice: 19 1300
+Choice: 20 1400
+Choice: 21 1600
+END
+/main/other/5008
+Label: Focal Length
+Readonly: 1
+Type: MENU
+Current: 2800
+Choice: 0 2800
+END
+/main/other/500a
+Label: Focus Mode
+Readonly: 1
+Type: MENU
+Current: 32787
+Choice: 0 1
+Choice: 1 32784
+Choice: 2 32785
+Choice: 3 32787
+END
+/main/other/500b
+Label: Exposure Metering Mode
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 2
+Choice: 1 3
+Choice: 2 4
+Choice: 3 32784
+END
+/main/other/500c
+Label: Flash Mode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+END
+/main/other/500d
+Label: Exposure Time
+Readonly: 1
+Type: MENU
+Current: 40
+Choice: 0 40
+END
+/main/other/500e
+Label: Exposure Program Mode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/500f
+Label: Exposure Index (film speed ISO)
+Readonly: 0
+Type: MENU
+Current: 64
+Choice: 0 32
+Choice: 1 40
+Choice: 2 50
+Choice: 3 64
+Choice: 4 80
+Choice: 5 100
+Choice: 6 125
+Choice: 7 160
+Choice: 8 200
+Choice: 9 250
+Choice: 10 320
+Choice: 11 400
+Choice: 12 500
+Choice: 13 640
+Choice: 14 800
+Choice: 15 1000
+Choice: 16 1250
+Choice: 17 1600
+Choice: 18 2000
+Choice: 19 2500
+Choice: 20 3200
+Choice: 21 4000
+Choice: 22 5000
+Choice: 23 6400
+Choice: 24 8000
+Choice: 25 10000
+Choice: 26 12800
+Choice: 27 16000
+Choice: 28 20000
+Choice: 29 25600
+Choice: 30 32000
+Choice: 31 40000
+Choice: 32 51200
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -5000
+Choice: 1 -4666
+Choice: 2 -4333
+Choice: 3 -4000
+Choice: 4 -3666
+Choice: 5 -3333
+Choice: 6 -3000
+Choice: 7 -2666
+Choice: 8 -2333
+Choice: 9 -2000
+Choice: 10 -1666
+Choice: 11 -1333
+Choice: 12 -1000
+Choice: 13 -666
+Choice: 14 -333
+Choice: 15 0
+Choice: 16 333
+Choice: 17 666
+Choice: 18 1000
+Choice: 19 1333
+Choice: 20 1666
+Choice: 21 2000
+Choice: 22 2333
+Choice: 23 2666
+Choice: 24 3000
+Choice: 25 3333
+Choice: 26 3666
+Choice: 27 4000
+Choice: 28 4333
+Choice: 29 4666
+Choice: 30 5000
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20220404T145041
+END
+/main/other/5013
+Label: Still Capture Mode
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 32784
+Choice: 3 32785
+Choice: 4 33024
+END
+/main/other/5018
+Label: Burst Number
+Readonly: 0
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 65535
+Step: 1
+END
+/main/other/501e
+Label: Artist
+Readonly: 1
+Type: TEXT
+Current: 
+END
+/main/other/501f
+Label: Copyright Info
+Readonly: 1
+Type: TEXT
+Current: 
+END
+/main/other/d303
+Label: UseDeviceStageFlag
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+
+Device info:
+Manufacturer: Nikon Corporation
+  Model: Z 9
+  device version: V1.11
+  serial number: '0000000000000000000000000nnnnnnn'
+Vendor extension ID: 0xffffffff
+Vendor extension version: 110
+Vendor extension description: Microsoft.com/DeviceServices: 1.0
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x90c0 (Unknown PTP_OC)
+  0x90c1 (Unknown PTP_OC)
+  0x90c2 (Unknown PTP_OC)
+  0x90c3 (Unknown PTP_OC)
+  0x90c4 (Unknown PTP_OC)
+  0x90c7 (Unknown PTP_OC)
+  0x90c8 (Unknown PTP_OC)
+  0x90c9 (Unknown PTP_OC)
+  0x90cb (Unknown PTP_OC)
+  0x90cc (Unknown PTP_OC)
+  0x90cd (Unknown PTP_OC)
+  0x90ce (Unknown PTP_OC)
+  0x90cf (Unknown PTP_OC)
+  0x9201 (Report Added/Deleted Items)
+  0x9202 (Report Acquired Items)
+  0x9203 (Get transferable playlist types)
+  0x9204 (Unknown PTP_OC)
+  0x9205 (Unknown PTP_OC)
+  0x9206 (Unknown PTP_OC)
+  0x9207 (Unknown PTP_OC)
+  0x9209 (Unknown PTP_OC)
+  0x920a (Unknown PTP_OC)
+  0x920b (Unknown PTP_OC)
+  0x920c (Unknown PTP_OC)
+  0x920f (Unknown PTP_OC)
+  0x9400 (Unknown PTP_OC)
+  0x9401 (Unknown PTP_OC)
+  0x9402 (Unknown PTP_OC)
+  0x9403 (Unknown PTP_OC)
+  0x9404 (Unknown PTP_OC)
+  0x9405 (Unknown PTP_OC)
+  0x9406 (Unknown PTP_OC)
+  0x940c (Unknown PTP_OC)
+  0x9412 (Unknown PTP_OC)
+  0x9413 (Unknown PTP_OC)
+  0x9414 (Unknown PTP_OC)
+  0x9415 (Unknown PTP_OC)
+  0x9416 (Unknown PTP_OC)
+  0x9417 (Unknown PTP_OC)
+  0x9418 (Unknown PTP_OC)
+  0x9419 (Unknown PTP_OC)
+  0x941a (Unknown PTP_OC)
+  0x941b (Unknown PTP_OC)
+  0x941c (Unknown PTP_OC)
+  0x9420 (Unknown PTP_OC)
+  0x9421 (Unknown PTP_OC)
+  0x9422 (Unknown PTP_OC)
+  0x9423 (Unknown PTP_OC)
+  0x9424 (Unknown PTP_OC)
+  0x9425 (Unknown PTP_OC)
+  0x9426 (Unknown PTP_OC)
+  0x9428 (Unknown PTP_OC)
+  0x942e (Unknown PTP_OC)
+  0x942f (Unknown PTP_OC)
+  0x9431 (Unknown PTP_OC)
+  0x9432 (Unknown PTP_OC)
+  0x9433 (Unknown PTP_OC)
+  0x9434 (Unknown PTP_OC)
+  0x9435 (Unknown PTP_OC)
+  0x9436 (Unknown PTP_OC)
+  0x9439 (Unknown PTP_OC)
+  0x943a (Unknown PTP_OC)
+  0x943b (Unknown PTP_OC)
+  0x943c (Unknown PTP_OC)
+  0x943d (Unknown PTP_OC)
+  0x943e (Unknown PTP_OC)
+  0x943f (Unknown PTP_OC)
+  0x9440 (Unknown PTP_OC)
+  0x9441 (Unknown PTP_OC)
+  0x9442 (Unknown PTP_OC)
+  0x9443 (Unknown PTP_OC)
+  0x9444 (Unknown PTP_OC)
+  0x9445 (Unknown PTP_OC)
+  0x9446 (Unknown PTP_OC)
+  0x9447 (Unknown PTP_OC)
+  0x9520 (Unknown PTP_OC)
+  0x9521 (Unknown PTP_OC)
+  0x9522 (Unknown PTP_OC)
+  0x9523 (Unknown PTP_OC)
+  0x9527 (Unknown PTP_OC)
+  0x9528 (Unknown PTP_OC)
+  0x9529 (Unknown PTP_OC)
+  0x952a (Unknown PTP_OC)
+  0x9530 (Unknown PTP_OC)
+  0x9531 (Unknown PTP_OC)
+  0x9532 (Unknown PTP_OC)
+  0x9533 (Unknown PTP_OC)
+  0x9535 (Unknown PTP_OC)
+Events Supported:
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4007 (ObjectInfoChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0x400a (StoreFull)
+  0x400c (StorageInfoChanged)
+  0x400d (CaptureComplete)
+  0xc101 (Unknown Event)
+  0xc102 (Unknown Event)
+  0xc105 (Unknown Event)
+  0xc108 (Unknown Event)
+  0xc10a (Unknown Event)
+  0xc10b (Unknown Event)
+  0xc10c (Unknown Event)
+  0xc10d (Unknown Event)
+  0xc10e (Unknown Event)
+  0xc120 (Unknown Event)
+  0xc121 (Unknown Event)
+  0xc122 (Unknown Event)
+  0xc123 (Unknown Event)
+  0xc700 (Unknown Event)
+Device Properties Supported:
+  0x5001 (Battery Level)
+  0x5003 (Image Size)
+  0x5004 (Compression Setting)
+  0x5005 (White Balance)
+  0x5007 (F-Number)
+  0x5008 (Focal Length)
+  0x500a (Focus Mode)
+  0x500b (Exposure Metering Mode)
+  0x500c (Flash Mode)
+  0x500d (Exposure Time)
+  0x500e (Exposure Program Mode)
+  0x500f (Exposure Index (film speed ISO))
+  0x5010 (Exposure Bias Compensation)
+  0x5011 (Date & Time)
+  0x5013 (Still Capture Mode)
+  0x5018 (Burst Number)
+  0x501e (Artist)
+  0x501f (Copyright Info)
+  0xd303 (Unknown DPC code)
+  0xd406 (Session Initiator Info)
+  0xd407 (Perceived Device Type)
+Device info:
+Manufacturer: Nikon Corporation
+  Model: Z 9
+  device version: V1.11
+  serial number: '0000000000000000000000000nnnnnnn'
+Vendor extension ID: 0x0000000a
+Vendor extension version: 110
+Vendor extension description: Microsoft.com/DeviceServices: 1.0
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100e (Initiate capture)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x90c0 (InitiateCaptureRecInSdram)
+  0x90c1 (AfDrive)
+  0x90c2 (ChangeCameraMode)
+  0x90c3 (DelImageSDRAM)
+  0x90c4 (GetLargeThumb)
+  0x90c7 (GetEvent)
+  0x90c8 (DeviceReady)
+  0x90c9 (SetPreWBData)
+  0x90cb (AfCaptureSDRAM)
+  0x90cc (GetPictCtrlData)
+  0x90cd (SetPictCtrlData)
+  0x90ce (DelCstPicCtrl)
+  0x90cf (GetPicCtrlCapability)
+  0x9201 (StartLiveView)
+  0x9202 (EndLiveView)
+  0x9203 (GetLiveViewImg)
+  0x9204 (MfDrive)
+  0x9205 (ChangeAfArea)
+  0x9206 (AfDriveCancel)
+  0x9207 (InitiateCaptureRecInMedia)
+  0x9209 (GetVendorStorageIDs)
+  0x920a (StartMovieRecInCard)
+  0x920b (EndMovieRec)
+  0x920c (TerminateCapture)
+  0x920f (GetFhdPicture)
+  0x9400 (GetPartialObjectHiSpeed)
+  0x9401 (Unknown PTP_OC)
+  0x9402 (StartSpotWb)
+  0x9403 (EndSpotWb)
+  0x9404 (ChangeSpotWbArea)
+  0x9405 (MeasureSpotWb)
+  0x9406 (EndSpotWbResultDisp)
+  0x940c (CancelImagesInSDRAM)
+  0x9412 (Unknown PTP_OC)
+  0x9413 (Unknown PTP_OC)
+  0x9414 (GetSBHandles)
+  0x9415 (GetSBAttrDesc)
+  0x9416 (GetSBAttrValue)
+  0x9417 (SetSBAttrValue)
+  0x9418 (GetSBGroupAttrDesc)
+  0x9419 (GetSBGroupAttrValue)
+  0x941a (SetSBGroupAttrValue)
+  0x941b (TestFlash)
+  0x941c (GetEventEx)
+  0x9420 (SaveCameraSetting)
+  0x9421 (GetObjectSize)
+  0x9422 (ChangeMonitorOff)
+  0x9423 (GetLiveViewCompressedSize)
+  0x9424 (StartTracking)
+  0x9425 (EndTracking)
+  0x9426 (ChangeAELock)
+  0x9428 (GetLiveViewImageEx)
+  0x942e (Unknown PTP_OC)
+  0x942f (Unknown PTP_OC)
+  0x9431 (GetPartialObjectEx)
+  0x9432 (GetManualSettingLensData)
+  0x9433 (InitiatePixelMapping)
+  0x9434 (GetObjectsMetaData)
+  0x9435 (ChangeApplicationMode)
+  0x9436 (ResetMenu)
+  0x9439 (Unknown PTP_OC)
+  0x943a (Unknown PTP_OC)
+  0x943b (Unknown PTP_OC)
+  0x943c (Unknown PTP_OC)
+  0x943d (Unknown PTP_OC)
+  0x943e (Unknown PTP_OC)
+  0x943f (Unknown PTP_OC)
+  0x9440 (Unknown PTP_OC)
+  0x9441 (Unknown PTP_OC)
+  0x9442 (Unknown PTP_OC)
+  0x9443 (Unknown PTP_OC)
+  0x9444 (Unknown PTP_OC)
+  0x9445 (Unknown PTP_OC)
+  0x9446 (Unknown PTP_OC)
+  0x9447 (Unknown PTP_OC)
+  0x9520 (Unknown PTP_OC)
+  0x9521 (Unknown PTP_OC)
+  0x9522 (Unknown PTP_OC)
+  0x9523 (Unknown PTP_OC)
+  0x9527 (Unknown PTP_OC)
+  0x9528 (Unknown PTP_OC)
+  0x9529 (Unknown PTP_OC)
+  0x952a (Unknown PTP_OC)
+  0x9530 (Unknown PTP_OC)
+  0x9531 (Unknown PTP_OC)
+  0x9532 (Unknown PTP_OC)
+  0x9533 (Unknown PTP_OC)
+  0x9535 (Unknown PTP_OC)
+Events Supported:
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4007 (ObjectInfoChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0x400a (StoreFull)
+  0x400c (StorageInfoChanged)
+  0x400d (CaptureComplete)
+  0xc101 (Nikon_ObjectAddedInSDRAM)
+  0xc102 (Nikon_CaptureCompleteRecInSdram)
+  0xc105 (Nikon_MovieRecordInterrupted)
+  0xc108 (Nikon_MovieRecordComplete)
+  0xc10a (Nikon_MovieRecordStarted)
+  0xc10b (Nikon_PictureControlAdjustChanged)
+  0xc10c (Nikon_LiveViewStateChanged)
+  0xc10d (Unknown Event)
+  0xc10e (Nikon_ManualSettingsLensDataChanged)
+  0xc120 (Nikon_SBAdded)
+  0xc121 (Nikon_SBRemoved)
+  0xc122 (Nikon_SBAttrChanged)
+  0xc123 (Nikon_SBGroupAttrChanged)
+  0xc700 (Unknown Event)
+Device Properties Supported:
+  0x5001 (Battery Level)
+  0x5003 (Image Size)
+  0x5004 (Compression Setting)
+  0x5005 (White Balance)
+  0x5007 (F-Number)
+  0x5008 (Focal Length)
+  0x500a (Focus Mode)
+  0x500b (Exposure Metering Mode)
+  0x500c (Flash Mode)
+  0x500d (Exposure Time)
+  0x500e (Exposure Program Mode)
+  0x500f (Exposure Index (film speed ISO))
+  0x5010 (Exposure Bias Compensation)
+  0x5011 (Date & Time)
+  0x5013 (Still Capture Mode)
+  0x5018 (Burst Number)
+  0x501e (Artist)
+  0x501f (Copyright Info)
+  0xd303 (UseDeviceStageFlag)
+  0xd406 (Unknown DPC code)
+  0xd407 (Unknown DPC code)

@@ -1753,13 +1753,15 @@ static struct {
 
 	/* Thomas Schaad */
 	{"Nikon:Z5",                      0x04b0, 0x0448, PTP_CAP|PTP_CAP_PREVIEW},
-	{"Nikon:Zfc",                     0x04b0, 0x044f, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Fahrion <fahrion.2600@gmail.com> */
 	{"Nikon:Z7_2",                	  0x04b0, 0x044b, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Thomas Schaad <tom@avisec.ch> */
 	{"Nikon:Z6_2",                	  0x04b0, 0x044c, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Nikon:Zfc",                     0x04b0, 0x044f, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Stefan Weiberg at SUSE */
+	{"Nikon:Z9",			  0x04b0, 0x0450, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	/* https://github.com/gphoto/libgphoto2/issues/569 */
