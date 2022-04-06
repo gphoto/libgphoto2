@@ -3121,8 +3121,6 @@ camera_exit (Camera *camera, GPContext *context)
 				if ((exit_gp_result = camera_unprepare_capture (camera, context)) < GP_OK)	/* note: gets gphoto resultcodes, not ptp retcodes */
 					goto exitfailed;
 			}
-			/* this switches the display back on ... */
-			C_PTP (ptp_canon_eos_setremotemode(params, 1));
 			break;
 		case PTP_VENDOR_NIKON:
 			if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView))

@@ -582,8 +582,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 
 	/* Drain the rest set of the event data */
 	C_PTP (ptp_check_eos_events (params));
-	/* remotemode 1 should stay, as it keeps the display on for some reason */
-	/*C_PTP (ptp_canon_eos_setremotemode(params, 0));*/
+	C_PTP (ptp_canon_eos_setremotemode(params, 0));
 	C_PTP (ptp_canon_eos_seteventmode(params, 0));
 	params->eos_captureenabled = 0;
 	return GP_OK;
