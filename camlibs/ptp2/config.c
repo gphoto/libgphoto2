@@ -585,7 +585,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
         /* Resets the camera state */
 	C_PTP (ptp_canon_eos_setremotemode(params, 0));
         /* Enables camera display for some reason. */
-        C_PTP (ptp_canon_eos_setremotemode(params, 1));
+	C_PTP (ptp_canon_eos_setremotemode(params, 1));
 	C_PTP (ptp_canon_eos_seteventmode(params, 0));
 	params->eos_captureenabled = 0;
 	return GP_OK;
