@@ -3606,7 +3606,6 @@ enable_liveview:
 					if (cond.u32 & (1<<17)){ gp_context_error (context, _("Liveview cannot start: %s"),_("Temperature too high")); return GP_ERROR; }
 					if (cond.u32 & (1<<9)) { gp_context_error (context, _("Liveview cannot start: %s"),_("TTL error")); return GP_ERROR; }
 					if (cond.u32 & (1<<22)){ gp_context_error (context, _("Liveview cannot start: %s"),_("In Mirror-up operation")); return GP_ERROR; }
-					if (cond.u32 & (1<<24)){ gp_context_error (context, _("Liveview cannot start: %s"),_("Lens is retracting")); goto ignoreerror; }
 					if (cond.u32 & (1<<5)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Minimum aperture warning")); return GP_ERROR; }
 					if (cond.u32 & (1<<15)){ gp_context_error (context, _("Liveview cannot start: %s"),_("Processing of shooting operation")); return GP_ERROR; }
 					if (cond.u32 & (1<<2)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Sequence error")); return GP_ERROR; }
@@ -3619,12 +3618,14 @@ enable_liveview:
 					if (cond.u32 & (1<<12)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Pending unretrieved SDRAM image")); return GP_ERROR; }
 					if (cond.u32 & (1<<12)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Pending unretrieved SDRAM image")); return GP_ERROR; }
 					if (cond.u32 & (1<<4)) { gp_context_error (context, _("Liveview cannot start: %s"),_("Fully pressed button")); return GP_ERROR; }
+
+					if (cond.u32 & (1<<24)){ gp_context_error (context, _("Liveview cannot start: %s"),_("Lens is retracting")); goto ignoreerror; }
 					gp_context_error (context, _("Liveview cannot start: code 0x%08x"), cond.u32);
 					return GP_ERROR;
-ignoreerror:
 				}
 			}
 
+ignoreerror:
 			ret = ptp_nikon_start_liveview (params);
 			if ((ret != PTP_RC_OK) && (ret != PTP_RC_DeviceBusy))
 				C_PTP_REP_MSG (ret, _("Nikon enable liveview failed"));
