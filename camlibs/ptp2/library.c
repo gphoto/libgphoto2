@@ -4780,6 +4780,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		!strcmp(params->deviceinfo.Model, "ZV-1")		||
 		!strcmp(params->deviceinfo.Model, "DSC-RX100M7")	||
 		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")		||
+		!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")		||
 		!strcmp(params->deviceinfo.Model, "DSC-RX0M2")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7C")
 	)) {
