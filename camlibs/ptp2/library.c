@@ -3122,7 +3122,9 @@ camera_exit (Camera *camera, GPContext *context)
 					goto exitfailed;
 			}
 			/* this switches the display back on ... */
-			C_PTP (ptp_canon_eos_setremotemode(params, 1));
+			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) {
+				C_PTP (ptp_canon_eos_setremotemode(params, 1));
+			}
 			break;
 		case PTP_VENDOR_NIKON:
 			if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView))
