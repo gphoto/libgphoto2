@@ -1226,6 +1226,9 @@ static struct {
 	/* David Farrier <farrier@iglou.com> */
 	{"Sony:RX100M3 (MTP)",        0x054c, 0x08e3, 0},
 
+	/* via email to gphoto-devel */
+	{"Sony:DSC-WX220 (MTP)",      0x054c, 0x08d7, 0},
+
 	/* Markus Oertel */
 	{"Sony:Alpha-A5100 (MTP)",    0x054c, 0x08e7, 0},
 
