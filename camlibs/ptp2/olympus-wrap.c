@@ -418,11 +418,13 @@ olympus_xml_transfer (PTPParams *params,
 				goto skip;
 			}
 			newhandle = ptp2.Param1;
+#if 0
 			if ((newhandle & 0xff000000) != 0x1e000000) {
 				GP_LOG_D ("event 0x%04x, handle 0x%08x received, no XML event, just passing on", ptp2.Code, ptp2.Param1);
 				ptp_add_event (params, &ptp2);
 				continue;
 			}
+#endif
 
 			ret = ptp_getobjectinfo (outerparams, newhandle, &oi);
 			if (ret != PTP_RC_OK)
