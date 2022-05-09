@@ -6899,6 +6899,27 @@ downloadnow:
 					ptp_free_objectinfo (&oi);
 					return ret;
 				}
+
+				/* we also get the fs info for free, so just set it */
+				info.file.fields = GP_FILE_INFO_TYPE |
+						GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+						GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
+				strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, oi.ObjectFormat);
+				info.file.width		= oi.ImagePixWidth;
+				info.file.height	= oi.ImagePixHeight;
+				info.file.size		= oi.ObjectCompressedSize;
+				info.file.mtime		= time(NULL);
+
+				info.preview.fields = GP_FILE_INFO_TYPE |
+						GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+						GP_FILE_INFO_SIZE;
+				strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, oi.ThumbFormat);
+				info.preview.width	= oi.ThumbPixWidth;
+				info.preview.height	= oi.ThumbPixHeight;
+				info.preview.size	= oi.ThumbCompressedSize;
+				GP_LOG_D ("setting fileinfo in fs");
+				gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+
 				*eventtype = GP_EVENT_FILE_ADDED;
 				*eventdata = path;
 				/* We have now handed over the file, disclaim responsibility by unref. */
