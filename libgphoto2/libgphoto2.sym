@@ -122,6 +122,7 @@ gp_filesystem_set_funcs
 gp_file_unref
 gp_gamma_correct_single
 gp_gamma_fill_table
+gp_initialise_locale
 gp_library_version
 gp_list_append
 gp_list_count
