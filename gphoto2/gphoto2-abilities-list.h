@@ -186,6 +186,8 @@ int gp_abilities_list_get_abilities (CameraAbilitiesList *list, int index,
 
 const char *gp_message_codeset (const char *);
 
+int gp_initialise_locale (const char *localedir);
+
 
 /**
  * Name of the environment variable which may contain the path where

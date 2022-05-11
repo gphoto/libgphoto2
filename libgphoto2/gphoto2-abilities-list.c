@@ -72,6 +72,26 @@ gp_message_codeset (const char *codeset)
 }
 
 /**
+ * \brief Initialise localisation.
+ * 
+ * Call bindtextdomain() with our locale directory. This is called by
+ * gp_abilities_list_new() so you don't need to call it unless you have a
+ * non-standard installation. 
+ * \param localedir Root directory of libgphoto2's localisation files.
+ * \return gphoto2 error code.
+ */
+int
+gp_initialise_locale (const char *localedir)
+{
+	static int locale_initialised = 0;
+	if (locale_initialised)
+		return GP_OK;
+	locale_initialised = 1;
+	bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2, localedir);
+	return GP_OK;
+}
+
+/**
  * \brief Allocate the memory for a new abilities list.
  *
  * Function to allocate the memory for a new abilities list.
@@ -92,7 +112,7 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 	 * an other way without introducing a global initialization
 	 * function...
 	 */
-	bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2, LOCALEDIR);
+	gp_initialise_locale(LOCALEDIR);
 
 	C_MEM (*list = calloc (1, sizeof (CameraAbilitiesList)));
 
