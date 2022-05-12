@@ -1,5 +1,5 @@
 # gp-progs.m4 - look for certain well-known tools              -*- Autoconf -*-
-# serial 13
+# serial 14
 dnl | Increment the above serial number every time you edit this file.
 dnl | When it finds multiple m4 files with the same name,
 dnl | aclocal will use the one with the highest serial.
@@ -71,7 +71,7 @@ dnl ####################################################################
 m4_pattern_forbid([GP_PROG_SLEEP])dnl
 AC_DEFUN_ONCE([GP_PROG_SLEEP],[dnl
 AC_ARG_VAR([SLEEP], [sleep delay command])dnl
-AC_MSG_CHECKING([whether to sleep])
+AC_MSG_CHECKING([for sleep])
 AS_VAR_IF([SLEEP], [no], [dnl
   AC_MSG_RESULT([no])
 ], [dnl
