@@ -124,8 +124,7 @@ AM_CONDITIONAL([HAVE_CXX], [test "x$CXX" != "x" && test "x$CXX" != "xno"])
 
 
 dnl Not strictly necessary, but helps pulling translations.
-AC_ARG_VAR([RSYNC], [rsync file copying command])
-AC_PATH_PROG([RSYNC], [rsync], [no])
+GP_CHECK_PROG([RSYNC], [rsync], [file copying command])
 AM_CONDITIONAL([HAVE_RSYNC], [test "x$RSYNC" != xno])
 
 

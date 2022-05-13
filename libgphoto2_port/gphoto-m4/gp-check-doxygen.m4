@@ -1,5 +1,5 @@
 # gp-check-doxygen.m4 - check for doxygen tool                 -*- Autoconf -*-
-# serial 13
+# serial 14
 dnl | Increment the above serial number every time you edit this file.
 dnl | When it finds multiple m4 files with the same name,
 dnl | aclocal will use the one with the highest serial.
@@ -12,13 +12,30 @@ dnl ####################################################################
 dnl
 AC_DEFUN([GP_CHECK_DOXYGEN], [dnl
 dnl
-AC_ARG_VAR([DOT],          [graphviz dot directed graph drawing command])
-AC_PATH_PROG([DOT],        [dot], [no])
-AM_CONDITIONAL([HAVE_DOT], [test "x$DOT" != xno])
+GP_CHECK_PROG([DOT], [dot], [graphviz directed graph drawing command])
 dnl
-AC_ARG_VAR([DOXYGEN],          [software documentation generator command])
-AC_PATH_PROG([DOXYGEN],        [doxygen], [no])
+AM_CONDITIONAL([HAVE_DOT], [test "x$DOT" != xno])
+AC_MSG_CHECKING([HAVE_DOT])
+AM_COND_IF([HAVE_DOT], [dnl
+  gp_config_msg_dot=", using dot (${DOT})"
+  AC_MSG_RESULT([yes ($DOT)])
+], [dnl
+  gp_config_msg_dot=", not using dot"
+  AC_MSG_RESULT([no])
+])
+dnl
+dnl
+GP_CHECK_PROG([DOXYGEN], [doxygen], [software documentation generator command])
+dnl
 AM_CONDITIONAL([HAVE_DOXYGEN], [test "x$DOXYGEN" != xno])
+AC_MSG_CHECKING([HAVE_DOXYGEN])
+AM_COND_IF([HAVE_DOXYGEN], [dnl
+  AC_MSG_RESULT([yes ($DOXYGEN)${gp_config_msg_dot})])
+  GP_CONFIG_MSG([build doxygen docs], [yes])
+], [dnl
+  AC_MSG_RESULT([no])
+  GP_CONFIG_MSG([build doxygen docs], [no])
+])
 dnl
 dnl Substitutions for Doxyfile.in
 AM_COND_IF([HAVE_DOT],
