@@ -15,20 +15,18 @@ jobs:
     - uses: actions/checkout@v2
     - name: apt-get install
       run: sudo apt-get update && sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
-    - name: nproc
-      run: nproc
     - name: autoreconf
       run: autoreconf -i -f
     - name: configure
       run: ./configure --prefix=$PWD/__prefix
     - name: make
-      run: make
+      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC
     - name: make check
-      run: make check
+      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC check
     - name: make distcheck
-      run: make distcheck
+      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC distcheck
     - name: make install
-      run: make install
+      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC install
     - name: build and run example libgphoto2 frontend (ambs-lgp2-frontend)
       run: |
         set -x
