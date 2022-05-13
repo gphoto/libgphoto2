@@ -27,6 +27,8 @@ jobs:
       run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC distcheck
     - name: make install
       run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC install
+    - name: make installcheck
+      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC installcheck
     - name: build and run example libgphoto2 frontend (ambs-lgp2-frontend)
       run: |
         set -x
