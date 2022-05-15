@@ -100,6 +100,10 @@ gp_init_localedir (const char *localedir)
 	static int locale_initialised = 0;
 	if (locale_initialised)
 		return GP_OK;
+	const int gpp_result = gp_port_init_localedir (localedir);
+	if (gpp_result != GP_OK) {
+		return gpp_result;
+	}
 	if (bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2, localedir) == NULL)
 	{
 		if (errno == ENOMEM)

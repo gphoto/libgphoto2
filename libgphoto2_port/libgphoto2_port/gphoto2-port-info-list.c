@@ -27,6 +27,7 @@
 
 #include <gphoto2/gphoto2-port-info-list.h>
 
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -63,13 +64,55 @@ struct _GPPortInfoList {
 
 
 /**
+ * \brief Initialize the localedir directory.
+ *
+ * Override the localedir directory libgphoto2_port uses for its message
+ * translations.
+ *
+ * This function is called by the gp_init_localedir() function, so if
+ * you are calling that already, there is no need to call it yourself.
+ *
+ * Call this before calling any libgphoto2_port non-initialization
+ * function which might use translated messages.
+ *
+ * You only need to call this if you have a non-standard installation
+ * where the locale files are at location which differs from the
+ * compiled in default location.
+ *
+ * If you need to call this function, call it before calling any
+ * non-initialization function.
+ *
+ * Internally, this will make sure bindtextdomain() is called for the
+ * relevant gettext text domain(s).
+ *
+ * \param localedir Root directory of libgphoto2's localisation files.
+ * \return gphoto2 error code.
+ */
+int
+gp_port_init_localedir (const char *localedir)
+{
+	static int locale_initialised = 0;
+	if (locale_initialised)
+		return GP_OK;
+	if (bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2_PORT, localedir) == NULL)
+	{
+		if (errno == ENOMEM)
+			return GP_ERROR_NO_MEMORY;
+		return GP_ERROR;
+	}
+	locale_initialised = 1;
+	return GP_OK;
+}
+
+
+/**
  * \brief Specify codeset for translations
  *
- * This function specifies the codeset that are used for the translated
+ * This function specifies the codeset that is used for the translated
  * strings that are passed back by the libgphoto2_port functions.
  *
- * This function is called by the gp_message_codeset() function, there is
- * no need to call it yourself.
+ * This function is called by the gp_message_codeset() function, so
+ * there is no need to call it yourself.
  *
  * \param codeset new codeset to use
  * \return the previous codeset
@@ -99,7 +142,7 @@ gp_port_info_list_new (GPPortInfoList **list)
 	 * We put this in here because everybody needs to call this function
 	 * before accessing ports...
 	 */
-	bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2_PORT, LOCALEDIR);
+	gp_port_init_localedir (LOCALEDIR);
 
 	C_MEM (*list = calloc (1, sizeof (GPPortInfoList)));
 

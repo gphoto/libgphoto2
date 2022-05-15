@@ -96,4 +96,11 @@ LIBGPHOTO2_INTERNAL {
 #	# Add new exported functions here too!
 #}; # LIBGPHOTO2_6_0
 
+LIBGPHOTO2_6_0 {
+    global:
+        gp_port_init_localedir;
+    local:
+        *;
+}; # LIBGPHOTO2_6_0
+
 # here comes the next version...

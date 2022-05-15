@@ -94,6 +94,9 @@ int gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info);
 
 const char *gp_port_message_codeset (const char*);
 
+int gp_port_init_localedir (const char *localedir);
+
+
 /**
  * Name of the environment variable which may contain the path where
  * to look for the IO libs. If this environment variable is not defined,
