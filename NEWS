@@ -2,6 +2,7 @@ libgphoto2 2.5.29.1 development snapshot
 
 general:
 * fix parallel builds by requiring gettext 0.19.1 for builds from git (PR #797)
+* add gp_init_localedir() function to allow for non-standard installations (PR #796)
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.29 release
