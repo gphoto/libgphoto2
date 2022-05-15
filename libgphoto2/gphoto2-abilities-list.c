@@ -73,7 +73,7 @@ gp_message_codeset (const char *codeset)
 }
 
 /**
- * \brief Initialize locale directory.
+ * \brief Initialize the localedir directory.
  *
  * Override the localedir directory libgphoto2 uses for its message
  * translations.
