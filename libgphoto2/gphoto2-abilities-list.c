@@ -26,6 +26,7 @@
 #include "config.h"
 #include <gphoto2/gphoto2-abilities-list.h>
 
+#include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -87,7 +88,12 @@ gp_init_localedir (const char *localedir)
 	if (locale_initialised)
 		return GP_OK;
 	locale_initialised = 1;
-	bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2, localedir);
+	if (bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2, localedir) == NULL)
+	{
+		if (errno == ENOMEM)
+			return GP_ERROR_NO_MEMORY;
+		return GP_ERROR;
+	}
 	return GP_OK;
 }
 
