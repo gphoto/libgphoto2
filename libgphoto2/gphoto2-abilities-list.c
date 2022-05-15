@@ -73,8 +73,8 @@ gp_message_codeset (const char *codeset)
 }
 
 /**
- * \brief Initialise locale directory.
- * 
+ * \brief Initialize locale directory.
+ *
  * Call bindtextdomain() with our locale directory. This is called by
  * gp_abilities_list_new() so you don't need to call it unless you have a
  * non-standard installation. 
