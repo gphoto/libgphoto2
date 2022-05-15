@@ -40,6 +40,23 @@
    several cameras that might have been affected by the current
    release.
 
+## update libtool library version(s), hopefully keeping the soname(s)
+
+   Ensure the libtool library version (from which the soname is derived)
+   have been updated relative to the last release.
+
+  * LIBGPHOTO2_{AGE,REVISION,CURRENT} in configure.ac and
+  * LIBGPHOTO2_PORT_{AGE,REVISION,CURRENT} in libgphoto2_port/configure.ac
+
+   If no functions have been added since the last release,
+   incrementing *_REVISION will do.
+
+   If functions have been added since the last release, update
+   _AGE and _CHANGES and reset _REVISION to 0.
+
+   If functions have been removed, a lot of other work results besides
+   updating the libtool library version.
+
 ## update NEWS
 
     git diff libgphoto2-2\_5\_21-release.. | less
