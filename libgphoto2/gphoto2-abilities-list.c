@@ -72,7 +72,7 @@ gp_message_codeset (const char *codeset)
 }
 
 /**
- * \brief Initialise localisation.
+ * \brief Initialise locale directory.
  * 
  * Call bindtextdomain() with our locale directory. This is called by
  * gp_abilities_list_new() so you don't need to call it unless you have a
@@ -81,7 +81,7 @@ gp_message_codeset (const char *codeset)
  * \return gphoto2 error code.
  */
 int
-gp_initialise_locale (const char *localedir)
+gp_init_localedir (const char *localedir)
 {
 	static int locale_initialised = 0;
 	if (locale_initialised)
@@ -112,7 +112,7 @@ gp_abilities_list_new (CameraAbilitiesList **list)
 	 * an other way without introducing a global initialization
 	 * function...
 	 */
-	gp_initialise_locale(LOCALEDIR);
+	gp_init_localedir(LOCALEDIR);
 
 	C_MEM (*list = calloc (1, sizeof (CameraAbilitiesList)));
 
