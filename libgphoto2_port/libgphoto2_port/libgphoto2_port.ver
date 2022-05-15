@@ -83,7 +83,7 @@ LIBGPHOTO2_INTERNAL {
 	gp_port_info_set_name;
 	gp_port_info_set_path;
 	gp_port_info_set_type;
-};
+}; # LIBGPHOTO2_5_0
 
 #LIBGPHOTO2_6_0 {
 #    global:
@@ -94,6 +94,6 @@ LIBGPHOTO2_INTERNAL {
 #	#	gp_port_info_list_append, gp_port_info_list_get_info
 #
 #	# Add new exported functions here too!
-#} LIBGPHOTO2_5_0;
+#}; # LIBGPHOTO2_6_0
 
 # here comes the next version...
