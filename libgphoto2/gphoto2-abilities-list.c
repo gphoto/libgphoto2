@@ -87,13 +87,13 @@ gp_init_localedir (const char *localedir)
 	static int locale_initialised = 0;
 	if (locale_initialised)
 		return GP_OK;
-	locale_initialised = 1;
 	if (bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2, localedir) == NULL)
 	{
 		if (errno == ENOMEM)
 			return GP_ERROR_NO_MEMORY;
 		return GP_ERROR;
 	}
+	locale_initialised = 1;
 	return GP_OK;
 }
 
