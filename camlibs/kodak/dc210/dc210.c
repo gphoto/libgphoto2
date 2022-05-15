@@ -669,7 +669,7 @@ static CameraFilesystemFuncs fsfuncs = {
 
 int camera_init (Camera *camera, GPContext *context) {
 
-	DC210_DEBUG("Initialising camera.\n");
+	DC210_DEBUG("Initializing camera.\n");
 
         /* First, set up all the function pointers */
 	camera->functions->get_config = camera_get_config;

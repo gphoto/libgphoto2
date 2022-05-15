@@ -1186,7 +1186,7 @@
 2006-02-05  Marcus Meissner  <marcus@jet.franken.de>
 
 	* library.c: Use event_check and event_wait
-	  functions from params struct. Initialise those
+	  functions from params struct. Initialize those
 	  entries.
 
 2006-01-31  Marcus Meissner  <marcus@jet.franken.de>

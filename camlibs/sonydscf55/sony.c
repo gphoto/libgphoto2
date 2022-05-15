@@ -497,7 +497,7 @@ sony_baud_set(Camera * camera, long baud)
 }
 
 /**
- * Port initialisation
+ * Port initialization
  */
 static int
 sony_init_port (Camera *camera)
@@ -559,7 +559,7 @@ sony_is_mpeg_supported (Camera * camera)
 }
 
 /**
- * Initialises camera
+ * Initialize camera
  */
 int
 sony_init (Camera * camera, SonyModel model)

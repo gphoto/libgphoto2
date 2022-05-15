@@ -75,7 +75,7 @@
 #define GP_ERROR_IO_SUPPORTED_USB       -21
 
 /**
- * \brief Error initialising I/O
+ * \brief Error initializing I/O
  */
 #define GP_ERROR_IO_INIT                -31
 /**

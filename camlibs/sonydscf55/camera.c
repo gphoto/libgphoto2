@@ -75,7 +75,7 @@ camera_abilities(CameraAbilitiesList * list)
 }
 
 /**
- * De-initialises camera
+ * De-initializes camera
  */
 static int
 camera_exit(Camera * camera, GPContext *context)
@@ -311,7 +311,7 @@ static CameraFilesystemFuncs fsfuncs = {
 };
 
 /**
- * Initialises camera
+ * Initializes camera
  */
 int
 camera_init(Camera * camera, GPContext *context)

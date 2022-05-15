@@ -35,7 +35,7 @@ Send                             	Receive				Informations
 At first connection after Coolpix has been powerup, first 0x00 don't work, coolpix respond 0xFF 0xFF then nothing
 A second 0x00 do the job.
 
-* Initialisations
+* Initializations
 
 Need more informations...
 
@@ -164,7 +164,7 @@ Send                             	Receive				Informations
 * "Attention" packet 0xFF from coolpix
 
 Coolpix send 0xFF in many cases :
-- After initialisation in response to 0x00.
+- After initialization in response to 0x00.
 - When Coolpix self powerdown (powersave)
 - When Coolpix is powerdown
 - When a picture has been recorded

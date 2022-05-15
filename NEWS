@@ -191,7 +191,7 @@ ptp2:
   * Leica SL Typ 601
 
 lumix:
-* fixed initialisation, might help capture
+* fixed initialization, might help capture
 
 all:
 * ongoing stability fixes from AFL fuzzing
@@ -2111,8 +2111,8 @@ Drivers (camlibs)
        do not have a USB class id.
 
      * Now supports a "fast filesystem" mode on newer Nikon PTP cameras.
-     
-       This speeds up initialisation notably on cameras with lots (>50)
+
+       This speeds up initialization notably on cameras with lots (>50)
        of images.
 
        However, this mode does not find the special files on the camera

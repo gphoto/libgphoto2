@@ -841,7 +841,7 @@ camera_init (Camera *camera, GPContext *context)
 	settings.usb.inep  = 0x83;
 	settings.usb.outep = 0x04;
 	gp_port_set_settings (camera->port, settings);
-	/* This function does the initialisation sequence.
+	/* This function does the initialization sequence.
 	 * CMD = 0xce, REPLY = 2 byte, 0xe0 0xe0  ... apparently means ok.
 	 */
 	gp_log (GP_LOG_DEBUG, "hp215", "Sending init sequence ... ");

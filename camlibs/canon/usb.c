@@ -2173,7 +2173,7 @@ canon_usb_set_file_attributes (Camera *camera, unsigned int attr_bits,
  * correctly uploaded, cause the camera to not accept any more uploads.
  * Smaller files work fine.
  * s10sh (http://www.kyuzz.org/antirez/s10sh.html) has the same problem.
- * The problem only appears when USB deinitialisation and initialisation
+ * The problem only appears when USB deinitialization and initialization
  * is performed between uploads. You can call this function more than
  * once with big files during one session without encountering the problem
  * described. <kramm@quiss.org>
