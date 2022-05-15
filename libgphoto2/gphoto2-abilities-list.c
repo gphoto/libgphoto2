@@ -58,11 +58,9 @@ static int gp_abilities_list_sort      (CameraAbilitiesList *);
  * \brief Set the current character codeset libgphoto2 is operating in.
  *
  * Set the codeset for all messages returned by libgphoto2.
+ *
  * \param codeset New codeset for the messages. For instance "utf-8".
  * \return old codeset as returned from bind_textdomain_codeset().
- *
- * You would then call gp_abilities_list_load() in order to
- * populate it.
  */
 const char*
 gp_message_codeset (const char *codeset)
