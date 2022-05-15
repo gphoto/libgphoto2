@@ -75,9 +75,22 @@ gp_message_codeset (const char *codeset)
 /**
  * \brief Initialize locale directory.
  *
- * Call bindtextdomain() with our locale directory. This is called by
- * gp_abilities_list_new() so you don't need to call it unless you have a
- * non-standard installation. 
+ * Override the localedir directory libgphoto2 uses for its message
+ * translations.
+ *
+ * Call this before calling any libgphoto2 non-initialization function
+ * which might use translated messages.
+ *
+ * You only need to call this if you have a non-standard installation
+ * where the locale files are at location which differs from the
+ * compiled in default location.
+ *
+ * If you need to call this function, call it before calling any
+ * non-initialization function.
+ *
+ * Internally, this will make sure bindtextdomain() is called for the
+ * relevant gettext text domain(s).
+ *
  * \param localedir Root directory of libgphoto2's localisation files.
  * \return gphoto2 error code.
  */
