@@ -97,20 +97,19 @@ gp_message_codeset (const char *codeset)
 int
 gp_init_localedir (const char *localedir)
 {
-	static int locale_initialised = 0;
-	if (locale_initialised)
+	static int locale_initialized = 0;
+	if (locale_initialized)
 		return GP_OK;
 	const int gpp_result = gp_port_init_localedir (localedir);
 	if (gpp_result != GP_OK) {
 		return gpp_result;
 	}
-	if (bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2, localedir) == NULL)
-	{
+	if (bindtextdomain (GETTEXT_PACKAGE_LIBGPHOTO2, localedir) == NULL) {
 		if (errno == ENOMEM)
 			return GP_ERROR_NO_MEMORY;
 		return GP_ERROR;
 	}
-	locale_initialised = 1;
+	locale_initialized = 1;
 	return GP_OK;
 }
 
