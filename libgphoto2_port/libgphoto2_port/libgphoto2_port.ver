@@ -27,7 +27,7 @@ LIBGPHOTO2_5_0 {
 	gp_port_info_list_lookup_name;
 	gp_port_info_list_lookup_path;
 	gp_port_info_list_new;
-        gp_port_init_localedir;
+	gp_port_init_localedir;
 	gp_port_library_version;
 	gp_port_message_codeset;
 	gp_port_new;
@@ -91,7 +91,7 @@ LIBGPHOTO2_INTERNAL {
 #	# The asm(".symver ...") constructs will put stuff into this node,
 #	# it needs to stay.
 #	# Currently used by:
-#	#	gp_port_set_info, gp_port_get_info, 
+#	#	gp_port_set_info, gp_port_get_info,
 #	#	gp_port_info_list_append, gp_port_info_list_get_info
 #
 #	# Add new exported functions here too!
