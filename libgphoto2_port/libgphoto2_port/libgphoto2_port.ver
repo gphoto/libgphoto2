@@ -27,6 +27,7 @@ LIBGPHOTO2_5_0 {
 	gp_port_info_list_lookup_name;
 	gp_port_info_list_lookup_path;
 	gp_port_info_list_new;
+        gp_port_init_localedir;
 	gp_port_library_version;
 	gp_port_message_codeset;
 	gp_port_new;
@@ -95,12 +96,5 @@ LIBGPHOTO2_INTERNAL {
 #
 #	# Add new exported functions here too!
 #}; # LIBGPHOTO2_6_0
-
-LIBGPHOTO2_6_0 {
-    global:
-        gp_port_init_localedir;
-    local:
-        *;
-}; # LIBGPHOTO2_6_0
 
 # here comes the next version...
