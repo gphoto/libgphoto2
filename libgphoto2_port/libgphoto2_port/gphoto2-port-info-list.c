@@ -86,6 +86,7 @@ struct _GPPortInfoList {
  * relevant gettext text domain(s).
  *
  * \param localedir Root directory of libgphoto2's localisation files.
+ *                  If NULL, the default localedir will be locked in.
  * \return gphoto2 error code.
  */
 int
