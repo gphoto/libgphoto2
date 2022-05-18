@@ -621,3 +621,11 @@ gp_port_info_new (GPPortInfo *info) {
 	C_MEM (*info = calloc (1, sizeof(struct _GPPortInfo)));
 	return GP_OK;
 }
+
+
+/*
+ * Local Variables:
+ * c-file-style:"linux"
+ * indent-tabs-mode:t
+ * End:
+ */
