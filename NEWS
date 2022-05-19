@@ -1,9 +1,23 @@
 libgphoto2 2.5.29.1 development snapshot
 
+ptp2:
+* Canon: fixed display locking/unlocking after exit
+* generic: avoid potential crash on image addition
+* Sony: Add image information when wait_for_event
+* Added IDs:
+  * Nikon Zfc, Z9
+  * Sony DSC-WX220, Alpha-A7 IV
+  * Nikon P950
+  * Canon EOS Rebel T8i
+  * Fuji Fujifilm X-E4
+  * GoPro HERO10 Black
+
 general:
 * fix parallel builds by requiring gettext 0.19.1 for builds from git (PR #797)
 * add gp_init_localedir() function to allow for non-standard installations (PR #796)
 
+translations:
+* updated traditional chinese
 ------------------------------------------------------------------------------
 libgphoto2 2.5.29 release
 
