@@ -1,12 +1,36 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += pentax/README.pentax pentax/ChangeLog pentax/exiftool_pentax_lens.txt
+EXTRA_DIST             += %reldir%/ChangeLog
+EXTRA_DIST             += %reldir%/exiftool_pentax_lens.txt
 
-camlibdoc_DATA += pentax/README.pentax
-EXTRA_LTLIBRARIES += pentax.la
+EXTRA_DIST             += %reldir%/README.pentax
+camlibdoc_DATA         += %reldir%/README.pentax
 
-pentax_la_SOURCES = pentax/pslr.c pentax/library.c pentax/pslr_enum.c pentax/pslr_lens.c pentax/pslr_model.c pentax/pslr_enum.h pentax/pslr.h pentax/pslr_lens.h pentax/pslr_model.h pentax/pslr_scsi.h pentax/exiftool_pentax_lens.txt pentax/js0n.c pentax/js0n.h
-pentax_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS) -DLIBGPHOTO2 -DPKTDATADIR='"/"'
-pentax_la_LDFLAGS = $(camlib_ldflags)
-pentax_la_DEPENDENCIES = $(camlib_dependencies)
-pentax_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES      += pentax.la
+
+pentax_la_SOURCES       =
+pentax_la_SOURCES      += %reldir%/pslr.c
+pentax_la_SOURCES      += %reldir%/library.c
+pentax_la_SOURCES      += %reldir%/pslr_enum.c
+pentax_la_SOURCES      += %reldir%/pslr_lens.c
+pentax_la_SOURCES      += %reldir%/pslr_model.c
+pentax_la_SOURCES      += %reldir%/pslr_enum.h
+pentax_la_SOURCES      += %reldir%/pslr.h
+pentax_la_SOURCES      += %reldir%/pslr_lens.h
+pentax_la_SOURCES      += %reldir%/pslr_model.h
+pentax_la_SOURCES      += %reldir%/pslr_scsi.h
+pentax_la_SOURCES      += %reldir%/exiftool_pentax_lens.txt
+pentax_la_SOURCES      += %reldir%/js0n.c
+pentax_la_SOURCES      += %reldir%/js0n.h
+
+pentax_la_CFLAGS        = $(camlib_cflags)
+pentax_la_CPPFLAGS      = $(camlib_cppflags)
+pentax_la_DEPENDENCIES  = $(camlib_dependencies)
+pentax_la_LDFLAGS       = $(camlib_ldflags)
+pentax_la_LIBADD        = $(camlib_libadd)
+
+pentax_la_CFLAGS       += $(NO_UNUSED_CFLAGS)
+
+pentax_la_CFLAGS       += -DLIBGPHOTO2
+pentax_la_CFLAGS       += -DPKTDATADIR='"/"'

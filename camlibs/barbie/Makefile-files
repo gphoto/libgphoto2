@@ -1,9 +1,15 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += barbie/Protocol.txt barbie/ChangeLog
-EXTRA_LTLIBRARIES += barbie.la
+EXTRA_DIST             += %reldir%/ChangeLog
+EXTRA_DIST             += %reldir%/Protocol.txt
 
-barbie_la_SOURCES = barbie/barbie.c
-barbie_la_LDFLAGS = $(camlib_ldflags)
-barbie_la_DEPENDENCIES = $(camlib_dependencies)
-barbie_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES      += barbie.la
+
+barbie_la_SOURCES       = %reldir%/barbie.c
+
+barbie_la_CFLAGS        = $(camlib_cflags)
+barbie_la_CPPFLAGS      = $(camlib_cppflags)
+barbie_la_DEPENDENCIES  = $(camlib_dependencies)
+barbie_la_LDFLAGS       = $(camlib_ldflags)
+barbie_la_LIBADD        = $(camlib_libadd)

@@ -1,11 +1,19 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_LTLIBRARIES += kodak_dc210.la
-EXTRA_DIST += kodak/dc210/ChangeLog kodak/dc210/TODO
+EXTRA_DIST                   += %reldir%/ChangeLog
+EXTRA_DIST                   += %reldir%/TODO
 
-kodak_dc210_la_SOURCES = \
-	kodak/dc210/dc210.c kodak/dc210/dc210.h \
-	kodak/dc210/library.c kodak/dc210/library.h
-kodak_dc210_la_LDFLAGS = $(camlib_ldflags)
-kodak_dc210_la_DEPENDENCIES = $(camlib_dependencies)
-kodak_dc210_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES            += kodak_dc210.la
+
+kodak_dc210_la_SOURCES        =
+kodak_dc210_la_SOURCES       += %reldir%/dc210.c
+kodak_dc210_la_SOURCES       += %reldir%/dc210.h
+kodak_dc210_la_SOURCES       += %reldir%/library.c
+kodak_dc210_la_SOURCES       += %reldir%/library.h
+
+kodak_dc210_la_CFLAGS        = $(camlib_cflags)
+kodak_dc210_la_CPPFLAGS      = $(camlib_cppflags)
+kodak_dc210_la_DEPENDENCIES  = $(camlib_dependencies)
+kodak_dc210_la_LDFLAGS       = $(camlib_ldflags)
+kodak_dc210_la_LIBADD        = $(camlib_libadd)

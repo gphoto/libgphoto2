@@ -1,11 +1,20 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += pccam600/README.pccam600 pccam600/ChangeLog
-camlibdoc_DATA += pccam600/README.pccam600
+EXTRA_DIST               += %reldir%/ChangeLog
 
-EXTRA_LTLIBRARIES += pccam600.la
+EXTRA_DIST               += %reldir%/README.pccam600
+camlibdoc_DATA           += %reldir%/README.pccam600
 
-pccam600_la_SOURCES = pccam600/pccam600.c pccam600/pccam600.h pccam600/library.c 
-pccam600_la_LDFLAGS = $(camlib_ldflags)
-pccam600_la_DEPENDENCIES = $(camlib_dependencies)
-pccam600_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES        += pccam600.la
+
+pccam600_la_SOURCES       =
+pccam600_la_SOURCES      += %reldir%/pccam600.c
+pccam600_la_SOURCES      += %reldir%/pccam600.h
+pccam600_la_SOURCES      += %reldir%/library.c
+
+pccam600_la_CFLAGS        = $(camlib_cflags)
+pccam600_la_CPPFLAGS      = $(camlib_cppflags)
+pccam600_la_DEPENDENCIES  = $(camlib_dependencies)
+pccam600_la_LDFLAGS       = $(camlib_ldflags)
+pccam600_la_LIBADD        = $(camlib_libadd)

@@ -1,16 +1,30 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += sierra/PROTOCOL sierra/ChangeLog sierra/MC-EU1-Protocol.txt
+EXTRA_DIST             += %reldir%/ChangeLog
+EXTRA_DIST             += %reldir%/MC-EU1-Protocol.txt
+EXTRA_DIST             += %reldir%/PROTOCOL
 
-EXTRA_LTLIBRARIES += sierra.la
 
-sierra_la_CPPFLAGS = $(AM_CPPFLAGS) $(CPPFLAGS) $(LIBEXIF_CFLAGS)
-sierra_la_SOURCES = \
-	sierra/sierra.c sierra/sierra.h \
-	sierra/library.c sierra/library.h \
-	sierra/sierra-usbwrap.c sierra/sierra-usbwrap.h \
-	sierra/sierra-desc.h sierra/sierra-desc.c \
-	sierra/nikon-desc.c sierra/olympus-desc.c sierra/epson-desc.c
-sierra_la_LDFLAGS = $(camlib_ldflags)
-sierra_la_DEPENDENCIES = $(camlib_dependencies)
-sierra_la_LIBADD = $(camlib_libadd) $(LIBEXIF_LIBS)
+EXTRA_LTLIBRARIES      += sierra.la
+
+sierra_la_SOURCES       =
+sierra_la_SOURCES      += %reldir%/sierra.c
+sierra_la_SOURCES      += %reldir%/sierra.h
+sierra_la_SOURCES      += %reldir%/library.c
+sierra_la_SOURCES      += %reldir%/library.h
+sierra_la_SOURCES      += %reldir%/sierra-usbwrap.c
+sierra_la_SOURCES      += %reldir%/sierra-usbwrap.h
+sierra_la_SOURCES      += %reldir%/sierra-desc.h
+sierra_la_SOURCES      += %reldir%/sierra-desc.c
+sierra_la_SOURCES      += %reldir%/nikon-desc.c
+sierra_la_SOURCES      += %reldir%/olympus-desc.c
+sierra_la_SOURCES      += %reldir%/epson-desc.c
+
+sierra_la_CFLAGS        = $(camlib_cflags)
+sierra_la_CPPFLAGS      = $(camlib_cppflags)
+sierra_la_DEPENDENCIES  = $(camlib_dependencies)
+sierra_la_LDFLAGS       = $(camlib_ldflags)
+sierra_la_LIBADD        = $(camlib_libadd)
+
+sierra_la_CPPFLAGS     += $(LIBEXIF_CFLAGS)
+sierra_la_LIBADD       += $(LIBEXIF_LIBS)

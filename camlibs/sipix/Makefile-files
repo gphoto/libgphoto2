@@ -1,29 +1,45 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += sipix/web2.html sipix/blink.c sipix/blink.txt \
-	sipix/xjpeg.c sipix/blink2.txt sipix/ChangeLog
+EXTRA_DIST                   += %reldir%/ChangeLog
+EXTRA_DIST                   += %reldir%/blink.c
+EXTRA_DIST                   += %reldir%/blink.txt
+EXTRA_DIST                   += %reldir%/blink2.txt
+EXTRA_DIST                   += %reldir%/web2.html
+EXTRA_DIST                   += %reldir%/xjpeg.c
+
 
 # Seems to be obsolete
-EXTRA_LTLIBRARIES += sipix_blink.la
+EXTRA_LTLIBRARIES            += sipix_blink.la
 
-sipix_blink_la_SOURCES	= sipix/blink.c
-sipix_blink_la_LDFLAGS = $(camlib_ldflags)
-sipix_blink_la_DEPENDENCIES = $(camlib_dependencies)
-sipix_blink_la_LIBADD = $(camlib_libadd)
+sipix_blink_la_SOURCES        = %reldir%/blink.c
 
-
-EXTRA_LTLIBRARIES += sipix_blink2.la
-
-sipix_blink2_la_SOURCES	= sipix/blink2.c
-sipix_blink2_la_LDFLAGS = $(camlib_ldflags)
-sipix_blink2_la_DEPENDENCIES = $(camlib_dependencies)
-sipix_blink2_la_CPPFLAGS = $(AM_CPPFLAGS) $(LIBJPEG_CFLAGS)
-sipix_blink2_la_LIBADD = $(camlib_libadd) $(LIBJPEG_LIBS)
+sipix_blink_la_CFLAGS         = $(camlib_cflags)
+sipix_blink_la_CPPFLAGS       = $(camlib_cppflags)
+sipix_blink_la_DEPENDENCIES   = $(camlib_dependencies)
+sipix_blink_la_LDFLAGS        = $(camlib_ldflags)
+sipix_blink_la_LIBADD         = $(camlib_libadd)
 
 
-EXTRA_LTLIBRARIES += sipix_web2.la
+EXTRA_LTLIBRARIES            += sipix_blink2.la
 
-sipix_web2_la_SOURCES = sipix/web2.c
-sipix_web2_la_LDFLAGS = $(camlib_ldflags)
-sipix_web2_la_DEPENDENCIES = $(camlib_dependencies)
-sipix_web2_la_LIBADD = $(camlib_libadd)
+sipix_blink2_la_SOURCES       = %reldir%/blink2.c
+
+sipix_blink2_la_CFLAGS        = $(camlib_cflags)
+sipix_blink2_la_CPPFLAGS      = $(camlib_cppflags)
+sipix_blink2_la_DEPENDENCIES  = $(camlib_dependencies)
+sipix_blink2_la_LDFLAGS       = $(camlib_ldflags)
+sipix_blink2_la_LIBADD        = $(camlib_libadd)
+
+sipix_blink2_la_CPPFLAGS     += $(LIBJPEG_CFLAGS)
+sipix_blink2_la_LIBADD       += $(LIBJPEG_LIBS)
+
+
+EXTRA_LTLIBRARIES            += sipix_web2.la
+
+sipix_web2_la_SOURCES         = %reldir%/web2.c
+
+sipix_web2_la_CFLAGS          = $(camlib_cflags)
+sipix_web2_la_CPPFLAGS        = $(camlib_cppflags)
+sipix_web2_la_DEPENDENCIES    = $(camlib_dependencies)
+sipix_web2_la_LDFLAGS         = $(camlib_ldflags)
+sipix_web2_la_LIBADD          = $(camlib_libadd)

@@ -1,14 +1,21 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += gsmart300/README.gsmart300 gsmart300/ChangeLog
-camlibdoc_DATA += gsmart300/README.gsmart300
+EXTRA_DIST                += %reldir%/ChangeLog
 
-EXTRA_LTLIBRARIES += gsmart300.la
+EXTRA_DIST                += %reldir%/README.gsmart300
+camlibdoc_DATA            += %reldir%/README.gsmart300
 
-gsmart300_la_SOURCES = \
-	gsmart300/gsmart300.c gsmart300/gsmart300.h \
-	gsmart300/library.c \
-	gsmart300/gsmart300-jpeg-header.h 
-gsmart300_la_LDFLAGS = $(camlib_ldflags)
-gsmart300_la_DEPENDENCIES = $(camlib_dependencies)
-gsmart300_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES         += gsmart300.la
+
+gsmart300_la_SOURCES       =
+gsmart300_la_SOURCES      += %reldir%/gsmart300.c
+gsmart300_la_SOURCES      += %reldir%/gsmart300.h
+gsmart300_la_SOURCES      += %reldir%/library.c
+gsmart300_la_SOURCES      += %reldir%/gsmart300-jpeg-header.h
+
+gsmart300_la_CFLAGS        = $(camlib_cflags)
+gsmart300_la_CPPFLAGS      = $(camlib_cppflags)
+gsmart300_la_DEPENDENCIES  = $(camlib_dependencies)
+gsmart300_la_LDFLAGS       = $(camlib_ldflags)
+gsmart300_la_LIBADD        = $(camlib_libadd)

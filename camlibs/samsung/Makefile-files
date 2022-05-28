@@ -1,9 +1,14 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_LTLIBRARIES += samsung.la
-EXTRA_DIST += samsung/ChangeLog
+EXTRA_DIST              += %reldir%/ChangeLog
 
-samsung_la_SOURCES = samsung/samsung.c
-samsung_la_LDFLAGS = $(camlib_ldflags)
-samsung_la_DEPENDENCIES = $(camlib_dependencies)
-samsung_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES       += samsung.la
+
+samsung_la_SOURCES       = %reldir%/samsung.c
+
+samsung_la_CFLAGS        = $(camlib_cflags)
+samsung_la_CPPFLAGS      = $(camlib_cppflags)
+samsung_la_DEPENDENCIES  = $(camlib_dependencies)
+samsung_la_LDFLAGS       = $(camlib_ldflags)
+samsung_la_LIBADD        = $(camlib_libadd)

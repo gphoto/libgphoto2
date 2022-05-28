@@ -1,12 +1,20 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += enigma13/STATUS enigma13/protocol.txt enigma13/README.enigma13 enigma13/ChangeLog
-camlibdoc_DATA += enigma13/README.enigma13
+EXTRA_DIST               += %reldir%/ChangeLog
 
-EXTRA_LTLIBRARIES += enigma13.la
+EXTRA_DIST               += %reldir%/README.enigma13
+camlibdoc_DATA           += %reldir%/README.enigma13
 
-enigma13_la_SOURCES = enigma13/enigma13.c
-enigma13_la_LDFLAGS = $(camlib_ldflags)
-enigma13_la_DEPENDENCIES = $(camlib_dependencies)
-enigma13_la_LIBADD = $(camlib_libadd)
+EXTRA_DIST               += %reldir%/STATUS
+EXTRA_DIST               += %reldir%/protocol.txt
 
+
+EXTRA_LTLIBRARIES        += enigma13.la
+
+enigma13_la_SOURCES       = %reldir%/enigma13.c
+
+enigma13_la_CFLAGS        = $(camlib_cflags)
+enigma13_la_CPPFLAGS      = $(camlib_cppflags)
+enigma13_la_DEPENDENCIES  = $(camlib_dependencies)
+enigma13_la_LDFLAGS       = $(camlib_ldflags)
+enigma13_la_LIBADD        = $(camlib_libadd)

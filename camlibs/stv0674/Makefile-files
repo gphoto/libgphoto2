@@ -1,12 +1,19 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += stv0674/Protocol stv0674/Changelog
+EXTRA_DIST              += %reldir%/Changelog
+EXTRA_DIST              += %reldir%/Protocol
 
-EXTRA_LTLIBRARIES += stv0674.la
 
-stv0674_la_SOURCES = \
-	stv0674/stv0674.c stv0674/stv0674.h \
-	stv0674/library.c stv0674/library.h
-stv0674_la_LDFLAGS = $(camlib_ldflags)
-stv0674_la_DEPENDENCIES = $(camlib_dependencies)
-stv0674_la_LIBADD = $(camlib_libadd)
+EXTRA_LTLIBRARIES       += stv0674.la
+
+stv0674_la_SOURCES       =
+stv0674_la_SOURCES      += %reldir%/stv0674.c
+stv0674_la_SOURCES      += %reldir%/stv0674.h
+stv0674_la_SOURCES      += %reldir%/library.c
+stv0674_la_SOURCES      += %reldir%/library.h
+
+stv0674_la_CFLAGS        = $(camlib_cflags)
+stv0674_la_CPPFLAGS      = $(camlib_cppflags)
+stv0674_la_DEPENDENCIES  = $(camlib_dependencies)
+stv0674_la_LDFLAGS       = $(camlib_ldflags)
+stv0674_la_LIBADD        = $(camlib_libadd)

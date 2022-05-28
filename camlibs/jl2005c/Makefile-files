@@ -1,20 +1,32 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += jl2005c/README.jl2005c jl2005c/README.jl2005bcd-compression jl2005c/ChangeLog
-camlibdoc_DATA += jl2005c/README.jl2005c jl2005c/README.jl2005bcd-compression
+EXTRA_DIST              += %reldir%/README.jl2005c
+camlibdoc_DATA          += %reldir%/README.jl2005c
 
-EXTRA_LTLIBRARIES += jl2005c.la
+EXTRA_DIST              += %reldir%/README.jl2005bcd-compression
+camlibdoc_DATA          += %reldir%/README.jl2005bcd-compression
 
-jl2005c_la_SOURCES = jl2005c/library.c\
-		    jl2005c/jl2005c.c\
-		    jl2005c/jpeg_memsrcdest.c \
-		    jl2005c/jpeg_memsrcdest.h \
-		    jl2005c/jl2005bcd_decompress.c\
-		    jl2005c/jl2005bcd_decompress.h\
-		    jl2005c/jl2005c.h\
-		    jl2005c/img_enhance.c\
-		    jl2005c/img_enhance.h
-jl2005c_la_LDFLAGS = $(camlib_ldflags)
-jl2005c_la_DEPENDENCIES = $(camlib_dependencies)
-jl2005c_la_LIBADD = $(camlib_libadd) $(LIBJPEG_LIBS)
-jl2005c_la_CPPFLAGS = $(AM_CPPFLAGS) $(LIBJPEG_CFLAGS)
+EXTRA_DIST              += %reldir%/ChangeLog
+
+
+EXTRA_LTLIBRARIES       += jl2005c.la
+
+jl2005c_la_SOURCES       =
+jl2005c_la_SOURCES      += %reldir%/library.c
+jl2005c_la_SOURCES      += %reldir%/jl2005c.c
+jl2005c_la_SOURCES      += %reldir%/jpeg_memsrcdest.c
+jl2005c_la_SOURCES      += %reldir%/jpeg_memsrcdest.h
+jl2005c_la_SOURCES      += %reldir%/jl2005bcd_decompress.c
+jl2005c_la_SOURCES      += %reldir%/jl2005bcd_decompress.h
+jl2005c_la_SOURCES      += %reldir%/jl2005c.h
+jl2005c_la_SOURCES      += %reldir%/img_enhance.c
+jl2005c_la_SOURCES      += %reldir%/img_enhance.h
+
+jl2005c_la_CFLAGS        = $(camlib_cflags)
+jl2005c_la_CPPFLAGS      = $(camlib_cppflags)
+jl2005c_la_DEPENDENCIES  = $(camlib_dependencies)
+jl2005c_la_LDFLAGS       = $(camlib_ldflags)
+jl2005c_la_LIBADD        = $(camlib_libadd)
+
+jl2005c_la_CPPFLAGS     += $(LIBJPEG_CFLAGS)
+jl2005c_la_LIBADD       += $(LIBJPEG_LIBS)

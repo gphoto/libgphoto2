@@ -1,11 +1,21 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += pccam300/README.pccam300 pccam300/pccam300-lsusb.txt pccam300/ChangeLog
-camlibdoc_DATA += pccam300/README.pccam300
+EXTRA_DIST               += %reldir%/ChangeLog
+EXTRA_DIST               += %reldir%/pccam300-lsusb.txt
 
-EXTRA_LTLIBRARIES += pccam300.la
+EXTRA_DIST               += %reldir%/README.pccam300
+camlibdoc_DATA           += %reldir%/README.pccam300
 
-pccam300_la_SOURCES = pccam300/pccam300.c pccam300/pccam300.h pccam300/library.c 
-pccam300_la_LDFLAGS = $(camlib_ldflags)
-pccam300_la_DEPENDENCIES = $(camlib_dependencies)
-pccam300_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES        += pccam300.la
+
+pccam300_la_SOURCES       =
+pccam300_la_SOURCES      += %reldir%/pccam300.c
+pccam300_la_SOURCES      += %reldir%/pccam300.h
+pccam300_la_SOURCES      += %reldir%/library.c
+
+pccam300_la_CFLAGS        = $(camlib_cflags)
+pccam300_la_CPPFLAGS      = $(camlib_cppflags)
+pccam300_la_DEPENDENCIES  = $(camlib_dependencies)
+pccam300_la_LDFLAGS       = $(camlib_ldflags)
+pccam300_la_LIBADD        = $(camlib_libadd)

@@ -1,13 +1,19 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += clicksmart310/README.clicksmart310
-camlibdoc_DATA += clicksmart310/README.clicksmart310
+EXTRA_DIST                    += %reldir%/README.clicksmart310
+camlibdoc_DATA                += %reldir%/README.clicksmart310
 
-EXTRA_LTLIBRARIES += clicksmart310.la
 
-clicksmart310_la_SOURCES = \
-	clicksmart310/library.c \
-	clicksmart310/clicksmart.c clicksmart310/clicksmart.h \
-	clicksmart310/spca50x-jpeg-header.h
-clicksmart310_la_LDFLAGS = $(camlib_ldflags)
-clicksmart310_la_LIBADD = $(camlib_libadd)
+EXTRA_LTLIBRARIES             += clicksmart310.la
+
+clicksmart310_la_SOURCES       =
+clicksmart310_la_SOURCES      += %reldir%/library.c
+clicksmart310_la_SOURCES      += %reldir%/clicksmart.c
+clicksmart310_la_SOURCES      += %reldir%/clicksmart.h
+clicksmart310_la_SOURCES      += %reldir%/spca50x-jpeg-header.h
+
+clicksmart310_la_CFLAGS        = $(camlib_cflags)
+clicksmart310_la_CPPFLAGS      = $(camlib_cppflags)
+clicksmart310_la_DEPENDENCIES  = $(camlib_dependencies)
+clicksmart310_la_LDFLAGS       = $(camlib_ldflags)
+clicksmart310_la_LIBADD        = $(camlib_libadd)

@@ -1,14 +1,29 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += docupen/ChangeLog
+EXTRA_DIST              += %reldir%/ChangeLog
 
-#EXTRA_DIST  += docupen/README.docupen
-#camlibdoc_DATA += docupen/README.docupen
+#EXTRA_DIST             += docupen/README.docupen
+#camlibdoc_DATA         += docupen/README.docupen
 
-EXTRA_LTLIBRARIES += docupen.la
 
-docupen_la_SOURCES = docupen/docupen.c docupen/cache.c docupen/huffman.c docupen/image.c docupen/calibration.c docupen/docupen.h docupen/huffman.h
-docupen_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS) @LIBGD_CFLAGS@
-docupen_la_LDFLAGS = $(camlib_ldflags)
-docupen_la_DEPENDENCIES = $(camlib_dependencies)
-docupen_la_LIBADD = $(camlib_libadd) @LIBGD_LIBS@
+EXTRA_LTLIBRARIES       += docupen.la
+
+docupen_la_SOURCES       =
+docupen_la_SOURCES      += %reldir%/cache.c
+docupen_la_SOURCES      += %reldir%/calibration.c
+docupen_la_SOURCES      += %reldir%/docupen.c
+docupen_la_SOURCES      += %reldir%/docupen.h
+docupen_la_SOURCES      += %reldir%/huffman.c
+docupen_la_SOURCES      += %reldir%/huffman.h
+docupen_la_SOURCES      += %reldir%/image.c
+
+docupen_la_CFLAGS        = $(camlib_cflags)
+docupen_la_CPPFLAGS      = $(camlib_cppflags)
+docupen_la_DEPENDENCIES  = $(camlib_dependencies)
+docupen_la_LDFLAGS       = $(camlib_ldflags)
+docupen_la_LIBADD        = $(camlib_libadd)
+
+docupen_la_CFLAGS       += $(NO_UNUSED_CFLAGS)
+
+docupen_la_CFLAGS       += @LIBGD_CFLAGS@
+docupen_la_LIBADD       += @LIBGD_LIBS@

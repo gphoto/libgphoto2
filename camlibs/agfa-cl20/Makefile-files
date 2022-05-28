@@ -1,17 +1,24 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += \
-	agfa-cl20/README.agfa-cl20 \
-	agfa-cl20/STATUS agfa-cl20/ChangeLog \
-	agfa-cl20/protocol.txt agfa-cl20/protocol2.txt \
-	agfa-cl20/commands.txt \
-	agfa-cl20/pic-header.txt agfa-cl20/RANDOM
+EXTRA_DIST                += %reldir%/ChangeLog
+EXTRA_DIST                += %reldir%/RANDOM
 
-camlibdoc_DATA += agfa-cl20/README.agfa-cl20
+EXTRA_DIST                += %reldir%/README.agfa-cl20
+camlibdoc_DATA            += %reldir%/README.agfa-cl20
 
-EXTRA_LTLIBRARIES += agfa_cl20.la
+EXTRA_DIST                += %reldir%/STATUS
+EXTRA_DIST                += %reldir%/commands.txt
+EXTRA_DIST                += %reldir%/pic-header.txt
+EXTRA_DIST                += %reldir%/protocol.txt
+EXTRA_DIST                += %reldir%/protocol2.txt
 
-agfa_cl20_la_SOURCES = agfa-cl20/agfa_cl20.c
-agfa_cl20_la_LDFLAGS = $(camlib_ldflags)
-agfa_cl20_la_DEPENDENCIES = $(camlib_dependencies)
-agfa_cl20_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES         += agfa_cl20.la
+
+agfa_cl20_la_SOURCES       = %reldir%/agfa_cl20.c
+
+agfa_cl20_la_CFLAGS        = $(camlib_cflags)
+agfa_cl20_la_CPPFLAGS      = $(camlib_cppflags)
+agfa_cl20_la_DEPENDENCIES  = $(camlib_dependencies)
+agfa_cl20_la_LDFLAGS       = $(camlib_ldflags)
+agfa_cl20_la_LIBADD        = $(camlib_libadd)

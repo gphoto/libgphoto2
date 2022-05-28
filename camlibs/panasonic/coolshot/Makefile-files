@@ -1,13 +1,20 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += panasonic/coolshot/README.panasonic-coolshot panasonic/coolshot/ChangeLog
-camlibdoc_DATA += panasonic/coolshot/README.panasonic-coolshot
+EXTRA_DIST                         += %reldir%/ChangeLog
 
-EXTRA_LTLIBRARIES += panasonic_coolshot.la
+EXTRA_DIST                         += %reldir%/README.panasonic-coolshot
+camlibdoc_DATA                     += %reldir%/README.panasonic-coolshot
 
-panasonic_coolshot_la_SOURCES = \
-	panasonic/coolshot/coolshot.c \
-	panasonic/coolshot/library.c panasonic/coolshot/library.h
-panasonic_coolshot_la_LDFLAGS = $(camlib_ldflags)
-panasonic_coolshot_la_DEPENDENCIES = $(camlib_dependencies)
-panasonic_coolshot_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES                  += panasonic_coolshot.la
+
+panasonic_coolshot_la_SOURCES       =
+panasonic_coolshot_la_SOURCES      += %reldir%/coolshot.c
+panasonic_coolshot_la_SOURCES      += %reldir%/library.c
+panasonic_coolshot_la_SOURCES      += %reldir%/library.h
+
+panasonic_coolshot_la_CFLAGS        = $(camlib_cflags)
+panasonic_coolshot_la_CPPFLAGS      = $(camlib_cppflags)
+panasonic_coolshot_la_DEPENDENCIES  = $(camlib_dependencies)
+panasonic_coolshot_la_LDFLAGS       = $(camlib_ldflags)
+panasonic_coolshot_la_LIBADD        = $(camlib_libadd)

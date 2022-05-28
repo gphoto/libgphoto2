@@ -1,13 +1,18 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_LTLIBRARIES += sony_dscf55.la
-EXTRA_DIST += sonydscf55/ChangeLog sonydscf55/TODO
+EXTRA_DIST                  += %reldir%/ChangeLog
+EXTRA_DIST                  += %reldir%/TODO
 
-sony_dscf55_la_SOURCES =
-sony_dscf55_la_SOURCES += sonydscf55/sony.c
-sony_dscf55_la_SOURCES += sonydscf55/sony.h
-sony_dscf55_la_SOURCES += sonydscf55/camera.c
 
-sony_dscf55_la_LDFLAGS = $(camlib_ldflags)
-sony_dscf55_la_DEPENDENCIES = $(camlib_dependencies)
-sony_dscf55_la_LIBADD = $(camlib_libadd)
+EXTRA_LTLIBRARIES           += sony_dscf55.la
+
+sony_dscf55_la_SOURCES       =
+sony_dscf55_la_SOURCES      += %reldir%/sony.c
+sony_dscf55_la_SOURCES      += %reldir%/sony.h
+sony_dscf55_la_SOURCES      += %reldir%/camera.c
+
+sony_dscf55_la_CFLAGS        = $(camlib_cflags)
+sony_dscf55_la_CPPFLAGS      = $(camlib_cppflags)
+sony_dscf55_la_DEPENDENCIES  = $(camlib_dependencies)
+sony_dscf55_la_LDFLAGS       = $(camlib_ldflags)
+sony_dscf55_la_LIBADD        = $(camlib_libadd)

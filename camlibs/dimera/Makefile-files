@@ -1,13 +1,21 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += dimera/CREDITS dimera/Protocol.txt dimera/ChangeLog dimera/TODO
+EXTRA_DIST                 += %reldir%/CREDITS
+EXTRA_DIST                 += %reldir%/ChangeLog
+EXTRA_DIST                 += %reldir%/Protocol.txt
+EXTRA_DIST                 += %reldir%/TODO
 
-EXTRA_LTLIBRARIES += dimera3500.la
 
-dimera3500_la_SOURCES =\
-	dimera/dimera3500.c \
-	dimera/mesalib.c dimera/mesalib.h\
-	dimera/dimeratab.h
-dimera3500_la_LDFLAGS = $(camlib_ldflags)
-dimera3500_la_DEPENDENCIES = $(camlib_dependencies)
-dimera3500_la_LIBADD = $(camlib_libadd)
+EXTRA_LTLIBRARIES          += dimera3500.la
+
+dimera3500_la_SOURCES       =
+dimera3500_la_SOURCES      += %reldir%/dimera3500.c
+dimera3500_la_SOURCES      += %reldir%/mesalib.c
+dimera3500_la_SOURCES      += %reldir%/mesalib.h
+dimera3500_la_SOURCES      += %reldir%/dimeratab.h
+
+dimera3500_la_CFLAGS        = $(camlib_cflags)
+dimera3500_la_CPPFLAGS      = $(camlib_cppflags)
+dimera3500_la_DEPENDENCIES  = $(camlib_dependencies)
+dimera3500_la_LDFLAGS       = $(camlib_ldflags)
+dimera3500_la_LIBADD        = $(camlib_libadd)

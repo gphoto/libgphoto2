@@ -1,16 +1,33 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += st2205/README.st2205-compression st2205/README.st2205
-camlibdoc_DATA += st2205/README.st2205-compression st2205/README.st2205
+EXTRA_DIST             += %reldir%/README.st2205-compression
+camlibdoc_DATA         += %reldir%/README.st2205-compression
 
-EXTRA_LTLIBRARIES += st2205.la
+EXTRA_DIST             += %reldir%/README.st2205
+camlibdoc_DATA         += %reldir%/README.st2205
 
-st2205_la_SOURCES = st2205/library.c st2205/st2205.c st2205/st2205.h st2205/st2205_decode.c st2205/st2205_tables.c
-st2205_la_LDFLAGS = $(camlib_ldflags)
-st2205_la_DEPENDENCIES = $(camlib_dependencies)
-st2205_la_LIBADD = $(camlib_libadd) @LIBGD_LIBS@ $(LTLIBICONV)
-st2205_la_CFLAGS = @LIBGD_CFLAGS@
+
+EXTRA_LTLIBRARIES      += st2205.la
+
+st2205_la_SOURCES       =
+
+st2205_la_SOURCES      += %reldir%/library.c
+st2205_la_SOURCES      += %reldir%/st2205.c
+st2205_la_SOURCES      += %reldir%/st2205.h
+st2205_la_SOURCES      += %reldir%/st2205_decode.c
+st2205_la_SOURCES      += %reldir%/st2205_tables.c
+
+st2205_la_CFLAGS        = $(camlib_cflags)
+st2205_la_CPPFLAGS      = $(camlib_cppflags)
+st2205_la_DEPENDENCIES  = $(camlib_dependencies)
+st2205_la_LDFLAGS       = $(camlib_ldflags)
+st2205_la_LIBADD        = $(camlib_libadd)
+
+st2205_la_CFLAGS       += @LIBGD_CFLAGS@
+st2205_la_LIBADD       += @LIBGD_LIBS@
+
+st2205_la_LIBADD       += $(LTLIBICONV)
 
 # On systems such as mingw/Windows, mmap(2) is not part of the
 # standard library and needs an explicit library to link against.
-st2205_la_LIBADD += $(MMAP_LIBS)
+st2205_la_LIBADD       += $(MMAP_LIBS)

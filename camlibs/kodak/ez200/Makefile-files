@@ -1,10 +1,16 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += kodak/ez200/Protocol.txt kodak/ez200/ez200-lsusb.txt kodak/ez200/ChangeLog
+EXTRA_DIST                  += %reldir%/ChangeLog
+EXTRA_DIST                  += %reldir%/Protocol.txt
+EXTRA_DIST                  += %reldir%/ez200-lsusb.txt
 
-EXTRA_LTLIBRARIES += kodak_ez200.la
 
-kodak_ez200_la_SOURCES = kodak/ez200/ez200.c 
-kodak_ez200_la_LDFLAGS = $(camlib_ldflags)
-kodak_ez200_la_DEPENDENCIES = $(camlib_dependencies)
-kodak_ez200_la_LIBADD = $(camlib_libadd)
+EXTRA_LTLIBRARIES           += kodak_ez200.la
+
+kodak_ez200_la_SOURCES       = %reldir%/ez200.c
+
+kodak_ez200_la_CFLAGS        = $(camlib_cflags)
+kodak_ez200_la_CPPFLAGS      = $(camlib_cppflags)
+kodak_ez200_la_DEPENDENCIES  = $(camlib_dependencies)
+kodak_ez200_la_LDFLAGS       = $(camlib_ldflags)
+kodak_ez200_la_LIBADD        = $(camlib_libadd)

@@ -1,4 +1,4 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
 # If you use this as template for a real camlib (say 'foobar.la'),
 # make sure to change the "noinst_" at the beginning of the following
@@ -16,15 +16,19 @@
 # Also, do not forget to add any *.c source files containing
 # translated strings to POTFILES.in.
 
-EXTRA_DIST += template/ChangeLog
+EXTRA_DIST               += %reldir%/ChangeLog
 
-EXTRA_DIST  += template/README.template
-noinst_DATA += template/README.template
+EXTRA_DIST               += %reldir%/README.template
+noinst_DATA              += %reldir%/README.template
 
-noinst_LTLIBRARIES += template.la
+noinst_LTLIBRARIES       += template.la
 
-template_la_SOURCES = template/template.c
-template_la_CFLAGS = $(AM_CFLAGS) $(NO_UNUSED_CFLAGS) $(CFLAGS)
-template_la_LDFLAGS = $(camlib_ldflags)
-template_la_DEPENDENCIES = $(camlib_dependencies)
-template_la_LIBADD = $(camlib_libadd)
+template_la_SOURCES       = %reldir%/template.c
+
+template_la_CFLAGS        = $(camlib_cflags)
+template_la_CPPFLAGS      = $(camlib_cppflags)
+template_la_DEPENDENCIES  = $(camlib_dependencies)
+template_la_LDFLAGS       = $(camlib_ldflags)
+template_la_LIBADD        = $(camlib_libadd)
+
+template_la_CFLAGS       += $(NO_UNUSED_CFLAGS)

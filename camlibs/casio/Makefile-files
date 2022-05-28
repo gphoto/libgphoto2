@@ -1,16 +1,24 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += casio/PROTOCOL.txt casio/ChangeLog
+EXTRA_DIST               += %reldir%/ChangeLog
+EXTRA_DIST               += %reldir%/PROTOCOL.txt
 
-EXTRA_LTLIBRARIES += casio_qv.la
 
-casio_qv_la_SOURCES =		\
-	casio/casio-qv.c				\
-	casio/casio-qv-commands.c casio/casio-qv-commands.h \
-	casio/camtojpeg.c casio/camtojpeg.h			\
-	casio/cam2jpgtab.h casio/jpegtab_f.h		\
-	casio/ycctoppm.c casio/ycctoppm.h
+EXTRA_LTLIBRARIES        += casio_qv.la
 
-casio_qv_la_LDFLAGS = $(camlib_ldflags)
-casio_qv_la_DEPENDENCIES = $(camlib_dependencies)
-casio_qv_la_LIBADD = $(camlib_libadd)
+casio_qv_la_SOURCES       =
+casio_qv_la_SOURCES      += %reldir%/casio-qv.c
+casio_qv_la_SOURCES      += %reldir%/casio-qv-commands.c
+casio_qv_la_SOURCES      += %reldir%/casio-qv-commands.h
+casio_qv_la_SOURCES      += %reldir%/camtojpeg.c
+casio_qv_la_SOURCES      += %reldir%/camtojpeg.h
+casio_qv_la_SOURCES      += %reldir%/cam2jpgtab.h
+casio_qv_la_SOURCES      += %reldir%/jpegtab_f.h
+casio_qv_la_SOURCES      += %reldir%/ycctoppm.c
+casio_qv_la_SOURCES      += %reldir%/ycctoppm.h
+
+casio_qv_la_CFLAGS        = $(camlib_cflags)
+casio_qv_la_CPPFLAGS      = $(camlib_cppflags)
+casio_qv_la_DEPENDENCIES  = $(camlib_dependencies)
+casio_qv_la_LDFLAGS       = $(camlib_ldflags)
+casio_qv_la_LIBADD        = $(camlib_libadd)

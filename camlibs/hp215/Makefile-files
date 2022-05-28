@@ -1,9 +1,18 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_LTLIBRARIES += hp215.la
-EXTRA_DIST += hp215/ChangeLog hp215/PROTOCOL
+EXTRA_DIST            += %reldir%/ChangeLog
+EXTRA_DIST            += %reldir%/PROTOCOL
 
-hp215_la_SOURCES = hp215/hp215.c hp215/hp215.h hp215/crctab.h
-hp215_la_LDFLAGS = $(camlib_ldflags)
-hp215_la_DEPENDENCIES = $(camlib_dependencies)
-hp215_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES     += hp215.la
+
+hp215_la_SOURCES       =
+hp215_la_SOURCES      += %reldir%/hp215.c
+hp215_la_SOURCES      += %reldir%/hp215.h
+hp215_la_SOURCES      += %reldir%/crctab.h
+
+hp215_la_CFLAGS        = $(camlib_cflags)
+hp215_la_CPPFLAGS      = $(camlib_cppflags)
+hp215_la_DEPENDENCIES  = $(camlib_dependencies)
+hp215_la_LDFLAGS       = $(camlib_ldflags)
+hp215_la_LIBADD        = $(camlib_libadd)

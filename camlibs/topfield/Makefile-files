@@ -1,9 +1,25 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_LTLIBRARIES += topfield.la
-EXTRA_DIST += topfield/ChangeLog
-topfield_la_SOURCES =  topfield/crc16.c topfield/crc16.h topfield/tf_bytes.c topfield/tf_bytes.h topfield/mjd.c topfield/mjd.h \
-			topfield/puppy.c topfield/usb_io.h topfield/usb_io.c
-topfield_la_LDFLAGS = $(camlib_ldflags)
-topfield_la_DEPENDENCIES = $(camlib_dependencies)
-topfield_la_LIBADD = $(camlib_libadd) $(LTLIBICONV)
+EXTRA_DIST               += %reldir%/ChangeLog
+
+
+EXTRA_LTLIBRARIES        += topfield.la
+
+topfield_la_SOURCES       =
+topfield_la_SOURCES      += %reldir%/crc16.c
+topfield_la_SOURCES      += %reldir%/crc16.h
+topfield_la_SOURCES      += %reldir%/tf_bytes.c
+topfield_la_SOURCES      += %reldir%/tf_bytes.h
+topfield_la_SOURCES      += %reldir%/mjd.c
+topfield_la_SOURCES      += %reldir%/mjd.h
+topfield_la_SOURCES      += %reldir%/puppy.c
+topfield_la_SOURCES      += %reldir%/usb_io.h
+topfield_la_SOURCES      += %reldir%/usb_io.c
+
+topfield_la_CFLAGS        = $(camlib_cflags)
+topfield_la_CPPFLAGS      = $(camlib_cppflags)
+topfield_la_DEPENDENCIES  = $(camlib_dependencies)
+topfield_la_LDFLAGS       = $(camlib_ldflags)
+topfield_la_LIBADD        = $(camlib_libadd)
+
+topfield_la_LIBADD       += $(LTLIBICONV)

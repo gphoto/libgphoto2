@@ -1,22 +1,33 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += digigr8/README.905C
-EXTRA_DIST += digigr8/README.9050
-EXTRA_DIST += digigr8/README.9051
-EXTRA_DIST += digigr8/README.9052
-EXTRA_DIST += digigr8/README.913D
-EXTRA_DIST += digigr8/ChangeLog
-camlibdoc_DATA += digigr8/README.905C
-camlibdoc_DATA += digigr8/README.9050
-camlibdoc_DATA += digigr8/README.9051
-camlibdoc_DATA += digigr8/README.9052
-camlibdoc_DATA += digigr8/README.913D
-EXTRA_LTLIBRARIES += digigr8.la
+EXTRA_DIST              += %reldir%/ChangeLog
 
-digigr8_la_SOURCES = \
-	digigr8/library.c \
-	digigr8/digigr8.c digigr8/digigr8.h \
-	digigr8/digi_postprocess.c 
-digigr8_la_LDFLAGS = $(camlib_ldflags)
-digigr8_la_DEPENDENCIES = $(camlib_dependencies)
-digigr8_la_LIBADD = $(camlib_libadd)
+EXTRA_DIST              += %reldir%/README.9050
+camlibdoc_DATA          += %reldir%/README.9050
+
+EXTRA_DIST              += %reldir%/README.9051
+camlibdoc_DATA          += %reldir%/README.9051
+
+EXTRA_DIST              += %reldir%/README.9052
+camlibdoc_DATA          += %reldir%/README.9052
+
+EXTRA_DIST              += %reldir%/README.905C
+camlibdoc_DATA          += %reldir%/README.905C
+
+EXTRA_DIST              += %reldir%/README.913D
+camlibdoc_DATA          += %reldir%/README.913D
+
+
+EXTRA_LTLIBRARIES       += digigr8.la
+
+digigr8_la_SOURCES       =
+digigr8_la_SOURCES      += %reldir%/library.c
+digigr8_la_SOURCES      += %reldir%/digigr8.c
+digigr8_la_SOURCES      += %reldir%/digigr8.h
+digigr8_la_SOURCES      += %reldir%/digi_postprocess.c
+
+digigr8_la_CFLAGS        = $(camlib_cflags)
+digigr8_la_CPPFLAGS      = $(camlib_cppflags)
+digigr8_la_DEPENDENCIES  = $(camlib_dependencies)
+digigr8_la_LDFLAGS       = $(camlib_ldflags)
+digigr8_la_LIBADD        = $(camlib_libadd)

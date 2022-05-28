@@ -1,14 +1,22 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += largan/lmini/README.largan-lmini largan/lmini/ChangeLog
-camlibdoc_DATA += largan/lmini/README.largan-lmini
+EXTRA_DIST                     += %reldir%/ChangeLog
 
-EXTRA_LTLIBRARIES += largan.la
+EXTRA_DIST                     += %reldir%/README.largan-lmini
+camlibdoc_DATA                 += %reldir%/README.largan-lmini
 
-largan_la_SOURCES = \
-	largan/lmini/largan.c \
-	largan/lmini/lmini.c largan/lmini/lmini.h \
-	largan/lmini/lmini_ccd.c largan/lmini/lmini_ccd.h
-largan_la_LDFLAGS = $(camlib_ldflags)
-largan_la_DEPENDENCIES = $(camlib_dependencies)
-largan_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES      += largan.la
+
+largan_la_SOURCES       =
+largan_la_SOURCES      += %reldir%/largan.c
+largan_la_SOURCES      += %reldir%/lmini.c
+largan_la_SOURCES      += %reldir%/lmini.h
+largan_la_SOURCES      += %reldir%/lmini_ccd.c
+largan_la_SOURCES      += %reldir%/lmini_ccd.h
+
+largan_la_CFLAGS        = $(camlib_cflags)
+largan_la_CPPFLAGS      = $(camlib_cppflags)
+largan_la_DEPENDENCIES  = $(camlib_dependencies)
+largan_la_LDFLAGS       = $(camlib_ldflags)
+largan_la_LIBADD        = $(camlib_libadd)

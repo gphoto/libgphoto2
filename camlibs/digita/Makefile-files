@@ -1,14 +1,19 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_LTLIBRARIES += digita.la
-EXTRA_DIST += digita/ChangeLog
+EXTRA_DIST             += %reldir%/ChangeLog
 
-digita_la_SOURCES = \
-	digita/digita.c \
-	digita/serial.c \
-	digita/usb.c \
-	digita/commands.c \
-	digita/digita.h
-digita_la_LDFLAGS = $(camlib_ldflags)
-digita_la_DEPENDENCIES = $(camlib_dependencies)
-digita_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES      += digita.la
+
+digita_la_SOURCES       =
+digita_la_SOURCES      += %reldir%/digita.c
+digita_la_SOURCES      += %reldir%/serial.c
+digita_la_SOURCES      += %reldir%/usb.c
+digita_la_SOURCES      += %reldir%/commands.c
+digita_la_SOURCES      += %reldir%/digita.h
+
+digita_la_CFLAGS        = $(camlib_cflags)
+digita_la_CPPFLAGS      = $(camlib_cppflags)
+digita_la_DEPENDENCIES  = $(camlib_dependencies)
+digita_la_LDFLAGS       = $(camlib_ldflags)
+digita_la_LIBADD        = $(camlib_libadd)

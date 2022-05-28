@@ -1,22 +1,28 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += minolta/dimagev/README.minolta-dimagev minolta/dimagev/COPYING 
-camlibdoc_DATA += minolta/dimagev/README.minolta-dimagev
+EXTRA_DIST              += %reldir%/COPYING
 
-EXTRA_LTLIBRARIES += dimagev.la
+EXTRA_DIST              += %reldir%/README.minolta-dimagev
+camlibdoc_DATA          += %reldir%/README.minolta-dimagev
 
-dimagev_la_SOURCES = \
-	minolta/dimagev/capture.c \
-	minolta/dimagev/data.c \
-	minolta/dimagev/delete.c \
-	minolta/dimagev/dimagev.c \
-	minolta/dimagev/dimagev.h \
-	minolta/dimagev/download.c \
-	minolta/dimagev/info.c \
-	minolta/dimagev/packet.c \
-	minolta/dimagev/status.c \
-	minolta/dimagev/upload.c \
-	minolta/dimagev/util.c
-dimagev_la_LDFLAGS = $(camlib_ldflags)
-dimagev_la_DEPENDENCIES = $(camlib_dependencies)
-dimagev_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES       += dimagev.la
+
+dimagev_la_SOURCES       =
+dimagev_la_SOURCES      += %reldir%/capture.c
+dimagev_la_SOURCES      += %reldir%/data.c
+dimagev_la_SOURCES      += %reldir%/delete.c
+dimagev_la_SOURCES      += %reldir%/dimagev.c
+dimagev_la_SOURCES      += %reldir%/dimagev.h
+dimagev_la_SOURCES      += %reldir%/download.c
+dimagev_la_SOURCES      += %reldir%/info.c
+dimagev_la_SOURCES      += %reldir%/packet.c
+dimagev_la_SOURCES      += %reldir%/status.c
+dimagev_la_SOURCES      += %reldir%/upload.c
+dimagev_la_SOURCES      += %reldir%/util.c
+
+dimagev_la_CFLAGS        = $(camlib_cflags)
+dimagev_la_CPPFLAGS      = $(camlib_cppflags)
+dimagev_la_DEPENDENCIES  = $(camlib_dependencies)
+dimagev_la_LDFLAGS       = $(camlib_ldflags)
+dimagev_la_LIBADD        = $(camlib_libadd)

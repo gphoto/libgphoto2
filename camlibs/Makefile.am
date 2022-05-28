@@ -25,7 +25,7 @@ SUBDIRS = .
 ########################################################################
 # Define the common variables added to in the included Makefile-files
 CLEANFILES =
-EXTRA_DIST = camlib.sym
+EXTRA_DIST =
 camlibdoc_DATA =
 localization_DATA =
 localizationdir =
@@ -59,22 +59,30 @@ camlib_LTLIBRARIES = $(INSTALL_THESE_CAMLIBS)
 # i.e. here.
 
 camlib_dependencies =
-camlib_dependencies += $(top_srcdir)/camlibs/camlib.sym
 
 camlib_ldflags =
 camlib_ldflags += -module
 camlib_ldflags += -no-undefined
 camlib_ldflags += -avoid-version
 camlib_ldflags += -export-dynamic
-camlib_ldflags += -export-symbols '$(top_srcdir)/camlibs/camlib.sym'
+
+EXTRA_DIST          += camlib.sym
+camlib_dependencies += $(top_srcdir)/camlibs/camlib.sym
+camlib_ldflags      += -export-symbols '$(top_srcdir)/camlibs/camlib.sym'
+
 camlib_ldflags += -rpath '$(camlibdir)'
 
 camlib_libadd =
 camlib_libadd += $(top_builddir)/libgphoto2/libgphoto2.la
 camlib_libadd += $(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la
 
-AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)
-AM_CPPFLAGS += -I$(top_srcdir)/libgphoto2_port
+camlib_cflags  =
+
+camlib_cppflags  =
+camlib_cppflags += $(AM_CPPFLAGS)
+camlib_cppflags += -I$(top_srcdir)
+camlib_cppflags += -I$(top_builddir)
+camlib_cppflags += -I$(top_srcdir)/libgphoto2_port
 
 
 ########################################################################

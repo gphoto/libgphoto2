@@ -1,19 +1,30 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += \
-	stv0680/CREDITS stv0680/ChangeLog stv0680/LICENCE \
-	stv0680/README.pdf \
-	stv0680/680_commands_and_communication_sdk.pdf.gz
+EXTRA_DIST              += %reldir%/680_commands_and_communication_sdk.pdf.gz
+EXTRA_DIST              += %reldir%/CREDITS
+EXTRA_DIST              += %reldir%/ChangeLog
+EXTRA_DIST              += %reldir%/LICENCE
+EXTRA_DIST              += %reldir%/README.pdf
 
-EXTRA_LTLIBRARIES += stv0680.la
 
-stv0680_la_SOURCES = \
-	stv0680/stv0680.c stv0680/stv0680.h \
-	stv0680/library.c stv0680/library.h \
-	stv0680/stv0680-bayer.c stv0680/stv0680-bayer.h \
-	stv0680/sharpen.c stv0680/sharpen.h \
-	stv0680/saturate.c stv0680/saturate.h \
-	stv0680/demosaic_sharpen.h stv0680/demosaic_sharpen.c
-stv0680_la_LDFLAGS = $(camlib_ldflags)
-stv0680_la_DEPENDENCIES = $(camlib_dependencies)
-stv0680_la_LIBADD = $(camlib_libadd)
+EXTRA_LTLIBRARIES       += stv0680.la
+
+stv0680_la_SOURCES       =
+stv0680_la_SOURCES      += %reldir%/stv0680.c
+stv0680_la_SOURCES      += %reldir%/stv0680.h
+stv0680_la_SOURCES      += %reldir%/library.c
+stv0680_la_SOURCES      += %reldir%/library.h
+stv0680_la_SOURCES      += %reldir%/stv0680-bayer.c
+stv0680_la_SOURCES      += %reldir%/stv0680-bayer.h
+stv0680_la_SOURCES      += %reldir%/sharpen.c
+stv0680_la_SOURCES      += %reldir%/sharpen.h
+stv0680_la_SOURCES      += %reldir%/saturate.c
+stv0680_la_SOURCES      += %reldir%/saturate.h
+stv0680_la_SOURCES      += %reldir%/demosaic_sharpen.h
+stv0680_la_SOURCES      += %reldir%/demosaic_sharpen.c
+
+stv0680_la_CFLAGS        = $(camlib_cflags)
+stv0680_la_CPPFLAGS      = $(camlib_cppflags)
+stv0680_la_DEPENDENCIES  = $(camlib_dependencies)
+stv0680_la_LDFLAGS       = $(camlib_ldflags)
+stv0680_la_LIBADD        = $(camlib_libadd)

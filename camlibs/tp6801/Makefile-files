@@ -1,12 +1,23 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += tp6801/README.tp6801 tp6801/tp6801-dump.c
-camlibdoc_DATA += tp6801/README.tp6801
+EXTRA_DIST             += %reldir%/tp6801-dump.c
 
-EXTRA_LTLIBRARIES += tp6801.la
+EXTRA_DIST             += %reldir%/README.tp6801
+camlibdoc_DATA         += %reldir%/README.tp6801
 
-tp6801_la_SOURCES = tp6801/library.c tp6801/tp6801.c tp6801/tp6801.h
-tp6801_la_LDFLAGS = $(camlib_ldflags)
-tp6801_la_DEPENDENCIES = $(camlib_dependencies)
-tp6801_la_LIBADD = $(camlib_libadd) @LIBGD_LIBS@
-tp6801_la_CFLAGS = @LIBGD_CFLAGS@
+
+EXTRA_LTLIBRARIES      += tp6801.la
+
+tp6801_la_SOURCES       =
+tp6801_la_SOURCES      += %reldir%/library.c
+tp6801_la_SOURCES      += %reldir%/tp6801.c
+tp6801_la_SOURCES      += %reldir%/tp6801.h
+
+tp6801_la_CFLAGS        = $(camlib_cflags)
+tp6801_la_CPPFLAGS      = $(camlib_cppflags)
+tp6801_la_DEPENDENCIES  = $(camlib_dependencies)
+tp6801_la_LDFLAGS       = $(camlib_ldflags)
+tp6801_la_LIBADD        = $(camlib_libadd)
+
+tp6801_la_CPPFLAGS     += @LIBGD_CFLAGS@
+tp6801_la_LIBADD       += @LIBGD_LIBS@

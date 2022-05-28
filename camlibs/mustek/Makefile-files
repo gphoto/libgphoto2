@@ -1,14 +1,32 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += mustek/AUTHOR  mustek/README.mustek mustek/ChangeLog mustek/STATUS
-camlibdoc_DATA += mustek/README.mustek
+EXTRA_DIST             += %reldir%/AUTHOR
+EXTRA_DIST             += %reldir%/ChangeLog
+EXTRA_DIST             += %reldir%/STATUS
 
-EXTRA_LTLIBRARIES += mustek.la
+EXTRA_DIST             += %reldir%/README.mustek
+camlibdoc_DATA         += %reldir%/README.mustek
 
-mustek_la_SOURCES = \
-	mustek/mdc800.c mustek/core.c mustek/image.c \
-	mustek/io.c mustek/rs232.c mustek/usb.c mustek/core.h mustek/image.h \
-	mustek/io.h mustek/mdc800_spec.h mustek/print.h mustek/rs232.h mustek/usb.h
-mustek_la_LDFLAGS = $(camlib_ldflags)
-mustek_la_DEPENDENCIES = $(camlib_dependencies)
-mustek_la_LIBADD = $(camlib_libadd)
+
+EXTRA_LTLIBRARIES      += mustek.la
+
+mustek_la_SOURCES       =
+mustek_la_SOURCES      += %reldir%/mdc800.c
+mustek_la_SOURCES      += %reldir%/core.c
+mustek_la_SOURCES      += %reldir%/image.c
+mustek_la_SOURCES      += %reldir%/io.c
+mustek_la_SOURCES      += %reldir%/rs232.c
+mustek_la_SOURCES      += %reldir%/usb.c
+mustek_la_SOURCES      += %reldir%/core.h
+mustek_la_SOURCES      += %reldir%/image.h
+mustek_la_SOURCES      += %reldir%/io.h
+mustek_la_SOURCES      += %reldir%/mdc800_spec.h
+mustek_la_SOURCES      += %reldir%/print.h
+mustek_la_SOURCES      += %reldir%/rs232.h
+mustek_la_SOURCES      += %reldir%/usb.h
+
+mustek_la_CFLAGS        = $(camlib_cflags)
+mustek_la_CPPFLAGS      = $(camlib_cppflags)
+mustek_la_DEPENDENCIES  = $(camlib_dependencies)
+mustek_la_LDFLAGS       = $(camlib_ldflags)
+mustek_la_LIBADD        = $(camlib_libadd)

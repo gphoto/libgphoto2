@@ -1,11 +1,25 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += sq905/README.913C sq905/README.sq905 sq905/ChangeLog sq905/TODO
-camlibdoc_DATA += sq905/README.913C sq905/README.sq905
+EXTRA_DIST            += %reldir%/ChangeLog
+EXTRA_DIST            += %reldir%/TODO
 
-EXTRA_LTLIBRARIES += sq905.la
+EXTRA_DIST            += %reldir%/README.913C
+camlibdoc_DATA        += %reldir%/README.913C
 
-sq905_la_SOURCES = sq905/library.c sq905/sq905.c sq905/sq905.h sq905/postprocess.c 
-sq905_la_LDFLAGS = $(camlib_ldflags)
-sq905_la_DEPENDENCIES = $(camlib_dependencies)
-sq905_la_LIBADD = $(camlib_libadd)
+EXTRA_DIST            += %reldir%/README.sq905
+camlibdoc_DATA        += %reldir%/README.sq905
+
+
+EXTRA_LTLIBRARIES     += sq905.la
+
+sq905_la_SOURCES       =
+sq905_la_SOURCES      += %reldir%/library.c
+sq905_la_SOURCES      += %reldir%/sq905.c
+sq905_la_SOURCES      += %reldir%/sq905.h
+sq905_la_SOURCES      += %reldir%/postprocess.c
+
+sq905_la_CFLAGS        = $(camlib_cflags)
+sq905_la_CPPFLAGS      = $(camlib_cppflags)
+sq905_la_DEPENDENCIES  = $(camlib_dependencies)
+sq905_la_LDFLAGS       = $(camlib_ldflags)
+sq905_la_LIBADD        = $(camlib_libadd)

@@ -1,10 +1,18 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += fuji/PROTOCOL fuji/ChangeLog
+EXTRA_DIST           += %reldir%/ChangeLog
+EXTRA_DIST           += %reldir%/PROTOCOL
 
-EXTRA_LTLIBRARIES += fuji.la
 
-fuji_la_SOURCES = fuji/library.c fuji/fuji.c fuji/fuji.h
-fuji_la_LDFLAGS = $(camlib_ldflags)
-fuji_la_DEPENDENCIES = $(camlib_dependencies)
-fuji_la_LIBADD = $(camlib_libadd)
+EXTRA_LTLIBRARIES    += fuji.la
+
+fuji_la_SOURCES       =
+fuji_la_SOURCES      += %reldir%/library.c
+fuji_la_SOURCES      += %reldir%/fuji.c
+fuji_la_SOURCES      += %reldir%/fuji.h
+
+fuji_la_CFLAGS        = $(camlib_cflags)
+fuji_la_CPPFLAGS      = $(camlib_cppflags)
+fuji_la_DEPENDENCIES  = $(camlib_dependencies)
+fuji_la_LDFLAGS       = $(camlib_ldflags)
+fuji_la_LIBADD        = $(camlib_libadd)

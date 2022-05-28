@@ -1,19 +1,30 @@
-# -*- Makefile -*-
+# -*- Makefile-automake -*-
 
-EXTRA_DIST += ricoh/g3.txt ricoh/ChangeLog
-
-
-EXTRA_LTLIBRARIES += ricoh.la
-
-ricoh_la_SOURCES = ricoh/library.c ricoh/ricoh.c ricoh/ricoh.h ricoh/crctab.h
-ricoh_la_LDFLAGS = $(camlib_ldflags)
-ricoh_la_DEPENDENCIES = $(camlib_dependencies)
-ricoh_la_LIBADD = $(camlib_libadd)
+EXTRA_DIST               += %reldir%/ChangeLog
+EXTRA_DIST               += %reldir%/g3.txt
 
 
-EXTRA_LTLIBRARIES += ricoh_g3.la
+EXTRA_LTLIBRARIES        += ricoh.la
 
-ricoh_g3_la_SOURCES = ricoh/g3.c
-ricoh_g3_la_LDFLAGS = $(camlib_ldflags)
-ricoh_g3_la_DEPENDENCIES = $(camlib_dependencies)
-ricoh_g3_la_LIBADD = $(camlib_libadd)
+ricoh_la_SOURCES          =
+ricoh_la_SOURCES         += %reldir%/library.c
+ricoh_la_SOURCES         += %reldir%/ricoh.c
+ricoh_la_SOURCES         += %reldir%/ricoh.h
+ricoh_la_SOURCES         += %reldir%/crctab.h
+
+ricoh_la_CFLAGS           = $(camlib_cflags)
+ricoh_la_CPPFLAGS         = $(camlib_cppflags)
+ricoh_la_DEPENDENCIES     = $(camlib_dependencies)
+ricoh_la_LDFLAGS          = $(camlib_ldflags)
+ricoh_la_LIBADD           = $(camlib_libadd)
+
+
+EXTRA_LTLIBRARIES        += ricoh_g3.la
+
+ricoh_g3_la_SOURCES       = %reldir%/g3.c
+
+ricoh_g3_la_CFLAGS        = $(camlib_cflags)
+ricoh_g3_la_CPPFLAGS      = $(camlib_cppflags)
+ricoh_g3_la_DEPENDENCIES  = $(camlib_dependencies)
+ricoh_g3_la_LDFLAGS       = $(camlib_ldflags)
+ricoh_g3_la_LIBADD        = $(camlib_libadd)
