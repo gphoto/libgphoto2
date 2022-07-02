@@ -1,9 +1,9 @@
-libgphoto2 2.5.29.1 development snapshot
+libgphoto2 2.5.30 release
 
 ptp2:
 * Canon: fixed display locking/unlocking after exit
 * generic: avoid potential crash on image addition
-* Sony: Add image information when wait_for_event
+* Sony: Add image information when wait_for_event, some config values added
 * Added IDs:
   * Nikon Zfc, Z9
   * Sony DSC-WX220, Alpha-A7 IV
