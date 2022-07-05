@@ -2476,6 +2476,8 @@ static struct {
 	{"Canon:EOS M200",			0x04a9, 0x32ef, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/781 */
 	{"Canon:EOS Rebel T8i",			0x04a9, 0x32f1, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/libgphoto2/issues/810 */
+	{"Canon:EOS 850D",			0x04a9, 0x32f1, PTP_CAP|PTP_CAP_PREVIEW},
 	/* from timelapse-view */
 	{"Canon:EOS R5",			0x04a9, 0x32f4, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Steve Rencontre <steve@rsn-tech.co.uk> */
