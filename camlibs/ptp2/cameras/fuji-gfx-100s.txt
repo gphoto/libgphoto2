@@ -1,0 +1,289 @@
+Manufacturer: FUJIFILM
+Model: GFX100S
+Version: 1.10
+Serial Number:
+Vendor Extension ID: 0xe (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0;
+
+Capture Formats: Defined Type JPEG Unknown(b103)
+Display Formats: Defined Type, JPEG, Unknown(b103), TIFF
+
+Device Capabilities:
+File Download, File Deletion, No File Upload
+Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+StorageDescription: Still
+VolumeLabel:
+Storage Type: Builtin RAM
+Filesystemtype: Generic Hierarchical
+Access Capability: Read Only with Object deletion
+Maximum Capability: 18446744073709551615 (4294967295 MB)
+Free Space (Bytes): 18446744073709551615 (4294967295 MB)
+Free Space (Images): -1
+store_10000002:
+StorageDescription: Live
+VolumeLabel:
+Storage Type: Builtin RAM
+Filesystemtype: Generic Hierarchical
+Access Capability: Read Only with Object deletion
+Maximum Capability: 18446744073709551615 (4294967295 MB)
+Free Space (Bytes): 18446744073709551615 (4294967295 MB)
+Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001): error 200a on query.
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+'4000x2664',
+'4000x2248',
+'2992x2992',
+'8256x5504',
+'8256x4640',
+'6192x6192',
+'11648x7768',
+'11648x6552',
+'8736x8736',
+'4992x3328',
+'4992x2808',
+'3328x3328',
+'4000x3000',
+'4000x1480',
+'3744x3000',
+'3504x3000',
+'11648x8736',
+'11648x4304',
+'10928x8736',
+'10192x8736',
+'8256x6192',
+'8256x3048',
+'7744x6192',
+'7232x6192',
+'9552x6368'
+] value: '11648x8736'
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,6,8,32769,32770,32771,32774,32775,32776,32777,32778,32800,32801] value: Daylight (4)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [1,32769,32770] value: Manual Focus (1)
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Center-spot (4)
+Flash Mode(0x500c): error 200a on query.
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [1,3,4,6] value: M (1)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x5) Enumeration [50,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,25600,51200,102400,-1,-2,-3] value: ISO 100 (100)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20220427T112800'
+Pre-Capture Delay(0x5012):(readwrite) (type=0x4) Enumeration [10000,2000,0] value: 0.0s (0)
+Sharpness(0x5015):(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
+Burst Number(0x5018): error 200a on query.
+Burst Interval(0x5019): error 200a on query.
+Focus Metering Mode(0x501c):(readwrite) (type=0x4) Enumeration [32769,32770,32771] value: 32769
+Film Simulation(0xd001):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] value: 1
+FilmSimulationTune(0xd002): error 200a on query.
+Property 0xd003: error 200a on query.
+Property 0xd004: error 200a on query.
+Property 0xd005: error 200a on query.
+DRangeMode(0xd007):(readwrite) (type=0x4) Enumeration [65535,100,200,400,800] value: 100
+ColorMode(0xd008):(readwrite) (type=0x3) Range [-40 - 40, step 10] value: 0
+Property 0xd009: error 200a on query.
+ColorSpace(0xd00a):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+WhitebalanceTune1(0xd00b):(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+WhitebalanceTune2(0xd00c):(readwrite) (type=0x3) Range [-9 - 9, step 1] value: 0
+Property 0xd00d: error 200a on query.
+Property 0xd00e: error 200a on query.
+Property 0xd00f: error 200a on query.
+Property 0xd010: error 200a on query.
+Property 0xd011: error 200a on query.
+Property 0xd012: error 200a on query.
+Property 0xd013: error 200a on query.
+Property 0xd014: error 200a on query.
+Property 0xd015: error 200a on query.
+Property 0xd016: error 200a on query.
+Color Temperature(0xd017):(readwrite) (type=0x4) Enumeration [2500,2510,2520,2530,2540,2550,2560,2570,2580,2590,2600,2610,2620,2630,2640,2650,2660,2670,2680,2690,2700,2710,2720,2730,2740,2750,2760,2770,2780,2790,2800,2810,2820,2830,2840,2850,2860,2870,2880,2890,2900,2910,2920,2930,2940,2950,2960,2970,2980,2990,3000,3010,3020,3030,3040,3050,3060,3070,3080,3090,3100,3110,3120,3130,3140,3150,3160,3170,3180,3190,3200,3210,3220,3230,3240,3250,3260,3270,3280,3290,3300,3310,3320,3330,3340,3350,3360,3370,3380,3390,3400,3410,3420,3430,3440,3450,3460,3470,3480,3490,3500,3510,3520,3530,3540,3550,3560,3570,3580,3590,3600,3610,3620,3630,3640,3650,3660,3670,3680,3690,3700,3710,3720,3730,3740,3750,3760,3770,3780,3790,3800,3810,3820,3830,3840,3850,3860,3870,3880,3890,3900,3910,3920,3930,3940,3950,3960,3970,3980,3990,4000,4010,4020,4030,4040,4050,4060,4070,4080,4090,4100,4110,4120,4130,4140,4150,4160,4170,4180,4190,4200,4210,4220,4230,4240,4250,4260,4270,4280,4290,4300,4310,4320,4330,4340,4350,4360,4370,4380,4390,4400,4410,4420,4430,4440,4450,4460,4470,4480,4490,4500,4510,4520,4530,4540,4550,4560,4570,4580,4590,4600,4610,4620,4630,4640,4650,4660,4670,4680,4690,4700,4710,4720,4730,4740,4750,4760,4770,4780,4790,4800,4810,4820,4830,4840,4850,4860,4870,4880,4890,4900,4910,4920,4930,4940,4950,4960,4970,4980,4990,5000,5010,5020,5030,5040,5050,5060,5070,5080,5090,5100,5110,5120,5130,5140,5150,5160,5170,5180,5190,5200,5210,5220,5230,5240,5250,5260,5270,5280,5290,5300,5310,5320,5330,5340,5350,5360,5370,5380,5390,5400,5410,5420,5430,5440,5450,5460,5470,5480,5490,5500,5510,5520,5530,5540,5550,5560,5570,5580,5590,5600,5610,5620,5630,5640,5650,5660,5670,5680,5690,5700,5710,5720,5730,5740,5750,5760,5770,5780,5790,5800,5810,5820,5830,5840,5850,5860,5870,5880,5890,5900,5910,5920,5930,5940,5950,5960,5970,5980,5990,6000,6010,6020,6030,6040,6050,6060,6070,6080,6090,6100,6110,6120,6130,6140,6150,6160,6170,6180,6190,6200,6210,6220,6230,6240,6250,6260,6270,6280,6290,6300,6310,6320,6330,6340,6350,6360,6370,6380,6390,6400,6410,6420,6430,6440,6450,6460,6470,6480,6490,6500,6510,6520,6530,6540,6550,6560,6570,6580,6590,6600,6610,6620,6630,6640,6650,6660,6670,6680,6690,6700,6710,6720,6730,6740,6750,6760,6770,6780,6790,6800,6810,6820,6830,6840,6850,6860,6870,6880,6890,6900,6910,6920,6930,6940,6950,6960,6970,6980,6990,7000,7010,7020,7030,7040,7050,7060,7070,7080,7090,7100,7110,7120,7130,7140,7150,7160,7170,7180,7190,7200,7210,7220,7230,7240,7250,7260,7270,7280,7290,7300,7310,7320,7330,7340,7350,7360,7370,7380,7390,7400,7410,7420,7430,7440,7450,7460,7470,7480,7490,7500,7510,7520,7530,7540,7550,7560,7570,7580,7590,7600,7610,7620,7630,7640,7650,7660,7670,7680,7690,7700,7710,7720,7730,7740,7750,7760,7770,7780,7790,7800,7810,7820,7830,7840,7850,7860,7870,7880,7890,7900,7910,7920,7930,7940,7950,7960,7970,7980,7990,8000,8010,8020,8030,8040,8050,8060,8070,8080,8090,8100,8110,8120,8130,8140,8150,8160,8170,8180,8190,8200,8210,8220,8230,8240,8250,8260,8270,8280,8290,8300,8310,8320,8330,8340,8350,8360,8370,8380,8390,8400,8410,8420,8430,8440,8450,8460,8470,8480,8490,8500,8510,8520,8530,8540,8550,8560,8570,8580,8590,8600,8610,8620,8630,8640,8650,8660,8670,8680,8690,8700,8710,8720,8730,8740,8750,8760,8770,8780,8790,8800,8810,8820,8830,8840,8850,8860,8870,8880,8890,8900,8910,8920,8930,8940,8950,8960,8970,8980,8990,9000,9010,9020,9030,9040,9050,9060,9070,9080,9090,9100,91109120,9130,9140,9150,9160,9170,9180,9190,9200,9210,9220,9230,9240,9250,9260,9270,9280,9290,9300,9310,9320,9330,9340,9350,9360,9370,9380,9390,9400,9410,9420,9430,9440,9450,9460,9470,9480,9490,9500,9510,9520,9530,9540,9550,9560,9570,9580,9590,9600,9610,9620,9630,9640,9650,9660,9670,9680,9690,9700,9710,9720,9730,9740,9750,9760,9770,9780,9790,9800,9810,9820,9830,9840,9850,9860,9870,9880,9890,9900,9910,9920,9930,9940,9950,9960,9970,9980,9990,10000] value: 10000
+Quality(0xd018):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 7
+RecMode(0xd019): error 200a on query.
+LiveViewBrightness(0xd01a): error 200a on query.
+ThroughImageZoom(0xd01b):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12] value: 1
+NoiseReduction(0xd01c):(readwrite) (type=0x4) Enumeration [0,4096,8192,12288,16384,20480,24576,28672,32768] value: 8192
+Comment(0xd100):(readwrite) (type=0xffff) ''
+SerialMode(0xd101): error 200a on query.
+ExposureDelay(0xd102): error 200a on query.
+PreviewTime(0xd103): error 200a on query.
+BlackImageTone(0xd104):(readwrite) (type=0x3) Range [-180 - 180, step 10] value: 0
+Illumination(0xd105): error 200a on query.
+FrameGuideMode(0xd106):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+ViewfinderWarning(0xd107): error 200a on query.
+AutoImageRotation(0xd108): error 200a on query.
+DetectImageRotation(0xd109): error 200a on query.
+ShutterPriorityMode1(0xd10a):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+ShutterPriorityMode2(0xd10b):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd10c: error 200a on query.
+Property 0xd10d: error 200a on query.
+Property 0xd10e: error 200a on query.
+Property 0xd10f: error 200a on query.
+Property 0xd110: error 200a on query.
+Property 0xd111: error 200a on query.
+AFIlluminator(0xd112):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Beep(0xd113): error 200a on query.
+AELock(0xd114): error 200a on query.
+ISOAutoSetting1(0xd115): error 200a on query.
+ISOAutoSetting2(0xd116): error 200a on query.
+ISOAutoSetting3(0xd117): error 200a on query.
+ExposureStep(0xd118): error 200a on query.
+CompensationStep(0xd119): error 200a on query.
+ExposureSimpleSet(0xd11a): error 200a on query.
+CenterPhotometryRange(0xd11b): error 200a on query.
+PhotometryLevel1(0xd11c): error 200a on query.
+PhotometryLevel2(0xd11d): error 200a on query.
+PhotometryLevel3(0xd11e): error 200a on query.
+FlashTuneSpeed(0xd11f): error 200a on query.
+FlashShutterLimit(0xd120): error 200a on query.
+BuiltinFlashMode(0xd121): error 200a on query.
+FlashManualMode(0xd122): error 200a on query.
+FlashRepeatingMode1(0xd123): error 200a on query.
+FlashRepeatingMode2(0xd124): error 200a on query.
+FlashRepeatingMode3(0xd125): error 200a on query.
+FlashCommanderMode1(0xd126): error 200a on query.
+FlashCommanderMode2(0xd127): error 200a on query.
+FlashCommanderMode3(0xd128): error 200a on query.
+FlashCommanderMode4(0xd129): error 200a on query.
+FlashCommanderMode5(0xd12a): error 200a on query.
+FlashCommanderMode6(0xd12b): error 200a on query.
+FlashCommanderMode7(0xd12c): error 200a on query.
+ModelingFlash(0xd12d): error 200a on query.
+Property 0xd12e: error 200a on query.
+BKTChange(0xd12f): error 200a on query.
+BKTOrder(0xd130): error 200a on query.
+BKTSelection(0xd131): error 200a on query.
+AEAFLockButton(0xd132): error 200a on query.
+CenterButton(0xd133): error 200a on query.
+MultiSelectorButton(0xd134): error 200a on query.
+Property 0xd135: error 200a on query.
+FunctionLock(0xd136):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+Property 0xd137: error 200a on query.
+Property 0xd138: error 200a on query.
+Property 0xd139: error 200a on query.
+Property 0xd13a: error 200a on query.
+Property 0xd13b: error 200a on query.
+Property 0xd13c: error 200a on query.
+Property 0xd13d: error 200a on query.
+Property 0xd13e: error 200a on query.
+Property 0xd13f: error 200a on query.
+Property 0xd140: error 200a on query.
+Property 0xd141: error 200a on query.
+Property 0xd142: error 200a on query.
+Property 0xd143: error 200a on query.
+Property 0xd144: error 200a on query.
+Password(0xd145):(readwrite) (type=0xffff) '0000'
+ChangePassword(0d146): error 200a on query.
+CommandDialSetting1(0xd147): error 200a on query.
+CommandDialSetting2(0xd148): error 200a on query.
+CommandDialSetting3(0xd149): error 200a on query.
+CommandDialSetting4(0xd14a): error 200a on query.
+ButtonsAndDials(0xd14b): error 200a on query.
+NonCPULensData(0xd14c): error 200a on query.
+Property 0xd14d: error 200a on query.
+MBD200Batteries(0xd14e): error 200a on query.
+AFOnForMBD200Batteries(0xd14f): error 200a on query.
+Property 0xd150: error 200a on query.
+Property 0xd151: error 200a on query.
+Property 0xd152: error 200a on query.
+FirmwareVersion(0xd153):(read only) (type=0x4) 272
+ShotCount(0xd154):(read only) (type=0x6) 166002688
+ShutterExchangeCount(0xd155):(read only) (type=0x6) 0
+WorldClock(0xd157): error 200a on query.
+TimeDifference1(0xd158): error 200a on query.
+TimeDifference2(0xd159): error 200a on query.
+Language(0xd15a): error 200a on query.
+FrameNumberSequence(0xd15b): error 200a on query.
+VideoMode(0xd15c): error 200a on query.
+SetUSBMode(0xd15d): error 200a on query.
+Property 0xd15e: error 200a on query.
+Property 0xd15f: error 200a on query.
+Property 0xd160: error 200a on query.
+CommentWriteSetting(0xd161): error 200a on query.
+LightTune(0xd200): error 200a on query.
+ReleaseMode(0xd201):(readwrite) (type=0x4) Enumeration [4,16,65535] value: 4
+BKTFrame1(0xd202): error 200a on query.
+BKTFrame2(0xd203): error 200a on query.
+BKTStep(0xd204): error 200a on query.
+ProgramShift(0xd205): error 200a on query.
+FocusAreas(0xd206): error 200a on query.
+PriorityMode(0xd207):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd208:(readwrite) (type=0x4) Enumeration [260,512,4,772,1280,12,32768,40960,6,36864,2,37120,1,37632,5,14,37376,64,2052,128,16384] value: 772
+AFStatus(0xd209):(read only) (type=0x4) Enumeration [1,2,3,4] value: 1
+Property 0xd20a:(read only) (type=0x4) Enumeration [1,2,3] value: 1
+DeviceName(0xd20b):(readwrite) (type=0xffff) ''
+MediaRecord(0xd20c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 2
+MediaCapacity(0xd20d):(read only) (type=0xffff) '604,16,247960064,9,0,0,0,0'
+FreeSDRAMImages(0xd20e):(read only) (type=0x4) Range [0 - 1, step 1] value: 17
+Property 0xd20f: error 200a on query.
+Property 0xd210: error 200a on query.
+MediaStatus(0xd211):(read only) (type=0x4) Range [0 - 65535, step 1] value: 769
+CurrentState(0xd212): error 201b on query.
+Property 0xd213: error 200a on query.
+Property 0xd214: error 200a on query.
+Copyright(0xd215):(readwrite) (type=0xffff) ''
+Copyright2(0xd216):(readwrite) (type=0xffff) ''
+Property 0xd217: error 200a on query.
+Aperture(0xd218): error 200a on query.
+ShutterSpeed(0xd219): error 200a on query.
+Property 0xd21a: error 200a on query.
+DeviceError(0xd21b): error 200a on query.
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd407:(read only) (type=0x6) 1
+Exposure Time(0x500d):(readwrite) (type=0x6) Enumeration [244,307,387,488,615,775,976,1230,1550,1953,2460,3100,3906,4921,6200,7812,9843,12401,15625,19686,24803,31250,39372,49606,62500,78745,99212,125000,157490,198425,250000,314980,396850,500000,629960,793700,1000000,1259921,1587401,2000000,2519842,3174802,4000000,5039684,6349604,8000000,10079368,12699208,16000000,20158736,25398416,32000000,40317473,50796833,64000000,64000030,64000060,64000090,64000120,64000150,64000180,4294967295] value: 20 sec (2000000)
+F-Number(0x5007):(readwrite) (type=0x4) Enumeration [120,140,160,180,200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/8 (800)
+LensZoomPosCaps(0xd38c):(readwrite) (type=0x4) Range [1 - 1, step 1] value: 1
+FocusPosition(0xd171):(readwrite) (type=0x3) Enumeration [-217,24370,1001,820,31,3] value: 23115
+Property 0xd21c:(readwrite) (type=0x4) Enumeration [0,1,2,3,4,5,6,7,8,9,10,11] value: 3
+Focus Point(0xd347): error 201b on query.
+LensZoomPos(0xd170):(read only) (type=0x4) Range [1 - 1, step 1] value: 1
+BatteryLevel(0xd242): error 200a on query.
+LiveViewImageSize(0xd174):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+VideoOutOnOff(0xd168): error 200a on query.
+LiveViewImageQuality(0xd173):(readwrite) (type=0x4) Enumeration [1,3] value: 1
+ForceMode(0xd230):(readwrite) (type=0x4) Enumeration [1] value: 1
+Property 0xd16e: error 200a on query.
+FocusArea1(0xd372): error 201b on query.
+FaceDetectionMode(0xd020):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+RawCompression(0xd022):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+GrainEffect(0xd023):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7] value: 6
+SetEyeAFMode(0xd024):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
+FocusPoints(0xd025):(readwrite) (type=0x4) Enumeration [3,4] value: 4
+MFAssistMode(0xd026):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12] value: 1
+InterlockAEAFArea(0xd027):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Shadowing(0xd029):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+CropMode(0xd16f):(readwrite) (type=0x4) Enumeration [0,1,32768,32769] value: 32768
+TNumber(0xd02f): error 200a on query.
+FocusArea4(0xd395): error 201b on query.
+HighLightTone(0xd320):(readwrite) (type=0x3) Range [-20 - 40, step 5] value: 0
+ShadowTone(0xd321):(readwrite) (type=0x3) Range [-20 - 40, step 5] value: 0
+LongExposureNR(0xd322):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+FullTimeManualFocus(0xd323):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+LensISSwitch(0xd346):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+InstantAFMode(0xd34a):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+PreAFMode(0xd34b):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+LMOMode(0xd34d):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+ISMode(0xd351):(readwrite) (type=0x4) Enumeration [1,2,3] value: 3
+FocusCheckMode(0xd35e):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+LiveViewImageQuality(0xd173):(readwrite) (type=0x4) Enumeration [1,3] value: 1
+FileNamePrefix1(0xd365):(readwrite) (type=0xffff) 'DSCF'
+FileNamePrefix2(0xd366):(readwrite) (type=0xffff) 'DSF'
+FocusArea3(0xd374): error 201b on query.
+TotalShotCount(0xd310):(read only) (type=0x6) 166002688
+ExposurePreview(0xd359):(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
+FrameGuideGridInfo1(0xd375):(readwrite) (type=0xffff) '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+FrameGuideGridInfo2(0xd376):(readwrite) (type=0xffff) '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+CustomDispInfo(0xd36e): error 200a on query.
+ViewMode1(0xd33f):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9] value: 3
+CustomAutoPowerOff(0xd364):(readwrite) (type=0x4) Range [0 - 255, step 1] value: 0
+LockButtonMode(0xd34e):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+WideDynamicRange(0xd02e):(readwrite) (type=0x4) Enumeration [0,1,2,3,32768] value: 0
+LensNameAndSerial(0xd36d):(read only) (type=0xffff) 'LR107A,GF250mmF4 R LM OIS WR,05C00022'
+LensUnknownData(0xd38a):(read only) (type=0x4) Enumeration [1,2,3,4,5] value: 2
+BatteryInfo1(0xd36a):(read only) (type=0x6) Range [0 - 16777215, step 1] value: 10
+BatteryInfo2(0xd36b):(read only) (type=0xffff) '53,0,0,0'
+FunctionLockCategory1(0xd36f):(readwrite) (type=0x6) 65536
+FunctionLockCategory2(0xd370):(readwrite) (type=0x6) 65536
+SensitivityFineTune1(0xd222):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 8192
+SensitivityFineTune2(0xd223):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 8192
+LensZoomPosCaps(0xd38c):(readwrite) (type=0x4) Range [1 - 1, step 1] value: 1
+LensFNumberList(0xd38d):(read only) (type=0xffff) '400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200,2600,2900,3200'
+LensFocalLengthList(0xd38e):(read only) (type=0xffff) '25000,19800'
+Property 0xd17b:(readwrite) (type=0x4) Enumeration [1] value: 1
