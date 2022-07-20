@@ -11051,6 +11051,7 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x044b, nikon_z6_capture_settings,      NULL,   NULL }, /* Z7_2 guessed */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x044c, nikon_z6_capture_settings,      NULL,   NULL }, /* Z6_2 guessed */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x044f, nikon_z6_capture_settings,      NULL,   NULL }, /* Zfc guessed */
+	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0452, nikon_z6_capture_settings,      NULL,   NULL }, /* Z30 guessed */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0,      nikon_generic_capture_settings, NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0,      0,      capture_settings_menu,          NULL,   NULL },
 
