@@ -2451,10 +2451,9 @@ static struct {
 	{"Canon:EOS R",          		0x04a9, 0x32da, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
 
 	/* Christian Muehlhaeuser <muesli@gmail.com> */
-	{"Canon:EOS 2000D",			0x04a9, 0x32e1, PTP_CAP|PTP_CAP_PREVIEW|PTPBUG_DELETE_SENDS_EVENT},
-
+	{"Canon:EOS 2000D",			0x04a9, 0x32e1, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION|PTPBUG_DELETE_SENDS_EVENT},
 	/* https://github.com/gphoto/gphoto2/issues/247, from logfile */
-	{"Canon:EOS 1500D",          		0x04a9, 0x32e1, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
+	{"Canon:EOS 1500D",          		0x04a9, 0x32e1, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION|PTPBUG_DELETE_SENDS_EVENT},
 
 	/* from Enno at SUSE */
 	{"Canon:EOS RP",          		0x04a9, 0x32e2, PTP_CAP|PTP_CAP_PREVIEW|PTP_DONT_CLOSE_SESSION},
