@@ -2685,6 +2685,9 @@ static struct {
 	/* Keld Henningsen <drawsacircle@hotmail.com */
 	{"Pentax:K70 (PTP Mode)",		0x25fb, 0x017d, 0},
 
+	/* via email to gphoto-devel */
+	{"Pentax:KP (PTP Mode)",		0x25fb, 0x017f, 0},
+
 	{"Sanyo:VPC-C5 (PTP mode)",             0x0474, 0x0230, 0},
 	/* https://github.com/gphoto/libgphoto2/issues/497 */
 	{"Sanyo:VPC-FH1 (PTP mode)",            0x0474, 0x02e5, 0},

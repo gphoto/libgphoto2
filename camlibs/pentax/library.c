@@ -156,6 +156,12 @@ camera_abilities (CameraAbilitiesList *list)
         a.usb_product           = 0x017c;
         if (GP_OK != (ret = gp_abilities_list_append (list, a)))
                 return ret;
+	/* fifu7fi@gmail.com */
+        strcpy (a.model, "Pentax:KP");
+	a.usb_vendor		= 0x25fb;
+        a.usb_product           = 0x017e;
+        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+                return ret;
 	return GP_OK;
 
 }
