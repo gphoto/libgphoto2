@@ -2637,7 +2637,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 				ce[i].u.propid = proptype;
-				if (curoff >= 0x12)
+				if (olcver >= 0x12)	/* FIXME: olcver???? */
 					curoff += 6;	/* m6 mark 2 */
 				else
 					curoff += 4;	/* 7, 8, b, f*/
