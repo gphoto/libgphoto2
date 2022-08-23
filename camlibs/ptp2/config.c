@@ -8030,6 +8030,35 @@ _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 }
 
 static int
+_get_Canon_EOS_TestOLC(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	val = 2;
+	gp_widget_set_value  (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Canon_EOS_TestOLC(CONFIG_PUT_ARGS) {
+	int			val;
+	PTPParams		*params = &(camera->pl->params);
+	unsigned int		i;
+
+	CR (gp_widget_get_value(widget, &val));
+	if (val) {
+		/* idea is to request all OLCs seperately to see the sizes in the logfile */
+		for (i=0;i<25;i++) {	/* 0x1 -> 0x1000 */
+			C_PTP (ptp_canon_eos_setrequestolcinfogroup(params, (1<<i)));
+			ptp_check_eos_events (params);
+		}
+		C_PTP (ptp_canon_eos_setrequestolcinfogroup(params, 0x1fff));
+	}
+        return GP_OK;
+}
+
+static int
 _get_Panasonic_ViewFinder(CONFIG_GET_ARGS) {
 	int val;
 
@@ -10569,6 +10598,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Capture"),		"capture",	0,  PTP_VENDOR_CANON,   0,  _get_Canon_CaptureMode, _put_Canon_CaptureMode },
 	{ N_("Remote Mode"),		"remotemode",	PTP_OC_CANON_EOS_SetRemoteMode,  PTP_VENDOR_CANON,   0,  _get_Canon_RemoteMode, _put_Canon_RemoteMode },
 	{ N_("Event Mode"),		"eventmode",	PTP_OC_CANON_EOS_SetEventMode,   PTP_VENDOR_CANON,   0,  _get_Canon_EventMode,  _put_Canon_EventMode },
+	{ N_("Test OLC"),		"testolc",	PTP_OC_CANON_EOS_SetRequestOLCInfoGroup,   PTP_VENDOR_CANON,   0,  _get_Canon_EOS_TestOLC,  _put_Canon_EOS_TestOLC },
 	{ 0,0,0,0,0,0,0 },
 };
 
