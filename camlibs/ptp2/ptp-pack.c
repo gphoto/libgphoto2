@@ -2506,6 +2506,28 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				}
 			}
 			break;
+static int olcsizes[0x14][13] = {
+	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x0 */
+	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x1 */
+	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x2 */
+	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x3 */
+	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x4 */
+	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x5 */
+	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x6 */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x7 */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x9 */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xa */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xb */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xc */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xd */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xe */
+	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xf */
+	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x10 */
+	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x11 */
+	{2,7,9,6,4, 6,8,4,7,7, 7,8,1 },	/* 0x12 */
+	{2,7,9,6,4, 6,8,4,7,7, 7,8,1 },	/* 0x13 */
+};
 		/* one more information record handed to us */
 		/* Versions seen: (d199)
 		 * 100D: 	7 (original reference)
@@ -2779,6 +2801,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			}
 			if (mask & 0x1000) {
 				/* mask 0x1000: 1 byte, 00 observed */
+				/* mask 0x1000: 8 byte too on 5ds, type 11 (has shuttercount inside) */
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 				ce[i].u.info = malloc(strlen("OLCInfo event 0x1000 content 01")+1);
 				sprintf(ce[i].u.info,"OLCInfo event 0x1000 content %02x",
