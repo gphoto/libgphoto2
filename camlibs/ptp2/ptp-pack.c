@@ -2518,18 +2518,23 @@ static int olcsizes[0x14][13] = {
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x5 */
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x6 */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x7 */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */	/* PowerShot SX720HS: only reports 0x1, 0x2, 0x4 and 0x8 masks, seperateely */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x9 */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xa */
-	{2,6,5,4,4, 6,8,4,6,5, 5,9,8 },	/* 0xb */ /* https://github.com/gphoto/gphoto2/issues/81 */
+	{2,6,5,4,4, 6,8,4,6,5, 5,9,8(x) },/* 0xb */
+							/* The EOS 750D was 0x1000 field length 1 (first byte content 0x00),
+							 * The EOS 5ds has field length 8 (first byte content 0x07),
+							 * the first byte could be considered block length?
+							 * https://github.com/gphoto/gphoto2/issues/81
+							 */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xc */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xd */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xe */
 	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xf */
 	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x10 */
 	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x11 */
-	{2,7,9,6,4, 6,8,4,7,7, 7,8,1 },	/* 0x12 */
-	{2,7,9,6,4, 6,8,4,7,7, 7,8,1 },	/* 0x13 */
+	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x12 */	/* EOS M6 Mark II */
+	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x13 */	/* guess / copy from 0x12 entry */
 };
 #endif
 		/* one more information record handed to us */
@@ -2579,7 +2584,7 @@ static int olcsizes[0x14][13] = {
 				break;
 			}
 			mask = dtoh16a(curdata+8+4);
-			ptp_debug (params, "event %d: OLC mask 0x%04x length %d / data length %d", mask, len, len - 8);
+			ptp_debug (params, "event %d: OLC mask 0x%04x length %d / data length %d", i, mask, len, len - 8);
 			curoff = 8+4+4;
 			if (mask & CANON_EOS_OLC_BUTTON) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
