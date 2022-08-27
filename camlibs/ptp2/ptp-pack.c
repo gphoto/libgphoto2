@@ -2565,6 +2565,12 @@ static int olcsizes[0x14][13] = {
 				for (k=8;k<size;k++)
 					ptp_debug (params, "    %d: %02x", k-8, curdata[k]);
 			}
+			if (size < 14) {
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+				ce[i].u.info = strdup("OLC size too small");
+				ptp_debug (params, "event %d: OLC unexpected size %d", i, size);
+				break;
+			}
 			len = dtoh32a(curdata+8);
 			if ((len != size-8) && (len != size-4)) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
@@ -2573,12 +2579,7 @@ static int olcsizes[0x14][13] = {
 				break;
 			}
 			mask = dtoh16a(curdata+8+4);
-			if (size < 14) {
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = strdup("OLC size too small");
-				ptp_debug (params, "event %d: OLC unexpected size %d", i, size);
-				break;
-			}
+			ptp_debug (params, "event %d: OLC mask 0x%04x length %d / data length %d", mask, len, len - 8);
 			curoff = 8+4+4;
 			if (mask & CANON_EOS_OLC_BUTTON) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
