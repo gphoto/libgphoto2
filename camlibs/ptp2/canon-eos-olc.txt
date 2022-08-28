@@ -1,0 +1,78 @@
+Canon EOS / PowerShot OLC info. (Unclear what OLC means).
+
+The OLC info is a 1 binary block of data. Only the updates
+we want are sent, this is specified by a mask set via
+EOS_SetRequestOLCInfoGroup().
+
+Only 0x1fff are valid bits, setting 0x2000 or higher bits can crash
+the camera.
+
+Following bits are identified:
+
+0x1 - Button info, 2 bytes. Likely a 16 bit button number.
+
+0x2 - shutterspeed, 6 or 7 bytes. Shutterspeed seems to be
+      at offset 0x5, usual encoding same as the regular shutterspeed property.
+
+0x4 - Aperture, 5, 6 or 9 bytes.
+	for the 9 byte variant, it seems to be at offset 0x7.
+	for the 5,6 byte variants at offset 0x4.
+	Aperture is the same 1 byte encoded as with the regular aperture property.
+
+0x8 - ISO, 4 or 6 bytes.
+	seems to be at offset 0x3.
+
+0x10 - unknown, 4 byte
+
+0x20 - unknown, 6 bytes, perhaps self timer record?
+
+0x40 - exposure indicator, 7 or 8 byte.
+	
+
+0x80 - unknown, 4 byte
+
+0x100 - unknown, 6 or 7 byte, focus related? "focus info"
+
+0x200 - unknown, 7 bytes, focus mask?
+
+0x400 - unknown, 7 bytes
+
+0x800 - unknown, 8 bytes, could be mask of focus points selected
+
+0x1000 - has shuttercount on EOS 5ds, but 1 byte 0x00 on others.
+
+
+Recorded values:
+
+EOS 100D (Jim E, Marcus M):
+	type 7 0x07
+	0x1	- 2	01 00
+	0x2	- 6	00 00 00 00 00 00
+	0x4	- 5	00 00 55 30 00
+	0x8	- 4	01 01 00 00
+	0x10	- 4	04 01 00 49
+	0x20	- 6	00 00 00 00 00 00
+	0x40	- 7	00 00 00 00 00 00 00
+	0x80	- 4	00 00 00 00
+	0x100	- 6	00 00 00 00 00 00
+	0x200	- 5	00 00 00 00 00
+	0x400	- 5	00 00 00 00 00
+	0x800	- 8	00 00 00 00 00 00 00 00
+	0x1000	- 1	00
+
+
+EOS M6 Mark II (Marcus M):
+	type 18	0x12
+	0x1	- 2	01 00
+	0x2	- 7	00 00 00 00 00 00
+	0x4	- 9	00 00 00 50 00 25 00 00 00
+	0x8	- 6	01 01 00 00 68 28
+	0x10	- 4	04 01 00 e4
+	0x20	- 6	00 00 00 00 00 00
+	0x40	- 8	00 00 00 00 00 00 00 00
+	0x80	- 5	00 00 00 00 00
+	0x100	- 7	00 00 00 00 00 00 00
+	0x200	- 5	00 00 00 00 00
+	0x400	- 5	00 00 00 00 00
+	0x800	- 9	00 00 00 00 00 00 00 00 00
+	0x1000	- 8	00 00 00 00 00 00 00 00
