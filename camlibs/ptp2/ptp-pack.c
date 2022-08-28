@@ -2517,12 +2517,12 @@ static int olcsizes[0x14][13] = {
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x4 */
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x5 */
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x6 */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x7 */
+	{2,6,5,4,4, 6,7,4,6,5, 5,8,1 },	/* 0x7 */	/* full block: 79. EOS 100D */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */	/* EOS M10, PowerShot SX720HS: only report 0x1, 0x2, 0x4 and 0x8 masks, seperately */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x9 */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xa */
 	{2,6,5,4,4, 6,8,4,6,5, 5,9,8(x) },/* 0xb */
-							/* The EOS 750D was 0x1000 field length 1 (first byte content 0x00),
+							/* full block 81: The EOS 750D was 0x1000 field length 1 (first byte content 0x00),
 							 * The EOS 5ds has field length 8 (first byte content 0x07),
 							 * the first byte could be considered block length?
 							 * https://github.com/gphoto/gphoto2/issues/81
@@ -2533,7 +2533,7 @@ static int olcsizes[0x14][13] = {
 	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xf */
 	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x10 */
 	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x11 */
-	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x12 */	/* EOS M6 Mark II */
+	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x12 */	/* full block 97: EOS M6 Mark II */
 	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x13 */	/* guess / copy from 0x12 entry */
 };
 #endif
