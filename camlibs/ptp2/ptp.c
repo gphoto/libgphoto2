@@ -1582,7 +1582,7 @@ ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode)
 	uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 );
 	if (size < headerLength * 4 + 2 * 4) return PTP_RC_GeneralError;
 
-	ptp_debug(params, "header: %lu, code: %lu\n", headerLength, propertyCode);
+	ptp_debug(params, "header: %lu, code: %u\n", headerLength, propertyCode);
 
 	return PTP_RC_OK;
 }
