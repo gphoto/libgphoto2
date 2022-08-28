@@ -1686,6 +1686,7 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	uint32_t	headerLength;
 	uint32_t	propertyCode;
 	unsigned int	off = 0;
+	unsigned int	i;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ListProperty, propcode, 0, 0);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
@@ -1729,7 +1730,6 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 
 	*propertyValueList = calloc(*propertyValueListLength, sizeof(uint32_t));
 
-	uint16_t i;
 	for(i = 0; i < *propertyValueListLength; i++) {
 		if(valuesize == 2) {
 			(*propertyValueList)[i] = (uint32_t) dtoh16a( (data) + headerLength * 4 + 3 * 4 + valuesize + i * valuesize);
