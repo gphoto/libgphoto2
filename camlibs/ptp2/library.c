@@ -6371,6 +6371,21 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		return camera_canon_eos_capture (camera, type, path, context);
 	}
 #endif
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_PANASONIC) &&
+		ptp_operation_issupported(params, PTP_OC_PANASONIC_InitiateCapture)
+	) {
+		PTPContainer	event;
+
+		// Fetch and discard any pending events.
+		C_PTP_REP (ptp_check_event (params));
+		while (ptp_get_one_event(params, &event))
+			; // Do nothing with the events
+
+		// Trigger the actual capture.
+		return translate_ptp_result(ptp_panasonic_capture(params));
+	}
+
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context,
                	_("Sorry, your camera does not support generic capture"));
