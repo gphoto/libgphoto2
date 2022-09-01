@@ -330,9 +330,11 @@ GP_LIBJPEG
 dnl ---------------------------------------------------------------------------
 dnl check for ws2_32
 dnl ---------------------------------------------------------------------------
-LIBWS232=""
+LIBWS232_CFLAGS=""
+LIBWS232_LIBS=""
 libws232_msg="no"
-AC_SUBST([LIBWS232])
+AC_SUBST([LIBWS232_CFLAGS])
+AC_SUBST([LIBWS232_LIBS])
 AC_ARG_WITH([ws232],
             [AS_HELP_STRING([--without-ws232],
 	                    [Build without ws2_32 library (default: no)])])
@@ -341,7 +343,7 @@ AS_IF([test "x$with_ws232" != "xno"], [dnl
 		AC_CHECK_HEADER([winsock.h], [dnl
 			AC_DEFINE([HAVE_LIBWS232], [1],
 			          [define if we found LIBWS232 and its headers])
-			LIBWS232="-lws2_32"
+			LIBWS232_LIBS="-lws2_32"
 			libws232_msg="yes"
 		])
 	])

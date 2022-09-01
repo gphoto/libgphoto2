@@ -49,4 +49,5 @@ ptp2_la_LIBADD       += $(LIBXML2_LIBS)
 ptp2_la_CPPFLAGS     += $(LIBJPEG_CFLAGS)
 ptp2_la_LIBADD       += $(LIBJPEG_LIBS)
 
-ptp2_la_LIBADD       += @LIBWS232@
+ptp2_la_CPPFLAGS     += $(LIBWS232_CFLAGS)
+ptp2_la_LIBADD       += $(LIBWS232_LIBS)
