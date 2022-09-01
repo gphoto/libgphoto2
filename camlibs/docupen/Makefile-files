@@ -25,5 +25,5 @@ docupen_la_LIBADD        = $(camlib_libadd)
 
 docupen_la_CFLAGS       += $(NO_UNUSED_CFLAGS)
 
-docupen_la_CFLAGS       += @LIBGD_CFLAGS@
-docupen_la_LIBADD       += @LIBGD_LIBS@
+docupen_la_CFLAGS       += $(LIBGD_CFLAGS)
+docupen_la_LIBADD       += $(LIBGD_LIBS)
