@@ -2391,8 +2391,8 @@ static struct {
 
 	/* Barney Livingston <barney.livingston@lobsterpictures.tv> */
 	{"Canon:EOS 1300D",			0x04a9, 0x32b4, PTP_CAP|PTP_CAP_PREVIEW},
-    /* Rebel T6 is the same camera. Jasem Mutlaq <mutlaqja@ikarustech.com> */
-    {"Canon:EOS Rebel T6",		0x04a9, 0x32b4, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Rebel T6 is the same camera. Jasem Mutlaq <mutlaqja@ikarustech.com> */
+	{"Canon:EOS Rebel T6",			0x04a9, 0x32b4, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Jim Howard <jh.xsnrg@gmail.com> */
 	{"Canon:EOS M5",			0x04a9, 0x32bb, PTP_CAP|PTP_CAP_PREVIEW},
@@ -2488,6 +2488,8 @@ static struct {
 	{"Canon:EOS R10",			0x04a9, 0x32f8, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/642 */
 	{"Canon:EOS M50m2",			0x04a9, 0x32f9, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Ingmar Rieger via email */
+	{"Canon:EOS R5 C",			0x04a9, 0x3303, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
