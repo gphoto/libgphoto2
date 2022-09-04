@@ -13,8 +13,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: apt-get update
+      run: sudo apt-get update
+    - name: apt-get 3rd party repo libgd-dev dependency workaround
+      run: sudo apt-get remove nginx libgd3
+    - name: apt-get dist-upgrade
+      run: sudo apt-get dist-upgrade
     - name: apt-get install
-      run: sudo apt-get update && sudo apt-get upgrade && sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
+      run: sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
     - name: autoreconf
       run: autoreconf -i -f
     - name: configure
