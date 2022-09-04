@@ -81,7 +81,7 @@ gp_port_library_list (GPPortInfoList *list)
 	if (mnt) {
 		while ((mntent = getmntent (mnt))) {
 			/* detect floppies so we don't access them with the stat() below */
-			GP_LOG_D ("found fstab fsname %s", mntent->mnt_fsname);
+			GP_LOG_D ("found fstab fstype %s", mntent->mnt_type);
 
 			if ((NULL != strstr(mntent->mnt_fsname,"fd"))	||
 			    (NULL != strstr(mntent->mnt_fsname,"floppy")) ||
@@ -153,7 +153,7 @@ gp_port_library_list (GPPortInfoList *list)
 	if (mnt) {
 		while ((mntent = getmntent (mnt))) {
 			/* detect floppies so we don't access them with the stat() below */
-			GP_LOG_D ("found mtab fsname %s", mntent->mnt_fsname);
+			GP_LOG_D ("found mtab fstype %s", mntent->mnt_type);
 
 			if ((NULL != strstr(mntent->mnt_fsname,"fd"))	||
 			    (NULL != strstr(mntent->mnt_fsname,"floppy")) ||
