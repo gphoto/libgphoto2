@@ -291,7 +291,7 @@ gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 #else
 	GPPortInfo info;
 	char	*path, *s;
-	static unsigned short vendor, product;
+	static unsigned short vendor = 0x04b0, product = 0x0437; /* defaults are the Nikon D750 */
 	int	fd;
 
 	static char *lastpath = NULL;
@@ -308,7 +308,7 @@ gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 		s = strchr(path, ':')+1;
 		fd = open(s, O_RDONLY);
-		vendor = product = 0;
+		/*vendor = product = 0; */
 		if (fd != -1) {
 			if (-1 == read( fd, &vendor, 2))
 				gp_log(GP_LOG_DEBUG,__FUNCTION__,"could not read vendor");
@@ -317,6 +317,7 @@ gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 			close(fd);
 		}
 	}
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(using vendor 0x%04x,0x%04x)", vendor, product);
 
 	if ((idvendor == vendor) && (idproduct == product)) {
 #endif
