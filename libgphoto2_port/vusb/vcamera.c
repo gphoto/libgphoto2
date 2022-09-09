@@ -445,7 +445,7 @@ read_tree(char *path) {
 	}
 	if (!dcim) {
 		dcim = malloc(sizeof(struct ptp_dirent));
-		dcim->name = strdup("");
+		dcim->name = strdup("DCIM");
 		dcim->fsname = strdup(path);
 		dcim->id = ptp_objectid++;
 		dcim->next = first_dirent;
