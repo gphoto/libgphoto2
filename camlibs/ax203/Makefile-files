@@ -29,8 +29,8 @@ ax203_la_DEPENDENCIES  = $(camlib_dependencies)
 ax203_la_LDFLAGS       = $(camlib_ldflags)
 ax203_la_LIBADD        = $(camlib_libadd)
 
-ax203_la_LIBADD       += @LIBGD_LIBS@
-ax203_la_CPPFLAGS     += @LIBGD_CFLAGS@
+ax203_la_LIBADD       += $(LIBGD_LIBS)
+ax203_la_CPPFLAGS     += $(LIBGD_CFLAGS)
 
 ax203_la_LIBADD       += $(LIBJPEG_LIBS)
 ax203_la_CPPFLAGS     += $(LIBJPEG_CFLAGS)

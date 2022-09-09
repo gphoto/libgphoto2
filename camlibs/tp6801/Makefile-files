@@ -19,5 +19,5 @@ tp6801_la_DEPENDENCIES  = $(camlib_dependencies)
 tp6801_la_LDFLAGS       = $(camlib_ldflags)
 tp6801_la_LIBADD        = $(camlib_libadd)
 
-tp6801_la_CPPFLAGS     += @LIBGD_CFLAGS@
-tp6801_la_LIBADD       += @LIBGD_LIBS@
+tp6801_la_CPPFLAGS     += $(LIBGD_CFLAGS)
+tp6801_la_LIBADD       += $(LIBGD_LIBS)

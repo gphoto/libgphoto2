@@ -22,4 +22,5 @@ lumix_la_LIBADD       += $(LIBCURL_LIBS)
 lumix_la_CFLAGS       += $(LIBXML2_CFLAGS)
 lumix_la_LIBADD       += $(LIBXML2_LIBS)
 
-lumix_la_LIBADD       += @LIBWS232@
+lumix_la_CFLAGS       += $(LIBWS232_CFLAGS)
+lumix_la_LIBADD       += $(LIBWS232_LIBS)

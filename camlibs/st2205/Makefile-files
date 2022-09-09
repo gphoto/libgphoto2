@@ -23,8 +23,8 @@ st2205_la_DEPENDENCIES  = $(camlib_dependencies)
 st2205_la_LDFLAGS       = $(camlib_ldflags)
 st2205_la_LIBADD        = $(camlib_libadd)
 
-st2205_la_CFLAGS       += @LIBGD_CFLAGS@
-st2205_la_LIBADD       += @LIBGD_LIBS@
+st2205_la_CFLAGS       += $(LIBGD_CFLAGS)
+st2205_la_LIBADD       += $(LIBGD_LIBS)
 
 st2205_la_LIBADD       += $(LTLIBICONV)
 
