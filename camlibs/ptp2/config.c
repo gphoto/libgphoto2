@@ -5230,6 +5230,8 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	}
 
 	if (direction == 1) {
+		position_new = sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0])-1;
+
 		for (i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
@@ -5238,6 +5240,8 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 				break;
 		}
 	} else {
+		position_new = 0;
+
 		for (i=sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0])-1;i--;) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
