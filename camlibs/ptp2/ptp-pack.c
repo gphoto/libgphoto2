@@ -2506,9 +2506,10 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				}
 			}
 			break;
-#if 0
-			/* WIP */
-static int olcsizes[0x14][13] = {
+
+/* largely input from users, CONFIRMED is really confirmed from debug
+ * traces via "testolc", rest is guessed */
+static unsigned int olcsizes[0x15][13] = {
 	/* 1,2,4,8,0x10,  0x20,0x40,0x80,0x100,0x200, 0x400,0x800,0x1000*/
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x0 */
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x1 */
@@ -2517,53 +2518,60 @@ static int olcsizes[0x14][13] = {
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x4 */
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x5 */
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x6 */
-	{2,6,5,4,4, 6,7,4,6,5, 5,8,1 },	/* 0x7 */	/* full block: 79. EOS 100D */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */	/* EOS M10, PowerShot SX720HS: only report 0x1, 0x2, 0x4 and 0x8 masks, seperately */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x9 */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xa */
-	{2,6,5,4,4, 6,8,4,6,5, 5,9,8(x) },/* 0xb */
+	{2,6,5,4,4, 6,7,4,6,5, 5,8,1 },	/* 0x7 */	/* CONFIRMED: EOS 100D, 5D Mark 3 */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */	/* CONFIRMED: EOS M10, PowerShot SX720HS: only report 0x1, 0x2, 0x4 and 0x8 masks, seperately */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x9 */	/* guessed */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xa */	/* guessed */
+	{2,6,5,4,4, 6,8,4,6,5, 5,9,8 }, /* 0xb */	/* CONFIRMED */
 							/* full block 81: The EOS 750D was 0x1000 field length 1 (first byte content 0x00),
 							 * The EOS 5ds has field length 8 (first byte content 0x07),
 							 * the first byte could be considered block length?
 							 * https://github.com/gphoto/gphoto2/issues/81
 							 */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xc */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xd */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xe */
-	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xf */
-	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x10 */
-	{2,7,6,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x11 */
-	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x12 */	/* full block 97: EOS M6 Mark II */
-	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x13 */	/* guess / copy from 0x12 entry */
+	{2,6,5,4,4, 6,8,4,6,5, 5,9,1 },	/* 0xc */	/* guessed */
+	{2,6,5,4,4, 6,8,4,6,5, 5,9,1 },	/* 0xd */	/* guessed */
+	{2,6,5,4,4, 6,8,4,6,5, 5,9,1 },	/* 0xe */	/* guessed */
+	{2,7,6,4,4, 6,8,4,6,5, 5,9,1 },	/* 0xf */	/* guessed */
+	{2,7,6,4,4, 6,8,4,6,5, 5,9,1 },	/* 0x10 */	/* guessed */
+	{2,7,6,6,4, 6,8,4,6,5, 5,9,8 },	/* 0x11 */	/* CONFIRMED: EOS R */
+	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x12 */	/* CONFIRMED: EOS M6 Mark II */
+	{2,7,9,7,4, 6,8,5,7,5, 5,9,8 },	/* 0x13 */	/* CONFIRMED: EOS R5 C info from user Ingmar */
+	{2,9,9,7,4, 6,8,5,7,5, 5,9,8 },	/* 0x14 */	/* CONFIRMED: EOS R10. confirmed by trace from Marc Wetli */
 };
-#endif
 		/* one more information record handed to us */
 		/* Versions seen: (d199)
-		 * 100D: 	7 (original reference)
-		 * 5d Mark 3:	7
-		 * 650D:	7
-		 * 6D:		7
-		 * M10:		8
-		 * 70D:		8
-		 * 5Dsr:	b
-		 * 200D: 	f
-		 * EOS R:	0x11
-		 * EOS M6 Mark2 0x12
-		 * EOS R5:	0x13
+		 * 100D, 5d Mark 3, 650D, 6D: 	7 (original reference)
+		 * M10, 70D:		8
+		 * 5Dsr, 750D:		b
+		 * 200D: 		f
+		 * EOS R:		0x11
+		 * EOS M6 Mark2 	0x12
+		 * EOS R5, R5 C, M50m2:	0x13
+		 * EOS R10:		0x14
 		 */
+		/* still unclear what OLC stands for */
 		case PTP_EC_CANON_EOS_OLCInfoChanged: {
 			uint32_t		len, curoff;
 			uint16_t		mask,proptype;
 			PTPDevicePropDesc	*dpd;
-			int			olcver = 0;
+			unsigned int		olcver = 0, j;
 
 			dpd = _lookup_or_allocate_canon_prop(params, PTP_DPC_CANON_EOS_OLCInfoVersion);
 			if (dpd) {
 				ptp_debug (params, "olcinfoversion is %d", dpd->CurrentValue.u32);
 				olcver = dpd->CurrentValue.u32;
 			}
+			if (olcver == 0) {
+				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+				ce[i].u.info = strdup("OLC version is unknown");
+				ptp_debug (params, "event %d: OLC version is 0, skipping (might get set later)");
+				break;
+			}
+			if (olcver >= sizeof(olcsizes)/sizeof(olcsizes[0])) {
+				ptp_debug (params, "event %d: OLC version is %d, assuming latest known", olcver);
+				olcver = sizeof(olcsizes)/sizeof(olcsizes[0])-1;
+			}
 
-			/* unclear what OLC stands for */
 			ptp_debug (params, "event %d: EOS event OLCInfoChanged (size %d)", i, size);
 			if (size >= 0x8) {	/* event info */
 				unsigned int k;
@@ -2586,239 +2594,224 @@ static int olcsizes[0x14][13] = {
 			mask = dtoh16a(curdata+8+4);
 			ptp_debug (params, "event %d: OLC mask 0x%04x length %d / data length %d", i, mask, len, len - 8);
 			curoff = 8+4+4;
-			if (mask & CANON_EOS_OLC_BUTTON) {
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("Button 1234567"));
-				sprintf(ce[i].u.info, "Button %d",  dtoh16a(curdata+curoff));
-				i++;
-				curoff += 2; /* 7, 8 , f */
-			}
 
-			if (mask & CANON_EOS_OLC_SHUTTERSPEED) {
-				/* 6 bytes: 01 01 98 10 00 60 */
-				/* this seem to be the shutter speed record */
-				/* EOS 200D seems to have 7 bytes here, sample:
-				 * 7 bytes: 01 03 98 10 00 70 00
-				 * EOS R also 7 bytes
-				 * 7 bytes: 01 01 a0 0c 00 0c 00
-				 */
-				proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
-				dpd = _lookup_or_allocate_canon_prop(params, proptype);
-				dpd->CurrentValue.u16 = curdata[curoff+5]; /* just use last byte */
-
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
-				ce[i].u.propid = proptype;
-				/* hack to differ between older EOS and EOS 200D newer */
-				switch (olcver) {
-				case 0xf:
-				case 0x11:
-				case 0x12:
-				case 0x13:
-					curoff += 7;	/* f (200D), 8 (M10) ???, 11 is EOS R , 12 is EOS m6 Mark2*/
+			for (j = 0; j <= 12 ; j++) {
+				unsigned int k;
+				unsigned int curmask = 1 << j;
+				if (curoff > size)
 					break;
-				case 0x7:
-				case 0x8: /* EOS 70D */
-				case 0xb: /* EOS 5Ds */
-					curoff += 6;	/* 7 , b (5ds) */
-					break;
-				default:
-					if (olcver >= 0xf)
-						curoff += 7;
-					else
-						curoff += 6;
+				if (!(mask & curmask))
+					continue;
+				if (curoff+olcsizes[olcver][j] > size) {
+					ptp_debug (params, "event %d: size of entry ", i, mask, len, len - 8);
 					break;
 				}
-				i++;
-			}
-			if (mask & CANON_EOS_OLC_APERTURE) {
-				/* 5 bytes: 01 01 5b 30 30 */
-				/* this seem to be the aperture record */
-				/* EOS 200D seems to have 6 bytes here?
-				 * 6 bytes: 01 01 50 20 20 00 *
-				 * EOS M6 Mark 2:
-				 * 9 bytes: 01 03 00 58 00 2d 00 30 00
-				 */
-				proptype = PTP_DPC_CANON_EOS_Aperture;
-				dpd = _lookup_or_allocate_canon_prop(params, proptype);
-				if (olcver >= 0x12) {
-					dpd->CurrentValue.u16 = curdata[curoff+7]; /* RP, R5, etc */
-				} else {
-					dpd->CurrentValue.u16 = curdata[curoff+4]; /* just use last byte */
+				ptp_debug (params, "event %d: olcmask 0x%04x", i, curmask);
+				for (k=0;k<olcsizes[olcver][j];k++) {
+					ptp_debug (params, "    %d: %02x", k, curdata[curoff+k]);
 				}
+				switch (curmask) {
+				case CANON_EOS_OLC_BUTTON: {
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+					ce[i].u.info = malloc(strlen("Button 1234567"));
+					sprintf(ce[i].u.info, "Button %d",  dtoh16a(curdata+curoff));
+					i++;
+					break;
+				}
+				case CANON_EOS_OLC_SHUTTERSPEED: {
+					/* 6 bytes: 01 01 98 10 00 60 */
+					/* this seem to be the shutter speed record */
+					/* EOS 200D seems to have 7 bytes here, sample:
+					 * 7 bytes: 01 03 98 10 00 70 00
+					 * EOS R also 7 bytes
+					 * 7 bytes: 01 01 a0 0c 00 0c 00
+					 */
+					proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
+					dpd = _lookup_or_allocate_canon_prop(params, proptype);
+					dpd->CurrentValue.u16 = curdata[curoff+5]; /* just use last byte */
 
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
-				ce[i].u.propid = proptype;
-				if (olcver >= 0x12) {
-					curoff += 9;	/* m6 mark 2, r5 */
-				} else {
-					if (olcver >= 0xf) {
-						curoff += 6;	/* f, 11 */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
+					ce[i].u.propid = proptype;
+					i++;
+					break;
+				}
+				case CANON_EOS_OLC_APERTURE: {
+					/* 5 bytes: 01 01 5b 30 30 */
+					/* this seem to be the aperture record */
+					/* EOS 200D seems to have 6 bytes here?
+					 * 6 bytes: 01 01 50 20 20 00 *
+					 * EOS M6 Mark 2:
+					 * 9 bytes: 01 03 00 58 00 2d 00 30 00
+					 */
+					proptype = PTP_DPC_CANON_EOS_Aperture;
+					dpd = _lookup_or_allocate_canon_prop(params, proptype);
+					if (olcver >= 0x12) {
+						dpd->CurrentValue.u16 = curdata[curoff+7]; /* RP, R5, etc */
 					} else {
-						curoff += 5;	/* 7, 8, b */
+						dpd->CurrentValue.u16 = curdata[curoff+4]; /* just use last byte */
 					}
-				}
-				i++;
-			}
-			if (mask & CANON_EOS_OLC_ISO) {
-				/* 4 bytes: 01 01 00 78 */
-				/* EOS M6 Mark2: 01 01 00 6b 68 28 */
-				/* this seem to be the ISO record */
-				proptype = PTP_DPC_CANON_EOS_ISOSpeed;
-				dpd = _lookup_or_allocate_canon_prop(params, proptype);
-				dpd->CurrentValue.u16 = curdata[curoff+3]; /* just use last byte */
 
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
-				ce[i].u.propid = proptype;
-				if (olcver >= 0x12)	/* FIXME: olcver???? */
-					curoff += 6;	/* m6 mark 2 */
-				else
-					curoff += 4;	/* 7, 8, b, f*/
-				i++;
-			}
-			if (mask & 0x0010) {
-				/* mask 0x0010: 4 bytes, 04 00 00 00 observed */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo event 0x0010 content 01234567")+1);
-				sprintf(ce[i].u.info,"OLCInfo event 0x0010 content %02x%02x%02x%02x",
-					curdata[curoff],
-					curdata[curoff+1],
-					curdata[curoff+2],
-					curdata[curoff+3]
-				);
-				curoff += 4;
-				i++;
-			}
-			if (mask & 0x0020) {
-				/* mask 0x0020: 6 bytes, 00 00 00 00 00 00 observed.
-				 * This seems to be the self-timer record: when active,
-				 * has the form of 00 00 01 00 XX XX, where the last two bytes
-				 * stand for the number of seconds remaining until the shot */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo event 0x0020 content 0123456789ab")+1);
-				sprintf(ce[i].u.info,"OLCInfo event 0x0020 content %02x%02x%02x%02x%02x%02x",
-					curdata[curoff],
-					curdata[curoff+1],
-					curdata[curoff+2],
-					curdata[curoff+3],
-					curdata[curoff+4],
-					curdata[curoff+5]
-				);
-				curoff += 6;
-				i++;
-			}
-			if (mask & 0x0040) {
-				int	value = (signed char)curdata[curoff+2];
-				/* mask 0x0040: 7 bytes, 01 01 00 00 00 00 00 observed */
-				/* exposure indicator */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo exposure indicator 012345678901234567890123456789abcd")+1);
-				sprintf(ce[i].u.info,"OLCInfo exposure indicator %d,%d,%d.%d (%02x%02x%02x%02x)",
-					curdata[curoff],
-					curdata[curoff+1],
-					value/10,abs(value)%10,
-					curdata[curoff+3],
-					curdata[curoff+4],
-					curdata[curoff+5],
-					curdata[curoff+6]
-				);
-				if (olcver >= 0x12) {
-					curoff += 8;
-				} else {
-					curoff += 7;
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
+					ce[i].u.propid = proptype;
+					i++;
+					break;
 				}
-				i++;
-			}
-			if (mask & 0x0080) {
-				/* mask 0x0080: 4 bytes, 00 00 00 00 observed */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo event 0x0080 content 01234567")+1);
-				sprintf(ce[i].u.info,"OLCInfo event 0x0080 content %02x%02x%02x%02x",
-					curdata[curoff],
-					curdata[curoff+1],
-					curdata[curoff+2],
-					curdata[curoff+3]
-				);
-				curoff += 4;
-				i++;
-			}
-			if (mask & 0x0100) {
-				/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and 00 00 00 00 01 00 (on focus) observed */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO;
-				ce[i].u.info = malloc(strlen("0123456789ab")+1);
-				sprintf(ce[i].u.info,"%02x%02x%02x%02x%02x%02x",
-					curdata[curoff],
-					curdata[curoff+1],
-					curdata[curoff+2],
-					curdata[curoff+3],
-					curdata[curoff+4],
-					curdata[curoff+5]
-				);
-				if (olcver >= 0x12)
-					curoff += 7;
-				else
-					curoff += 6;
-				i++;
-			}
-			if (mask & 0x0200) {
-				/* mask 0x0200: 7 bytes, 00 00 00 00 00 00 00 observed */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK;
-				ce[i].u.info = malloc(strlen("0123456789abcd0123456789abcdef")+1);
-				sprintf(ce[i].u.info,"%02x%02x%02x%02x%02x%02x%02x",
-					curdata[curoff],
-					curdata[curoff+1],
-					curdata[curoff+2],
-					curdata[curoff+3],
-					curdata[curoff+4],
-					curdata[curoff+5],
-					curdata[curoff+6]
-				);
-				curoff += 7;
-				i++;
-			}
-			if (mask & 0x0400) {
-				/* mask 0x0400: 7 bytes, 00 00 00 00 00 00 00 observed */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo event 0x0400 content 0123456789abcd")+1);
-				sprintf(ce[i].u.info,"OLCInfo event 0x0400 content %02x%02x%02x%02x%02x%02x%02x",
-					curdata[curoff],
-					curdata[curoff+1],
-					curdata[curoff+2],
-					curdata[curoff+3],
-					curdata[curoff+4],
-					curdata[curoff+5],
-					curdata[curoff+6]
-				);
-				curoff += 7;
-				i++;
-			}
-			if (mask & 0x0800) {
-				/* mask 0x0800: 8 bytes, 00 00 00 00 00 00 00 00 and 19 01 00 00 00 00 00 00 and others observed */
-				/*   might be mask of focus points selected */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo event 0x0800 content 0123456789abcdef")+1);
-				sprintf(ce[i].u.info,"OLCInfo event 0x0800 content %02x%02x%02x%02x%02x%02x%02x%02x",
-					curdata[curoff],
-					curdata[curoff+1],
-					curdata[curoff+2],
-					curdata[curoff+3],
-					curdata[curoff+4],
-					curdata[curoff+5],
-					curdata[curoff+6],
-					curdata[curoff+7]
-				);
-				curoff += 8;
-				i++;
-			}
-			if (mask & 0x1000) {
-				/* mask 0x1000: 1 byte, 00 observed */
-				/* mask 0x1000: 8 byte too on 5ds, type 11 (has shuttercount inside) */
-				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = malloc(strlen("OLCInfo event 0x1000 content 01")+1);
-				sprintf(ce[i].u.info,"OLCInfo event 0x1000 content %02x",
-					curdata[curoff]
-				);
-				curoff += 1;
-				i++;
+				case CANON_EOS_OLC_ISO: {
+					/* 4 bytes: 01 01 00 78 */
+					/* EOS M6 Mark2: 01 01 00 6b 68 28 */
+					/* this seem to be the ISO record */
+					proptype = PTP_DPC_CANON_EOS_ISOSpeed;
+					dpd = _lookup_or_allocate_canon_prop(params, proptype);
+					dpd->CurrentValue.u16 = curdata[curoff+3]; /* just use last byte */
+
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
+					ce[i].u.propid = proptype;
+					i++;
+					break;
+				}
+				case 0x0010: {
+					/* mask 0x0010: 4 bytes, 04 00 00 00 observed */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+					ce[i].u.info = malloc(strlen("OLCInfo event 0x0010 content 01234567")+1);
+					sprintf(ce[i].u.info,"OLCInfo event 0x0010 content %02x%02x%02x%02x",
+						curdata[curoff],
+						curdata[curoff+1],
+						curdata[curoff+2],
+						curdata[curoff+3]
+					);
+					i++;
+					break;
+				}
+				case 0x0020: {
+					/* mask 0x0020: 6 bytes, 00 00 00 00 00 00 observed.
+					 * This seems to be the self-timer record: when active,
+					 * has the form of 00 00 01 00 XX XX, where the last two bytes
+					 * stand for the number of seconds remaining until the shot */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+					ce[i].u.info = malloc(strlen("OLCInfo event 0x0020 content 0123456789ab")+1);
+					sprintf(ce[i].u.info,"OLCInfo event 0x0020 content %02x%02x%02x%02x%02x%02x",
+						curdata[curoff],
+						curdata[curoff+1],
+						curdata[curoff+2],
+						curdata[curoff+3],
+						curdata[curoff+4],
+						curdata[curoff+5]
+					);
+					i++;
+					break;
+				}
+				case 0x0040: {
+					int	value = (signed char)curdata[curoff+2];
+					/* mask 0x0040: 7 bytes, 01 01 00 00 00 00 00 observed */
+					/* exposure indicator */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+					ce[i].u.info = malloc(strlen("OLCInfo exposure indicator 012345678901234567890123456789abcd")+1);
+					sprintf(ce[i].u.info,"OLCInfo exposure indicator %d,%d,%d.%d (%02x%02x%02x%02x)",
+						curdata[curoff],
+						curdata[curoff+1],
+						value/10,abs(value)%10,
+						curdata[curoff+3],
+						curdata[curoff+4],
+						curdata[curoff+5],
+						curdata[curoff+6]
+					);
+					i++;
+					break;
+				}
+				case 0x0080: {
+					/* mask 0x0080: 4 bytes, 00 00 00 00 observed */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+					ce[i].u.info = malloc(strlen("OLCInfo event 0x0080 content 01234567")+1);
+					sprintf(ce[i].u.info,"OLCInfo event 0x0080 content %02x%02x%02x%02x",
+						curdata[curoff],
+						curdata[curoff+1],
+						curdata[curoff+2],
+						curdata[curoff+3]
+					);
+					i++;
+					break;
+				}
+				case 0x0100: {
+					/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and 00 00 00 00 01 00 (on focus) observed */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO;
+					ce[i].u.info = malloc(strlen("0123456789ab")+1);
+					sprintf(ce[i].u.info,"%02x%02x%02x%02x%02x%02x",
+						curdata[curoff],
+						curdata[curoff+1],
+						curdata[curoff+2],
+						curdata[curoff+3],
+						curdata[curoff+4],
+						curdata[curoff+5]
+					);
+					i++;
+					break;
+				}
+				case 0x0200: {
+					/* mask 0x0200: 7 bytes, 00 00 00 00 00 00 00 observed */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK;
+					ce[i].u.info = malloc(strlen("0123456789abcd0123456789abcdef")+1);
+					sprintf(ce[i].u.info,"%02x%02x%02x%02x%02x%02x%02x",
+						curdata[curoff],
+						curdata[curoff+1],
+						curdata[curoff+2],
+						curdata[curoff+3],
+						curdata[curoff+4],
+						curdata[curoff+5],
+						curdata[curoff+6]
+					);
+					i++;
+					break;
+				}
+				case 0x0400: {
+					/* mask 0x0400: 7 bytes, 00 00 00 00 00 00 00 observed */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+					ce[i].u.info = malloc(strlen("OLCInfo event 0x0400 content 0123456789abcd")+1);
+					sprintf(ce[i].u.info,"OLCInfo event 0x0400 content %02x%02x%02x%02x%02x%02x%02x",
+						curdata[curoff],
+						curdata[curoff+1],
+						curdata[curoff+2],
+						curdata[curoff+3],
+						curdata[curoff+4],
+						curdata[curoff+5],
+						curdata[curoff+6]
+					);
+					i++;
+					break;
+				}
+				case 0x0800: {
+					/* mask 0x0800: 8 bytes, 00 00 00 00 00 00 00 00 and 19 01 00 00 00 00 00 00 and others observed */
+					/*   might be mask of focus points selected */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+					ce[i].u.info = malloc(strlen("OLCInfo event 0x0800 content 0123456789abcdef")+1);
+					sprintf(ce[i].u.info,"OLCInfo event 0x0800 content %02x%02x%02x%02x%02x%02x%02x%02x",
+						curdata[curoff],
+						curdata[curoff+1],
+						curdata[curoff+2],
+						curdata[curoff+3],
+						curdata[curoff+4],
+						curdata[curoff+5],
+						curdata[curoff+6],
+						curdata[curoff+7]
+					);
+					i++;
+					break;
+				}
+				case 0x1000: {
+					/* mask 0x1000: 1 byte, 00 observed */
+					/* mask 0x1000: 8 byte too on 5ds, type 11 (has shuttercount inside) */
+					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
+					ce[i].u.info = malloc(strlen("OLCInfo event 0x1000 content 01")+1);
+					sprintf(ce[i].u.info,"OLCInfo event 0x1000 content %02x",
+						curdata[curoff]
+					);
+					i++;
+					break;
+				}
+				default: {
+					break;
+				}
+				}
+				curoff += olcsizes[olcver][j];
 			}
 			/* handle more masks */
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
@@ -2898,10 +2891,10 @@ static int olcsizes[0x14][13] = {
 				break;
 			}
 			if (size >= 0x8) {	/* event info */
-				unsigned int j;
+				unsigned int k;
 				/*ptp_debug (params, "data=%p, curdata=%p, datsize=%d, size=%d", data, curdata, datasize, size);*/
-				for (j=8;j<size;j++)
-					ptp_debug (params, "    %d: %02x", j, curdata[j]);
+				for (k=8;k<size;k++)
+					ptp_debug (params, "    %d: %02x", k, curdata[k]);
 			}
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 			break;
