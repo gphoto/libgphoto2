@@ -733,8 +733,8 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPProperty
 					cx = ((xc>>8) & 0xff) | ((xc & 0xff) << 8);
 					xstr[i] = cx;
 				}
-				xstr[len] = 0;
 			}
+			xstr[len] = '\0';
 			ptp_debug( params, "\t%s", xstr);
 			propval->str = xstr;
 			break;
