@@ -61,6 +61,8 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 			fprintf (stderr, "wait for event CAPTURE_COMPLETE\n");
 			break;
 		case GP_EVENT_UNKNOWN:
+			free(data);
+			break;
 		case GP_EVENT_TIMEOUT:
 			break;
 		case GP_EVENT_FOLDER_ADDED:
