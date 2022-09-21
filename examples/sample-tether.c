@@ -78,6 +78,7 @@ camera_tether(Camera *camera, GPContext *context) {
 		case GP_EVENT_UNKNOWN:
 			if (evtdata) {
 				printf("Unknown event: %s.\n", (char*)evtdata);
+				free(evtdata);
 			} else {
 				printf("Unknown event.\n");
 			}
