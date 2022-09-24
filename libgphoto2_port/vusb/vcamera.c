@@ -205,6 +205,7 @@ ptp_response(vcamera *cam, uint16_t code, int nparams, ...) {
 #define PTP_RC_InvalidObjectFormatCode			0x200B
 #define PTP_RC_StoreFull				0x200C
 #define PTP_RC_ObjectWriteProtected			0x200D
+#define PTP_RC_StoreReadOnly				0x200E
 #define PTP_RC_AccessDenied				0x200F
 #define PTP_RC_NoThumbnailPresent			0x2010
 #define PTP_RC_StoreNotAvailable			0x2013
@@ -1122,8 +1123,8 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 		cur = cur->next;
 	}
 	if (!cur) {
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed");
-		ptp_response (cam, PTP_RC_GeneralError, 0);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed. reporting PTP_RC_StoreReadOnly.");
+		ptp_response (cam, PTP_RC_StoreReadOnly, 0);
 		return 1;
 	}
 	dir = first_dirent;
