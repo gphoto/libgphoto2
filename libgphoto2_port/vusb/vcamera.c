@@ -418,6 +418,26 @@ struct ptp_dirent {
 static struct ptp_dirent *first_dirent = NULL;
 static uint32_t	ptp_objectid = 0;
 
+static void *read_file(struct ptp_dirent *cur) {
+	FILE *file = fopen(cur->fsname, "rb");
+	if (!file) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not open %s", cur->fsname);
+		return NULL;
+	}
+	void *data = malloc(cur->stbuf.st_size);
+	if (!data) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not allocate data for %s", cur->fsname);
+		return NULL;
+	}
+	if (!fread(data, cur->stbuf.st_size, 1, file)) {
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not read data of %s", cur->fsname);
+		free(data);
+		data = NULL;
+	}
+	fclose(file);
+	return data;
+}
+
 static void
 read_directories(const char *path, struct ptp_dirent *parent) {
 	struct ptp_dirent	*cur;
@@ -906,27 +926,14 @@ ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	if (ofc == 0x3801) {			/* We are jpeg ... look into the exif data */
 		ExifData	*ed;
 		ExifEntry	*e;
-		int		fd;
 		unsigned char	*filedata;
 
-		filedata = malloc(cur->stbuf.st_size);
-		fd =  open(cur->fsname,O_RDONLY);
-		if (fd == -1) {
-			free (filedata);
+		filedata = read_file(cur);
+		if (!filedata) {
 			free (data);
-			gp_log (GP_LOG_ERROR,__FUNCTION__, "could not open %s", cur->fsname);
 			ptp_response(cam,PTP_RC_GeneralError,0);
 			return 1;
 		}
-		if (cur->stbuf.st_size != read(fd, filedata, cur->stbuf.st_size)) {
-			free (filedata);
-			free (data);
-			close (fd);
-			gp_log (GP_LOG_ERROR,__FUNCTION__, "could not read data of %s", cur->fsname);
-			ptp_response(cam,PTP_RC_GeneralError,0);
-			return 1;
-		}
-		close (fd);
 
 		ed = exif_data_new_from_data ((unsigned char*)filedata, cur->stbuf.st_size);
 		if (ed) {
@@ -997,7 +1004,6 @@ static int
 ptp_getobject_write(vcamera *cam, ptpcontainer *ptp) {
 	unsigned char 		*data;
 	struct ptp_dirent	*cur;
-	int fd;
 
 	CHECK_SEQUENCE_NUMBER();
 	CHECK_SESSION();
@@ -1013,22 +1019,11 @@ ptp_getobject_write(vcamera *cam, ptpcontainer *ptp) {
 		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
 		return 1;
 	}
-	data = malloc(cur->stbuf.st_size);
-	fd =  open(cur->fsname,O_RDONLY);
-	if (fd == -1) {
-		free (data);
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not open %s", cur->fsname);
+	data = read_file(cur);
+	if (!data) {
 		ptp_response(cam,PTP_RC_GeneralError,0);
 		return 1;
 	}
-	if (cur->stbuf.st_size != read(fd, data, cur->stbuf.st_size)) {
-		free (data);
-		close (fd);
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not read data of %s", cur->fsname);
-		ptp_response(cam,PTP_RC_GeneralError,0);
-		return 1;
-	}
-	close (fd);
 
 	ptp_senddata (cam, 0x1009, data, cur->stbuf.st_size);
 	free (data);
@@ -1040,7 +1035,6 @@ static int
 ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp) {
 	unsigned char 		*data;
 	struct ptp_dirent	*cur;
-	int			fd;
 #ifdef HAVE_LIBEXIF
         ExifData		*ed;
 #endif
@@ -1059,22 +1053,11 @@ ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp) {
 		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
 		return 1;
 	}
-	data = malloc(cur->stbuf.st_size);
-	fd =  open(cur->fsname,O_RDONLY);
-	if (fd == -1) {
-		free (data);
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not open %s", cur->fsname);
+	data = read_file(cur);
+	if (!data) {
 		ptp_response(cam,PTP_RC_GeneralError,0);
 		return 1;
 	}
-	if (cur->stbuf.st_size != read(fd, data, cur->stbuf.st_size)) {
-		free (data);
-		close (fd);
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "could not read data of %s", cur->fsname);
-		ptp_response(cam,PTP_RC_GeneralError,0);
-		return 1;
-	}
-	close (fd);
 
 #ifdef HAVE_LIBEXIF
 	ed = exif_data_new_from_data ((unsigned char*)data, cur->stbuf.st_size);
