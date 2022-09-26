@@ -819,6 +819,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				ret = gp_filesystem_append (fs, folder, xfn, context);
 				if (ret < GP_OK) goto out;
 
+				memset (&info, 0, sizeof (info));
 				/* we also get parts of fs info for free, so just set it */
 				info.file.fields =
 						GP_FILE_INFO_SIZE |

@@ -119,7 +119,7 @@ static int file_list_func (CameraFilesystem *fs, const char *folder,
 	  if( !((file_entry->state & 0x02) != 2)  &&
 	      !((file_entry->state & 0x08) == 8) )
 	    {
-	      info.file.fields = 0;
+	      memset (&info, 0, sizeof (info));
 	      temp = (char *)&(file_entry->name)[5];
 	      if (strncmp(temp,"JPG",3) == 0)
 		{

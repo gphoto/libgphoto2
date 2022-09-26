@@ -3291,6 +3291,7 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, CameraFilePath *path
 	/* fetch ob pointer again, as gp_filesystem_append can change the object list */
 	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 
+	memset (&info, 0, sizeof (info));
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
@@ -4000,6 +4001,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	/* We have now handed over the file, disclaim responsibility by unref. */
 	gp_file_unref (file);
 
+	memset (&info, 0, sizeof (info));
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
@@ -6930,6 +6932,7 @@ downloadnow:
 					return ret;
 				}
 
+				memset (&info, 0, sizeof (info));
 				/* we also get the fs info for free, so just set it */
 				info.file.fields = GP_FILE_INFO_TYPE |
 						GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
