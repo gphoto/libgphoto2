@@ -419,7 +419,7 @@ static struct ptp_dirent *first_dirent = NULL;
 static uint32_t	ptp_objectid = 0;
 
 static void
-read_directories(char *path, struct ptp_dirent *parent) {
+read_directories(const char *path, struct ptp_dirent *parent) {
 	struct ptp_dirent	*cur;
 	gp_system_dir		dir;
 	gp_system_dirent	de;
@@ -457,7 +457,7 @@ free_dirent(struct ptp_dirent *ent) {
 }
 
 static void
-read_tree(char *path) {
+read_tree(const char *path) {
 	struct	ptp_dirent *root = NULL, *dir, *dcim = NULL;
 
 	if (first_dirent)
@@ -2157,7 +2157,8 @@ vcamera_new(vcameratype type) {
 	cam = calloc(1,sizeof(vcamera));
 	if (!cam) return NULL;
 
-	read_tree(VCAMERADIR);
+	const char *vcameradir_env = getenv("VCAMERADIR");
+	read_tree(vcameradir_env != NULL ? vcameradir_env : VCAMERADIR);
 
 	cam->init = vcam_init;
 	cam->exit = vcam_exit;
