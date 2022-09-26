@@ -75,7 +75,6 @@ gp_system_dir gp_system_opendir (const char *dirname) {
         GPPORTWINDIR *d;
         DWORD dr;
         int x;
-        printf("blah2\n");
         d = (GPPORTWINDIR*)malloc(sizeof(GPPORTWINDIR));
         d->handle = INVALID_HANDLE_VALUE;
         d->got_first = 0;
