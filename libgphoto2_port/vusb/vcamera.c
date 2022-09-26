@@ -1133,6 +1133,7 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 		return 1;
 	}
 
+	/* just search for first jpeg we find in the tree, we will use this to send back as the captured image */
 	cur = first_dirent;
 	while (cur) {
 		if (strstr (cur->name, ".jpg") || strstr (cur->name, ".JPG"))
@@ -1144,31 +1145,14 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 		ptp_response (cam, PTP_RC_StoreNotAvailable, 0);
 		return 1;
 	}
+	/* identify the DCIM dir, so we can attach a virtual xxxGPHOT directory to virtually store the new picture in */
 	dir = first_dirent;
 	while (dir) {
 		if (!strcmp(dir->name,"DCIM") && dir->parent && !dir->parent->id)
 			dcim = dir;
 		dir = dir->next;
 	}
-
-	cur = first_dirent;
-	while (cur) {
-		if (strstr (cur->name, ".jpg") || strstr (cur->name, ".JPG"))
-			break;
-		cur = cur->next;
-	}
-	if (!cur) {
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed. reporting PTP_RC_StoreReadOnly.");
-		ptp_response (cam, PTP_RC_StoreNotAvailable, 0);
-		return 1;
-	}
-	dir = first_dirent;
-	while (dir) {
-		if (!strcmp(dir->name,"DCIM") && dir->parent && !dir->parent->id)
-			dcim = dir;
-		dir = dir->next;
-	}
-	/* nnnGPHOT directories, where nnn is 100-999. (See DCIM standard.) */
+	/* find the nnnGPHOT directories, where nnn is 100-999. (See DCIM standard.) */
 	sprintf(buf, "%03dGPHOT", 100 + ((capcnt / 100) % 900));
 	dir = first_dirent;
 	while (dir) {
@@ -1176,6 +1160,7 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 			break;
 		dir = dir->next;
 	}
+	/* if not yet found, create the virtual /DCIM/xxxGPHOT/ directory. */
 	if (!dir) {
 		dir 		= malloc (sizeof(struct ptp_dirent));
 		dir->id		= ++ptp_objectid;
