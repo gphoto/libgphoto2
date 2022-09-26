@@ -1106,7 +1106,7 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 	}
 	if (!cur) {
 		gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed");
-		ptp_response (cam, PTP_RC_GeneralError, 0);
+		ptp_response (cam, PTP_RC_StoreNotAvailable, 0);
 		return 1;
 	}
 	dir = first_dirent;
@@ -1124,7 +1124,7 @@ ptp_initiatecapture_write(vcamera *cam, ptpcontainer *ptp) {
 	}
 	if (!cur) {
 		gp_log (GP_LOG_ERROR,__FUNCTION__, "I do not have a JPG file in the store, can not proceed. reporting PTP_RC_StoreReadOnly.");
-		ptp_response (cam, PTP_RC_StoreReadOnly, 0);
+		ptp_response (cam, PTP_RC_StoreNotAvailable, 0);
 		return 1;
 	}
 	dir = first_dirent;
