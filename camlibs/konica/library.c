@@ -564,6 +564,8 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 	C(gp_filesystem_append (camera->fs, path->folder,
 					     path->name, context));
 
+	memset (&info, 0, sizeof (info));
+
 	info.preview.fields = GP_FILE_INFO_SIZE | GP_FILE_INFO_TYPE;
 	info.preview.size = buffer_size;
 	strcpy (info.preview.type, GP_MIME_JPEG);
@@ -1268,4 +1270,3 @@ camera_init (Camera* camera, GPContext *context)
 						       timeout_func);
         return (GP_OK);
 }
-

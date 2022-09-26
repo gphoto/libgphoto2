@@ -418,6 +418,7 @@ jd11_index_reader(GPPort *port, CameraFilesystem *fs, GPContext *context) {
 		return ret;
 	}
 
+	memset (&info, 0, sizeof (info));
 	/* we also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |

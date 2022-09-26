@@ -415,6 +415,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		}
 		/* We have now handed over the file, disclaim responsibility by unref. */
 		gp_file_unref (file);
+
+		memset (&info, 0, sizeof (info));
 		/* we also get the fs info for free, so just set it */
 		info.file.fields = GP_FILE_INFO_TYPE |
 				GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
@@ -574,6 +576,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 			}
 			/* We have now handed over the file, disclaim responsibility by unref. */
 			gp_file_unref (file);
+
+			memset (&info, 0, sizeof (info));
 			/* we also get the fs info for free, so just set it */
 			info.file.fields = GP_FILE_INFO_TYPE |
 					GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
