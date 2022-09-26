@@ -340,6 +340,41 @@ struct _PTPDevicePropDesc {
 };
 typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 
+// We need these (modified) helpers from ptp.c.
+// Perhaps vcamera.c should be moved to camlibs/ptp2 for easier sharing
+// in the future.
+static void
+ptp_free_devicepropvalue(uint16_t dt, PTPPropertyValue* dpd)
+{
+	if (dt == /* PTP_DTC_STR */ 0xFFFF) {
+		free(dpd->str);
+	} else if (dt & /* PTP_DTC_ARRAY_MASK */ 0x4000) {
+		free(dpd->a.v);
+	}
+}
+
+static void
+ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
+{
+	uint16_t i;
+
+	ptp_free_devicepropvalue (dpd->DataType, &dpd->FactoryDefaultValue);
+	ptp_free_devicepropvalue (dpd->DataType, &dpd->CurrentValue);
+	switch (dpd->FormFlag) {
+	case /* PTP_DPFF_Range */ 0x01:
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MinimumValue);
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MaximumValue);
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.StepSize);
+		break;
+	case /* PTP_DPFF_Enumeration */ 0x02:
+		if (dpd->FORM.Enum.SupportedValue) {
+			for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++)
+				ptp_free_devicepropvalue (dpd->DataType, dpd->FORM.Enum.SupportedValue+i);
+			free (dpd->FORM.Enum.SupportedValue);
+		}
+	}
+}
+
 static int ptp_battery_getdesc(vcamera*,PTPDevicePropDesc*);
 static int ptp_battery_getvalue(vcamera*,PTPPropertyValue*);
 static int ptp_imagesize_getdesc(vcamera*,PTPDevicePropDesc*);
@@ -1334,6 +1369,8 @@ ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp) {
 		break;
 	}
 
+	ptp_free_devicepropdesc(&desc);
+
 	ptp_senddata (cam, 0x1014, data, x);
 	free (data);
 	ptp_response (cam, PTP_RC_OK, 0);
@@ -1819,6 +1856,8 @@ static int vcam_close(vcamera* cam) {
 		cam->fuzzf = NULL;
 		cam->fuzzpending = 0;
 	}
+	free (cam->inbulk);
+	free (cam->outbulk);
 	return GP_OK;
 }
 
