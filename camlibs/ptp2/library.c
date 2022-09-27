@@ -5697,8 +5697,10 @@ fallback:
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
 	ptpres = LOG_ON_PTP_E (ptp_initiatecapture(params, 0x00000000, 0x00000000));
 	/* the V1 reports general error to us, but has actually captured ... so just ignore GeneralError. */
-	if ((ptpres != PTP_RC_OK) && (ptpres != PTP_RC_GeneralError))
-		CR(ptpres);
+	if ((ptpres != PTP_RC_OK) && (ptpres != PTP_RC_GeneralError)) {
+		CR (gp_port_set_timeout (camera->port, normal_timeout));
+		C_PTP (ptpres);
+	}
 	/* A word of comments is worth here.
 	 * After InitiateCapture camera should report with ObjectAdded event
 	 * all newly created objects. However there might be more than one
