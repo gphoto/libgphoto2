@@ -7075,6 +7075,21 @@ _get_BatteryLevel(CONFIG_GET_ARGS) {
 		return GP_ERROR;
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
 
+	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
+		unsigned int i, highest = 0, factor = 1;
+
+		gp_widget_set_name (*widget, menu->name);
+
+		/* This is for Canon ... they have enums  [0,1,2,3] and [0,25,50,75,100] .. For the 0-3 enum, multiply by 33 */
+		for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++) {
+			if (dpd->FORM.Enum.SupportedValue[i].u8 > highest)
+				highest = dpd->FORM.Enum.SupportedValue[i].u8;
+		}
+		if (highest == 3) factor = 33;
+
+		sprintf (buffer, "%d%%", dpd->CurrentValue.u8 * factor);
+		return gp_widget_set_value(*widget, buffer);
+	}
 	if (dpd->FormFlag == PTP_DPFF_Range) {
 		gp_widget_set_name (*widget, menu->name);
 		start = dpd->FORM.Range.MinimumValue.u8;
