@@ -1813,7 +1813,11 @@ static int vcam_open(vcamera* cam, const char *port) {
 			cam->fuzzpending = 0;
 			cam->fuzzmode = FUZZMODE_NORMAL;
 		}
-		if (cam->fuzzf == NULL) perror(s+1);
+		/* in virtual camera mode we have no fuzzing
+		if (cam->fuzzf == NULL) {
+			perror(s+1);
+		}
+		*/
 	}
 	return GP_OK;
 }
