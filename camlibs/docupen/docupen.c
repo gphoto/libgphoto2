@@ -273,7 +273,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!strcmp(value, _("100 DPI")))
 			camera->pl->profile[0x81] = RES_100DPI;
 		else if (!strcmp(value, _("200 DPI")))
-			camera->pl->profile[0x81] = RES_200DPI;;
+			camera->pl->profile[0x81] = RES_200DPI;
 	}
 
 	gp_widget_get_child_by_label (section, _("Hi Resolution"), &widget);
