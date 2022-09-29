@@ -1797,6 +1797,7 @@ static int vcam_exit(vcamera* cam) {
 }
 
 static int vcam_open(vcamera* cam, const char *port) {
+#ifdef FUZZING
 	char *s = strchr(port,':');
 
 	if (s) {
@@ -1819,15 +1820,18 @@ static int vcam_open(vcamera* cam, const char *port) {
 		}
 		*/
 	}
+#endif
 	return GP_OK;
 }
 
 static int vcam_close(vcamera* cam) {
+#ifdef FUZZING
 	if (cam->fuzzf) {
 		fclose (cam->fuzzf);
 		cam->fuzzf = NULL;
 		cam->fuzzpending = 0;
 	}
+#endif
 	free (cam->inbulk);
 	free (cam->outbulk);
 	return GP_OK;
@@ -1935,6 +1939,8 @@ static int
 vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
 	unsigned int	toread = bytes;
 
+#ifdef FUZZING
+	/* here we are not using the virtual ptp camera, but just read from a file, or write to it. */
 	if (cam->fuzzf) {
 		unsigned int hasread;
 
@@ -1985,6 +1991,7 @@ vcam_read(vcamera*cam, int ep, unsigned char *data, int bytes) {
 			return toread;
 		}
 	}
+#endif /* FUZZING */
 
 	/* Emulated PTP camera stuff */
 
@@ -2079,11 +2086,14 @@ vcam_readint(vcamera*cam, unsigned char *data, int bytes, int timeout) {
 	struct ptp_interrupt	*pint;
 
 	if (!first_interrupt) {
+#ifdef FUZZING
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 		usleep (timeout*1000);
 #endif
+		/* this emulates plugged out devices during fuzzing */
 		if (cam->fuzzf && feof(cam->fuzzf))
 			return GP_ERROR_IO;
+#endif /* FUZZING */
 		return GP_ERROR_TIMEOUT;
 	}
 	gettimeofday (&now, NULL);
