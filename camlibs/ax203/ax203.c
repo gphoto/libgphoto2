@@ -992,7 +992,7 @@ ax203_read_filecount(Camera *camera)
 		return ax203_read_v3_3_x_v3_4_x_filecount (camera);
 	case AX206_FIRMWARE_3_5_x:
 	case AX3003_FIRMWARE_3_5_x:
-		return ax203_read_v3_5_x_filecount (camera);;
+		return ax203_read_v3_5_x_filecount (camera);
 	}
 	/* Never reached */
 	return GP_ERROR_NOT_SUPPORTED;
