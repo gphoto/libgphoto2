@@ -9055,7 +9055,7 @@ _put_Panasonic_ColorTemp(CONFIG_PUT_ARGS)
     uint32_t val;
 
     CR (gp_widget_get_value(widget, &xval));
-    uint16_t KSet;;
+    uint16_t KSet;
     sscanf (xval, "%hd", &KSet);
     val = KSet;
 
