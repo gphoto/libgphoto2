@@ -514,18 +514,26 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 			/* V1 and J1 are a less reliable then the newer 1 versions, no changecamera mode, no getevent, no initiatecapturerecinsdram */
 			if (	!strcmp(params->deviceinfo.Model,"V1") ||
+				!strcmp(params->deviceinfo.Model,"S1") ||
 				!strcmp(params->deviceinfo.Model,"J1")
 			) {
 				/* on V1 and J1 even the 90c7 getevents does not work */
 				/* V1: see https://github.com/gphoto/libgphoto2/issues/569 */
 				/* J1: see https://github.com/gphoto/libgphoto2/issues/716 */
+				/* S1: see https://github.com/gphoto/libgphoto2/issues/845 */
 				for (i=0;i<di->OperationsSupported_len;i++) {
 					if (di->OperationsSupported[i] == PTP_OC_NIKON_GetEvent) {
-						GP_LOG_D("On Nikon V1: disable NIKON_GetEvent as its unreliable");
+						GP_LOG_D("On Nikon S1/J1/V1: disable NIKON_GetEvent as its unreliable");
 						di->OperationsSupported[i] = PTP_OC_GetDeviceInfo; /* overwrite */
 					}
 					if (di->OperationsSupported[i] == PTP_OC_NIKON_InitiateCaptureRecInSdram) {
-						GP_LOG_D("On Nikon V1: disable NIKON_InitiateCaptureRecInSdram as its unreliable");
+						GP_LOG_D("On Nikon S1/J1/V1: disable NIKON_InitiateCaptureRecInSdram as its unreliable");
+						di->OperationsSupported[i] = PTP_OC_InitiateCapture; /* overwrite */
+					}
+					if (!strcmp(params->deviceinfo.Model,"S1") &&
+						(di->OperationsSupported[i] == PTP_OC_NIKON_InitiateCaptureRecInMedia))
+					{
+						GP_LOG_D("On Nikon S1: disable NIKON_InitiateCaptureRecInMedia as its unreliable");
 						di->OperationsSupported[i] = PTP_OC_InitiateCapture; /* overwrite */
 					}
 				}
@@ -4377,7 +4385,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 				/* just add it to the filesystem, and return in CameraPath */
 				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-				/* We have some form of objectinfo in entry.u.object.oi already, but we let the 
+				/* We have some form of objectinfo in entry.u.object.oi already, but we let the
 				 * code refetch it via regular GetObjectInfo */
 
 				res = add_object_to_fs_and_path (camera, entry.u.object.oid, path, context);
@@ -4809,7 +4817,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		/* For some as yet unknown reason the ZV-1, the RX100M7 and the A7 R4 need around 3 seconds startup time
 		 * to be able to capture. I looked for various trigger events or property changes on the ZV-1
 		 * but nothing worked except waiting.
-		 * This might not be required when having manual focusing according to https://github.com/gphoto/gphoto2/issues/349 
+		 * This might not be required when having manual focusing according to https://github.com/gphoto/gphoto2/issues/349
 		 */
 
 		while (time_since (params->starttime) < 2500) {
