@@ -3228,11 +3228,39 @@ ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 }
 
 uint16_t
+ptp_add_event_queue (PTPContainer **events, unsigned int *nrevents, PTPContainer *evt)
+{
+	PTPContainer *levents;
+
+	levents = realloc(*events, sizeof(PTPContainer)*((*nrevents)+1));
+	if (!levents)
+		return PTP_RC_GeneralError;
+	*events = levents;
+	memcpy (&events[*nrevents],evt,1*sizeof(PTPContainer));
+	(*nrevents)++;
+	return PTP_RC_OK;
+}
+uint16_t
 ptp_add_event (PTPParams *params, PTPContainer *evt)
 {
+	return ptp_add_event_queue (&params->events, &params->nrofevents, evt);
+/*
 	params->events = realloc(params->events, sizeof(PTPContainer)*(params->nrofevents+1));
 	memcpy (&params->events[params->nrofevents],evt,1*sizeof(PTPContainer));
 	params->nrofevents += 1;
+
+	return PTP_RC_OK;
+*/
+}
+
+uint16_t
+ptp_add_events (PTPParams *params, PTPContainer **evt, unsigned int nrevents)
+{
+	unsigned int i;
+
+	for (i=0;i<nrevents;i++) {
+		CHECK_PTP_RC (ptp_add_event_queue (&params->events, &params->nrofevents, evt[i]));
+	}
 	return PTP_RC_OK;
 }
 
