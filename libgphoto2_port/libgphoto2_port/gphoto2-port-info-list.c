@@ -316,12 +316,12 @@ gp_port_info_list_load (GPPortInfoList *list)
 	C_PARAMS (list);
 
 	GP_LOG_D ("Using ltdl to load io-drivers from '%s'...", iolibs);
-	pthread_mutex_lock(&gpi_libltdl_mutex);
+	gpi_libltdl_lock();
 	lt_dlinit ();
 	lt_dladdsearchdir (iolibs);
 	result = lt_dlforeachfile (iolibs, foreach_func, list);
 	lt_dlexit ();
-	pthread_mutex_unlock(&gpi_libltdl_mutex);
+	gpi_libltdl_unlock();
 	if (result < 0)
 		return (result);
 	if (list->iolib_count == 0) {
