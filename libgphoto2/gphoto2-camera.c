@@ -37,7 +37,7 @@
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>
-#include <gphoto2/gphoto2-port-mutex.h>
+#include <gphoto2/gphoto2-port-locking.h>
 
 #include "libgphoto2/i18n.h"
 
