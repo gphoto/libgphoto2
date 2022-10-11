@@ -96,7 +96,6 @@ noinst_DATA = libgphoto2_port-uninstalled.pc
 
 # ship headers
 nobase_include_HEADERS =	\
-	gphoto2/gphoto2-port-mutex.h			\
 	gphoto2/gphoto2-port.h			\
 	gphoto2/gphoto2-port-info-list.h	\
 	gphoto2/gphoto2-port-log.h		\
@@ -105,3 +104,4 @@ nobase_include_HEADERS =	\
 	gphoto2/gphoto2-port-result.h
 
 EXTRA_DIST += gphoto2/gphoto2-port-library.h
+EXTRA_DIST += gphoto2/gphoto2-port-mutex.h
