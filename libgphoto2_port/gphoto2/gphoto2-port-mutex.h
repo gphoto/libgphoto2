@@ -1,5 +1,5 @@
-#ifndef __GPHOTO2_MUTEX_H__
-#define __GPHOTO2_MUTEX_H__
+#ifndef LIBGPHOTO2_GPHOTO2_PORT_MUTEX_H
+#define LIBGPHOTO2_GPHOTO2_PORT_MUTEX_H
 
 #include <pthread.h>
 
@@ -17,4 +17,4 @@ extern pthread_mutex_t gpi_libltdl_mutex;
 }
 #endif /* __cplusplus */
 
-#endif /* __GPHOTO2_MUTEX_H__ */
+#endif /* defined(LIBGPHOTO2_GPHOTO2_PORT_MUTEX_H) */
