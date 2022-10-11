@@ -4170,7 +4170,7 @@ capturetriggered:
 	if (ret != PTP_RC_OK) {
 		/* store back all the queued events back to the hw event queue before returning. */
 		/* we do not do this in all error edge cases currently, only the ones that can trigger often */
-		ptp_add_events (params, &storedevents, nrstoredevents);
+		ptp_add_events (params, storedevents, nrstoredevents);
 		C_PTP_REP (ret);
 	}
 
@@ -4251,7 +4251,7 @@ capturetriggered:
 	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 70*1000)); /* 70 seconds */
 
 	/* add all the queued events back to the event queue */
-	ptp_add_events (params, &storedevents, nrstoredevents);
+	ptp_add_events (params, storedevents, nrstoredevents);
 
 	/* Maximum image time is 30 seconds, but NR processing might take 25 seconds ... so wait longer.
 	 * see https://github.com/gphoto/libgphoto2/issues/94 */

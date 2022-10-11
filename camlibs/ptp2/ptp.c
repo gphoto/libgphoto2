@@ -3236,7 +3236,7 @@ ptp_add_event_queue (PTPContainer **events, unsigned int *nrevents, PTPContainer
 	if (!levents)
 		return PTP_RC_GeneralError;
 	*events = levents;
-	memcpy (&events[*nrevents],evt,1*sizeof(PTPContainer));
+	memcpy (&levents[*nrevents],evt,1*sizeof(PTPContainer));
 	(*nrevents)++;
 	return PTP_RC_OK;
 }
@@ -3254,12 +3254,12 @@ ptp_add_event (PTPParams *params, PTPContainer *evt)
 }
 
 uint16_t
-ptp_add_events (PTPParams *params, PTPContainer **evt, unsigned int nrevents)
+ptp_add_events (PTPParams *params, PTPContainer *evt, unsigned int nrevents)
 {
 	unsigned int i;
 
 	for (i=0;i<nrevents;i++) {
-		CHECK_PTP_RC (ptp_add_event_queue (&params->events, &params->nrofevents, evt[i]));
+		CHECK_PTP_RC (ptp_add_event_queue (&params->events, &params->nrofevents, &evt[i]));
 	}
 	return PTP_RC_OK;
 }
