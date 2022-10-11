@@ -239,8 +239,10 @@ GP_VA_COPY
 
 
 dnl check for/set up libtool and libltdl
+m4_pattern_forbid([^LT_PREREQ])dnl
 LT_PREREQ([2.4.2])
 dnl Disable building static library, as no one uses it anyway.
+m4_pattern_forbid([^LT_INIT])dnl
 LT_INIT([
   disable-static
   dlopen
