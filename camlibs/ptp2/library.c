@@ -4129,6 +4129,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		GP_LOG_D ("saving event queue before capture: event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 		ptp_add_event_queue (&storedevents, &nrstoredevents, &event);
 	}
+	free(storedevents); storedevents = NULL;
 
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
@@ -4171,6 +4172,7 @@ capturetriggered:
 		/* store back all the queued events back to the hw event queue before returning. */
 		/* we do not do this in all error edge cases currently, only the ones that can trigger often */
 		ptp_add_events (params, storedevents, nrstoredevents);
+		free(storedevents); storedevents = NULL;
 		C_PTP_REP (ret);
 	}
 
@@ -4252,6 +4254,7 @@ capturetriggered:
 
 	/* add all the queued events back to the event queue */
 	ptp_add_events (params, storedevents, nrstoredevents);
+	free(storedevents); storedevents = NULL;
 
 	/* Maximum image time is 30 seconds, but NR processing might take 25 seconds ... so wait longer.
 	 * see https://github.com/gphoto/libgphoto2/issues/94 */
