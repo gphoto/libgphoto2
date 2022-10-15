@@ -61,9 +61,8 @@ GP_CONFIG_MSG([Source code location],[${srcdir}])
 dnl ---------------------------------------------------------------------------
 dnl Advanced information about versioning:
 dnl   * "Writing shared libraries" by Mike Hearn
-dnl         https://web.archive.org/web/20070219014345/http://plan99.net/~mike/writing-shared-libraries.html
+dnl         http://plan99.net/~mike/writing-shared-libraries.html
 dnl         originally http://navi.cx/~mike/writing-shared-libraries.html
-dnl         and later http://plan99.net/~mike/writing-shared-libraries.html
 dnl   * libtool.info chapter "Versioning"
 dnl   * libtool.info chapter "Updating library version information"
 dnl ---------------------------------------------------------------------------
