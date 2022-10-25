@@ -184,6 +184,11 @@
 struct _GPPortPrivateLibrary {
 	int fd;       /* Device handle */
 	int baudrate; /* Current speed */
+
+	/* Internal cache for faster reading */
+	char cache[512];
+	const char *cachep;
+	const char *cachee;
 };
 
 static int gp_port_serial_check_speed (GPPort *dev);
@@ -560,10 +565,21 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 			/* FALLTHROUGH */
 		    }
 		} else {
-		    /* Just read the bytes */
-		    now = read (dev->pl->fd, bytes, size - readen);
-		    if (now < 0)
-			    return GP_ERROR_IO_READ;
+			if (dev->pl->cachep == dev->pl->cachee) {
+				/* Cache is empty, fill it up. */
+				now = read (dev->pl->fd, dev->pl->cache, sizeof(dev->pl->cache));
+				if (now < 0) {
+					/* nothing more to read from the actual port */
+					return GP_ERROR_IO_READ;
+				}
+				/* Reset cache pointers */
+				dev->pl->cachep = dev->pl->cache;
+				dev->pl->cachee = dev->pl->cache + now;
+			}
+			/* read up to the required chunk size from cache */
+			now = MIN(size - readen, dev->pl->cachee - dev->pl->cachep);
+			memcpy(bytes, dev->pl->cachep, now);
+			dev->pl->cachep += now;
 		}
 		bytes += now;
 		readen += now;
