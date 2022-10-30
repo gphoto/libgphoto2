@@ -24,9 +24,6 @@
 /* Boston, MA  02110-1301  USA					*/
 /****************************************************************/
 
-#define _POSIX_C_SOURCE 199309L
-#define _DEFAULT_SOURCE
-
 #include "config.h"
 
 #include <stdio.h>
@@ -726,5 +723,3 @@ int coolshot_build_thumbnail (char *data, int *size)
 
 	return( GP_OK );
 }
-
-

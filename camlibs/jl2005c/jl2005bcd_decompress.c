@@ -24,8 +24,6 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _DEFAULT_SOURCE
-
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>

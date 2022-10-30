@@ -21,8 +21,6 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _DEFAULT_SOURCE
-#define _DARWIN_C_SOURCE
 #include "config.h"
 
 #include <stdlib.h>

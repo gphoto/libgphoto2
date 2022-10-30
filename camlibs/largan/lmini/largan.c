@@ -24,8 +24,6 @@
  * Currently only largan lmini is supported
  */
 
-#define _DEFAULT_SOURCE
-
 #include "config.h"
 
 #include <string.h>

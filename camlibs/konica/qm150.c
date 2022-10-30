@@ -33,8 +33,6 @@
  * information header and use this number with all functions !!
  */
 
-#define _DEFAULT_SOURCE
-
 #include "config.h"
 
 #include <string.h>

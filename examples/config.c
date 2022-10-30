@@ -1,4 +1,3 @@
-#define _DARWIN_C_SOURCE
 #include "samples.h"
 
 #include <string.h>

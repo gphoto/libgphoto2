@@ -41,8 +41,6 @@
  * - event pipe , port 55741 (camera remote port starts listen when you run "InitiateOpenCapture")
  * - jpeg pipe , port 55742 (camera remote port starts listen when you run "InitiateOpenCapture")
  */
-#define _DEFAULT_SOURCE
-#define _DARWIN_C_SOURCE
 #include "config.h"
 
 #include <stdlib.h>

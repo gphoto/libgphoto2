@@ -20,9 +20,6 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#define _GNU_SOURCE
-#define _DARWIN_C_SOURCE
-
 #include "config.h"
 
 #include <gphoto2/gphoto2-port-info-list.h>

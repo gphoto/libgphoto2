@@ -20,8 +20,6 @@
  *
  ****************************************************************************/
 
-#define _DEFAULT_SOURCE
-
 #include "config.h"
 
 #include <stdlib.h>

@@ -18,8 +18,6 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _DEFAULT_SOURCE	/* for flock */
-
 #include "config.h"
 #include <gphoto2/gphoto2-port-library.h>
 

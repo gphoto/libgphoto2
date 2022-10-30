@@ -25,6 +25,8 @@ AM_SILENT_RULES([no])
 
 AC_LANG([C])
 
+dnl Enable extra system functions like flock, strdup, re_compile_pattern and others.
+AC_USE_SYSTEM_EXTENSIONS
 
 
 dnl Flag all GP_ strings in result as error unless specifically allowed.

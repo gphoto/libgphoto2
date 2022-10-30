@@ -28,8 +28,6 @@
  *
  * Nikon WU-1* adapters might use 0011223344556677 as GUID always...
  */
-#define _DEFAULT_SOURCE
-#define _DARWIN_C_SOURCE
 #include "config.h"
 
 #include <stdlib.h>

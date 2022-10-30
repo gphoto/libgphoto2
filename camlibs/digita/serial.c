@@ -21,8 +21,6 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _DEFAULT_SOURCE
-
 #include "config.h"
 
 #include <stdio.h>
@@ -336,4 +334,3 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 
 	return negotiated ? 0 : -1;
 }
-
