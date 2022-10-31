@@ -212,7 +212,7 @@ dnl Every compile example after here will be using the C language
 AC_LANG([C])
 
 dnl Enable extra system functions like flock, strdup, re_compile_pattern and others.
-AC_USE_SYSTEM_EXTENSIONS
+AC_DEFINE([_DEFAULT_SOURCE], [1], [Enable extra system functions])
 
 dnl ---------------------------------------------------------------------------
 dnl Turn on (almost) all warnings when using gcc
