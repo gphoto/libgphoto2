@@ -27,9 +27,6 @@
  * Boston, MA  02110-1301  USA
  */
 
-/* Solaris needs this */
-#define __EXTENSIONS__
-
 #include "config.h"
 #include <gphoto2/gphoto2-port-library.h>
 
