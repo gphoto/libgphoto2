@@ -22,6 +22,8 @@
  * is used.
  */
 
+#include "config.h"
+
 /*
  * Implements cummunication-core :
  *

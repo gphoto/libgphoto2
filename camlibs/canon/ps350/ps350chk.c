@@ -57,6 +57,8 @@
    function to be usable.
  */
 
+#include "config.h"
+
 #include <stdio.h>
 
 void

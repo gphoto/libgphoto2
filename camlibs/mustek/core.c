@@ -21,6 +21,8 @@
  * supports rs232 and USB.
  */
 
+#include "config.h"
+
 #include <stdlib.h>
 #include <string.h>
 

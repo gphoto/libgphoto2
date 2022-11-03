@@ -6,6 +6,9 @@
  * <benjamin@psnw.com>
  * http://www.psnw.com/~smokeserpent/code/
  */
+
+#include "config.h"
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>

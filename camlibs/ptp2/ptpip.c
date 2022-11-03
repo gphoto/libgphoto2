@@ -28,6 +28,7 @@
  *
  * Nikon WU-1* adapters might use 0011223344556677 as GUID always...
  */
+
 #include "config.h"
 
 #include <stdlib.h>

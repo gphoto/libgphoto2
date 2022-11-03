@@ -22,7 +22,9 @@
  * This library is unfinished! -Marcus
  *
  */
+
 #include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

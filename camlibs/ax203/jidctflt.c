@@ -72,6 +72,7 @@
  */
 
 #include "config.h"
+
 #include <stdint.h>
 #include "tinyjpeg-internal.h"
 

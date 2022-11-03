@@ -22,6 +22,7 @@
  */
 
 #include "config.h"
+
 #include <gphoto2/gphoto2-result.h>
 
 #include <stddef.h>

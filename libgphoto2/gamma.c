@@ -22,6 +22,7 @@
  */
 
 #include "config.h"
+
 #include "libgphoto2/gamma.h"
 
 #include <math.h>

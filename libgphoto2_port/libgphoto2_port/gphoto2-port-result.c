@@ -19,6 +19,7 @@
  */
 
 #include "config.h"
+
 #include <gphoto2/gphoto2-port-result.h>
 
 #include "libgphoto2_port/i18n.h"

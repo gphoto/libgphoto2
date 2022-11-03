@@ -22,6 +22,8 @@
  * is used.
  */
 
+#include "config.h"
+
 #include <string.h>
 #include "image.h"
 #include "print.h"

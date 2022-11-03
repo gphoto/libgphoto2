@@ -3,6 +3,9 @@
  * Copyright 2020 Ondrej Zary <ondrej@zary.sk>
  * based on Docupen tools by Florian Heinz <fh@cronon-ag.de>
  */
+
+#include "config.h"
+
 #include <gphoto2/gphoto2-library.h>
 #include <libgphoto2/gphoto2-endian.h>
 #include "docupen.h"

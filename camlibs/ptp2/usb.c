@@ -21,7 +21,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include <config.h>
+#include "config.h"
+
 #include "ptp.h"
 #include "ptp-private.h"
 #include "ptp-bugs.h"

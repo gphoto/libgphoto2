@@ -15,6 +15,7 @@
  * and usb.c, keeping the common protocols/buses support in this
  * file.
  */
+
 #include "config.h"
 
 #include <stdlib.h>

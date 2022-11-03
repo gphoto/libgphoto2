@@ -1,5 +1,7 @@
 /* RenameJPG    Copyright 1999 J.A. Bezemer   GPL'd */
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>

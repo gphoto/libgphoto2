@@ -23,6 +23,7 @@
  */
 
 #include "config.h"
+
 #include "ptp.h"
 
 #ifdef HAVE_LIBXML2

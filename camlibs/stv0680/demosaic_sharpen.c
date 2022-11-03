@@ -68,6 +68,7 @@
  */
 
 #include "config.h"
+
 #include <stdlib.h>
 #include "demosaic_sharpen.h"
 

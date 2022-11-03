@@ -44,6 +44,7 @@
  */
 
 #include "config.h"
+
 #include "sierra-usbwrap.h"
 #include "sierra.h"
 

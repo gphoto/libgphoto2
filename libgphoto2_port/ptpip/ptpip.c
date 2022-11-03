@@ -20,6 +20,7 @@
  */
 
 #include "config.h"
+
 #include <gphoto2/gphoto2-port-library.h>
 
 #include <stdlib.h>

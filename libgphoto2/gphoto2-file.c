@@ -24,7 +24,9 @@
  * This file contains internal functions. Use of these functions from
  * external software modules is considered <strong>deprecated</strong>.
  */
+
 #include "config.h"
+
 #include <gphoto2/gphoto2-file.h>
 
 #include <stdlib.h>

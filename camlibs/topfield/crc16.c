@@ -24,6 +24,8 @@
 
 */
 
+#include "config.h"
+
 #include "crc16.h"
 
 static unsigned short crc_16_table[256] = {

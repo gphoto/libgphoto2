@@ -21,6 +21,8 @@
  * supports rs232 and USB.
  */
 
+#include "config.h"
+
 /*
 	Implemenation of the USB Version of ExecuteCommand
 */
