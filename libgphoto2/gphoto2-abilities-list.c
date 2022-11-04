@@ -186,9 +186,8 @@ foreach_func (const char *filename, lt_ptr data)
 	return ((fd->result == GP_OK)?0:1);
 }
 
-
-int
-gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
+static int
+unlocked_gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			    GPContext *context)
 {
 	CameraLibraryIdFunc id;
@@ -213,12 +212,10 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 	if (1) { /* a new block in which we can define a temporary variable */
 		foreach_data_t foreach_data = { NULL, GP_OK };
 		foreach_data.list = flist;
-		gpi_libltdl_lock();
 		lt_dlinit ();
 		lt_dladdsearchdir (dir);
 		ret = lt_dlforeachfile (dir, foreach_func, &foreach_data);
 		lt_dlexit ();
-		gpi_libltdl_unlock();
 		if (ret != 0) {
 			gp_list_free (flist);
 			GP_LOG_E ("Internal error looking for camlibs (%d)", ret);
@@ -234,9 +231,7 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		return ret;
 	}
 	GP_LOG_D ("Found %i camera drivers.", count);
-	gpi_libltdl_lock();
 	lt_dlinit ();
-	gpi_libltdl_unlock();
 	p = gp_context_progress_start (context, count,
 		_("Loading camera drivers from '%s'..."), dir);
 	for (i = 0; i < count; i++) {
@@ -245,28 +240,20 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			gp_list_free (flist);
 			return ret;
 		}
-		gpi_libltdl_lock();
 		lh = lt_dlopenext (filename);
-		gpi_libltdl_unlock();
 		if (!lh) {
-			gpi_libltdl_lock();
 			GP_LOG_D ("Failed to load '%s': %s.", filename,
 				lt_dlerror ());
-			gpi_libltdl_unlock();
 			continue;
 		}
 
 		/* camera_id */
-		gpi_libltdl_lock();
 		id = lt_dlsym (lh, "camera_id");
-		gpi_libltdl_unlock();
 		if (!id) {
-			gpi_libltdl_lock();
 			GP_LOG_D ("Library '%s' does not seem to "
 				"contain a camera_id function: %s",
 				filename, lt_dlerror ());
 			lt_dlclose (lh);
-			gpi_libltdl_unlock();
 			continue;
 		}
 
@@ -275,52 +262,38 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		 * loaded yet.
 		 */
 		if (id (&text) != GP_OK) {
-			gpi_libltdl_lock();
 			lt_dlclose (lh);
-			gpi_libltdl_unlock();
 			continue;
 		}
 		if (gp_abilities_list_lookup_id (list, text.text) >= 0) {
-			gpi_libltdl_lock();
 			lt_dlclose (lh);
-			gpi_libltdl_unlock();
 			continue;
 		}
 
 		/* camera_abilities */
-		gpi_libltdl_lock();
 		ab = lt_dlsym (lh, "camera_abilities");
-		gpi_libltdl_unlock();
 		if (!ab) {
-			gpi_libltdl_lock();
 			GP_LOG_D ("Library '%s' does not seem to "
 				"contain a camera_abilities function: "
 				"%s", filename, lt_dlerror ());
 			lt_dlclose (lh);
-			gpi_libltdl_unlock();
 			continue;
 		}
 
 		old_count = gp_abilities_list_count (list);
 		if (old_count < 0) {
-			gpi_libltdl_lock();
 			lt_dlclose (lh);
-			gpi_libltdl_unlock();
 			continue;
 		}
 
 		if (ab (list) != GP_OK) {
-			gpi_libltdl_lock();
 			lt_dlclose (lh);
-			gpi_libltdl_unlock();
 			continue;
 		}
 
 		/* do not free the library in valgrind mode */
 #if !defined(VALGRIND)
-		gpi_libltdl_lock();
 		lt_dlclose (lh);
-		gpi_libltdl_unlock();
 #endif
 		new_count = gp_abilities_list_count (list);
 		if (new_count < 0)
@@ -334,21 +307,30 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 
 		gp_context_progress_update (context, p, i);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
-			gpi_libltdl_lock();
 			lt_dlexit ();
-			gpi_libltdl_unlock();
 			gp_list_free (flist);
-			return (GP_ERROR_CANCEL);
+			return GP_ERROR_CANCEL;
 		}
 	}
 	gp_context_progress_stop (context, p);
-	gpi_libltdl_lock();
 	lt_dlexit ();
-	gpi_libltdl_unlock();
 	gp_list_free (flist);
 
-	return (GP_OK);
+	return GP_OK;
 }
+
+int
+gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
+			    GPContext *context)
+{
+	int ret;
+
+	gpi_libltdl_lock();
+	ret = unlocked_gp_abilities_list_load_dir (list, dir, context);
+	gpi_libltdl_unlock();
+	return ret;
+}
+
 
 
 /**
