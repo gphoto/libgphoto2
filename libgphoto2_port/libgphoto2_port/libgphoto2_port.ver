@@ -79,6 +79,8 @@ LIBGPHOTO2_INTERNAL {
 	gpi_string_list_to_flags;
 	gpi_flags_to_string_list;
 	gpi_vsnprintf;
+	gpi_libltdl_lock;
+	gpi_libltdl_unlock;
 
 	gp_port_info_new;
 	gp_port_info_set_name;

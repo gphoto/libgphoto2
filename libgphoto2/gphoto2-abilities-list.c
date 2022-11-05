@@ -36,6 +36,7 @@
 #include <gphoto2/gphoto2-result.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-library.h>
+#include <gphoto2/gphoto2-port-locking.h>
 
 #include "libgphoto2/i18n.h"
 
@@ -185,9 +186,8 @@ foreach_func (const char *filename, lt_ptr data)
 	return ((fd->result == GP_OK)?0:1);
 }
 
-
-int
-gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
+static int
+unlocked_gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			    GPContext *context)
 {
 	CameraLibraryIdFunc id;
@@ -295,7 +295,6 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 #if !defined(VALGRIND)
 		lt_dlclose (lh);
 #endif
-
 		new_count = gp_abilities_list_count (list);
 		if (new_count < 0)
 			continue;
@@ -310,15 +309,28 @@ gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
 			lt_dlexit ();
 			gp_list_free (flist);
-			return (GP_ERROR_CANCEL);
+			return GP_ERROR_CANCEL;
 		}
 	}
 	gp_context_progress_stop (context, p);
 	lt_dlexit ();
 	gp_list_free (flist);
 
-	return (GP_OK);
+	return GP_OK;
 }
+
+int
+gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
+			    GPContext *context)
+{
+	int ret;
+
+	gpi_libltdl_lock();
+	ret = unlocked_gp_abilities_list_load_dir (list, dir, context);
+	gpi_libltdl_unlock();
+	return ret;
+}
+
 
 
 /**

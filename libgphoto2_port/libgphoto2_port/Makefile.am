@@ -66,11 +66,13 @@ libgphoto2_port_la_LIBADD       += $(INTLLIBS)
 
 libgphoto2_port_la_SOURCES      += gphoto2-port-info-list.c
 libgphoto2_port_la_SOURCES      += gphoto2-port-info.h
+libgphoto2_port_la_SOURCES      += gphoto2-port-locking.c
 libgphoto2_port_la_SOURCES      += gphoto2-port-log.c
 libgphoto2_port_la_SOURCES      += gphoto2-port-version.c
 libgphoto2_port_la_SOURCES      += gphoto2-port.c
 libgphoto2_port_la_SOURCES      += gphoto2-port-portability.c
 libgphoto2_port_la_SOURCES      += gphoto2-port-result.c
 
+libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-locking.h
 libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-version.h
 libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-library.h
