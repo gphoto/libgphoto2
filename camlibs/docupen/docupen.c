@@ -283,7 +283,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!strcmp(value, _("200 DPI")))
 			camera->pl->profile[0x82] = RES_200DPI;
 		else if (!strcmp(value, _("400 DPI")))
-			camera->pl->profile[0x82] = RES_400DPI;;
+			camera->pl->profile[0x82] = RES_400DPI;
 	}
 
 	gp_widget_get_child_by_label (window, _("Color Document mode"), &section);
@@ -302,7 +302,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!strcmp(value, _("100 DPI")))
 			camera->pl->profile[0x84] = RES_100DPI;
 		else if (!strcmp(value, _("200 DPI")))
-			camera->pl->profile[0x84] = RES_200DPI;;
+			camera->pl->profile[0x84] = RES_200DPI;
 	}
 
 	gp_widget_get_child_by_label (section, _("Hi Resolution"), &widget);
@@ -312,7 +312,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!strcmp(value, _("200 DPI")))
 			camera->pl->profile[0x85] = RES_200DPI;
 		else if (!strcmp(value, _("400 DPI")))
-			camera->pl->profile[0x85] = RES_400DPI;;
+			camera->pl->profile[0x85] = RES_400DPI;
 	}
 
 	gp_widget_get_child_by_label (window, _("Color Photo mode"), &section);
@@ -331,7 +331,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!strcmp(value, _("100 DPI")))
 			camera->pl->profile[0x87] = RES_100DPI;
 		else if (!strcmp(value, _("200 DPI")))
-			camera->pl->profile[0x87] = RES_200DPI;;
+			camera->pl->profile[0x87] = RES_200DPI;
 	}
 
 	gp_widget_get_child_by_label (section, _("Hi Resolution"), &widget);
@@ -341,7 +341,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		if (!strcmp(value, _("200 DPI")))
 			camera->pl->profile[0x88] = RES_200DPI;
 		else if (!strcmp(value, _("400 DPI")))
-			camera->pl->profile[0x88] = RES_400DPI;;
+			camera->pl->profile[0x88] = RES_400DPI;
 	}
 
 	if (!dp_set_profile(camera))
