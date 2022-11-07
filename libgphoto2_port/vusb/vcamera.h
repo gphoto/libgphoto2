@@ -22,6 +22,7 @@
 #ifndef IOLIBS_VUSB_VCAMERA_H
 #define IOLIBS_VUSB_VCAMERA_H
 
+#undef FUZZING
 #undef FUZZ_PTP
 
 #include <stdio.h>
@@ -67,11 +68,13 @@ typedef struct vcamera {
 	unsigned int	shutterspeed;
 	unsigned int	fnumber;
 
+#ifdef FUZZING
 	int		fuzzmode;
 #define FUZZMODE_PROTOCOL	0
 #define FUZZMODE_NORMAL		1
 	FILE*		fuzzf;
 	unsigned int	fuzzpending;
+#endif /* FUZZING */
 } vcamera;
 
 vcamera *vcamera_new(vcameratype);

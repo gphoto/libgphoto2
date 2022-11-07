@@ -104,3 +104,4 @@ nobase_include_HEADERS =	\
 	gphoto2/gphoto2-port-result.h
 
 EXTRA_DIST += gphoto2/gphoto2-port-library.h
+EXTRA_DIST += gphoto2/gphoto2-port-locking.h

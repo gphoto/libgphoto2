@@ -1,3 +1,6 @@
+libgphoto2_port 0.12.2
+  * internal API/ABI: Added gpi_libltdl_lock() and gpi_libltdl_unlock()
+
 libgphoto2_port 0.12.1
   * API:
     * Added function: `int gp_port_init_localedir(const char *localedir)`

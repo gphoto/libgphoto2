@@ -514,18 +514,26 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 			/* V1 and J1 are a less reliable then the newer 1 versions, no changecamera mode, no getevent, no initiatecapturerecinsdram */
 			if (	!strcmp(params->deviceinfo.Model,"V1") ||
+				!strcmp(params->deviceinfo.Model,"S1") ||
 				!strcmp(params->deviceinfo.Model,"J1")
 			) {
 				/* on V1 and J1 even the 90c7 getevents does not work */
 				/* V1: see https://github.com/gphoto/libgphoto2/issues/569 */
 				/* J1: see https://github.com/gphoto/libgphoto2/issues/716 */
+				/* S1: see https://github.com/gphoto/libgphoto2/issues/845 */
 				for (i=0;i<di->OperationsSupported_len;i++) {
 					if (di->OperationsSupported[i] == PTP_OC_NIKON_GetEvent) {
-						GP_LOG_D("On Nikon V1: disable NIKON_GetEvent as its unreliable");
+						GP_LOG_D("On Nikon S1/J1/V1: disable NIKON_GetEvent as its unreliable");
 						di->OperationsSupported[i] = PTP_OC_GetDeviceInfo; /* overwrite */
 					}
 					if (di->OperationsSupported[i] == PTP_OC_NIKON_InitiateCaptureRecInSdram) {
-						GP_LOG_D("On Nikon V1: disable NIKON_InitiateCaptureRecInSdram as its unreliable");
+						GP_LOG_D("On Nikon S1/J1/V1: disable NIKON_InitiateCaptureRecInSdram as its unreliable");
+						di->OperationsSupported[i] = PTP_OC_InitiateCapture; /* overwrite */
+					}
+					if (!strcmp(params->deviceinfo.Model,"S1") &&
+						(di->OperationsSupported[i] == PTP_OC_NIKON_InitiateCaptureRecInMedia))
+					{
+						GP_LOG_D("On Nikon S1: disable NIKON_InitiateCaptureRecInMedia as its unreliable");
 						di->OperationsSupported[i] = PTP_OC_InitiateCapture; /* overwrite */
 					}
 				}
@@ -4053,6 +4061,9 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	int			back_off_wait = 0;
 	struct timeval          capture_start;
 	int			loops;
+	PTPContainer		*storedevents = NULL;
+	unsigned int		nrstoredevents = 0;
+	PTPContainer		event;
 
 
 	if (type != GP_CAPTURE_IMAGE)
@@ -4078,6 +4089,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
                	_("Sorry, your camera does not support Nikon capture"));
 		return GP_ERROR_NOT_SUPPORTED;
 	}
+
 	if (	ptp_property_issupported(params, PTP_DPC_StillCaptureMode)	&&
 		(PTP_RC_OK == ptp_getdevicepropdesc (params, PTP_DPC_StillCaptureMode, &propdesc))) {
 		PTPDevicePropDesc       burstdesc;
@@ -4111,6 +4123,14 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		/* OK or busy, try to proceed ... */
 		C_PTP_REP_MSG (nikon_wait_busy(params,20,2000), _("Nikon enable liveview failed"));
 	}
+
+	/* before we start real capture, move the current hw event queue to our local queue */
+	while (ptp_get_one_event(params, &event)) {
+		GP_LOG_D ("saving event queue before capture: event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
+		ptp_add_event_queue (&storedevents, &nrstoredevents, &event);
+	}
+	free(storedevents); storedevents = NULL;
+
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
 		/* we assume for modern cameras this event method works to avoid longer waits */
@@ -4148,7 +4168,13 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	}
 
 capturetriggered:
-	C_PTP_REP (ret);
+	if (ret != PTP_RC_OK) {
+		/* store back all the queued events back to the hw event queue before returning. */
+		/* we do not do this in all error edge cases currently, only the ones that can trigger often */
+		ptp_add_events (params, storedevents, nrstoredevents);
+		free(storedevents); storedevents = NULL;
+		C_PTP_REP (ret);
+	}
 
 	CR (gp_port_set_timeout (camera->port, capture_timeout));
 
@@ -4158,13 +4184,9 @@ capturetriggered:
 	done = 0; tries = 100;
 	capture_start = time_now();
 	do {
-		PTPContainer	event;
-		int 		checkevt;
-
 		/* Just busy loop until the camera is ready again. */
 		/* and wait for the 0xc101 event */
 		C_PTP_REP (ptp_check_event (params));
-		checkevt = 0;
 		while (ptp_get_one_event(params, &event)) {
 			GP_LOG_D ("event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
@@ -4183,8 +4205,7 @@ capturetriggered:
 				/* if we got one object already, put it into the queue */
 				/* e.g. for NEF+RAW capture */
 				if (newobject != 0xffff0001) {
-					ptp_add_event (params, &event);
-					checkevt = 1; /* avoid endless loop */
+					ptp_add_event_queue (&storedevents, &nrstoredevents, &event);
 					done = 3;
 					break;
 				}
@@ -4215,12 +4236,9 @@ capturetriggered:
 				break;
 			default:
 				GP_LOG_D ("UNHANDLED event.Code is %x / param %lx, DEFER", event.Code, (unsigned long)event.Param1);
-				ptp_add_event (params, &event);
-				checkevt = 1; /* avoid endless loop */
+				ptp_add_event_queue (&storedevents, &nrstoredevents, &event);
 				break;
 			}
-			if (checkevt)
-				break;
 		}
 		/* we got both capturecomplete and objectadded ... leave */
 		if (done == 3)
@@ -4233,6 +4251,11 @@ capturetriggered:
 		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
 	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 70*1000)); /* 70 seconds */
+
+	/* add all the queued events back to the event queue */
+	ptp_add_events (params, storedevents, nrstoredevents);
+	free(storedevents); storedevents = NULL;
+
 	/* Maximum image time is 30 seconds, but NR processing might take 25 seconds ... so wait longer.
 	 * see https://github.com/gphoto/libgphoto2/issues/94 */
 
@@ -4377,7 +4400,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 
 				/* just add it to the filesystem, and return in CameraPath */
 				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-				/* We have some form of objectinfo in entry.u.object.oi already, but we let the 
+				/* We have some form of objectinfo in entry.u.object.oi already, but we let the
 				 * code refetch it via regular GetObjectInfo */
 
 				res = add_object_to_fs_and_path (camera, entry.u.object.oid, path, context);
@@ -4809,7 +4832,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		/* For some as yet unknown reason the ZV-1, the RX100M7 and the A7 R4 need around 3 seconds startup time
 		 * to be able to capture. I looked for various trigger events or property changes on the ZV-1
 		 * but nothing worked except waiting.
-		 * This might not be required when having manual focusing according to https://github.com/gphoto/gphoto2/issues/349 
+		 * This might not be required when having manual focusing according to https://github.com/gphoto/gphoto2/issues/349
 		 */
 
 		while (time_since (params->starttime) < 2500) {

@@ -17,7 +17,7 @@ general:
 * add gp_init_localedir() function to allow for non-standard installations (PR #796)
 
 translations:
-* updated traditional chinese
+* updated traditional chinese, swedish
 ------------------------------------------------------------------------------
 libgphoto2 2.5.29 release
 

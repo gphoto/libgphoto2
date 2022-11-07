@@ -61,7 +61,8 @@ GP_CONFIG_MSG([Source code location],[${srcdir}])
 dnl ---------------------------------------------------------------------------
 dnl Advanced information about versioning:
 dnl   * "Writing shared libraries" by Mike Hearn
-dnl         http://navi.cx/~mike/writing-shared-libraries.html
+dnl         http://plan99.net/~mike/writing-shared-libraries.html
+dnl         originally http://navi.cx/~mike/writing-shared-libraries.html
 dnl   * libtool.info chapter "Versioning"
 dnl   * libtool.info chapter "Updating library version information"
 dnl ---------------------------------------------------------------------------
@@ -239,8 +240,10 @@ GP_VA_COPY
 
 
 dnl check for/set up libtool and libltdl
+m4_pattern_forbid([^LT_PREREQ])dnl
 LT_PREREQ([2.4.2])
 dnl Disable building static library, as no one uses it anyway.
+m4_pattern_forbid([^LT_INIT])dnl
 LT_INIT([
   disable-static
   dlopen
