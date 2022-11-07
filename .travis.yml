@@ -37,6 +37,7 @@ before_install:
 script:
  - PATH=/usr/local/opt/gettext/bin:$PATH autoreconf -i -f && sleep 2
  - sh .travis-script.sh standard-test   --enable-vusb
+ - sh .travis-script.sh standard-test-nodebug   --enable-vusb --disable-debug
  - sh .travis-script.sh everything-test --enable-vusb --with-camlibs=everything
  - date; ls -l configure
  - ./configure --enable-vusb --with-camlibs=ptp2 && make && make check && sudo PATH=$PATH make install && examples/sample-afl && make clean && sudo make uninstall
