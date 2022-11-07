@@ -22,6 +22,7 @@
 #define CAMLIBS_TOSHIBA_PDRM11_PDRM11_H
 
 #include "config.h"
+
 #include <gphoto2/gphoto2.h>
 #include <stdint.h>
 
