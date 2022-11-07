@@ -493,14 +493,6 @@ AC_SUBST([pkgconfigdir])
 
 
 dnl ----------------------------------------------------------------------
-dnl GNU regex?
-dnl ----------------------------------------------------------------------
-AC_CHECK_FUNC([re_compile_pattern],
-              [AC_DEFINE([HAVE_GNU_REGEX], [1],
-	                 [Define if you have GNU regex.])])
-
-
-dnl ----------------------------------------------------------------------
 dnl disable debugging if requested
 dnl ----------------------------------------------------------------------
 AC_ARG_ENABLE([debug],
