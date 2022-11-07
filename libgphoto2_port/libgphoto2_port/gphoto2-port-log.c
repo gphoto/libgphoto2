@@ -35,6 +35,35 @@
 
 #include "libgphoto2_port/i18n.h"
 
+char*
+gpi_vsnprintf (const char* format, va_list args)
+{
+	va_list xargs;
+	int strsize;
+	char *str;
+
+#ifdef HAVE_VA_COPY
+	va_copy (xargs, args);
+#else
+	/* according to 'the web', the only interesting compiler without va_copy is MSVC
+	 * and there a simple assignment is the way to go */
+	xargs = args;
+#endif
+
+	/* query the size necessary for the string, add the terminating '\0' */
+	strsize = vsnprintf (NULL, 0, format, xargs) + 1;
+	va_end (xargs);
+
+	str = malloc(strsize);
+	if (!str)
+		return NULL;
+
+	/* actually print the string into the buffer */
+	vsnprintf (str, strsize, format, args);
+
+	return str;
+}
+
 #ifndef DISABLE_DEBUGGING
 /**
  * \brief Internal logging function entry.
@@ -84,35 +113,6 @@ gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 	return logfuncid;
 }
 
-
-char*
-gpi_vsnprintf (const char* format, va_list args)
-{
-	va_list xargs;
-	int strsize;
-	char *str;
-
-#ifdef HAVE_VA_COPY
-	va_copy (xargs, args);
-#else
-	/* according to 'the web', the only interesting compiler without va_copy is MSVC
-	 * and there a simple assignment is the way to go */
-	xargs = args;
-#endif
-
-	/* query the size necessary for the string, add the terminating '\0' */
-	strsize = vsnprintf (NULL, 0, format, xargs) + 1;
-	va_end (xargs);
-
-	str = malloc(strsize);
-	if (!str)
-		return NULL;
-
-	/* actually print the string into the buffer */
-	vsnprintf (str, strsize, format, args);
-
-	return str;
-}
 
 /**
  * \brief Remove a logging receiving function
