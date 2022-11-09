@@ -12,40 +12,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: apt-get update
-      run: sudo apt-get update
-    - name: apt-get 3rd party repo libgd-dev dependency workaround
-      run: sudo apt-get remove nginx libgd3
-    - name: apt-get install
-      run: sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
-    - name: autoreconf
-      run: autoreconf -i -f
-    - name: configure
-      run: ./configure --prefix=$PWD/__prefix
-    - name: make
-      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC
-    - name: make check
-      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC check
-    - name: make distcheck
-      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC distcheck
-    - name: make install
-      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC install
-    - name: make installcheck
-      run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC installcheck
-    - name: build and run example libgphoto2 frontend (ambs-lgp2-frontend)
-      run: |
-        set -x
-        exec 2>&1
-        abs_top_builddir="$PWD"
-        export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig"
-        export LD_LIBRARY_PATH="${abs_top_builddir}/__prefix/lib"
-        cd examples/ambs-lgp2-frontend
-        autoreconf -vis
-        ./configure --prefix="$PWD/__pref"
-        make
-        ldd ambs-lgp2-frontend
-        ./ambs-lgp2-frontend
-        make install
-        ldd __pref/bin/ambs-lgp2-frontend
-        __pref/bin/ambs-lgp2-frontend
+      - uses: actions/checkout@v3
+
+      - name: 'apt-get update'
+        run: sudo apt-get update
+
+      - name: 'apt-get 3rd party repo libgd-dev dependency workaround'
+        run: sudo apt-get remove nginx libgd3
+
+      - name: 'apt-get install'
+        run: sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
+
+      - name: 'autoreconf'
+        run: autoreconf -i -f
+
+      - name: 'configure'
+        run: ./configure --prefix=$PWD/__prefix
+
+      - name: 'make'
+        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC
+
+      - name: 'make check'
+        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC check
+
+      - name: 'make distcheck'
+        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC distcheck
+
+      - name: 'make install'
+        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC install
+
+      - name: 'make installcheck'
+        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC installcheck
+
+      - name: 'build and run example libgphoto2 frontend (ambs-lgp2-frontend)'
+        run: |
+          set -x
+          exec 2>&1
+          abs_top_builddir="$PWD"
+          export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig"
+          export LD_LIBRARY_PATH="${abs_top_builddir}/__prefix/lib"
+          cd examples/ambs-lgp2-frontend
+          autoreconf -vis
+          ./configure --prefix="$PWD/__pref"
+          make
+          ldd ambs-lgp2-frontend
+          ./ambs-lgp2-frontend
+          make install
+          ldd __pref/bin/ambs-lgp2-frontend
+          __pref/bin/ambs-lgp2-frontend
