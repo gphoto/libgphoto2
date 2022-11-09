@@ -1,0 +1,29 @@
+# Cirrus CI configuration
+# https://cirrus-ci.com/github/gphoto/libgphoto2
+
+task:
+  name: FreeBSD
+  freebsd_instance:
+    matrix:
+      image_family: freebsd-13-0
+      # image_family: freebsd-12-2
+      # image_family: freebsd-11-4
+
+  env:
+    # Set to 10 instead of 1 to avoid problems when new commits are submitted
+    # during a run.
+    CIRRUS_CLONE_DEPTH: 10
+    CFLAGS: -Wall -Wextra -O2
+    MAKE_FLAGS: -j 2
+
+  pkginstall_script:
+    - pkg install -y autoconf automake libtool gettext-tools gettext-runtime pkgconf libltdl libexif libgd libxml2 curl
+  configure_script:
+    - autoreconf -ivf
+    - ./configure --disable-silent-rules --with-camlibs=everything || { tail -300 config.log; false; }
+  compile_script:
+    - make
+  test_script:
+    - make check
+  install_script:
+    - make install
