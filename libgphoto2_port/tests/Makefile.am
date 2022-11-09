@@ -18,16 +18,15 @@ AM_CPPFLAGS += -I$(top_srcdir)
 noinst_PROGRAMS += test-gp-port test-port-list
 test_gp_port_CPPFLAGS = $(AM_CPPFLAGS) $(LTDLINCL) $(CPPFLAGS)
 test_gp_port_SOURCES = test-gp-port.c
-test_gp_port_LDFLAGS = $(top_builddir)/libgphoto2_port/libgphoto2_port.la $(LIBLTDL) $(INTLLIBS)
+test_gp_port_LDADD = $(top_builddir)/libgphoto2_port/libgphoto2_port.la
+test_gp_port_LDADD += $(LIBLTDL) $(INTLLIBS)
 
 TESTS += test-port-list
 INSTALL_TESTS += test-port-list
 check_PROGRAMS += test-port-list
 test_port_list_CPPFLAGS = $(AM_CPPFLAGS) $(LTDLINCL) $(CPPFLAGS)
 test_port_list_SOURCES = test-port-list.c
-test_port_list_LDFLAGS = \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port.la \
-	$(LIBLTDL) \
-	$(INTLLIBS)
+test_port_list_LDADD = $(top_builddir)/libgphoto2_port/libgphoto2_port.la
+test_port_list_LDADD += $(LIBLTDL) $(INTLLIBS)
 
 include $(top_srcdir)/installcheck.mk
