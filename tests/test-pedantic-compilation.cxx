@@ -20,7 +20,7 @@
 static
 unsigned long cxx_version = __cplusplus;
 
-int main()
+int main(void)
 {
   std::cout << "cxx_version = " << cxx_version << std::endl;
   return 0;

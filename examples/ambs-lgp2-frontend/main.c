@@ -14,7 +14,7 @@ struct {
   {"libgphoto2",      gp_library_version}
 };
 
-int main()
+int main(void)
 {
   for (size_t i=0; i<(sizeof(versions)/sizeof(versions[0])); i++) {
     const char *const title          = versions[i].title;

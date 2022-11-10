@@ -80,7 +80,7 @@ void foo_func(void *ptr, int n_param, ...)
 }
 
 
-int main()
+int main(void)
 {
   /* Zero to five parameters after the code are the valid use
    * cases. The CODE in these examples has the value (1000+n_param).

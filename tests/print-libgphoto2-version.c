@@ -133,7 +133,7 @@ print_version_verbose(FILE *out,
 }
 
 
-int main()
+int main(void)
 {
 	print_version_comment(stdout, NULL, "\n", NULL, NULL);
 	printf("\n");
