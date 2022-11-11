@@ -19,6 +19,10 @@ jobs:
           - { os: windows-latest, sys: mingw32 }
           - { os: windows-latest, sys: mingw64 }
 
+    env:
+      if: runner.os == 'Windows'
+      MINGW_ARCH: ${{ matrix.sys }}
+
     steps:
       - name: 'git config'
         if: runner.os == 'Windows'
