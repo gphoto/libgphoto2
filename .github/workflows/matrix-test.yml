@@ -20,8 +20,12 @@ jobs:
           - { os: windows-latest, sys: mingw64 }
 
     env:
-      if: runner.os == 'Windows'
       MINGW_ARCH: ${{ matrix.sys }}
+
+    defaults:
+      if: runner.os == 'Windows'
+      run:
+        shell: msys2 {0}
 
     steps:
       - name: 'git config'
@@ -43,7 +47,7 @@ jobs:
 
       - name: 'Determine number of cores to build on (Windows)'
         if: runner.os == 'Windows'
-        run: echo NPROC="${NUMBER_OF_PROCESSORS}" >> $GITHUB_ENV
+        run: echo NPROC="${NUMBER_OF_PROCESSORS-unknown}" >> $GITHUB_ENV
 
       - name: 'Determine number of cores to build on (macOS)'
         if: runner.os == 'macOS'
