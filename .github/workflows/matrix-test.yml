@@ -14,16 +14,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest }
-          - { os: macos-latest }
-          - { os: windows-latest, sys: mingw32 }
-          - { os: windows-latest, sys: mingw64 }
+          - { os: ubuntu-latest,  shell: bash  }
+          - { os: macos-latest,   shell: bash  }
+          - { os: windows-latest, shell: msys2, sys: mingw32 }
+          - { os: windows-latest, shell: msys2, sys: mingw64 }
+
+    defaults:
+      run:
+        shell: '${{ matrix.shell }} {0}'
 
     steps:
       - name: 'git config'
         if: runner.os == 'Windows'
         run: git config --global core.autocrlf input
-        shell: bash
+        shell: ${{ matrix.shell }}
 
       - uses: actions/checkout@v3
 
