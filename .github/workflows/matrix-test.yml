@@ -19,9 +19,6 @@ jobs:
           - { os: windows-latest, sys: mingw32 }
           - { os: windows-latest, sys: mingw64 }
 
-    env:
-      MINGW_ARCH: ${{ matrix.sys }}
-
     steps:
       - name: 'git config'
         if: runner.os == 'Windows'
@@ -29,6 +26,11 @@ jobs:
         shell: bash
 
       - uses: actions/checkout@v3
+
+      - name: 'Set MINGW_ARCH (Windows)'
+        if: runner.os == 'Windows'
+        env:
+          MINGW_ARCH: ${{ matrix.sys }}
 
       - name: 'Set up MSYS2 and Install Software'
         if: runner.os == 'Windows'
