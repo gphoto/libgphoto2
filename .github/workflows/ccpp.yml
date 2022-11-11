@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  LC_ALL: C
+  COMMON_CONFIGURE_FLAGS: >-
+    --disable-silent-rules
+    --enable-vusb
+    --with-camlibs=everything
+    SLEEP=no
+
 jobs:
   build:
 
@@ -27,7 +35,7 @@ jobs:
         run: autoreconf -i -f
 
       - name: 'configure'
-        run: ./configure --prefix=$PWD/__prefix
+        run: ./configure ${COMMON_CONFIGURE_FLAGS} --prefix=$PWD/__prefix
 
       - name: 'make'
         run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC
@@ -36,7 +44,7 @@ jobs:
         run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC check
 
       - name: 'make distcheck'
-        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC distcheck
+        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC DISTCHECK_CONFIGURE_FLAGS="${COMMON_CONFIGURE_FLAGS}" distcheck
 
       - name: 'make install'
         run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC install
