@@ -14,19 +14,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        include:
-          - os: windows-latest
-            - { sys: mingw32, env: i686 }
-            - { sys: mingw64, env: x86_64 }
-
-    env:
-      if: runner.os == 'Windows'
-      MINGW_ARCH: ${{ matrix.sys }}
-
-    defaults:
-      run:
-        if: runner.os == 'Windows'
-        shell: msys2 {0}
 
     steps:
       - name: 'git config'
