@@ -29,13 +29,13 @@ jobs:
       - name: 'Prepare concurrent make'
         run: if test "x$NPROC" = x; then echo ci_MAKE="make" >> $GITHUB_ENV; echo "NPROC must be set"; exit 1; else echo ci_MAKE="make -j${NPROC} -l${NPROC}" >> $GITHUB_ENV; fi
 
-      - name: 'apt-get update'
+      - name: 'Update software database'
         run: sudo apt-get update
 
-      - name: 'apt-get 3rd party repo libgd-dev dependency workaround'
+      - name: 'Work around apt-get 3rd party repo libgd-dev dependency'
         run: sudo apt-get remove nginx libgd3
 
-      - name: 'apt-get install'
+      - name: 'Install build requirements'
         run: sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
 
       - name: 'autoreconf'
@@ -59,7 +59,7 @@ jobs:
       - name: 'make installcheck'
         run: set -x; ${ci_MAKE} installcheck
 
-      - name: 'build and run example libgphoto2 frontend (ambs-lgp2-frontend)'
+      - name: 'Build and run example libgphoto2 frontend (ambs-lgp2-frontend)'
         run: |
           set -x
           exec 2>&1
