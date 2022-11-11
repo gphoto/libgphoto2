@@ -29,17 +29,17 @@ jobs:
         with:
           msystem: ${{ matrix.sys }}
 
-      - name: 'Determine number of cores to build on'
+      - name: 'Determine number of cores to build on (Linux)'
         if: runner.os == 'Linux'
         run: echo NPROC="$(nproc)" >> $GITHUB_ENV
 
-      - name: 'Determine number of cores to build on'
+      - name: 'Determine number of cores to build on (Windows)'
         if: runner.os == 'Windows'
         run: echo NPROC="${NUMBER_OF_PROCESSORS}" >> $GITHUB_ENV
 
-      - name: 'Determine number of cores to build on'
+      - name: 'Determine number of cores to build on (macOS)'
         if: runner.os == 'macOS'
         run: echo NPROC="$(sysctl -n hw.logicalcpu)" >> $GITHUB_ENV
 
-      - name: 'Check environment'
-        run: echo foobar
+      - name: 'Check NPROC value'
+        run: echo NPROC=$NPROC
