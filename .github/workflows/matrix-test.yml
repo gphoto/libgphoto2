@@ -29,8 +29,8 @@ jobs:
 
       - name: 'Set MINGW_ARCH (Windows)'
         if: runner.os == 'Windows'
-        env:
-          MINGW_ARCH: ${{ matrix.sys }}
+        shell: bash
+        run: echo MINGW_ARCH="${{ matrix.sys }}" >> $GITHUB_ENV
 
       - name: 'Set up MSYS2 and Install Software'
         if: runner.os == 'Windows'
