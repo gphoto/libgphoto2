@@ -38,6 +38,9 @@ jobs:
       - name: 'Install build requirements'
         run: sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
 
+      - name: 'OS specific build flags'
+        run: echo OS_SPECIFIC_CPPFLAGS="" >> $GITHUB_ENV
+
       - name: 'autoreconf'
         run: autoreconf -i -f
 
@@ -45,19 +48,19 @@ jobs:
         run: ./configure ${COMMON_CONFIGURE_FLAGS} --prefix=$PWD/__prefix
 
       - name: 'make'
-        run: set -x; ${ci_MAKE}
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}"
 
       - name: 'make check'
-        run: set -x; ${ci_MAKE} check
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" check
 
       - name: 'make distcheck'
-        run: set -x; ${ci_MAKE} DISTCHECK_CONFIGURE_FLAGS="${COMMON_CONFIGURE_FLAGS}" distcheck
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" DISTCHECK_CONFIGURE_FLAGS="${COMMON_CONFIGURE_FLAGS}" distcheck
 
       - name: 'make install'
-        run: set -x; ${ci_MAKE} install
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" install
 
       - name: 'make installcheck'
-        run: set -x; ${ci_MAKE} installcheck
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" installcheck
 
       - name: 'Build and run example libgphoto2 frontend (ambs-lgp2-frontend)'
         run: |
