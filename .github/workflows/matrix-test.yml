@@ -16,9 +16,8 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: windows-latest
-            sys: mingw32
-          - os: windows-latest
-            sys: mingw64
+            - { sys: mingw32 }
+            - { sys: mingw64 }
 
     steps:
       - name: 'git config'
