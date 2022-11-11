@@ -1,0 +1,58 @@
+name: "Matrix-Test"
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    name: "${{ matrix.os }} ${{ matrix.sys }} build"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: windows-latest
+            - { sys: mingw32, env: i686 }
+            - { sys: mingw64, env: x86_64 }
+
+    env:
+      if: runner.os == 'Windows'
+      MINGW_ARCH: ${{ matrix.sys }}
+
+    defaults:
+      run:
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+
+    steps:
+      - name: 'git config'
+        if: runner.os == 'Windows'
+        run: git config --global core.autocrlf input
+        shell: bash
+
+      - uses: actions/checkout@v3
+
+      - name: 'Set up MSYS2 and Install Software'
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.sys }}
+
+      - name: 'Determine number of cores to build on'
+        if: runner.os == 'Linux'
+        run: echo NPROC="$(nproc)" >> $GITHUB_ENV
+
+      - name: 'Determine number of cores to build on'
+        if: runner.os == 'Windows'
+        run: echo NPROC="${NUMBER_OF_PROCESSORS}" >> $GITHUB_ENV
+
+      - name: 'Determine number of cores to build on'
+        if: runner.os == 'macOS'
+        run: echo NPROC="$(sysctl -n hw.logicalcpu)" >> $GITHUB_ENV
+
+      - name: 'Check environment'
+        run: echo foobar
