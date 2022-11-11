@@ -24,7 +24,7 @@ jobs:
         shell: ${{ matrix.shell }}
 
     steps:
-      - name: 'git config'
+      - name: 'git config core.autocrlf (Windows)'
         if: runner.os == 'Windows'
         run: git config --global core.autocrlf input
         shell: bash
@@ -54,5 +54,9 @@ jobs:
         if: runner.os == 'macOS'
         run: echo NPROC="$(sysctl -n hw.logicalcpu)" >> $GITHUB_ENV
 
-      - name: 'Check NPROC value'
-        run: echo NPROC=$NPROC
+      - name: 'Check shell environment'
+        run: |
+          echo "NPROC=$NPROC"
+          echo "SHELL=$SHELL"
+          echo "BASH_VERSION=$BASH_VERSION"
+          $SHELL --version
