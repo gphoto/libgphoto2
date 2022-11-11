@@ -22,6 +22,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: 'Determine number of cores to build on'
+        run: echo NPROC=$(nproc) >> $GITHUB_ENV
+
+      # Setting MAKE interferes with Makefile{,.in,.am} using $(MAKE) internally
+      - name: 'Prepare concurrent make'
+        run: if test "x$NPROC" = x; then echo ci_MAKE="make" >> $GITHUB_ENV; echo "NPROC must be set"; exit 1; else echo ci_MAKE="make -j${NPROC} -l${NPROC}" >> $GITHUB_ENV; fi
+
       - name: 'apt-get update'
         run: sudo apt-get update
 
@@ -38,19 +45,19 @@ jobs:
         run: ./configure ${COMMON_CONFIGURE_FLAGS} --prefix=$PWD/__prefix
 
       - name: 'make'
-        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC
+        run: set -x; ${ci_MAKE}
 
       - name: 'make check'
-        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC check
+        run: set -x; ${ci_MAKE} check
 
       - name: 'make distcheck'
-        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC DISTCHECK_CONFIGURE_FLAGS="${COMMON_CONFIGURE_FLAGS}" distcheck
+        run: set -x; ${ci_MAKE} DISTCHECK_CONFIGURE_FLAGS="${COMMON_CONFIGURE_FLAGS}" distcheck
 
       - name: 'make install'
-        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC install
+        run: set -x; ${ci_MAKE} install
 
       - name: 'make installcheck'
-        run: NPROC=$(nproc); set -x; make -j$NPROC -l$NPROC installcheck
+        run: set -x; ${ci_MAKE} installcheck
 
       - name: 'build and run example libgphoto2 frontend (ambs-lgp2-frontend)'
         run: |
