@@ -44,6 +44,7 @@ jobs:
       matrix:
         os: [windows-latest]
         include:
+          sys: [mingw32, mingw64, ucrt64, clang64]
           - sys: mingw32
             env: i686
           - sys: mingw64
