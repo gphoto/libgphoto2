@@ -36,12 +36,13 @@ jobs:
   msys2-build:
     needs: ix-build
 
-    name: 'MSYS2 ${{ matrix.sys }} build'
-    runs-on: windows-latest
+    name: '${{ matrix.os }} ${{ matrix.sys }} build'
+    runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
+        os: [windows-latest]
         include:
           - {sys: mingw32, env: i686}
           - {sys: mingw64, env: x86_64}
