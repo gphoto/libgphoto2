@@ -8,12 +8,12 @@ on:
 
 jobs:
   ix-build:
-    name: "${{ matrix.os }} build"
+    name: "${{ matrix.os }} ix-build"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest] # , macos-latest]
 
     steps:
       - uses: actions/checkout@v3
@@ -36,7 +36,7 @@ jobs:
   msys2-build:
     needs: ix-build
 
-    name: '${{ matrix.os }} ${{ matrix.sys }} build'
+    name: '${{ matrix.os }} ${{ matrix.sys }} msys2-build'
     runs-on: ${{ matrix.os }}
 
     strategy:
