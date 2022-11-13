@@ -7,52 +7,67 @@ on:
     branches: [master, main]
 
 jobs:
-  build:
-    name: "${{ matrix.os }} ${{ matrix.sys }} build"
+  ix-build:
+    name: "${{ matrix.os }} build"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 'Determine number of cores to build on (Linux)'
+        if: runner.os == 'Linux'
+        run: echo NPROC="$(nproc)" >> $GITHUB_ENV
+
+      - name: 'Determine number of cores to build on (macOS)'
+        if: runner.os == 'macOS'
+        run: echo NPROC="$(sysctl -n hw.logicalcpu)" >> $GITHUB_ENV
+
+      - name: 'Check shell environment'
+        run: |
+          echo "NPROC=$NPROC"
+          echo "SHELL=$SHELL"
+          echo "BASH_VERSION=$BASH_VERSION"
+          $SHELL --version
+
+  msys2-build:
+    name: 'MSYS2 ${{ matrix.sys }} build'
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
         include:
-          - {os: ubuntu-latest, shell: bash}
-          - {os: macos-latest, shell: bash}
-          - {os: windows-latest, shell: 'msys2 {0}', sys: mingw32}
-          - {os: windows-latest, shell: 'msys2 {0}', sys: mingw64}
+          - {sys: mingw32, env: i686}
+          - {sys: mingw64, env: x86_64}
+          - {sys: ucrt64,  env: ucrt-x86_64}
+          - {sys: clang64, env: clang-x86_64}
 
     defaults:
       run:
-        shell: ${{ matrix.shell }}
+        shell: 'msys2 {0}'
 
     steps:
       - name: 'git config core.autocrlf (Windows)'
-        if: runner.os == 'Windows'
         run: git config --global core.autocrlf input
         shell: bash
 
       - uses: actions/checkout@v3
 
       - name: 'Set MINGW_ARCH (Windows)'
-        if: runner.os == 'Windows'
         shell: bash
         run: echo MINGW_ARCH="${{ matrix.sys }}" >> $GITHUB_ENV
 
       - name: 'Set up MSYS2 and Install Software'
-        if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with:
           msystem: ${{ matrix.sys }}
 
-      - name: 'Determine number of cores to build on (Linux)'
-        if: runner.os == 'Linux'
-        run: echo NPROC="$(nproc)" >> $GITHUB_ENV
-
       - name: 'Determine number of cores to build on (Windows)'
-        if: runner.os == 'Windows'
         run: echo NPROC="${NUMBER_OF_PROCESSORS-unknown}" >> $GITHUB_ENV
-
-      - name: 'Determine number of cores to build on (macOS)'
-        if: runner.os == 'macOS'
-        run: echo NPROC="$(sysctl -n hw.logicalcpu)" >> $GITHUB_ENV
 
       - name: 'Check shell environment'
         run: |
