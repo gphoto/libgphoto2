@@ -1,3 +1,7 @@
+# If Github does not properly accept this YAML file, try
+# https://rhysd.github.io/actionlint/ from
+# https://github.com/rhysd/actionlint.
+
 name: 'CI build'
 
 on:
