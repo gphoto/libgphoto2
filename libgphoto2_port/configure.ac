@@ -395,7 +395,11 @@ GP_CHECK_LIBRARY([LIBUSB],[libusb],[>= 0.1.5],
 	case "$host" in
 	  *-*-mingw* | *-*-cygwin* | *-*-msvc* )
 	  dnl Windows itself has usb.h we mis-detect, in that case remove access to the other usb.h
-	  IOLIB_LIST="$IOLIB_LIST usb"
+	  if test "x$have_LIBUSB1" = xyes; then
+		GP_CONFIG_MSG([libusb0 support], [detected, but disabled (using libusb1 instead)])
+	  else
+		IOLIB_LIST="$IOLIB_LIST usb"
+	  fi
 	  ;;
           *-linux*)
 	  if test "x$have_LIBUSB1" != xyes; then
