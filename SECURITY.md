@@ -66,3 +66,5 @@ Information disclosure is not a relevant attack scenario.
 Bugreports can be filed as github issues.
 
 If you want to report an embargoed security bug report, reach out to marcus@jet.franken.de
+or [Report a vulnerability](https://github.com/gphoto/libgphoto2/security/advisories/new)
+on Github.
