@@ -4263,6 +4263,23 @@ static struct deviceproptableu8 nikon_afsensor[] = {
 };
 GENERIC8TABLE(Nikon_AutofocusArea,nikon_afsensor)
 
+static struct deviceproptableu16 sony_focusarea[] = {
+		{ N_("Wide"), 0x01, 0 },
+		{ N_("Zone"),	0x02, 0 },
+		{ N_("Center"),	0x03, 0 },
+		{ N_("Flexible Spot: S"),	0x101, 0 },
+		{ N_("Flexible Spot: M"),	0x102, 0 },
+		{ N_("Flexible Spot: L"),	0x103, 0 },
+		{ N_("Expand Flexible Spot"),	0x104, 0 },
+		{ N_("Lock-on AF: Wide"),	0x201, 0 },
+		{ N_("Lock-on AF: Zone"),	0x202, 0 },
+		{ N_("Lock-on AF: Center"),	0x203, 0 },
+		{ N_("Lock-on AF: Flexible Spot: S"),	0x204, 0 },
+		{ N_("Lock-on AF: Flexible Spot: M"),	0x205, 0 },
+		{ N_("Lock-on AF: Flexible Spot: L"),	0x206, 0 },
+		{ N_("Lock-on AF: Expand Flexible Spot"),	0x207, 0 },
+};
+GENERIC16TABLE(Sony_FocusArea,sony_focusarea)
 
 static struct deviceproptableu16 exposure_metering[] = {
 	{ N_("Average"),	0x0001, 0 },
@@ -10836,6 +10853,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Release without CF card"),        "nocfcardrelease",          PTP_DPC_NIKON_NoCFCard,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Mode Manual Power"),        "flashmodemanualpower",     PTP_DPC_NIKON_FlashModeManualPower,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FlashModeManualPower,    _put_Nikon_FlashModeManualPower },
 	{ N_("Auto Focus Area"),                "autofocusarea",            PTP_DPC_NIKON_AutofocusArea,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_AutofocusArea,           _put_Nikon_AutofocusArea },
+	{ N_("Focus Area"),                     "focusarea",                PTP_DPC_SONY_FocusArea,                 PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_Sony_FocusArea,                _put_Sony_FocusArea },
 	{ N_("Flash Exposure Compensation"),    "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_INT8,   _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation },
 	{ N_("Bracketing"),                     "bracketing",               PTP_DPC_NIKON_Bracketing,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Bracketing"),                     "bracketmode",              PTP_DPC_NIKON_E6ManualModeBracketing,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ManualBracketMode,       _put_Nikon_ManualBracketMode },

@@ -7549,6 +7549,7 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_SONY_StillImage, N_("Still Image")},		/* 0xD2C7 */
 		{PTP_DPC_SONY_SensorCrop, N_("Sensor Crop")},
 		{PTP_DPC_SONY_AutoFocus, N_("Autofocus")},
+		{PTP_DPC_SONY_FocusArea, N_("Focus Area")},
 		{PTP_DPC_SONY_Capture, N_("Capture")},
 		{PTP_DPC_WhiteBalance, N_("White Balance")},		/* 0x5005 */
 		{PTP_DPC_SONY_Zoom, N_("Zoom")},
