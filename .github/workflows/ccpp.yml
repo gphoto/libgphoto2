@@ -178,20 +178,16 @@ jobs:
           update: true
           install: >-
             git
-            autoconf
-            automake
-            gettext-devel
-            libtool
-            make
-            pkgconf
-            msys2-w32api-headers
-            msys2-w32api-runtime
           pacboy:
-            gcc:p
+            autotools:p
+            cc:p
             curl:p
             libexif:p
             libgd:p
+            libiconv:p
+            libjpeg:p
             libltdl:p
+            libsystre:p
             libusb:p
             libxml2:p
 
