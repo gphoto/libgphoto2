@@ -80,6 +80,7 @@ typedef struct {
 
 static LogFunc *log_funcs = NULL;
 static unsigned int log_funcs_count = 0;
+static GPLogLevel log_max_level = 0;
 
 /**
  * \brief Add a function to get logging information
@@ -110,6 +111,9 @@ gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 	log_funcs[log_funcs_count - 1].func = func;
 	log_funcs[log_funcs_count - 1].data = data;
 
+	if (level > log_max_level)
+		log_max_level = level;
+
 	return logfuncid;
 }
 
@@ -126,15 +130,21 @@ int
 gp_log_remove_func (int id)
 {
 	unsigned int i;
+	GPLogLevel new_max_log_level = 0;
+	int status = GP_ERROR_BAD_PARAMETERS;
 
+	/* Remove log function from list and recalculate current most detailed log level needed */
 	for (i=0;i<log_funcs_count;i++) {
 		if (log_funcs[i].id == id) {
 			memmove (log_funcs + i, log_funcs + i + 1, sizeof(LogFunc) * (log_funcs_count - i - 1));
 			log_funcs_count--;
-			return GP_OK;
+			status = GP_OK;
 		}
+		if (new_max_log_level < log_funcs[i].level)
+			new_max_log_level = log_funcs[i].level;
 	}
-	return GP_ERROR_BAD_PARAMETERS;
+	log_max_level = new_max_log_level;
+	return status;
 }
 
 /**
@@ -199,6 +209,10 @@ gp_log_data (const char *domain, const char *data, unsigned int size, const char
 	int y = HEXDUMP_INIT_Y;
 	unsigned int index, original_size = size;
 	unsigned char value;
+
+	/* No logger currently at the data log level */
+	if (log_max_level < GP_LOG_DATA)
+		return;
 
 	va_start (args, format);
 	msg = gpi_vsnprintf(format, args);
@@ -290,7 +304,7 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 	unsigned int i;
 	char *str = 0;
 
-	if (!log_funcs_count)
+	if (!log_funcs_count || level > log_max_level)
 		return;
 
 	str = gpi_vsnprintf(format, args);
@@ -320,6 +334,9 @@ gp_log (GPLogLevel level, const char *domain, const char *format, ...)
 {
 	va_list args;
 
+	if (!log_funcs_count || level > log_max_level)
+		return;
+
 	va_start (args, format);
 	gp_logv (level, domain, format, args);
 	va_end (args);
@@ -329,11 +346,14 @@ void
 gp_log_with_source_location(GPLogLevel level, const char *file, int line, const char *func, const char *format, ...)
 {
 	va_list args;
-        char domain[100];
+	char domain[100];
 
-        /* Only display filename without any path/directory part */
-        file = strrchr(file, '/') ? strrchr(file, '/') + 1 : file;
-        snprintf(domain, sizeof(domain), "%s [%s:%d]", func, file, line);
+	if (!log_funcs_count || level > log_max_level)
+		return;
+
+	/* Only display filename without any path/directory part */
+	file = strrchr(file, '/') ? strrchr(file, '/') + 1 : file;
+	snprintf(domain, sizeof(domain), "%s [%s:%d]", func, file, line);
 
 	va_start (args, format);
 	gp_logv (level, domain, format, args);
