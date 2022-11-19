@@ -3086,8 +3086,6 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_ISO				0xD21E	/* ? */
 #define PTP_DPC_SONY_StillImageStoreDestination		0xD222  /* (type=0x4) Enumeration [1,17,16] value: 17 */
 /* guessed DPC_SONY_DateTimeSettings 0xD223  error on query */
-/* guessed DPC_SONY_FocusArea 0xD22C  (type=0x4) Enumeration [1,2,3,257,258,259,260,513,514,515,516,517,518,519,261,520] value: 1 */
-/* guessed DPC_SONY_LiveDisplayEffect 0xD231 (type=0x2) Enumeration [1,2] value: 1 */
 /* guessed DPC_SONY_FileType 0xD235  (enum: 0,1) */
 /* guessed DPC_SONY_JpegQuality 0xD252 */
 /* d255 reserved 5 */
@@ -3095,6 +3093,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_ExposureCompensation		0xD224
 #define PTP_DPC_SONY_ISO2				0xD226
 #define PTP_DPC_SONY_ShutterSpeed2			0xD229
+#define PTP_DPC_SONY_FocusArea				0xD22C  /* (type=0x4) Enumeration [1,2,3,257,258,259,260,513,514,515,516,517,518,519,261,520] value: 1 */
+#define PTP_DPC_SONY_LiveViewSettingEffect  0xD231  /* (type=0x2) Enumeration [1,2] value: 1 */
 #define PTP_DPC_SONY_PriorityMode			0xD25A
 #define PTP_DPC_SONY_AutoFocus				0xD2C1 /* ? half-press */
 #define PTP_DPC_SONY_Capture				0xD2C2 /* ? full-press */

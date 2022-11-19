@@ -4263,6 +4263,23 @@ static struct deviceproptableu8 nikon_afsensor[] = {
 };
 GENERIC8TABLE(Nikon_AutofocusArea,nikon_afsensor)
 
+static struct deviceproptableu16 sony_focusarea[] = {
+		{ N_("Wide"), 0x01, 0 },
+		{ N_("Zone"),	0x02, 0 },
+		{ N_("Center"),	0x03, 0 },
+		{ N_("Flexible Spot: S"),	0x101, 0 },
+		{ N_("Flexible Spot: M"),	0x102, 0 },
+		{ N_("Flexible Spot: L"),	0x103, 0 },
+		{ N_("Expand Flexible Spot"),	0x104, 0 },
+		{ N_("Lock-on AF: Wide"),	0x201, 0 },
+		{ N_("Lock-on AF: Zone"),	0x202, 0 },
+		{ N_("Lock-on AF: Center"),	0x203, 0 },
+		{ N_("Lock-on AF: Flexible Spot: S"),	0x204, 0 },
+		{ N_("Lock-on AF: Flexible Spot: M"),	0x205, 0 },
+		{ N_("Lock-on AF: Flexible Spot: L"),	0x206, 0 },
+		{ N_("Lock-on AF: Expand Flexible Spot"),	0x207, 0 },
+};
+GENERIC16TABLE(Sony_FocusArea,sony_focusarea)
 
 static struct deviceproptableu16 exposure_metering[] = {
 	{ N_("Average"),	0x0001, 0 },
@@ -6782,6 +6799,12 @@ static struct deviceproptableu8 sony_sensorcrop[] = {
 	{ N_("On"),	0x02, 0 },
 };
 GENERIC8TABLE(Sony_SensorCrop,sony_sensorcrop)
+
+static struct deviceproptableu8 sony_liveviewsettingeffect[] = {
+		{ N_("On"),  0x01, 0 },
+		{ N_("Off"), 0x02, 0 },
+};
+GENERIC8TABLE(Sony_LiveViewSettingEffect,sony_liveviewsettingeffect)
 
 /* Sony specific, we need to wait for it settle (around 1 second), otherwise we get trouble later on */
 static int
@@ -10644,7 +10667,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Movie ISO Speed"),        "movieiso",             PTP_DPC_NIKON_MovieISO,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_INT,                       _put_INT },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_CANON_EOS_ISOSpeed,             PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ISO,                 _put_Canon_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_QX_ISO,                    PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_QX_ISO },
-	/* these 2 iso will overwrite and conflicht with each other... the older Sony do not have d226, so it should pick the next entry ... */
+	/* these 2 iso will overwrite and conflict with each other... the older Sony do not have d226, so it should pick the next entry ... */
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO2,                      PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO2 },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ISO,               _put_Nikon_1_ISO },
@@ -10820,6 +10843,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_FUJI_LiveViewImageSize,         PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_LiveViewSize,             _put_Fuji_LiveViewSize },
 	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_SONY_QX_LiveviewResolution,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_QX_LiveViewSize,          _put_Sony_QX_LiveViewSize },
 	{ N_("Live View Size"),                 "liveviewsize",             PTP_DPC_CANON_EOS_EVFOutputDevice,      PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_LiveViewSize,            _put_Canon_LiveViewSize },
+	{ N_("Live View Setting Effect"),       "liveviewsettingeffect",    PTP_DPC_SONY_LiveViewSettingEffect,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_LiveViewSettingEffect,    _put_Sony_LiveViewSettingEffect },
 	{ N_("File Number Sequencing"),         "filenrsequencing",         PTP_DPC_NIKON_FileNumberSequence,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Sign"),                     "flashsign",                PTP_DPC_NIKON_FlashSign,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Modelling Flash"),                "modelflash",               PTP_DPC_NIKON_E4ModelingFlash,          PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OffOn_UINT8,             _put_Nikon_OffOn_UINT8 },
@@ -10829,6 +10853,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Release without CF card"),        "nocfcardrelease",          PTP_DPC_NIKON_NoCFCard,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Flash Mode Manual Power"),        "flashmodemanualpower",     PTP_DPC_NIKON_FlashModeManualPower,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FlashModeManualPower,    _put_Nikon_FlashModeManualPower },
 	{ N_("Auto Focus Area"),                "autofocusarea",            PTP_DPC_NIKON_AutofocusArea,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_AutofocusArea,           _put_Nikon_AutofocusArea },
+	{ N_("Focus Area"),                     "focusarea",                PTP_DPC_SONY_FocusArea,                 PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_Sony_FocusArea,                _put_Sony_FocusArea },
 	{ N_("Flash Exposure Compensation"),    "flashexposurecompensation", PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, PTP_DTC_INT8,   _get_Nikon_FlashExposureCompensation, _put_Nikon_FlashExposureCompensation },
 	{ N_("Bracketing"),                     "bracketing",               PTP_DPC_NIKON_Bracketing,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Bracketing"),                     "bracketmode",              PTP_DPC_NIKON_E6ManualModeBracketing,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ManualBracketMode,       _put_Nikon_ManualBracketMode },
