@@ -339,7 +339,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		do_preprocess = 1;
 		if (camera->pl->last_fetched_data) break;
 
-		camera->pl->last_fetched_data = malloc (nb_frames*w*h);
+		camera->pl->last_fetched_data = malloc ((long)nb_frames*w*h);
 		if (!camera->pl->last_fetched_data) {
 			sq_rewind(camera->port, camera->pl);
 			return GP_ERROR_NO_MEMORY;
@@ -387,7 +387,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		size = size + (w * h * 3);
 		GP_DEBUG ("size = %i\n", size);
 		if (comp_ratio>1) {
-			rawdata = malloc (w*h);
+			rawdata = malloc ((long)w*h);
 			if (!rawdata) {
 				free (ppm);
 				return GP_ERROR_NO_MEMORY;
