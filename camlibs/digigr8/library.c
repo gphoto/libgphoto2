@@ -291,7 +291,7 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 	ptr = ppm + size;
 	size = size + (w * h * 3);
 	GP_DEBUG ("size = %i\n", size);
-	p_data = malloc(w * h);
+	p_data = calloc(w , h);
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
 		free (ppm);
@@ -370,7 +370,7 @@ camera_capture_preview(Camera *camera, CameraFile *file, GPContext *context)
 		GP_DEBUG("Error in reading data\n");
 		return GP_ERROR;
 	}
-	frame_data = malloc(w * h);
+	frame_data = calloc(w , h);
 	if (!frame_data) {
 		free(raw_data);
 		return GP_ERROR_NO_MEMORY;
