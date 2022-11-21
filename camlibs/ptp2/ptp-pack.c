@@ -2564,11 +2564,11 @@ static unsigned int olcsizes[0x15][13] = {
 			if (olcver == 0) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 				ce[i].u.info = strdup("OLC version is unknown");
-				ptp_debug (params, "event %d: OLC version is 0, skipping (might get set later)");
+				ptp_debug (params, "event %d: OLC version is 0, skipping (might get set later)", i);
 				break;
 			}
 			if (olcver >= sizeof(olcsizes)/sizeof(olcsizes[0])) {
-				ptp_debug (params, "event %d: OLC version is %d, assuming latest known", olcver);
+				ptp_debug (params, "event %d: OLC version is %d, assuming latest known", i, olcver);
 				olcver = sizeof(olcsizes)/sizeof(olcsizes[0])-1;
 			}
 
