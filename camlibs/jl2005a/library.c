@@ -243,7 +243,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		status = GP_ERROR_CORRUPTED_DATA;
 		goto end;
 	}
-	p_data = malloc( w*h );
+	p_data = calloc( w,h );
 	if (!p_data) {
 		status =  GP_ERROR_NO_MEMORY;
 		goto end;
