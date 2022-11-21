@@ -301,7 +301,7 @@ ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, unsigned int o
 		return 0;
 
 	if (offset + sizeof(uint32_t)*(n+1) > datalen) {
-		ptp_debug (params ,"array runs over datalen bufferend (%d vs %d)", offset + sizeof(uint32_t)*(n+1) , datalen);
+		ptp_debug (params ,"array runs over datalen bufferend (%ld vs %d)", offset + sizeof(uint32_t)*(n+1) , datalen);
 		return 0;
 	}
 
@@ -347,7 +347,7 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, unsigned int o
 	if (offset + sizeof(uint32_t) > datalen)
 		return 0;
 	if (offset + sizeof(uint32_t)+sizeof(uint16_t)*n > datalen) {
-		ptp_debug (params ,"array runs over datalen bufferend (%d vs %d)", offset + sizeof(uint32_t)+n*sizeof(uint16_t) , datalen);
+		ptp_debug (params ,"array runs over datalen bufferend (%ld vs %d)", offset + sizeof(uint32_t)+n*sizeof(uint16_t) , datalen);
 		return 0;
 	}
 	*array = calloc (n,sizeof(uint16_t));
@@ -2081,9 +2081,9 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			ce[i].u.object.oi.ObjectCompressedSize= dtoh32a(&curdata[PTP_ece_OA_Size]);
 			ce[i].u.object.oi.Filename 	= strdup(((char*)&curdata[PTP_ece_OA_Name]));
 			if (type == PTP_EC_CANON_EOS_ObjectAddedEx) {
-				ptp_debug (params, "event %d: objectinfo added oid %08lx, parent %08lx, ofc %04x, size %d, filename %s", i, ce[i].u.object.oid, ce[i].u.object.oi.ParentObject, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
+				ptp_debug (params, "event %d: objectinfo added oid %08x, parent %08x, ofc %04x, size %ld, filename %s", i, ce[i].u.object.oid, ce[i].u.object.oi.ParentObject, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
 			} else {
-				ptp_debug (params, "event %d: objectinfo changed oid %08lx, parent %08lx, ofc %04x, size %d, filename %s", i, ce[i].u.object.oid, ce[i].u.object.oi.ParentObject, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
+				ptp_debug (params, "event %d: objectinfo changed oid %08x, parent %08x, ofc %04x, size %ld, filename %s", i, ce[i].u.object.oid, ce[i].u.object.oi.ParentObject, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
 			}
 			break;
 		case PTP_EC_CANON_EOS_ObjectAddedEx64:	/* FIXME: review if the data used is correct */
@@ -2098,7 +2098,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			ce[i].u.object.oi.ObjectFormat 	= dtoh16a(&curdata[PTP_ece2_OA_OFC]);
 			ce[i].u.object.oi.ObjectCompressedSize= dtoh32a(&curdata[PTP_ece2_OA_Size]);	/* FIXME: might be 64bit now */
 			ce[i].u.object.oi.Filename 	= strdup(((char*)&curdata[PTP_ece2_OA_Name]));
-			ptp_debug (params, "event %d: objectinfo added oid %08lx, parent %08lx, ofc %04x, size %d, filename %s", i, ce[i].u.object.oid, ce[i].u.object.oi.ParentObject, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
+			ptp_debug (params, "event %d: objectinfo added oid %08x, parent %08x, ofc %04x, size %ld, filename %s", i, ce[i].u.object.oid, ce[i].u.object.oi.ParentObject, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
 			break;
 		case PTP_EC_CANON_EOS_RequestObjectTransfer:
 		case PTP_EC_CANON_EOS_RequestObjectTransfer64:
@@ -2114,7 +2114,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			ce[i].u.object.oi.ObjectCompressedSize = dtoh32a(&curdata[PTP_ece_OI_Size]);
 			ce[i].u.object.oi.Filename 	= strdup(((char*)&curdata[PTP_ece_OI_Name]));
 
-			ptp_debug (params, "event %d: request object transfer oid %08lx, ofc %04x, size %d, filename %p", i, ce[i].u.object.oid, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
+			ptp_debug (params, "event %d: request object transfer oid %08x, ofc %04x, size %ld, filename %p", i, ce[i].u.object.oid, ce[i].u.object.oi.ObjectFormat, ce[i].u.object.oi.ObjectCompressedSize, ce[i].u.object.oi.Filename);
 			break;
 		case PTP_EC_CANON_EOS_AvailListChanged: {	/* property desc */
 			uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
