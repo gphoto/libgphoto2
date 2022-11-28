@@ -8701,22 +8701,22 @@ _put_Sony_ManualFocus(CONFIG_PUT_ARGS)
 		xpropval.u16 = 2;
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d2, &xpropval, PTP_DTC_UINT16));
 		*/
-		if(val <= -7) xpropval.u16 = 0xFFFF - 6;
-		else if(val <= -6.0) xpropval.u16 = 0xFFFF - 5;
-		else if(val <= -5.0) xpropval.u16 = 0xFFFF - 4;
-		else if(val <= -4.0) xpropval.u16 = 0xFFFF - 3;
-		else if(val <= -3.0) xpropval.u16 = 0xFFFF - 2;
-		else if(val <= -2.0) xpropval.u16 = 0xFFFF - 1;
-		else if(val <= -1.0) xpropval.u16 = 0xFFFF;
-		else if(val <= 1.0) xpropval.u16 = 1;
-		else if(val <= 2.0) xpropval.u16 = 2;
-		else if(val <= 3.0) xpropval.u16 = 3;
-		else if(val <= 4.0) xpropval.u16 = 4;
-		else if(val <= 5.0) xpropval.u16 = 5;
-		else if(val <= 6.0) xpropval.u16 = 6;
-		else if(val <= 7.0) xpropval.u16 = 7;
-		else xpropval.u16 = 0;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_NearFar, &xpropval, PTP_DTC_UINT16));
+		if(val <= -7) xpropval.i16 = - 7;
+		else if(val <= -6.0) xpropval.i16 = -6;
+		else if(val <= -5.0) xpropval.i16 = -5;
+		else if(val <= -4.0) xpropval.i16 = -4;
+		else if(val <= -3.0) xpropval.i16 = -3;
+		else if(val <= -2.0) xpropval.i16 = -2;
+		else if(val <= -1.0) xpropval.i16 = -1;
+		else if(val <= 1.0) xpropval.i16 = 1;
+		else if(val <= 2.0) xpropval.i16 = 2;
+		else if(val <= 3.0) xpropval.i16 = 3;
+		else if(val <= 4.0) xpropval.i16 = 4;
+		else if(val <= 5.0) xpropval.i16 = 5;
+		else if(val <= 6.0) xpropval.i16 = 6;
+		else if(val <= 7.0) xpropval.i16 = 7;
+		else xpropval.i16 = 0;
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_NearFar, &xpropval, PTP_DTC_INT16));
 	} else {
 		xpropval.u16 = 1;
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d2, &xpropval, PTP_DTC_UINT16));
@@ -10494,7 +10494,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 
 	{ N_("Auto-Focus"),                     "autofocus",        PTP_DPC_SONY_AutoFocus, PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Autofocus,            _put_Sony_Autofocus },
-	{ N_("Manual-Focus"),                   "manualfocus",      PTP_DPC_SONY_NearFar,   PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_ManualFocus,          _put_Sony_ManualFocus },
+	{ N_("Manual-Focus"),                   "manualfocus",      PTP_DPC_SONY_NearFar,   PTP_VENDOR_SONY,   PTP_DTC_INT16,   _get_Sony_ManualFocus,          _put_Sony_ManualFocus },
 	{ N_("Capture"),                        "capture",          PTP_DPC_SONY_Capture,   PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Capture,              _put_Sony_Capture },
 	{ N_("Power Down"),                     "powerdown",        0,  0,                  PTP_OC_PowerDown,                   _get_PowerDown,                 _put_PowerDown },
 	{ N_("Focus Lock"),                     "focuslock",        0,  PTP_VENDOR_CANON,   PTP_OC_CANON_FocusLock,             _get_Canon_FocusLock,           _put_Canon_FocusLock },
