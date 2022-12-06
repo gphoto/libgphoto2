@@ -7283,8 +7283,19 @@ handleregular:
 		PTPDevicePropDesc	dpd;
 
 		*eventtype = GP_EVENT_UNKNOWN;
-		/* cached devprop should hafve been flushed I think... */
-		C_PTP_REP (ptp_generic_getdevicepropdesc (params, event.Param1&0xffff, &dpd));
+		/* cached devprop should have been flushed I think... */
+		ret = ptp_generic_getdevicepropdesc (params, event.Param1&0xffff, &dpd);
+
+		/* Nikon Z6 II reports a prop changed event 501c, but getdevicepropdesc fails with devicepropnot supported
+		 * (reported via email)
+		 */
+		if (ret == PTP_RC_DevicePropNotSupported) {
+			C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
+			sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
+			break;
+		}
+		if (ret != PTP_RC_OK)
+			C_PTP_REP (ret);
 
 		ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 		if (ret == GP_OK) {
