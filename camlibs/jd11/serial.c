@@ -507,6 +507,12 @@ jd11_get_image_full(
     }
     gp_file_append(file, IMGHEADER, strlen(IMGHEADER));
     data = malloc(640*480*3);
+    if (!data) {
+        free(uncomp[0]);free(uncomp[1]);free(uncomp[2]);
+        free(imagebufs[0]);free(imagebufs[1]);free(imagebufs[2]);free(imagebufs);
+        return GP_ERROR_NO_MEMORY;
+    }
+
     if (!raw) {
 	unsigned char *bayerpre;
 	s = bayerpre = malloc(640*480);
