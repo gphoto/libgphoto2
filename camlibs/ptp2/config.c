@@ -5281,11 +5281,24 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 				break;
 		}
 
-		// Calculating jump width
-		if (direction > 0)
-			value.u8 = 0x00 + position_new - position_current;
-		else
-			value.u8 = 0x100 + position_new - position_current;
+		/* If something failed, fall back to single step, https://github.com/gphoto/libgphoto2/issues/694 */
+		if (position_current == position_new) {
+			GP_LOG_D ("posNew and pos_current both %d, fall back to single step", position_current);
+			if (old > new) {
+				value.u8 = 0x01;
+				direction = 1;
+			}
+			else {
+				value.u8 = 0xff;
+				direction = -1;
+			}
+		} else {
+			// Calculating jump width
+			if (direction > 0)
+				value.u8 = 0x00 + position_new - position_current;
+			else
+				value.u8 = 0x100 + position_new - position_current;
+		}
 
 		a = dpd->CurrentValue.u32>>16;
 		b = dpd->CurrentValue.u32&0xffff;
