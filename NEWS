@@ -1,5 +1,14 @@
 libgphoto2 2.5.30.1 development snapshot
 
+general:
+* disable log formatting when we are not logging (speeds up large downloads, as 
+  we are not hex dumping data and immediately discard the text)
+
+translations:
+* updated swedish
+------------------------------------------------------------------------------
+libgphoto2 2.5.30 release
+
 ptp2:
 * Canon: fixed display locking/unlocking after exit
 * generic: avoid potential crash on image addition
