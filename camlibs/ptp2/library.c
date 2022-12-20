@@ -2752,6 +2752,8 @@ static struct {
 
 	/* 522903503@qq.com */
 	{"Sigma:fp",				0x1003,	0xc432, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/libgphoto2/issues/882 */
+	{"Sigma:fp L",				0x1003,	0xc442, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Bernhard Wagner <me@bernhardwagner.net> */
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},

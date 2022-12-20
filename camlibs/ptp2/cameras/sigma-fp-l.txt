@@ -1,0 +1,115 @@
+Camera summary:
+Manufacturer: SIGMA
+Model: SIGMA fp L
+  Version: 1.00
+  Serial Number: 000000003333333
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: SIGMA
+
+Capture Formats: 
+Display Formats: Association/Directory, Script, Apple Quicktime, JPEG
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: 
+	VolumeLabel: 
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Only
+	Maximum Capability: 127831900160 (121910 MB)
+	Free Space (Bytes): 122287292416 (116622 MB)
+	Free Space (Images): 0
+
+Device Property Summary:
+
+Device info:
+Manufacturer: SIGMA
+  Model: SIGMA fp L
+  device version: 1.00
+  serial number: '000000003333333'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: SIGMA
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x9012 (Unknown PTP_OC)
+  0x9013 (Unknown PTP_OC)
+  0x9014 (Unknown PTP_OC)
+  0x9015 (Unknown PTP_OC)
+  0x9016 (Unknown PTP_OC)
+  0x9017 (Unknown PTP_OC)
+  0x9018 (Unknown PTP_OC)
+  0x9019 (Unknown PTP_OC)
+  0x901b (Unknown PTP_OC)
+  0x901c (Unknown PTP_OC)
+  0x9022 (Unknown PTP_OC)
+  0x9023 (Unknown PTP_OC)
+  0x9024 (Unknown PTP_OC)
+  0x9027 (Unknown PTP_OC)
+  0x9028 (Unknown PTP_OC)
+  0x9029 (Unknown PTP_OC)
+  0x902a (Unknown PTP_OC)
+  0x902b (Unknown PTP_OC)
+  0x902c (Unknown PTP_OC)
+  0x902d (Unknown PTP_OC)
+  0x902f (Unknown PTP_OC)
+  0x9030 (Unknown PTP_OC)
+  0x9031 (Unknown PTP_OC)
+  0x9032 (Unknown PTP_OC)
+  0x9033 (Unknown PTP_OC)
+  0x9034 (Unknown PTP_OC)
+  0x9038 (Unknown PTP_OC)
+  0x9039 (Unknown PTP_OC)
+  0x903a (Unknown PTP_OC)
+  0x9035 (Unknown PTP_OC)
+  0x9036 (Unknown PTP_OC)
+  0x9037 (Unknown PTP_OC)
+  0x9401 (Unknown PTP_OC)
+  0x9402 (Unknown PTP_OC)
+  0x9403 (Unknown PTP_OC)
+  0x9404 (Unknown PTP_OC)
+  0x9405 (Unknown PTP_OC)
+  0x9411 (Unknown PTP_OC)
+  0x9412 (Unknown PTP_OC)
+  0x9413 (Unknown PTP_OC)
+  0x9414 (Unknown PTP_OC)
+  0x9421 (Unknown PTP_OC)
+  0x9422 (Unknown PTP_OC)
+  0x9423 (Unknown PTP_OC)
+  0x9424 (Unknown PTP_OC)
+  0x9431 (Unknown PTP_OC)
+  0x9432 (Unknown PTP_OC)
+  0x9433 (Unknown PTP_OC)
+Events Supported:
+  0x4001 (CancelTransaction)
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+  0xc401 (Unknown Event)
+  0xc411 (Unknown Event)
+Device Properties Supported:
