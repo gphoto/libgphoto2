@@ -1,8 +1,28 @@
 libgphoto2 2.5.30.1 development snapshot
 
+pentax:
+* added Pentax KP id
+
+ptp2:
+* do better event queueing during capture (makes capture faster, avoids losing events)
+* Canon EOS: OLC logic rewritten to be table driven, more debugging of the content,
+  config "testolc" to generate debugoutput. Supports more cameras better.
+* Sony Alpha: Added config options: focusarea, liveviewsettingeffect
+* Battery Level: also support ENUM style battery reporting for Canon
+* Nikon 1: S1 also does not support everything
+* New ids:
+  - Nikon Z30
+  - Canon EOS 850D, R7, R10, R5 C
+  - Fuji X-H2
+  - Pentax KP (PTP mode)
+  - Sigma fp L
+  - GOPRO HERO 11 BLACK
+  - new ids also imported from libmtp
+
 general:
-* disable log formatting when we are not logging (speeds up large downloads, as 
-  we are not hex dumping data and immediately discard the text)
+* disable log formatting when we are not logging (speeds up large downloads, as
+  we are not hex dumping the whole data and immediately discard the result)
+* libltdl usage now thread-safe. (some other library pieces are not threadsafe yet)
 
 translations:
 * updated swedish
