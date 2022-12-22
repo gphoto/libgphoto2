@@ -3098,6 +3098,12 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_PriorityMode			0xD25A
 #define PTP_DPC_SONY_AutoFocus				0xD2C1 /* ? half-press */
 #define PTP_DPC_SONY_Capture				0xD2C2 /* ? full-press */
+#define PTP_DPC_SONY_FocusMagnify			0xD2CB
+#define PTP_DPC_SONY_FocusMagnifyExit			0xD2CC
+#define PTP_DPC_SONY_FocusMagnifyUp	    		0xD2CD
+#define PTP_DPC_SONY_FocusMagnifyDown			0xD2CE
+#define PTP_DPC_SONY_FocusMagnifyLeft			0xD2CF
+#define PTP_DPC_SONY_FocusMagnifyRight			0xD2D0
 /* D2DB (2) , D2D3 (2) , D2C8 (2) also seen in Camera Remote related to D2C2 */
 /* S1 ?
  * AEL - d2c3
