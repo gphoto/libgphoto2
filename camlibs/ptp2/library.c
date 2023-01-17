@@ -5915,7 +5915,8 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)) {
 		if (!is_canon_eos_m (params)) {
 			/* Regular EOS */
-			int 			manualfocus = 0, foundfocusinfo = 0;
+			uint16_t	res;
+			int 		manualfocus = 0, foundfocusinfo = 0;
 
 			/* are we in manual focus mode ... value would be 3 */
 			if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusMode, &dpd)) {
@@ -5976,7 +5977,16 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 			}
 			/* full press now */
 
-			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 2, 0), _("Canon EOS Full-Press failed"));
+			res = LOG_ON_PTP_E (ptp_canon_eos_remotereleaseon (params, 2, 0));
+			if (res != PTP_RC_OK) {
+				/* if the Full Press failed, try to roll back the release and do not exit Half-Pressed. */
+				ptp_check_eos_events (params);
+				C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
+				ptp_check_eos_events (params);
+				C_PTP_REP_MSG (res, _("Canon EOS Full-Press failed"));
+				/* safety, should not arrive here */
+				return GP_ERROR;
+			}
 			/* no event check between */
 			/* full release now */
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 2), _("Canon EOS Full-Release failed"));
