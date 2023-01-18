@@ -3237,7 +3237,7 @@ exitfailed:
 				(camera->port, GP_PORT_USB_ENDPOINT_INT);
 	}
 #if defined(HAVE_LIBWS232) && defined(WIN32)
-	else if ((camera->port!=NULL) && camera->port->type != GP_PORT_PTPIP) {
+	else if ((camera->port!=NULL) && (camera->port->type == GP_PORT_PTPIP)) {
 		WSACleanup();
 	}
 #endif
