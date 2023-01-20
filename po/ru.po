@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: libgphoto2 2.4.13\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
 "POT-Creation-Date: 2012-02-20 10:17+0100\n"
-"PO-Revision-Date: 2023-01-19 15:29+0300\n"
+"PO-Revision-Date: 2023-01-20 15:43+0300\n"
 "Last-Translator: Мария Шикунова <translation-team@basealt.ru>\n"
 "Language-Team: Russian <gnu@mx.ru>\n"
 "Language: ru\n"
@@ -618,7 +618,7 @@ msgstr ""
 #: camlibs/canon/library.c:1046 camlibs/canon/library.c:1052
 #: camlibs/canon/library.c:2010 camlibs/canon/library.c:2016
 msgid "AC adapter"
-msgstr "блок питания"
+msgstr "Блок питания"
 
 #: camlibs/canon/library.c:1046 camlibs/canon/library.c:1052
 #: camlibs/canon/library.c:2010 camlibs/canon/library.c:2016
@@ -1061,19 +1061,19 @@ msgstr "ОШИБКА: наслоение сообщений"
 
 #: camlibs/canon/serial.c:750
 msgid "ERROR: out of sequence."
-msgstr "ОШИБКА: нарушение последовательности"
+msgstr "ОШИБКА: нарушение последовательности."
 
 #: camlibs/canon/serial.c:755
 msgid "ERROR: unexpected packet type."
-msgstr "ОШИБКА: неожиданный тип пакета"
+msgstr "ОШИБКА: неожиданный тип пакета."
 
 #: camlibs/canon/serial.c:765
 msgid "ERROR: message format error."
-msgstr "ОШИБКА: неверный формат сообщения"
+msgstr "ОШИБКА: неверный формат сообщения."
 
 #: camlibs/canon/serial.c:777
 msgid "ERROR: unexpected message2."
-msgstr "ОШИБКА: неожиданное сообщение2"
+msgstr "ОШИБКА: неожиданное сообщение2."
 
 #: camlibs/canon/serial.c:994
 msgid "Uploading file..."
@@ -1203,7 +1203,8 @@ msgstr "Фотоаппарат подключён"
 
 #: camlibs/canon/serial.c:1517
 msgid "ERROR: a fatal error condition was detected, can't continue "
-msgstr "ОШИБКА: обнаружены признаки неисправимой ошибки. Невозможно продолжать"
+msgstr ""
+"ОШИБКА: обнаружены признаки неисправимой ошибки. Невозможно продолжать "
 
 #: camlibs/canon/serial.c:1533
 #, c-format
@@ -1959,7 +1960,7 @@ msgstr ""
 "Программа копирования снимков для Digital Dream Enigma 1.3. от <"
 "olivier@aixmarseille.com> разработана на основе драйвера spca50x. Спасибо"
 " авторам"
-" spca50x: адаптировать этот драйвер для данного фотоаппарата было легко."
+" spca50x: адаптировать этот драйвер для данного фотоаппарата было легко. "
 
 #: camlibs/fuji/fuji.c:85
 #, c-format
@@ -2076,15 +2077,15 @@ msgstr "ID"
 
 #: camlibs/fuji/library.c:438
 msgid "Version: "
-msgstr "Версия:"
+msgstr "Версия: "
 
 #: camlibs/fuji/library.c:444
 msgid "Model: "
-msgstr "Модель:"
+msgstr "Модель: "
 
 #: camlibs/fuji/library.c:451
 msgid "Available memory: "
-msgstr "Доступная память:"
+msgstr "Доступная память: "
 
 #: camlibs/gsmart300/library.c:163
 msgid ""
@@ -2801,10 +2802,10 @@ msgid ""
 " please send a message to koltan@gmx.de to let me know, if you have any"
 " troubles with this driver library or if everything is okay."
 msgstr ""
-"Работоспособность драйвера проверена с аппаратом Kodak DC 215 Zoom Возможно"
+"Работоспособность драйвера проверена с аппаратом Kodak DC 215 Zoom. Возможно,"
 " он подойдёт для DC 200 и DC 210. Если у вас есть один из перечисленных"
-" фотоаппаратов, напишите, пожалуйста по адресу koltan@gmx.de и сообщите, все"
-" ли функции доступны с этим драйвером, и нет ли с ним проблем."
+" фотоаппаратов, напишите по адресу koltan@gmx.de и сообщите, все"
+" ли функции доступны с этим драйвером и нет ли с ним проблем."
 
 #: camlibs/kodak/dc210/dc210.c:644
 msgid ""
@@ -2980,7 +2981,7 @@ msgstr "Ошибка фокусировки."
 
 #: camlibs/konica/konica.c:65
 msgid "Iris error."
-msgstr "Ошибка ирисовой диафрагмы"
+msgstr "Ошибка ирисовой диафрагмы."
 
 #: camlibs/konica/konica.c:68
 msgid "Strobe error."
@@ -2988,7 +2989,7 @@ msgstr "Ошибка источника света."
 
 #: camlibs/konica/konica.c:71
 msgid "EEPROM checksum error."
-msgstr "Ошибка контрольной суммы ППЗУ"
+msgstr "Ошибка контрольной суммы ППЗУ."
 
 #: camlibs/konica/konica.c:74
 msgid "Internal error (1)."
@@ -3179,16 +3180,16 @@ msgstr "Разрешение"
 #: camlibs/konica/library.c:719 camlibs/konica/library.c:727
 #: camlibs/konica/library.c:936
 msgid "Low (576 x 436)"
-msgstr "низкое (576 x 436)"
+msgstr "Низкое (576 x 436)"
 
 #: camlibs/konica/library.c:720 camlibs/konica/library.c:730
 msgid "Medium (1152 x 872)"
-msgstr "среднее (1152 x 872)"
+msgstr "Среднее (1152 x 872)"
 
 #: camlibs/konica/library.c:721 camlibs/konica/library.c:724
 #: camlibs/konica/library.c:934
 msgid "High (1152 x 872)"
-msgstr "высокое (1152 x 872)"
+msgstr "Высокое (1152 x 872)"
 
 #: camlibs/konica/library.c:737 camlibs/konica/library.c:947
 #: camlibs/konica/qm150.c:819
@@ -3223,7 +3224,7 @@ msgstr "PAL"
 
 #: camlibs/konica/library.c:758 camlibs/konica/library.c:984
 msgid "Do not display TV menu"
-msgstr "Не показывать ТВ меню"
+msgstr "Не показывать ТВ-меню"
 
 #: camlibs/konica/library.c:762 camlibs/konica/library.c:994
 #: camlibs/konica/qm150.c:823
@@ -3358,7 +3359,7 @@ msgstr "Необходимо быть в режиме записи для пол
 msgid "No space available to capture new images. You must delete some images."
 msgstr ""
 "Не хватает свободного места для получения новых изображений. Удалите"
-" несколько изображений"
+" несколько изображений."
 
 #: camlibs/konica/qm150.c:641
 msgid "Can't capture new images. Unknown error"
@@ -8168,7 +8169,7 @@ msgstr "Режим ручного брекетинга"
 
 #: camlibs/ptp2/ptp.c:3745
 msgid "Auto Bracket Selection"
-msgstr "Выделение автовилки"
+msgstr "Выделение брекетинга"
 
 #: camlibs/ptp2/ptp.c:3746
 msgid "NIKON Auto Bracketing Set"
@@ -9447,7 +9448,7 @@ msgstr "Копируется видеозапись..."
 
 #: camlibs/ricoh/g3.c:358
 msgid "Downloading audio..."
-msgstr "Копируется звукопись..."
+msgstr "Копируется звукозапись..."
 
 #: camlibs/ricoh/g3.c:373
 msgid "Downloading EXIF data..."
@@ -9619,7 +9620,7 @@ msgstr "Изображение и звук"
 
 #: camlibs/ricoh/library.c:361
 msgid "Character & Sound"
-msgstr "Character & Sound"
+msgstr "Текст и звук"
 
 #: camlibs/ricoh/library.c:379
 msgid "3x"
@@ -9875,7 +9876,7 @@ msgstr ""
 "  * пользовательские настройки баланса белого\n"
 "- Декомпиляция файлов конфигурации производилась с\n"
 "  PhotoPC 3000z, если ваш аппарат работает иначе, напишите\n"
-"  об этом в список рассылки для разработчиков gphoto (по английски)\n"
+"  об этом в список рассылки для разработчиков gphoto (по-английски)\n"
 
 #: camlibs/sierra/library.c:147 camlibs/sierra/library.c:1373
 msgid "No memory card present"
@@ -9958,7 +9959,7 @@ msgstr "Передача данных..."
 #, c-format
 msgid ""
 "recursive calls are not supported by the sierra driver! Please contact %s."
-msgstr "Рекурсивные вызовы не поддерживаются драйвером sierra. Свяжитесь с %s."
+msgstr "рекурсивные вызовы не поддерживаются драйвером sierra. Свяжитесь с %s."
 
 #: camlibs/sierra/library.c:1273
 #, c-format
@@ -10125,7 +10126,7 @@ msgstr ""
 "        например, это относится к тонкой настройке\n"
 "        баланса белого и настройкам языка.\n"
 "\n"
-"        Переведите аппарат в режим 'M', если хотите\n"
+"        Переведите аппарат в режим «M», если хотите\n"
 "        задать выдержку.\n"
 
 #: camlibs/sierra/nikon-desc.c:743
@@ -10143,7 +10144,7 @@ msgstr ""
 "    Набор параметров настройки этого аппарата\n"
 "    неполон, напишите в список рассылки\n"
 "    разработчиков gphoto, если хотите внести \n"
-"    поправки·в·этот·драйвер.\n"
+"    поправки в этот драйвер.\n"
 "\n"
 "    Копирование снимков должно работать верно.\n"
 
@@ -10558,8 +10559,8 @@ msgstr ""
 "  * фокус\n"
 "  * пользовательские настройки баланса белого\n"
 "- Декомпиляция файлов конфигурации производилась с\n"
-"  PhotoPC 3000z. Если ваш аппарат работает иначе, напишите,\n"
-"  пожалуйста по адресу %s (по английски)\n"
+"  PhotoPC 3000z. Если ваш аппарат работает иначе,\n"
+"  напишите  по адресу %s (по-английски)\n"
 
 #: camlibs/sierra/sierra.c:2056
 msgid ""
@@ -10696,7 +10697,7 @@ msgstr ""
 "   - удаление последнего изображения (не все фотоаппараты Sonix это"
 " поддерживают)\n"
 "   - захват изображения в фотоаппарат (\t\tditto\t\t)\n"
-"Видеоролики, если они есть, возможно получить в формате последовательности\n"
+"Видеоролики, если они есть, можно получить в формате последовательности\n"
 "фотографий или AVI-файлов в зависимости от модели. Миниатюры для файлов AVI\n"
 "создаются на основе первого кадра. Отдельное изображение нельзя удалить,\n"
 "если оно не является последним.\n"
@@ -10946,7 +10947,7 @@ msgstr "Фотоаппарат имеет память.\n"
 
 #: camlibs/stv0680/library.c:559
 msgid "Camera supports videoformats: "
-msgstr "Фотоаппарат поддерживает следующие форматы видео:"
+msgstr "Фотоаппарат поддерживает следующие форматы видео: "
 
 #: camlibs/stv0680/library.c:565
 #, c-format
