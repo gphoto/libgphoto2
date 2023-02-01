@@ -2603,7 +2603,7 @@ static unsigned int olcsizes[0x15][13] = {
 				if (!(mask & curmask))
 					continue;
 				if (curoff+olcsizes[olcver][j] > size) {
-					ptp_debug (params, "event %d: size of entry ", i, mask, len, len - 8);
+					ptp_debug (params, "event %d: mask 0x%x size of olc entry %d exceeds total size %d", i, mask, curoff+olcsizes[olcver][j], size);
 					break;
 				}
 				ptp_debug (params, "event %d: olcmask 0x%04x", i, curmask);
