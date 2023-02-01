@@ -1053,8 +1053,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 		snprintf (time_str, sizeof (time_str), _("%s (host time %s%i seconds)"),
 			  formatted_camera_time, time_diff >= 0 ? "+" : "", (int) time_diff);
 	} else {
-		GP_DEBUG ("canon_int_get_time() returned negative result: %s (%i)",
-			  gp_result_as_string ((int) camera_time), (int) camera_time);
+		GP_DEBUG ("canon_int_get_time() returned negative result: %s (%li)",
+			  gp_result_as_string ((int) camera_time), (long) camera_time);
 		snprintf (time_str, sizeof (time_str), ("not available: %s"),
 			  gp_result_as_string ((int) camera_time));
 	}
