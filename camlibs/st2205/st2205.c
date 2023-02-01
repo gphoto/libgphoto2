@@ -970,7 +970,7 @@ st2205_init(Camera *camera)
 
 	CHECK (st2205_check_fat_checksum (camera))
 
-	camera->pl->rand_seed = time(NULL);
+	camera->pl->rand_seed = time(NULL) & 0xffffffff;
 
 	/* Some 96x64 models don't use compression, unfortunately I've found
 	   no way to detect if this is the case, so we keep a list of firmware
