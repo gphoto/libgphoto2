@@ -9589,8 +9589,8 @@ debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi) {
 	GP_LOG_D ("  AssociationType: 0x%04x", oi->AssociationType);
 	GP_LOG_D ("  AssociationDesc: 0x%08x", oi->AssociationDesc);
 	GP_LOG_D ("  SequenceNumber: 0x%08x", oi->SequenceNumber);
-	GP_LOG_D ("  ModificationDate: 0x%08x", (unsigned int)oi->ModificationDate);
-	GP_LOG_D ("  CaptureDate: 0x%08x", (unsigned int)oi->CaptureDate);
+	GP_LOG_D ("  ModificationDate: 0x%08lx", (unsigned long)oi->ModificationDate);
+	GP_LOG_D ("  CaptureDate: 0x%08lx", (unsigned long)oi->CaptureDate);
 }
 
 static CameraFilesystemFuncs fsfuncs = {
