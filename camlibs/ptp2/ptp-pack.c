@@ -2198,7 +2198,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 					free (dpd->FORM.Enum.SupportedValue);
 					dpd->FORM.Enum.SupportedValue = NULL;
 					dpd->FORM.Enum.NumberOfValues = 0;
-					ptp_debug (params ,"event %d: data type 0x%04x of %x unhandled, size %d, raw values:", i, dpd->DataType, proptype, dtoh32a(xdata), size);
+					ptp_debug (params ,"event %d: data type 0x%04x of %x unhandled, size %d, raw values:", i, dpd->DataType, proptype, size);
 					for (j=0;j<(size-PTP_ece_Prop_Desc_Data)/4;j++, xdata+=4) /* 4 is good for propxtype 3 */
 						ptp_debug (params, "    %3d: 0x%8x", j, dtoh32a(xdata));
 					break;
