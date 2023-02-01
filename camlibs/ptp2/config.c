@@ -9178,17 +9178,19 @@ _put_Panasonic_AFMode(CONFIG_PUT_ARGS)
 {
     PTPParams *params = &(camera->pl->params);
     char *xval;
-    uint32_t val;
-    uint32_t i;
+    uint32_t val = 0;
+    uint32_t i, found;
 
     CR (gp_widget_get_value(widget, &xval));
 
     for (i=0;i<sizeof(panasonic_aftable)/sizeof(panasonic_aftable[0]);i++) {
         if (!strcmp(panasonic_aftable[i].str, xval)) {
             val = panasonic_aftable[i].val;
+	    found = 1;
             break;
         }
     }
+    if (!found) return GP_ERROR;
 
     return translate_ptp_result (ptp_panasonic_setdeviceproperty(params, PTP_DPC_PANASONIC_AFArea_AFModeParam, (unsigned char*)&val, 2));
 }
