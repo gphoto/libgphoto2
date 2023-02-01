@@ -5944,6 +5944,8 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
         PTP_CNT_INIT(ptp, PTP_OC_FUJI_GetDeviceInfo);
         ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 
+	if (ret != PTP_RC_OK) return ret;
+
 	if (size < 8) {
 		free (data);
 		return PTP_RC_GeneralError;
