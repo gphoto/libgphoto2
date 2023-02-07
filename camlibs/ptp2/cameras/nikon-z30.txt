@@ -1,0 +1,4591 @@
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: Z 30
+  Version: V1.00
+  Serial Number: 0000000000000000000000000nnnnnnn
+Vendor Extension ID: 0xa (1.10)
+Vendor Extension Description: Microsoft.com/DeviceServices: 1.0
+
+Capture Formats: JPEG Undefined Type
+Display Formats: JPEG, Undefined Type, Association/Directory, TIFF, Script, Apple Quicktime, Unknown(b982)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, Nikon Capture 1, Nikon Capture 2, Nikon Capture 3
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: 
+	VolumeLabel: NIKON Z 30  [Slot 1]
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 127901106176 (121976 MB)
+	Free Space (Bytes): 127771607040 (121852 MB)
+	Free Space (Images): 8476
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [1 - 100, step 1] value: 100% (100)
+Image Size(0x5003):(readwrite) (type=0xffff) Enumeration [
+	'5568x3712',
+	'4176x2784',
+	'2784x1856'
+	] value: '5568x3712'
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [0,2,4,7,8,10,12] value: RAW (4)
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,5,6,7,32784,32785,32786,32787,32790] value: Automatic (2)
+F-Number(0x5007):(read only) (type=0x4) Enumeration [350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/3.5 (350)
+Focal Length(0x5008):(read only) (type=0x6) Range [1600 - 5000, step 1] value: 16 mm (1600)
+Focus Mode(0x500a):(read only) (type=0x4) Enumeration [1,32784,32785,32786,32787] value: AF-A (32786)
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [2,3,4,32784] value: Multi-spot (3)
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [2] value: Flash off (2)
+Exposure Time(0x500d):(read only) (type=0x6) Enumeration [2,3,4,5,6,8,10,12,15,20,25,31,40,50,62,80,100,125,166,200,250,333,400,500,666,769,1000,1250,1666,2000,2500,3333,4000,5000,6250,7692,10000,13000,16000,20000,25000,30000,40000,50000,60000,80000,100000,130000,150000,200000,250000,300000] value: 0.0004 sec (40)
+Exposure Program Mode(0x500e):(read only) (type=0x4) Enumeration [1,2,3,4,32784,32848,32849,32850] value: Auto (32784)
+Exposure Index (film speed ISO)(0x500f):(readwrite) (type=0x4) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200] value: ISO 200 (200)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [-5000,-4666,-4333,-4000,-3666,-3333,-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000,3333,3666,4000,4333,4666,5000] value: 0.0 stops (0)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20230207T091711'
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,2,32784,32785,32793] value: Single Shot (1)
+Burst Number(0x5018):(readwrite) (type=0x4) Range [1 - 65535, step 1] value: 1
+Artist(0x501e):(read only) (type=0xffff) ''
+Copyright Info(0x501f):(read only) (type=0xffff) ''
+UseDeviceStageFlag(0xd303):(read only) (type=0x2) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+Property 0xd407:(read only) (type=0x6) 1
+Auto White Balance Bias(0xd017):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Tungsten White Balance Bias(0xd018):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Fluorescent White Balance Bias(0xd019):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Daylight White Balance Bias(0xd01a):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Flash White Balance Bias(0xd01b):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Cloudy White Balance Bias(0xd01c):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Shady White Balance Bias(0xd01d):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+White Balance Colour Temperature(0xd01e):(readwrite) (type=0x4) Range [2500 - 10000, step 10] value: 5000
+White Balance Preset Number(0xd01f):(readwrite) (type=0x2) Range [1 - 6, step 1] value: 1
+White Balance Preset Name 1(0xd021):(readwrite) (type=0xffff) '                                    '
+White Balance Preset Name 2(0xd022):(readwrite) (type=0xffff) '                                    '
+White Balance Preset Name 3(0xd023):(readwrite) (type=0xffff) '                                    '
+White Balance Preset Name 4(0xd024):(readwrite) (type=0xffff) '                                    '
+White Balance Preset Value 1(0xd026):(read only) (type=0x6) 252971900
+White Balance Preset Value 2(0xd027):(read only) (type=0x6) 252971900
+White Balance Preset Value 3(0xd028):(read only) (type=0x6) 252971900
+White Balance Preset Value 4(0xd029):(read only) (type=0x6) 252971900
+Lens Focal Length (Non CPU)(0xd02e):(readwrite) (type=0x4) Enumeration [0,6,8,13,15,16,18,20,24,25,28,35,43,45,50,55,58,70,80,85,86,100,105,135,180,200,300,360,400,500,600,800,1000,1200,1400,1600,2000,2400,2800,3200,4000] value: 1200
+Lens Maximum Aperture (Non CPU)(0xd02f):(readwrite) (type=0x4) Enumeration [0,120,140,180,200,250,280,330,350,400,450,500,560,630,710,800,950,1100,1300,1500,1600,1900,2200] value: 1300
+Shooting Mode(0xd030):(readwrite) (type=0x2) Enumeration [2,4,5] value: 2
+Color Space(0xd032):(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Flicker Reduction(0xd034):(readwrite) (type=0x2) Enumeration [0,1,255] value: 255
+1_Mode(0xd038):(readwrite) (type=0xffff) '                                    '
+WhiteBalancePresetName6(0xd039):(readwrite) (type=0xffff) '                                    '
+WhiteBalanceTunePreset5(0xd03a):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+WhiteBalanceTunePreset6(0xd03b):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+WhiteBalancePresetProtect5(0xd03c):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+WhiteBalancePresetProtect6(0xd03d):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+WhiteBalancePresetValue5(0xd03e):(read only) (type=0x6) 252971900
+WhiteBalancePresetValue6(0xd03f):(read only) (type=0x6) 252971900
+AFStillLockOnAcross(0xd046):(readwrite) (type=0x2) Range [1 - 5, step 1] value: 3
+PTP_DPC_NIKON_A1AFCModePriority(0xd048):(readwrite) (type=0x2) Enumeration [0,3] value: 0
+PTP_DPC_NIKON_A2AFSModePriority(0xd049):(readwrite) (type=0x2) Enumeration [0,3] value: 0
+Focus Area Wrap(0xd04f):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Enable Copyright(0xd053):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Auto ISO(0xd054):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Centre Weight Area(0xd059):(readwrite) (type=0x2) Enumeration [8,255] value: 22 mm (8)
+Exposure Base Matrix(0xd05a):(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+Exposure Base Center(0xd05b):(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+Exposure Base Spot(0xd05c):(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+Live View AF Area(0xd05d):(readwrite) (type=0x4) Enumeration [2,32784,32785,32792,32793,32794,32795,32800,32801] value: 32800
+Live View AF Focus(0xd061):(readwrite) (type=0x2) Enumeration [0,1,4,5] value: 5
+Angle Level(0xd067):(read only) (type=0x5) 359.0' (23530677)
+Shooting Speed(0xd068):(readwrite) (type=0x2) Enumeration [1,2,3,4] value: 1
+Maximum Shots(0xd069):(readwrite) (type=0x2) Range [1 - 100, step 1] value: 35
+Exposure delay mode(0xd06a):(readwrite) (type=0x2) Enumeration [0,2,5,10,20,30] value: Off (0)
+Long Exposure Noise Reduction(0xd06b):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+File Number Sequencing(0xd06c):(readwrite) (type=0x2) Range [0 - 1, step 1] value: On (1)
+High ISO noise reduction(0xd070):(readwrite) (type=0x4) Enumeration [0,2,3,4] value: 0
+Artist Name(0xd072):(readwrite) (type=0xffff) ''
+Copyright Information(0xd073):(readwrite) (type=0xffff) ''
+Flash Sync. Speed(0xd074):(readwrite) (type=0x6) Enumeration [2147549384,65736,65696,65661,65636,65616,65596] value: 65736
+Flash Shutter Speed(0xd075):(readwrite) (type=0x6) Enumeration [65537,65538,65540,65544,65551,65566,65596,131073,262145,524289,983041,1966081] value: 65596
+Bracket Set(0xd078):(readwrite) (type=0x2) Enumeration [0,1,2,3,4] value: AE only (1)
+Manual Mode Bracketing(0xd079):(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Bracket Order(0xd07a):(readwrite) (type=0x2) Enumeration [0,1] value: MTR > Under (0)
+NIKON Auto Bracketing Set(0xd07c):(read only) (type=0x2) Enumeration [0,1] value: 1
+AngleLevelPitching(0xd07d):(read only) (type=0x5) 23144288
+AngleLevelYawing(0xd07e):(read only) (type=0x5) -1
+No CF Card Release(0xd08a):(readwrite) (type=0x2) Enumeration [0,1] value: Off (1)
+AF Area Point(0xd08d):(readwrite) (type=0x2) Enumeration [0,1] value: On (0)
+Image Comment String(0xd090):(readwrite) (type=0xffff) ''
+Image Comment Enable(0xd091):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Manual Set Lens Number(0xd093):(readwrite) (type=0x2) Range [0 - 19, step 1] value: 0
+RetractableLensWarning(0xd09c):(read only) (type=0x2) Range [0 - 1, step 1] value: 0
+Movie Screen Size(0xd0a0):(readwrite) (type=0x8) Enumeration [53408,53408,53408,53408,53408,53408,53408,53408,53408,53408,53408,53408,53408] value: 0
+Movie Microphone(0xd0a2):(readwrite) (type=0x2) Enumeration [0,1,2] value: 0
+MovRecProhibitCondition(0xd0a4):(read only) (type=0x6) 24576
+Movie Quality(0xd0a7):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+MovRecordMicrophoneLevelValue(0xd0a8):(readwrite) (type=0x2) Range [1 - 20, step 1] value: 15
+MovWindNoiseReduction(0xd0aa):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+MovRecordingZone(0xd0ac):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+MovISOAutoControl(0xd0ad):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+MovISOAutoHighLimit(0xd0ae):(read only) (type=0x6) Enumeration [200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600] value: 6400
+MovFileType(0xd0af):(readwrite) (type=0x2) Enumeration [0,1] value: 1
+ExposureIndexEx(0xd0b4):(readwrite) (type=0x6) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200] value: 200
+ISOControlSensitivity(0xd0b5):(read only) (type=0x6) 400
+FlickerReductionSetting(0xd0b7):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+DiffractionCompensatipn(0xd0ba):(readwrite) (type=0x2) Enumeration [0,1] value: 1
+MovieAutoDistortion(0xd0bc):(read only) (type=0x2) Enumeration [1] value: 1
+Property 0xd0bd:(read only) (type=0x6) 2147483648
+Bracketing Enable(0xd0c0):(readwrite) (type=0x2) Range [0 - 1, step 1] value: Off (0)
+Exposure Bracketing Step(0xd0c1):(read only) (type=0x2) Enumeration [2,4,6,12,18] value: 18
+Exposure Bracketing Program(0xd0c2):(read only) (type=0x4) Enumeration [0,258,514,259,515,1027,1029,1031,1033] value: 0
+Auto Exposure Bracket Count(0xd0c3):(read only) (type=0x2) Range [1 - 0, step 1] value: 1
+White Balance Bracket Step(0xd0c4):(read only) (type=0x2) Enumeration [1,2,3] value: 1
+White Balance Bracket Program(0xd0c5):(read only) (type=0x4) Enumeration [0,258,514,259,515,1027,1029,1031,1033] value: 0
+ADLBracketingPattern(0xd0c6):(read only) (type=0x4) Enumeration [0,2,3,4,5] value: 0
+ADLBracketingStep(0xd0c7):(read only) (type=0x4) Enumeration [2,3,4,5,65535] value: 65535
+Property 0xd0cd:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Lens ID(0xd0e0):(read only) (type=0x4) 11
+Lens Sort(0xd0e1):(read only) (type=0x2) Range [0 - 1, step 1] value: 1
+Lens Type(0xd0e2):(read only) (type=0x8) 0
+Min. Focal Length(0xd0e3):(read only) (type=0x6) 16 mm (1600)
+Max. Focal Length(0xd0e4):(read only) (type=0x6) 50 mm (5000)
+Max. Aperture at Min. Focal Length(0xd0e5):(read only) (type=0x4) f/3.5 (350)
+Max. Aperture at Max. Focal Length(0xd0e6):(read only) (type=0x4) f/6.3 (630)
+LensTypeML(0xd0e7):(read only) (type=0x8) 0
+Vignette Control(0xd0f7):(readwrite) (type=0x4) Enumeration [0,2,3,4] value: 3
+Auto Distortion Control(0xd0f8):(read only) (type=0x2) Range [1 - 1, step 1] value: 1
+UserMode(0xd0fc):(read only) (type=0x2) Range [19 - 23, step 1] value: 19
+Nikon Exposure Time(0xd100):(read only) (type=0x6) Enumeration [69536,68736,68036,67536,67136,66786,66536,66336,66176,66036,65936,65856,65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,655385,65538,655376,655373,65537,851978,1048586,131073,1638410,196609,262145,327681,393217,524289,655361,851969,983041,1310721,1638401,1966081] value: 65786
+AC Power(0xd101):(read only) (type=0x2) Enumeration [0,1] value: No (0)
+Warning Status(0xd102):(read only) (type=0x6) 0
+AF Locked(0xd104):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+AE Locked(0xd105):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+FV Locked(0xd106):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Flexible Program(0xd109):(read only) (type=0x1) Range [-30 - 30, step 2] value: 0
+Recording Media(0xd10b):(readwrite) (type=0x2) Enumeration [0,1,2] value: Card (0)
+USB Speed(0xd10c):(read only) (type=0x2) Enumeration [1,2] value: USB 2.0 (1)
+Camera Orientation(0xd10e):(read only) (type=0x2) Enumeration [0,1,2,3] value: 0' (0)
+ExposureCompFlashUsed(0xd118):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+External Flash Attached(0xd120):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+External Flash Status(0xd121):(read only) (type=0x2) Enumeration [0,1] value: No (0)
+External Flash Sort(0xd122):(read only) (type=0x2) Enumeration [0,2,3] value: 0
+External Flash Compensation(0xd124):(read only) (type=0x1) Range [-18 - 18, step 1] value: 0 (0)
+External Flash Mode(0xd125):(read only) (type=0x2) Enumeration [0,1,2,3,4,5,6,7] value: 0
+Flash Exposure Compensation(0xd126):(read only) (type=0x1) Range [-18 - 6, step 2] value: 0.0 stops (0)
+ExternalFlashMultiFlashMode(0xd12d):(read only) (type=0x2) Enumeration [0,1] value: 0
+ConnectionPath(0xd12e):(read only) (type=0x2) Enumeration [0,2] value: 0
+HDR Mode(0xd130):(readwrite) (type=0x4) Enumeration [0,1,257] value: 0
+HDR High Dynamic(0xd131):(readwrite) (type=0x2) Enumeration [6,12,18,255] value: 18
+HDR Smoothing(0xd132):(readwrite) (type=0x4) Enumeration [2,3,4] value: 2
+HDRSaveIndividualImages(0xd133):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+VibrationReduction(0xd138):(readwrite) (type=0x2) Enumeration [0,1,2] value: 2
+WBAutoType(0xd141):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+Raw Bit Mode(0xd149):(readwrite) (type=0x2) Enumeration [12,14] value: 14
+Active D-Lighting(0xd14e):(readwrite) (type=0x4) Enumeration [0,2,3,4,5,65535] value: 65535
+Fluorescent Type(0xd14f):(readwrite) (type=0x2) Range [3 - 5, step 1] value: 3
+Tune Colour Temperature(0xd150):(readwrite) (type=0x2) Range [0 - 48, step 1] value: 24
+Tune Preset 1(0xd152):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Tune Preset 2(0xd153):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Tune Preset 3(0xd154):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Tune Preset 4(0xd155):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+WBPresetProtect1(0xd158):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+WBPresetProtect2(0xd159):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+WBPresetProtect3(0xd15a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+ActiveFolder(0xd15b):(read only) (type=0x4) Range [100 - 999, step 1] value: 100
+WBPresetProtect4(0xd15c):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+WhiteBalanceNaturalLightAutoBias(0xd15e):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+Auto ISO P/A/DVP Setting(0xd164):(readwrite) (type=0x6) Enumeration [69536,68736,68036,67536,67136,66786,66536,66336,66176,66036,65936,65856,65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,655385,65538,655376,655373,65537,851978,1048586,131073,1638410,196609,262145,327681,393217,524289,655361,851969,983041,1310721,1638401,1966081,4294967295] value: 65556
+ISO Auto(0xd16a):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+LowLightAF(0xd17a):(read only) (type=0x2) Enumeration [0,1] value: 1
+ApplyLiveViewSetting(0xd17b):(readwrite) (type=0x2) Enumeration [0,1] value: 1
+MovieAfSpeed(0xd17c):(readwrite) (type=0x1) Range [-5 - 5, step 1] value: 0
+MovieAfSpeedWhenToApply(0xd17d):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+MovieAfTrackingSensitivity(0xd17e):(readwrite) (type=0x2) Range [1 - 7, step 1] value: 4
+ISO Auto High Limit(0xd183):(readwrite) (type=0x6) Enumeration [200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,102400,204800] value: 6400
+MovieReleaseButton(0xd197):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+FlashISOAutoHighLimit(0xd199):(readwrite) (type=0x6) Enumeration [200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,102400,204800,4294967295] value: 4294967295
+Property 0xd19d:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 1
+Property 0xd19e:(readwrite) (type=0x2) Range [0 - 3, step 1] value: 0
+Live View Status(0xd1a2):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Live View Prohibit Condition(0xd1a4):(read only) (type=0x6) 0
+LiveViewSelector(0xd1a6):(read only) (type=0x2) Enumeration [0,1] value: 0
+MovieShutterSpeed(0xd1a8):(read only) (type=0x6) Enumeration [69536,68736,68036,67536,67136,66786,66536,66336,66176,66036,65936,65856,65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561] value: 65561
+MovieFNumber(0xd1a9):(read only) (type=0x4) Enumeration [0] value: 0
+MovieISO(0xd1aa):(read only) (type=0x6) Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600] value: 25600
+MovieExposureBiasCompensation(0xd1ab):(read only) (type=0x3) Enumeration [-3000,-2666,-2333,-2000,-1666,-1333,-1000,-666,-333,0,333,666,1000,1333,1666,2000,2333,2666,3000] value: 0
+LiveViewMovieMode(0xd1ac):(readwrite) (type=0x2) Enumeration [1,2,3] value: 2
+LiveViewPhotography(0xd1ad):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 1
+MovieExposureMeteringMode(0xd1af):(read only) (type=0x4) Enumeration [2,3,32784] value: 3
+Exposure Display Status(0xd1b0):(read only) (type=0x2) Range [0 - 3, step 1] value: No (0)
+Exposure Indicate Status(0xd1b1):(read only) (type=0x1) Range [-60 - 60, step 1] value: 0.0 stops (0)
+Info Display Error Status(0xd1b2):(read only) (type=0x2) Range [0 - 1, step 1] value: No (0)
+Exposure Indicate Lightup(0xd1b3):(read only) (type=0x2) Range [0 - 1, step 1] value: Yes (1)
+ContinousShootingCount(0xd1b4):(read only) (type=0x4) Range [0 - 360, step 1] value: 26
+MovieRecFrameCount(0xd1b7):(read only) (type=0x2) Range [0 - 40, step 1] value: 26
+CameraLiveViewStatus(0xd1b8):(read only) (type=0x2) Enumeration [0,1] value: 1
+LiveViewTFTStatus(0xd1ba):(read only) (type=0x2) Enumeration [0,1] value: 0
+LiveViewImageStatus(0xd1bb):(read only) (type=0x2) Enumeration [0,1] value: 0
+LiveViewImageCompression(0xd1bc):(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5] value: 0
+LiveViewZoomArea(0xd1bd):(readwrite) (type=0x4) Enumeration [0,360,720,1440] value: 0
+Property 0xd1c5:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+ExternalRecordingControl(0xd1de):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+HighlightBrightness(0xd1df):(readwrite) (type=0x4) Enumeration [180,191,202,213,224,235,248,255] value: 248
+SBWirelessMode(0xd1e2):(read only) (type=0x2) Enumeration [] value: 0
+SBWirelessMultipleFlashMode(0xd1e3):(read only) (type=0x2) Enumeration [] value: 0
+SBUsableGroup(0xd1e4):(read only) (type=0x6) 0
+OpticalMultipleFlashChannel(0xd1e8):(read only) (type=0x2) Enumeration [255] value: 255
+FlashRangeDisplay(0xd1e9):(read only) (type=0x2) Enumeration [0,1] value: 0
+SBSettingMemberLock(0xd1ec):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+SBIntegrationFlashReady(0xd1ed):(read only) (type=0x2) Enumeration [0,1] value: 0
+ExposureRemaining(0xd1f1):(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 8476
+ISOAutoShutterCorrectionTime(0xd1f4):(readwrite) (type=0x1) Range [-2 - 2, step 1] value: 0
+MovieAfAreaMode(0xd1f8):(readwrite) (type=0x4) Enumeration [32784,32785,32792,32793,32794,32795,32800,32801] value: 32800
+MovieVibrationReduction(0xd1f9):(readwrite) (type=0x2) Enumeration [0,1,2,100] value: 100
+MovieFocusMode(0xd1fa):(readwrite) (type=0x2) Enumeration [0,1,2,4] value: 2
+RecordTimeCodes(0xd1fb):(readwrite) (type=0x2) Enumeration [0,1,2] value: 1
+CountUpMethod(0xd1fc):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+TimeCodeOrigin(0xd1fd): error 201b on query.
+DropFrame(0xd1fe):(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd1ff:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Active Pic Ctrl Item(0xd200):(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,201,202,203,204,205,206,207,208,209] value: 8
+ElectronicFrontCurtainShutter(0xd20d):(readwrite) (type=0x2) Enumeration [1,2] value: 2
+MovieWbAutoType(0xd211):(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+MovieWbTuneAuto(0xd212):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbTuneIncandescent(0xd213):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbFlourescentType(0xd214):(readwrite) (type=0x2) Range [3 - 5, step 1] value: 3
+MovieWbTuneFlourescent(0xd215):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbTuneSunny(0xd216):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbTuneCloudy(0xd218):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbTuneShade(0xd219):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbColorTemp(0xd21a):(readwrite) (type=0x4) Range [2500 - 10000, step 10] value: 5000
+MovieWbTuneColorTemp(0xd21b):(readwrite) (type=0x2) Range [0 - 48, step 1] value: 24
+MovieWbPresetData0(0xd21c):(readwrite) (type=0x2) Range [1 - 6, step 1] value: 1
+MovieWbPresetDataComment1(0xd21d):(readwrite) (type=0xffff) '                                    '
+MovieWbPresetDataComment2(0xd21e):(readwrite) (type=0xffff) '                                    '
+MovieWbPresetDataComment3(0xd21f):(readwrite) (type=0xffff) '                                    '
+MovieWbPresetDataComment4(0xd220):(readwrite) (type=0xffff) '                                    '
+MovieWbPresetDataComment5(0xd221):(readwrite) (type=0xffff) '                                    '
+MovieWbPresetDataComment6(0xd222):(readwrite) (type=0xffff) '                                    '
+MovieWbPresetDataValue1(0xd223):(read only) (type=0x6) 252971900
+MovieWbPresetDataValue2(0xd224):(read only) (type=0x6) 252971900
+MovieWbPresetDataValue3(0xd225):(read only) (type=0x6) 252971900
+MovieWbPresetDataValue4(0xd226):(read only) (type=0x6) 252971900
+MovieWbPresetDataValue5(0xd227):(read only) (type=0x6) 252971900
+MovieWbPresetDataValue6(0xd228):(read only) (type=0x6) 252971900
+MovieWbTunePreset1(0xd229):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbTunePreset2(0xd22a):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbTunePreset3(0xd22b):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbTunePreset4(0xd22c):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbTunePreset5(0xd22d):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbTunePreset6(0xd22e):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieWbPresetProtect1(0xd22f):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+MovieWbPresetProtect2(0xd230):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+MovieWbPresetProtect3(0xd231):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+MovieWbPresetProtect4(0xd232):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+MovieWbPresetProtect5(0xd233):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+MovieWbPresetProtect6(0xd234):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+MovieNrHighISO(0xd236):(readwrite) (type=0x4) Enumeration [0,2,3,4] value: 2
+MovieActivePicCtrlItem(0xd237):(read only) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,201,202,203,204,205,206,207,208,209] value: 8
+ExposureBaseCompHighlight(0xd239):(readwrite) (type=0x1) Range [-6 - 6, step 1] value: 0
+MovieWhiteBalance(0xd23a):(readwrite) (type=0x4) Enumeration [2,4,5,6,32784,32785,32786,32787,32789,32790] value: 2
+MovieActiveDLighting(0xd23b):(read only) (type=0x4) Enumeration [0,2,3,4,5,100] value: 3
+MovieWbTuneNatural(0xd23c):(readwrite) (type=0x4) Range [0 - 1224, step 1] value: 612
+MovieAttenuator(0xd23d):(readwrite) (type=0x2) Enumeration [0,1] value: 0
+MovieVignetteControl(0xd23e):(readwrite) (type=0x4) Enumeration [0,2,3,4,100] value: 3
+MovieDiffractionCompensation(0xd23f):(readwrite) (type=0x2) Enumeration [0,1] value: 1
+ElectronicVR(0xd314):(readwrite) (type=0x2) Range [0 - 1, step 1] value: 0
+
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Nikon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/manualfocusdrive
+Label: Drive Nikon DSLR Manual focus
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -32767
+Top: 32767
+Step: 1
+END
+/main/actions/changeafarea
+Label: Set Nikon Autofocus area
+Readonly: 0
+Type: TEXT
+Current: 0x0
+END
+/main/actions/controlmode
+Label: Set Nikon Control Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/actions/viewfinder
+Label: Nikon Viewfinder
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/movie
+Label: Movie Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1675757777
+Printable: Tue 07 Feb 2023 09:16:17 CET
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/imagecomment
+Label: Image Comment
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/imagecommentenable
+Label: Enable Image Comment
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/settings/recordingmedia
+Label: Recording Media
+Readonly: 0
+Type: RADIO
+Current: Card
+Choice: 0 Card
+Choice: 1 SDRAM
+Choice: 2 Unknown value 0002
+END
+/main/settings/artist
+Label: Artist
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/copyright
+Label: Copyright
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/flickerreduction
+Label: Flicker Reduction
+Readonly: 0
+Type: RADIO
+Current: Unknown value 00ff
+Choice: 0 50 Hz
+Choice: 1 60 Hz
+Choice: 2 Unknown value 00ff
+END
+/main/settings/thumbsize
+Label: Thumb Size
+Readonly: 0
+Type: RADIO
+Current: 
+Choice: 0 normal
+Choice: 1 large
+END
+/main/settings/fastfs
+Label: Fast Filesystem
+Readonly: 0
+Type: TOGGLE
+Current: 1
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/autofocus
+Label: Autofocus
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 0
+Type: TEXT
+Current: 0000000000000000000000000nnnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 0
+Type: TEXT
+Current: Nikon Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 0
+Type: TEXT
+Current: Z 30
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 0
+Type: TEXT
+Current: V1.00
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 0
+Type: TEXT
+Current: Microsoft.com/DeviceServices: 1.0
+END
+/main/status/externalflash
+Label: External Flash
+Readonly: 1
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/status/continousshootingcount
+Label: Continuous Shooting Count
+Readonly: 1
+Type: RANGE
+Current: 26
+Bottom: 0
+Top: 360
+Step: 1
+END
+/main/status/orientation
+Label: Camera Orientation
+Readonly: 1
+Type: RADIO
+Current: 0'
+Choice: 0 0'
+Choice: 1 270'
+Choice: 2 90'
+Choice: 3 180'
+END
+/main/status/orientation2
+Label: Camera Orientation
+Readonly: 1
+Type: TEXT
+Current: 359'
+END
+/main/status/activefolder
+Label: Active Folder
+Readonly: 1
+Type: RANGE
+Current: 100
+Bottom: 100
+Top: 999
+Step: 1
+END
+/main/status/availableshots
+Label: Available Shots
+Readonly: 1
+Type: RANGE
+Current: 8476
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/status/minfocallength
+Label: Focal Length Minimum
+Readonly: 1
+Type: TEXT
+Current: 16 mm
+END
+/main/status/maxfocallength
+Label: Focal Length Maximum
+Readonly: 1
+Type: TEXT
+Current: 50 mm
+END
+/main/status/apertureatminfocallength
+Label: Maximum Aperture at Focal Length Minimum
+Readonly: 1
+Type: TEXT
+Current: 4
+END
+/main/status/apertureatmaxfocallength
+Label: Maximum Aperture at Focal Length Maximum
+Readonly: 1
+Type: TEXT
+Current: 6
+END
+/main/status/lowlight
+Label: Low Light
+Readonly: 1
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 3
+Step: 1
+END
+/main/status/lightmeter
+Label: Light Meter
+Readonly: 1
+Type: RANGE
+Current: 0
+Bottom: -60
+Top: 60
+Step: 1
+END
+/main/status/aflocked
+Label: AF Locked
+Readonly: 1
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/aelocked
+Label: AE Locked
+Readonly: 1
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/fvlocked
+Label: FV Locked
+Readonly: 1
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/movieprohibit
+Label: Movie Prohibit Condition
+Readonly: 1
+Type: TEXT
+Current: Movie prohibit conditions: Not in application mode,Set liveview selector is enabled
+END
+/main/status/liveviewprohibit
+Label: Liveview Prohibit Condition
+Readonly: 1
+Type: TEXT
+Current: Liveview should not be prohibited
+END
+/main/imgsettings/imagesize
+Label: Image Size
+Readonly: 0
+Type: RADIO
+Current: 5568x3712
+Choice: 0 5568x3712
+Choice: 1 4176x2784
+Choice: 2 2784x1856
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: 200
+Choice: 0 100
+Choice: 1 125
+Choice: 2 160
+Choice: 3 200
+Choice: 4 250
+Choice: 5 320
+Choice: 6 400
+Choice: 7 500
+Choice: 8 640
+Choice: 9 800
+Choice: 10 1000
+Choice: 11 1250
+Choice: 12 1600
+Choice: 13 2000
+Choice: 14 2500
+Choice: 15 3200
+Choice: 16 4000
+Choice: 17 5000
+Choice: 18 6400
+Choice: 19 8000
+Choice: 20 10000
+Choice: 21 12800
+Choice: 22 16000
+Choice: 23 20000
+Choice: 24 25600
+Choice: 25 32000
+Choice: 26 40000
+Choice: 27 51200
+END
+/main/imgsettings/movieiso
+Label: Movie ISO Speed
+Readonly: 1
+Type: RADIO
+Current: 25600
+Choice: 0 100
+Choice: 1 125
+Choice: 2 160
+Choice: 3 200
+Choice: 4 250
+Choice: 5 320
+Choice: 6 400
+Choice: 7 500
+Choice: 8 640
+Choice: 9 800
+Choice: 10 1000
+Choice: 11 1250
+Choice: 12 1600
+Choice: 13 2000
+Choice: 14 2500
+Choice: 15 3200
+Choice: 16 4000
+Choice: 17 5000
+Choice: 18 6400
+Choice: 19 8000
+Choice: 20 10000
+Choice: 21 12800
+Choice: 22 16000
+Choice: 23 20000
+Choice: 24 25600
+END
+/main/imgsettings/isoauto
+Label: ISO Auto
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/imgsettings/autoiso
+Label: Auto ISO
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Daylight
+Choice: 2 Fluorescent
+Choice: 3 Tungsten
+Choice: 4 Flash
+Choice: 5 Cloudy
+Choice: 6 Shade
+Choice: 7 Color Temperature
+Choice: 8 Preset
+Choice: 9 Natural light auto
+END
+/main/imgsettings/colorspace
+Label: Color Space
+Readonly: 0
+Type: RADIO
+Current: AdobeRGB
+Choice: 0 sRGB
+Choice: 1 AdobeRGB
+END
+/main/capturesettings/longexpnr
+Label: Long Exp Noise Reduction
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 -5
+Choice: 1 -4.666
+Choice: 2 -4.333
+Choice: 3 -4
+Choice: 4 -3.666
+Choice: 5 -3.333
+Choice: 6 -3
+Choice: 7 -2.666
+Choice: 8 -2.333
+Choice: 9 -2
+Choice: 10 -1.666
+Choice: 11 -1.333
+Choice: 12 -1
+Choice: 13 -0.666
+Choice: 14 -0.333
+Choice: 15 0
+Choice: 16 0.333
+Choice: 17 0.666
+Choice: 18 1
+Choice: 19 1.333
+Choice: 20 1.666
+Choice: 21 2
+Choice: 22 2.333
+Choice: 23 2.666
+Choice: 24 3
+Choice: 25 3.333
+Choice: 26 3.666
+Choice: 27 4
+Choice: 28 4.333
+Choice: 29 4.666
+Choice: 30 5
+END
+/main/capturesettings/flashmode
+Label: Flash Mode
+Readonly: 0
+Type: RADIO
+Current: Flash off
+Choice: 0 Flash off
+END
+/main/capturesettings/f-number
+Label: F-Number
+Readonly: 1
+Type: RADIO
+Current: f/3.5
+Choice: 0 f/3.5
+Choice: 1 f/4
+Choice: 2 f/4.5
+Choice: 3 f/5
+Choice: 4 f/5.6
+Choice: 5 f/6.3
+Choice: 6 f/7.1
+Choice: 7 f/8
+Choice: 8 f/9
+Choice: 9 f/10
+Choice: 10 f/11
+Choice: 11 f/13
+Choice: 12 f/14
+Choice: 13 f/16
+Choice: 14 f/18
+Choice: 15 f/20
+Choice: 16 f/22
+END
+/main/capturesettings/movief-number
+Label: Movie F-Number
+Readonly: 1
+Type: RADIO
+Current: f/0
+Choice: 0 f/0
+END
+/main/capturesettings/flexibleprogram
+Label: Flexible Program
+Readonly: 1
+Type: RANGE
+Current: 0
+Bottom: -30
+Top: 30
+Step: 2
+END
+/main/capturesettings/imagequality
+Label: Image Quality
+Readonly: 0
+Type: RADIO
+Current: NEF (Raw)
+Choice: 0 JPEG Basic
+Choice: 1 JPEG Fine
+Choice: 2 NEF (Raw)
+Choice: 3 NEF+Fine
+Choice: 4 Unknown value 0008
+Choice: 5 Unknown value 000a
+Choice: 6 Unknown value 000c
+END
+/main/capturesettings/focallength
+Label: Focal Length
+Readonly: 1
+Type: RANGE
+Current: 16
+Bottom: 16
+Top: 50
+Step: 0.01
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 1
+Type: RADIO
+Current: AF-A
+Choice: 0 Manual
+Choice: 1 AF-S
+Choice: 2 AF-C
+Choice: 3 AF-A
+Choice: 4 Unknown value 8013
+END
+/main/capturesettings/expprogram
+Label: Exposure Program
+Readonly: 1
+Type: RADIO
+Current: Auto
+Choice: 0 M
+Choice: 1 P
+Choice: 2 A
+Choice: 3 S
+Choice: 4 Auto
+Choice: 5 Unknown value 8050
+Choice: 6 Unknown value 8051
+Choice: 7 Unknown value 8052
+END
+/main/capturesettings/hdrhighdynamic
+Label: HDR High Dynamic
+Readonly: 0
+Type: RADIO
+Current: Unknown value 0012
+Choice: 0 Unknown value 0006
+Choice: 1 Unknown value 000c
+Choice: 2 Unknown value 0012
+Choice: 3 Unknown value 00ff
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 0
+Type: RADIO
+Current: Single Shot
+Choice: 0 Single Shot
+Choice: 1 Burst
+Choice: 2 Continuous Low Speed
+Choice: 3 Timer
+Choice: 4 Unknown value 8019
+END
+/main/capturesettings/exposuremetermode
+Label: Exposure Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Multi Spot
+Choice: 0 Center Weighted
+Choice: 1 Multi Spot
+Choice: 2 Center Spot
+Choice: 3 Unknown value 8010
+END
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Readonly: 1
+Type: RADIO
+Current: 0.0040s
+Choice: 0 0.0002s
+Choice: 1 0.0003s
+Choice: 2 0.0004s
+Choice: 3 0.0005s
+Choice: 4 0.0006s
+Choice: 5 0.0008s
+Choice: 6 0.0010s
+Choice: 7 0.0012s
+Choice: 8 0.0015s
+Choice: 9 0.0020s
+Choice: 10 0.0025s
+Choice: 11 0.0031s
+Choice: 12 0.0040s
+Choice: 13 0.0050s
+Choice: 14 0.0062s
+Choice: 15 0.0080s
+Choice: 16 0.0100s
+Choice: 17 0.0125s
+Choice: 18 0.0166s
+Choice: 19 0.0200s
+Choice: 20 0.0250s
+Choice: 21 0.0333s
+Choice: 22 0.0400s
+Choice: 23 0.0500s
+Choice: 24 0.0666s
+Choice: 25 0.0769s
+Choice: 26 0.1000s
+Choice: 27 0.1250s
+Choice: 28 0.1666s
+Choice: 29 0.2000s
+Choice: 30 0.2500s
+Choice: 31 0.3333s
+Choice: 32 0.4000s
+Choice: 33 0.5000s
+Choice: 34 0.6250s
+Choice: 35 0.7692s
+Choice: 36 1.0000s
+Choice: 37 1.3000s
+Choice: 38 1.6000s
+Choice: 39 2.0000s
+Choice: 40 2.5000s
+Choice: 41 3.0000s
+Choice: 42 4.0000s
+Choice: 43 5.0000s
+Choice: 44 6.0000s
+Choice: 45 8.0000s
+Choice: 46 10.0000s
+Choice: 47 13.0000s
+Choice: 48 15.0000s
+Choice: 49 20.0000s
+Choice: 50 25.0000s
+Choice: 51 30.0000s
+END
+/main/capturesettings/shutterspeed2
+Label: Shutter Speed 2
+Readonly: 1
+Type: RADIO
+Current: 1/250
+Choice: 0 1/4000
+Choice: 1 1/3200
+Choice: 2 1/2500
+Choice: 3 1/2000
+Choice: 4 1/1600
+Choice: 5 1/1250
+Choice: 6 1/1000
+Choice: 7 1/800
+Choice: 8 1/640
+Choice: 9 1/500
+Choice: 10 1/400
+Choice: 11 1/320
+Choice: 12 1/250
+Choice: 13 1/200
+Choice: 14 1/160
+Choice: 15 1/125
+Choice: 16 1/100
+Choice: 17 1/80
+Choice: 18 1/60
+Choice: 19 1/50
+Choice: 20 1/40
+Choice: 21 1/30
+Choice: 22 1/25
+Choice: 23 1/20
+Choice: 24 1/15
+Choice: 25 1/13
+Choice: 26 1/10
+Choice: 27 1/8
+Choice: 28 1/6
+Choice: 29 1/5
+Choice: 30 1/4
+Choice: 31 1/3
+Choice: 32 10/25
+Choice: 33 1/2
+Choice: 34 10/16
+Choice: 35 10/13
+Choice: 36 1
+Choice: 37 13/10
+Choice: 38 16/10
+Choice: 39 2
+Choice: 40 25/10
+Choice: 41 3
+Choice: 42 4
+Choice: 43 5
+Choice: 44 6
+Choice: 45 8
+Choice: 46 10
+Choice: 47 13
+Choice: 48 15
+Choice: 49 20
+Choice: 50 25
+Choice: 51 30
+END
+/main/capturesettings/movieshutterspeed
+Label: Movie Shutter Speed 2
+Readonly: 1
+Type: RADIO
+Current: 1/25
+Choice: 0 1/4000
+Choice: 1 1/3200
+Choice: 2 1/2500
+Choice: 3 1/2000
+Choice: 4 1/1600
+Choice: 5 1/1250
+Choice: 6 1/1000
+Choice: 7 1/800
+Choice: 8 1/640
+Choice: 9 1/500
+Choice: 10 1/400
+Choice: 11 1/320
+Choice: 12 1/250
+Choice: 13 1/200
+Choice: 14 1/160
+Choice: 15 1/125
+Choice: 16 1/100
+Choice: 17 1/80
+Choice: 18 1/60
+Choice: 19 1/50
+Choice: 20 1/40
+Choice: 21 1/30
+Choice: 22 1/25
+END
+/main/capturesettings/focusareawrap
+Label: Focus Area Wrap
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/capturesettings/liveviewaffocus
+Label: Live View AF Focus
+Readonly: 0
+Type: RADIO
+Current: Unknown value 0005
+Choice: 0 Single-servo AF
+Choice: 1 Continuous-servo AF
+Choice: 2 Manual Focus (selection)
+Choice: 3 Unknown value 0005
+END
+/main/capturesettings/filenrsequencing
+Label: File Number Sequencing
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/capturesettings/flashexposurecompensation
+Label: Flash Exposure Compensation
+Readonly: 1
+Type: RANGE
+Current: 0
+Bottom: -3
+Top: 1
+Step: 0.333333
+END
+/main/capturesettings/bracketing
+Label: Bracketing
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 On
+Choice: 1 Off
+END
+/main/capturesettings/bracketmode
+Label: Bracketing
+Readonly: 0
+Type: RADIO
+Current: Flash/speed
+Choice: 0 Flash/speed
+Choice: 1 Flash/speed/aperture
+Choice: 2 Flash/aperture
+Choice: 3 Flash only
+END
+/main/capturesettings/bracketset
+Label: Bracket Set
+Readonly: 0
+Type: RADIO
+Current: AE only
+Choice: 0 AE & Flash
+Choice: 1 AE only
+Choice: 2 Flash only
+Choice: 3 WB bracketing
+Choice: 4 ADL bracketing
+END
+/main/capturesettings/bracketorder
+Label: Bracket Order
+Readonly: 0
+Type: RADIO
+Current: MTR > Under
+Choice: 0 MTR > Under
+Choice: 1 Under > MTR
+END
+/main/capturesettings/aebracketingstep
+Label: AE Bracketing Step
+Readonly: 1
+Type: RADIO
+Current: Unknown value 0012
+Choice: 0 2/3 EV
+Choice: 1 2 EV
+Choice: 2 Unknown value 0006
+Choice: 3 Unknown value 000c
+Choice: 4 Unknown value 0012
+END
+/main/capturesettings/wbbracketingstep
+Label: WB Bracketing Step
+Readonly: 1
+Type: RADIO
+Current: 2 EV
+Choice: 0 2 EV
+Choice: 1 3 EV
+Choice: 2 Unknown value 0003
+END
+/main/capturesettings/aebracketingcount
+Label: AE Bracketing Count
+Readonly: 1
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 0
+Step: 1
+END
+/main/capturesettings/wbpresetcomment1
+Label: WB Preset Comment 1
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/capturesettings/wbpresetcomment2
+Label: WB Preset Comment 2
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/capturesettings/wbpresetcomment3
+Label: WB Preset Comment 3
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/capturesettings/wbpresetcomment4
+Label: WB Preset Comment 4
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/capturesettings/wbpresetcomment6
+Label: WB Preset Comment 6
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/capturesettings/burstnumber
+Label: Burst Number
+Readonly: 0
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 65535
+Step: 1
+END
+/main/capturesettings/autowhitebias
+Label: Auto White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/capturesettings/tungstenwhitebias
+Label: Tungsten White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/capturesettings/flourescentwhitebias
+Label: Fluorescent White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/capturesettings/daylightwhitebias
+Label: Daylight White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/capturesettings/flashwhitebias
+Label: Flash White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/capturesettings/cloudywhitebias
+Label: Cloudy White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/capturesettings/shadewhitebias
+Label: Shady White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/capturesettings/naturallightautowhitebias
+Label: Natural light auto White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/capturesettings/whitebiaspresetno
+Label: White Balance Bias Preset Nr
+Readonly: 0
+Type: RADIO
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/capturesettings/whitebiaspreset1
+Label: White Balance Bias Preset 1
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/capturesettings/whitebiaspreset2
+Label: White Balance Bias Preset 2
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/capturesettings/whitebiaspreset3
+Label: White Balance Bias Preset 3
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/capturesettings/whitebiaspreset4
+Label: White Balance Bias Preset 4
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/capturesettings/centerweightsize
+Label: Center Weight Area
+Readonly: 0
+Type: RADIO
+Current: Unknown value 0008
+Choice: 0 Unknown value 0008
+Choice: 1 Unknown value 00ff
+END
+/main/capturesettings/applicationmode
+Label: Application Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/capturesettings/microphone
+Label: Microphone
+Readonly: 0
+Type: RADIO
+Current: Auto sensitivity
+Choice: 0 Auto sensitivity
+Choice: 1 High sensitivity
+Choice: 2 Medium sensitivity
+END
+/main/capturesettings/autodistortioncontrol
+Label: Auto Distortion Control
+Readonly: 1
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 100
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+Choice: 13 14
+Choice: 14 15
+Choice: 15 16
+Choice: 16 17
+Choice: 17 18
+Choice: 18 19
+Choice: 19 20
+Choice: 20 21
+Choice: 21 22
+Choice: 22 23
+Choice: 23 24
+Choice: 24 25
+Choice: 25 26
+Choice: 26 27
+Choice: 27 28
+Choice: 28 29
+Choice: 29 30
+Choice: 30 31
+Choice: 31 32
+Choice: 32 33
+Choice: 33 34
+Choice: 34 35
+Choice: 35 36
+Choice: 36 37
+Choice: 37 38
+Choice: 38 39
+Choice: 39 40
+Choice: 40 41
+Choice: 41 42
+Choice: 42 43
+Choice: 43 44
+Choice: 44 45
+Choice: 45 46
+Choice: 46 47
+Choice: 47 48
+Choice: 48 49
+Choice: 49 50
+Choice: 50 51
+Choice: 51 52
+Choice: 52 53
+Choice: 53 54
+Choice: 54 55
+Choice: 55 56
+Choice: 56 57
+Choice: 57 58
+Choice: 58 59
+Choice: 59 60
+Choice: 60 61
+Choice: 61 62
+Choice: 62 63
+Choice: 63 64
+Choice: 64 65
+Choice: 65 66
+Choice: 66 67
+Choice: 67 68
+Choice: 68 69
+Choice: 69 70
+Choice: 70 71
+Choice: 71 72
+Choice: 72 73
+Choice: 73 74
+Choice: 74 75
+Choice: 75 76
+Choice: 76 77
+Choice: 77 78
+Choice: 78 79
+Choice: 79 80
+Choice: 80 81
+Choice: 81 82
+Choice: 82 83
+Choice: 83 84
+Choice: 84 85
+Choice: 85 86
+Choice: 86 87
+Choice: 87 88
+Choice: 88 89
+Choice: 89 90
+Choice: 90 91
+Choice: 91 92
+Choice: 92 93
+Choice: 93 94
+Choice: 94 95
+Choice: 95 96
+Choice: 96 97
+Choice: 97 98
+Choice: 98 99
+Choice: 99 100
+END
+/main/other/5003
+Label: Image Size
+Readonly: 0
+Type: MENU
+Current: 5568x3712
+Choice: 0 5568x3712
+Choice: 1 4176x2784
+Choice: 2 2784x1856
+END
+/main/other/5004
+Label: Compression Setting
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 0
+Choice: 1 2
+Choice: 2 4
+Choice: 3 7
+Choice: 4 8
+Choice: 5 10
+Choice: 6 12
+END
+/main/other/5005
+Label: White Balance
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 5
+Choice: 3 6
+Choice: 4 7
+Choice: 5 32784
+Choice: 6 32785
+Choice: 7 32786
+Choice: 8 32787
+Choice: 9 32790
+END
+/main/other/5007
+Label: F-Number
+Readonly: 1
+Type: MENU
+Current: 350
+Choice: 0 350
+Choice: 1 400
+Choice: 2 450
+Choice: 3 500
+Choice: 4 560
+Choice: 5 630
+Choice: 6 710
+Choice: 7 800
+Choice: 8 900
+Choice: 9 1000
+Choice: 10 1100
+Choice: 11 1300
+Choice: 12 1400
+Choice: 13 1600
+Choice: 14 1800
+Choice: 15 2000
+Choice: 16 2200
+END
+/main/other/5008
+Label: Focal Length
+Readonly: 1
+Type: RANGE
+Current: 1600
+Bottom: 1600
+Top: 5000
+Step: 1
+END
+/main/other/500a
+Label: Focus Mode
+Readonly: 1
+Type: MENU
+Current: 32786
+Choice: 0 1
+Choice: 1 32784
+Choice: 2 32785
+Choice: 3 32786
+Choice: 4 32787
+END
+/main/other/500b
+Label: Exposure Metering Mode
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 2
+Choice: 1 3
+Choice: 2 4
+Choice: 3 32784
+END
+/main/other/500c
+Label: Flash Mode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+END
+/main/other/500d
+Label: Exposure Time
+Readonly: 1
+Type: MENU
+Current: 40
+Choice: 0 2
+Choice: 1 3
+Choice: 2 4
+Choice: 3 5
+Choice: 4 6
+Choice: 5 8
+Choice: 6 10
+Choice: 7 12
+Choice: 8 15
+Choice: 9 20
+Choice: 10 25
+Choice: 11 31
+Choice: 12 40
+Choice: 13 50
+Choice: 14 62
+Choice: 15 80
+Choice: 16 100
+Choice: 17 125
+Choice: 18 166
+Choice: 19 200
+Choice: 20 250
+Choice: 21 333
+Choice: 22 400
+Choice: 23 500
+Choice: 24 666
+Choice: 25 769
+Choice: 26 1000
+Choice: 27 1250
+Choice: 28 1666
+Choice: 29 2000
+Choice: 30 2500
+Choice: 31 3333
+Choice: 32 4000
+Choice: 33 5000
+Choice: 34 6250
+Choice: 35 7692
+Choice: 36 10000
+Choice: 37 13000
+Choice: 38 16000
+Choice: 39 20000
+Choice: 40 25000
+Choice: 41 30000
+Choice: 42 40000
+Choice: 43 50000
+Choice: 44 60000
+Choice: 45 80000
+Choice: 46 100000
+Choice: 47 130000
+Choice: 48 150000
+Choice: 49 200000
+Choice: 50 250000
+Choice: 51 300000
+END
+/main/other/500e
+Label: Exposure Program Mode
+Readonly: 1
+Type: MENU
+Current: 32784
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 32784
+Choice: 5 32848
+Choice: 6 32849
+Choice: 7 32850
+END
+/main/other/500f
+Label: Exposure Index (film speed ISO)
+Readonly: 0
+Type: MENU
+Current: 200
+Choice: 0 100
+Choice: 1 125
+Choice: 2 160
+Choice: 3 200
+Choice: 4 250
+Choice: 5 320
+Choice: 6 400
+Choice: 7 500
+Choice: 8 640
+Choice: 9 800
+Choice: 10 1000
+Choice: 11 1250
+Choice: 12 1600
+Choice: 13 2000
+Choice: 14 2500
+Choice: 15 3200
+Choice: 16 4000
+Choice: 17 5000
+Choice: 18 6400
+Choice: 19 8000
+Choice: 20 10000
+Choice: 21 12800
+Choice: 22 16000
+Choice: 23 20000
+Choice: 24 25600
+Choice: 25 32000
+Choice: 26 40000
+Choice: 27 51200
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -5000
+Choice: 1 -4666
+Choice: 2 -4333
+Choice: 3 -4000
+Choice: 4 -3666
+Choice: 5 -3333
+Choice: 6 -3000
+Choice: 7 -2666
+Choice: 8 -2333
+Choice: 9 -2000
+Choice: 10 -1666
+Choice: 11 -1333
+Choice: 12 -1000
+Choice: 13 -666
+Choice: 14 -333
+Choice: 15 0
+Choice: 16 333
+Choice: 17 666
+Choice: 18 1000
+Choice: 19 1333
+Choice: 20 1666
+Choice: 21 2000
+Choice: 22 2333
+Choice: 23 2666
+Choice: 24 3000
+Choice: 25 3333
+Choice: 26 3666
+Choice: 27 4000
+Choice: 28 4333
+Choice: 29 4666
+Choice: 30 5000
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20230207T091617
+END
+/main/other/5013
+Label: Still Capture Mode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 32784
+Choice: 3 32785
+Choice: 4 32793
+END
+/main/other/5018
+Label: Burst Number
+Readonly: 0
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 65535
+Step: 1
+END
+/main/other/501e
+Label: Artist
+Readonly: 1
+Type: TEXT
+Current: 
+END
+/main/other/501f
+Label: Copyright Info
+Readonly: 1
+Type: TEXT
+Current: 
+END
+/main/other/d303
+Label: UseDeviceStageFlag
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d017
+Label: Auto White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d018
+Label: Tungsten White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d019
+Label: Fluorescent White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d01a
+Label: Daylight White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d01b
+Label: Flash White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d01c
+Label: Cloudy White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d01d
+Label: Shady White Balance Bias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d01e
+Label: White Balance Colour Temperature
+Readonly: 0
+Type: RANGE
+Current: 5000
+Bottom: 2500
+Top: 10000
+Step: 10
+END
+/main/other/d01f
+Label: White Balance Preset Number
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+END
+/main/other/d021
+Label: White Balance Preset Name 1
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d022
+Label: White Balance Preset Name 2
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d023
+Label: White Balance Preset Name 3
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d024
+Label: White Balance Preset Name 4
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d026
+Label: White Balance Preset Value 1
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d027
+Label: White Balance Preset Value 2
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d028
+Label: White Balance Preset Value 3
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d029
+Label: White Balance Preset Value 4
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d02e
+Label: Lens Focal Length (Non CPU)
+Readonly: 0
+Type: MENU
+Current: 1200
+Choice: 0 0
+Choice: 1 6
+Choice: 2 8
+Choice: 3 13
+Choice: 4 15
+Choice: 5 16
+Choice: 6 18
+Choice: 7 20
+Choice: 8 24
+Choice: 9 25
+Choice: 10 28
+Choice: 11 35
+Choice: 12 43
+Choice: 13 45
+Choice: 14 50
+Choice: 15 55
+Choice: 16 58
+Choice: 17 70
+Choice: 18 80
+Choice: 19 85
+Choice: 20 86
+Choice: 21 100
+Choice: 22 105
+Choice: 23 135
+Choice: 24 180
+Choice: 25 200
+Choice: 26 300
+Choice: 27 360
+Choice: 28 400
+Choice: 29 500
+Choice: 30 600
+Choice: 31 800
+Choice: 32 1000
+Choice: 33 1200
+Choice: 34 1400
+Choice: 35 1600
+Choice: 36 2000
+Choice: 37 2400
+Choice: 38 2800
+Choice: 39 3200
+Choice: 40 4000
+END
+/main/other/d02f
+Label: Lens Maximum Aperture (Non CPU)
+Readonly: 0
+Type: MENU
+Current: 1300
+Choice: 0 0
+Choice: 1 120
+Choice: 2 140
+Choice: 3 180
+Choice: 4 200
+Choice: 5 250
+Choice: 6 280
+Choice: 7 330
+Choice: 8 350
+Choice: 9 400
+Choice: 10 450
+Choice: 11 500
+Choice: 12 560
+Choice: 13 630
+Choice: 14 710
+Choice: 15 800
+Choice: 16 950
+Choice: 17 1100
+Choice: 18 1300
+Choice: 19 1500
+Choice: 20 1600
+Choice: 21 1900
+Choice: 22 2200
+END
+/main/other/d030
+Label: Shooting Mode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 5
+END
+/main/other/d032
+Label: Color Space
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d034
+Label: Flicker Reduction
+Readonly: 0
+Type: MENU
+Current: 255
+Choice: 0 0
+Choice: 1 1
+Choice: 2 255
+END
+/main/other/d038
+Label: 1_Mode
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d039
+Label: WhiteBalancePresetName6
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d03a
+Label: WhiteBalanceTunePreset5
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d03b
+Label: WhiteBalanceTunePreset6
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d03c
+Label: WhiteBalancePresetProtect5
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d03d
+Label: WhiteBalancePresetProtect6
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d03e
+Label: WhiteBalancePresetValue5
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d03f
+Label: WhiteBalancePresetValue6
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d046
+Label: AFStillLockOnAcross
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d048
+Label: PTP_DPC_NIKON_A1AFCModePriority
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 3
+END
+/main/other/d049
+Label: PTP_DPC_NIKON_A2AFSModePriority
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 3
+END
+/main/other/d04f
+Label: Focus Area Wrap
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d053
+Label: Enable Copyright
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d054
+Label: Auto ISO
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d059
+Label: Centre Weight Area
+Readonly: 0
+Type: MENU
+Current: 8
+Choice: 0 8
+Choice: 1 255
+END
+/main/other/d05a
+Label: Exposure Base Matrix
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -6
+Choice: 1 -5
+Choice: 2 -4
+Choice: 3 -3
+Choice: 4 -2
+Choice: 5 -1
+Choice: 6 0
+Choice: 7 1
+Choice: 8 2
+Choice: 9 3
+Choice: 10 4
+Choice: 11 5
+Choice: 12 6
+END
+/main/other/d05b
+Label: Exposure Base Center
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -6
+Choice: 1 -5
+Choice: 2 -4
+Choice: 3 -3
+Choice: 4 -2
+Choice: 5 -1
+Choice: 6 0
+Choice: 7 1
+Choice: 8 2
+Choice: 9 3
+Choice: 10 4
+Choice: 11 5
+Choice: 12 6
+END
+/main/other/d05c
+Label: Exposure Base Spot
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -6
+Choice: 1 -5
+Choice: 2 -4
+Choice: 3 -3
+Choice: 4 -2
+Choice: 5 -1
+Choice: 6 0
+Choice: 7 1
+Choice: 8 2
+Choice: 9 3
+Choice: 10 4
+Choice: 11 5
+Choice: 12 6
+END
+/main/other/d05d
+Label: Live View AF Area
+Readonly: 0
+Type: MENU
+Current: 32800
+Choice: 0 2
+Choice: 1 32784
+Choice: 2 32785
+Choice: 3 32792
+Choice: 4 32793
+Choice: 5 32794
+Choice: 6 32795
+Choice: 7 32800
+Choice: 8 32801
+END
+/main/other/d061
+Label: Live View AF Focus
+Readonly: 0
+Type: MENU
+Current: 5
+Choice: 0 0
+Choice: 1 1
+Choice: 2 4
+Choice: 3 5
+END
+/main/other/d067
+Label: Angle Level
+Readonly: 1
+Type: TEXT
+Current: 23533956
+END
+/main/other/d068
+Label: Shooting Speed
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d069
+Label: Maximum Shots
+Readonly: 0
+Type: MENU
+Current: 35
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+Choice: 13 14
+Choice: 14 15
+Choice: 15 16
+Choice: 16 17
+Choice: 17 18
+Choice: 18 19
+Choice: 19 20
+Choice: 20 21
+Choice: 21 22
+Choice: 22 23
+Choice: 23 24
+Choice: 24 25
+Choice: 25 26
+Choice: 26 27
+Choice: 27 28
+Choice: 28 29
+Choice: 29 30
+Choice: 30 31
+Choice: 31 32
+Choice: 32 33
+Choice: 33 34
+Choice: 34 35
+Choice: 35 36
+Choice: 36 37
+Choice: 37 38
+Choice: 38 39
+Choice: 39 40
+Choice: 40 41
+Choice: 41 42
+Choice: 42 43
+Choice: 43 44
+Choice: 44 45
+Choice: 45 46
+Choice: 46 47
+Choice: 47 48
+Choice: 48 49
+Choice: 49 50
+Choice: 50 51
+Choice: 51 52
+Choice: 52 53
+Choice: 53 54
+Choice: 54 55
+Choice: 55 56
+Choice: 56 57
+Choice: 57 58
+Choice: 58 59
+Choice: 59 60
+Choice: 60 61
+Choice: 61 62
+Choice: 62 63
+Choice: 63 64
+Choice: 64 65
+Choice: 65 66
+Choice: 66 67
+Choice: 67 68
+Choice: 68 69
+Choice: 69 70
+Choice: 70 71
+Choice: 71 72
+Choice: 72 73
+Choice: 73 74
+Choice: 74 75
+Choice: 75 76
+Choice: 76 77
+Choice: 77 78
+Choice: 78 79
+Choice: 79 80
+Choice: 80 81
+Choice: 81 82
+Choice: 82 83
+Choice: 83 84
+Choice: 84 85
+Choice: 85 86
+Choice: 86 87
+Choice: 87 88
+Choice: 88 89
+Choice: 89 90
+Choice: 90 91
+Choice: 91 92
+Choice: 92 93
+Choice: 93 94
+Choice: 94 95
+Choice: 95 96
+Choice: 96 97
+Choice: 97 98
+Choice: 98 99
+Choice: 99 100
+END
+/main/other/d06a
+Label: Exposure delay mode
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 2
+Choice: 2 5
+Choice: 3 10
+Choice: 4 20
+Choice: 5 30
+END
+/main/other/d06b
+Label: Long Exposure Noise Reduction
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d06c
+Label: File Number Sequencing
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d070
+Label: High ISO noise reduction
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d072
+Label: Artist Name
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d073
+Label: Copyright Information
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d074
+Label: Flash Sync. Speed
+Readonly: 0
+Type: MENU
+Current: 65736
+Choice: 0 -2147417912
+Choice: 1 65736
+Choice: 2 65696
+Choice: 3 65661
+Choice: 4 65636
+Choice: 5 65616
+Choice: 6 65596
+END
+/main/other/d075
+Label: Flash Shutter Speed
+Readonly: 0
+Type: MENU
+Current: 65596
+Choice: 0 65537
+Choice: 1 65538
+Choice: 2 65540
+Choice: 3 65544
+Choice: 4 65551
+Choice: 5 65566
+Choice: 6 65596
+Choice: 7 131073
+Choice: 8 262145
+Choice: 9 524289
+Choice: 10 983041
+Choice: 11 1966081
+END
+/main/other/d078
+Label: Bracket Set
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+END
+/main/other/d079
+Label: Manual Mode Bracketing
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d07a
+Label: Bracket Order
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d07c
+Label: NIKON Auto Bracketing Set
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d07d
+Label: AngleLevelPitching
+Readonly: 1
+Type: TEXT
+Current: 23150837
+END
+/main/other/d07e
+Label: AngleLevelYawing
+Readonly: 1
+Type: TEXT
+Current: -1
+END
+/main/other/d08a
+Label: No CF Card Release
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d08d
+Label: AF Area Point
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d090
+Label: Image Comment String
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d091
+Label: Image Comment Enable
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d093
+Label: Manual Set Lens Number
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+END
+/main/other/d09c
+Label: RetractableLensWarning
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0a0
+Label: Movie Screen Size
+Readonly: 0
+Type: MENU
+Current: 1572864
+Choice: 0 1966080
+Choice: 1 1638400
+Choice: 2 1572864
+Choice: 3 7864320
+Choice: 4 6553600
+Choice: 5 3932160
+Choice: 6 3276800
+Choice: 7 1966080
+Choice: 8 1638400
+Choice: 9 1572864
+Choice: 10 1966376
+Choice: 11 1638696
+Choice: 12 1573170
+END
+/main/other/d0a2
+Label: Movie Microphone
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d0a4
+Label: MovRecProhibitCondition
+Readonly: 1
+Type: TEXT
+Current: 24576
+END
+/main/other/d0a7
+Label: Movie Quality
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0a8
+Label: MovRecordMicrophoneLevelValue
+Readonly: 0
+Type: MENU
+Current: 15
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 13
+Choice: 13 14
+Choice: 14 15
+Choice: 15 16
+Choice: 16 17
+Choice: 17 18
+Choice: 18 19
+Choice: 19 20
+END
+/main/other/d0aa
+Label: MovWindNoiseReduction
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0ac
+Label: MovRecordingZone
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0ad
+Label: MovISOAutoControl
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0ae
+Label: MovISOAutoHighLimit
+Readonly: 1
+Type: MENU
+Current: 6400
+Choice: 0 200
+Choice: 1 250
+Choice: 2 320
+Choice: 3 400
+Choice: 4 500
+Choice: 5 640
+Choice: 6 800
+Choice: 7 1000
+Choice: 8 1250
+Choice: 9 1600
+Choice: 10 2000
+Choice: 11 2500
+Choice: 12 3200
+Choice: 13 4000
+Choice: 14 5000
+Choice: 15 6400
+Choice: 16 8000
+Choice: 17 10000
+Choice: 18 12800
+Choice: 19 16000
+Choice: 20 20000
+Choice: 21 25600
+END
+/main/other/d0af
+Label: MovFileType
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0b4
+Label: ExposureIndexEx
+Readonly: 0
+Type: MENU
+Current: 200
+Choice: 0 100
+Choice: 1 125
+Choice: 2 160
+Choice: 3 200
+Choice: 4 250
+Choice: 5 320
+Choice: 6 400
+Choice: 7 500
+Choice: 8 640
+Choice: 9 800
+Choice: 10 1000
+Choice: 11 1250
+Choice: 12 1600
+Choice: 13 2000
+Choice: 14 2500
+Choice: 15 3200
+Choice: 16 4000
+Choice: 17 5000
+Choice: 18 6400
+Choice: 19 8000
+Choice: 20 10000
+Choice: 21 12800
+Choice: 22 16000
+Choice: 23 20000
+Choice: 24 25600
+Choice: 25 32000
+Choice: 26 40000
+Choice: 27 51200
+END
+/main/other/d0b5
+Label: ISOControlSensitivity
+Readonly: 1
+Type: TEXT
+Current: 400
+END
+/main/other/d0b7
+Label: FlickerReductionSetting
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0ba
+Label: DiffractionCompensatipn
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0bc
+Label: MovieAutoDistortion
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d0bd
+Label: PTP Property 0xd0bd
+Readonly: 1
+Type: TEXT
+Current: -2147483648
+END
+/main/other/d0c0
+Label: Bracketing Enable
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0c1
+Label: Exposure Bracketing Step
+Readonly: 1
+Type: MENU
+Current: 18
+Choice: 0 2
+Choice: 1 4
+Choice: 2 6
+Choice: 3 12
+Choice: 4 18
+END
+/main/other/d0c2
+Label: Exposure Bracketing Program
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 258
+Choice: 2 514
+Choice: 3 259
+Choice: 4 515
+Choice: 5 1027
+Choice: 6 1029
+Choice: 7 1031
+Choice: 8 1033
+END
+/main/other/d0c3
+Label: Auto Exposure Bracket Count
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d0c4
+Label: White Balance Bracket Step
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d0c5
+Label: White Balance Bracket Program
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 258
+Choice: 2 514
+Choice: 3 259
+Choice: 4 515
+Choice: 5 1027
+Choice: 6 1029
+Choice: 7 1031
+Choice: 8 1033
+END
+/main/other/d0c6
+Label: ADLBracketingPattern
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d0c7
+Label: ADLBracketingStep
+Readonly: 1
+Type: MENU
+Current: 65535
+Choice: 0 2
+Choice: 1 3
+Choice: 2 4
+Choice: 3 5
+Choice: 4 65535
+END
+/main/other/d0cd
+Label: PTP Property 0xd0cd
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0e0
+Label: Lens ID
+Readonly: 1
+Type: TEXT
+Current: 11
+END
+/main/other/d0e1
+Label: Lens Sort
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d0e2
+Label: Lens Type
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d0e3
+Label: Min. Focal Length
+Readonly: 1
+Type: TEXT
+Current: 1600
+END
+/main/other/d0e4
+Label: Max. Focal Length
+Readonly: 1
+Type: TEXT
+Current: 5000
+END
+/main/other/d0e5
+Label: Max. Aperture at Min. Focal Length
+Readonly: 1
+Type: TEXT
+Current: 350
+END
+/main/other/d0e6
+Label: Max. Aperture at Max. Focal Length
+Readonly: 1
+Type: TEXT
+Current: 630
+END
+/main/other/d0e7
+Label: LensTypeML
+Readonly: 1
+Type: TEXT
+Current: 176
+END
+/main/other/d0f7
+Label: Vignette Control
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d0f8
+Label: Auto Distortion Control
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d0fc
+Label: UserMode
+Readonly: 1
+Type: MENU
+Current: 19
+Choice: 0 19
+Choice: 1 20
+Choice: 2 21
+Choice: 3 22
+Choice: 4 23
+END
+/main/other/d100
+Label: Nikon Exposure Time
+Readonly: 1
+Type: MENU
+Current: 65786
+Choice: 0 69536
+Choice: 1 68736
+Choice: 2 68036
+Choice: 3 67536
+Choice: 4 67136
+Choice: 5 66786
+Choice: 6 66536
+Choice: 7 66336
+Choice: 8 66176
+Choice: 9 66036
+Choice: 10 65936
+Choice: 11 65856
+Choice: 12 65786
+Choice: 13 65736
+Choice: 14 65696
+Choice: 15 65661
+Choice: 16 65636
+Choice: 17 65616
+Choice: 18 65596
+Choice: 19 65586
+Choice: 20 65576
+Choice: 21 65566
+Choice: 22 65561
+Choice: 23 65556
+Choice: 24 65551
+Choice: 25 65549
+Choice: 26 65546
+Choice: 27 65544
+Choice: 28 65542
+Choice: 29 65541
+Choice: 30 65540
+Choice: 31 65539
+Choice: 32 655385
+Choice: 33 65538
+Choice: 34 655376
+Choice: 35 655373
+Choice: 36 65537
+Choice: 37 851978
+Choice: 38 1048586
+Choice: 39 131073
+Choice: 40 1638410
+Choice: 41 196609
+Choice: 42 262145
+Choice: 43 327681
+Choice: 44 393217
+Choice: 45 524289
+Choice: 46 655361
+Choice: 47 851969
+Choice: 48 983041
+Choice: 49 1310721
+Choice: 50 1638401
+Choice: 51 1966081
+END
+/main/other/d101
+Label: AC Power
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d102
+Label: Warning Status
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d104
+Label: AF Locked
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d105
+Label: AE Locked
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d106
+Label: FV Locked
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d109
+Label: Flexible Program
+Readonly: 1
+Type: RANGE
+Current: 0
+Bottom: -30
+Top: 30
+Step: 2
+END
+/main/other/d10b
+Label: Recording Media
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d10c
+Label: USB Speed
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d10e
+Label: Camera Orientation
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d118
+Label: ExposureCompFlashUsed
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d120
+Label: External Flash Attached
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d121
+Label: External Flash Status
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d122
+Label: External Flash Sort
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d124
+Label: External Flash Compensation
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 -18
+Choice: 1 -17
+Choice: 2 -16
+Choice: 3 -15
+Choice: 4 -14
+Choice: 5 -13
+Choice: 6 -12
+Choice: 7 -11
+Choice: 8 -10
+Choice: 9 -9
+Choice: 10 -8
+Choice: 11 -7
+Choice: 12 -6
+Choice: 13 -5
+Choice: 14 -4
+Choice: 15 -3
+Choice: 16 -2
+Choice: 17 -1
+Choice: 18 0
+Choice: 19 1
+Choice: 20 2
+Choice: 21 3
+Choice: 22 4
+Choice: 23 5
+Choice: 24 6
+Choice: 25 7
+Choice: 26 8
+Choice: 27 9
+Choice: 28 10
+Choice: 29 11
+Choice: 30 12
+Choice: 31 13
+Choice: 32 14
+Choice: 33 15
+Choice: 34 16
+Choice: 35 17
+Choice: 36 18
+END
+/main/other/d125
+Label: External Flash Mode
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+END
+/main/other/d126
+Label: Flash Exposure Compensation
+Readonly: 1
+Type: RANGE
+Current: 0
+Bottom: -18
+Top: 6
+Step: 2
+END
+/main/other/d12d
+Label: ExternalFlashMultiFlashMode
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d12e
+Label: ConnectionPath
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 2
+END
+/main/other/d130
+Label: HDR Mode
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 257
+END
+/main/other/d131
+Label: HDR High Dynamic
+Readonly: 0
+Type: MENU
+Current: 18
+Choice: 0 6
+Choice: 1 12
+Choice: 2 18
+Choice: 3 255
+END
+/main/other/d132
+Label: HDR Smoothing
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 3
+Choice: 2 4
+END
+/main/other/d133
+Label: HDRSaveIndividualImages
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d138
+Label: VibrationReduction
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d141
+Label: WBAutoType
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d149
+Label: Raw Bit Mode
+Readonly: 0
+Type: MENU
+Current: 14
+Choice: 0 12
+Choice: 1 14
+END
+/main/other/d14e
+Label: Active D-Lighting
+Readonly: 0
+Type: MENU
+Current: 65535
+Choice: 0 0
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 65535
+END
+/main/other/d14f
+Label: Fluorescent Type
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 3
+Choice: 1 4
+Choice: 2 5
+END
+/main/other/d150
+Label: Tune Colour Temperature
+Readonly: 0
+Type: MENU
+Current: 24
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+Choice: 20 20
+Choice: 21 21
+Choice: 22 22
+Choice: 23 23
+Choice: 24 24
+Choice: 25 25
+Choice: 26 26
+Choice: 27 27
+Choice: 28 28
+Choice: 29 29
+Choice: 30 30
+Choice: 31 31
+Choice: 32 32
+Choice: 33 33
+Choice: 34 34
+Choice: 35 35
+Choice: 36 36
+Choice: 37 37
+Choice: 38 38
+Choice: 39 39
+Choice: 40 40
+Choice: 41 41
+Choice: 42 42
+Choice: 43 43
+Choice: 44 44
+Choice: 45 45
+Choice: 46 46
+Choice: 47 47
+Choice: 48 48
+END
+/main/other/d152
+Label: Tune Preset 1
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d153
+Label: Tune Preset 2
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d154
+Label: Tune Preset 3
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d155
+Label: Tune Preset 4
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d158
+Label: WBPresetProtect1
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d159
+Label: WBPresetProtect2
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d15a
+Label: WBPresetProtect3
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d15b
+Label: ActiveFolder
+Readonly: 1
+Type: RANGE
+Current: 100
+Bottom: 100
+Top: 999
+Step: 1
+END
+/main/other/d15c
+Label: WBPresetProtect4
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d15e
+Label: WhiteBalanceNaturalLightAutoBias
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d164
+Label: Auto ISO P/A/DVP Setting
+Readonly: 0
+Type: MENU
+Current: 65556
+Choice: 0 69536
+Choice: 1 68736
+Choice: 2 68036
+Choice: 3 67536
+Choice: 4 67136
+Choice: 5 66786
+Choice: 6 66536
+Choice: 7 66336
+Choice: 8 66176
+Choice: 9 66036
+Choice: 10 65936
+Choice: 11 65856
+Choice: 12 65786
+Choice: 13 65736
+Choice: 14 65696
+Choice: 15 65661
+Choice: 16 65636
+Choice: 17 65616
+Choice: 18 65596
+Choice: 19 65586
+Choice: 20 65576
+Choice: 21 65566
+Choice: 22 65561
+Choice: 23 65556
+Choice: 24 65551
+Choice: 25 65549
+Choice: 26 65546
+Choice: 27 65544
+Choice: 28 65542
+Choice: 29 65541
+Choice: 30 65540
+Choice: 31 65539
+Choice: 32 655385
+Choice: 33 65538
+Choice: 34 655376
+Choice: 35 655373
+Choice: 36 65537
+Choice: 37 851978
+Choice: 38 1048586
+Choice: 39 131073
+Choice: 40 1638410
+Choice: 41 196609
+Choice: 42 262145
+Choice: 43 327681
+Choice: 44 393217
+Choice: 45 524289
+Choice: 46 655361
+Choice: 47 851969
+Choice: 48 983041
+Choice: 49 1310721
+Choice: 50 1638401
+Choice: 51 1966081
+Choice: 52 -1
+END
+/main/other/d16a
+Label: ISO Auto
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d17a
+Label: LowLightAF
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d17b
+Label: ApplyLiveViewSetting
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d17c
+Label: MovieAfSpeed
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -5
+Choice: 1 -4
+Choice: 2 -3
+Choice: 3 -2
+Choice: 4 -1
+Choice: 5 0
+Choice: 6 1
+Choice: 7 2
+Choice: 8 3
+Choice: 9 4
+Choice: 10 5
+END
+/main/other/d17d
+Label: MovieAfSpeedWhenToApply
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d17e
+Label: MovieAfTrackingSensitivity
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+END
+/main/other/d183
+Label: ISO Auto High Limit
+Readonly: 0
+Type: MENU
+Current: 6400
+Choice: 0 200
+Choice: 1 250
+Choice: 2 320
+Choice: 3 400
+Choice: 4 500
+Choice: 5 640
+Choice: 6 800
+Choice: 7 1000
+Choice: 8 1250
+Choice: 9 1600
+Choice: 10 2000
+Choice: 11 2500
+Choice: 12 3200
+Choice: 13 4000
+Choice: 14 5000
+Choice: 15 6400
+Choice: 16 8000
+Choice: 17 10000
+Choice: 18 12800
+Choice: 19 16000
+Choice: 20 20000
+Choice: 21 25600
+Choice: 22 32000
+Choice: 23 40000
+Choice: 24 51200
+Choice: 25 102400
+Choice: 26 204800
+END
+/main/other/d197
+Label: MovieReleaseButton
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d199
+Label: FlashISOAutoHighLimit
+Readonly: 0
+Type: MENU
+Current: -1
+Choice: 0 200
+Choice: 1 250
+Choice: 2 320
+Choice: 3 400
+Choice: 4 500
+Choice: 5 640
+Choice: 6 800
+Choice: 7 1000
+Choice: 8 1250
+Choice: 9 1600
+Choice: 10 2000
+Choice: 11 2500
+Choice: 12 3200
+Choice: 13 4000
+Choice: 14 5000
+Choice: 15 6400
+Choice: 16 8000
+Choice: 17 10000
+Choice: 18 12800
+Choice: 19 16000
+Choice: 20 20000
+Choice: 21 25600
+Choice: 22 32000
+Choice: 23 40000
+Choice: 24 51200
+Choice: 25 102400
+Choice: 26 204800
+Choice: 27 -1
+END
+/main/other/d19d
+Label: PTP Property 0xd19d
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d19e
+Label: PTP Property 0xd19e
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d1a2
+Label: Live View Status
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1a4
+Label: Live View Prohibit Condition
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d1a6
+Label: LiveViewSelector
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1a8
+Label: MovieShutterSpeed
+Readonly: 1
+Type: MENU
+Current: 65561
+Choice: 0 69536
+Choice: 1 68736
+Choice: 2 68036
+Choice: 3 67536
+Choice: 4 67136
+Choice: 5 66786
+Choice: 6 66536
+Choice: 7 66336
+Choice: 8 66176
+Choice: 9 66036
+Choice: 10 65936
+Choice: 11 65856
+Choice: 12 65786
+Choice: 13 65736
+Choice: 14 65696
+Choice: 15 65661
+Choice: 16 65636
+Choice: 17 65616
+Choice: 18 65596
+Choice: 19 65586
+Choice: 20 65576
+Choice: 21 65566
+Choice: 22 65561
+END
+/main/other/d1a9
+Label: MovieFNumber
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+END
+/main/other/d1aa
+Label: MovieISO
+Readonly: 1
+Type: MENU
+Current: 25600
+Choice: 0 100
+Choice: 1 125
+Choice: 2 160
+Choice: 3 200
+Choice: 4 250
+Choice: 5 320
+Choice: 6 400
+Choice: 7 500
+Choice: 8 640
+Choice: 9 800
+Choice: 10 1000
+Choice: 11 1250
+Choice: 12 1600
+Choice: 13 2000
+Choice: 14 2500
+Choice: 15 3200
+Choice: 16 4000
+Choice: 17 5000
+Choice: 18 6400
+Choice: 19 8000
+Choice: 20 10000
+Choice: 21 12800
+Choice: 22 16000
+Choice: 23 20000
+Choice: 24 25600
+END
+/main/other/d1ab
+Label: MovieExposureBiasCompensation
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 -3000
+Choice: 1 -2666
+Choice: 2 -2333
+Choice: 3 -2000
+Choice: 4 -1666
+Choice: 5 -1333
+Choice: 6 -1000
+Choice: 7 -666
+Choice: 8 -333
+Choice: 9 0
+Choice: 10 333
+Choice: 11 666
+Choice: 12 1000
+Choice: 13 1333
+Choice: 14 1666
+Choice: 15 2000
+Choice: 16 2333
+Choice: 17 2666
+Choice: 18 3000
+END
+/main/other/d1ac
+Label: LiveViewMovieMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d1ad
+Label: LiveViewPhotography
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1af
+Label: MovieExposureMeteringMode
+Readonly: 1
+Type: MENU
+Current: 3
+Choice: 0 2
+Choice: 1 3
+Choice: 2 32784
+END
+/main/other/d1b0
+Label: Exposure Display Status
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d1b1
+Label: Exposure Indicate Status
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 -60
+Choice: 1 -59
+Choice: 2 -58
+Choice: 3 -57
+Choice: 4 -56
+Choice: 5 -55
+Choice: 6 -54
+Choice: 7 -53
+Choice: 8 -52
+Choice: 9 -51
+Choice: 10 -50
+Choice: 11 -49
+Choice: 12 -48
+Choice: 13 -47
+Choice: 14 -46
+Choice: 15 -45
+Choice: 16 -44
+Choice: 17 -43
+Choice: 18 -42
+Choice: 19 -41
+Choice: 20 -40
+Choice: 21 -39
+Choice: 22 -38
+Choice: 23 -37
+Choice: 24 -36
+Choice: 25 -35
+Choice: 26 -34
+Choice: 27 -33
+Choice: 28 -32
+Choice: 29 -31
+Choice: 30 -30
+Choice: 31 -29
+Choice: 32 -28
+Choice: 33 -27
+Choice: 34 -26
+Choice: 35 -25
+Choice: 36 -24
+Choice: 37 -23
+Choice: 38 -22
+Choice: 39 -21
+Choice: 40 -20
+Choice: 41 -19
+Choice: 42 -18
+Choice: 43 -17
+Choice: 44 -16
+Choice: 45 -15
+Choice: 46 -14
+Choice: 47 -13
+Choice: 48 -12
+Choice: 49 -11
+Choice: 50 -10
+Choice: 51 -9
+Choice: 52 -8
+Choice: 53 -7
+Choice: 54 -6
+Choice: 55 -5
+Choice: 56 -4
+Choice: 57 -3
+Choice: 58 -2
+Choice: 59 -1
+Choice: 60 0
+Choice: 61 1
+Choice: 62 2
+Choice: 63 3
+Choice: 64 4
+Choice: 65 5
+Choice: 66 6
+Choice: 67 7
+Choice: 68 8
+Choice: 69 9
+Choice: 70 10
+Choice: 71 11
+Choice: 72 12
+Choice: 73 13
+Choice: 74 14
+Choice: 75 15
+Choice: 76 16
+Choice: 77 17
+Choice: 78 18
+Choice: 79 19
+Choice: 80 20
+Choice: 81 21
+Choice: 82 22
+Choice: 83 23
+Choice: 84 24
+Choice: 85 25
+Choice: 86 26
+Choice: 87 27
+Choice: 88 28
+Choice: 89 29
+Choice: 90 30
+Choice: 91 31
+Choice: 92 32
+Choice: 93 33
+Choice: 94 34
+Choice: 95 35
+Choice: 96 36
+Choice: 97 37
+Choice: 98 38
+Choice: 99 39
+Choice: 100 40
+Choice: 101 41
+Choice: 102 42
+Choice: 103 43
+Choice: 104 44
+Choice: 105 45
+Choice: 106 46
+Choice: 107 47
+Choice: 108 48
+Choice: 109 49
+Choice: 110 50
+Choice: 111 51
+Choice: 112 52
+Choice: 113 53
+Choice: 114 54
+Choice: 115 55
+Choice: 116 56
+Choice: 117 57
+Choice: 118 58
+Choice: 119 59
+Choice: 120 60
+END
+/main/other/d1b2
+Label: Info Display Error Status
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1b3
+Label: Exposure Indicate Lightup
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1b4
+Label: ContinousShootingCount
+Readonly: 1
+Type: RANGE
+Current: 26
+Bottom: 0
+Top: 360
+Step: 1
+END
+/main/other/d1b7
+Label: MovieRecFrameCount
+Readonly: 1
+Type: MENU
+Current: 26
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+Choice: 20 20
+Choice: 21 21
+Choice: 22 22
+Choice: 23 23
+Choice: 24 24
+Choice: 25 25
+Choice: 26 26
+Choice: 27 27
+Choice: 28 28
+Choice: 29 29
+Choice: 30 30
+Choice: 31 31
+Choice: 32 32
+Choice: 33 33
+Choice: 34 34
+Choice: 35 35
+Choice: 36 36
+Choice: 37 37
+Choice: 38 38
+Choice: 39 39
+Choice: 40 40
+END
+/main/other/d1b8
+Label: CameraLiveViewStatus
+Readonly: 1
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1ba
+Label: LiveViewTFTStatus
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1bb
+Label: LiveViewImageStatus
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1bc
+Label: LiveViewImageCompression
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+END
+/main/other/d1bd
+Label: LiveViewZoomArea
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 360
+Choice: 2 720
+Choice: 3 1440
+END
+/main/other/d1c5
+Label: PTP Property 0xd1c5
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1de
+Label: ExternalRecordingControl
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1df
+Label: HighlightBrightness
+Readonly: 0
+Type: MENU
+Current: 248
+Choice: 0 180
+Choice: 1 191
+Choice: 2 202
+Choice: 3 213
+Choice: 4 224
+Choice: 5 235
+Choice: 6 248
+Choice: 7 255
+END
+/main/other/d1e2
+Label: SBWirelessMode
+Readonly: 1
+Type: MENU
+Current: 0
+END
+/main/other/d1e3
+Label: SBWirelessMultipleFlashMode
+Readonly: 1
+Type: MENU
+Current: 0
+END
+/main/other/d1e4
+Label: SBUsableGroup
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/other/d1e8
+Label: OpticalMultipleFlashChannel
+Readonly: 1
+Type: MENU
+Current: 255
+Choice: 0 255
+END
+/main/other/d1e9
+Label: FlashRangeDisplay
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1ec
+Label: SBSettingMemberLock
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1ed
+Label: SBIntegrationFlashReady
+Readonly: 1
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1f1
+Label: ExposureRemaining
+Readonly: 1
+Type: RANGE
+Current: 8476
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d1f4
+Label: ISOAutoShutterCorrectionTime
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -2
+Choice: 1 -1
+Choice: 2 0
+Choice: 3 1
+Choice: 4 2
+END
+/main/other/d1f8
+Label: MovieAfAreaMode
+Readonly: 0
+Type: MENU
+Current: 32800
+Choice: 0 32784
+Choice: 1 32785
+Choice: 2 32792
+Choice: 3 32793
+Choice: 4 32794
+Choice: 5 32795
+Choice: 6 32800
+Choice: 7 32801
+END
+/main/other/d1f9
+Label: MovieVibrationReduction
+Readonly: 0
+Type: MENU
+Current: 100
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 100
+END
+/main/other/d1fa
+Label: MovieFocusMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 4
+END
+/main/other/d1fb
+Label: RecordTimeCodes
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d1fc
+Label: CountUpMethod
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1fe
+Label: DropFrame
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d1ff
+Label: PTP Property 0xd1ff
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d200
+Label: Active Pic Ctrl Item
+Readonly: 0
+Type: MENU
+Current: 8
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 101
+Choice: 9 102
+Choice: 10 103
+Choice: 11 104
+Choice: 12 105
+Choice: 13 106
+Choice: 14 107
+Choice: 15 108
+Choice: 16 109
+Choice: 17 110
+Choice: 18 111
+Choice: 19 112
+Choice: 20 113
+Choice: 21 114
+Choice: 22 115
+Choice: 23 116
+Choice: 24 117
+Choice: 25 118
+Choice: 26 119
+Choice: 27 120
+Choice: 28 201
+Choice: 29 202
+Choice: 30 203
+Choice: 31 204
+Choice: 32 205
+Choice: 33 206
+Choice: 34 207
+Choice: 35 208
+Choice: 36 209
+END
+/main/other/d20d
+Label: ElectronicFrontCurtainShutter
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d211
+Label: MovieWbAutoType
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+END
+/main/other/d212
+Label: MovieWbTuneAuto
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d213
+Label: MovieWbTuneIncandescent
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d214
+Label: MovieWbFlourescentType
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 3
+Choice: 1 4
+Choice: 2 5
+END
+/main/other/d215
+Label: MovieWbTuneFlourescent
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d216
+Label: MovieWbTuneSunny
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d218
+Label: MovieWbTuneCloudy
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d219
+Label: MovieWbTuneShade
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d21a
+Label: MovieWbColorTemp
+Readonly: 0
+Type: RANGE
+Current: 5000
+Bottom: 2500
+Top: 10000
+Step: 10
+END
+/main/other/d21b
+Label: MovieWbTuneColorTemp
+Readonly: 0
+Type: MENU
+Current: 24
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+Choice: 20 20
+Choice: 21 21
+Choice: 22 22
+Choice: 23 23
+Choice: 24 24
+Choice: 25 25
+Choice: 26 26
+Choice: 27 27
+Choice: 28 28
+Choice: 29 29
+Choice: 30 30
+Choice: 31 31
+Choice: 32 32
+Choice: 33 33
+Choice: 34 34
+Choice: 35 35
+Choice: 36 36
+Choice: 37 37
+Choice: 38 38
+Choice: 39 39
+Choice: 40 40
+Choice: 41 41
+Choice: 42 42
+Choice: 43 43
+Choice: 44 44
+Choice: 45 45
+Choice: 46 46
+Choice: 47 47
+Choice: 48 48
+END
+/main/other/d21c
+Label: MovieWbPresetData0
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+END
+/main/other/d21d
+Label: MovieWbPresetDataComment1
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d21e
+Label: MovieWbPresetDataComment2
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d21f
+Label: MovieWbPresetDataComment3
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d220
+Label: MovieWbPresetDataComment4
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d221
+Label: MovieWbPresetDataComment5
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d222
+Label: MovieWbPresetDataComment6
+Readonly: 0
+Type: TEXT
+Current:                                     
+END
+/main/other/d223
+Label: MovieWbPresetDataValue1
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d224
+Label: MovieWbPresetDataValue2
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d225
+Label: MovieWbPresetDataValue3
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d226
+Label: MovieWbPresetDataValue4
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d227
+Label: MovieWbPresetDataValue5
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d228
+Label: MovieWbPresetDataValue6
+Readonly: 1
+Type: TEXT
+Current: 252971900
+END
+/main/other/d229
+Label: MovieWbTunePreset1
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d22a
+Label: MovieWbTunePreset2
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d22b
+Label: MovieWbTunePreset3
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d22c
+Label: MovieWbTunePreset4
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d22d
+Label: MovieWbTunePreset5
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d22e
+Label: MovieWbTunePreset6
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d22f
+Label: MovieWbPresetProtect1
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d230
+Label: MovieWbPresetProtect2
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d231
+Label: MovieWbPresetProtect3
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d232
+Label: MovieWbPresetProtect4
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d233
+Label: MovieWbPresetProtect5
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d234
+Label: MovieWbPresetProtect6
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d236
+Label: MovieNrHighISO
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 0
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d237
+Label: MovieActivePicCtrlItem
+Readonly: 1
+Type: MENU
+Current: 8
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 100
+Choice: 9 101
+Choice: 10 102
+Choice: 11 103
+Choice: 12 104
+Choice: 13 105
+Choice: 14 106
+Choice: 15 107
+Choice: 16 108
+Choice: 17 109
+Choice: 18 110
+Choice: 19 111
+Choice: 20 112
+Choice: 21 113
+Choice: 22 114
+Choice: 23 115
+Choice: 24 116
+Choice: 25 117
+Choice: 26 118
+Choice: 27 119
+Choice: 28 120
+Choice: 29 201
+Choice: 30 202
+Choice: 31 203
+Choice: 32 204
+Choice: 33 205
+Choice: 34 206
+Choice: 35 207
+Choice: 36 208
+Choice: 37 209
+END
+/main/other/d239
+Label: ExposureBaseCompHighlight
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -6
+Choice: 1 -5
+Choice: 2 -4
+Choice: 3 -3
+Choice: 4 -2
+Choice: 5 -1
+Choice: 6 0
+Choice: 7 1
+Choice: 8 2
+Choice: 9 3
+Choice: 10 4
+Choice: 11 5
+Choice: 12 6
+END
+/main/other/d23a
+Label: MovieWhiteBalance
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 5
+Choice: 3 6
+Choice: 4 32784
+Choice: 5 32785
+Choice: 6 32786
+Choice: 7 32787
+Choice: 8 32789
+Choice: 9 32790
+END
+/main/other/d23b
+Label: MovieActiveDLighting
+Readonly: 1
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 100
+END
+/main/other/d23c
+Label: MovieWbTuneNatural
+Readonly: 0
+Type: RANGE
+Current: 612
+Bottom: 0
+Top: 1224
+Step: 1
+END
+/main/other/d23d
+Label: MovieAttenuator
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d23e
+Label: MovieVignetteControl
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 100
+END
+/main/other/d23f
+Label: MovieDiffractionCompensation
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+END
+/main/other/d314
+Label: ElectronicVR
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
