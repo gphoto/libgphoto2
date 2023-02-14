@@ -30,6 +30,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>
 #ifdef HAVE_LIBGD
 #include <gd.h>
 #endif

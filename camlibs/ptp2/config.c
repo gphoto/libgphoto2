@@ -33,6 +33,7 @@
 # include <arpa/inet.h>
 #endif
 #include <sys/types.h>
+#include <unistd.h>
 
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-port-log.h>

@@ -23,6 +23,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 
 #ifdef TM_IN_SYS_TIME
 #include <sys/time.h>

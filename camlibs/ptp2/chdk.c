@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
+#include <unistd.h>
 
 #ifdef HAVE_LIBJPEG
 #  include <jpeglib.h>

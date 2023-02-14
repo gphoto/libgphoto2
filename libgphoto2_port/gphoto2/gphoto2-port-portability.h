@@ -37,6 +37,7 @@
 # include <string.h>
 # include <stdio.h>
 # include <direct.h>
+# include <unistd.h>
 
 # ifndef IOLIBS
 #  define IOLIBS			"."

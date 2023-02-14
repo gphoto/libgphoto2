@@ -37,6 +37,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <utime.h>
+#include <unistd.h>
 
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-port-portability.h>
