@@ -1,0 +1,239 @@
+Camera summary:
+Manufacturer: Sony Corporation
+Model: ILCE-1
+  Version: 1.31
+  Serial Number: 0000000000000000nnnnnnnnnnnnnnnn
+Vendor Extension ID: 0x11 (1.0)
+Vendor Extension Description: Sony PTP Extensions
+
+Capture Formats: 
+Display Formats: Association/Directory, JPEG, ARW, MPEG, Unknown(b982), Unknown(b110)
+
+Device Capabilities:
+	File Download, No File Deletion, File Upload
+	No Image Capture, No Open Capture, Sony Capture
+
+Storage Devices Summary:
+
+Device Property Summary:
+Compression Setting(0x5004):(readwrite) (type=0x2) Enumeration [16,20,19,18,17,4,3,2,1] value: 3
+White Balance(0x5005):(readwrite) (type=0x4) Enumeration [2,4,32785,32784,6,32769,32770,32771,32772,7,32816,32786,32800,32801,32802] value: Automatic (2)
+F-Number(0x5007):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: f/3.5 (350)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,32772,32774,1] value: 32772
+Exposure Metering Mode(0x500b):(readwrite) (type=0x4) Enumeration [32769,32770,32772,32773,32771,32774] value: 32769
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [] value: Fill flash (3)
+Exposure Program Mode(0x500e):(readwrite) (type=0x4) Enumeration [] value: P (2)
+Exposure Bias Compensation(0x5010):(readwrite) (type=0x3) Enumeration [] value: 0.0 stops (0)
+Still Capture Mode(0x5013):(readwrite) (type=0x4) Enumeration [1,32786,32789,2,32784,32772,32771,32773,32776,32777,32780,32781,32782,32783,33591,34103,35127,33623,34135,35159,33655,34167,35191,33553,34065,35089,33569,34081,33585,34097,33590,34102,35126,33622,34134,35158,33654,34166,35190,33552,34064,35088,33568,34080,33584,34096,32808,32792,32809,32793] value: 0
+DOC Compensation(0xd200):(readwrite) (type=0x3) Enumeration [] value: 0
+DRangeOptimize(0xd201):(readwrite) (type=0x2) Enumeration [1,31,17,18,19,20,21] value: 31
+Image size(0xd203):(readwrite) (type=0x2) Enumeration [1,2,3] value: 2
+Shutter speed(0xd20d):(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 65566
+Property 0xd20e:(readwrite) (type=0x2) Enumeration [] value: 7
+Color temperature(0xd20f):(readwrite) (type=0x4) Range [2500 - 9900, step 100] value: 5500
+CC Filter(0xd210):(readwrite) (type=0x2) Range [164 - 220, step 1] value: 192
+Aspect Ratio(0xd211):(readwrite) (type=0x2) Enumeration [1,3,2,4] value: 1
+Focus status(0xd213):(readwrite) (type=0x2) Enumeration [] value: 1
+Zoom(0xd214):(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 120396800
+Objects in memory(0xd215):(readwrite) (type=0x4) Range [0 - 65535, step 1] value: 0
+Property 0xd217:(readwrite) (type=0x2) Enumeration [] value: 1
+Battery Level(0xd218):(readwrite) (type=0x1) Range [-1 - 100, step 1] value: 93
+Picture Effect(0xd21b):(readwrite) (type=0x4) Enumeration [] value: 32768
+AB Filter(0xd21c):(readwrite) (type=0x2) Range [164 - 220, step 2] value: 192
+Property 0xd21d:(readwrite) (type=0x2) Range [0 - 2, step 1] value: 0
+ISO(0xd21e):(readwrite) (type=0x6) Enumeration [] value: 16777215
+Property 0xd21f:(readwrite) (type=0x2) Enumeration [] value: 1
+Property 0xd220:(readwrite) (type=0x2) Enumeration [] value: 1
+Property 0xd221:(readwrite) (type=0x2) Enumeration [] value: 1
+Capture Target(0xd222):(readwrite) (type=0x4) Enumeration [17,16] value: 17
+Property 0xd223: error 2002 on query.
+Exposure Bias Compensation(0xd224):(readwrite) (type=0x3) Enumeration [5000,4700,4300,4000,3700,3300,3000,2700,2300,2000,1700,1300,1000,700,300,0,-300,-700,-1000,-1300,-1700,-2000,-2300,-2700,-3000,-3300,-3700,-4000,-4300,-4700,-5000] value: 0
+ISO(0xd226):(readwrite) (type=0x6) Enumeration [16777215,50,64,80,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,64000,80000,102400] value: 16777215
+Property 0xd227:(readwrite) (type=0x2) Enumeration [] value: 0
+Property 0xd228:(readwrite) (type=0x2) Enumeration [4,5] value: 5
+Shutter speed(0xd229):(readwrite) (type=0x6) Enumeration [19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,524298,393226,327690,262154,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536,75536,78336,81536,85536,91136,97536] value: 65566
+Property 0xd22a:(readwrite) (type=0x2) Enumeration [] value: 1
+Property 0xd22b:(readwrite) (type=0x2) Enumeration [] value: 0
+Property 0xd235:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Property 0xd23e:(readwrite) (type=0x2) Enumeration [] value: 0
+Property 0xd23f:(readwrite) (type=0x2) Enumeration [0,1,2,3,4,5,6,7,8,9,10] value: 0
+Property 0xd240:(readwrite) (type=0x2) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] value: 1
+Property 0xd241:(readwrite) (type=0x2) Enumeration [10,11,12,13,14,15] value: 13
+Property 0xd242:(readwrite) (type=0x4) Enumeration [61,63,66] value: 63
+Property 0xd243:(readwrite) (type=0x4) Enumeration [] value: 2
+Property 0xd244:(readwrite) (type=0x4) Enumeration [] value: 2
+Property 0xd245:(readwrite) (type=0x2) Enumeration [] value: 1
+Property 0xd246:(readwrite) (type=0x2) Enumeration [] value: 1
+Property 0xd247:(readwrite) (type=0x2) Enumeration [0,1,2,3] value: 0
+Property 0xd248:(readwrite) (type=0x2) Enumeration [] value: 2
+Property 0xd249:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 0
+Property 0xd24a:(readwrite) (type=0x6) Range [0 - 4294967295, step 1] value: 0
+Property 0xd24b:(readwrite) (type=0x2) Enumeration [] value: 0
+Property 0xd24c:(readwrite) (type=0x2) Range [0 - 0, step 1] value: 100
+Property 0xd24d:(readwrite) (type=0x2) Enumeration [0,1,2,3,4] value: 0
+Property 0xd24e:(readwrite) (type=0x4) Enumeration [] value: 1
+Property 0xd24f:(readwrite) (type=0x2) Enumeration [1,2] value: 1
+Property 0xd250:(readwrite) (type=0x2) Enumeration [] value: 0
+Property 0xd25b:(readwrite) (type=0x2) Enumeration [0,1] value: 0
+Property 0xd25c:(readwrite) (type=0x6) Range [1000 - 1500, step 100] value: 1000
+Property 0xd25d:(readwrite) (type=0x6) 16777216
+Property 0xd25f:(readwrite) (type=0x2) Enumeration [1,3,4] value: 1
+Property 0xd260:(readwrite) (type=0x2) Enumeration [] value: 1
+Property 0xd265:(readwrite) (type=0x2) Enumeration [] value: 0
+Property 0xd266:(readwrite) (type=0x2) Enumeration [0,1] value: 1
+Autofocus(0xd2c1):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Capture(0xd2c2):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd2c3:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd2c5:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Still Image(0xd2c7):(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Movie(0xd2c8):(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd2c9:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Near Far(0xd2d1):(readwrite) (type=0x3) Range [-7 - 7, step 1] value: 2
+Property 0xd2d5:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2d6:(readwrite) (type=0x4) Enumeration [1,2] value: 1
+Property 0xd2d7:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd2d8:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd2d9:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+Property 0xd2dd:(readwrite) (type=0x1) Range [-1 - 1, step 1] value: 1
+Property 0xd2de:(readwrite) (type=0x4) Enumeration [1,2] value: 2
+
+Device info:
+Manufacturer: Sony Corporation
+  Model: ILCE-1
+  device version: 1.31
+  serial number: '0000000000000000nnnnnnnnnnnnnnnn'
+Vendor extension ID: 0x00000011
+Vendor extension version: 100
+Vendor extension description: Sony PTP Extensions
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100d (Send object)
+  0x101b (Get partial object)
+  0x9201 (SDIOConnect)
+  0x9202 (GetSDIOGetExtDeviceInfo)
+  0x9205 (SetControlDeviceA)
+  0x9207 (SetControlDeviceB)
+  0x9209 (GetAllDevicePropData)
+  0x920a (Unknown PTP_OC)
+  0x920b (Unknown PTP_OC)
+  0x920c (Unknown PTP_OC)
+  0x920d (Unknown PTP_OC)
+  0x920e (Unknown PTP_OC)
+  0x920f (Unknown PTP_OC)
+  0x9210 (Unknown PTP_OC)
+  0x9211 (Unknown PTP_OC)
+  0x9212 (Unknown PTP_OC)
+  0x9214 (Unknown PTP_OC)
+  0x9801 (Unknown PTP_OC)
+  0x9802 (Unknown PTP_OC)
+  0x9803 (Unknown PTP_OC)
+  0x9805 (Unknown PTP_OC)
+Events Supported:
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0xc201 (Sony_ObjectAdded)
+  0xc202 (Sony_ObjectRemoved)
+  0xc203 (Sony_PropertyChanged)
+  0xc204 (Unknown Event)
+  0xc205 (Unknown Event)
+  0xc206 (Unknown Event)
+  0xc207 (Unknown Event)
+  0xc208 (Unknown Event)
+  0xc209 (Unknown Event)
+  0xc20a (Unknown Event)
+  0xc20b (Unknown Event)
+  0xc20c (Unknown Event)
+  0xc20d (Unknown Event)
+Device Properties Supported:
+
+sony code: 5004
+sony code: 5005
+sony code: 5007
+sony code: 500a
+sony code: 500b
+sony code: 500c
+sony code: 500e
+sony code: 5010
+sony code: 5013
+sony code: d200
+sony code: d201
+sony code: d203
+sony code: d20d
+sony code: d20e
+sony code: d20f
+sony code: d210
+sony code: d211
+sony code: d213
+sony code: d214
+sony code: d215
+sony code: d217
+sony code: d218
+sony code: d21b
+sony code: d21c
+sony code: d21d
+sony code: d21e
+sony code: d21f
+sony code: d220
+sony code: d221
+sony code: d222
+sony code: d223
+sony code: d224
+sony code: d226
+sony code: d227
+sony code: d228
+sony code: d229
+sony code: d22a
+sony code: d22b
+sony code: d235
+sony code: d23e
+sony code: d23f
+sony code: d240
+sony code: d241
+sony code: d242
+sony code: d243
+sony code: d244
+sony code: d245
+sony code: d246
+sony code: d247
+sony code: d248
+sony code: d249
+sony code: d24a
+sony code: d24b
+sony code: d24c
+sony code: d24d
+sony code: d24e
+sony code: d24f
+sony code: d250
+sony code: d25b
+sony code: d25c
+sony code: d25d
+sony code: d25f
+sony code: d260
+sony code: d265
+sony code: d266
+sony code: d2c1
+sony code: d2c2
+sony code: d2c3
+sony code: d2c5
+sony code: d2c7
+sony code: d2c8
+sony code: d2c9
+sony code: d2d1
+sony code: d2d5
+sony code: d2d6
+sony code: d2d7
+sony code: d2d8
+sony code: d2d9
+sony code: d2dd
+sony code: d2de
