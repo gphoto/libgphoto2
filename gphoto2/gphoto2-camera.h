@@ -461,12 +461,12 @@ int gp_camera_file_delete     	(Camera *camera, const char *folder,
  */
 typedef int          (* CameraTimeoutFunc)      (Camera *camera,
 						 GPContext *context);
-typedef unsigned int (* CameraTimeoutStartFunc) (Camera *camera,
+typedef pthread_t    (* CameraTimeoutStartFunc) (Camera *camera,
 						 unsigned int timeout,
 						 CameraTimeoutFunc func,
 						 void *data);
 typedef void         (* CameraTimeoutStopFunc)  (Camera *camera,
-						 unsigned int id, void *data);
+						 pthread_t id, void *data);
 void         gp_camera_set_timeout_funcs (Camera *camera,
 				          CameraTimeoutStartFunc start_func,
 				          CameraTimeoutStopFunc  stop_func,
