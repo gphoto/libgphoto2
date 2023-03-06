@@ -659,8 +659,8 @@ struct submenu;
 #define CONFIG_GET_ARGS Camera *camera, CameraWidget **widget, struct submenu* menu, PTPDevicePropDesc *dpd
 #define CONFIG_GET_NAMES camera, widget, menu, dpd
 typedef int (*get_func)(CONFIG_GET_ARGS);
-#define CONFIG_PUT_ARGS Camera *camera, CameraWidget *widget, PTPPropertyValue *propval, PTPDevicePropDesc *dpd
-#define CONFIG_PUT_NAMES camera, widget, propval, dpd
+#define CONFIG_PUT_ARGS Camera *camera, CameraWidget *widget, PTPPropertyValue *propval, PTPDevicePropDesc *dpd, int *alreadyset
+#define CONFIG_PUT_NAMES camera, widget, propval, dpd, alreadyset
 typedef int (*put_func)(CONFIG_PUT_ARGS);
 
 struct menu;
@@ -1626,6 +1626,7 @@ _put_Sony_ExpCompensation(CONFIG_PUT_ARGS) {
 
 	ret = _put_ExpCompensation(CONFIG_PUT_NAMES);
 	if (ret != GP_OK) return ret;
+	*alreadyset = 1;
 	return _put_sony_value_i16 (&camera->pl->params, dpd->DevicePropertyCode, propval->i16, 0);
 }
 
@@ -1636,6 +1637,7 @@ _put_Sony_ExpCompensation2(CONFIG_PUT_ARGS) {
 
 	ret = _put_ExpCompensation(CONFIG_PUT_NAMES);
 	if (ret != GP_OK) return ret;
+	*alreadyset = 1;
 	return translate_ptp_result (ptp_sony_setdevicecontrolvaluea (&camera->pl->params, dpd->DevicePropertyCode, propval, PTP_DTC_INT16));
 }
 
@@ -1786,6 +1788,7 @@ _put_Sony_Zoom(CONFIG_PUT_ARGS)
 
 	CR (gp_widget_get_value(widget, &f));
 	propval->u32 = (uint32_t)f*1000000;
+	*alreadyset = 1;
 	return _put_sony_value_u32(params, PTP_DPC_SONY_Zoom, propval->u32, 0);
 }
 
@@ -3092,6 +3095,7 @@ _put_Sony_ISO(CONFIG_PUT_ARGS)
 	CR (_parse_Sony_ISO(value, &raw_iso));
 
 	propval->u32 = raw_iso;
+	*alreadyset = 1;
 
 	return _put_sony_value_u32(params, dpd->DevicePropertyCode, raw_iso, 1);
 }
@@ -3109,6 +3113,7 @@ _put_Sony_ISO2(CONFIG_PUT_ARGS)
 
 	propval->u32 = raw_iso;
 
+	*alreadyset = 1;
 	return translate_ptp_result (ptp_sony_setdevicecontrolvaluea(params, dpd->DevicePropertyCode, propval, PTP_DTC_UINT32));
 }
 
@@ -3428,6 +3433,7 @@ _put_Sony_FNumber(CONFIG_PUT_ARGS)
 		propval->u16 = fvalue*100;
 	else
 		return GP_ERROR;
+	*alreadyset = 1;
 	return _put_sony_value_u16 (params, PTP_DPC_FNumber, fvalue*100, 0);
 }
 
@@ -5358,6 +5364,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 			break;
 		}
 	} while (1);
+	*alreadyset = 1;
 	propval->u32 = new;
 	return GP_OK;
 }
@@ -5887,6 +5894,7 @@ _put_Sony_FocusMode(CONFIG_PUT_ARGS) {
 			break;
 		}
 	}
+	*alreadyset = 1;
 	return GP_OK;
 }
 
@@ -6844,6 +6852,7 @@ _put_Sony_CompressionSetting(CONFIG_PUT_ARGS) {
 			break;
 		}
 	}
+	*alreadyset = 1;
 	return GP_OK;
 }
 
@@ -8366,6 +8375,7 @@ _put_Sony_Movie(CONFIG_PUT_ARGS)
 	else
 		value.u16 = 1;
         C_PTP_REP (ptp_sony_setdevicecontrolvalueb (params, 0xD2C8, &value, PTP_DTC_UINT16 ));
+	*alreadyset = 1;
 	return GP_OK;
 }
 
@@ -8394,6 +8404,7 @@ _put_Sony_QX_Movie(CONFIG_PUT_ARGS)
 	else
 		value.u16 = 1;
         C_PTP_REP (ptp_sony_qx_setdevicecontrolvalueb (params, PTP_DPC_SONY_QX_Movie_Rec, &value, PTP_DTC_UINT16 ));
+	*alreadyset = 1;
 	return GP_OK;
 }
 
@@ -8685,7 +8696,7 @@ _put_Sony_Autofocus(CONFIG_PUT_ARGS)
 	xpropval.u16 = val ? 2 : 1;
 
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &xpropval, PTP_DTC_UINT16));
-
+	*alreadyset = 1;
 	return GP_OK;
 }
 
@@ -8735,7 +8746,7 @@ _put_Sony_ManualFocus(CONFIG_PUT_ARGS)
 		xpropval.u16 = 1;
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d2, &xpropval, PTP_DTC_UINT16));
 	}
-
+	*alreadyset = 1;
 	return GP_OK;
 }
 
@@ -8761,7 +8772,7 @@ _put_Sony_Capture(CONFIG_PUT_ARGS)
 	xpropval.u16 = val ? 2 : 1;
 
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &xpropval, PTP_DTC_UINT16));
-
+	*alreadyset = 1;
 	return GP_OK;
 }
 
@@ -8797,6 +8808,7 @@ _put_Sony_Bulb(CONFIG_PUT_ARGS)
 		xpropval.u16 = 1;
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &xpropval, PTP_DTC_UINT16));
 	}
+	*alreadyset = 1;
 	return GP_OK;
 }
 
@@ -8822,7 +8834,7 @@ _put_Sony_FocusMagnifyProp(CONFIG_PUT_ARGS)
 	xpropval.u16 = val ? 2 : 1;
 
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, dpd->DevicePropertyCode, &xpropval, PTP_DTC_UINT16));
-
+	*alreadyset = 1;
 	return GP_OK;
 }
 
@@ -10418,7 +10430,7 @@ _put_nikon_create_wifi_profile (CONFIG_PUT_ARGS)
 
 	        gp_widget_set_changed (subwidget, FALSE);
 
-		ret = cursub->putfunc (camera, subwidget, NULL, NULL);
+		ret = cursub->putfunc (camera, subwidget, NULL, NULL, NULL);
 	}
 
 	return GP_OK;
@@ -10472,7 +10484,7 @@ _put_wifi_profiles_menu (CONFIG_MENU_PUT_ARGS)
 		if (ret != GP_OK)
 			continue;
 
-		ret = cursub->putfunc (camera, subwidget, NULL, NULL);
+		ret = cursub->putfunc (camera, subwidget, NULL, NULL, NULL);
 	}
 
 	return GP_OK;
@@ -11698,6 +11710,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 		/* Standard menu with submenus */
 		for (submenuno = 0; menus[menuno].submenus[submenuno].label ; submenuno++ ) {
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
+			int alreadyset = 0;
 
 			ret = GP_OK;
 			if (mode == MODE_SET) {
@@ -11740,24 +11753,26 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 						/* FIXME: continue to search here perhaps instead of below? */
 					}
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
-						ret = cursub->putfunc (camera, widget, &propval, &dpd);
+						ret = cursub->putfunc (camera, widget, &propval, &dpd, &alreadyset);
 					} else {
 						gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently read-only."), _(cursub->label), cursub->propid);
 						ret = GP_ERROR_NOT_SUPPORTED;
 					}
 					if (ret == GP_OK) {
-						ret_ptp = LOG_ON_PTP_E (ptp_generic_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
-						if (ret_ptp != PTP_RC_OK) {
-							gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)"),
-									  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret_ptp, params->deviceinfo.VendorExtensionID)));
-							ret = translate_ptp_result (ret_ptp);
+						if (!alreadyset) {
+							ret_ptp = LOG_ON_PTP_E (ptp_generic_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
+							if (ret_ptp != PTP_RC_OK) {
+								gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)"),
+										  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret_ptp, params->deviceinfo.VendorExtensionID)));
+								ret = translate_ptp_result (ret_ptp);
+							}
 						}
 						ptp_free_devicepropvalue (cursub->type, &propval);
 					}
 					ptp_free_devicepropdesc(&dpd);
 					if (ret != GP_OK) continue; /* see if we have another match */
 				} else {
-					ret = cursub->putfunc (camera, widget, NULL, NULL);
+					ret = cursub->putfunc (camera, widget, NULL, NULL, NULL);
 				}
 				if (mode == MODE_SINGLE_SET)
 					return ret;
@@ -11773,13 +11788,15 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid);
 					memset(&dpd,0,sizeof(dpd));
 					ptp_canon_eos_getdevicepropdesc (params,cursub->propid, &dpd);
-					ret = cursub->putfunc (camera, widget, &propval, &dpd);
+					ret = cursub->putfunc (camera, widget, &propval, &dpd, &alreadyset);
 					if (ret == GP_OK) {
-						ret_ptp = LOG_ON_PTP_E (ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
-						if (ret_ptp != PTP_RC_OK) {
-							gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)."),
-									  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret_ptp, params->deviceinfo.VendorExtensionID)));
-							ret = translate_ptp_result (ret_ptp);
+						if (!alreadyset) {
+							ret_ptp = LOG_ON_PTP_E (ptp_canon_eos_setdevicepropvalue (params, cursub->propid, &propval, cursub->type));
+							if (ret_ptp != PTP_RC_OK) {
+								gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)."),
+										  _(cursub->label), cursub->propid, ret_ptp, _(ptp_strerror(ret_ptp, params->deviceinfo.VendorExtensionID)));
+								ret = translate_ptp_result (ret_ptp);
+							}
 						}
 						ptp_free_devicepropvalue(cursub->type, &propval);
 					} else
@@ -11791,7 +11808,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					if (	((cursub->type & 0x7000) != 0x1000) ||
 						 ptp_operation_issupported(params, cursub->type)
 					)
-						ret = cursub->putfunc (camera, widget, &propval, &dpd);
+						ret = cursub->putfunc (camera, widget, &propval, &dpd, &alreadyset);
 					else
 						continue;
 				}
@@ -11807,7 +11824,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				gp_widget_set_changed (widget, FALSE); /* clear flag */
 				GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid);
 				memset(&dpd,0,sizeof(dpd));
-				ret = cursub->putfunc (camera, widget, &propval, &dpd);
+				ret = cursub->putfunc (camera, widget, &propval, &dpd, &alreadyset);
 				if (ret != GP_OK)
 					gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d."), _(cursub->label), cursub->propid, ret);
 				if (mode == MODE_SINGLE_SET)
