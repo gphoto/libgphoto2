@@ -1356,12 +1356,14 @@ fallback:										\
 											\
 		/* we tell the camera to do it, but it takes around 0.7 seconds for the SLT-A58 */	\
 		time(&start);								\
+		int matched = 0;							\
 		do {									\
 			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));		\
 			C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));	\
 											\
 			if (dpd.CurrentValue.bits == value) {				\
 				GP_LOG_D ("Value matched!");				\
+				matched = 1;						\
 				break;							\
 			}								\
 			if (dpd.CurrentValue.bits != origval) {				\
@@ -1373,6 +1375,7 @@ fallback:										\
 											\
 			time(&end);							\
 		} while (end-start <= 3);						\
+		if (matched) break;							\
 											\
 		int overshoot = 0; \
 		if (useenumorder) { \
@@ -1383,18 +1386,18 @@ fallback:										\
 				}							\
 			}								\
 			GP_LOG_D("posnow %d, value %d", posnow, dpd.CurrentValue.bits);	\
-			\
-			/*
-			 If we made a small +-1 adjustment, check for overshoot.
-			 However, use enum position instead of value itself for comparisons as enums
-			 are not always sorted (e.g. Auto ISO has higher numerical value but comes earlier).
-		    */ \
+											\
+			/*								\
+			 If we made a small +-1 adjustment, check for overshoot.	\
+			 However, use enum position instead of value itself for comparisons as enums		\
+			 are not always sorted (e.g. Auto ISO has higher numerical value but comes earlier).	\
+		    */ 									\
 			overshoot = ((propval.u8 == 0x01) && (posnow > posnew)) || ((propval.u8 == 0xff) && (posnow < posnew)); \
 		} else { 								\
 			overshoot = ((propval.u8 == 0x01) && (dpd.CurrentValue.bits > value)) || ((propval.u8 == 0xff) && (dpd.CurrentValue.bits < value)); \
-		} \
-		\
-		if (overshoot) {		\
+		} 									\
+											\
+		if (overshoot) {							\
 			GP_LOG_D ("We overshooted value, maybe not exact match possible. Break!");	\
 			break;								\
 		}									\
@@ -1408,7 +1411,7 @@ fallback:										\
 			break;								\
 		}									\
 		/* We did not get there. Did we hit 0? */				\
-		if (useenumorder) {		\
+		if (useenumorder) {							\
 			if (posnow == -1) {						\
 				GP_LOG_D ("Now value is not in enumeration, falling back to ordered tries.");\
 				useenumorder = 0;					\
