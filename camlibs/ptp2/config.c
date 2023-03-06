@@ -1356,14 +1356,12 @@ fallback:										\
 											\
 		/* we tell the camera to do it, but it takes around 0.7 seconds for the SLT-A58 */	\
 		time(&start);								\
-		int matched = 0;							\
 		do {									\
 			C_PTP_REP (ptp_sony_getalldevicepropdesc (params));		\
 			C_PTP_REP (ptp_generic_getdevicepropdesc (params, prop, &dpd));	\
 											\
 			if (dpd.CurrentValue.bits == value) {				\
 				GP_LOG_D ("Value matched!");				\
-				matched = 1;						\
 				break;							\
 			}								\
 			if (dpd.CurrentValue.bits != origval) {				\
@@ -1375,7 +1373,6 @@ fallback:										\
 											\
 			time(&end);							\
 		} while (end-start <= 3);						\
-		if (matched) break;							\
 											\
 		int overshoot = 0; \
 		if (useenumorder) { \
