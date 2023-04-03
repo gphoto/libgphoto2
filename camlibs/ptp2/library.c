@@ -1358,6 +1358,9 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/749 */
 	{"Sony:ILCE-7RM4A (PC Control)",	0x054c, 0x0d9f, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* https://github.com/gphoto/libgphoto2/issues/896 */
+	{"Sony:ILME-FX3 (PC Control)",		0x054c, 0x0da3, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* https://github.com/gphoto/libgphoto2/pull/782 */
 	{"Sony:Alpha-A7 IV (MTP mode)",		0x054c, 0x0da6, 0},
 	{"Sony:Alpha-A7 IV (PC Control)",	0x054c, 0x0da7, PTP_CAP|PTP_CAP_PREVIEW},
@@ -2693,6 +2696,8 @@ static struct {
 
 	/* Arda Kaan <ardakaan@gmail.com> */
 	{"Ricoh:WG-M2 (PTP mode)",        	0x25fb, 0x210b, 0},
+	/* https://github.com/libmtp/libmtp/issues/148 */
+	{"Ricoh:GR IIIx (PTP mode)",        	0x25fb, 0x25fb, 0},
 
 	/* Pentax cameras */
 	{"Pentax:Optio 43WR",                   0x0a17, 0x000d, 0},
