@@ -1261,6 +1261,46 @@ static int html_end_func (
 	return 0;
 }
 
+static int
+json_begin_func (const func_params_t *params, void **data) {
+	printf ("[\n");
+	return 0;
+}
+
+static int json_any_cam_printed = 0;
+
+static int
+json_camera_func (const func_params_t *params, const int i, const int total, const CameraAbilities *a, void *data) {
+	if (a->device_type != GP_DEVICE_STILL_CAMERA)
+		return 0;
+
+	if (json_any_cam_printed) {
+		printf (",\n");
+	}
+
+	const char *camlib_basename;
+	camlib_basename = path_basename(a->library);
+	printf ("    {\"camlib\": \"%s\", \"id\": \"%s\", \"model\": \"%s\"",
+		camlib_basename,
+		a->id,
+		a->model);
+
+	if (a->usb_vendor) { /* usb product id may be zero! */
+		printf (", \"usb-vendor\": \"%04x\", \"usb-product\": \"%04x\"",
+			a->usb_vendor,
+			a->usb_product);
+	}
+	printf ("}");
+	json_any_cam_printed = 1;
+	return 0;
+}
+
+static int
+json_end_func (const func_params_t *params, void *data) {
+	printf ("\n]\n");
+	return 0;
+}
+
 /* time zero for debug log time stamps */
 struct timeval glob_tv_zero = { 0, 0 };
 
@@ -1448,6 +1488,19 @@ static const output_format_t formats[] = {
 	 NULL,
 	 NULL,
 	 empty_end_func
+	},
+	{"json",
+	 "JSON array of camera objects",
+	 "Use this is intended to be consumed by a programm/script.\n"
+	 "        Output is a JSON array with an object for each camera with type \"Still image\".\n"
+	 "        Each object contains the following keys: camlib, id, model.\n"
+	 "        If a camera support interfacing via USB it will also have the usb-vendor and usb-product keys.\n",
+	 NULL,
+	 json_begin_func,
+	 json_camera_func,
+	 NULL,
+	 NULL,
+	 json_end_func
 	},
 	{NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}
 };
