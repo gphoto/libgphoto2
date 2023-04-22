@@ -23,7 +23,7 @@
 #define IOLIBS_VUSB_VCAMERA_H
 
 #undef FUZZING
-#undef FUZZ_PTP
+#define FUZZ_PTP
 
 #include <stdio.h>
 
