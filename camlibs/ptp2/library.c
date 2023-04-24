@@ -3021,6 +3021,11 @@ camera_abilities (CameraAbilitiesList *list)
 				(strstr(models[i].model,"EOS") || strstr(models[i].model,"Rebel"))
 			)
 				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
+
+			/* Enable for Panasonic */
+			if (models[i].usb_vendor == 0x04da)
+				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
+
 			/* Sony Alpha are also trigger capture capable */
 			if (	models[i].usb_vendor == 0x54c)
 				a.operations |= GP_OPERATION_TRIGGER_CAPTURE;
