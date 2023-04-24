@@ -5458,6 +5458,11 @@ downloadfile:
 	path->name[0]='\0';
 	path->folder[0]='\0';
 
+	/* Synthesize a capture complete event to avoid waits. */
+	event.Code = PTP_EC_CaptureComplete;
+	event.Nparam = 0;
+	ptp_add_event (params, &event);
+
 	if (newobject != 0) /* NOTE: association add handled */
 		return add_object_to_fs_and_path (camera, newobject, path, context);
 	return GP_ERROR;
