@@ -5547,13 +5547,17 @@ camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath 
 			}
 			return GP_ERROR;
 		}
+#if 0
+		/* the 0x80 flag seems to happen only if the camera starts doing stuff */
 		if ((captstatus.status & 0xf000) == 0x8000) {	/* success */
 			break;
 		}
+#endif
 		if (captstatus.status == 0x0002) break;	/* success ? */
-		if (captstatus.status == 0x0005) break;	/* success */
+		/* 4 means processing */
+		if (captstatus.status == 0x0005) break;	/* 5 means complete image created */
 
-		usleep(20*1000);
+		usleep(200*1000);
 
 	}
 	C_PTP_REP (ptp_sigma_fp_getpictfileinfo2(params, &pictfileinfoex2));
