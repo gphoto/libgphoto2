@@ -1178,6 +1178,9 @@ static struct {
 	{"Sony:DSC-RX100M2",	      0x054c, 0x074b, 0},
 	/* Thorsten Ludewig <t.ludewig@gmail.com> */
 	{"Sony:Alpha-A3000",	      0x054c, 0x074e, 0},
+	
+	/* Sony alpha 6000: JB and DC added 2014-05-19 */
+        {"Sony:Alpha-A6000",          0x054c, 0x094e, PTP_CAP},
 
 	/* bertrand.chambon@free.fr */
 	{"Sony:Alpha-A68 (MTP)",      0x054c, 0x0779, 0},
