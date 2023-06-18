@@ -10610,6 +10610,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_CANON_EOS_BatteryPower,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_BatteryLevel,    _put_None },
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_SONY_BatteryLevel,              PTP_VENDOR_SONY,    PTP_DTC_INT8,   _get_SONY_BatteryLevel,         _put_None },
 	{ N_("Mirror Up Status"),       "mirrorupstatus",   PTP_DPC_NIKON_MirrorUpStatus,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,		_put_None },
+	{ N_("Mirror Up Status"),       "mirrorupstatus",   PTP_DPC_CANON_EOS_MirrorLockupState,    PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,			_put_None },
 	{ N_("Mirror Up Shooting Count"),"mirrorupshootingcount", PTP_DPC_NIKON_MirrorUpReleaseShootingCount, PTP_VENDOR_NIKON, PTP_DTC_UINT8,  _get_INT,		_put_None },
 	{ N_("Continuous Shooting Count"),"continousshootingcount", PTP_DPC_NIKON_ContinousShootingCount, PTP_VENDOR_NIKON, PTP_DTC_UINT8,_get_INT,			_put_None },
 	{ N_("Camera Orientation"),     "orientation",      PTP_DPC_NIKON_CameraOrientation,        PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_CameraOrientation,   _put_None },
