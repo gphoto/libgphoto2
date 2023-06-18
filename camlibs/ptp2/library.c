@@ -4850,6 +4850,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")		||
 		!strcmp(params->deviceinfo.Model, "DSC-RX0M2")		||
+		!strcmp(params->deviceinfo.Model, "ILCE-7M3")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7C")
 	)) {
 		/* For some as yet unknown reason the ZV-1, the RX100M7 and the A7 R4 need around 3 seconds startup time
