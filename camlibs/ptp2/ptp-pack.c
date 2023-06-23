@@ -2299,6 +2299,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case PTP_DPC_CANON_EOS_ModelID:
 				case PTP_DPC_CANON_EOS_LensID:
 				case PTP_DPC_CANON_EOS_StroboFiring:
+				case PTP_DPC_CANON_EOS_StroboDispState:
 				case PTP_DPC_CANON_EOS_AFSelectFocusArea:
 				case PTP_DPC_CANON_EOS_ContinousAFMode:
 				case PTP_DPC_CANON_EOS_MirrorUpSetting:
