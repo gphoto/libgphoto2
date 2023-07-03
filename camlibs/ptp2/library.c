@@ -2805,6 +2805,8 @@ static struct {
 	{"GoPro:HERO10 Black",			0x2672, 0x0056, 0},
 	/* https://github.com/libmtp/libmtp/issues/136 */
 	{"GoPro:HERO11 Black",			0x2672, 0x0059, 0},
+	/* https://github.com/libmtp/libmtp/issues/162 */
+	{"GoPro:HERO11 Black mini",		0x2672, 0x005a, 0},
 #endif
 };
 
