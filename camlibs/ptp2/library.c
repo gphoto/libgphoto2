@@ -5948,7 +5948,7 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 
 			/* are we in manual focus mode ... value would be 3 */
 			if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusMode, &dpd)) {
-				if ((dpd.DataType == PTP_DTC_UINT16) && (dpd.CurrentValue.u16 == 3)) {
+				if ((dpd.DataType == PTP_DTC_UINT32) && (dpd.CurrentValue.u32 == 3)) {
 					manualfocus = 1;
 					/* will do 1 pass through the focusing loop for good measure */
 					GP_LOG_D("detected manual focus. skipping focus detection logic");
