@@ -1783,6 +1783,9 @@ static struct {
 	/* Stefan Weiberg at SUSE */
 	{"Nikon:Z9",			  0x04b0, 0x0450, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* Ben Govero */
+	{"Nikon:Z8",			  0x04b0, 0x0451, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Z://github.com/gphoto/libgphoto2/pull/750#issuecomment-1189987634 */
 	{"Nikon:Z30",			  0x04b0, 0x0452, PTP_CAP|PTP_CAP_PREVIEW},
 
