@@ -2187,29 +2187,29 @@ _get_Canon_LiveViewSize(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++) {
-		if ((dpd->FORM.Enum.SupportedValue[i].u16 & 0xe) == 0x2) {
+		if ((dpd->FORM.Enum.SupportedValue[i].u32 & 0xe) == 0x2) {
 			if (!(have & 0x2))
 				gp_widget_add_choice (*widget, _("Large"));
 			have |= 0x2;
 			continue;
 		}
-		if ((dpd->FORM.Enum.SupportedValue[i].u16 & 0xe) == 0x4) {
+		if ((dpd->FORM.Enum.SupportedValue[i].u32 & 0xe) == 0x4) {
 			if (!(have & 0x4))
 				gp_widget_add_choice (*widget, _("Medium"));
 			have |= 0x4;
 			continue;
 		}
-		if ((dpd->FORM.Enum.SupportedValue[i].u16 & 0xe) == 0x8) {
+		if ((dpd->FORM.Enum.SupportedValue[i].u32 & 0xe) == 0x8) {
 			if (!(have & 0x8))
 				gp_widget_add_choice (*widget, _("Small"));
 			have |= 0x8;
 			continue;
 		}
 	}
-	if ((dpd->CurrentValue.u16 & 0xe) == 0x8) { gp_widget_set_value (*widget, _("Small")); return GP_OK; }
-	if ((dpd->CurrentValue.u16 & 0xe) == 0x4) { gp_widget_set_value (*widget, _("Medium")); return GP_OK; }
-	if ((dpd->CurrentValue.u16 & 0xe) == 0x2) { gp_widget_set_value (*widget, _("Large")); return GP_OK; }
-	sprintf(buf,"val %x", dpd->CurrentValue.u16);
+	if ((dpd->CurrentValue.u32 & 0xe) == 0x8) { gp_widget_set_value (*widget, _("Small")); return GP_OK; }
+	if ((dpd->CurrentValue.u32 & 0xe) == 0x4) { gp_widget_set_value (*widget, _("Medium")); return GP_OK; }
+	if ((dpd->CurrentValue.u32 & 0xe) == 0x2) { gp_widget_set_value (*widget, _("Large")); return GP_OK; }
+	sprintf(buf,"val %x", dpd->CurrentValue.u32);
 	gp_widget_set_value (*widget, buf);
 	return GP_OK;
 }
@@ -2227,7 +2227,7 @@ _put_Canon_LiveViewSize(CONFIG_PUT_ARGS) {
 	if (outputval == 0)
 		return GP_ERROR_BAD_PARAMETERS;
 	/* replace the current outputsize, but keep the TFT flag */
-	propval->u16 = (dpd->CurrentValue.u16 & ~0xe) | outputval;
+	propval->u32 = (dpd->CurrentValue.u32 & ~0xe) | outputval;
 	return GP_OK;
 }
 
