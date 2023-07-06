@@ -4188,18 +4188,20 @@ static struct deviceproptableu16 nikon_d7100_focus_metering[] = {
 GENERIC16TABLE(Nikon_D7100_FocusMetering,nikon_d7100_focus_metering)
 
 static struct deviceproptableu16 nikon_d850_focus_metering[] = {
-	{ N_("Dynamic-area AF (25 points)"),0x0002, PTP_VENDOR_NIKON},
-	{ N_("Single-point AF"),0x8010, PTP_VENDOR_NIKON},
-	{ N_("Auto-area AF"),	0x8011, PTP_VENDOR_NIKON},
-	{ N_("3D-tracking"),	0x8012, PTP_VENDOR_NIKON},
-	{ N_("Dynamic-area AF (72 points)"),0x8013, PTP_VENDOR_NIKON},
-	{ N_("Dynamic-area AF (153 points)"),	0x8014, PTP_VENDOR_NIKON},
-	{ N_("Group-area AF"),	0x8015, PTP_VENDOR_NIKON},
-	{ N_("Dynamic-area AF (9 points)"),	0x8016, PTP_VENDOR_NIKON},
+	{ N_("Dynamic-area AF (25 points)"),0x0002, 	PTP_VENDOR_NIKON},
+	{ N_("Single-point AF"),			0x8010, PTP_VENDOR_NIKON},
+	{ N_("Auto-area AF"),				0x8011, PTP_VENDOR_NIKON},
+	{ N_("3D-tracking"),				0x8012, PTP_VENDOR_NIKON},
+	{ N_("Dynamic-area AF (72 points)"),		0x8013, PTP_VENDOR_NIKON},
+	{ N_("Dynamic-area AF (153 points)"),		0x8014, PTP_VENDOR_NIKON},
+	{ N_("Group-area AF"),				0x8015, PTP_VENDOR_NIKON},
+	{ N_("Dynamic-area AF (9 points)"),		0x8016, PTP_VENDOR_NIKON},
 
 	{ N_("Pinpoint AF"),		0x8017, PTP_VENDOR_NIKON}, /* on Z */
 	{ N_("Wide-area AF (S)"),	0x8018, PTP_VENDOR_NIKON}, /* on Z */
 	{ N_("Wide-area AF (L)"),	0x8019, PTP_VENDOR_NIKON}, /* on Z */
+	{ N_("Wide-area AF (C1)"),	0x801e, PTP_VENDOR_NIKON}, /* on Z */
+	{ N_("Wide-area AF (C2)"),	0x801f, PTP_VENDOR_NIKON}, /* on Z */
 };
 GENERIC16TABLE(Nikon_D850_FocusMetering,nikon_d850_focus_metering)
 
@@ -6915,6 +6917,8 @@ GENERIC8TABLE(Nikon_D90_MeterOffTime,nikon_d90_meterofftime)
 static struct deviceproptableu8 nikon_rawcompression[] = {
 	{ N_("Lossless"),	0x00, 0 },
 	{ N_("Lossy"),		0x01, 0 },
+	{ N_("High Efficiency*"),0x03, 0 },
+	{ N_("High Efficiency"),0x04, 0 },
 };
 GENERIC8TABLE(Nikon_RawCompression,nikon_rawcompression)
 
@@ -11157,6 +11161,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Movie Quality"),                  "moviequality",             PTP_DPC_NIKON_1_MovQuality,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_MovieQuality,          _put_Nikon_1_MovieQuality },
 	{ N_("Movie Loop Length"),              "movielooplength",          PTP_DPC_NIKON_MovieLoopLength,          PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_MovieLoopLength,         _put_Nikon_MovieLoopLength },
 	{ N_("High ISO Noise Reduction"),       "highisonr",                PTP_DPC_NIKON_1_HiISONoiseReduction,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_HighISONR,             _put_Nikon_1_HighISONR },
+	{ N_("Auto ISO"),			"autoiso",		    PTP_DPC_NIKON_ISOAuto,		    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 
 	{ N_("Raw Compression"),                "rawcompression",           PTP_DPC_NIKON_RawCompression,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_RawCompression,          _put_Nikon_RawCompression },
 
@@ -11206,6 +11211,8 @@ static struct menu menus[] = {
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x044b, nikon_z6_capture_settings,      NULL,   NULL }, /* Z7_2 guessed */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x044c, nikon_z6_capture_settings,      NULL,   NULL }, /* Z6_2 guessed */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x044f, nikon_z6_capture_settings,      NULL,   NULL }, /* Zfc guessed */
+        { N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0450, nikon_z6_capture_settings,      NULL,   NULL }, /* Z9 */
+        { N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0451, nikon_z6_capture_settings,      NULL,   NULL }, /* Z8 */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0x0452, nikon_z6_capture_settings,      NULL,   NULL }, /* Z30 guessed */
 	{ N_("Capture Settings"),           "capturesettings",  0x4b0,  0,      nikon_generic_capture_settings, NULL,   NULL },
 	{ N_("Capture Settings"),           "capturesettings",  0,      0,      capture_settings_menu,          NULL,   NULL },
