@@ -2179,7 +2179,7 @@ _get_Canon_LiveViewSize(CONFIG_GET_ARGS) {
 
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return GP_ERROR;
-	if (dpd->DataType != PTP_DTC_UINT16)
+	if (dpd->DataType != PTP_DTC_UINT32)
 		return GP_ERROR;
 /* actually it is a flag value, 1 = TFT, 2 = PC, 4 = MOBILE, 8 = MOBILE2 */
 
