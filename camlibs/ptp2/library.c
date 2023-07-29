@@ -387,10 +387,10 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->VendorExtensionID = PTP_VENDOR_FUJI;
 	}
 
-	if (    di->Manufacturer && !strcmp(di->Manufacturer,"OLYMPUS") &&
-		(	!strncmp(di->Model,"E-M",3) ||
-			!strncmp(di->Model,"OM-",3)
-		)
+	/* Olympus seems to use OMSYSTEM as manufacturer for the OM-1 */
+	if (    di->Manufacturer && 
+		(	!strcmp(di->Manufacturer,"OLYMPUS")  || !strcmp(di->Manufacturer,"OMSYSTEM")) &&
+		(	!strncmp(di->Model,"E-M",3) || !strncmp(di->Model,"OM-",3))
 	) {
 		GP_LOG_D ("Setting Olympus VendorExtensionID to PTP_VENDOR_GP_OLYMPUS_OMD");
 		di->VendorExtensionID = PTP_VENDOR_GP_OLYMPUS_OMD;
