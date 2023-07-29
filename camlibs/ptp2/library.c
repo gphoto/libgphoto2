@@ -1369,6 +1369,9 @@ static struct {
 	{"Sony:Alpha-A7 IV (MTP mode)",		0x054c, 0x0da6, 0},
 	{"Sony:Alpha-A7 IV (PC Control)",	0x054c, 0x0da7, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* The A7-RV */
+	{"Sony:ILCE-7RM5 (PC Control)",		0x054c, 0x0e0c, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
@@ -4860,8 +4863,13 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		!strcmp(params->deviceinfo.Model, "DSC-RX100M7")	||
 		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")		||
+		!strcmp(params->deviceinfo.Model, "ILCE-7RM5")		||
 		!strcmp(params->deviceinfo.Model, "DSC-RX0M2")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7M3")		||
+		!strcmp(params->deviceinfo.Model, "ILCE-7SM3")		||
+		!strcmp(params->deviceinfo.Model, "ILCE-7M4")		||
+		!strcmp(params->deviceinfo.Model, "ILCE-9M2")		||
+		!strcmp(params->deviceinfo.Model, "ILCE-1")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7C")
 	)) {
 		/* For some as yet unknown reason the ZV-1, the RX100M7 and the A7 R4 need around 3 seconds startup time
