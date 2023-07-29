@@ -387,7 +387,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->VendorExtensionID = PTP_VENDOR_FUJI;
 	}
 
-	if (    di->Manufacturer && !strcmp(di->Manufacturer,"OLYMPUS") && !strncmp(di->Model,"E-M",3)  ) {
+	if (    di->Manufacturer && !strcmp(di->Manufacturer,"OLYMPUS") &&
+		(	!strncmp(di->Model,"E-M",3) ||
+			!strncmp(di->Model,"OM-",3)
+		)
+	) {
 		GP_LOG_D ("Setting Olympus VendorExtensionID to PTP_VENDOR_GP_OLYMPUS_OMD");
 		di->VendorExtensionID = PTP_VENDOR_GP_OLYMPUS_OMD;
 	}
@@ -1901,6 +1905,8 @@ static struct {
 
 	/* from timelapse-VIEW */
 	{"Olympus:E-M1 MII",  	  	  0x07b4, 0x0135, PTP_CAP|PTP_CAP_PREVIEW},
+	/* email */
+	{"Olympus:OM-1",  	  	  0x07b4, 0x0136, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
