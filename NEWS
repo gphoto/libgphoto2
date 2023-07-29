@@ -8,6 +8,7 @@ ptp2:
 * Canon EOS: OLC logic rewritten to be table driven, more debugging of the content,
   config "testolc" to generate debugoutput. Supports more cameras better.
 * Sony Alpha: Added config options: focusarea, liveviewsettingeffect
+* Olympus: Enabled OM-1 capture
 * Battery Level: also support ENUM style battery reporting for Canon
 * Nikon 1: S1 also does not support everything
 * New ids:
@@ -17,6 +18,7 @@ ptp2:
   - Pentax KP (PTP mode)
   - Sigma fp L
   - GOPRO HERO 11 BLACK
+  - OMSYSTEM OM-1
   - new ids also imported from libmtp
 
 general:
