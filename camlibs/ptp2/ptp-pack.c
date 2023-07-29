@@ -2638,7 +2638,11 @@ static unsigned int olcsizes[0x15][13] = {
 					 */
 					proptype = PTP_DPC_CANON_EOS_ShutterSpeed;
 					dpd = _lookup_or_allocate_canon_prop(params, proptype);
-					dpd->CurrentValue.u16 = curdata[curoff+5]; /* just use last byte */
+					if (olcver >= 0x14) {	/* taken from northofyou branch */
+						dpd->CurrentValue.u16 = curdata[curoff+7];
+					} else {
+						dpd->CurrentValue.u16 = curdata[curoff+5];
+					}
 
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 					ce[i].u.propid = proptype;
