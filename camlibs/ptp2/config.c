@@ -2745,7 +2745,21 @@ static struct deviceproptableu16 canon_eos_image_format[] = {
 	{ N_("sRAW + Tiny JPEG"),		0x2cf3, 0 }, /*Canon EOS 5D Mark III*/
 	/* There are more RAW + 'smallish' JPEG combinations for at least the 5DM3 possible.
 	   Axel was simply to lazy to exercise the combinatorial explosion. :-/ */
-	/* 1DX mark ii from NorthOfYOu branch */
+	/* 1DX series 0 compression options */
+	{ N_("Small"),				0x2100, 0 },
+	{ N_("Medium 1"),			0x5100, 0 },
+	{ N_("Medium 2"),			0x6100, 0 },
+	{ N_("Large"),				0x0100, 0 },
+	{ N_("Small + RAW"),			0x0c21, 0 },
+	{ N_("Medium 1 + RAW"),			0x0c51, 0 },
+	{ N_("Medium 2 + RAW"),			0x0c61, 0 },
+	{ N_("Large + RAW"),			0x0c01, 0 },
+	{ N_("Small + cRAW"),			0x0b21, 0 },
+	{ N_("Medium 1 + cRAW"),		0x0b51, 0 },
+	{ N_("Medium 2 + cRAW"),		0x0b61, 0 },
+	{ N_("Large + cRAW"),			0x0b01, 0 },
+
+	/* 1DX mark ii */
 	{ N_("Large + mRAW"),			0x1c01, 0 },
 	{ N_("Medium 1 + mRAW"),		0x1c51, 0 },
 	{ N_("Medium 2 + mRAW"),		0x1c61, 0 },
