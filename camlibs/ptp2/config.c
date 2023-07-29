@@ -5875,6 +5875,7 @@ static struct deviceproptableu16 focusmodes[] = {
 	{ N_("AF-S"),		0x8010, PTP_VENDOR_NIKON },
 	{ N_("AF-C"),		0x8011, PTP_VENDOR_NIKON },
 	{ N_("AF-A"),		0x8012, PTP_VENDOR_NIKON },
+	{ N_("AF-F"),		0x8013, PTP_VENDOR_NIKON },
 	{ N_("Single-Servo AF"),0x8001, PTP_VENDOR_FUJI },
 	{ N_("Continuous-Servo AF"),0x8002, PTP_VENDOR_FUJI },
 
