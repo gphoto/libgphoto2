@@ -3095,7 +3095,11 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_ShutterSpeed2			0xD229
 #define PTP_DPC_SONY_FocusArea				0xD22C  /* (type=0x4) Enumeration [1,2,3,257,258,259,260,513,514,515,516,517,518,519,261,520] value: 1 */
 #define PTP_DPC_SONY_LiveViewSettingEffect  0xD231  /* (type=0x2) Enumeration [1,2] value: 1 */
+#define PTP_DPC_SONY_JpegQuality			0xD252
+#define PTP_DPC_SONY_CompressionSetting			0xD253
 #define PTP_DPC_SONY_PriorityMode			0xD25A
+#define PTP_DPC_SONY_PcSaveImageSize			0xD268
+#define PTP_DPC_SONY_PcSaveImageFormat			0xD269
 #define PTP_DPC_SONY_AutoFocus				0xD2C1 /* ? half-press */
 #define PTP_DPC_SONY_Capture				0xD2C2 /* ? full-press */
 #define PTP_DPC_SONY_FocusMagnify			0xD2CB

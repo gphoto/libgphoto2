@@ -6826,6 +6826,22 @@ static struct deviceproptableu8 compressionsetting[] = {
 };
 GENERIC8TABLE(CompressionSetting,compressionsetting)
 
+static struct deviceproptableu8 sony_300_compression[] = {
+	{ N_("RAW"),         0x01, PTP_VENDOR_SONY },
+	{ N_("RAW+JPEG"),    0x02, PTP_VENDOR_SONY },
+	{ N_("JPEG"),        0x03, PTP_VENDOR_SONY },
+};
+GENERIC8TABLE(Sony_300_CompressionSetting,sony_300_compression)
+
+static struct deviceproptableu8 sony_300_jpegcompression[] = {
+	{ N_("n/a"),         0x00, PTP_VENDOR_SONY },
+	{ N_("X.Fine"),      0x01, PTP_VENDOR_SONY },
+	{ N_("Fine"),        0x02, PTP_VENDOR_SONY },
+	{ N_("Std"),         0x03, PTP_VENDOR_SONY },
+	{ N_("Light"),       0x04, PTP_VENDOR_SONY },
+};
+GENERIC8TABLE(Sony_300_JpegCompressionSetting,sony_300_jpegcompression)
+
 static struct deviceproptableu8 sony_qx_compression[] = {
 	{ N_("Standard"),	0x02, 0 },
 	{ N_("Fine"),		0x03, 0 },
@@ -6834,6 +6850,21 @@ static struct deviceproptableu8 sony_qx_compression[] = {
 	{ N_("RAW+JPEG"),	0x13, 0 },
 };
 GENERIC8TABLE(Sony_QX_Compression,sony_qx_compression)
+
+static struct deviceproptableu8 sony_pc_save_image_size[] = {
+	{ N_("Original"), 0x01, 0 },
+	{ N_("2M"),       0x02, 0 },
+};
+GENERIC8TABLE(Sony_PcSaveImageSize, sony_pc_save_image_size)
+
+static struct deviceproptableu8 sony_pc_save_image_format[] = {
+	{ N_("RAW & JPEG"),   0x01, 0 },
+	{ N_("JPEG Only"),    0x02, 0 },
+	{ N_("RAW Only"),     0x03, 0 },
+	{ N_("RAW & HEIF"),   0x04, 0 },
+	{ N_("HEIF Only"),    0x05, 0 }
+};
+GENERIC8TABLE(Sony_PcSaveImageFormat, sony_pc_save_image_format)
 
 static struct deviceproptableu8 sony_sensorcrop[] = {
 	{ N_("Off"),	0x01, 0 },
@@ -10860,8 +10891,12 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Live View Size"),			"liveviewsize",		    0,					    PTP_VENDOR_PANASONIC,PTP_DTC_INT32, _get_Panasonic_LiveViewSize,        _put_Panasonic_LiveViewSize },
 	{ N_("Movie F-Number"),                 "movief-number",            PTP_DPC_NIKON_MovieFNumber,             PTP_VENDOR_NIKON,   PTP_DTC_UINT16, _get_FNumber,                       _put_FNumber },
 	{ N_("Flexible Program"),               "flexibleprogram",          PTP_DPC_NIKON_FlexibleProgram,          PTP_VENDOR_NIKON,   PTP_DTC_INT8,   _get_Range_INT8,                    _put_Range_INT8 },
+	{ N_("Image Quality"),			"imagequality",		    PTP_DPC_SONY_CompressionSetting,	    PTP_VENDOR_SONY,	PTP_DTC_UINT8,	_get_Sony_300_CompressionSetting,   _put_Sony_300_CompressionSetting },
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_CompressionSetting,            _put_Sony_CompressionSetting },
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             0,                  PTP_DTC_UINT8,  _get_CompressionSetting,            _put_CompressionSetting },
+	{ N_("JPEG Quality"),			"jpegquality",              PTP_DPC_SONY_JpegQuality,               PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_300_JpegCompressionSetting,   _put_Sony_300_JpegCompressionSetting },
+	{ N_("PC Save Image Size"),		"pcsaveimgsize",            PTP_DPC_SONY_PcSaveImageSize,           PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_PcSaveImageSize,          _put_Sony_PcSaveImageSize },
+	{ N_("PC Save Image Format"),		"pcsaveimgformat",	    PTP_DPC_SONY_PcSaveImageFormat,         PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_PcSaveImageFormat,        _put_Sony_PcSaveImageFormat },
 	{ N_("Focus Distance"),                 "focusdistance",            PTP_DPC_FocusDistance,                  0,                  PTP_DTC_UINT16, _get_FocusDistance,                 _put_FocusDistance },
 	{ N_("Focal Length"),                   "focallength",              PTP_DPC_FocalLength,                    0,                  PTP_DTC_UINT32, _get_FocalLength,                   _put_FocalLength },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_FocusMode,                      PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FocusMode,                     _put_Sony_FocusMode },
