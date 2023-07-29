@@ -2745,6 +2745,15 @@ static struct deviceproptableu16 canon_eos_image_format[] = {
 	{ N_("sRAW + Tiny JPEG"),		0x2cf3, 0 }, /*Canon EOS 5D Mark III*/
 	/* There are more RAW + 'smallish' JPEG combinations for at least the 5DM3 possible.
 	   Axel was simply to lazy to exercise the combinatorial explosion. :-/ */
+	/* 1DX mark ii from NorthOfYOu branch */
+	{ N_("Large + mRAW"),			0x1c01, 0 },
+	{ N_("Medium 1 + mRAW"),		0x1c51, 0 },
+	{ N_("Medium 2 + mRAW"),		0x1c61, 0 },
+	{ N_("Small + mRAW"),			0x1c21, 0 },
+	{ N_("Large + sRAW"),			0x2c01, 0 },
+	{ N_("Medium 1 + sRAW"),		0x2c51, 0 },
+	{ N_("Medium 2 + sRAW"),		0x2c61, 0 },
+	{ N_("Small + sRAW"),			0x2c21, 0 },
 };
 GENERIC16TABLE(Canon_EOS_ImageFormat,canon_eos_image_format)
 
