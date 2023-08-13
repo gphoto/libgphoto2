@@ -1,7 +1,15 @@
 cmake_minimum_required(VERSION 3.13)
 project(libgphoto)
 
+include(CheckLibraryExists)
+
 option(FLAT_LAYOUT "Put camlibs/iolibs to same location " OFF)
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
+        "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+	      FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libgphoto2_port)
@@ -13,6 +21,9 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
 
 find_path(LIBUSB_HDR libusb-1.0/libusb.h)
 find_library(LIBUSB_LIB usb-1.0)
+
+check_library_exists(${LIBUSB_LIB} libusb_wrap_sys_device "" HAVE_LIBUSB_WRAP_SYS_DEVICE)
+
 
 find_path(LIBLTDL_HDR ltdl.h)
 find_library(LIBLTDL_LIB ltdl)
