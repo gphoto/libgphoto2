@@ -240,6 +240,12 @@ foreach_func (const char *filename, lt_ptr data)
 	int result;
 
 	GP_LOG_D ("Called for filename '%s'.", filename );
+#ifdef GPHOTO2_FLAT_LAYOUT
+    if(!strstr(filename,GPHOTO2_FLAT_LAYOUT_IO_PREFIX)) {
+        GP_LOG_D("Skipping filename '%s' not matching %s.",filename,GPHOTO2_FLAT_LAYOUT_IO_PREFIX);
+        return (0); 
+    }
+#endif    
 
 	lh = lt_dlopenext (filename);
 	if (!lh) {

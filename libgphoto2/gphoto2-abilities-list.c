@@ -181,6 +181,12 @@ foreach_func (const char *filename, lt_ptr data)
 	CameraList *list = fd->list;
 
 	GP_LOG_D ("Found '%s'.", filename);
+#ifdef GPHOTO2_FLAT_LAYOUT
+    if(!strstr(filename,GPHOTO2_FLAT_LAYOUT_CAM_PREFIX)) {
+        GP_LOG_D("Skipping camlib filename '%s' not matching %s.",filename,GPHOTO2_FLAT_LAYOUT_CAM_PREFIX);
+        return (0); 
+    }
+#endif    
 	fd->result = gp_list_append (list, filename, NULL);
 
 	return ((fd->result == GP_OK)?0:1);
@@ -312,6 +318,7 @@ unlocked_gp_abilities_list_load_dir (CameraAbilitiesList *list, const char *dir,
 			return GP_ERROR_CANCEL;
 		}
 	}
+
 	gp_context_progress_stop (context, p);
 	lt_dlexit ();
 	gp_list_free (flist);
