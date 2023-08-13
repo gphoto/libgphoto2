@@ -14,6 +14,11 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
 find_path(LIBUSB_HDR libusb-1.0/libusb.h)
 find_library(LIBUSB_LIB usb-1.0)
 
+find_path(LIBLTDL_HDR ltdl.h)
+find_library(LIBLTDL_LIB ltdl)
+
+include_directories(${LIBLTDL_HDR})
+
 find_path(LIBJPEG_HDR jpeglib.h)
 find_library(LIBJPEG_LIB jpeg)
 
@@ -80,8 +85,8 @@ configure_file(gphoto2-endian.cmake.h libgphoto2/gphoto2-endian.h)
 add_library(gphoto2_port SHARED ${LIBGPHOTO2_PORT_SRC})
 add_library(gphoto2 SHARED ${LIBGPHOTO2_SRC})
 
-target_link_libraries(gphoto2 gphoto2_port ltdl m)
-target_link_libraries(gphoto2_port ltdl)
+target_link_libraries(gphoto2 gphoto2_port ${LIBLTDL_LIB} m)
+target_link_libraries(gphoto2_port ${LIBLTDL_LIB})
 
 add_library(gphoto2_port_iolibs_usb1 SHARED libgphoto2_port/libusb1/libusb1.c)
 target_link_libraries(gphoto2_port_iolibs_usb1 gphoto2_port ${LIBUSB_LIB})
