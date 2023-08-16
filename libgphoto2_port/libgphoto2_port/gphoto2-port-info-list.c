@@ -238,14 +238,13 @@ foreach_func (const char *filename, lt_ptr data)
 	GPPortType type;
 	unsigned int j, old_size = list->count;
 	int result;
+    char *prefix = getenv(IOLIBDIR_PREFIX_ENV);
 
 	GP_LOG_D ("Called for filename '%s'.", filename );
-#ifdef GPHOTO2_FLAT_LAYOUT
-    if(!strstr(filename,GPHOTO2_FLAT_LAYOUT_IO_PREFIX)) {
-        GP_LOG_D("Skipping filename '%s' not matching %s.",filename,GPHOTO2_FLAT_LAYOUT_IO_PREFIX);
+    if(prefix && !strstr(filename,prefix)) {
+        GP_LOG_D("Skipping filename '%s' not matching %s.",filename,prefix);
         return (0); 
     }
-#endif    
 
 	lh = lt_dlopenext (filename);
 	if (!lh) {

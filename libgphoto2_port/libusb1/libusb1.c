@@ -118,14 +118,9 @@ struct _PrivateIrqCompleted {
 
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
 static struct _GPPortExternalSysDevice {
-    int fd;
+    /* some more may be used in future */
     libusb_device_handle *h;
-} external_sys_device = { -1, NULL };
-
-void gp_libusb1_config_sys_device(int fd)
-{
-    external_sys_device.fd = fd;
-}
+} external_sys_device = { NULL };
 
 #endif
 
@@ -177,9 +172,9 @@ load_devicelist (GPPortPrivateLibrary *pl) {
         pl->descs = NULL;
     }
     #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
-    if(external_sys_device.fd != -1) {
+    if(gp_port_usb_get_sys_device() != -1) {
         if(!external_sys_device.h) {
-            LOG_ON_LIBUSB_E(libusb_wrap_sys_device(pl->ctx,external_sys_device.fd,&external_sys_device.h));
+            LOG_ON_LIBUSB_E(libusb_wrap_sys_device(pl->ctx,gp_port_usb_get_sys_device(),&external_sys_device.h));
             libusb_ref_device(libusb_get_device(external_sys_device.h));
         }
         pl->nrofdevs = 1;
@@ -212,7 +207,7 @@ gp_port_library_list (GPPortInfoList *list)
     struct libusb_device_descriptor    *descs;
 
 #ifdef  HAVE_LIBUSB_WRAP_SYS_DEVICE
-    if(external_sys_device.fd != -1) {
+    if(gp_port_usb_get_sys_device() != -1) {
         libusb_set_option(NULL,LIBUSB_OPTION_NO_DEVICE_DISCOVERY,NULL);
     }
 #endif    
@@ -365,7 +360,7 @@ static int gp_libusb1_init (GPPort *port)
     port->pl->config = port->pl->interface = port->pl->altsetting = -1;
 
 #ifdef  HAVE_LIBUSB_WRAP_SYS_DEVICE
-    if(external_sys_device.fd != -1) {
+    if(gp_port_usb_get_sys_device() != -1) {
         libusb_set_option(NULL,LIBUSB_OPTION_NO_DEVICE_DISCOVERY,NULL);
     }
 #endif    
@@ -418,8 +413,8 @@ gp_libusb1_open (GPPort *port)
     }
 
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
-    if(external_sys_device.fd != -1) {
-        C_LIBUSB(libusb_wrap_sys_device(port->pl->ctx,external_sys_device.fd,&port->pl->dh), GP_ERROR_IO);
+    if(gp_port_usb_get_sys_device() != -1) {
+        C_LIBUSB(libusb_wrap_sys_device(port->pl->ctx,gp_port_usb_get_sys_device(),&port->pl->dh), GP_ERROR_IO);
     }
     else 
 #endif        

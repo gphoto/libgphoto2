@@ -48,6 +48,8 @@ LIBGPHOTO2_5_0 {
 	gp_port_timeout_get;
 	gp_port_timeout_set;
 	gp_port_usb_clear_halt;
+	gp_port_usb_set_sys_device;
+	gp_port_usb_get_sys_device;
 	gp_port_usb_find_device;
 	gp_port_usb_find_device_by_class;
 	gp_port_usb_msg_class_read;

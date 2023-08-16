@@ -179,14 +179,13 @@ foreach_func (const char *filename, lt_ptr data)
 {
 	foreach_data_t *fd = data;
 	CameraList *list = fd->list;
+    char *prefix = getenv(CAMLIBDIR_PREFIX_ENV);
 
 	GP_LOG_D ("Found '%s'.", filename);
-#ifdef GPHOTO2_FLAT_LAYOUT
-    if(!strstr(filename,GPHOTO2_FLAT_LAYOUT_CAM_PREFIX)) {
-        GP_LOG_D("Skipping camlib filename '%s' not matching %s.",filename,GPHOTO2_FLAT_LAYOUT_CAM_PREFIX);
+    if(prefix && !strstr(filename,prefix)) {
+        GP_LOG_D("Skipping camlib filename '%s' not matching %s.",filename,prefix);
         return (0); 
     }
-#endif    
 	fd->result = gp_list_append (list, filename, NULL);
 
 	return ((fd->result == GP_OK)?0:1);

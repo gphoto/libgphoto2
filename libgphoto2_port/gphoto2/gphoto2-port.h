@@ -202,6 +202,21 @@ int gp_port_set_pin   (GPPort *port, GPPin pin, GPLevel level);
 int gp_port_send_break (GPPort *port, int duration);
 int gp_port_flush      (GPPort *port, int direction);
 
+/** 
+ * \brief Allow using file descriptor of USB device without auto-discovery
+ *
+ * This is required for access of USB on android since applications don't have direct
+ * access to USB device
+ * 
+ * It must be called prior to library initialization
+ */
+int gp_port_usb_set_sys_device(int fd);
+
+/** 
+ * \brief Get externally set file descriptor of USB device, return -1 if not set
+ */
+int gp_port_usb_get_sys_device(void);
+
 int gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct);
 int gp_port_usb_find_device_by_class (GPPort *port, int mainclass, int subclass, int protocol);
 int gp_port_usb_clear_halt  (GPPort *port, int ep);
