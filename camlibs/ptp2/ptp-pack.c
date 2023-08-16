@@ -2331,6 +2331,14 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case PTP_DPC_CANON_EOS_EVFOutputDevice:
 				case PTP_DPC_CANON_EOS_FocusMode:
 				case PTP_DPC_CANON_EOS_MirrorLockupState:
+				case PTP_DPC_CANON_EOS_LensStatus:
+				case PTP_DPC_CANON_EOS_TempStatus:
+				case PTP_DPC_CANON_EOS_DepthOfFieldPreview:
+				case PTP_DPC_CANON_EOS_EVFSharpness:
+				case PTP_DPC_CANON_EOS_EVFWBMode:
+				case PTP_DPC_CANON_EOS_MovieSoundRecord:
+				case PTP_DPC_CANON_EOS_NetworkCommunicationMode:
+				case PTP_DPC_CANON_EOS_NetworkServerRegion:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */
