@@ -7206,7 +7206,7 @@ sonyout:
 					PTPDevicePropDesc	dpd;
 
 					*eventtype = GP_EVENT_UNKNOWN;
-					/* cached devprop should hafve been flushed I think... */
+					/* cached devprop should have been flushed I think... */
 					C_PTP_REP (ptp_generic_getdevicepropdesc (params, event.Param1&0xffff, &dpd));
 
 					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
