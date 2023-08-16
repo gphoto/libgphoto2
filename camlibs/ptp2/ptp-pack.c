@@ -2409,13 +2409,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 					break;
 				/* yet unknown 32bit props */
 				case PTP_DPC_CANON_EOS_WftStatus:
-				case PTP_DPC_CANON_EOS_LensStatus:
 				case PTP_DPC_CANON_EOS_CardExtension:
-				case PTP_DPC_CANON_EOS_TempStatus:
 				case PTP_DPC_CANON_EOS_PhotoStudioMode:
-				case PTP_DPC_CANON_EOS_DepthOfFieldPreview:
-				case PTP_DPC_CANON_EOS_EVFSharpness:
-				case PTP_DPC_CANON_EOS_EVFWBMode:
 				case PTP_DPC_CANON_EOS_EVFClickWBCoeffs:
 				case PTP_DPC_CANON_EOS_MovSize:
 				case PTP_DPC_CANON_EOS_DepthOfField:
