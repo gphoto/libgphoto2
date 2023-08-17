@@ -1,0 +1,372 @@
+# Georgian translation for libgphoto2_port.
+# Copyright (C) 2023 Lutz Mueller and others
+# This file is distributed under the same license as the libgphoto2 package.
+# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgphoto2_port 2.5.28\n"
+"Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2022-01-03 11:20+0100\n"
+"PO-Revision-Date: 2023-01-08 20:38+0100\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:394
+msgid "Generic Port"
+msgstr "ზოგადი პორტი"
+
+#: libgphoto2_port/gphoto2-port-result.c:42
+msgid "No error"
+msgstr "შეცდომის გარეშე"
+
+#: libgphoto2_port/gphoto2-port-result.c:44
+msgid "Unspecified error"
+msgstr "დაუზუსტებელი შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:46
+msgid "I/O problem"
+msgstr "I/O პრობლემა"
+
+#: libgphoto2_port/gphoto2-port-result.c:48
+msgid "Bad parameters"
+msgstr "არასწორი პარამეტრები"
+
+#: libgphoto2_port/gphoto2-port-result.c:50
+msgid "Unsupported operation"
+msgstr "მხარდაუჭერელი ოპერაცია"
+
+#: libgphoto2_port/gphoto2-port-result.c:52
+msgid "Fixed limit exceeded"
+msgstr "ფიქსირებული ლიმიტი გადაჭარბებულია"
+
+#: libgphoto2_port/gphoto2-port-result.c:54
+msgid "Timeout reading from or writing to the port"
+msgstr "პორტიდან წაკითხვის ან მასში ჩაწერის მოლოდინის დრო გადაჭარბებულია"
+
+#: libgphoto2_port/gphoto2-port-result.c:56
+msgid "Serial port not supported"
+msgstr "სერიული პორტი მხარდაუჭერელია"
+
+#: libgphoto2_port/gphoto2-port-result.c:58
+msgid "USB port not supported"
+msgstr "USB პორტი მხარდაუჭერელია"
+
+#: libgphoto2_port/gphoto2-port-result.c:60
+msgid "Unknown port"
+msgstr "უცნობი პორტი"
+
+#: libgphoto2_port/gphoto2-port-result.c:62
+msgid "Out of memory"
+msgstr "არასაკმარისი მეხსიერება"
+
+#: libgphoto2_port/gphoto2-port-result.c:64
+msgid "Error loading a library"
+msgstr "ბიბლიოთეკის ჩატვირთვის შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:66
+msgid "Error initializing the port"
+msgstr "პორტის ინიციალიზაციის შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Error reading from the port"
+msgstr "პორტიდან წაკითხვის შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:70
+msgid "Error writing to the port"
+msgstr "პორტში ჩაწერის შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:72
+msgid "Error updating the port settings"
+msgstr "პორტის პარამეტრის განახლების შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:74
+msgid "Error setting the serial port speed"
+msgstr "სერიული პორტის სიჩქარის დაყენების შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:76
+msgid "Error clearing a halt condition on the USB port"
+msgstr "USB პორტის halt ბიტის გასუფთავების შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:78
+msgid "Could not find the requested device on the USB port"
+msgstr "USB პორტზე მოთხოვნილი მოწყობილობა ვერ ვპოვე"
+
+#: libgphoto2_port/gphoto2-port-result.c:80
+msgid "Could not claim the USB device"
+msgstr "USB მოწყობილობის გამოთხოვის შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:82
+msgid "Could not lock the device"
+msgstr "მოწყობილობის დაბლოკვის შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:84
+msgid "libhal error"
+msgstr "libhal -ის შეცდომა"
+
+#: libgphoto2_port/gphoto2-port-result.c:86
+msgid "Unknown error"
+msgstr "უცნობი შეცდომა"
+
+#: libgphoto2_port/gphoto2-port.c:46
+#, c-format
+msgid "The operation '%s' is not supported by this device"
+msgstr "ოპერაცია '%s' მხარდაუჭერელია მოწყობილობის მიერ"
+
+#: libgphoto2_port/gphoto2-port.c:47
+msgid "The port has not yet been initialized"
+msgstr "პორტი ჯერ ინიციალიზებული არაა"
+
+#: libgphoto2_port/gphoto2-port.c:673
+msgid "low"
+msgstr "დაბალი"
+
+#: libgphoto2_port/gphoto2-port.c:674
+msgid "high"
+msgstr "მაღალი"
+
+#: libgphoto2_port/gphoto2-port.c:1202
+msgid "No error description available"
+msgstr "შეცდომის აღწერა ხელმისაწვდომი არაა"
+
+#: disk/disk.c:133 disk/disk.c:134 disk/disk.c:212 disk/disk.c:213
+#: disk/disk.c:253 disk/disk.c:276
+#, c-format
+msgid "Media '%s'"
+msgstr "მედია '%s'"
+
+#: libusb1/libusb1.c:386 usb/libusb.c:248
+#, c-format
+msgid "Could not open USB device (%s)."
+msgstr "USB მოწყობილობის (%s) გახსნის შეცდომა."
+
+#: libusb1/libusb1.c:395 usb/libusb.c:261
+msgid "Camera is already in use."
+msgstr "კამერა უკვე გამოიყენება."
+
+#: libusb1/libusb1.c:404
+msgid "Could not detach kernel driver of camera device."
+msgstr "კამერის მოწყობილობის ბირთვის დრაივერის გამორთვის შეცდომა."
+
+#: libusb1/libusb1.c:410 usb/libusb.c:274
+msgid "Could not query kernel driver of device."
+msgstr "მოწყობილობის ბირთვის დრაივერისთვის მოთხოვნის გაგზავნის შეცდომა."
+
+#: libusb1/libusb1.c:417 usb/libusb.c:283
+#, c-format
+msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "ინტერფეისის %d (%s) გამოთხოვის შეცდომა. დარწმუნდით, რომ არც ერთი სხვა პროგრამა (%s) ან ბირთვის მოდული (მაგ: %s) იყენებს მოწყობილობას და რომ მოწყობილობამდე ჩაწერა/წაკითხვის უფლებები გაგაჩნიათ."
+
+#: libusb1/libusb1.c:428 usb/libusb.c:295
+msgid "MacOS PTPCamera service"
+msgstr "MacOS PTPCamera სერვისი"
+
+#: libusb1/libusb1.c:430 usb/libusb.c:297
+msgid "unknown libgphoto2 using program"
+msgstr "უცნობი libgphoto2 პროგრამით"
+
+#: libusb1/libusb1.c:499 usb/libusb.c:314
+#, c-format
+msgid "Could not release interface %d (%s)."
+msgstr "ინტერფეისის %d (%s) გაშვების შეცდომა."
+
+#: libusb1/libusb1.c:513 usb/libusb.c:329
+#, c-format
+msgid "Could not reset USB port (%s)."
+msgstr "USB პორტის (%s) საწყის მნიშვნელობებზე დაბრუნების შეცდომა."
+
+#: libusb1/libusb1.c:522
+msgid "Could not reattach kernel driver of camera device."
+msgstr "კამერის მოწყობილობის ბირთვის დრაივერის თავიდან ჩატვირთვის შეცდომა."
+
+#: libusb1/libusb1.c:956 usb/libusb.c:621
+#, c-format
+msgid "Could not set config %d/%d (%s)"
+msgstr "შეცდომა კონფიგურაციის %d/%d (%s) დაყენებისას"
+
+#: libusb1/libusb1.c:985 usb/libusb.c:652
+#, c-format
+msgid "Could not set altsetting from %d to %d (%s)"
+msgstr "შეცდომა altsetting -ის %d -დან %d (%s)-ზე დაყენებისას"
+
+#: libusb1/libusb1.c:1119 libusb1/libusb1.c:1211 usb/libusb.c:812
+#: usb/libusb.c:898
+#, c-format
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "USB მოწყობილობა (მომწოდებელი 0x%x, პროდუქტი 0x%x) ვერ ვიპოვე. დარწმუნდით, რომ ის მიერთებულია კომპიუტერზე."
+
+#: libusb1/libusb1.c:1150 usb/libusb.c:741
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "მითითებული მომწოდების ან პროდუქსი id (0x%x,0x%x) არასწორია."
+
+#: libusb1/libusb1.c:1500 usb/libusb.c:1191
+#, c-format
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "USB მოწყობილობა (კლასი 0x%x, ქვეკლასი 0x%x, პროტოკოლი 0x%x) ვერ ვიპოვე. დარწმუნდით, რომ ის მიერთებულია კომპიუტერზე."
+
+#: ptpip/ptpip.c:161
+msgid "PTP/IP Connection"
+msgstr "PTP/IP მიერთება"
+
+#: ptpip/ptpip.c:174
+msgid "IP Connection"
+msgstr "IP მიერთება"
+
+#: serial/unix.c:209
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr "მოწყობილობის ('%s') დაბლოკვის შეცდომა"
+
+#: serial/unix.c:219 usbdiskdirect/linux.c:79
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "მოწყობილობა '%s' დაბლოკილია pid-ის %d მიერ"
+
+#: serial/unix.c:222 usbdiskdirect/linux.c:82
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "მოწყობილობის '%s' დაბლოკვის შეცდომა (dev_lock -ის პასუხია %d)"
+
+#: serial/unix.c:251
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "მოწყობილობის ('%s') განბლოკვის შეცდომა."
+
+#: serial/unix.c:263 usbdiskdirect/linux.c:111
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "მოწყობილობის '%s' განბლოკვა შეუძლებელია. ის დაბლოკილია pid-ის %d მიერ."
+
+#: serial/unix.c:267 usbdiskdirect/linux.c:115
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "მოწყობილობის '%s' განბლოკვის შეცდომა (dev_unlock -ის პასუხია %d)"
+
+#: serial/unix.c:313
+#, c-format
+msgid "Serial Port %i"
+msgstr "სერიული პორტი %i"
+
+#: serial/unix.c:326
+msgid "Serial Port Device"
+msgstr "სერიული პორტის მოწყობილობა"
+
+#: serial/unix.c:401
+#, c-format
+msgid "Failed to open '%s' (%s)."
+msgstr "'%s'-ის (%s) გახსნის შეცდომა."
+
+#: serial/unix.c:421
+#, c-format
+msgid "Could not close '%s' (%s)."
+msgstr "%s-ის (%s) დახურვის შეცდომა."
+
+#: serial/unix.c:477
+#, c-format
+msgid "Could not write to port (%s)"
+msgstr "პორტში (%s) ჩაწერის შეცდომა"
+
+#: serial/unix.c:552
+msgid "Parity error."
+msgstr "პარიტეტის შეცდომა."
+
+#: serial/unix.c:556
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "პარიტეტის პასუხის მოულოდნელი მიმდევრობა 0xff 0x%02x."
+
+#: serial/unix.c:599
+#, c-format
+msgid "Unknown pin %i."
+msgstr "უცნობი ფეხი %i."
+
+#: serial/unix.c:621
+#, c-format
+msgid "Could not get level of pin %i (%s)."
+msgstr "ფეხის: %i (%s) დონის მიღების შეცდომა."
+
+#: serial/unix.c:657
+#, c-format
+msgid "Could not set level of pin %i to %i (%s)."
+msgstr "ფეხის %i -დან %i -ზე (%s) დაყენების შეცდომა."
+
+#: serial/unix.c:684
+#, c-format
+msgid "Could not flush '%s' (%s)."
+msgstr "ფაილის პირდაპირ დისკზე ჩაწერის შეცდომა: %s (%s)."
+
+#: serial/unix.c:778
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "სერიული პორტის ბოდების სიჩქარის %d-ზე დაყენების შეცდომა"
+
+#: usb/libusb.c:269
+#, c-format
+msgid "Could not detach kernel driver '%s' of camera device."
+msgstr "ბირთვის დრაივერის '%s' კამერის მოწყობილობიდან მოხსნის შეცდომა."
+
+#: usb/libusb.c:359
+#, c-format
+msgid "Could not close USB port (%s)."
+msgstr "USB მოწყობილობის (%s) დახურვის შეცდომა."
+
+#: usbdiskdirect/linux.c:218
+msgid "USB Mass Storage direct IO"
+msgstr "USB Mass Storage პირდაპირი IO"
+
+#: usbdiskdirect/linux.c:269 usbscsi/linux.c:253
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "'%s' (%m)-ის გახსნის შეცდომა."
+
+#: usbdiskdirect/linux.c:283 usbscsi/linux.c:281
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "'%s'-ის (%m) დახურვის შეცდომა."
+
+#: usbdiskdirect/linux.c:307
+#, c-format
+msgid "Could not seek to offset: %x on '%s' (%m)."
+msgstr "წანაცვლებაზე გადახვევის შეცდომა: %x '%s'-ზე (%m)."
+
+#: usbdiskdirect/linux.c:329
+#, c-format
+msgid "Could not write to '%s' (%m)."
+msgstr "'%s'-ში (%m) ჩაწერის შეცდომა."
+
+#: usbdiskdirect/linux.c:350
+#, c-format
+msgid "Could not read from '%s' (%m)."
+msgstr "ფაილიდან (\"%s\" %m) წაკითხვის შეცდომა."
+
+#: usbscsi/linux.c:92
+#, c-format
+msgid "Device '%s' is locked by another app."
+msgstr "მოწყობილობა %s სხვა აპლიკაციის მიერაა დაბლოკილი."
+
+#: usbscsi/linux.c:97
+#, c-format
+msgid "Failed to lock '%s' (%m)."
+msgstr "'%s' (%m)-ის დაბლოკვის შეცდომა."
+
+#: usbscsi/linux.c:113
+#, c-format
+msgid "Failed to unlock '%s' (%m)."
+msgstr "'%s' (%m)-ის განბლოკვის შეცდომა."
+
+#: usbscsi/linux.c:214
+msgid "USB Mass Storage raw SCSI"
+msgstr "USB Mass Storage raw SCSI"
+
+#: usbscsi/linux.c:325
+#, c-format
+msgid "Could not send scsi command to: '%s' (%m)."
+msgstr "'%s'-სთვის (%m) scsi ბრძანების გაგზავნის შეცდომა."
