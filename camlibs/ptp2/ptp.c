@@ -4509,7 +4509,11 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 
 	*props = NULL;
 	*size = 0;
-	PTP_CNT_INIT(ptp, PTP_OC_SONY_GetSDIOGetExtDeviceInfo, 0xc8 /* unclear */);
+	if(has_sony_mode_300(params)) {
+		PTP_CNT_INIT(ptp, PTP_OC_SONY_GetSDIOGetExtDeviceInfo, 0x12c /* newer mode (300) */);
+	} else {
+		PTP_CNT_INIT(ptp, PTP_OC_SONY_GetSDIOGetExtDeviceInfo, 0x0c8 /* older mode (200) */);
+	}
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize));
 	if (xsize == 0) {
 		ptp_debug (params, "No special operations sent?");
