@@ -11,6 +11,7 @@ ptp2:
 * Olympus: Enabled OM-1 capture
 * Battery Level: also support ENUM style battery reporting for Canon
 * Nikon 1: S1 also does not support everything
+* merged some improvements from NorthOfYou fork for Canon EOS, Nikon and Sony
 * New ids:
   - Nikon Z30
   - Canon EOS 850D, R7, R10, R5 C
@@ -27,7 +28,7 @@ general:
 * libltdl usage now thread-safe. (some other library pieces are not threadsafe yet)
 
 translations:
-* updated swedish
+* updated swedish, spanish
 ------------------------------------------------------------------------------
 libgphoto2 2.5.30 release
 
