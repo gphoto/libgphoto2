@@ -4878,12 +4878,13 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		 * to be able to capture. I looked for various trigger events or property changes on the ZV-1
 		 * but nothing worked except waiting.
 		 * This might not be required when having manual focusing according to https://github.com/gphoto/gphoto2/issues/349
+		 * 2.5 seconds were reported not enough, 3.0 seconds worked to some degree for ILCE-7RM4.
 		 */
 
-		while (time_since (params->starttime) < 2500) {
+		while (time_since (params->starttime) < 3000) {
 			/* drain the queue first */
 			if (ptp_get_one_event(params, &event)) {
-				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+				GP_LOG_D ("sony startup wait poll event.code=%04x Param1=%08x", event.Code, event.Param1);
 				continue;
 			}
 			/* wait for events and poll property data */
@@ -4897,8 +4898,8 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
-	GP_LOG_D ("dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
-	GP_LOG_D ("dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
+	GP_LOG_D ("PTP_DPC_CompressionSetting dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
+	GP_LOG_D ("PTP_DPC_CompressionSetting dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
 
 	if (dpd.CurrentValue.u8 == 0)
 		dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
@@ -4927,7 +4928,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			/* needed on older cameras like the a58, check for events ... */
 			C_PTP (ptp_check_event (params));
 			if (ptp_get_one_event(params, &event)) {
-				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+				GP_LOG_D ("during shutterbutton press event.code=%04x Param1=%08x", event.Code, event.Param1);
 				if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
 					(event.Param1 == PTP_DPC_SONY_FocusFound)
 				) {
@@ -4975,7 +4976,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		 * we drained all events above */
 		C_PTP (ptp_check_event_queue (params));
 		if (ptp_get_one_event(params, &event)) {
-			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+			GP_LOG_D ("during wait for image event.code=%04x Param1=%08x", event.Code, event.Param1);
 			if (event.Code == PTP_EC_Sony_ObjectAdded) {
 				newobject = event.Param1;
 				GP_LOG_D ("SONY ObjectAdded received, ending wait");
