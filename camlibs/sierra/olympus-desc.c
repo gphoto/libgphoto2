@@ -642,7 +642,7 @@ static const RegisterDescriptorType oly3040_reg_33[] = {
 /*
  * Register 34: LCD mode / write-only through SIERRA_SUBACTION / ACTION_LCD_MODE
  * This register always contains 1 (OFF).
- * Note: Always swicth off LCD before disconnecting the camera. Otherwise the camera
+ * Note: Always switch off LCD before disconnecting the camera. Otherwise the camera
  * controls won't work, and you will need to replug the cable and switch off the LCD.
  * (This _is_ a documented "feature".)
  */

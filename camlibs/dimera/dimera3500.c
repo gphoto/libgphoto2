@@ -202,7 +202,7 @@ conversion_chuck (const unsigned int width, const unsigned int height,
 	 *
 	 * Use neighboring cells to generate color values for each pixel.
 	 * The neighbors are the (x-1, y-1), (x, y-1), (x-1, y), and (x, y).
-	 * The exception is when x or y are zero then the neighors used are
+	 * The exception is when x or y are zero then the neighbors used are
 	 * the +1 cells.
 	 */
 

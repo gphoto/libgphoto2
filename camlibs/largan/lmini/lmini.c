@@ -335,7 +335,7 @@ int largan_capture (Camera *camera)
 		return ret;
 	}
 	if (reply != LARGAN_CAPTURE_CMD) {
-		GP_DEBUG ("largan_capture(): inconsisten reply code\n");
+		GP_DEBUG ("largan_capture(): inconsistent reply code\n");
 		return GP_ERROR;
 	}
 	if (code != code2) {

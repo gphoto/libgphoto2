@@ -3,9 +3,9 @@ I don't know what they do exactly.
 
 c1 00 00 00 21 05 01 00
 
-c1 00 00 00 20 05 01 00		This one appeares only right after issuing any delete command
+c1 00 00 00 20 05 01 00		This one appears only right after issuing any delete command
 				41 0a 01 00 0d 00 00 00 (for pic 01). It appears after every
-				 delete comand. I dont't know what
+				delete command. I don't know what
 				it does. The camera answers as usual with a "00" Byte.
 
 41 02 00 00 07 00 00 00		This appears after the

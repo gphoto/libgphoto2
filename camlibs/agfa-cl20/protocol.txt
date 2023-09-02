@@ -1,4 +1,4 @@
-Okay, let's tell something about the protocoll:
+Okay, let's tell something about the protocol:
 
 Everything can be looked up in the USB 1.1 secification!
 http://www.usb.org/developers/data/usbspec.zip
@@ -14,7 +14,7 @@ I always confuse that. Well, If I have 0x0001 then it sends 01 00, so turned aro
 3. bulk transfers with direction "in"
 
 1. These control packages are always 8 Bytes long. The first
-   Byte is the reqest Type. this is always 0xc1 for direction "in".
+   Byte is the request Type. this is always 0xc1 for direction "in".
   The c1 is a Bitmap:
 7 1	means that the direction is device to host
 6 1	Bits 6 and 5 mean that the "Type" is "Vendor"
@@ -26,7 +26,7 @@ I always confuse that. Well, If I have 0x0001 then it sends 01 00, so turned aro
 0 1
 
 the last two Bytes are always 01 00 the length of the camera reply, so 0x0001 - one Byte.
-The camera always replys with 0x00.
+The camera always replies with 0x00.
 
 
 2. Similar to 1. just the direction is "out".
@@ -36,7 +36,7 @@ The camera always replys with 0x00.
 
 3. these semm to be standard bulk transfers. you just open one, and the camera sends data.
    The direction of this transfer is "in".
-   The trnsfer buffer length is always 0x100.
+   The transfer buffer length is always 0x100.
 
 
 
@@ -74,7 +74,7 @@ As answer we should get:
 07 05 84 03 01 00 08
 
 
-Now it's time to choose a configuration. I believe the camera just has one, but without setting it exlicitly, the camera does nothing!
+Now it's time to choose a configuration. I believe the camera just has one, but without setting it explicitly, the camera does nothing!
 
 So we choose configuration 0x01.
 

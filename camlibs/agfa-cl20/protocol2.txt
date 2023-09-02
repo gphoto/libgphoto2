@@ -19,7 +19,7 @@ The specs can be found here:
 http://www.pima.net/standards/it10/PIMA15740/Exif_2-1.PDF
 
 This is a special format which INCLUDES THUMBNAILS. This means, that the picture and the thmbnail are ONE file.
-So what basicallly happens in the windows driver:
+So what basically happens in the windows driver:
 
 It retrieves the EXIF File complete, for example 173kb. I calculated it. It fits. I had 685 Bulk Transfers, 256Bytes each, which makes a total of 175360 Bytes --> my picture (Exif=Thumbnail+picture).
 The Windows driver then extracts the Thumbnail out of the Exif, saves i as JFIF (JPEG) and displays it in the thumbnail overview.
@@ -29,21 +29,21 @@ So, if you have the Exif you automatically have the Thumbnail AND the picture. S
 Interesting is also, that the actual picture, the Exif File, comes in BIG ENDIAN Format. you can see this from the 4d 4d (MM) in the EXIF header.
 
 
-Okay, let's tell something about the protocoll:
+Okay, let's tell something about the protocol:
 
 Everything can be looked up in the USB 1.1 secification!
 That's where I have everything from.
 
 All the communication consists of three usb command types:
 It seems that all the packages have a little endian byte order (least significant byte first?)
-I always cofuse that. Well, If I have 0x0001 then it sends 01 00, so turned around.
+I always confuse that. Well, If I have 0x0001 then it sends 01 00, so turned around.
 
 1. control packages with direction "in"
 2. control packages with direction "out"
 3. bulk transfers with direction "in"
 
 1. These control packages are always 8 Bytes long. The first
-   Byte is the reqest Type. this is always 0xc1 for direction "in".
+   Byte is the request Type. this is always 0xc1 for direction "in".
   The c1 is a Bitmap:
 7 1     means that the direction is device to host
 6 1     Bits 6 and 5 mean that the "Type" is "Vendor"
@@ -55,7 +55,7 @@ I always cofuse that. Well, If I have 0x0001 then it sends 01 00, so turned arou
 0 1
 
 the last two Bytes are always 01 00 the length of the camera reply, so 0x0001 - one Byte.
-The camera always replys with 0x00.
+The camera always replies with 0x00.
 
 
 2. Similar to 1. just the direction is "out".
@@ -65,7 +65,7 @@ The camera always replys with 0x00.
 
 3. these semm to be standard bulk transfers. you just open one, and the camera sends data.
    The direction of this transfer is "in".
-   The trnsfer buffer length is always 0x100.
+   The transfer buffer length is always 0x100.
 
 
 
@@ -103,7 +103,7 @@ As answer we should get:
 07 05 84 03 01 00 08
 
 
-Now it's time to choose a configuration. I believe the camera just has one, but without setting it exlicitly, the camera does not
+Now it's time to choose a configuration. I believe the camera just has one, but without setting it explicitly, the camera does not
 hing!
 
 So we choose configuration 0x01.
@@ -149,7 +149,7 @@ These are the first rows without a flash card:
    0000:
 00 00 00 10 00 ff ff ff ff 31 2e 31 36 ff ff ff
    0010:
-ff ff ff ff 00 03 00 00 00 02 00 00 ff ff 05 09 Maybe the 03 is the nubmer of pictures, but I don't
+ff ff ff ff 00 03 00 00 00 02 00 00 ff ff 05 09 Maybe the 03 is the number of pictures, but I don't
    0020:                                        think so..
 1b 00 00 00 00 00 00 50 01 e0 00 60 00 17 0f 00
    0030:
@@ -181,7 +181,7 @@ Each time I get back a picture information package, looing like (for pic 4 for e
    0020:
 1b 74 01 62 02 11 06 50 01 e0 00 60 00 17 0f 01		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
    0030:
-19 01 1a 01 1b 01 1c 01 1d 01 1e 01 1f 01 20 01		and mor ffs...
+19 01 1a 01 1b 01 1c 01 1d 01 1e 01 1f 01 20 01		and more ffs...
    0040:
 21 01 22 01 23 01 24 01 25 01 26 01 27 01 28 01
    0050:

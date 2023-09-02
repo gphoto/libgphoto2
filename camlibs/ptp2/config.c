@@ -2919,7 +2919,7 @@ static struct deviceproptableu16 fuji_action[] = {
  * 0x600                                SDK_1PushAF
  * 0x4                                  SDK_CancelS1
  * 0x300                                SDK_ShootS2
- * 0x8000 migh be autowhitebalance
+ * 0x8000 might be autowhitebalance
  * working bulb transition (with autofocus):
  * 	0x200 -> wait for d209 turn from 1 to 2 -> 0x500 -> wait BULBTIME seconds -> 0xc
  * seen in fuji webcam traces:
@@ -8224,7 +8224,7 @@ _put_Canon_EOS_TestOLC(CONFIG_PUT_ARGS) {
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
-		/* idea is to request all OLCs seperately to see the sizes in the logfile */
+		/* idea is to request all OLCs separately to see the sizes in the logfile */
 		for (i=0;i<13;i++) {	/* 0x1 -> 0x1000 */
 			C_PTP (ptp_canon_eos_setrequestolcinfogroup(params, (1<<i)));
 			ptp_check_eos_events (params);

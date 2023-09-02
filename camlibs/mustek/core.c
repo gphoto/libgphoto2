@@ -33,7 +33,7 @@
 #include "print.h"
 
 
-/*----------------------  Funktion for Communication ------------------------ */
+/*----------------------  Function for Communication ------------------------ */
 
 /*
  * Send the Initial Command. If the device is rs232 this
@@ -148,7 +148,7 @@ int mdc800_changespeed (Camera *camera,int new)
 	if (oldrate == sizeof(baud_rate)/sizeof(baud_rate[0]))
 	    return GP_ERROR_IO;
 
-	/* Setting comunication speed */
+	/* Setting communication speed */
 	ret = mdc800_io_sendCommand(camera->port,COMMAND_CHANGE_RS232_BAUD_RATE,new,oldrate,0,0,0);
 	if (ret != GP_OK)
 	{
@@ -397,7 +397,7 @@ int mdc800_setStorageSource (Camera *camera,int flag)
 	if (flag == camera->pl->memory_source)
 		return GP_OK;
 
-	/* Check wether FlashCard is present */
+	/* Check whether FlashCard is present */
 	if ((flag == 0) && mdc800_isCFCardPresent (camera))
 	{
 		printCoreNote ("There's is no FlashCard in the Camera !\n");
@@ -632,7 +632,7 @@ int mdc800_playbackImage (Camera *camera,int nr )
 }
 
 /*
- * With ths function you can get information about, how many
+ * With this function you can get information about, how many
  * pictures can be stored in the free memory of the camera.
  *
  * h: High Quality, s: Standard Quality, e: Economy Quality
@@ -705,7 +705,7 @@ int mdc800_getWBandExposure (Camera *camera,int* exp, int* wb)
 	unsigned char retval[2];
 	int ret;
 
-	/* What's that here is a real diffenrence between USB and RS232 */
+	/* What's that here is a real difference between USB and RS232 */
 	int toggle= (camera->port->type == GP_PORT_USB);
 
 	ret = mdc800_io_sendCommand(camera->port,COMMAND_GET_WB_AND_EXPOSURE,0,0,0,retval,2);

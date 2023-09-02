@@ -467,7 +467,7 @@ int camera_init (Camera *camera, GPContext *context)
         }
 
 	/* Apparently, trying to set the clock now leaves the camera in an
-	   unstable state. Skiping it for now. */
+	   unstable state. Skipping it for now. */
         /* if ( dimagev_set_date(camera->pl) < GP_OK ) {
                 GP_DEBUG( "camera_init::unable to set camera to system time");
         } */

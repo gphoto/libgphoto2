@@ -67,7 +67,7 @@
 
 2002-09-06  Michael Koltan <koltan@gmx.de>
 
-	* Implemeted the named commands for displaying,
+	* Implemented the named commands for displaying,
 	  downloading and deleting of files
 	* Added conversion for cfa bayer thumnails
 	* Minor cleanups

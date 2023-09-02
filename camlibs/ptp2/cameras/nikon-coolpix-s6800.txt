@@ -210,7 +210,7 @@ Hi
 I have been able to connect a Nikon Coolpix s6800 successfully and the
 relevant information is below/attached.
 
-I discovered the PTP propert 0xd002 is image mode with values and output as
+I discovered the PTP property 0xd002 is image mode with values and output as
 follows;
 
 7 - Scene mode - AUTO, Quality - FINE, Compression 1/4, Size - 4608x3456 -

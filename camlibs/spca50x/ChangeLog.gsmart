@@ -7,7 +7,7 @@ Sam Dez 07 21:04:46 2002  Till Adam  <till@adam-lilienthal.de>
 
 Tue Nov 05 12:17:30 2002  Till Adam  <till@adam-lilienthal.de>
 
- * return unssuported for avi downloading and small and large image
+ * return unssupported for avi downloading and small and large image
    resolutions if the bridge is a SPCA500 (gsmart mini).
 
 Sat Oct 19 22:52:34 2002  Till Adam  <till@adam-lilienthal.de>
@@ -25,7 +25,7 @@ Mon Oct 14 20:32:08 2002  Till Adam  <till@adam-lilienthal.de>
  * driver status for the spca504a based is now TESTING
  * patch from Piotr Pawlow <pp@siedziba.pl> adding an index to downloaded
    avi's and fixing a few bugs.
- * endianess fixes
+ * endianness fixes
 
 Wed Oct 09 19:58:01 2002  Till Adam  <till@adam-lilienthal.de>
 
@@ -43,7 +43,7 @@ Tue Oct 08 22:14:04 2002  Till Adam  <till@adam-lilienthal.de>
 Sam Aug 31 20:15:03 2002  Till Adam  <till@adam-lilienthal.de>
 
  * return name in the file_info as well. Fixes kamera kio-slave
- * endianess fix reported by Carl Lunde <chlunde@student.matnat.uio.no>
+ * endianness fix reported by Carl Lunde <chlunde@student.matnat.uio.no>
  * spelling fix
 
 Thu Aug 22 20:46:02 2002  Till Adam  <till@adam-lilienthal.de>

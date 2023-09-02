@@ -90,7 +90,7 @@ typedef enum {
  * branching. (KG)
  */
 
-/* relative postition */
+/* relative positition */
 typedef struct _off {
 	signed char dx, dy;
 } off;

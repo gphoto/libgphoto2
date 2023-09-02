@@ -908,7 +908,7 @@ static int download_picture(int n,int thumb,CameraFile *file,CameraPrivateLibrar
 	        fuji_size=get_picture_info(n,name,fjd);
 		DBG3("Info %3d   %12s ", n, name);
 	}
-	else fuji_size=10500;  /* Probly not same for all cams, better way ? */
+	else fuji_size=10500;  /* Probably not same for all cams, better way ? */
 
 	DBG2("calling download for %d bytes",fuji_size);
 

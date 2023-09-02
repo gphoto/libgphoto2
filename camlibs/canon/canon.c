@@ -1274,7 +1274,7 @@ canon_int_capture_preview (Camera *camera, unsigned char **data, unsigned int *l
  * canon_int_find_new_image:
  * @camera: Camera * to this camera
  * @initial_state: Camera directory dump before image capture
- * @initial_state_len: Lengt of before dump 
+ * @initial_state_len: Length of before dump 
  * @final_state: Directory dump after image capture
  * @final_state_len: Length of after dump
  * @path: Will be filled in with the path and filename of the captured

@@ -2660,7 +2660,7 @@ static struct {
 	{"Fuji:Fujifilm X-T3",			0x04cb, 0x02dd, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/gphoto2/issues/256 */
 	{"Fuji:Fujifilm GFX100",		0x04cb, 0x02de, PTP_CAP|PTP_CAP_PREVIEW},
-	/* Bruno Filho at SUSE (currently not working with cpature, but shows variables) */
+	/* Bruno Filho at SUSE (currently not working with capture, but shows variables) */
 	/* so far looks like the low end X-T30 does not support tethering, https://www.dpreview.com/forums/thread/4451199 */
 	{"Fuji:Fujifilm X-T30",			0x04cb, 0x02e3, PTP_CAP_PREVIEW},
 	/* via email to gphoto-devel on Apr 2 2021 */
@@ -5538,7 +5538,7 @@ downloadfile:
 	path->name[0]='\0';
 	path->folder[0]='\0';
 
-	if (newobject != 0) /* FIXME: does not handle assocation adds I think */
+	if (newobject != 0) /* FIXME: does not handle association adds I think */
 		return add_object_to_fs_and_path (camera, newobject, path, context);
 	return GP_ERROR;
 }
@@ -5659,7 +5659,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	SET_CONTEXT_P(params, context);
 	camera->pl->checkevents = TRUE;
 
-	/* first, draing existing events if the caller did not do it. */
+	/* first, draining existing events if the caller did not do it. */
 	while (ptp_get_one_event(params, &event)) {
 		GP_LOG_D ("draining unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 	}
@@ -5784,7 +5784,7 @@ fallback:
 	 * all newly created objects. However there might be more than one
 	 * newly created object. There a two scenarios here, which may occur
 	 * both at the time.
-	 * 1) InitiateCapture trigers capture of more than one object if the
+	 * 1) InitiateCapture triggers capture of more than one object if the
 	 * camera is in burst mode for example.
 	 * 2) InitiateCapture creates a number of objects, but not all
 	 * objects represents images. This happens when the camera creates a

@@ -244,13 +244,13 @@ bit weird, but it is how it is.
 ┌─────────┬───────────────────────────────────────────────────────────────────┐
 │ Offset  │                              Meaning                              │
 ├─────────┼───────────────────────────────────────────────────────────────────┤
-│0x00-0x01│Litte Endian 16 bit word storing last DC val for the Y channel     │
+│0x00-0x01│Little Endian 16 bit word storing last DC val for the Y channel    │
 ├─────────┼───────────────────────────────────────────────────────────────────┤
-│0x02-0x03│Litte Endian 16 bit word storing last DC val for the Cb channel    │
+│0x02-0x03│Little Endian 16 bit word storing last DC val for the Cb channel   │
 ├─────────┼───────────────────────────────────────────────────────────────────┤
-│0x04-0x05│Litte Endian 16 bit word storing last DC val for the Cr channel    │
+│0x04-0x05│Little Endian 16 bit word storing last DC val for the Cr channel   │
 ├─────────┼───────────────────────────────────────────────────────────────────┤
-│         │Litte Endian 16 bit word storing the offset into the image, from   │
+│         │Little Endian 16 bit word storing the offset into the image, from  │
 │0x06-0x07│the start of this info block! Where the huffman data for this MCU  │
 │         │starts                                                             │
 └─────────┴───────────────────────────────────────────────────────────────────┘

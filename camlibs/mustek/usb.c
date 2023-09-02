@@ -41,7 +41,7 @@
 
 
 /*
- * Checks wether the camera responds busy
+ * Checks whether the camera responds busy
  */
 static int mdc800_usb_isBusy (unsigned char* ch)
 {
@@ -54,7 +54,7 @@ static int mdc800_usb_isBusy (unsigned char* ch)
 
 
 /*
- * Checks wether the Camera is ready
+ * Checks whether the Camera is ready
  */
 static int mdc800_usb_isReady (unsigned char *ch)
 {
