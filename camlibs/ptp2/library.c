@@ -5951,11 +5951,15 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 			C_PTP (ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_AvailableShots, &dpd));
 			if (dpd.CurrentValue.u32 < 100) {
 				/* Tell the camera we have enough free space on the PC */
+#if 0
 				if (!params->uilocked)
 					ptp_canon_eos_setuilock(params);
+#endif
 				LOG_ON_PTP_E (ptp_canon_eos_pchddcapacity(params, 0x0fffffff, 0x00001000, 0x00000001));
+#if 0
 				if (!params->uilocked)
 					ptp_canon_eos_resetuilock(params);
+#endif
 			}
 		}
 	}
