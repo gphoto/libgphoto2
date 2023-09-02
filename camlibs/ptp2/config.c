@@ -334,6 +334,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 			   "setdevicepropvalue of capturetarget to 0x%x failed", ct_val.u32);
 		if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 			uint16_t	ret;
+#if 0
 			int		uilocked = params->uilocked;
 
 			/* if we want to download the image from the device, we need to tell the camera
@@ -344,9 +345,12 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 
 			if (!uilocked)
 				LOG_ON_PTP_E (ptp_canon_eos_setuilock (params));
+#endif
 			ret = ptp_canon_eos_pchddcapacity(params, 0x0fffffff, 0x00001000, 0x00000001);
+#if 0
 			if (!uilocked)
 				LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
+#endif
 			/* not so bad if its just busy, would also fail later. */
 			if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
 			C_PTP (ret);
