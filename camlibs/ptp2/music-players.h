@@ -1721,6 +1721,9 @@
   /* https://github.com/libmtp/libmtp/issues/81 */
   { "Sony", 0x054c, "NW-ZX500", 0x0d01,
       DEVICE_FLAGS_SONY_NWZ_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/170 */
+  { "Sony", 0x054c, "NW-A306", 0x0e6e,
+      DEVICE_FLAGS_SONY_NWZ_BUGS },
   { "Sony", 0x054c, "DCR-SR75", 0x1294,
       DEVICE_FLAGS_SONY_NWZ_BUGS },
 
@@ -3165,8 +3168,11 @@
   /* https://github.com/libmtp/libmtp/issues/116 */
   { "Lenovo", 0x17ef, "TB-X306F (3rd id)", 0x7c97,
       DEVICE_FLAGS_ANDROID_BUGS },
-  /*https://github.com/libmtp/libmtp/issues/111  */
+  /* https://github.com/libmtp/libmtp/issues/111  */
   { "Lenovo", 0x17ef, "TAB M7 Gen 3", 0x7cb3,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/173 */
+  { "Lenovo", 0x17ef, "TAB P11 Plus", 0x7d4b,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1736/ */
   { "Lenovo", 0x17ef, "P1060X", 0x9039,
