@@ -46,7 +46,7 @@ Your operating system will tell you about that because it is likely to recognize
 the device as a SCSI disk that you can mount (for Linux 'dmesg' will tell you).
 Again, those cameras *cannot* be accessed through libgphoto2. Some of them can
 be switched to use a different communication protocol and might be in that case
-useable with libgphoto2.
+usable with libgphoto2.
 
 Other camera support a protocol called PTP or USB Imaging Devices that has
 been developed by Kodak and other. libgphoto2 does support PTP. Also working

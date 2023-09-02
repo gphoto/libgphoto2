@@ -19,7 +19,7 @@ being captured.
 Doing a deletion is virtual and does not affect the filesystem content.
 
 PTP Opcode 0x9999 can be used to emit PTP Events
-First argment is the type, second argument is the delay of the interrupt in 1/1000 seconds
+First argument is the type, second argument is the delay of the interrupt in 1/1000 seconds
 
 	0x0	objectadded		- will use a random existing jpg and virtually duplicate it
 	0x1	objectremoved		- will virtually delete the first existing jpg it finds

@@ -16,7 +16,7 @@ Camera drivers will get in contact with a #CameraAbilitiesList when the #CameraL
 <para>
 Frontends will use the #CameraAbilitiesList as an entry point to gphoto2. In 
 order to set up a #Camera, you need to call #gp_camera_set_abilities. The
-#CameraAbilities you pass to that function can be retreived from a
+#CameraAbilities you pass to that function can be retrieved from a
 #CameraAbilitiesList.
   <example>
     <title>Using the #CameraAbilitiesList</title>
@@ -109,7 +109,7 @@ order to set up a #Camera, you need to call #gp_camera_set_abilities. The
   This structure is used to inform frontends about what abilities a
   specific camera model has. In addition, it is used by gphoto2 to
   determine what library to load on #gp_camera_set_abilities.
-  For retreiving abilities of a specific model, create a
+  For retrieving abilities of a specific model, create a
   #CameraAbilitiesList and use #gp_abilities_list_load in order to scan
   the system for drivers. Then, retrieve the #CameraAbilities from this list.
 </para>

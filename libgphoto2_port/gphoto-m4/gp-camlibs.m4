@@ -466,7 +466,7 @@ GP_SET_EQUAL_IFELSE([camlib-set], [camlib-set-standard], [dnl
     ])
     m4_pattern_allow([GP_CAMLIB_SET_IS_NONSTANDARD])dnl
     AC_DEFINE_UNQUOTED([GP_CAMLIB_SET_IS_NONSTANDARD], [1],
-                       [define when the camlib set to buidl is non-standard])
+                       [define when the camlib set to build is non-standard])
 ])dnl
 
 m4_pattern_allow([GP_CAMLIB_SET])dnl

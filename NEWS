@@ -153,7 +153,7 @@ ptp2:
   * EOS M6 Mark 2 is actually more like a EOS DSLR and fully capable, added some work
   * Handle OLCINFO for M6 Mark 2 and EOS R5 and new cameras
   * added current list of autoexposuremode to expose also Fv and friends
-  * Canon Liveview size is encoded in "output" (PC / MOBILE / MOBILE2 variants are the different livesizes), try to expose seperately as "liveviewsize"
+  * Canon Liveview size is encoded in "output" (PC / MOBILE / MOBILE2 variants are the different livesizes), try to expose separately as "liveviewsize"
   * decode more options, nickname, eosmoviemode (color/bw), strobofiring, eventmode, flashcharged, oneshotrawon
   * bugfixes
 * Sony Alpha:
@@ -1077,7 +1077,7 @@ libgphoto2 API:
    * Adjusted to new GPPortInfo handling.
 
    * Rewrote gphoto2-filesys.c to be directory based (in a tree structure).
-     Change should not be visibile outside of gphoto2-filesys.c.
+     Change should not be visible outside of gphoto2-filesys.c.
 
 libgphoto2_port API:
    * GPPortInfo is now abstracted and internal.
@@ -1654,7 +1654,7 @@ libgphoto2:
    * gp-byteorder.m4 fixes for newer glibcs.
 
 Example programs:
-   * Addes some basic library usage example programs and helpers.
+   * Added some basic library usage example programs and helpers.
 
 PTP2 driver:
    * Merged camlib from TRUNK.
@@ -1846,7 +1846,7 @@ PTP2 driver:
 
  	Canon PowerShot SD1000, SD900, A450, A550, A560, A570, A420, SD40, SD750
  	Canon PowerShot S5 IS, SD1000
-	Canon Digitial IXUS 70, 75, 900Ti, iZ
+	Canon Digital IXUS 70, 75, 900Ti, iZ
 	Canon MV750i
 	Nikon CoolPix S4, S6, P4, L10
 	Nikon DSC D40, 
@@ -1942,7 +1942,7 @@ Ricoh G3:
    * Added Ricoh Caplio R4 id.
 
 Disk port:
-   * Addes Solaris filesystem table handling.
+   * Added Solaris filesystem table handling.
    * Fixed a crasher.
    * Skip "fuse" filesystem.
 

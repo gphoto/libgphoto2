@@ -22,7 +22,7 @@ AS_VAR_IF([$1], [], [dnl
 	$1="\${libdir}/${PACKAGE_TARNAME}/${PACKAGE_VERSION}"
 	AC_MSG_RESULT([${$1} (default)])
 ], [dnl
-	AC_MSG_RESULT([${$1} (set explictly)])
+	AC_MSG_RESULT([${$1} (set explicitly)])
 ])
 
 dnl If you see this after 2022-12-31, please remove the following
