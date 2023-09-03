@@ -84,7 +84,7 @@ static bool inquiry_read(Camera *camera)
 		return false;
 	}
 	/* FIXME: len is 8bit unsigned, so can be at most 255 ... sizeof(struct dp_info) is currently over 256
-	 * so this is alwas false ... It is harmless and likely ok, but weird. -Marcus 20200831 */
+	 * so this is always false ... It is harmless and likely ok, but weird. -Marcus 20200831 */
 	if (camera->pl->info.len > sizeof(struct dp_info)) {
 		GP_LOG_E("camera info too long: %d bytes", camera->pl->info.len);
 		return false;
@@ -388,7 +388,7 @@ camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 	_(
 	"Docupen scanner can't download/erase individual images, only everything\n"
 	"at once. To work-around this, a cache file is created where a copy of the\n"
-	"scanner's memory is stored. The cache fill is trigerred by downloading any\n"
+	"scanner's memory is stored. The cache fill is triggered by downloading any\n"
 	"image - so downloading the first image will take long time if the cache is\n"
 	"empty or not valid. The cache is invalidated automatically when the amount\n"
 	"of used memory reported by the scanner does not match cache size.\n"
@@ -672,7 +672,7 @@ camera_init (Camera *camera, GPContext *context)
 		camera_exit(camera, context);
 		return GP_ERROR_CAMERA_ERROR;
 	}
-	gp_port_read(camera->port, buf, sizeof(buf));	/* read and ingore */
+	gp_port_read(camera->port, buf, sizeof(buf));	/* read and ignore */
 
 	if (!dp_cmd(camera->port, cmd_inquiry)) {
 		GP_LOG_E("inquiry failed");

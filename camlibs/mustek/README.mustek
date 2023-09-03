@@ -13,11 +13,11 @@ Baudrate is selectable in the GUI.
 History :
 
 10.01.2000 The Library was ported to the ne iolib. It uses also
-           the USB Interfave from Johannes Erdfeld. This makes it
+           the USB Interface from Johannes Erdfeld. This makes it
 			  unnecessary to have a special Kernelmodul for the 
 			  Mustek.
 			  In camera.h there is added a new entry, so you can select
-			  wether you want to use USB or rs232. This is needed
+			  whether you want to use USB or rs232. This is needed
 			  because the iolib does not support autodetection for this.
 
 19.11.1999 Autoprobe of the Baudrate when starting (opening) this

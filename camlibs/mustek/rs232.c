@@ -35,7 +35,7 @@
 
 /*
  * sends a command and receives the answer to this
- * buffer: Strores the answer
+ * buffer: Stores the answer
  * length: length of answer or null
  */
 int mdc800_rs232_sendCommand(GPPort *port,unsigned char* command, unsigned char* buffer, int length)

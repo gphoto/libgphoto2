@@ -27,7 +27,7 @@ done with high res images, 640 x 480.
 				// that number can exceed 255, it is not
 				// clear what the second byte is.
 
-61 <image number> 00		// download thumbnail (first image is 0 thes
+61 <image number> 00		// download thumbnail (first image is 0 the
 				// image number (starts at zero) the
 				// second byte could be the msb of the image
 				// number, if more than 256 images are
@@ -94,7 +94,7 @@ Commands seen but not investigated
 
 2d 65 66			// no response ( take picture? )
 
-The following sequnece is used to down load a full fine mode image, after
+The following sequence is used to download a full fine mode image, after
 the baud rate is set.
 
 41 54 0d

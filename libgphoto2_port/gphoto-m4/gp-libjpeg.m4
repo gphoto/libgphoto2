@@ -54,7 +54,7 @@ AC_MSG_RESULT([$with_jpeg])
 dnl
 AS_CASE([$with_jpeg],
 [no], [
-  # libjpeg explictly disabled from command line
+  # libjpeg explicitly disabled from command line
   GP_CONFIG_MSG([JPEG mangling support],
                 [no (disabled by --without-jpeg)])
 ],

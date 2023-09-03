@@ -1126,7 +1126,7 @@ gp_filesystem_delete_file (CameraFilesystem *fs, const char *folder,
 }
 
 /**
- * \brief Delete a virtal file from a folder in the filesystem
+ * \brief Delete a virtual file from a folder in the filesystem
  * \param fs a #CameraFilesystem
  * \param folder a folder in which to delete the file
  * \param filename the name of the file to delete
@@ -1474,7 +1474,7 @@ recursive_folder_scan (
 		}
 		f = f->next;
 	}
-	/* thorugh all subfoilders */
+	/* through all subfolders */
 	return GP_ERROR_FILE_NOT_FOUND;
 }
 /**

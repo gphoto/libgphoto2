@@ -138,7 +138,7 @@ no rewind controls. The constraints which this places are obvious. It means
 for example that to download all the photos on the camera to display thumbnails 
 requires the camera to be reset afterwards, because that is the only way to do
 the "rewind" required before any of the photos can be accessed again. It also 
-menas that "gphoto2 -p 2" would NOT download the second photo on the camera, 
+means that "gphoto2 -p 2" would NOT download the second photo on the camera, 
 unless the support for it is so written as to download the first photo, then 
 the second photo, and to process only the second one, having consigned the 
 data from the first photo to /dev/null. The camera simply cannot do better. 

@@ -60,7 +60,7 @@ struct _PTPContainer {
 	/* events can only have three parameters */
 	uint32_t Param4;
 	uint32_t Param5;
-	/* the number of meaningfull parameters */
+	/* the number of meaningful parameters */
 	uint8_t	 Nparam;
 };
 typedef struct _PTPContainer PTPContainer;
@@ -570,7 +570,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
-#define PTP_OC_NIKON_GetPartialObjectHiSpeed	0x9400	/* 3 params, p1: object handle, p2: 32bit transfer size, p3: terminate after transfer. DATA in, Reuslt: r1: 32bit number sent, r2: before offset low 32bit , r3: before offset high 32bit */
+#define PTP_OC_NIKON_GetPartialObjectHiSpeed	0x9400	/* 3 params, p1: object handle, p2: 32bit transfer size, p3: terminate after transfer. DATA in, Result: r1: 32bit number sent, r2: before offset low 32bit , r3: before offset high 32bit */
 #define PTP_OC_NIKON_StartSpotWb		0x9402
 #define PTP_OC_NIKON_EndSpotWb			0x9403
 #define PTP_OC_NIKON_ChangeSpotWbArea		0x9404
@@ -2863,7 +2863,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
  * 0x600 				SDK_1PushAF
  * 0x4 					SDK_CancelS1
  * 0x300 				SDK_ShootS2
- * 0x8000 migh be autowhitebalance
+ * 0x8000 might be autowhitebalance
  */
 #define PTP_DPC_FUJI_AFStatus				0xD209
 #define PTP_DPC_FUJI_DeviceName				0xD20B

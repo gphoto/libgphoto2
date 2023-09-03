@@ -801,7 +801,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 				int payloadSize = sizeof(packet.data) - 9;
 				ssize_t w = read(src, &packet.data[8], payloadSize);
 
-				/* Detect a Topfield protcol bug and prevent the sending of packets
+				/* Detect a Topfield protocol bug and prevent the sending of packets
 				   that are a multiple of 512 bytes. */
 				if((w > 4) && (((((PACKET_HEAD_SIZE + 8 + w) + 1) & ~1) % 0x200) == 0)) {
 					lseek(src, -4, SEEK_CUR);

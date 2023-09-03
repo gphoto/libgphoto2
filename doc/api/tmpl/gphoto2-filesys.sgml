@@ -14,7 +14,7 @@ prevent synchronization errors.
 <para>
 Camera drivers need to set up the #CameraFilesystem on #camera_init in order
 to make the #CameraFilesystem capable of getting file or folder listings, 
-retreiving information about a file, etc.
+retrieving information about a file, etc.
   <example>
     <title>Setting up the #CameraFilesystem</title>
     <programlisting>

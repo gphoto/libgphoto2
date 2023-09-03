@@ -441,7 +441,7 @@
 2007-10-26  Marcus Meissner  <marcus@jet.franken.de>
 	
 	* library.c, config.c: Set GPContext consistently
-	  in the Params struct, otherwise we might resuse
+	  in the Params struct, otherwise we might reuse
 	  already free contexts.
 
 2007-10-25  Marcus Meissner  <marcus@jet.franken.de>
@@ -2080,7 +2080,7 @@
 	  structures
 2003-04-03 Mariusz Woloszyn
 	* library.c: enabled getting config support;
-	  curently only getting batery level is supported;
+	  curently only getting battery level is supported;
 	* ptp-pack.c: "finished" Device Property Describing Dataset
 	  unpacking function ptp_unpack_DPD();
 	* ptp.h: changed PTP_DC_* to PTP_DTC_* (DTC stands for DataType Code);

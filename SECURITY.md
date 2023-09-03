@@ -30,7 +30,7 @@ Attack impacts are achieving control over this computer, or blocking its use.
 
 ## Bugs considered security issues
 
-(Mostly for CVE assigments rules.)
+(Mostly for CVE assignments rules.)
 
 In scope of a security attack are the autodetecting protocols support,
 like USB.

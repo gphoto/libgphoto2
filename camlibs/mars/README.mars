@@ -43,7 +43,7 @@ here the information can be used to run options such as gphoto2 -p 3 and
 gphoto2 -p 3-5. The OEM software provided with the various cameras does not 
 take advantage even of the mentioned abilities. With the OEM driver, one has 
 the choice either to download all photos, or none. If all are downloaded, then 
-thumbnails are created from temporry image files in C:\TEMP. Thereby, the user 
+thumbnails are created from temporary image files in C:\TEMP. Thereby, the user 
 can decide what to "save" in some more permanent place. 
 
 

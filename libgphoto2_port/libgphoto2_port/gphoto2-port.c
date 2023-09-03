@@ -241,7 +241,7 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 }
 
 /**
- * \brief Retreives information about the port.
+ * \brief Retrieves information about the port.
  *
  * Retrieves the informations set by gp_port_set_info().
  *
@@ -447,7 +447,7 @@ gp_port_read (GPPort *port, char *data, int size)
 }
 
 /**
- * \brief Check for intterupt.
+ * \brief Check for interrupt.
  *
  * \param port a GPPort
  * \param data a pointer to an allocated buffer
@@ -486,7 +486,7 @@ gp_port_check_int (GPPort *port, char *data, int size)
  * \param data a pointer to an allocated buffer
  * \param size the number of bytes that should be read
  *
- * Reads a specified number of bytes from the inerrupt endpoint
+ * Reads a specified number of bytes from the interrupt endpoint
  * into the supplied buffer.
  * Function waits 50 miliseconds for data on interrupt endpoint.
  *
@@ -560,7 +560,7 @@ int gp_port_timeout_get (GPPort *port, int *timeout)
  * \param port a #GPPort
  * \param timeout pointer to timeout
  *
- * Retreives the current timeout of the port.
+ * Retrieves the current timeout of the port.
  *
  * \return a gphoto2 error code
  **/
@@ -624,7 +624,7 @@ int gp_port_settings_set (GPPort *port, GPPortSettings settings)
  * \param port a #GPPort
  * \param settings pointer to the retrieved settings
  *
- * Retreives the current settings of a port.
+ * Retrieves the current settings of a port.
  *
  * \return a gphoto2 error code
  **/
@@ -1145,7 +1145,7 @@ int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
 		}
 		GP_LOG_D ("\tCurrent command read filemark: %s",(sense[2]&0x80)?"yes":"no");
 		GP_LOG_D ("\tEarly warning passed: %s",(sense[2]&0x40)?"yes":"no");
-		GP_LOG_D ("\tIncorrect blocklengt: %s",(sense[2]&0x20)?"yes":"no");
+		GP_LOG_D ("\tIncorrect block length: %s",(sense[2]&0x20)?"yes":"no");
 		GP_LOG_D ("\tSense Key: %d",sense[2]&0xf);
 		if (sense[0]&0x80)
 			GP_LOG_D ("\tResidual Length: %d",sense[3]*0x1000000+sense[4]*0x10000+sense[5]*0x100+sense[6]);

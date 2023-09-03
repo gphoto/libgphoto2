@@ -122,7 +122,7 @@ gp_port_library_list (GPPortInfoList *list)
 			if (!unknownint)
 				continue;
 			/* Note: We do not skip USB storage. Some devices can support both,
-			 * and the Ricoh erronously reports it.
+			 * and the Ricoh erroneously reports it.
 			 */
 			nrofdevices++;
 		}
@@ -176,7 +176,7 @@ gp_port_library_list (GPPortInfoList *list)
 			if (!unknownint)
 				continue;
 			/* Note: We do not skip USB storage. Some devices can support both,
-			 * and the Ricoh erronously reports it.
+			 * and the Ricoh erroneously reports it.
 			 */
 			gp_port_info_new (&info);
 			gp_port_info_set_type (info, GP_PORT_USB);
@@ -426,7 +426,7 @@ gp_port_usb_reset(GPPort *port)
 {
 	int ret;
 
-	GP_LOG_D ("Reseting port");
+	GP_LOG_D ("Resetting port");
 	C_PARAMS (port && port->pl->dh);
 
 	ret = usb_reset(port->pl->dh);
@@ -533,7 +533,7 @@ gp_port_usb_msg_class_read_lib(GPPort *port, int request,
 }
 
 /*
- * This function applys changes to the device.
+ * This function applies changes to the device.
  *
  * New settings are in port->settings_pending and the old ones
  * are in port->settings. Compare them first and only call

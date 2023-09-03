@@ -522,7 +522,7 @@ gp_port_info_list_get_info (GPPortInfoList *list, int n, GPPortInfo *info)
  * \param info a #GPPortInfo
  * \param name a pointer to a char* which will receive the name
  *
- * Retreives the name of the passed in GPPortInfo, by reference.
+ * Retrieves the name of the passed in GPPortInfo, by reference.
  *
  * \return a gphoto2 error code
  **/
@@ -553,7 +553,7 @@ gp_port_info_set_name (GPPortInfo info, const char *name) {
  * \param info a #GPPortInfo
  * \param path a pointer to a char* which will receive the path
  *
- * Retreives the path of the passed in GPPortInfo, by reference.
+ * Retrieves the path of the passed in GPPortInfo, by reference.
  *
  * \return a gphoto2 error code
  **/
@@ -584,7 +584,7 @@ gp_port_info_set_path (GPPortInfo info, const char *path) {
  * \param info a #GPPortInfo
  * \param type a pointer to a GPPortType variable which will receive the type
  *
- * Retreives the type of the passed in GPPortInfo
+ * Retrieves the type of the passed in GPPortInfo
  *
  * \return a gphoto2 error code
  **/

@@ -520,7 +520,7 @@ REPORT HARDWARE REVISION
       06   XX   YY ZZ WW VV
 
 Comment:
-      Get hardware revison number.
+      Get hardware revision number.
 
     XX: checksum
     YY: model ID1
@@ -618,7 +618,7 @@ Comment:
      4th byte macro mode   01:normal 02:macro mode
      5th byte unknown 01
      6th byte unknown 0a,09,0c,0e,0b shutter speed? WB?
-     7th byte iris(meybe) 07:(F8) 03:(F2)
+     7th byte iris(maybe) 07:(F8) 03:(F2)
      8th byte unknown 0d
      9th byte unknown 04
     10th byte unknown 0d

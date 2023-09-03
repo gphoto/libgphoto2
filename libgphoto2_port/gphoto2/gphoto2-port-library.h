@@ -33,7 +33,7 @@
  * These operations are to be implemented and set by the port library,
  * which drives the lowlevel protocol (serial, usb, etc.).
  *
- * They are acessed using the accessor functions, like gp_port_open(),
+ * They are accessed using the accessor functions, like gp_port_open(),
  * gp_port_read() and gp_port_write().
  */
 typedef struct _GPPortOperations {

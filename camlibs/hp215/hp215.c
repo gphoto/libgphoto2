@@ -31,7 +31,7 @@
     Ported to libgphoto2: Marcus Meissner <marcus@jet.franken.de> in 2005.
 
     Camera commands:
-     Global comands
+     Global commands
                            Bytes   | 0    1cmd 2    3    4    5    6    7    8    9    10   11   12   13   14   15
     -------------------------------+----------------------------------------------------------------------------------
      init camera              8    | 0x02 0xce 0x80 0x8a 0x84 0x8d 0x83 0x03
@@ -40,8 +40,8 @@
      Delete all pics         12    | 0x02 0xb1 0x84 0x8f 0x8f 0x8f 0x8f 0x86 0x80 0x8a 0x86 0x03
 
 
-     Single picture comands:
-     Allways 12 bytes long
+     Single picture commands:
+     Always 12 bytes long
                                    | 0    1cmd 2    3    4    5    6    7    8    9    10    11
     -------------------------------+---------------------------------------------------------------
      Request for a preview         | 0x02 0xb3 0x84 0x80 ...                                 0x03

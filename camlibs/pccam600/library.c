@@ -18,7 +18,7 @@
 /*                                                              */
 /* Please notice that camera commands was sniffed by use of a   */
 /* usbsniffer under windows. This is an experimental driver and */
-/* a work in progess(I hope :))                                 */
+/* a work in progress(I hope :))                                 */
 /*                                                              */
 /* You should have received a copy of the GNU Library General   */
 /* Public License along with this library; if not, write to the */
