@@ -1,4 +1,10 @@
 libgphoto2 2.5.31.1 development
+
+ptp2:
+* Added ids:
+  - Canon EOS R100
+translations:
+* added georgian, friulian
 ------------------------------------------------------------------------------
 libgphoto2 2.5.31 release
 
