@@ -2523,6 +2523,8 @@ static struct {
 	{"Canon:EOS R5 C",			0x04a9, 0x3303, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/881 */
 	{"Canon:EOS R6m2",			0x04a9, 0x330b, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/libgphoto2/issues/924 */
+	{"Canon:EOS R100",			0x04a9, 0x3312, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
