@@ -1,0 +1,118 @@
+Camera summary:
+Manufacturer: LEICA
+Model: LEICA Q3
+  Version: 1.2.0
+  Serial Number: 000000000XXXXXXX
+PTP Standard Version: 1.10
+
+Capture Formats: 
+Display Formats: Association/Directory, DPOF, Apple Quicktime, Defined Type, TIFF EP, JPEG
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: SD1
+	VolumeLabel: 
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 256511049728 (244628 MB)
+	Free Space (Bytes): 236885901312 (225912 MB)
+	Free Space (Images): 0
+
+Device Property Summary:
+Battery Level(0x5001): error 2003 on query.
+White Balance(0x5005): error 2003 on query.
+Focus Mode(0x500a): error 2003 on query.
+Exposure Metering Mode(0x500b): error 2003 on query.
+Exposure Program Mode(0x500e): error 2003 on query.
+Exposure Index (film speed ISO)(0x500f): error 2003 on query.
+Exposure Bias Compensation(0x5010): error 2003 on query.
+Still Capture Mode(0x5013): error 2003 on query.
+Contrast(0x5014): error 2003 on query.
+Sharpness(0x5015): error 2003 on query.
+Supported Streams(0x5020): error 2003 on query.
+Enabled Streams(0x5021): error 2003 on query.
+Video Format(0x5022): error 2003 on query.
+Video Resolution(0x5023): error 2003 on query.
+Video Framerate(0x5025): error 2003 on query.
+Property 0xd004: error 2003 on query.
+Property 0xd00b: error 2003 on query.
+Property 0xd00c: error 2003 on query.
+Property 0xd00f: error 2003 on query.
+Property 0xd014: error 2003 on query.
+Property 0xd01a: error 2003 on query.
+Property 0xd03b: error 2003 on query.
+Property 0xd03c: error 2003 on query.
+Property 0xd09c: error 2003 on query.
+Property 0xd0b3: error 2003 on query.
+Property 0xd0e0: error 2003 on query.
+Property 0xd0e1: error 2003 on query.
+Property 0xd0eb: error 2003 on query.
+Property 0xd0ec: error 2003 on query.
+Property 0xd108: error 2003 on query.
+Property 0xd136: error 2003 on query.
+Property 0xd137: error 2003 on query.
+Property 0xd13e: error 2003 on query.
+Property 0xd196: error 2003 on query.
+Property 0xd020: error 2003 on query.
+Property 0xd209: error 2003 on query.
+Property 0xd212: error 2003 on query.
+Property 0xd21d: error 2003 on query.
+Property 0xd406: error 2003 on query.
+Property 0xd60c: error 2003 on query.
+Property 0xd60e: error 2003 on query.
+Property 0xd610: error 2003 on query.
+Property 0xd61a: error 2003 on query.
+Property 0xd625: error 2003 on query.
+Property 0xd62c: error 2003 on query.
+Property 0xd639: error 2003 on query.
+Property 0xd65f: error 2003 on query.
+Property 0xd69c: error 2003 on query.
+Property 0xd69d: error 2003 on query.
+
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: 000000000XXXXXXX
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 1
+Type: TEXT
+Current: LEICA
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: LEICA Q3
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 1
+Type: TEXT
+Current: 1.2.0
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 1
+Type: TEXT
+Current: 
+END
