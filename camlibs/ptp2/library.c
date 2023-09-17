@@ -1371,6 +1371,9 @@ static struct {
 	{"Sony:Alpha-A7 IV (MTP mode)",		0x054c, 0x0da6, 0},
 	{"Sony:Alpha-A7 IV (PC Control)",	0x054c, 0x0da7, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* https://github.com/gphoto/gphoto2/issues/596 */
+	{"Sony:ZV-E10 (MTP mode)",		0x054c, 0x0de3, 0},
+
 	/* The A7-RV */
 	{"Sony:ILCE-7RM5 (PC Control)",		0x054c, 0x0e0c, PTP_CAP|PTP_CAP_PREVIEW},
 
