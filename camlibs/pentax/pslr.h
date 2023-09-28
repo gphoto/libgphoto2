@@ -66,9 +66,9 @@ typedef struct {
     const char *extension;
 } user_file_format_t;
 
-extern user_file_format_t file_formats[3];
+extern user_file_format_t pslr_user_file_formats[3];
 
-user_file_format_t *get_file_format_t( user_file_format uff );
+user_file_format_t *pslr_get_user_file_format_t( user_file_format uff );
 
 // OFF-AUTO: Off-Auto-Aperture
 typedef enum {
@@ -116,8 +116,6 @@ typedef struct {
 
 typedef void (*pslr_progress_callback_t)(uint32_t current, uint32_t total);
 
-void sleep_sec(double sec);
-
 pslr_handle_t pslr_init(char *model, char *device);
 int pslr_connect(pslr_handle_t h);
 int pslr_disconnect(pslr_handle_t h);
@@ -129,12 +127,11 @@ int pslr_focus(pslr_handle_t h);
 
 int pslr_get_status(pslr_handle_t h, pslr_status *sbuf);
 int pslr_get_status_buffer(pslr_handle_t h, uint8_t *st_buf);
-int pslr_get_settings(pslr_handle_t h, pslr_settings *ps);
 int pslr_get_settings_json(pslr_handle_t h, pslr_settings *ps);
 int pslr_get_settings_buffer(pslr_handle_t h, uint8_t *st_buf);
 
-char *collect_status_info( pslr_handle_t h, pslr_status status );
-char *collect_settings_info( pslr_handle_t h, pslr_settings settings );
+char *pslr_get_status_info( pslr_handle_t h, pslr_status status );
+char *pslr_get_settings_info( pslr_handle_t h, pslr_settings settings );
 
 int pslr_get_buffer(pslr_handle_t h, int bufno, pslr_buffer_type type, int resolution,
                     uint8_t **pdata, uint32_t *pdatalen);
@@ -145,7 +142,7 @@ int pslr_set_progress_callback(pslr_handle_t h, pslr_progress_callback_t cb,
 int pslr_set_shutter(pslr_handle_t h, pslr_rational_t value);
 int pslr_set_aperture(pslr_handle_t h, pslr_rational_t value);
 int pslr_set_iso(pslr_handle_t h, uint32_t value, uint32_t auto_min_value, uint32_t auto_max_value);
-int pslr_set_ec(pslr_handle_t h, pslr_rational_t value);
+int pslr_set_expose_compensation(pslr_handle_t h, pslr_rational_t value);
 
 int pslr_set_white_balance(pslr_handle_t h, pslr_white_balance_mode_t wb_mode);
 int pslr_set_white_balance_adjustment(pslr_handle_t h, pslr_white_balance_mode_t wb_mode, uint32_t wbadj_mg, uint32_t wbadj_ba);
@@ -169,7 +166,7 @@ int pslr_set_jpeg_hue(pslr_handle_t h, int32_t hue);
 int pslr_set_image_format(pslr_handle_t h, pslr_image_format_t format);
 int pslr_set_raw_format(pslr_handle_t h, pslr_raw_format_t format);
 int pslr_set_user_file_format(pslr_handle_t h, user_file_format uff);
-user_file_format get_user_file_format( pslr_status *st );
+user_file_format pslr_get_user_file_format( pslr_status *st );
 
 int pslr_delete_buffer(pslr_handle_t h, int bufno);
 
@@ -190,9 +187,9 @@ void pslr_buffer_close(pslr_handle_t h);
 uint32_t pslr_buffer_get_size(pslr_handle_t h);
 
 int pslr_set_exposure_mode(pslr_handle_t h, pslr_exposure_mode_t mode);
-int pslr_select_af_point(pslr_handle_t h, uint32_t point);
+int pslr_set_selected_af_point(pslr_handle_t h, uint32_t point);
 
-const char *pslr_camera_name(pslr_handle_t h);
+const char *pslr_get_camera_name(pslr_handle_t h);
 int pslr_get_model_max_jpeg_stars(pslr_handle_t h);
 int pslr_get_model_jpeg_property_levels(pslr_handle_t h);
 int pslr_get_model_status_buffer_size(pslr_handle_t h);
@@ -214,25 +211,22 @@ bool pslr_get_model_bufmask_single(pslr_handle_t h);
 pslr_buffer_type pslr_get_jpeg_buffer_type(pslr_handle_t h, int quality);
 int pslr_get_jpeg_resolution(pslr_handle_t h, int hwres);
 
-int pslr_read_datetime(pslr_handle_t *h, int *year, int *month, int *day, int *hour, int *min, int *sec);
+int pslr_get_datetime(pslr_handle_t *h, int *year, int *month, int *day, int *hour, int *min, int *sec);
 
-int pslr_read_dspinfo(pslr_handle_t *h, char *firmware);
+int pslr_get_dspinfo(pslr_handle_t *h, char *firmware);
 
-int pslr_read_setting(pslr_handle_t *h, int offset, uint32_t *value);
-int pslr_write_setting(pslr_handle_t *h, int offset, uint32_t value);
-int pslr_write_setting_by_name(pslr_handle_t *h, char *name, uint32_t value);
+int pslr_get_setting(pslr_handle_t *h, int offset, uint32_t *value);
+int pslr_set_setting(pslr_handle_t *h, int offset, uint32_t value);
+int pslr_set_setting_by_name(pslr_handle_t *h, char *name, uint32_t value);
 bool pslr_has_setting_by_name(pslr_handle_t *h, char *name);
-int pslr_read_settings(pslr_handle_t *h);
+int pslr_get_settings(pslr_handle_t *h);
 
 pslr_gui_exposure_mode_t exposure_mode_conversion( pslr_exposure_mode_t exp );
-char *format_rational( pslr_rational_t rational, char * fmt );
+char *pslr_format_rational( pslr_rational_t rational, char * fmt );
 
 int pslr_test( pslr_handle_t h, bool cmd9_wrap, int subcommand, int argnum,  int arg1, int arg2, int arg3, int arg4);
 
-char *copyright(void);
+char *pslr_copyright(void);
 
-void write_debug( const char* message, ... );
-
-int debug_onoff(ipslr_handle_t *p, char debug_mode);
-
-#endif /* !defined(CAMLIBS_PENTAX_PSLR_H) */
+int pslr_set_debugmode(ipslr_handle_t *p, char debug_mode);
+#endif

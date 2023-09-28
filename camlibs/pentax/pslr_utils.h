@@ -1,6 +1,6 @@
 /*
     pkTriggerCord
-    Copyright (C) 2011-2019 Andras Salamon <andras.salamon@melda.info>
+    Copyright (C) 2011-2020 Andras Salamon <andras.salamon@melda.info>
     Remote control of Pentax DSLR cameras.
 
     based on:
@@ -9,7 +9,8 @@
     Remote control of Pentax DSLR cameras.
     Copyright (C) 2008 Pontus Lidman <pontus@lysator.liu.se>
 
-    Pentax lens database comes from ExifTool ( http://www.sno.phy.queensu.ca/~phil/exiftool/ )
+    PK-Remote for Windows
+    Copyright (C) 2010 Tomasz Kos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
@@ -26,26 +27,22 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "pslr_lens.h"
+#ifndef CAMLIBS_PENTAX_PKTRIGGERCORD_COMMON_H
+#define CAMLIBS_PENTAX_PKTRIGGERCORD_COMMON_H
 
-#include <stdio.h>
+#ifdef RAD10
+#include <utime.h>
+#else
+#include <sys/time.h>
+#endif
+#include <time.h>
+#include <math.h>
 
-static const struct {
-    uint32_t id1;
-    uint32_t id2;
-    const char *name;
-} lens_id[] = {
-#include "exiftool_pentax_lens.txt"
-};
+#include "pslr_model.h"
 
-const char *pslr_get_lens_name( uint32_t id1, uint32_t id2) {
-    int lens_num = sizeof(lens_id)/sizeof(lens_id[0]);
-    int i;
-    for ( i=0; i<lens_num; ++i ) {
-        if ( lens_id[i].id1 == id1 &&
-                lens_id[i].id2 == id2 ) {
-            return lens_id[i].name;
-        }
-    }
-    return "";
-}
+double timeval_diff_sec(struct timeval *t2, struct timeval *t1);
+void sleep_sec(double sec);
+pslr_rational_t parse_shutter_speed(char *shutter_speed_str);
+pslr_rational_t parse_aperture(char *aperture_str);
+
+#endif

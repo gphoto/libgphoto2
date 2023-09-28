@@ -47,6 +47,7 @@
 #include <sys/stat.h>
 
 #include "pslr_model.h"
+#include "pslr_log.h"
 #include "pslr.h"
 
 static uint8_t lastbuf[MAX_STATUS_BUF_SIZE];
@@ -140,7 +141,7 @@ void set_uint32_be(uint32_t v, uint8_t *buf) {
     buf[3] = v;
 }
 
-char *shexdump(uint8_t *buf, uint32_t bufLen) {
+char *pslr_hexdump(uint8_t *buf, uint32_t bufLen) {
     char *ret = malloc(4*bufLen);
     uint32_t i;
     sprintf(ret,"%s","");
@@ -163,13 +164,13 @@ char *shexdump(uint8_t *buf, uint32_t bufLen) {
 }
 
 void hexdump(uint8_t *buf, uint32_t bufLen) {
-    char *dmp = shexdump(buf, bufLen);
-    DPRINT("%s",dmp);
+    char *dmp = pslr_hexdump(buf, bufLen);
+    printf("%s",dmp);
     free(dmp);
 }
 
 void hexdump_debug(uint8_t *buf, uint32_t bufLen) {
-    char *dmp = shexdump(buf, bufLen);
+    char *dmp = pslr_hexdump(buf, bufLen);
     DPRINT("%s",dmp);
     free(dmp);
 }
@@ -204,7 +205,7 @@ int _get_user_jpeg_stars( ipslr_model_info_t *model, int hwqual ) {
     }
 }
 
-int get_hw_jpeg_quality( ipslr_model_info_t *model, int user_jpeg_stars) {
+int pslr_get_hw_jpeg_quality( ipslr_model_info_t *model, int user_jpeg_stars) {
     if ( model->id == 0x12f71 ) {
         // K5IIs hack
         // TODO: test it
@@ -222,7 +223,7 @@ int get_hw_jpeg_quality( ipslr_model_info_t *model, int user_jpeg_stars) {
 static
 void ipslr_status_parse_k10d(ipslr_handle_t  *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
     memset(status, 0, sizeof (*status));
@@ -268,7 +269,7 @@ static
 void ipslr_status_parse_k20d(ipslr_handle_t *p, pslr_status *status) {
 
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
     memset(status, 0, sizeof (*status));
@@ -427,7 +428,7 @@ static
 void ipslr_status_parse_kx(ipslr_handle_t *p, pslr_status *status) {
 
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -446,7 +447,7 @@ void ipslr_status_parse_kx(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_kr(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -462,7 +463,7 @@ void ipslr_status_parse_kr(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_k5(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -481,7 +482,7 @@ void ipslr_status_parse_k5(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_k30(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -502,7 +503,7 @@ void ipslr_status_parse_k30(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_k01(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -522,7 +523,7 @@ void ipslr_status_parse_k01(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_k50(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -538,7 +539,7 @@ void ipslr_status_parse_k50(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_k500(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -557,7 +558,7 @@ void ipslr_status_parse_k500(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_km(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -575,7 +576,7 @@ void ipslr_status_parse_km(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_k3(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -595,7 +596,7 @@ void ipslr_status_parse_k3(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_ks1(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -613,7 +614,7 @@ void ipslr_status_parse_ks1(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_k1(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -657,7 +658,7 @@ void ipslr_status_parse_k1(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_k70(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -727,7 +728,7 @@ void ipslr_status_parse_k70(ipslr_handle_t *p, pslr_status *status) {
 static
 void ipslr_status_parse_k200d(ipslr_handle_t *p, pslr_status *status) {
     uint8_t *buf = p->status_buffer;
-    if ( debug ) {
+    if ( PSLR_DEBUG_ENABLED ) {
         ipslr_status_diff(buf);
     }
 
@@ -778,7 +779,7 @@ void ipslr_status_parse_k200d(ipslr_handle_t *p, pslr_status *status) {
     // 4= remote, 5= remote 3s delay
 }
 
-pslr_setting_def_t *find_setting_by_name (pslr_setting_def_t *array, int array_length, char *name) {
+pslr_setting_def_t *pslr_find_setting_by_name (pslr_setting_def_t *array, int array_length, char *name) {
     if (array == NULL || array_length == 0) {
         return NULL;
     }
@@ -800,7 +801,7 @@ char *read_json_file(int *jsonsize) {
             jsonfd = open(PKTDATADIR "/pentax_settings.json", O_RDONLY);
         }
         if (jsonfd == -1) {
-            fprintf(stderr, "Cannot open pentax_settings.json file\n");
+            pslr_write_log(PSLR_ERROR, "Cannot open pentax_settings.json file\n");
             return NULL;
         }
     }
@@ -826,12 +827,12 @@ pslr_setting_def_t *setting_file_process(const char *cameraid, int *def_num) {
     size_t json_part_length;
     const char *json_part;
     if (!(json_part = js0n(cameraid, strlen(cameraid), jsontext, jsonsize, &json_part_length))) {
-        fprintf(stderr, "JSON: Cannot find camera model\n");
+        pslr_write_log(PSLR_ERROR, "JSON: Cannot find camera model\n");
         return NULL;
     }
 
     if (!(json_part = js0n("fields", strlen("fields"), json_part, json_part_length, &json_part_length))) {
-        fprintf(stderr, "JSON: No fields defined for the camera model\n");
+        pslr_write_log(PSLR_ERROR, "JSON: No fields defined for the camera model\n");
         return NULL;
     }
     int ai=0;
@@ -842,7 +843,7 @@ pslr_setting_def_t *setting_file_process(const char *cameraid, int *def_num) {
         const char *camera_field_name_ptr;
         char *camera_field_name;
         if (!(camera_field_name_ptr=js0n( "name", strlen("name"), json_array_part, json_array_part_length, &name_length))) {
-            fprintf(stderr, "No name is defined\n");
+            pslr_write_log(PSLR_ERROR, "No name is defined\n");
             return NULL;
         } else {
             camera_field_name=malloc(name_length+1);
@@ -852,7 +853,7 @@ pslr_setting_def_t *setting_file_process(const char *cameraid, int *def_num) {
         const char *camera_field_type_ptr;
         char *camera_field_type;
         if (!(camera_field_type_ptr=js0n( "type", strlen("type"), json_array_part, json_array_part_length, &type_length))) {
-            fprintf(stderr, "No type is defined\n");
+            pslr_write_log(PSLR_ERROR, "No type is defined\n");
             return NULL;
         } else {
             camera_field_type=malloc(type_length+1);
@@ -889,7 +890,6 @@ pslr_setting_def_t *setting_file_process(const char *cameraid, int *def_num) {
     return ret;
 }
 
-static
 pslr_bool_setting ipslr_settings_parse_bool(const uint8_t *buf, const pslr_setting_def_t *def) {
     pslr_bool_setting bool_setting;
     if (def->value != NULL) {
@@ -909,7 +909,6 @@ pslr_bool_setting ipslr_settings_parse_bool(const uint8_t *buf, const pslr_setti
     return bool_setting;
 }
 
-static
 pslr_uint16_setting ipslr_settings_parse_uint16(const uint8_t *buf, const pslr_setting_def_t *def) {
     pslr_uint16_setting uint16_setting;
     if (def->value != NULL) {
@@ -944,7 +943,7 @@ void ipslr_settings_parser_json(const char *cameraid, ipslr_handle_t *p, pslr_se
         } else if (strcmp(def.type, "uint16") == 0) {
             uint16_setting = ipslr_settings_parse_uint16(buf, &def);
         } else {
-            fprintf(stderr, "Invalid json type: %s\n", def.type);
+            pslr_write_log(PSLR_ERROR, "Invalid json type: %s\n", def.type);
         }
         if (strcmp(def.name, "bulb_mode_press_press") == 0) {
             settings->bulb_mode_press_press = bool_setting;
@@ -1007,10 +1006,11 @@ ipslr_model_info_t camera_models[] = {
     { 0x13240, "K-1 II",      false, false, true,  true,  false, true,  456,  3, {36, 22, 12, 2}, 9, 8000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_FLAT, true,  33, ipslr_status_parse_k1 },
     { 0x13222, "K-70",        false, false, true,  true,  true,  true,  456,  3, {24, 14, 6, 2}, 9, 6000, 100, 102400, 100, 102400, PSLR_JPEG_IMAGE_TONE_AUTO, true,  11, ipslr_status_parse_k70},
     { 0x1322c, "KP",          false, false, true,  true,  false, true,  456,   3, {24, 14, 6, 2}, 9, 6000, 100, 819200, 100, 819200, PSLR_JPEG_IMAGE_TONE_AUTO, true,  27, ipslr_status_parse_k70},
-    { 0x13010, "645Z",        false, false, true,  true,  false, false,  0,   3, {51, 32, 21, 3}, 9, 4000, 100, 204800, 100, 204800, PSLR_JPEG_IMAGE_TONE_CROSS_PROCESSING, true,  35, NULL}
+    { 0x13010, "645Z",        false, false, true,  true,  false, false,  0,   3, {51, 32, 21, 3}, 9, 4000, 100, 204800, 100, 204800, PSLR_JPEG_IMAGE_TONE_CROSS_PROCESSING, true,  35, NULL},
+    { 0x13254, "K-3III",      false, false, true,  true,  false, true,  452,  4, {24, 14, 6, 2}, 9, 8000, 100, 51200, 100, 51200, PSLR_JPEG_IMAGE_TONE_BLEACH_BYPASS, true,  27, ipslr_status_parse_k3}
 };
 
-ipslr_model_info_t *find_model_by_id( uint32_t id ) {
+ipslr_model_info_t *pslr_find_model_by_id( uint32_t id ) {
     unsigned int i;
     for ( i = 0; i<sizeof (camera_models) / sizeof (camera_models[0]); i++) {
         if ( camera_models[i].id == id ) {

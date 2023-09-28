@@ -32,29 +32,18 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-extern bool debug;
-extern void write_debug( const char* message, ... );
-
-#ifdef ANDROID
-#include <android/log.h>
-#define DPRINT(...) __android_log_print(ANDROID_LOG_DEBUG, "PkTriggerCord", __VA_ARGS__)
-#else
-#ifdef LIBGPHOTO2
-#include <gphoto2/gphoto2-library.h>
-#define DPRINT(x...) gp_log (GP_LOG_DEBUG, "pentax", x)
-#else
-#define DPRINT(x...) write_debug(x)
-#endif
+#ifdef RAD10
+#include <windows.h>
 #endif
 
-#define CHECK(x) do {							\
-	int __r;							\
-	__r = (x);							\
-	if (__r != PSLR_OK) {						\
-		fprintf(stderr, "%s:%d:%s failed: %d\n", __FILE__, __LINE__, #x, __r); \
-		return __r;						\
-	}								\
-} while (0)
+#define CHECK(x) do {                           \
+        int __r;                                \
+        __r = (x);                                                      \
+        if (__r != PSLR_OK) {                                           \
+            pslr_write_log(PSLR_ERROR, "%s:%d:%s failed: %d\n", __FILE__, __LINE__, #x, __r); \
+            return __r;                                                 \
+        }                                                               \
+    } while (0)
 
 typedef enum {
     PSLR_OK = 0,
@@ -69,6 +58,7 @@ typedef enum {
 
 /* This also could be used to specify FDTYPE HANDLE for Win32, but this seems tricky with includes */
 #ifdef LIBGPHOTO2
+typedef struct _GPPort GPPort;
 #define FDTYPE GPPort*
 #define PRIFDTYPE "p"
 #else
@@ -90,5 +80,4 @@ pslr_result get_drive_info(char* drive_name, FDTYPE* device,
                            char* product_id, int product_id_size_max);
 
 void close_drive(FDTYPE *device);
-
-#endif /* !defined(CAMLIBS_PENTAX_PSLR_SCSI_H) */
+#endif
