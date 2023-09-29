@@ -162,8 +162,21 @@ camera_abilities (CameraAbilitiesList *list)
         a.usb_product           = 0x017e;
         if (GP_OK != (ret = gp_abilities_list_append (list, a)))
                 return ret;
-	return GP_OK;
 
+	/* https://github.com/asalamon74/pktriggercord/issues/21 */
+	strcpy (a.model, "Pentax:K1II");
+	a.usb_vendor		= 0x25fb;
+	a.usb_product           = 0x0183;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
+
+	strcpy (a.model, "Pentax:K3III");
+	a.usb_vendor		= 0x25fb;
+	a.usb_product           = 0x0189;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
+
+	return GP_OK;
 }
 
 int scsi_write(GPPort *port, uint8_t *cmd, uint32_t cmdLen,
