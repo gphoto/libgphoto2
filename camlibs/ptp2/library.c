@@ -276,7 +276,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	/* LEICA */
-	if (    (di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (    ((!di->VendorExtensionID) || (di->VendorExtensionID == PTP_VENDOR_MICROSOFT)) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x1a98)
 	) {
@@ -2791,7 +2791,7 @@ static struct {
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
 
 	/* https://github.com/gphoto/gphoto2/issues/601 */
-	{"Leica:Q3",				0x1a98,	0x2376, 0},	/* checking for PTP_CAP */
+	{"Leica:Q3",				0x1a98,	0x2376, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Christopher Kao <christopherkao@icloud.com> */
 	{"Leica:SL (Typ 601)",			0x1a98,	0x2041, PTP_CAP|PTP_CAP_PREVIEW},
