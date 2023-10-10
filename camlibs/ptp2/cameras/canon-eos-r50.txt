@@ -1,0 +1,1225 @@
+Camera summary:
+Manufacturer: Canon.Inc
+Model: Canon EOS R50
+  Version: 3-1.0.0
+  Serial Number: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Vendor Extension ID: 0xb (1.0)
+Vendor Extension Description: 
+
+Capture Formats: JPEG Unknown(b108) Unknown(b10b) Unknown(b982)
+Display Formats: Association/Directory, Script, DPOF, MS AVI, MS Wave, JPEG, Unknown(b103), Unknown(bf02), Defined Type, Unknown(b105), Unknown(b982), Unknown(b10a), Unknown(b10b), Unknown(b109)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, Canon EOS Capture, Canon EOS Capture 2
+	Canon Wifi support
+
+Storage Devices Summary:
+store_00020001:
+	StorageDescription: SD1
+	VolumeLabel: 
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 63831015424 (60874 MB)
+	Free Space (Bytes): 54918119424 (52374 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Property 0xd402:(read only) (type=0xffff) 'Canon EOS R50'
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) 'Unknown Initiator'
+Property 0xd303:(read only) (type=0x2) 1
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [100,0,75,0,50] value: 100% (100)
+
+/main/actions/syncdatetimeutc
+Label: Synchronize camera date and time with PC (UTC)
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/syncdatetime
+Label: Synchronize camera date and time with PC
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/uilock
+Label: UI Lock
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/popupflash
+Label: Popup Flash
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Canon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/manualfocusdrive
+Label: Drive Canon DSLR Manual focus
+Readonly: 0
+Type: RADIO
+Current: None
+Choice: 0 Near 1
+Choice: 1 Near 2
+Choice: 2 Near 3
+Choice: 3 None
+Choice: 4 Far 1
+Choice: 5 Far 2
+Choice: 6 Far 3
+END
+/main/actions/cancelautofocus
+Label: Cancel Canon DSLR Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/eoszoom
+Label: Canon EOS Zoom
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/actions/eoszoomposition
+Label: Canon EOS Zoom Position
+Readonly: 0
+Type: TEXT
+Current: 0,0
+END
+/main/actions/viewfinder
+Label: Canon EOS Viewfinder
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/actions/eosremoterelease
+Label: Canon EOS Remote Release
+Readonly: 0
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 Press Half
+Choice: 2 Press Full
+Choice: 3 Release Half
+Choice: 4 Release Full
+Choice: 5 Immediate
+Choice: 6 Press 1
+Choice: 7 Press 2
+Choice: 8 Press 3
+Choice: 9 Release 1
+Choice: 10 Release 2
+Choice: 11 Release 3
+END
+/main/actions/eosmoviemode
+Label: Movie Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetimeutc
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1696942934
+Printable: Út 10. října 2023, 15:02:14
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1696939334
+Printable: Út 10. října 2023, 14:02:14
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/output
+Label: Camera Output
+Readonly: 0
+Type: RADIO
+Current: TFT
+Choice: 0 Off
+Choice: 1 TFT
+Choice: 2 PC
+Choice: 3 TFT + PC
+Choice: 4 MOBILE
+Choice: 5 TFT + MOBILE
+Choice: 6 PC + MOBILE
+Choice: 7 TFT + PC + MOBILE
+Choice: 8 MOBILE2
+Choice: 9 TFT + MOBILE2
+Choice: 10 PC + MOBILE2
+Choice: 11 TFT + PC + MOBILE2
+END
+/main/settings/movierecordtarget
+Label: Recording Destination
+Readonly: 0
+Type: RADIO
+Current: SDRAM
+Choice: 0 Card
+Choice: 1 None
+Choice: 2 SDRAM
+END
+/main/settings/evfmode
+Label: EVF Mode
+Readonly: 0
+Type: RADIO
+Current: 1
+Choice: 0 1
+END
+/main/settings/ownername
+Label: Owner Name
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/artist
+Label: Artist
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/copyright
+Label: Copyright
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/nickname
+Label: Nickname
+Readonly: 0
+Type: TEXT
+Current: EOSR50_C271FA
+END
+/main/settings/customfuncex
+Label: Custom Functions Ex
+Readonly: 0
+Type: TEXT
+Current: 14,1,6,8,0,
+END
+/main/settings/focusarea
+Label: Focus Area
+Readonly: 0
+Type: TEXT
+Current: 127
+END
+/main/settings/strobofiring
+Label: Strobo Firing
+Readonly: 1
+Type: RADIO
+Current: 0
+Choice: 0 0
+Choice: 1 1
+END
+/main/settings/flashcharged
+Label: Flash Charging State
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/settings/oneshotrawon
+Label: One Shot Raw On
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/settings/autopoweroff
+Label: Auto Power Off
+Readonly: 0
+Type: RADIO
+Current: 30
+Choice: 0 15
+Choice: 1 30
+Choice: 2 60
+Choice: 3 180
+Choice: 4 300
+Choice: 5 600
+Choice: 6 1800
+Choice: 7 0
+Choice: 8 4294967295
+END
+/main/settings/depthoffield
+Label: Depth of Field
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/capture
+Label: Capture
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/settings/remotemode
+Label: Remote Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/settings/eventmode
+Label: Event Mode
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/settings/testolc
+Label: Test OLC
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 1
+Type: TEXT
+Current: Canon.Inc
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: Canon EOS R50
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 1
+Type: TEXT
+Current: 3-1.0.0
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 1
+Type: TEXT
+Current: 
+END
+/main/status/model
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: 2147484800
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/status/mirrorlockstatus
+Label: Mirror Lock Status
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/status/mirrordownstatus
+Label: Mirror Down Status
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/status/lensname
+Label: Lens Name
+Readonly: 1
+Type: TEXT
+Current: RF-S18-45mm F4.5-6.3 IS STM
+END
+/main/status/eosserialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: 063070013801
+END
+/main/status/availableshots
+Label: Available Shots
+Readonly: 1
+Type: TEXT
+Current: 33185
+END
+/main/status/eosmovieswitch
+Label: Movie Switch
+Readonly: 1
+Type: TEXT
+Current: 0
+END
+/main/imgsettings/imageformat
+Label: Image Format
+Readonly: 0
+Type: RADIO
+Current: RAW + Small Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 cRAW + Large Fine JPEG
+Choice: 8 cRAW + Large Normal JPEG
+Choice: 9 RAW + Large Fine JPEG
+Choice: 10 RAW + Large Normal JPEG
+Choice: 11 cRAW + Medium Fine JPEG
+Choice: 12 cRAW + Medium Normal JPEG
+Choice: 13 RAW + Medium Fine JPEG
+Choice: 14 RAW + Medium Normal JPEG
+Choice: 15 cRAW + Small Fine JPEG
+Choice: 16 cRAW + Small Normal JPEG
+Choice: 17 RAW + Small Fine JPEG
+Choice: 18 RAW + Small Normal JPEG
+Choice: 19 cRAW + Smaller JPEG
+Choice: 20 RAW + Smaller JPEG
+Choice: 21 RAW
+Choice: 22 cRAW
+END
+/main/imgsettings/imageformatsd
+Label: Image Format SD
+Readonly: 0
+Type: RADIO
+Current: RAW + Small Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 cRAW + Large Fine JPEG
+Choice: 8 cRAW + Large Normal JPEG
+Choice: 9 RAW + Large Fine JPEG
+Choice: 10 RAW + Large Normal JPEG
+Choice: 11 cRAW + Medium Fine JPEG
+Choice: 12 cRAW + Medium Normal JPEG
+Choice: 13 RAW + Medium Fine JPEG
+Choice: 14 RAW + Medium Normal JPEG
+Choice: 15 cRAW + Small Fine JPEG
+Choice: 16 cRAW + Small Normal JPEG
+Choice: 17 RAW + Small Fine JPEG
+Choice: 18 RAW + Small Normal JPEG
+Choice: 19 cRAW + Smaller JPEG
+Choice: 20 RAW + Smaller JPEG
+Choice: 21 RAW
+Choice: 22 cRAW
+END
+/main/imgsettings/imageformatcf
+Label: Image Format CF
+Readonly: 0
+Type: RADIO
+Current: RAW + Small Fine JPEG
+Choice: 0 Large Fine JPEG
+Choice: 1 Large Normal JPEG
+Choice: 2 Medium Fine JPEG
+Choice: 3 Medium Normal JPEG
+Choice: 4 Small Fine JPEG
+Choice: 5 Small Normal JPEG
+Choice: 6 Smaller JPEG
+Choice: 7 cRAW + Large Fine JPEG
+Choice: 8 cRAW + Large Normal JPEG
+Choice: 9 RAW + Large Fine JPEG
+Choice: 10 RAW + Large Normal JPEG
+Choice: 11 cRAW + Medium Fine JPEG
+Choice: 12 cRAW + Medium Normal JPEG
+Choice: 13 RAW + Medium Fine JPEG
+Choice: 14 RAW + Medium Normal JPEG
+Choice: 15 cRAW + Small Fine JPEG
+Choice: 16 cRAW + Small Normal JPEG
+Choice: 17 RAW + Small Fine JPEG
+Choice: 18 RAW + Small Normal JPEG
+Choice: 19 cRAW + Smaller JPEG
+Choice: 20 RAW + Smaller JPEG
+Choice: 21 RAW
+Choice: 22 cRAW
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: 400
+Choice: 0 Auto
+Choice: 1 100
+Choice: 2 125
+Choice: 3 160
+Choice: 4 200
+Choice: 5 250
+Choice: 6 320
+Choice: 7 400
+Choice: 8 500
+Choice: 9 640
+Choice: 10 800
+Choice: 11 1000
+Choice: 12 1250
+Choice: 13 1600
+Choice: 14 2000
+Choice: 15 2500
+Choice: 16 3200
+Choice: 17 4000
+Choice: 18 5000
+Choice: 19 6400
+Choice: 20 8000
+Choice: 21 10000
+Choice: 22 12800
+Choice: 23 16000
+Choice: 24 20000
+Choice: 25 25600
+Choice: 26 32000
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Auto
+Choice: 0 Auto
+Choice: 1 Daylight
+Choice: 2 Shadow
+Choice: 3 Cloudy
+Choice: 4 Tungsten
+Choice: 5 Fluorescent
+Choice: 6 Flash
+Choice: 7 Manual
+Choice: 8 Color Temperature
+Choice: 9 AWB White
+END
+/main/imgsettings/colortemperature
+Label: Color Temperature
+Readonly: 0
+Type: RADIO
+Current: 4500
+Choice: 0 2500
+Choice: 1 2600
+Choice: 2 2700
+Choice: 3 2800
+Choice: 4 2900
+Choice: 5 3000
+Choice: 6 3100
+Choice: 7 3200
+Choice: 8 3300
+Choice: 9 3400
+Choice: 10 3500
+Choice: 11 3600
+Choice: 12 3700
+Choice: 13 3800
+Choice: 14 3900
+Choice: 15 4000
+Choice: 16 4100
+Choice: 17 4200
+Choice: 18 4300
+Choice: 19 4400
+Choice: 20 4500
+Choice: 21 4600
+Choice: 22 4700
+Choice: 23 4800
+Choice: 24 4900
+Choice: 25 5000
+Choice: 26 5100
+Choice: 27 5200
+Choice: 28 5300
+Choice: 29 5400
+Choice: 30 5500
+Choice: 31 5600
+Choice: 32 5700
+Choice: 33 5800
+Choice: 34 5900
+Choice: 35 6000
+Choice: 36 6100
+Choice: 37 6200
+Choice: 38 6300
+Choice: 39 6400
+Choice: 40 6500
+Choice: 41 6600
+Choice: 42 6700
+Choice: 43 6800
+Choice: 44 6900
+Choice: 45 7000
+Choice: 46 7100
+Choice: 47 7200
+Choice: 48 7300
+Choice: 49 7400
+Choice: 50 7500
+Choice: 51 7600
+Choice: 52 7700
+Choice: 53 7800
+Choice: 54 7900
+Choice: 55 8000
+Choice: 56 8100
+Choice: 57 8200
+Choice: 58 8300
+Choice: 59 8400
+Choice: 60 8500
+Choice: 61 8600
+Choice: 62 8700
+Choice: 63 8800
+Choice: 64 8900
+Choice: 65 9000
+Choice: 66 9100
+Choice: 67 9200
+Choice: 68 9300
+Choice: 69 9400
+Choice: 70 9500
+Choice: 71 9600
+Choice: 72 9700
+Choice: 73 9800
+Choice: 74 9900
+Choice: 75 10000
+END
+/main/imgsettings/whitebalanceadjusta
+Label: WhiteBalance Adjust A
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+END
+/main/imgsettings/whitebalanceadjustb
+Label: WhiteBalance Adjust B
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+END
+/main/imgsettings/whitebalancexa
+Label: WhiteBalance X A
+Readonly: 1
+Type: RADIO
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/imgsettings/whitebalancexb
+Label: WhiteBalance X B
+Readonly: 1
+Type: RADIO
+Current: 0
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/imgsettings/colorspace
+Label: Color Space
+Readonly: 0
+Type: RADIO
+Current: sRGB
+Choice: 0 sRGB
+Choice: 1 AdobeRGB
+END
+/main/capturesettings/zoomspeed
+Label: Zoom Speed
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 0
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 0
+Type: RADIO
+Current: Manual
+Choice: 0 One Shot
+Choice: 1 AI Servo
+Choice: 2 AI Focus
+Choice: 3 Manual
+END
+/main/capturesettings/continuousaf
+Label: Continuous AF
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 Off
+Choice: 1 On
+END
+/main/capturesettings/aspectratio
+Label: Aspect Ratio
+Readonly: 0
+Type: RADIO
+Current: 3:2
+Choice: 0 3:2
+Choice: 1 1:1
+Choice: 2 4:3
+Choice: 3 16:9
+END
+/main/capturesettings/afmethod
+Label: AF Method
+Readonly: 0
+Type: RADIO
+Current: LiveSpotAF
+Choice: 0 LiveSpotAF
+Choice: 1 Live
+Choice: 2 LiveSingleExpandCross
+Choice: 3 LiveSingleExpandSurround
+Choice: 4 Unknown value 000b
+Choice: 5 Unknown value 000c
+Choice: 6 Unknown value 000d
+Choice: 7 Unknown value 000e
+END
+/main/capturesettings/storageid
+Label: Storage Device
+Readonly: 0
+Type: TEXT
+Current: 00020001
+END
+/main/capturesettings/highisonr
+Label: High ISO Noise Reduction
+Readonly: 0
+Type: RADIO
+Current: Off
+Choice: 0 Off
+Choice: 1 Low
+Choice: 2 Normal
+Choice: 3 High
+END
+/main/capturesettings/autoexposuremode
+Label: Canon Auto Exposure Mode
+Readonly: 0
+Type: RADIO
+Current: Manual
+Choice: 0 P
+Choice: 1 TV
+Choice: 2 AV
+Choice: 3 Manual
+Choice: 4 Bulb
+Choice: 5 A_DEP
+Choice: 6 DEP
+Choice: 7 Custom
+Choice: 8 Lock
+Choice: 9 Green
+Choice: 10 Night Portrait
+Choice: 11 Sports
+Choice: 12 Portrait
+Choice: 13 Landscape
+Choice: 14 Closeup
+Choice: 15 Flash Off
+Choice: 16 C2
+Choice: 17 C3
+Choice: 18 Creative Auto
+Choice: 19 Movie
+Choice: 20 Auto
+Choice: 21 Handheld Night Scene
+Choice: 22 HDR Backlight Control
+Choice: 23 SCN
+Choice: 24 Food
+Choice: 25 Grainy B/W
+Choice: 26 Soft focus
+Choice: 27 Toy camera effect
+Choice: 28 Fish-eye effect
+Choice: 29 Water painting effect
+Choice: 30 Miniature effect
+Choice: 31 HDR art standard
+Choice: 32 HDR art vivid
+Choice: 33 HDR art bold
+Choice: 34 HDR art embossed
+Choice: 35 Panning
+Choice: 36 HDR
+Choice: 37 Self Portrait
+Choice: 38 Hybrid Auto
+Choice: 39 Smooth skin
+Choice: 40 Fv
+END
+/main/capturesettings/autoexposuremodedial
+Label: Canon Auto Exposure Mode Dial
+Readonly: 0
+Type: RADIO
+Current: Manual
+Choice: 0 P
+Choice: 1 TV
+Choice: 2 AV
+Choice: 3 Manual
+Choice: 4 Bulb
+Choice: 5 A_DEP
+Choice: 6 DEP
+Choice: 7 Custom
+Choice: 8 Lock
+Choice: 9 Green
+Choice: 10 Night Portrait
+Choice: 11 Sports
+Choice: 12 Portrait
+Choice: 13 Landscape
+Choice: 14 Closeup
+Choice: 15 Flash Off
+Choice: 16 C2
+Choice: 17 C3
+Choice: 18 Creative Auto
+Choice: 19 Movie
+Choice: 20 Auto
+Choice: 21 Handheld Night Scene
+Choice: 22 HDR Backlight Control
+Choice: 23 SCN
+Choice: 24 Food
+Choice: 25 Grainy B/W
+Choice: 26 Soft focus
+Choice: 27 Toy camera effect
+Choice: 28 Fish-eye effect
+Choice: 29 Water painting effect
+Choice: 30 Miniature effect
+Choice: 31 HDR art standard
+Choice: 32 HDR art vivid
+Choice: 33 HDR art bold
+Choice: 34 HDR art embossed
+Choice: 35 Panning
+Choice: 36 HDR
+Choice: 37 Self Portrait
+Choice: 38 Hybrid Auto
+Choice: 39 Smooth skin
+Choice: 40 Fv
+END
+/main/capturesettings/drivemode
+Label: Drive Mode
+Readonly: 0
+Type: RADIO
+Current: Continuous high speed
+Choice: 0 Single
+Choice: 1 Super high speed continuous shooting
+Choice: 2 Continuous high speed
+Choice: 3 Continuous low speed
+Choice: 4 Timer 10 sec
+Choice: 5 Timer 2 sec
+Choice: 6 Continuous timer
+END
+/main/capturesettings/picturestyle
+Label: Picture Style
+Readonly: 0
+Type: RADIO
+Current: Standard
+Choice: 0 Standard
+Choice: 1 Portrait
+Choice: 2 Landscape
+Choice: 3 Neutral
+Choice: 4 Faithful
+Choice: 5 Monochrome
+Choice: 6 Auto
+Choice: 7 Fine detail
+Choice: 8 User defined 1
+Choice: 9 User defined 2
+Choice: 10 User defined 3
+END
+/main/capturesettings/aperture
+Label: Aperture
+Readonly: 0
+Type: RADIO
+Current: 4.5
+Choice: 0 4.5
+Choice: 1 5
+Choice: 2 5.6
+Choice: 3 6.3
+Choice: 4 7.1
+Choice: 5 8
+Choice: 6 9
+Choice: 7 10
+Choice: 8 11
+Choice: 9 13
+Choice: 10 14
+Choice: 11 16
+Choice: 12 18
+Choice: 13 20
+Choice: 14 22
+END
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Readonly: 0
+Type: RADIO
+Current: 1/20
+Choice: 0 bulb
+Choice: 1 30
+Choice: 2 25
+Choice: 3 20
+Choice: 4 15
+Choice: 5 13
+Choice: 6 10.3
+Choice: 7 8
+Choice: 8 6.3
+Choice: 9 5
+Choice: 10 4
+Choice: 11 3.2
+Choice: 12 2.5
+Choice: 13 2
+Choice: 14 1.6
+Choice: 15 1.3
+Choice: 16 1
+Choice: 17 0.8
+Choice: 18 0.6
+Choice: 19 0.5
+Choice: 20 0.4
+Choice: 21 0.3
+Choice: 22 1/4
+Choice: 23 1/5
+Choice: 24 1/6
+Choice: 25 1/8
+Choice: 26 1/10
+Choice: 27 1/13
+Choice: 28 1/15
+Choice: 29 1/20
+Choice: 30 1/25
+Choice: 31 1/30
+Choice: 32 1/40
+Choice: 33 1/50
+Choice: 34 1/60
+Choice: 35 1/80
+Choice: 36 1/100
+Choice: 37 1/125
+Choice: 38 1/160
+Choice: 39 1/200
+Choice: 40 1/250
+Choice: 41 1/320
+Choice: 42 1/400
+Choice: 43 1/500
+Choice: 44 1/640
+Choice: 45 1/800
+Choice: 46 1/1000
+Choice: 47 1/1250
+Choice: 48 1/1600
+Choice: 49 1/2000
+Choice: 50 1/2500
+Choice: 51 1/3200
+Choice: 52 1/4000
+END
+/main/capturesettings/meteringmode
+Label: Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Partial
+Choice: 0 Spot
+Choice: 1 Evaluative
+Choice: 2 Partial
+Choice: 3 Center-weighted average
+END
+/main/capturesettings/liveviewsize
+Label: Live View Size
+Readonly: 0
+Type: RADIO
+Current: val 1
+Choice: 0 Large
+Choice: 1 Medium
+Choice: 2 Small
+END
+/main/capturesettings/bracketmode
+Label: Bracket Mode
+Readonly: 0
+Type: RADIO
+Current: Unknown value 0000
+Choice: 0 Unknown value 0000
+END
+/main/capturesettings/aeb
+Label: Auto Exposure Bracketing
+Readonly: 0
+Type: RADIO
+Current: off
+Choice: 0 off
+Choice: 1 +/- 1/3
+Choice: 2 +/- 2/3
+Choice: 3 +/- 1
+Choice: 4 +/- 1 1/3
+Choice: 5 +/- 1 2/3
+Choice: 6 +/- 2
+Choice: 7 +/- 2 1/3
+Choice: 8 +/- 2 2/3
+Choice: 9 +/- 3
+END
+/main/capturesettings/alomode
+Label: Auto Lighting Optimization
+Readonly: 0
+Type: RADIO
+Current: x3
+Choice: 0 x3
+END
+/main/capturesettings/movieservoaf
+Label: Movie Servo AF
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 Off
+Choice: 1 On
+END
+/main/other/d402
+Label: PTP Property 0xd402
+Readonly: 1
+Type: TEXT
+Current: Canon EOS R50
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: Unknown Initiator
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 100
+Choice: 0 100
+Choice: 1 0
+Choice: 2 75
+Choice: 3 0
+Choice: 4 50
+END
+
+Manufacturer: Canon.Inc
+  Model: Canon EOS R50
+  device version: 3-1.0.0
+  serial number: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+Vendor extension ID: 0x0000000b
+Vendor extension version: 100
+Vendor extension description: 
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1001 (Get device info)
+  0x1004 (Get storage IDs)
+  0x9101 (EOS_GetStorageIDs)
+  0x1005 (Get storage info)
+  0x9102 (EOS_GetStorageInfo)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x9103 (EOS_GetObjectInfo)
+  0x9170 (EOS_GetObjectInfo64)
+  0x1009 (Get object)
+  0x9104 (EOS_GetObject)
+  0x9171 (EOS_GetObject64)
+  0x100a (Get thumbnail)
+  0x100f (Format storage)
+  0x9106 (EOS_FormatStore)
+  0x1014 (Get device property description)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x9107 (EOS_GetPartialObject)
+  0x9172 (EOS_GetPartialObject64)
+  0x912c (EOS_GetPartialObjectEx)
+  0x9174 (EOS_GetPartialObjectEX64)
+  0x9114 (EOS_SetRemoteMode)
+  0x9115 (EOS_SetEventMode)
+  0x9116 (EOS_GetEvent)
+  0x9117 (EOS_TransferComplete)
+  0x9109 (EOS_GetObjectInfoEx)
+  0x9173 (EOS_GetObjectInfoEx64)
+  0x910a (EOS_GetThumbEx)
+  0x9132 (EOS_EndGetPartialObjectEx)
+  0x9033 (GetMACAddress)
+  0x906a (SetWebServiceData)
+  0x906b (DeleteWebServiceData)
+  0x911a (EOS_PCHDDCapacity)
+  0x911d (EOS_KeepDeviceOn)
+  0x911e (EOS_SetNullPacketMode)
+  0x911f (EOS_UpdateFirmware)
+  0x9131 (EOS_PopupBuiltinFlash)
+  0x9133 (EOS_MovieSelectSWOn)
+  0x9134 (EOS_MovieSelectSWOff)
+  0x9135 (EOS_GetCTGInfo)
+  0x913c (EOS_SetCTGInfo)
+  0x913e (EOS_SetRequestRollingPitchingLevel)
+  0x913f (EOS_GetCameraSupport)
+  0x9140 (EOS_SetRating)
+  0x9154 (EOS_DoAf)
+  0x9155 (EOS_DriveLens)
+  0x9157 (EOS_ClickWB)
+  0x9158 (EOS_Zoom)
+  0x9159 (EOS_ZoomPosition)
+  0x915a (EOS_SetLiveAfFrame)
+  0x915b (EOS_TouchAfPosition)
+  0x9160 (EOS_AfCancel)
+  0x906d (GetRootCertificateData)
+  0x9087 (Unknown PTP_OC)
+  0x9108 (EOS_GetDeviceInfoEx)
+  0x9110 (EOS_SetDevicePropValueEx)
+  0x9130 (EOS_ResetMirrorLockupState)
+  0x913d (EOS_SetRequestOLCInfoGroup)
+  0x915c (EOS_SetLvPcFlavoreditMode)
+  0x915d (EOS_SetLvPcFlavoreditParam)
+  0x911b (EOS_SetUILock)
+  0x911c (EOS_ResetUILock)
+  0x9153 (EOS_GetViewFinderData)
+  0x9128 (EOS_RemoteReleaseOn)
+  0x9129 (EOS_RemoteReleaseOff)
+  0x902f (Unknown PTP_OC)
+  0x910c (EOS_SetObjectAttributes)
+  0x91f0 (EOS_TransferCompleteFTP)
+  0x9127 (EOS_RequestDevicePropValue)
+  0x91f1 (EOS_CancelTransferFTP)
+  0x91e1 (Unknown PTP_OC)
+  0x91e3 (Unknown PTP_OC)
+  0x91e7 (Unknown PTP_OC)
+  0x91e8 (EOS_NotifyNetworkError)
+  0x91e9 (EOS_AdapterTransferProgress)
+  0x91ec (Unknown PTP_OC)
+  0x9144 (EOS_GpsLoggingDataMode)
+  0x9145 (EOS_GetGpsLogCurrentHandle)
+  0x91d3 (Unknown PTP_OC)
+  0x91d4 (Unknown PTP_OC)
+  0x9136 (EOS_GetLensAdjust)
+  0x9137 (EOS_SetLensAdjust)
+  0x9146 (EOS_SetImageRecoveryData)
+  0x916b (EOS_SetImageRecoveryDataEx)
+  0x916c (EOS_GetImageRecoveryListEx)
+  0x9148 (EOS_FormatImageRecoveryData)
+  0x9149 (EOS_GetPresetLensAdjustParam)
+  0x914a (EOS_GetRawDispImage)
+  0x910f (EOS_RemoteRelease)
+  0x914b (EOS_SaveImageRecoveryData)
+  0x9141 (EOS_RequestInnerDevelopStart)
+  0x9143 (EOS_RequestInnerDevelopEnd)
+  0x100b (Delete object)
+  0x9105 (EOS_DeleteObject)
+  0x9139 (EOS_CreateHandle)
+  0x913a (EOS_SendPartialObjectEx)
+  0x913b (EOS_EndSendPartialObjectEx)
+  0x91d8 (Unknown PTP_OC)
+  0x91d9 (Unknown PTP_OC)
+  0x91da (Unknown PTP_OC)
+  0x91db (Unknown PTP_OC)
+  0x91dc (Unknown PTP_OC)
+  0x91dd (Unknown PTP_OC)
+  0x91de (Unknown PTP_OC)
+  0x91d5 (Unknown PTP_OC)
+  0x9186 (EOS_GetWFTData)
+  0x9187 (EOS_SetWFTData)
+  0x9188 (EOS_ChangeWFTSettingNumber)
+  0x9180 (Unknown PTP_OC)
+  0x9181 (Unknown PTP_OC)
+  0x9182 (EOS_NotifyEstimateNumberofImport)
+  0x9183 (EOS_NotifyNumberofImported)
+  0x9184 (EOS_NotifySizeOfPartialDataTransfer)
+  0x9185 (EOS_NotifyFinish)
+  0x9189 (EOS_GetPictureStylePCFlavorParam)
+  0x918a (EOS_SetPictureStylePCFlavorParam)
+  0x9138 (EOS_ReadyToSendMusic)
+  0x9118 (EOS_CancelTransfer)
+  0x914d (EOS_DrivePowerZoom)
+  0x914f (EOS_GetIptcData)
+  0x9150 (EOS_SetIptcData)
+  0x916f (EOS_GetReducedObject)
+  0x916e (EOS_NotifyAutoTransferStatus)
+  0x9177 (EOS_NotifySaveComplete)
+  0x91ae (Unknown PTP_OC)
+  0x91af (Unknown PTP_OC)
+  0x91ac (EOS_SetCAssistMode)
+  0x91ad (EOS_GetCAssistPresetThumb)
+  0x91b9 (EOS_SetFELock)
+  0x91ba (EOS_DeleteWFTSettingNumber)
+  0x9077 (GetTranscodeApproxSize)
+  0x9078 (RequestTranscodeStart)
+  0x9079 (RequestTranscodeCancel)
+  0x9178 (EOS_GetTranscodedBlock)
+  0x9179 (EOS_TransferCompleteTranscodedBlock)
+  0x9163 (Unknown PTP_OC)
+  0x9162 (Unknown PTP_OC)
+  0x9050 (Unknown PTP_OC)
+  0x9051 (Unknown PTP_OC)
+  0x905c (Unknown PTP_OC)
+  0x905d (Unknown PTP_OC)
+  0x9060 (Unknown PTP_OC)
+Events Supported:
+  0xc181 (Unknown Event)
+  0x4003 (ObjectRemoved)
+  0xc183 (Unknown Event)
+  0xc184 (Unknown Event)
+  0xc185 (Unknown Event)
+  0xc186 (Unknown Event)
+  0xc187 (Unknown Event)
+  0xc188 (Unknown Event)
+  0xc189 (Unknown Event)
+  0xc18a (Unknown Event)
+  0xc18b (Unknown Event)
+  0xc18d (Unknown Event)
+  0xc18e (Unknown Event)
+  0xc18f (Unknown Event)
+  0xc190 (Unknown Event)
+  0xc191 (Unknown Event)
+  0xc1a0 (Unknown Event)
+  0xc1a1 (Unknown Event)
+  0x4009 (RequestObjectTransfer)
+  0xc1b4 (Unknown Event)
+Device Properties Supported:
+  0xd402 (Unknown DPC code)
+  0xd407 (Unknown DPC code)
+  0xd406 (Unknown DPC code)
+  0xd303 (Unknown DPC code)
+  0x5001 (Battery Level)
