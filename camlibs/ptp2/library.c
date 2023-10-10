@@ -2792,7 +2792,7 @@ static struct {
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
 
 	/* https://github.com/gphoto/gphoto2/issues/601 */
-	{"Leica:Q3",				0x1a98,	0x2376, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Leica:Q3",				0x1a98,	0x2376, PTP_CAP|PTP_CAP_PREVIEW|PTP_NO_CAPTURE_COMPLETE},
 
 	/* Christopher Kao <christopherkao@icloud.com> */
 	{"Leica:SL (Typ 601)",			0x1a98,	0x2041, PTP_CAP|PTP_CAP_PREVIEW},
