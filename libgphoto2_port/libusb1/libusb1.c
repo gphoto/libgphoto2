@@ -623,6 +623,9 @@ gp_libusb1_close (GPPort *port)
 	}
 
 	libusb_close (port->pl->dh);
+#ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
+    }
+#endif        
 
 	struct _PrivateIrqCompleted *irq_iter;
 	struct _PrivateIrqCompleted *irq_next;
