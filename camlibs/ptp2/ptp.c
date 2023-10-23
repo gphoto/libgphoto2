@@ -190,7 +190,7 @@ ptp_error (PTPParams *params, const char *format, ...)
  * Performs PTP transaction. ptp is a PTPContainer with appropriate fields
  * filled in (i.e. operation code and parameters). It's up to caller to do
  * so.
- * The flags decide thether the transaction has a data phase and what is its
+ * The flags decide whether the transaction has a data phase and what is its
  * direction (send or receive).
  * If transaction is sending data the sendlen should contain its length in
  * bytes, otherwise it's ignored.
@@ -199,7 +199,7 @@ ptp_error (PTPParams *params, const char *format, ...)
  * od dataphase direction (send or received) or is being ignored (no
  * dataphase).
  * The memory for a pointer should be preserved by the caller, if data are
- * being retreived the appropriate amount of memory is being allocated
+ * being retrieved the appropriate amount of memory is being allocated
  * (the caller should handle that!).
  *
  * Return values: Some PTP_RC_* code.
@@ -3427,7 +3427,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 		/*debug_objectinfo(params, handle, &ob->oi);*/
 	}
 
-#if 0 /* apple devices report it, but the conrtent they have does not match the standard somehow. Neesd further debugging */
+#if 0 /* apple devices report it, but the conrtent they have does not match the standard somehow. Needs further debugging */
 	if (ptp_operation_issupported(params, PTP_OC_GetFilesystemManifest)) {
 		uint64_t		numoifs = 0;
 		PTPObjectFilesystemInfo	*oifs = NULL;
@@ -4509,7 +4509,11 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 
 	*props = NULL;
 	*size = 0;
-	PTP_CNT_INIT(ptp, PTP_OC_SONY_GetSDIOGetExtDeviceInfo, 0xc8 /* unclear */);
+	if(has_sony_mode_300(params)) {
+		PTP_CNT_INIT(ptp, PTP_OC_SONY_GetSDIOGetExtDeviceInfo, 0x12c /* newer mode (300) */);
+	} else {
+		PTP_CNT_INIT(ptp, PTP_OC_SONY_GetSDIOGetExtDeviceInfo, 0x0c8 /* older mode (200) */);
+	}
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize));
 	if (xsize == 0) {
 		ptp_debug (params, "No special operations sent?");

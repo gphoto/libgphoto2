@@ -24,6 +24,7 @@
 #define CAMLIBS_PTP2_PTP_H
 
 #include <stdarg.h>
+#include <string.h>
 #include <time.h>
 #include <sys/time.h>
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
@@ -59,7 +60,7 @@ struct _PTPContainer {
 	/* events can only have three parameters */
 	uint32_t Param4;
 	uint32_t Param5;
-	/* the number of meaningfull parameters */
+	/* the number of meaningful parameters */
 	uint8_t	 Nparam;
 };
 typedef struct _PTPContainer PTPContainer;
@@ -569,7 +570,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 
 #define PTP_OC_NIKON_GetDevicePTPIPInfo	0x90E0
 
-#define PTP_OC_NIKON_GetPartialObjectHiSpeed	0x9400	/* 3 params, p1: object handle, p2: 32bit transfer size, p3: terminate after transfer. DATA in, Reuslt: r1: 32bit number sent, r2: before offset low 32bit , r3: before offset high 32bit */
+#define PTP_OC_NIKON_GetPartialObjectHiSpeed	0x9400	/* 3 params, p1: object handle, p2: 32bit transfer size, p3: terminate after transfer. DATA in, Result: r1: 32bit number sent, r2: before offset low 32bit , r3: before offset high 32bit */
 #define PTP_OC_NIKON_StartSpotWb		0x9402
 #define PTP_OC_NIKON_EndSpotWb			0x9403
 #define PTP_OC_NIKON_ChangeSpotWbArea		0x9404
@@ -2862,7 +2863,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
  * 0x600 				SDK_1PushAF
  * 0x4 					SDK_CancelS1
  * 0x300 				SDK_ShootS2
- * 0x8000 migh be autowhitebalance
+ * 0x8000 might be autowhitebalance
  */
 #define PTP_DPC_FUJI_AFStatus				0xD209
 #define PTP_DPC_FUJI_DeviceName				0xD20B
@@ -4677,6 +4678,24 @@ uint16_t ptp_olympus_getcameraid (PTPParams*, unsigned char**, unsigned int *);
 
 uint16_t ptp_olympus_omd_capture (PTPParams* params);
 uint16_t ptp_olympus_omd_move_focus (PTPParams* params, uint32_t direction, uint32_t step_size);
+
+/* Internal function for SONY */
+static inline int
+has_sony_mode_300(PTPParams *params) {
+	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY) return 0;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-7SM3")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-7C")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-9M2")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-1")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-7M4")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM5")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ZV-E1")) return 1;
+	// TODO add other mode 300 camera models
+	return 0;
+}
+
 
 /* Non PTP protocol functions */
 static inline int

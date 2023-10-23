@@ -255,7 +255,7 @@ int main(int argc, char **argv) {
 	gp_file_free (file);
 
 #if 0
-	/* this gives endless event check loops occasionaly ... need review how to do this best */
+	/* this gives endless event check loops occasionally ... need review how to do this best */
 	ret = gp_camera_capture (camera, GP_CAPTURE_IMAGE, &path, context);
 	if ((ret != GP_OK) && (ret != GP_ERROR_NOT_SUPPORTED)) {
 		printf ("Could not capture preview.\n");

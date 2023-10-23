@@ -130,7 +130,7 @@ gsmart300_request_file (CameraPrivateLibrary * lib, CameraFile *file,
 	uint8_t qIndex, value;
 	uint8_t *mybuf;
 	int i, ret;
-	/* NOTE : these varialbes are slightly renamed */
+	/* NOTE : these variables are slightly renamed */
 	int flash_size, data_size, file_size;
 
 	CHECK (gsmart300_get_file_info (lib, number, &g_file));

@@ -483,11 +483,11 @@ http://sourceforge.net/tracker/download.php?group_id=8874&atid=108874&file_id=17
 2002-03-12  Mariusz Woloszyn
 
 	* changed all _event, eventep to _int and intep as it describes usb
-	  inerrupt endpoint
+	  interrupt endpoint
 
 2002-03-11  Lutz Müller <lutz@users.sourceforge.net>
 
-	* configure.in: Fix versionning.
+	* configure.in: Fix versioning.
 
 2002-03-11  Mariusz Woloszyn
 
@@ -847,7 +847,7 @@ http://sourceforge.net/tracker/download.php?group_id=8874&atid=108874&file_id=17
 
 2001-10-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	* libgphoto2_port/gp_port.c: Forot to set default speed to 0
+	* libgphoto2_port/gp_port.c: Forgot to set default speed to 0
 
 2001-10-20  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 

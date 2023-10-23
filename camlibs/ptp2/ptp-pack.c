@@ -129,7 +129,7 @@ dtoh64ap (PTPParams *params, const unsigned char *a)
 /*
  * PTP strings ... if the size field is:
  * size 0  : "empty string" ... we interpret that as string with just \0 terminator, return 1
- *  (the whole PTP standard is not that clear, it occasionaly refers to strings as optional in such cases, but no clear guidance).
+ *  (the whole PTP standard is not that clear, it occasionally refers to strings as optional in such cases, but no clear guidance).
  * size > 0: all other strings have a terminating \0, included in the length (not sure how conforming everyone is here)
  *
  * len - in ptp string characters currently
@@ -801,7 +801,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	free(capture_date);
 }
 
-/* Custom Type Value Assignement (without Length) macro frequently used below */
+/* Custom Type Value Assignment (without Length) macro frequently used below */
 #define CTVAL(target,func) {			\
 	if (total - *offset < sizeof(target))	\
 		return 0;			\
@@ -1677,7 +1677,7 @@ ptp_unpack_EOS_ImageFormat (PTPParams* params, unsigned char** data )
 	/*
 	  EOS ImageFormat entries (of at least the 5DM2 and the 400D) look like this:
 		uint32: number of entries / generated files (1 or 2)
-		uint32: size of this entry in bytes (most likely allways 0x10)
+		uint32: size of this entry in bytes (most likely always 0x10)
 		uint32: image type (1 == JPG, 6 == RAW)
 		uint32: image size (0 == Large, 1 == Medium, 2 == Small, 0xe == S1, 0xf == S2, 0x10 == S3)
 		uint32: image compression (2 == Standard/JPG, 3 == Fine/JPG, 4 == Lossles/RAW)
@@ -2331,6 +2331,14 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 				case PTP_DPC_CANON_EOS_EVFOutputDevice:
 				case PTP_DPC_CANON_EOS_FocusMode:
 				case PTP_DPC_CANON_EOS_MirrorLockupState:
+				case PTP_DPC_CANON_EOS_LensStatus:
+				case PTP_DPC_CANON_EOS_TempStatus:
+				case PTP_DPC_CANON_EOS_DepthOfFieldPreview:
+				case PTP_DPC_CANON_EOS_EVFSharpness:
+				case PTP_DPC_CANON_EOS_EVFWBMode:
+				case PTP_DPC_CANON_EOS_MovieSoundRecord:
+				case PTP_DPC_CANON_EOS_NetworkCommunicationMode:
+				case PTP_DPC_CANON_EOS_NetworkServerRegion:
 					dpd->DataType = PTP_DTC_UINT32;
 					break;
 				/* enumeration for AEM is never provided, but is available to set */
@@ -2401,13 +2409,8 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 					break;
 				/* yet unknown 32bit props */
 				case PTP_DPC_CANON_EOS_WftStatus:
-				case PTP_DPC_CANON_EOS_LensStatus:
 				case PTP_DPC_CANON_EOS_CardExtension:
-				case PTP_DPC_CANON_EOS_TempStatus:
 				case PTP_DPC_CANON_EOS_PhotoStudioMode:
-				case PTP_DPC_CANON_EOS_DepthOfFieldPreview:
-				case PTP_DPC_CANON_EOS_EVFSharpness:
-				case PTP_DPC_CANON_EOS_EVFWBMode:
 				case PTP_DPC_CANON_EOS_EVFClickWBCoeffs:
 				case PTP_DPC_CANON_EOS_MovSize:
 				case PTP_DPC_CANON_EOS_DepthOfField:
@@ -2529,7 +2532,7 @@ static unsigned int olcsizes[0x15][13] = {
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x5 */
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x6 */
 	{2,6,5,4,4, 6,7,4,6,5, 5,8,1 },	/* 0x7 */	/* CONFIRMED: EOS 100D, 5D Mark 3 */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */	/* CONFIRMED: EOS M10, PowerShot SX720HS: only report 0x1, 0x2, 0x4 and 0x8 masks, seperately */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */	/* CONFIRMED: EOS M10, PowerShot SX720HS: only report 0x1, 0x2, 0x4 and 0x8 masks, separately */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x9 */	/* guessed */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xa */	/* guessed */
 	{2,6,5,4,4, 6,8,4,6,5, 5,9,8 }, /* 0xb */	/* CONFIRMED */

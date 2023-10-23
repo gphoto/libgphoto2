@@ -162,8 +162,21 @@ camera_abilities (CameraAbilitiesList *list)
         a.usb_product           = 0x017e;
         if (GP_OK != (ret = gp_abilities_list_append (list, a)))
                 return ret;
-	return GP_OK;
 
+	/* https://github.com/asalamon74/pktriggercord/issues/21 */
+	strcpy (a.model, "Pentax:K1II");
+	a.usb_vendor		= 0x25fb;
+	a.usb_product           = 0x0183;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
+
+	strcpy (a.model, "Pentax:K3III");
+	a.usb_vendor		= 0x25fb;
+	a.usb_product           = 0x0189;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
+
+	return GP_OK;
 }
 
 int scsi_write(GPPort *port, uint8_t *cmd, uint32_t cmdLen,
@@ -204,7 +217,7 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 
 	pslr_get_status (&camera->pl->pslr, &status);
 
-	statusinfo = collect_status_info( &camera->pl->pslr, status );
+	statusinfo = pslr_get_status_info( &camera->pl->pslr, status );
 
 	sprintf (summary->text, _(
 		"Pentax K DSLR capture driver.\n"
@@ -618,7 +631,7 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 
 	pslr_get_status (&camera->pl->pslr, &status);
 
-	model = pslr_camera_name (&camera->pl->pslr);
+	model = pslr_get_camera_name (&camera->pl->pslr);
 
 	available_resolutions = pslr_get_model_jpeg_resolutions (&camera->pl->pslr);
 
@@ -775,15 +788,15 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_add_choice (t, _("B"));
 	gp_widget_add_choice (t, _("X"));
 	switch (status.exposure_mode) {
-	case PSLR_GUI_EXPOSURE_MODE_GREEN:	gp_widget_set_value (t, _("GREEN"));break;
-	case PSLR_GUI_EXPOSURE_MODE_M:		gp_widget_set_value (t, _("M"));break;
-	case PSLR_GUI_EXPOSURE_MODE_P:		gp_widget_set_value (t, _("P"));break;
-	case PSLR_GUI_EXPOSURE_MODE_AV:		gp_widget_set_value (t, _("AV"));break;
-	case PSLR_GUI_EXPOSURE_MODE_TV:		gp_widget_set_value (t, _("TV"));break;
-	case PSLR_GUI_EXPOSURE_MODE_SV:		gp_widget_set_value (t, _("SV"));break;
-	case PSLR_GUI_EXPOSURE_MODE_TAV:	gp_widget_set_value (t, _("TAV"));break;
-	case PSLR_GUI_EXPOSURE_MODE_X:		gp_widget_set_value (t, _("X"));break;
-	case PSLR_GUI_EXPOSURE_MODE_B:		gp_widget_set_value (t, _("B"));break;
+	case PSLR_EXPOSURE_MODE_GREEN:	gp_widget_set_value (t, _("GREEN"));break;
+	case PSLR_EXPOSURE_MODE_M:		gp_widget_set_value (t, _("M"));break;
+	case PSLR_EXPOSURE_MODE_P:		gp_widget_set_value (t, _("P"));break;
+	case PSLR_EXPOSURE_MODE_AV:		gp_widget_set_value (t, _("AV"));break;
+	case PSLR_EXPOSURE_MODE_TV:		gp_widget_set_value (t, _("TV"));break;
+	case PSLR_EXPOSURE_MODE_SV:		gp_widget_set_value (t, _("SV"));break;
+	case PSLR_EXPOSURE_MODE_TAV:	gp_widget_set_value (t, _("TAV"));break;
+	case PSLR_EXPOSURE_MODE_X:		gp_widget_set_value (t, _("X"));break;
+	case PSLR_EXPOSURE_MODE_B:		gp_widget_set_value (t, _("B"));break;
 	default:
 		sprintf(buf, _("Unknown mode %d"), status.exposure_mode);
 		gp_widget_set_value (t, buf);
@@ -839,22 +852,22 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	ret = gp_widget_get_child_by_label (window, _("Shooting Mode"), &w);
 	if ((ret == GP_OK) && gp_widget_changed (w)) {
-		pslr_gui_exposure_mode_t exposuremode;
+		pslr_exposure_mode_t exposuremode;
 
 	        gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 
-		exposuremode = PSLR_GUI_EXPOSURE_MODE_MAX;
-		if (!strcmp(sval,_("GREEN")))	exposuremode = PSLR_GUI_EXPOSURE_MODE_GREEN;
-		if (!strcmp(sval,_("M")))	exposuremode = PSLR_GUI_EXPOSURE_MODE_M;
-		if (!strcmp(sval,_("B")))	exposuremode = PSLR_GUI_EXPOSURE_MODE_B;
-		if (!strcmp(sval,_("P")))	exposuremode = PSLR_GUI_EXPOSURE_MODE_P;
-		if (!strcmp(sval,_("SV")))	exposuremode = PSLR_GUI_EXPOSURE_MODE_SV;
-		if (!strcmp(sval,_("TV")))	exposuremode = PSLR_GUI_EXPOSURE_MODE_TV;
-		if (!strcmp(sval,_("AV")))	exposuremode = PSLR_GUI_EXPOSURE_MODE_AV;
-		if (!strcmp(sval,_("TAV")))	exposuremode = PSLR_GUI_EXPOSURE_MODE_TAV;
-		if (!strcmp(sval,_("X")))	exposuremode = PSLR_GUI_EXPOSURE_MODE_TAV;
-		if (exposuremode != PSLR_GUI_EXPOSURE_MODE_MAX) {
+		exposuremode = PSLR_EXPOSURE_MODE_MAX;
+		if (!strcmp(sval,_("GREEN")))	exposuremode = PSLR_EXPOSURE_MODE_GREEN;
+		if (!strcmp(sval,_("M")))	exposuremode = PSLR_EXPOSURE_MODE_M;
+		if (!strcmp(sval,_("B")))	exposuremode = PSLR_EXPOSURE_MODE_B;
+		if (!strcmp(sval,_("P")))	exposuremode = PSLR_EXPOSURE_MODE_P;
+		if (!strcmp(sval,_("SV")))	exposuremode = PSLR_EXPOSURE_MODE_SV;
+		if (!strcmp(sval,_("TV")))	exposuremode = PSLR_EXPOSURE_MODE_TV;
+		if (!strcmp(sval,_("AV")))	exposuremode = PSLR_EXPOSURE_MODE_AV;
+		if (!strcmp(sval,_("TAV")))	exposuremode = PSLR_EXPOSURE_MODE_TAV;
+		if (!strcmp(sval,_("X")))	exposuremode = PSLR_EXPOSURE_MODE_TAV;
+		if (exposuremode != PSLR_EXPOSURE_MODE_MAX) {
 			pslr_set_exposure_mode(&camera->pl->pslr, exposuremode);
 			pslr_get_status(&camera->pl->pslr, &status);
 		} else {
@@ -886,7 +899,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		rational.denom = 10;
 		rational.nom = (int)(10 * fval);
 
-		pslr_set_ec (&camera->pl->pslr, rational);
+		pslr_set_expose_compensation (&camera->pl->pslr, rational);
 
 	}
 
@@ -965,7 +978,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		int bulb;
 
-		if (status.exposure_mode != PSLR_GUI_EXPOSURE_MODE_B) {
+		if (status.exposure_mode != PSLR_EXPOSURE_MODE_B) {
 			gp_context_error (context, _("You need to switch the shooting mode or the camera to 'B' for bulb exposure."));
 			return GP_ERROR;
 		}

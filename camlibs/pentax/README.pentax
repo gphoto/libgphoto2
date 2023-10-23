@@ -1,6 +1,10 @@
 This driver is imported from the pkremote project.
 
-http://sf.net/projects/pkremote/
+	https://sf.net/projects/pkremote/
+
+and later on updated from the more recent pktriggercord fork of pkremote.
+
+	https://github.com/asalamon74/pktriggercord
 
 It uses special SCSI commands tunneled over USB Mass 
 Storage to control the camera.

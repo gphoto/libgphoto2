@@ -460,7 +460,7 @@ After a completed file download, a "forget file" command follows.
 
 This tells the camera to turn itself off. This seems the only way of
 getting out of the computer-controlled mode. The M$Win driver issues this
-command upon exitting it.
+command upon exiting it.
 
 
 "turn off" reply
@@ -649,7 +649,7 @@ When a picture is selected, the `Aquire' button initiates a communication
 just like a thumbnail download, only there may be repeated "file
 download" commands. And in the file name it's "AUT" instead of "THM".
 
-When the driver is exitted, a "turn off" command is sent.
+When the driver is exited, a "turn off" command is sent.
 
 
 DIRECTORY ENTRIES

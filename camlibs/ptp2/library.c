@@ -276,7 +276,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	/* LEICA */
-	if (    (di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
+	if (    ((!di->VendorExtensionID) || (di->VendorExtensionID == PTP_VENDOR_MICROSOFT)) &&
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x1a98)
 	) {
@@ -1344,6 +1344,8 @@ static struct {
 	{"Sony:Alpha-A6600 (MTP)",	0x054c, 0x0d0f, 0},
 	{"Sony:Alpha-A6600 (PC Control)",	0x054c, 0x0d10, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* email report */
+	{"Sony:DSC-A7S III (MTP)",		0x054c, 0x0d17, 0},
 	/* Elijah Parker, mail@timelapseplus.com */
 	{"Sony:DSC-A7S III (Control)",		0x054c, 0x0d18, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -1369,8 +1371,14 @@ static struct {
 	{"Sony:Alpha-A7 IV (MTP mode)",		0x054c, 0x0da6, 0},
 	{"Sony:Alpha-A7 IV (PC Control)",	0x054c, 0x0da7, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* https://github.com/gphoto/gphoto2/issues/596 */
+	{"Sony:ZV-E10 (MTP mode)",		0x054c, 0x0de3, 0},
+
 	/* The A7-RV */
 	{"Sony:ILCE-7RM5 (PC Control)",		0x054c, 0x0e0c, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* via email */
+	{"Sony:A6700 (PC Control)",		0x054c, 0x0e78, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
@@ -2521,6 +2529,11 @@ static struct {
 	{"Canon:EOS R5 C",			0x04a9, 0x3303, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/881 */
 	{"Canon:EOS R6m2",			0x04a9, 0x330b, PTP_CAP|PTP_CAP_PREVIEW},
+	/* email */
+	{"Canon:EOS R8",			0x04a9, 0x330c, PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS R50",			0x04a9, 0x330d, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/libgphoto2/issues/924 */
+	{"Canon:EOS R100",			0x04a9, 0x3312, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Konica-Minolta PTP cameras */
 	{"Konica-Minolta:DiMAGE A2 (PTP mode)",        0x132b, 0x0001, 0},
@@ -2658,7 +2671,7 @@ static struct {
 	{"Fuji:Fujifilm X-T3",			0x04cb, 0x02dd, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/gphoto2/issues/256 */
 	{"Fuji:Fujifilm GFX100",		0x04cb, 0x02de, PTP_CAP|PTP_CAP_PREVIEW},
-	/* Bruno Filho at SUSE (currently not working with cpature, but shows variables) */
+	/* Bruno Filho at SUSE (currently not working with capture, but shows variables) */
 	/* so far looks like the low end X-T30 does not support tethering, https://www.dpreview.com/forums/thread/4451199 */
 	{"Fuji:Fujifilm X-T30",			0x04cb, 0x02e3, PTP_CAP_PREVIEW},
 	/* via email to gphoto-devel on Apr 2 2021 */
@@ -2782,6 +2795,9 @@ static struct {
 
 	/* Bernhard Wagner <me@bernhardwagner.net> */
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
+
+	/* https://github.com/gphoto/gphoto2/issues/601 */
+	{"Leica:Q3",				0x1a98,	0x2376, PTP_CAP|PTP_CAP_PREVIEW|PTP_NO_CAPTURE_COMPLETE},
 
 	/* Christopher Kao <christopherkao@icloud.com> */
 	{"Leica:SL (Typ 601)",			0x1a98,	0x2041, PTP_CAP|PTP_CAP_PREVIEW},
@@ -3289,7 +3305,7 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 	   "This driver supports cameras that support PTP or PictBridge(tm), and\n"
 	   "Media Players that support the Media Transfer Protocol (MTP).\n"
 	   "\n"
-	   "Enjoy!"), 2021);
+	   "Enjoy!"), 2023);
 	return (GP_OK);
 }
 
@@ -4876,12 +4892,13 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		 * to be able to capture. I looked for various trigger events or property changes on the ZV-1
 		 * but nothing worked except waiting.
 		 * This might not be required when having manual focusing according to https://github.com/gphoto/gphoto2/issues/349
+		 * 2.5 seconds were reported not enough, 3.0 seconds worked to some degree for ILCE-7RM4.
 		 */
 
-		while (time_since (params->starttime) < 2500) {
+		while (time_since (params->starttime) < 3000) {
 			/* drain the queue first */
 			if (ptp_get_one_event(params, &event)) {
-				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+				GP_LOG_D ("sony startup wait poll event.code=%04x Param1=%08x", event.Code, event.Param1);
 				continue;
 			}
 			/* wait for events and poll property data */
@@ -4895,8 +4912,8 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
-	GP_LOG_D ("dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
-	GP_LOG_D ("dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
+	GP_LOG_D ("PTP_DPC_CompressionSetting dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
+	GP_LOG_D ("PTP_DPC_CompressionSetting dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
 
 	if (dpd.CurrentValue.u8 == 0)
 		dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
@@ -4925,7 +4942,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			/* needed on older cameras like the a58, check for events ... */
 			C_PTP (ptp_check_event (params));
 			if (ptp_get_one_event(params, &event)) {
-				GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+				GP_LOG_D ("during shutterbutton press event.code=%04x Param1=%08x", event.Code, event.Param1);
 				if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
 					(event.Param1 == PTP_DPC_SONY_FocusFound)
 				) {
@@ -4973,7 +4990,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		 * we drained all events above */
 		C_PTP (ptp_check_event_queue (params));
 		if (ptp_get_one_event(params, &event)) {
-			GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
+			GP_LOG_D ("during wait for image event.code=%04x Param1=%08x", event.Code, event.Param1);
 			if (event.Code == PTP_EC_Sony_ObjectAdded) {
 				newobject = event.Param1;
 				GP_LOG_D ("SONY ObjectAdded received, ending wait");
@@ -5535,7 +5552,7 @@ downloadfile:
 	path->name[0]='\0';
 	path->folder[0]='\0';
 
-	if (newobject != 0) /* FIXME: does not handle assocation adds I think */
+	if (newobject != 0) /* FIXME: does not handle association adds I think */
 		return add_object_to_fs_and_path (camera, newobject, path, context);
 	return GP_ERROR;
 }
@@ -5656,7 +5673,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	SET_CONTEXT_P(params, context);
 	camera->pl->checkevents = TRUE;
 
-	/* first, draing existing events if the caller did not do it. */
+	/* first, draining existing events if the caller did not do it. */
 	while (ptp_get_one_event(params, &event)) {
 		GP_LOG_D ("draining unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 	}
@@ -5781,7 +5798,7 @@ fallback:
 	 * all newly created objects. However there might be more than one
 	 * newly created object. There a two scenarios here, which may occur
 	 * both at the time.
-	 * 1) InitiateCapture trigers capture of more than one object if the
+	 * 1) InitiateCapture triggers capture of more than one object if the
 	 * camera is in burst mode for example.
 	 * 2) InitiateCapture creates a number of objects, but not all
 	 * objects represents images. This happens when the camera creates a
@@ -5948,11 +5965,15 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 			C_PTP (ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_AvailableShots, &dpd));
 			if (dpd.CurrentValue.u32 < 100) {
 				/* Tell the camera we have enough free space on the PC */
+#if 0
 				if (!params->uilocked)
 					ptp_canon_eos_setuilock(params);
+#endif
 				LOG_ON_PTP_E (ptp_canon_eos_pchddcapacity(params, 0x0fffffff, 0x00001000, 0x00000001));
+#if 0
 				if (!params->uilocked)
 					ptp_canon_eos_resetuilock(params);
+#endif
 			}
 		}
 	}
@@ -7206,7 +7227,7 @@ sonyout:
 					PTPDevicePropDesc	dpd;
 
 					*eventtype = GP_EVENT_UNKNOWN;
-					/* cached devprop should hafve been flushed I think... */
+					/* cached devprop should have been flushed I think... */
 					C_PTP_REP (ptp_generic_getdevicepropdesc (params, event.Param1&0xffff, &dpd));
 
 					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);

@@ -46,7 +46,7 @@
 
 #define CHECK_RESULT(result) {int r = (result); if (r < 0) return (r);}
 
-/* lengt of one path component */
+/* length of one path component */
 #ifndef MAX_PATH
 # define MAX_PATH 256
 #endif

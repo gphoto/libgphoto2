@@ -38,7 +38,7 @@ static const struct {
 #include "exiftool_pentax_lens.txt"
 };
 
-const char *get_lens_name( uint32_t id1, uint32_t id2) {
+const char *pslr_get_lens_name( uint32_t id1, uint32_t id2) {
     int lens_num = sizeof(lens_id)/sizeof(lens_id[0]);
     int i;
     for ( i=0; i<lens_num; ++i ) {

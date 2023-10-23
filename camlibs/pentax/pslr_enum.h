@@ -26,7 +26,6 @@
     and GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #ifndef CAMLIBS_PENTAX_PSLR_ENUM_H
 #define CAMLIBS_PENTAX_PSLR_ENUM_H
 
@@ -202,41 +201,41 @@ typedef enum {
 int str_comparison_i (const char *s1, const char *s2, int n);
 int find_in_array( const char** array, int length, char* str );
 
-pslr_color_space_t get_pslr_color_space( char *str );
-const char *get_pslr_color_space_str( pslr_color_space_t value );
+pslr_color_space_t pslr_get_color_space( char *str );
+const char *pslr_get_color_space_str( pslr_color_space_t value );
 
-pslr_af_mode_t get_pslr_af_mode( char *str );
-const char *get_pslr_af_mode_str( pslr_af_mode_t value );
+pslr_af_mode_t pslr_get_af_mode( char *str );
+const char *pslr_get_af_mode_str( pslr_af_mode_t value );
 
-pslr_ae_metering_t get_pslr_ae_metering( char *str );
-const char *get_pslr_ae_metering_str( pslr_ae_metering_t value );
+pslr_ae_metering_t pslr_get_ae_metering( char *str );
+const char *pslr_get_ae_metering_str( pslr_ae_metering_t value );
 
-pslr_flash_mode_t get_pslr_flash_mode( char *str );
-const char *get_pslr_flash_mode_str( pslr_flash_mode_t value );
+pslr_flash_mode_t pslr_get_flash_mode( char *str );
+const char *pslr_get_flash_mode_str( pslr_flash_mode_t value );
 
-pslr_drive_mode_t get_pslr_drive_mode( char *str );
-const char *get_pslr_drive_mode_str( pslr_drive_mode_t value );
+pslr_drive_mode_t pslr_get_drive_mode( char *str );
+const char *pslr_get_drive_mode_str( pslr_drive_mode_t value );
 
-pslr_af_point_sel_t get_pslr_af_point_sel( char *str );
-const char *get_pslr_af_point_sel_str( pslr_af_point_sel_t value );
+pslr_af_point_sel_t pslr_get_af_point_sel( char *str );
+const char *pslr_get_af_point_sel_str( pslr_af_point_sel_t value );
 
-char *get_pslr_af11_point_str( uint32_t value );
+char *pslr_get_af11_point_str( uint32_t value );
 
-pslr_jpeg_image_tone_t get_pslr_jpeg_image_tone( char *str );
-const char *get_pslr_jpeg_image_tone_str( pslr_jpeg_image_tone_t value );
+pslr_jpeg_image_tone_t pslr_get_jpeg_image_tone( char *str );
+const char *pslr_get_jpeg_image_tone_str( pslr_jpeg_image_tone_t value );
 
-pslr_white_balance_mode_t get_pslr_white_balance_mode( char *str );
-const char *get_pslr_white_balance_mode_str( pslr_white_balance_mode_t value );
+pslr_white_balance_mode_t pslr_get_white_balance_mode( char *str );
+const char *pslr_get_white_balance_mode_str( pslr_white_balance_mode_t value );
 
 /* pslr_custom_ev_steps_t get_pslr_custom_ev_steps( char *str ); */
-const char *get_pslr_custom_ev_steps_str( pslr_custom_ev_steps_t value );
+const char *pslr_get_custom_ev_steps_str( pslr_custom_ev_steps_t value );
 
-const char *get_pslr_custom_sensitivity_steps_str( pslr_custom_sensitivity_steps_t value );
+const char *pslr_get_custom_sensitivity_steps_str( pslr_custom_sensitivity_steps_t value );
 
-const char *get_pslr_image_format_str( pslr_image_format_t value );
+const char *pslr_get_image_format_str( pslr_image_format_t value );
 
-const char *get_pslr_raw_format_str( pslr_raw_format_t value );
+const char *pslr_get_raw_format_str( pslr_raw_format_t value );
 
-const char *get_pslr_scene_mode_str( pslr_scene_mode_t value );
+const char *pslr_get_scene_mode_str( pslr_scene_mode_t value );
 
-#endif /* !defined(CAMLIBS_PENTAX_PSLR_ENUM_H) */
+#endif

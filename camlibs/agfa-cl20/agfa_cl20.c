@@ -694,7 +694,7 @@ camera_init (Camera *camera, GPContext *context)
 	gp_port_set_settings(camera->port, settings );
 
 	/* Camera should return either 0x00 or 0x08, depending on
-	 * wether the PRINT button is depressed. Either way, it
+	 * whether the PRINT button is depressed. Either way, it
 	 * should NOT stay 'X'
 	 */
 

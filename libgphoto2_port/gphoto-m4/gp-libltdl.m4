@@ -26,7 +26,7 @@ AS_IF([test "x${LTDLINCL}${LIBLTDL}" != x], [dnl
 
   AC_MSG_CHECKING([LTDLINCL (given explicitly)])
   AC_MSG_RESULT([${LTDLINCL}])
-  AC_MSG_CHECKING([LIBLTDL (given explictly)])
+  AC_MSG_CHECKING([LIBLTDL (given explicitly)])
   AC_MSG_RESULT([${LIBLTDL}])
 
   GP_LINK_LIBLTDL_IFELSE([dnl

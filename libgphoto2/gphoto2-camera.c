@@ -92,7 +92,7 @@
  *     to a 'Reset' signal on the camera.  I quote from the Digita 'Host
  *     Interface Specification' document:
  *
- *     "The Reset signal is a pulse on the Reset/Att line (which cooresponds
+ *     "The Reset signal is a pulse on the Reset/Att line (which corresponds
  *     [sic] to pin 2 at the camera side) sent from the host computer to the
  *     camera.  This pulse must be at least 50us."
  */

@@ -1,4 +1,12 @@
-libgphoto2 2.5.30.1 development snapshot
+libgphoto2 2.5.31.1 development
+
+ptp2:
+* Added ids:
+  - Canon EOS R100
+translations:
+* added georgian, friulian
+------------------------------------------------------------------------------
+libgphoto2 2.5.31 release
 
 pentax:
 * added Pentax KP id
@@ -7,27 +15,41 @@ ptp2:
 * do better event queueing during capture (makes capture faster, avoids losing events)
 * Canon EOS: OLC logic rewritten to be table driven, more debugging of the content,
   config "testolc" to generate debugoutput. Supports more cameras better.
+* Canon EOS: various bugfixes
 * Sony Alpha: Added config options: focusarea, liveviewsettingeffect
 * Olympus: Enabled OM-1 capture
 * Battery Level: also support ENUM style battery reporting for Canon
 * Nikon 1: S1 also does not support everything
+* Sony Alpha: small changes in config setters
+* merged some improvements from NorthOfYou fork for Canon EOS, Nikon and Sony
 * New ids:
-  - Nikon Z30
-  - Canon EOS 850D, R7, R10, R5 C
-  - Fuji X-H2
-  - Pentax KP (PTP mode)
-  - Sigma fp L
-  - GOPRO HERO 11 BLACK
-  - OMSYSTEM OM-1
+  - Canon EOS 850D, R7, R10, R5 C, R6m2
+  - Fuji X-H2, X-T5
+  - GOPRO HERO 11 BLACK, 11 BLACK mini
   - new ids also imported from libmtp
+  - Nikon Z30, Z8
+  - OMSYSTEM OM-1
+  - Pentax KP (PTP mode)
+  - Ricoh GR IIIx
+  - Sigma fp L
+  - Sony A7S III, ILCE-1, ILME-FX3, 7RM5 aka A7-RV,
+
+digigr8:
+* fixed init to not switch to webcam mode
+
+pentax:
+* Added Pentax KP
 
 general:
 * disable log formatting when we are not logging (speeds up large downloads, as
   we are not hex dumping the whole data and immediately discard the result)
 * libltdl usage now thread-safe. (some other library pieces are not threadsafe yet)
+* some time_t 32bit vs 64bit fixes
+* some cleanups and warning fixes
 
 translations:
-* updated swedish
+* updated swedish, spanish
+* added georgian, friulian
 ------------------------------------------------------------------------------
 libgphoto2 2.5.30 release
 
@@ -137,7 +159,7 @@ ptp2:
   * EOS M6 Mark 2 is actually more like a EOS DSLR and fully capable, added some work
   * Handle OLCINFO for M6 Mark 2 and EOS R5 and new cameras
   * added current list of autoexposuremode to expose also Fv and friends
-  * Canon Liveview size is encoded in "output" (PC / MOBILE / MOBILE2 variants are the different livesizes), try to expose seperately as "liveviewsize"
+  * Canon Liveview size is encoded in "output" (PC / MOBILE / MOBILE2 variants are the different livesizes), try to expose separately as "liveviewsize"
   * decode more options, nickname, eosmoviemode (color/bw), strobofiring, eventmode, flashcharged, oneshotrawon
   * bugfixes
 * Sony Alpha:
@@ -150,7 +172,7 @@ ptp2:
 * ptp/ip: allow building on Windows
 * New IDS:
   * Sony DSC-A7S III
-  * Nikon Coolpix P1000, Z6_2, Z7_2 
+  * Nikon Coolpix P1000, Z6_2, Z7_2
   * Olympus E-M1 MII
   * Canon PowerShot G12, EOS M200
   * Fuji Fujifilm X-S10
@@ -1061,7 +1083,7 @@ libgphoto2 API:
    * Adjusted to new GPPortInfo handling.
 
    * Rewrote gphoto2-filesys.c to be directory based (in a tree structure).
-     Change should not be visibile outside of gphoto2-filesys.c.
+     Change should not be visible outside of gphoto2-filesys.c.
 
 libgphoto2_port API:
    * GPPortInfo is now abstracted and internal.
@@ -1638,7 +1660,7 @@ libgphoto2:
    * gp-byteorder.m4 fixes for newer glibcs.
 
 Example programs:
-   * Addes some basic library usage example programs and helpers.
+   * Added some basic library usage example programs and helpers.
 
 PTP2 driver:
    * Merged camlib from TRUNK.
@@ -1830,7 +1852,7 @@ PTP2 driver:
 
  	Canon PowerShot SD1000, SD900, A450, A550, A560, A570, A420, SD40, SD750
  	Canon PowerShot S5 IS, SD1000
-	Canon Digitial IXUS 70, 75, 900Ti, iZ
+	Canon Digital IXUS 70, 75, 900Ti, iZ
 	Canon MV750i
 	Nikon CoolPix S4, S6, P4, L10
 	Nikon DSC D40, 
@@ -1926,7 +1948,7 @@ Ricoh G3:
    * Added Ricoh Caplio R4 id.
 
 Disk port:
-   * Addes Solaris filesystem table handling.
+   * Added Solaris filesystem table handling.
    * Fixed a crasher.
    * Skip "fuse" filesystem.
 

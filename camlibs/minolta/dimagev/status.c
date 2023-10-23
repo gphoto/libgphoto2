@@ -153,7 +153,7 @@ dimagev_status_t *dimagev_import_camera_status(unsigned char *raw_data) {
 	return processed_data;
 }
 
-/* This is a fairly simple dump function, using the GPIO debug funtions. It
+/* This is a fairly simple dump function, using the GPIO debug functions. It
    just prints the current status to stderr in a reasonably readable format.
 */
 void dimagev_dump_camera_status(dimagev_status_t *status) {

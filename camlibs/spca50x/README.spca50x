@@ -36,7 +36,7 @@ Webcam mode
 The cameras of this series are based on the spca504a and spca500 chip
 manufactured by Sunplus. Both chips are capable of streaming, so there's a
 project working on video4linux support for them. spca50x.sourceforge.net
-We have been succesfull in getting some of the cameras supported by this
+We have been successful in getting some of the cameras supported by this
 camlib working as part of that project. :)
 
 Authors

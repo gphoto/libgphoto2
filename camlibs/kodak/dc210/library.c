@@ -737,7 +737,7 @@ int dc210_init_port (Camera *camera){
 	/* ok, run a dummy command; if the camera was off,
 	   this will activate it and set the speed to 9600;
 	   but the command will return an error;
-	   It makes no sense to shorten the timout time,
+	   It makes no sense to shorten the timeout time,
 	   because the camera may need up to 10 seconds (information
 	   of the manual) to startup */
 	if (dc210_check_battery(camera) == GP_OK) return GP_OK;

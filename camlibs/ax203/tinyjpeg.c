@@ -105,7 +105,7 @@ static const unsigned char zigzag[64] =
  *              But convert any 0xff,0x00 into 0xff
  *  get_nbits: read nbits from the stream, and put it in result,
  *             bits is removed from the stream and the reservoir is filled
- *             automaticaly. The result is signed according to the number of
+ *             automatically. The result is signed according to the number of
  *             bits.
  *  look_nbits: read nbits from the stream without marking as read.
  *  skip_nbits: read nbits from the stream but do not return the result.
@@ -176,7 +176,7 @@ static void resync(struct jdec_private *priv);
  * Get the next (valid) huffman code in the stream.
  *
  * To speedup the procedure, we look HUFFMAN_HASH_NBITS bits and the code is
- * lower than HUFFMAN_HASH_NBITS we have automaticaly the length of the code
+ * lower than HUFFMAN_HASH_NBITS we have automatically the length of the code
  * and the value by using two lookup table.
  * Else if the value is not found, just search (linear) into an array for each
  * bits is the code is present.
@@ -846,7 +846,7 @@ static const convert_colorspace_fct convert_colorspace_rgb24[4] = {
 /**
  * Decode and convert the jpeg image into @pixfmt@ image
  *
- * Note: components will be automaticaly allocated if no memory is attached.
+ * Note: components will be automatically allocated if no memory is attached.
  */
 int tinyjpeg_decode(struct jdec_private *priv)
 {

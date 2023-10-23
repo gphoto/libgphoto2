@@ -1083,7 +1083,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		if (i != -1)
 		  pdc700_set_date(camera, (time_t) i, context);
 		else
-		  GP_DEBUG ("date widget returned -1, not setting datee/time");
+		  GP_DEBUG ("date widget returned -1, not setting date/time");
 		/* GP_DEBUG ("Implement setting of date & time!"); */
 	}
 

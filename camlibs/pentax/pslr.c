@@ -51,25 +51,18 @@
 #include <stdbool.h>
 #include <stdarg.h>
 #include <dirent.h>
-#include <math.h>
 
 #include "pslr.h"
+#include "pslr_log.h"
 #include "pslr_scsi.h"
 #include "pslr_lens.h"
+#include "pslr_utils.h"
 
 #define POLL_INTERVAL 50000 /* Number of us to wait when polling */
 #define BLKSZ 65536 /* Block size for downloads; if too big, we get
                      * memory allocation error from sg driver */
 #define BLOCK_RETRY 3 /* Number of retries, since we can occasionally
                        * get SCSI errors when downloading data */
-
-void sleep_sec(double sec) {
-    int i;
-    for (i=0; i<floor(sec); ++i) {
-        usleep(999999); // 1000000 is not working for Windows
-    }
-    usleep(1000000*(sec-floor(sec)));
-}
 
 ipslr_handle_t pslr;
 
@@ -98,7 +91,7 @@ void hexdump(uint8_t *buf, uint32_t bufLen);
 
 static pslr_progress_callback_t progress_callback = NULL;
 
-user_file_format_t file_formats[3] = {
+user_file_format_t pslr_user_file_formats[3] = {
     { USER_FILE_FORMAT_PEF, "PEF", "pef"},
     { USER_FILE_FORMAT_DNG, "DNG", "dng"},
     { USER_FILE_FORMAT_JPEG, "JPEG", "jpg"},
@@ -253,8 +246,8 @@ static int ipslr_cmd_23_04(ipslr_handle_t *p) {
 
 /* Function called to enable/disable debug mode. If debug_mode argument is 0 */
 /* function disables debug mode, else debug mode is enabled                  */
-int debug_onoff(ipslr_handle_t *p, char debug_mode) {
-    DPRINT("[C]\tdebug_onoff(%d)\n", debug_mode);
+int pslr_set_debugmode(ipslr_handle_t *p, char debug_mode) {
+    DPRINT("[C]\tpslr_set_debugmode(%d)\n", debug_mode);
     uint8_t buf[16]; /* buffer for storing statuses and read_results */
 
     ipslr_cmd_00_09(p,1);
@@ -286,11 +279,11 @@ int debug_onoff(ipslr_handle_t *p, char debug_mode) {
 
 /* ************* End enabling/disabling debug mode ************ */
 
-user_file_format_t *get_file_format_t( user_file_format uff ) {
+user_file_format_t *pslr_get_user_file_format_t( user_file_format uff ) {
     unsigned int i;
-    for (i = 0; i<sizeof(file_formats) / sizeof(file_formats[0]); i++) {
-        if (file_formats[i].uff == uff) {
-            return &file_formats[i];
+    for (i = 0; i<sizeof(pslr_user_file_formats) / sizeof(pslr_user_file_formats[0]); i++) {
+        if (pslr_user_file_formats[i].uff == uff) {
+            return &pslr_user_file_formats[i];
         }
     }
     return NULL;
@@ -315,7 +308,7 @@ int pslr_set_user_file_format(pslr_handle_t h, user_file_format uff) {
     return PSLR_OK;
 }
 
-user_file_format get_user_file_format( pslr_status *st ) {
+user_file_format pslr_get_user_file_format( pslr_status *st ) {
     int rawfmt = st->raw_format;
     int imgfmt = st->image_format;
     if (imgfmt == PSLR_IMAGE_FORMAT_JPEG) {
@@ -368,7 +361,7 @@ pslr_handle_t pslr_init( char *model, char *device ) {
     char **drives;
     const char *camera_name;
 
-    DPRINT("[C]\tplsr_init()\n");
+    DPRINT("[C]\tpslr_init()\n");
 
     if ( device == NULL ) {
         drives = get_drives(&driveNum);
@@ -390,7 +383,7 @@ pslr_handle_t pslr_init( char *model, char *device ) {
                 pslr.fd = fd;
                 if ( model != NULL ) {
                     // user specified the camera model
-                    camera_name = pslr_camera_name( &pslr );
+                    camera_name = pslr_get_camera_name( &pslr );
                     DPRINT("\tName of the camera: %s\n", camera_name);
                     if ( str_comparison_i( camera_name, model, strlen( camera_name) ) == 0 ) {
                         return &pslr;
@@ -482,7 +475,7 @@ int pslr_get_status(pslr_handle_t h, pslr_status *ps) {
     return PSLR_OK;
 }
 
-char *format_rational( pslr_rational_t rational, char * fmt ) {
+char *pslr_format_rational( pslr_rational_t rational, char * fmt ) {
     char *ret = malloc(32);
     if ( rational.denom == 0 ) {
         snprintf( ret, 32, "unknown" );
@@ -516,11 +509,10 @@ char *get_white_balance_adjust_str( uint32_t adjust_mg, uint32_t adjust_ba ) {
     return ret;
 }
 
-static
 char *pslr_get_af_name(pslr_handle_t h, uint32_t af_point) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     if (p->model->af_point_num==11) {
-        return get_pslr_af11_point_str(af_point);
+        return pslr_get_af11_point_str(af_point);
     } else {
         char *raw = malloc(11);
         sprintf(raw, "%d", af_point);
@@ -528,54 +520,54 @@ char *pslr_get_af_name(pslr_handle_t h, uint32_t af_point) {
     }
 }
 
-char *collect_status_info( pslr_handle_t h, pslr_status status ) {
+char *pslr_get_status_info( pslr_handle_t h, pslr_status status ) {
     char *strbuffer = malloc(8192);
     sprintf(strbuffer,"%-32s: %d\n", "current iso", status.current_iso);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d/%d\n", "current shutter speed", status.current_shutter_speed.nom, status.current_shutter_speed.denom);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d/%d\n", "camera max shutter speed", status.max_shutter_speed.nom, status.max_shutter_speed.denom);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "current aperture", format_rational( status.current_aperture, "%.1f"));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "lens max aperture", format_rational( status.lens_max_aperture, "%.1f"));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "lens min aperture", format_rational( status.lens_min_aperture, "%.1f"));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "current aperture", pslr_format_rational( status.current_aperture, "%.1f"));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "lens max aperture", pslr_format_rational( status.lens_max_aperture, "%.1f"));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "lens min aperture", pslr_format_rational( status.lens_min_aperture, "%.1f"));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d/%d\n", "set shutter speed", status.set_shutter_speed.nom, status.set_shutter_speed.denom);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "set aperture", format_rational( status.set_aperture, "%.1f"));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "set aperture", pslr_format_rational( status.set_aperture, "%.1f"));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "fixed iso", status.fixed_iso);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d-%d\n", "auto iso", status.auto_iso_min,status.auto_iso_max);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "jpeg quality", status.jpeg_quality);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %dM\n", "jpeg resolution", pslr_get_jpeg_resolution( h, status.jpeg_resolution));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "jpeg image tone", get_pslr_jpeg_image_tone_str(status.jpeg_image_tone));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "jpeg image tone", pslr_get_jpeg_image_tone_str(status.jpeg_image_tone));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "jpeg saturation", status.jpeg_saturation);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "jpeg contrast", status.jpeg_contrast);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "jpeg sharpness", status.jpeg_sharpness);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "jpeg hue", status.jpeg_hue);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s mm\n", "zoom", format_rational(status.zoom, "%.2f"));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s mm\n", "zoom", pslr_format_rational(status.zoom, "%.2f"));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "focus", status.focus);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "color space", get_pslr_color_space_str(status.color_space));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "image format", get_pslr_image_format_str(status.image_format));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "raw format", get_pslr_raw_format_str(status.raw_format));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "color space", pslr_get_color_space_str(status.color_space));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "image format", pslr_get_image_format_str(status.image_format));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "raw format", pslr_get_raw_format_str(status.raw_format));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "light meter flags", status.light_meter_flags);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "ec", format_rational( status.ec, "%.2f" ) );
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s EV steps\n", "custom ev steps", get_pslr_custom_ev_steps_str(status.custom_ev_steps));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s EV steps\n", "custom sensitivity steps", get_pslr_custom_sensitivity_steps_str(status.custom_sensitivity_steps));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "ec", pslr_format_rational( status.ec, "%.2f" ) );
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s EV steps\n", "custom ev steps", pslr_get_custom_ev_steps_str(status.custom_ev_steps));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s EV steps\n", "custom sensitivity steps", pslr_get_custom_sensitivity_steps_str(status.custom_sensitivity_steps));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "exposure mode", status.exposure_mode);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "scene mode", get_pslr_scene_mode_str(status.scene_mode));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "scene mode", pslr_get_scene_mode_str(status.scene_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "user mode flag", status.user_mode_flag);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "ae metering mode", get_pslr_ae_metering_str(status.ae_metering_mode));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "af mode", get_pslr_af_mode_str(status.af_mode));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "af point select", get_pslr_af_point_sel_str(status.af_point_select));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "ae metering mode", pslr_get_ae_metering_str(status.ae_metering_mode));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "af mode", pslr_get_af_mode_str(status.af_mode));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "af point select", pslr_get_af_point_sel_str(status.af_point_select));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "selected af point", pslr_get_af_name( h, status.selected_af_point));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "focused af point", pslr_get_af_name( h, status.focused_af_point));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "drive mode", get_pslr_drive_mode_str(status.drive_mode));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "drive mode", pslr_get_drive_mode_str(status.drive_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "auto bracket mode", status.auto_bracket_mode > 0 ? "on" : "off");
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "auto bracket picture count", status.auto_bracket_picture_count);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %d\n", "auto bracket picture counter", status.auto_bracket_picture_counter);
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "auto bracket ev", format_rational(status.auto_bracket_ev, "%.2f"));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "auto bracket ev", pslr_format_rational(status.auto_bracket_ev, "%.2f"));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "shake reduction", status.shake_reduction > 0 ? "on" : "off");
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "white balance mode", get_pslr_white_balance_mode_str(status.white_balance_mode));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "white balance mode", pslr_get_white_balance_mode_str(status.white_balance_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "white balance adjust", get_white_balance_adjust_str(status.white_balance_adjust_mg, status.white_balance_adjust_ba));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "flash mode", get_pslr_flash_mode_str(status.flash_mode));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "flash mode", pslr_get_flash_mode_str(status.flash_mode));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %.2f\n", "flash exposure compensation", (1.0 * status.flash_exposure_compensation/256));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %.2f\n", "manual mode ev", (1.0 * status.manual_mode_ev / 10));
-    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "lens", get_lens_name(status.lens_id1, status.lens_id2));
+    sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "lens", pslr_get_lens_name(status.lens_id1, status.lens_id2));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %.2fV %.2fV %.2fV %.2fV\n", "battery", 0.01 * status.battery_1, 0.01 * status.battery_2, 0.01 * status.battery_3, 0.01 * status.battery_4);
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %s\n", "buffer mask", int_to_binary(status.bufmask));
     return strbuffer;
@@ -612,7 +604,7 @@ char *get_hardwired_setting_uint16_info( pslr_uint16_setting setting) {
     return strbuffer;
 }
 
-char *collect_settings_info( pslr_handle_t h, pslr_settings settings ) {
+char *pslr_get_settings_info( pslr_handle_t h, pslr_settings settings ) {
     char *strbuffer = malloc(8192);
     sprintf(strbuffer,"%-32s: %-8s%s\n", "one push bracketing", get_special_setting_info(settings.one_push_bracketing.pslr_setting_status) ?: settings.one_push_bracketing.value ? "on" : "off", get_hardwired_setting_bool_info(settings.one_push_bracketing));
     sprintf(strbuffer+strlen(strbuffer),"%-32s: %-8s%s\n", "bulb mode", get_special_setting_info(settings.bulb_mode_press_press.pslr_setting_status) ?: settings.bulb_mode_press_press.value ? "press-press" : "press-hold", get_hardwired_setting_bool_info(settings.bulb_mode_press_press));
@@ -749,8 +741,8 @@ int pslr_set_iso(pslr_handle_t h, uint32_t value, uint32_t auto_min_value, uint3
     return ipslr_handle_command_x18( p, true, X18_ISO, 3, value, auto_min_value, auto_max_value);
 }
 
-int pslr_set_ec(pslr_handle_t h, pslr_rational_t value) {
-    DPRINT("[C]\tpslr_set_ec(0x%X 0x%X)\n", value.nom, value.denom);
+int pslr_set_expose_compensation(pslr_handle_t h, pslr_rational_t value) {
+    DPRINT("[C]\tpslr_set_expose_compensation(0x%X 0x%X)\n", value.nom, value.denom);
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     return ipslr_handle_command_x18( p, true, X18_EC, 2, value.nom, value.denom, 0);
 }
@@ -811,7 +803,7 @@ int pslr_set_jpeg_stars(pslr_handle_t h, int jpeg_stars ) {
     if ( jpeg_stars > p->model->max_jpeg_stars ) {
         return PSLR_PARAM;
     }
-    hwqual = get_hw_jpeg_quality( p->model, jpeg_stars );
+    hwqual = pslr_get_hw_jpeg_quality( p->model, jpeg_stars );
     return ipslr_handle_command_x18( p, true, X18_JPEG_STARS, 2, 1, hwqual, 0);
 }
 
@@ -1142,7 +1134,7 @@ void pslr_buffer_close(pslr_handle_t h) {
     p->segment_count = 0;
 }
 
-int pslr_select_af_point(pslr_handle_t h, uint32_t point) {
+int pslr_set_selected_af_point(pslr_handle_t h, uint32_t point) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     return ipslr_handle_command_x18( p, true, X18_AF_POINT, 1, point, 0, 0);
 }
@@ -1236,8 +1228,8 @@ bool pslr_get_model_has_settings_parser(pslr_handle_t h) {
     return def_num>0;
 }
 
-const char *pslr_camera_name(pslr_handle_t h) {
-    DPRINT("[C]\tpslr_camera_name()\n");
+const char *pslr_get_camera_name(pslr_handle_t h) {
+    DPRINT("[C]\tpslr_get_camera_name()\n");
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     int ret;
     if (p->id == 0) {
@@ -1258,7 +1250,7 @@ const char *pslr_camera_name(pslr_handle_t h) {
 
 pslr_buffer_type pslr_get_jpeg_buffer_type(pslr_handle_t h, int jpeg_stars) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    return 2 + get_hw_jpeg_quality( p->model, jpeg_stars );
+    return 2 + pslr_get_hw_jpeg_quality( p->model, jpeg_stars );
 }
 
 static int ipslr_set_mode(ipslr_handle_t *p, uint32_t mode) {
@@ -1491,19 +1483,19 @@ static int ipslr_identify(ipslr_handle_t *p) {
         p->id = get_uint32_le(&idbuf[0]);
     }
     DPRINT("\tid of the camera: %x\n", p->id);
-    p->model = find_model_by_id( p->id );
+    p->model = pslr_find_model_by_id( p->id );
     return PSLR_OK;
 }
 
-int pslr_read_datetime(pslr_handle_t *h, int *year, int *month, int *day, int *hour, int *min, int *sec) {
+int pslr_get_datetime(pslr_handle_t *h, int *year, int *month, int *day, int *hour, int *min, int *sec) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    DPRINT("[C]\t\tipslr_read_datetime()\n");
+    DPRINT("[C]\t\tipslr_get_datetime()\n");
     uint8_t idbuf[800];
     int n;
 
     CHECK(command(p->fd, 0x20, 0x06, 0));
     n = get_result(p->fd);
-    DPRINT("[C]\t\tipslr_read_datetime() bytes: %d\n",n);
+    DPRINT("[C]\t\tipslr_get_datetime() bytes: %d\n",n);
     if (n!= 24) {
         return PSLR_READ_ERROR;
     }
@@ -1524,15 +1516,15 @@ int pslr_read_datetime(pslr_handle_t *h, int *year, int *month, int *day, int *h
     return PSLR_OK;
 }
 
-int pslr_read_dspinfo(pslr_handle_t *h, char* firmware) {
+int pslr_get_dspinfo(pslr_handle_t *h, char* firmware) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    DPRINT("[C]\t\tipslr_read_dspinfo()\n");
+    DPRINT("[C]\t\tipslr_get_dspinfo()\n");
     uint8_t buf[4];
     int n;
 
     CHECK(command(p->fd, 0x01, 0x01, 0));
     n = get_result(p->fd);
-    DPRINT("[C]\t\tipslr_read_dspinfo() bytes: %d\n",n);
+    DPRINT("[C]\t\tipslr_get_dspinfo() bytes: %d\n",n);
     if (n!= 4) {
         return PSLR_READ_ERROR;
     }
@@ -1545,16 +1537,16 @@ int pslr_read_dspinfo(pslr_handle_t *h, char* firmware) {
     return PSLR_OK;
 }
 
-int pslr_read_setting(pslr_handle_t *h, int offset, uint32_t *value) {
+int pslr_get_setting(pslr_handle_t *h, int offset, uint32_t *value) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    DPRINT("[C]\t\tipslr_read_setting(%d)\n", offset);
+    DPRINT("[C]\t\tipslr_get_setting(%d)\n", offset);
     uint8_t buf[4];
     int n;
 
     CHECK(ipslr_write_args(p, 1, offset));
     CHECK(command(p->fd, 0x20, 0x09, 4));
     n = get_result(p->fd);
-    DPRINT("[C]\t\tipslr_read_setting() bytes: %d\n",n);
+    DPRINT("[C]\t\tipslr_get_setting() bytes: %d\n",n);
     if (n!= 4) {
         return PSLR_READ_ERROR;
     }
@@ -1569,9 +1561,9 @@ int pslr_read_setting(pslr_handle_t *h, int offset, uint32_t *value) {
     return PSLR_OK;
 }
 
-int pslr_write_setting(pslr_handle_t *h, int offset, uint32_t value) {
+int pslr_set_setting(pslr_handle_t *h, int offset, uint32_t value) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
-    DPRINT("[C]\t\tipslr_write_setting(%d)=%d\n", offset, value);
+    DPRINT("[C]\t\tipslr_set_setting(%d)=%d\n", offset, value);
     CHECK(ipslr_cmd_00_09(p, 1));
     CHECK(ipslr_write_args(p, 2, offset, value));
     CHECK(command(p->fd, 0x20, 0x08, 8));
@@ -1579,20 +1571,20 @@ int pslr_write_setting(pslr_handle_t *h, int offset, uint32_t value) {
     return PSLR_OK;
 }
 
-int pslr_write_setting_by_name(pslr_handle_t *h, char *name, uint32_t value) {
+int pslr_set_setting_by_name(pslr_handle_t *h, char *name, uint32_t value) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     int def_num;
     char cameraid[10];
     sprintf(cameraid, "0x%0x", p->model->id);
     //    printf("cameraid: %s\n", cameraid);
     pslr_setting_def_t *defs = setting_file_process(cameraid, &def_num);
-    pslr_setting_def_t *setting_def = find_setting_by_name(defs, def_num, name);
+    pslr_setting_def_t *setting_def = pslr_find_setting_by_name(defs, def_num, name);
     if (setting_def != NULL) {
         if (strcmp(setting_def->type,"boolean") == 0) {
-            pslr_write_setting(h, setting_def->address, value);
+            pslr_set_setting(h, setting_def->address, value);
         } else if (strcmp(setting_def->type, "uint16") == 0) {
-            pslr_write_setting(h, setting_def->address, value >> 8);
-            pslr_write_setting(h, setting_def->address+1, value & 0xff);
+            pslr_set_setting(h, setting_def->address, value >> 8);
+            pslr_set_setting(h, setting_def->address+1, value & 0xff);
         }
     }
     return PSLR_OK;
@@ -1604,19 +1596,19 @@ bool pslr_has_setting_by_name(pslr_handle_t *h, char *name) {
     char cameraid[10];
     sprintf(cameraid, "0x%0x", p->model->id);
     pslr_setting_def_t *defs = setting_file_process(cameraid, &def_num);
-    pslr_setting_def_t *setting_def = find_setting_by_name(defs, def_num, name);
+    pslr_setting_def_t *setting_def = pslr_find_setting_by_name(defs, def_num, name);
 //    printf("%d %d\n", def_num, (setting_def != NULL));
     return (setting_def != NULL);
 }
 
 
-int pslr_read_settings(pslr_handle_t *h) {
+int pslr_get_settings(pslr_handle_t *h) {
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     int index=0;
     uint32_t value;
     int ret;
     while (index<SETTINGS_BUFFER_SIZE) {
-        if ( (ret = pslr_read_setting(h, index, &value)) != PSLR_OK ) {
+        if ( (ret = pslr_get_setting(h, index, &value)) != PSLR_OK ) {
             return ret;
         }
         p->settings_buffer[index] = value;
@@ -1629,7 +1621,7 @@ int pslr_get_settings_json(pslr_handle_t h, pslr_settings *ps) {
     DPRINT("[C]\tpslr_get_settings_json()\n");
     ipslr_handle_t *p = (ipslr_handle_t *) h;
     memset( ps, 0, sizeof( pslr_settings ));
-    CHECK(pslr_read_settings(h));
+    CHECK(pslr_get_settings(h));
     char cameraid[20];
     sprintf(cameraid, "0x%05x", p->id);
     DPRINT("cameraid:%s\n", cameraid);
@@ -1807,7 +1799,7 @@ static int read_result(FDTYPE fd, uint8_t *buf, uint32_t n) {
     return PSLR_OK;
 }
 
-char *copyright() {
+char *pslr_copyright() {
     char *ret = malloc(sizeof(char)*1024);
     sprintf(ret, "Copyright (C) 2011-2019 Andras Salamon\n\
 \n\
@@ -1815,21 +1807,4 @@ Based on:\n\
 pslr-shoot (C) 2009 Ramiro Barreiro\n\
 PK-Remote (C) 2008 Pontus Lidman \n\n");
     return ret;
-}
-
-void write_debug( const char* message, ... ) {
-
-    // Be sure debug is really on as DPRINT doesn't know
-    //
-    if ( !debug ) {
-        return;
-    }
-
-    // Write to stderr
-    //
-    va_list argp;
-    va_start(argp, message);
-    vfprintf( stderr, message, argp );
-    va_end(argp);
-    return;
 }

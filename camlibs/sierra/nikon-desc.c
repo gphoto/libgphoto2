@@ -412,7 +412,7 @@ static const ValueNameType cp880_reg_53_val_names[] = {
 	/* { { 0xnn }, "Japanese" },
 	 *
 	 * weird, can set to japanese, but can't see any change in any
-	 * registers; reg 53 is 3 wether it is english or japanese.
+	 * registers; reg 53 is 3 whether it is english or japanese.
 	 */
 };
 static const RegisterDescriptorType cp880_reg_53[] = {
@@ -519,7 +519,7 @@ static const RegisterDescriptorType cp880_reg_71[] = {
  * camera goes to a digital zoom).
  *
  * The low portion (mask 0x00ff) seems to have three values, none verified
- * on the cp880 - mabye should probably be split further.
+ * on the cp880 - maybe should probably be split further.
  */
 #ifdef OLD_WAY
 static const ValueNameType cp880_reg_72_mask_hi_val_names[] = {

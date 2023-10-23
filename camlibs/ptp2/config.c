@@ -334,6 +334,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 			   "setdevicepropvalue of capturetarget to 0x%x failed", ct_val.u32);
 		if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 			uint16_t	ret;
+#if 0
 			int		uilocked = params->uilocked;
 
 			/* if we want to download the image from the device, we need to tell the camera
@@ -344,9 +345,12 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 
 			if (!uilocked)
 				LOG_ON_PTP_E (ptp_canon_eos_setuilock (params));
+#endif
 			ret = ptp_canon_eos_pchddcapacity(params, 0x0fffffff, 0x00001000, 0x00000001);
+#if 0
 			if (!uilocked)
 				LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
+#endif
 			/* not so bad if its just busy, would also fail later. */
 			if (ret == PTP_RC_DeviceBusy) ret = PTP_RC_OK;
 			C_PTP (ret);
@@ -2915,7 +2919,7 @@ static struct deviceproptableu16 fuji_action[] = {
  * 0x600                                SDK_1PushAF
  * 0x4                                  SDK_CancelS1
  * 0x300                                SDK_ShootS2
- * 0x8000 migh be autowhitebalance
+ * 0x8000 might be autowhitebalance
  * working bulb transition (with autofocus):
  * 	0x200 -> wait for d209 turn from 1 to 2 -> 0x500 -> wait BULBTIME seconds -> 0xc
  * seen in fuji webcam traces:
@@ -2968,6 +2972,37 @@ _put_Fuji_AFDrive(CONFIG_PUT_ARGS)
 	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
 	return GP_OK;
 }
+
+static struct deviceproptableu16 fuji_focuspoints[] = {
+	{ N_("91 Points (7x13)"),   0x0001, 0 },
+	{ N_("325 Points (13x25)"), 0x0002, 0 },
+	{ N_("117 Points (9x13)"),  0x0003, 0 },
+	{ N_("425 Points (17x25)"), 0x0004, 0 },
+};
+GENERIC16TABLE(Fuji_FocusPoints,fuji_focuspoints)
+
+static int
+_get_Fuji_FocusPoint(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	gp_widget_set_value (*widget, dpd->CurrentValue.str);
+	return GP_OK;
+}
+
+static int
+_put_Fuji_FocusPoint(CONFIG_PUT_ARGS) {
+        PTPParams *params = &(camera->pl->params);
+        GPContext *context = ((PTPData *) params->data)->context;
+        PTPPropertyValue pval;
+        char *focus_point;
+
+        CR (gp_widget_get_value(widget, &focus_point));
+        C_MEM (pval.str = strdup(focus_point));
+        C_PTP_REP(ptp_setdevicepropvalue(params, PTP_DPC_FUJI_FocusArea4, &pval, PTP_DTC_STR));
+	*alreadyset = 1;
+        return GP_OK;
+}
+
 
 static int
 _get_Fuji_Bulb(CONFIG_GET_ARGS) {
@@ -8189,7 +8224,7 @@ _put_Canon_EOS_TestOLC(CONFIG_PUT_ARGS) {
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
-		/* idea is to request all OLCs seperately to see the sizes in the logfile */
+		/* idea is to request all OLCs separately to see the sizes in the logfile */
 		for (i=0;i<13;i++) {	/* 0x1 -> 0x1000 */
 			C_PTP (ptp_canon_eos_setrequestolcinfogroup(params, (1<<i)));
 			ptp_check_eos_events (params);
@@ -10658,6 +10693,10 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Cancel Canon DSLR Autofocus"),    "cancelautofocus",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_AfCancel,          _get_Canon_EOS_AFCancel,        _put_Canon_EOS_AFCancel },
 	{ N_("Drive Olympus OMD Manual focus"), "manualfocusdrive", 0,  PTP_VENDOR_GP_OLYMPUS_OMD, PTP_OC_OLYMPUS_OMD_MFDrive,	_get_Olympus_OMD_MFDrive,	_put_Olympus_OMD_MFDrive },
 	{ N_("Drive Panasonic Manual focus"),   "manualfocusdrive", 0,  PTP_VENDOR_PANASONIC, PTP_OC_PANASONIC_ManualFocusDrive,_get_Panasonic_MFDrive,		_put_Panasonic_MFDrive },
+	{ N_("Get Fuji focuspoint"),		"focuspoint",	    PTP_DPC_FUJI_FocusPoint,  PTP_VENDOR_FUJI, PTP_DTC_STR,	_get_Fuji_FocusPoint,		_put_Fuji_FocusPoint },
+	{ N_("Fuji FocusPoint Grid dimensions"),"focuspoints",	    PTP_DPC_FUJI_FocusPoints, PTP_VENDOR_FUJI, 0,		_get_Fuji_FocusPoints,		_put_Fuji_FocusPoints },
+	{ N_("Fuji Zoom Position"),		"zoompos",	    PTP_DPC_FUJI_LensZoomPos, PTP_VENDOR_FUJI, PTP_DTC_UINT16,	_get_INT,			_put_None },
+
 	{ N_("Canon EOS Zoom"),                 "eoszoom",          0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_Zoom,              _get_Canon_EOS_Zoom,            _put_Canon_EOS_Zoom },
 	{ N_("Canon EOS Zoom Position"),        "eoszoomposition",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_ZoomPosition,      _get_Canon_EOS_ZoomPosition,    _put_Canon_EOS_ZoomPosition },
 	{ N_("Canon EOS Viewfinder"),           "viewfinder",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder,      _put_Canon_EOS_ViewFinder },

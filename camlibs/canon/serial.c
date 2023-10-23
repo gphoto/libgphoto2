@@ -489,7 +489,7 @@ canon_serial_wait_for_ack (Camera *camera)
 				}
 			}
 		}
-		/* error already aknowledged, we skip the following ones */
+		/* error already acknowledged, we skip the following ones */
 		if (camera->pl->receive_error == ERROR_RECEIVED) {
 			if (!canon_serial_send_packet
 			    (camera, PKT_NACK, old_seq, camera->pl->psa50_eot + PKT_HDR_LEN,
@@ -1189,7 +1189,7 @@ canon_serial_get_dirents (Camera *camera, unsigned char **dirent_data,
 			 */
 			mallocd_bytes += MAX (1024, *dirents_length);
 
-			/* check if we are reading unrealistic ammounts
+			/* check if we are reading unrealistic amounts
 			 * of directory entries so that we don't loop
 			 * forever. 1024 * 1024 is picked out of the blue.
 			 */

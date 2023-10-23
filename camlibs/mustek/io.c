@@ -41,7 +41,7 @@
 #include "mdc800_spec.h"
 
 /*
- * Send a Command to the Camera. It is unimportant wether this
+ * Send a Command to the Camera. It is unimportant whether this
  * is a USB or a RS232 Command. The Function implements an automatic
  * retry of a failed command.
  *
@@ -76,7 +76,7 @@ int mdc800_io_sendCommand_with_retry (GPPort *port,unsigned char* command, unsig
 
 /*
  * sends a command and receives the answer to this
- * buffer: Strores the answer
+ * buffer: Stores the answer
  * length: length of answer or null
  */
 int mdc800_io_sendCommand (GPPort*port,unsigned char commandid,unsigned char par1,unsigned char par2,unsigned char par3, unsigned char* buffer, int length)

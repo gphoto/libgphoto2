@@ -310,7 +310,7 @@
 2002-09-21  Lutz Müller <lutz@users.sourceforge.net>
 
 	* library.c
-	* sierra.c: Make the check for the precence of a memory card
+	* sierra.c: Make the check for the presence of a memory card
 	  non-fatal.
 
 2002-09-19  Lutz Müller <lutz@users.sourceforge.net>
@@ -345,7 +345,7 @@
 
 2002-07-09  Selmeczi David <david@esr.elte.hu>
 
-	* olympus-desc.c: Patch aperature to use menu rather than radio.
+	* olympus-desc.c: Patch aperture to use menu rather than radio.
 
 2002-07-08  Patrick Mansfield <patmans@users.sourceforge.net>
 

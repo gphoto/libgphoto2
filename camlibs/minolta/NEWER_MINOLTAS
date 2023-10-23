@@ -3,7 +3,7 @@ UPDATE:
 Here is an update about what is written below. Most recent Minolta
 digital camera now use USB Mass Storage device protocol for USB
 connectivity. That means that they can be mounted as a disk device
-within the OS without additionnal support (Linux 2.4.x, *BSD,
+within the OS without additional support (Linux 2.4.x, *BSD,
 etc.). This is a great step forward to having these camera universally
 supported without requiring complex and non-standard device driver
 support.

@@ -32,7 +32,6 @@
     and GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 #ifndef CAMLIBS_PENTAX_PSLR_MODEL_H
 #define CAMLIBS_PENTAX_PSLR_MODEL_H
 
@@ -146,7 +145,7 @@ typedef struct {
 } pslr_setting_def_t;
 
 typedef void (*ipslr_status_parse_t)(ipslr_handle_t *p, pslr_status *status);
-pslr_setting_def_t *find_setting_by_name (pslr_setting_def_t *array, int array_length, char *name);
+pslr_setting_def_t *pslr_find_setting_by_name (pslr_setting_def_t *array, int array_length, char *name);
 void ipslr_settings_parser_json(const char *cameraid, ipslr_handle_t *p, pslr_settings *settings);
 pslr_setting_def_t *setting_file_process(const char *cameraid, int *def_num);
 
@@ -193,9 +192,9 @@ struct ipslr_handle {
     uint8_t settings_buffer[SETTINGS_BUFFER_SIZE];
 };
 
-ipslr_model_info_t *find_model_by_id( uint32_t id );
+ipslr_model_info_t *pslr_find_model_by_id( uint32_t id );
 
-int get_hw_jpeg_quality( ipslr_model_info_t *model, int user_jpeg_stars);
+int pslr_get_hw_jpeg_quality( ipslr_model_info_t *model, int user_jpeg_stars);
 
 uint32_t get_uint32_be(uint8_t *buf);
 uint32_t get_uint32_le(uint8_t *buf);
@@ -206,9 +205,9 @@ typedef uint32_t (*get_uint32_func)(uint8_t *buf);
 typedef uint16_t (*get_uint16_func)(const uint8_t *buf);
 typedef int32_t (*get_int32_func)(uint8_t *buf);
 
-char *shexdump(uint8_t *buf, uint32_t bufLen);
+char *pslr_hexdump(uint8_t *buf, uint32_t bufLen);
 void hexdump(uint8_t *buf, uint32_t bufLen);
 void hexdump_debug(uint8_t *buf, uint32_t bufLen);
 const char* int_to_binary( uint16_t x );
 
-#endif /* !defined(CAMLIBS_PENTAX_PSLR_MODEL_H) */
+#endif

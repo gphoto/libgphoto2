@@ -206,7 +206,7 @@ typedef enum {
 } CameraStorageFilesystemType;
 
 /**
- * \brief Storage information structue.
+ * \brief Storage information structure.
  *
  * This structure contains the information of a specific camera storage.
  * Only the members as specified by the \a fields member are valid.

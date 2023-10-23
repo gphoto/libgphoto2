@@ -4,7 +4,7 @@ Oh well, I will try to explain here anyway.
 
 Jpeg markers in general:
 ------------
-0xFF marker# lenth(2 bytes) data
+0xFF marker# length(2 bytes) data
 length is the size of the information after the 0xFF XX
 
 Quantization tables:

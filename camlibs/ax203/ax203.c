@@ -1695,7 +1695,7 @@ ax203_commit(Camera *camera)
 	int dirty_sectors;
 
 	/* We first check each 64k block for dirty sectors. If the block
-	   contains dirty sectors, decide wether to use 4k sector erase
+	   contains dirty sectors, decide whether to use 4k sector erase
 	   commands (if the eeprom supports it), or to erase and reprogram
 	   the entire block */
 	for (i = 0; i < mem_sector_size; i += block_sector_size) {

@@ -156,7 +156,7 @@ listed as location 0x400.
 
 The entries in columns 4 through 6 indicate, again in little endian form, the 
 data size for the given photo, in bytes. The actual data size to be requested
-and downloaded from the camera needs to be tne next integer multiple of 0x2000. 
+and downloaded from the camera needs to be the next integer multiple of 0x2000. 
 
 
 Finally, for the seventh column there is at this time no obvious 

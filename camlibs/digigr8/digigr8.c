@@ -46,7 +46,6 @@ digi_init (GPPort *port, CameraPrivateLibrary *priv)
 
 	SQWRITE (port, 0x0c, 0x14f4, 0x0, NULL, 0);
 	SQREAD (port, 0x0c, 0xf5, 0x00, c, 0x14);
-	SQWRITE (port, 0x0c, 0x1440, 0x110f, NULL, 0);
 	digi_reset (port);
 	SQWRITE (port, 0x0c, 0x14f0, 0x0, NULL, 0);
 

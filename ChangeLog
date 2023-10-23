@@ -7,7 +7,7 @@
 2010-03-12  Hans de Goede <hdegoede@redhat.com>
 
 	* camlibs/st2205: New camera driver for ST2205 based picture frames.
-	* libgphoto2_port/usbdiskdirect: USB Disk direct acccess driver
+	* libgphoto2_port/usbdiskdirect: USB Disk direct access driver
 	  (for ST2205 based picture frames.)
 	* New dependency for "libgd" for image conversion for above driver.
 	* configure.ac, camlibs/Makefile.am: hooked up new camlib, new gd check.
@@ -71,7 +71,7 @@
 	* Adjusted to new GPPortInfo handling.
 
 	* Rewrote gphoto2-filesys.c to be directory based (in a tree
-	  structure). Change should not be visibile outside of gphoto2-filesys.c.
+	  structure). Change should not be visible outside of gphoto2-filesys.c.
 
 2008-05-18  Marcus Meissner   <marcus@jet.franken.de>
 
@@ -284,7 +284,7 @@
 	  Got rid of most LRU heuristics, simplified to just store
 	  the last <n> full datastreams.
 	  This should be fully sufficient for 99.9% of all usecases
-	  (download images lineary).
+	  (download images linearly).
 
 	  You can control this by the setting "libgphoto2" , "cached-images".
 
@@ -1028,7 +1028,7 @@
 
 2002-05-19  Christophe Barbe <christophe.barbe@ufies.org>
 	
-	* frontends/command-line/main.c: replaced a missused #if with a #ifdef
+	* frontends/command-line/main.c: replaced a misused #if with a #ifdef
 	* frontends/command-line/gphoto2-cmd-capture.c: same 2 times.
 	   reported by Luciano Campal Vazquez <luch0@telefonica.net>
 
@@ -2140,7 +2140,7 @@
 	that broke (at least) two of the supported 'libgphoto2' camera
 	libraries!!!" *sigh*. 
 
-	* conigure.in: Add a --with-multi option and a warning that people
+	* configure.in: Add a --with-multi option and a warning that people
 	  who use it will run into troubles with digita and dc240 and that
 	  people who don't use it will run into troubles when using Nautilus
 	  or Konqueror for browsing their camera.
@@ -2776,7 +2776,7 @@
 
 2001-10-26 Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	* frontends/command-line/gphoto2-cmd-capture.c: Adjust brighness
+	* frontends/command-line/gphoto2-cmd-capture.c: Adjust brightness
 	  and contrast with arrow keys
 
 2001-10-26 Dan Fandrich <dan@coneharvesters.com>
@@ -3192,7 +3192,7 @@
 
 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
-	* libgphoto2/gphoto2-debug.c: Make tranition to gp_log_*
+	* libgphoto2/gphoto2-debug.c: Make transition to gp_log_*
 	* camlibs/sierra: Adjust parameters of camera_capture
 
 2001-10-17  Lutz Müller <urc8@rz.uni-karlsruhe.de>
@@ -3665,7 +3665,7 @@
 2001-10-04  Lutz Müller <urc8@rz.uni-karlsruhe.de>
 
 	* camlibs/konica/library.c: const
-	* frontents/command-line/main.c: Print out last debugging messages
+	* frontends/command-line/main.c: Print out last debugging messages
 	on error
 	* include/gphoto2-debug.h:
 	* libgphoto2/debug.c: Remember history
@@ -4606,18 +4606,18 @@
 	* tests/*: New
 	* configure.in:
 	* Makefile.am: Add tests to SUBDIRS and generate the Makefile
-	* frontents/command-line/test.[c,h]: Removed
+	* frontends/command-line/test.[c,h]: Removed
 	* frontends/command-line/main.c:
-	* frontents/command-line/Makefile.am: Reflect changes
+	* frontends/command-line/Makefile.am: Reflect changes
 
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
-	* frontents/gtk/macros/*: Removed.
+	* frontends/gtk/macros/*: Removed.
 
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
-	* frontents/Makefile.am: Remove libpghoto2_frontend from SUBDIRS.
-	* frontents/gtk/*: Removed those ancient files. For GUI frontends, 
+	* frontends/Makefile.am: Remove libpghoto2_frontend from SUBDIRS.
+	* frontends/gtk/*: Removed those ancient files. For GUI frontends, 
 	refer to gtkam or GnoCam. They are distributed separately.
 
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
@@ -4627,7 +4627,7 @@
 
 2001-08-17  Lutz Müller  <urc8@rz.uni-karlsruhe.de>
 
-	* frontents/libgphoto2_frontend/*: Removed. Those files were mainly
+	* frontends/libgphoto2_frontend/*: Removed. Those files were mainly
 	empty functions and nowhere needed.
 
 2001-08-17  Hubert Figuiere  <hfiguiere@teaser.fr>
@@ -5396,7 +5396,7 @@
 
 2000-07-29 04:14  simpson2
 
-	* camlibs/digita/digita.df: bvl: digita.df, module defenition file
+	* camlibs/digita/digita.df: bvl: digita.df, module definition file
 	to create DLL on OS/2
 
 2000-07-29 04:13  simpson2
@@ -5550,7 +5550,7 @@
 	po/POTFILES.in, po/cat-id-tbl.c, po/project5.pot, po/stamp-cat-id,
 	src/Makefile.am, src/callbacks.c, src/callbacks.h, src/interface.c,
 	src/interface.h, src/main.c, src/support.c, src/support.h: added
-	new gtk inteface beginning code
+	new gtk interface beginning code
 
 2000-07-26 14:25  scottf
 
@@ -5630,7 +5630,7 @@
 	camlibs/directory/directory.def, camlibs/directory/makefile.os2,
 	frontends/command-line/main.c, frontends/command-line/makefile.os2,
 	include/gphoto2.h, include/gphotoos2.h, libgphoto2/library.c,
-	libgphoto2/makefile.os2: bvl: Made some linebreak statments, and
+	libgphoto2/makefile.os2: bvl: Made some linebreak statements, and
 	ifdef correction on behalf of the      OS/2 port
 
 2000-07-22 14:47  scottf
@@ -5677,7 +5677,7 @@
 	camlibs/konica/Makefile.in, camlibs/panasonic/dc.c,
 	camlibs/panasonic/dc.h, camlibs/panasonic/dc1580.c,
 	camlibs/panasonic/dc1580.h, frontends/command-line/.cvsignore,
-	libgphoto2/file.c, libgphoto2/library.c: added a bunch of patchs
+	libgphoto2/file.c, libgphoto2/library.c: added a bunch of patches
 	from Johannes and Mariusz
 
 2000-07-21 14:15  scottf
@@ -6628,7 +6628,7 @@
 	* frontends/: Makefile.am, command-line/Makefile.am,
 	libgphoto2-util/Makefile.am, libgphoto2-util/cache.c,
 	libgphoto2-util/cache.h, libgphoto2-util/image.c,
-	libgphoto2-util/image.h: added beginining of gphoto2 utility
+	libgphoto2-util/image.h: added beginning of gphoto2 utility
 	library for frontends
 
 2000-06-16 14:48  scottf
