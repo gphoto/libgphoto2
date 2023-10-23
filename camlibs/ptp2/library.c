@@ -1377,6 +1377,9 @@ static struct {
 	/* The A7-RV */
 	{"Sony:ILCE-7RM5 (PC Control)",		0x054c, 0x0e0c, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* via email */
+	{"Sony:A6700 (PC Control)",		0x054c, 0x0e78, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
