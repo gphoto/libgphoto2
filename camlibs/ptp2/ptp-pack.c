@@ -2549,7 +2549,7 @@ static unsigned int olcsizes[0x15][13] = {
 	{2,7,6,6,4, 6,8,4,6,5, 5,9,8 },	/* 0x11 */	/* CONFIRMED: EOS R */
 	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x12 */	/* CONFIRMED: EOS M6 Mark II */
 	{2,7,9,7,4, 6,8,5,7,5, 5,9,8 },	/* 0x13 */	/* CONFIRMED: EOS R5 C info from user Ingmar */
-	{2,9,9,7,4, 6,8,5,7,5, 5,9,8 },	/* 0x14 */	/* CONFIRMED: EOS R10. confirmed by trace from Marc Wetli */
+	{2,9,9,7,4, 6,8,5,7,5, 5,9,8 },	/* 0x14 */	/* CONFIRMED: EOS R8, R10. confirmed by trace from Marc Wetli */
 };
 		/* one more information record handed to us */
 		/* Versions seen: (d199)
