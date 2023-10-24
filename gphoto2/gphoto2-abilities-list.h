@@ -198,6 +198,7 @@ int gp_init_localedir (const char *localedir);
  */
 #ifdef _GPHOTO2_INTERNAL_CODE
 #define CAMLIBDIR_ENV "CAMLIBS"
+#define CAMLIBDIR_PREFIX_ENV "CAMLIBS_PREFIX"
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
 

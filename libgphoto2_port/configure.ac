@@ -384,6 +384,10 @@ GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 		AC_DEFINE([HAVE_LIBUSB_STRERROR], [1],
 		          [Define if libusb-1.0 has libusb_strerror])
 	])
+	AC_CHECK_FUNC([libusb_wrap_sys_device], [dnl
+		AC_DEFINE([HAVE_LIBUSB_WRAP_SYS_DEVICE], [1],
+		          [Define if libusb-1.0 has libusb_wrap_sys_device])
+	])
 	LIBS="$save_LIBS"
 ], [],
 		[default-on],

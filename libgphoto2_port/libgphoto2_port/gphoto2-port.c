@@ -38,6 +38,7 @@
 #include <gphoto2/gphoto2-port-library.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-port-locking.h>
+#include <gphoto2/gphoto2-port.h>
 
 #include "libgphoto2_port/gphoto2-port-info.h"
 
@@ -1214,3 +1215,37 @@ gp_port_get_error (GPPort *port)
 
 	return _("No error description available");
 }
+
+
+#ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
+
+static int gp_port_usb_fd = -1;
+
+int
+gp_port_usb_set_sys_device(int fd)
+{
+    gp_port_usb_fd = fd;
+    return  (GP_OK);
+}
+
+int
+gp_port_usb_get_sys_device(void)
+{
+    return gp_port_usb_fd;
+}
+#else
+int gp_port_usb_set_sys_device(int fd)
+{
+    return GP_ERROR_NOT_SUPPORTED;
+}
+
+int gp_port_usb_get_sys_device()
+{
+    return -1;
+}
+#endif
+
+
+
+
+

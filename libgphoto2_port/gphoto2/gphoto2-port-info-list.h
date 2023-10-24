@@ -106,6 +106,7 @@ int gp_port_init_localedir (const char *localedir);
  */
 #ifdef _GPHOTO2_INTERNAL_CODE
 #define IOLIBDIR_ENV "IOLIBS"
+#define IOLIBDIR_PREFIX_ENV "IOLIBS_PREFIX"
 #endif /* _GPHOTO2_INTERNAL_CODE */
 
 
