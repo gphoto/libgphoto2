@@ -245,6 +245,9 @@ retry:
 		result = gp_port_read (camera->port, (char*)packet, maxsize);
 	if (result > 0) {
 		*rlen = result;
+		if (*rlen != dtoh32(packet->length)) {
+			GP_LOG_D ( "wtf");
+		}
 		return PTP_RC_OK;
 	}
 	if (result == GP_ERROR_IO_READ) {
@@ -498,12 +501,15 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 	ret = ptp_usb_getpacket(params, &usbresp, sizeof(usbresp), &rlen);
 
 	if (ret!=PTP_RC_OK) {
+		GP_LOG_D ("bad return from ptp_usb_getpacket");
 		ret = PTP_ERROR_IO;
 	} else
 	if (rlen < 12) {
+		GP_LOG_D ("bad response length (too short)");
 		ret = PTP_ERROR_IO;
 	} else
 	if (rlen != dtoh32(usbresp.length)) {
+		GP_LOG_D ("bad response length (bad conversion); rlen parsed to ");
 		ret = PTP_ERROR_IO;
 	} else
 	if (dtoh16(usbresp.type)!=PTP_USB_CONTAINER_RESPONSE) {
