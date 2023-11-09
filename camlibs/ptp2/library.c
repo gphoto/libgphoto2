@@ -9040,8 +9040,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 		/* We also need this for Nikon D850 and very big RAWs (>40 MB) */
 		/* Try the generic method first, EOS R does not like the second for some reason */
-		if (	(ptp_operation_issupported(params,PTP_OC_GetPartialObject)) &&
-			(size > BLOBSIZE) && (size <= 0xffffffffUL)
+		/* FUJI seems unhappy about getpartialobject too, see https://github.com/gphoto/libgphoto2/issues/653 */
+		if (	(ptp_operation_issupported(params,PTP_OC_GetPartialObject))	&&
+			(size > BLOBSIZE) && (size <= 0xffffffffUL)			&&
+			(params->deviceinfo.VendorExtensionID != PTP_VENDOR_FUJI)
 		) {
 				unsigned char	*ximage = NULL;
 				uint32_t 	offset = 0;
