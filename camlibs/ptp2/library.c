@@ -397,7 +397,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	if (di->VendorExtensionID == PTP_VENDOR_FUJI) {
-		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 60)));
+		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 61)));
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+0] = PTP_DPC_ExposureTime;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+1] = PTP_DPC_FNumber;
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+2] = 0xd38c;	/* PC Mode */
@@ -458,7 +458,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+57] = 0xd38d; /* seen on xt3 */
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+58] = 0xd38e; /* seen on xt3 */
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+59] = 0xd17b; /* seen on xt3 */
-		di->DevicePropertiesSupported_len += 60;
+		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+60] = PTP_DPC_ExposureBiasCompensation;
+
+		di->DevicePropertiesSupported_len += 61;
 
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_FUJI_GetDeviceInfo)) {
 			uint16_t	*props;
