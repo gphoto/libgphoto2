@@ -1501,6 +1501,8 @@ typedef struct _PTPObjectFilesystemInfo PTPObjectFilesystemInfo;
 #define PTP_OFC_CANON_CHDK_CRW			0xb1ff
 /* Sony */
 #define PTP_OFC_SONY_RAW			0xb101
+/* Fuji */
+#define PTP_OFC_FUJI_RAF			0xb103
 /* MTP extensions */
 #define PTP_OFC_MTP_MediaCard			0xb211
 #define PTP_OFC_MTP_MediaCardGroup		0xb212

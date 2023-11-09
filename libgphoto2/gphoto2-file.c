@@ -593,6 +593,7 @@ static const char *mime_table[] = {
     "mts",  GP_MIME_AVCHD,
     "m2ts", GP_MIME_AVCHD,
     "arw",  GP_MIME_ARW,
+    "raf",  GP_MIME_RAF,
     "txt",  GP_MIME_TXT,
     NULL};
 /**
@@ -1089,6 +1090,10 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 	const char *table[] = {
 		GP_MIME_RAW,  "raw",
 		GP_MIME_JPEG, "jpg",
+		GP_MIME_NEF,  "nef",
+		GP_MIME_CRW,  "crw",
+		GP_MIME_CR2,  "cr2",
+		GP_MIME_CR3,  "cr3",
 		GP_MIME_PNG,  "png",
 		GP_MIME_PPM,  "ppm",
 		GP_MIME_PGM,  "pgm",
@@ -1097,11 +1102,8 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 		GP_MIME_WAV,  "wav",
 		GP_MIME_BMP,  "bmp",
 		GP_MIME_AVI,  "avi",
-		GP_MIME_CRW,  "crw",
-		GP_MIME_CR2,  "cr2",
-		GP_MIME_CR3,  "cr3",
 		GP_MIME_ARW,  "arw",
-		GP_MIME_NEF,  "nef",
+		GP_MIME_RAF,  "raf",
 		GP_MIME_TXT,  "txt",
 		NULL};
 

@@ -59,6 +59,7 @@ extern "C" {
 #define GP_MIME_AVCHD     "video/mp2t"
 #define GP_MIME_RW2       "image/x-panasonic-raw2"
 #define GP_MIME_ARW       "image/x-sony-arw"
+#define GP_MIME_RAF       "image/x-fuji-raf"
 
 /**
  * \brief The type of view on the specified file.
