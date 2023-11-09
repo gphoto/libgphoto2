@@ -10695,10 +10695,10 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Cancel Canon DSLR Autofocus"),    "cancelautofocus",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_AfCancel,          _get_Canon_EOS_AFCancel,        _put_Canon_EOS_AFCancel },
 	{ N_("Drive Olympus OMD Manual focus"), "manualfocusdrive", 0,  PTP_VENDOR_GP_OLYMPUS_OMD, PTP_OC_OLYMPUS_OMD_MFDrive,	_get_Olympus_OMD_MFDrive,	_put_Olympus_OMD_MFDrive },
 	{ N_("Drive Panasonic Manual focus"),   "manualfocusdrive", 0,  PTP_VENDOR_PANASONIC, PTP_OC_PANASONIC_ManualFocusDrive,_get_Panasonic_MFDrive,		_put_Panasonic_MFDrive },
+	{ N_("Drive Fuji Manual focus"),        "manualfocusdrive", PTP_DPC_FUJI_FocusPosition, PTP_VENDOR_FUJI,  PTP_DTC_INT16,_get_INT,                       _put_INT },
 	{ N_("Get Fuji focuspoint"),		"focuspoint",	    PTP_DPC_FUJI_FocusPoint,  PTP_VENDOR_FUJI, PTP_DTC_STR,	_get_Fuji_FocusPoint,		_put_Fuji_FocusPoint },
 	{ N_("Fuji FocusPoint Grid dimensions"),"focuspoints",	    PTP_DPC_FUJI_FocusPoints, PTP_VENDOR_FUJI, 0,		_get_Fuji_FocusPoints,		_put_Fuji_FocusPoints },
 	{ N_("Fuji Zoom Position"),		"zoompos",	    PTP_DPC_FUJI_LensZoomPos, PTP_VENDOR_FUJI, PTP_DTC_UINT16,	_get_INT,			_put_None },
-
 	{ N_("Canon EOS Zoom"),                 "eoszoom",          0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_Zoom,              _get_Canon_EOS_Zoom,            _put_Canon_EOS_Zoom },
 	{ N_("Canon EOS Zoom Position"),        "eoszoomposition",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_ZoomPosition,      _get_Canon_EOS_ZoomPosition,    _put_Canon_EOS_ZoomPosition },
 	{ N_("Canon EOS Viewfinder"),           "viewfinder",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder,      _put_Canon_EOS_ViewFinder },
