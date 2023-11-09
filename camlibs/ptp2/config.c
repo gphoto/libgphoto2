@@ -508,8 +508,10 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 
 			propval.u16 = 0x0001;
 			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, 0xd38c, &propval, PTP_DTC_UINT16));
-			propval.u16 = 0x0002;
+
+			propval.u16 = 0x0001;
 			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+
 			return GP_OK;
 		}
 		break;

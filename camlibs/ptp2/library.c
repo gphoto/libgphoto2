@@ -5224,6 +5224,9 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		C_PTP (ptp_terminateopencapture (params,params->opencapture_transid));
 	}
 
+	propval.u16 = 0x0002;
+	LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+
 	C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &beforehandles));
 
 	C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_ExposureTime, &propval, PTP_DTC_UINT32));
@@ -7101,6 +7104,12 @@ sonyout:
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
 		ptp_property_issupported(params, PTP_DPC_FUJI_CurrentState)
 	) {
+		PTPPropertyValue propval;
+
+		/* reenable event wait mode */
+		propval.u16 = 0x0001;
+		LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+
 		/* current strategy ... as the camera (currently) does not send us ObjectAdded events for some reason...
 		 * we just synthesize them for the generic PTP event handler code */
 		do {
