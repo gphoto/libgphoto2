@@ -8589,7 +8589,7 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 			break;
 		case PTP_VENDOR_FUJI:
 			switch (ofc) {
-			case PTP_OFC_FUJI_RAW:
+			case PTP_OFC_FUJI_RAF:
 				return snprintf (txt, spaceleft,"RAF");
 			default:
 				break;
