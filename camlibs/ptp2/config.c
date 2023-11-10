@@ -2948,9 +2948,83 @@ _put_Fuji_AFDrive(CONFIG_PUT_ARGS)
 	PTPParams		*params = &(camera->pl->params);
 	GPContext		*context = ((PTPData *) params->data)->context;
 	PTPPropertyValue	pval;
+	uint16_t		af_start_code;
+	uint16_t		af_stop_code;
+	int			ret = GP_OK;
+
+	/* get the focus mode */
+	C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_FocusMode, &pval, PTP_DTC_UINT16));
+
+	/* manual-focus mode */
+	if (pval.u16 == 0x0001) {
+		af_start_code = 0xA000;
+		af_stop_code = 0x0006;
+		/* otherwise in one of the auto-focus modes */
+	} else {
+		if (!strcmp(params->deviceinfo.Model, "X-Pro2")) {
+			af_start_code = 0x9100;
+			af_stop_code = 0x0001;
+		} else {
+			af_start_code = 0x9300;
+			af_stop_code = 0x0005;
+		}
+	}
 
 	/* Focusing first ... */
-	pval.u16 = 0x9300;
+	pval.u16 = af_start_code;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+
+	if(!strcmp(params->deviceinfo.Model, "X-Pro2")) {
+		goto release_focus_lock;
+	}
+
+
+	/* poll camera until it is ready */
+	pval.u16 = 0x0001;
+	while (pval.u16 == 0x0001) {
+		C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_FUJI_AFStatus, &pval, PTP_DTC_UINT16));
+		GP_LOG_D ("XXX Ready to shoot? %X", pval.u16);
+	}
+
+	/* 2 - means OK apparently, 3 - means failed and initiatecapture will get busy. */
+	if (pval.u16 == 3) { /* reported on out of focus */
+		gp_context_error (context, _("Fuji Capture failed: Perhaps no auto-focus?"));
+		ret = GP_ERROR;
+	} else {
+		ret = GP_OK;
+	}
+
+release_focus_lock:
+	/* release focus lock */
+
+	pval.u16 = af_stop_code;
+	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
+	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+	return ret;
+}
+
+static int
+_get_Fuji_AFDriveManual(CONFIG_GET_ARGS) {
+	int val;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	val = 2; /* always changed */
+	gp_widget_set_value  (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Fuji_AFDriveManual(CONFIG_PUT_ARGS)
+{
+	PTPParams               *params = &(camera->pl->params);
+	GPContext               *context = ((PTPData *) params->data)->context;
+	PTPPropertyValue        pval;
+	int ret;
+
+	/* Focusing first ... */
+	pval.u16 = 0xA000;
 	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
 	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
 
@@ -2964,15 +3038,16 @@ _put_Fuji_AFDrive(CONFIG_PUT_ARGS)
 	/* 2 - means OK apparently, 3 - means failed and initiatecapture will get busy. */
 	if (pval.u16 == 3) { /* reported on out of focus */
 		gp_context_error (context, _("Fuji Capture failed: Perhaps no auto-focus?"));
-		return GP_ERROR;
+		ret = GP_ERROR;
+	} else {
+		ret = GP_OK;
 	}
 
 	/* release focus lock */
-
-	pval.u16 = 0x0005;
+	pval.u16 = 0x0006;
 	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &pval, PTP_DTC_UINT16));
 	C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
-	return GP_OK;
+	return ret;
 }
 
 static struct deviceproptableu16 fuji_focuspoints[] = {
@@ -8788,12 +8863,19 @@ _put_OpenCapture(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	int val;
+	int ret;
 	GPContext *context = ((PTPData *) params->data)->context;
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
-		C_PTP_REP (ptp_initiateopencapture (params, 0x0, 0x0)); /* so far use only defaults for storage and ofc */
-		params->opencapture_transid = params->transaction_id-1; /* transid will be incremented already */
+		ret = ptp_initiateopencapture (params, 0x0, 0x0); /* so far use only defaults for storage and ofc */
+		if (ret == PTP_RC_OK) {
+			params->opencapture_transid = params->transaction_id-1; /* transid will be incremented already */
+			params->inliveview = 1;
+		} else if (ret != PTP_RC_DeviceBusy) {
+			C_PTP_REP_MSG ((ret), _("failed to initiate opencapture"));
+		}
+
 	} else {
 		C_PTP_REP (ptp_terminateopencapture (params, params->opencapture_transid));
 	}
@@ -10688,6 +10770,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Drive Nikon DSLR Autofocus"),     "autofocusdrive",   0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_AfDrive,               _get_Nikon_AFDrive,             _put_Nikon_AFDrive },
 	{ N_("Drive Canon DSLR Autofocus"),     "autofocusdrive",   0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_DoAf,              _get_Canon_EOS_AFDrive,         _put_Canon_EOS_AFDrive },
 	{ N_("Drive Fuji Autofocus"),           "autofocusdrive",   0,  PTP_VENDOR_FUJI,    0,               			_get_Fuji_AFDrive,              _put_Fuji_AFDrive },
+	{ N_("Drive Fuji Autofocus in manual"), "autofocusdrivemanual",0,PTP_VENDOR_FUJI,   0,                                  _get_Fuji_AFDriveManual,        _put_Fuji_AFDriveManual },
 	{ N_("Drive Nikon DSLR Manual focus"),  "manualfocusdrive", 0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_MfDrive,               _get_Nikon_MFDrive,             _put_Nikon_MFDrive },
 	{ N_("Set Nikon Autofocus area"),       "changeafarea",     0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_ChangeAfArea,          _get_Nikon_ChangeAfArea,        _put_Nikon_ChangeAfArea },
 	{ N_("Set Nikon Control Mode"),         "controlmode",      0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_ChangeCameraMode,      _get_Nikon_ControlMode,         _put_Nikon_ControlMode },
@@ -10924,11 +11007,11 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Compensation"),		"exposurecompensation",	    0, 					    PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Exposure,         _put_Panasonic_Exposure },
 	{ N_("White Balance"),			"whitebalance",	    0, 					    	PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Whitebalance,         _put_Panasonic_Whitebalance },
 	{ N_("Color temperature"),              "colortemperature",         0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_ColorTemp,        _put_Panasonic_ColorTemp },
-	{ N_("Adjust A/B"),                     "whitebalanceadjustab",      0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_AdjustAB,         _put_Panasonic_AdjustAB }, 
-	{ N_("Adjust G/M"),                     "whitebalanceadjustgm",      0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_AdjustGM,         _put_Panasonic_AdjustGM }, 
-	{ N_("AF Mode"),                        "afmode",                   0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_AFMode,           _put_Panasonic_AFMode }, 
-	{ N_("MF Adjust"),                      "mfadjust",                 0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_MFAdjust,         _put_Panasonic_MFAdjust }, 
-	{ N_("Exp mode"),                       "expmode",                 0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_ExpMode,          _put_Panasonic_ExpMode }, 
+	{ N_("Adjust A/B"),                     "whitebalanceadjustab",      0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_AdjustAB,         _put_Panasonic_AdjustAB },
+	{ N_("Adjust G/M"),                     "whitebalanceadjustgm",      0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_AdjustGM,         _put_Panasonic_AdjustGM },
+	{ N_("AF Mode"),                        "afmode",                   0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_AFMode,           _put_Panasonic_AFMode },
+	{ N_("MF Adjust"),                      "mfadjust",                 0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_MFAdjust,         _put_Panasonic_MFAdjust },
+	{ N_("Exp mode"),                       "expmode",                 0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_ExpMode,          _put_Panasonic_ExpMode },
 	{ N_("Start/Stop recording"),           "recording",                 0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_INT32, _get_Panasonic_Recording,       _put_Panasonic_Recording }, 
 	/* these cameras also have PTP_DPC_ExposureBiasCompensation, avoid overlap */
 	{ N_("Exposure Compensation"),          "exposurecompensation2",    PTP_DPC_NIKON_ExposureCompensation,     PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
