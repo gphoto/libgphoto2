@@ -7099,6 +7099,13 @@ static struct deviceproptableu8 nikon_rawcompression[] = {
 };
 GENERIC8TABLE(Nikon_RawCompression,nikon_rawcompression)
 
+static struct deviceproptableu16 fuji_rawcompression[] = {
+	{ N_("Uncompressed"),		0x0001, 0 },
+	{ N_("Lossless compressed"),	0x0002, 0 },
+	{ N_("Compressed"),		0x0003, 0 },
+};
+GENERIC16TABLE(Fuji_RawCompression,fuji_rawcompression)
+
 static struct deviceproptableu8 nikon_d3s_jpegcompressionpolicy[] = {
 	{ N_("Size Priority"),	0x00, 0 },
 	{ N_("Optimal quality"),0x01, 0 },
@@ -11374,6 +11381,7 @@ static struct submenu nikon_generic_capture_settings[] = {
 	{ N_("Auto ISO"),			"autoiso",		    PTP_DPC_NIKON_ISOAuto,		    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 
 	{ N_("Raw Compression"),                "rawcompression",           PTP_DPC_NIKON_RawCompression,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_RawCompression,          _put_Nikon_RawCompression },
+	{ N_("Raw Compression"),                "rawcompression",           PTP_DPC_FUJI_RawCompression,            PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_RawCompression,           _put_Fuji_RawCompression },
 
 	{ N_("Image Quality 2"),                "imagequality2",            PTP_DPC_NIKON_1_ImageCompression,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_Compression,           _put_Nikon_1_Compression },
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_SONY_QX_CompressionSetting,     PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_QX_Compression,           _put_Sony_QX_Compression },
