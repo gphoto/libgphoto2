@@ -1532,6 +1532,16 @@ static struct deviceproptableu16 fuji_imageformat[] = {
 };
 GENERIC16TABLE(Fuji_ImageFormat,fuji_imageformat)
 
+static struct deviceproptableu16 fuji_graineffect[] = {
+	{ N_("Weak Small"),	2,	PTP_VENDOR_FUJI },
+	{ N_("Strong Small"),	3,	PTP_VENDOR_FUJI },
+	{ N_("Weak Large"),	4,	PTP_VENDOR_FUJI },
+	{ N_("Strong Large"),	5,	PTP_VENDOR_FUJI },
+	{ N_("Off Small"),	6,	PTP_VENDOR_FUJI },
+	{ N_("Off Large"),	7,	PTP_VENDOR_FUJI },
+};
+GENERIC16TABLE(Fuji_GrainEffect,fuji_graineffect)
+
 static struct deviceproptableu16 olympus_imageformat[] = {
 	{ N_("RAW"),			0x020,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Large Fine JPEG"),	0x101,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -10971,6 +10981,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_NIKON_ColorSpace,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ColorSpace,          _put_Nikon_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_CANON_EOS_ColorSpace,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_FUJI_ColorSpace,                PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace }, /* uses 1 for sRGB, and 2 for AdobeRGB too, same as EOS */
+	{ N_("Grain Effect"),           "graineffect",          PTP_DPC_FUJI_GrainEffect,               PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_GrainEffect,          _put_Fuji_GrainEffect },
 	{ N_("Video Format"),           "videoformat",          PTP_DPC_VideoFormat,                    0,                  PTP_DTC_UINT32, _get_VideoFormat,               _put_VideoFormat },
 	{ N_("Video Resolution"),       "videoresolution",      PTP_DPC_VideoResolution,                0,                  PTP_DTC_STR   , _get_STR_ENUMList,              _put_STR },
 	{ N_("Video Quality"),          "videoquality",         PTP_DPC_VideoQuality,                   0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
