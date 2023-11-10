@@ -8878,6 +8878,7 @@ _put_OpenCapture(CONFIG_PUT_ARGS)
 
 	} else {
 		C_PTP_REP (ptp_terminateopencapture (params, params->opencapture_transid));
+		params->inliveview = 0;
 	}
 	return GP_OK;
 }

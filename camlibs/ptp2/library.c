@@ -3847,6 +3847,20 @@ ignoreerror:
 			return res;
 		}
 
+		if(!params->inliveview) {
+			tries = 5;
+			while (tries--) {
+				ret = ptp_initiateopencapture(params, 0x00000000, 0x00000000);
+				if (ret == PTP_RC_OK) {
+					params->opencapture_transid = params->transaction_id-1;
+					params->inliveview = 1;
+					break;
+				}
+			}
+			C_PTP_REP (ret);
+		}
+
+		tries = 5;
 		while (tries--) {
 			ret = ptp_getobjectinfo (params, preview_object, &oi);
 			if (ret == PTP_RC_OK) {
@@ -3861,22 +3875,7 @@ ignoreerror:
 			}
 			C_PTP_REP (ret);
 		}
-
-		if(ret != PTP_RC_OK) {
-			tries = 5;
-			while (tries--) {
-				ret = ptp_initiateopencapture(params, 0x00000000, 0x00000000);
-				if (ret == PTP_RC_OK) {
-					params->opencapture_transid = params->transaction_id-1;
-					params->inliveview = 1;
-					usleep(100*1000); /* this basically waits until the first object is there. */
-					break;
-				}
-				usleep(200*1000);
-			}
-		}
-
-		tries = 20;
+		tries = 5;
 		do {
 			ret = ptp_getobject_with_size(params, preview_object, &ximage, &size);
 			if (ret == PTP_RC_OK)
