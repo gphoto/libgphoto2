@@ -5274,14 +5274,18 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	/* 2 - means OK apparently, 3 - means failed and initiatecapture will get busy. */
 	if (propval.u16 == 3) { /* reported on out of focus */
 		gp_context_error (context, _("Fuji Capture failed: Perhaps no auto-focus?"));
+
+		propval.u16 = 0x0004;
+		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+		C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+		propval.u16 = 0x0001;
+		LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
 		return GP_ERROR;
 	}
 
 	/* shoot */
 	propval.u16 = 0x0304;
 	C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
-
-
 	C_PTP_REP(ptp_initiatecapture(params, 0x00000000, 0x00000000));
 
 	event_start = time_now();
@@ -6472,6 +6476,17 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		propval.u16 = 0x0001;
 		while (propval.u16 == 0x0001) {
 			C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_FUJI_AFStatus, &propval, PTP_DTC_UINT16));
+		}
+		/* 2 - means OK apparently, 3 - means failed and initiatecapture will get busy. */
+		if (propval.u16 == 3) { /* reported on out of focus */
+			gp_context_error (context, _("Fuji Capture failed: Perhaps no auto-focus?"));
+
+			propval.u16 = 0x0004;
+			C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
+			C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
+			propval.u16 = 0x0001;
+			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+			return GP_ERROR;
 		}
 
 		/* shoot */
