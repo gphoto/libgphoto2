@@ -184,6 +184,7 @@
 struct _GPPortPrivateLibrary {
 	int fd;       /* Device handle */
 	int baudrate; /* Current speed */
+	int parity;   /* Current parity */
 };
 
 static int gp_port_serial_check_speed (GPPort *dev);
@@ -341,8 +342,9 @@ gp_port_serial_init (GPPort *dev)
 
 	C_MEM (dev->pl = calloc (1, sizeof (GPPortPrivateLibrary)));
 
-	/* There is no default speed. */
+	/* There is no default speed or parity. */
 	dev->pl->baudrate = -1;
+	dev->pl->parity   = -1;
 
 	return GP_OK;
 }
@@ -489,7 +491,7 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 #else
         ioctl (dev->pl->fd, TCDRAIN, 0);
 #endif
-        return GP_OK;
+        return len;
 }
 
 
@@ -552,7 +554,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 			    gp_port_set_error (dev, _("Parity error."));
 			    return GP_ERROR_IO_READ;
 			}
-			if (!memcmp(bytes,ffchar,1)) {
+			if (memcmp(bytes,ffchar,1)) {
 			    gp_port_set_error (dev, _("Unexpected parity response sequence 0xff 0x%02x."), ((unsigned char*)bytes)[0]);
 			    return GP_ERROR_IO_READ;
 			}
@@ -766,8 +768,9 @@ gp_port_serial_check_speed (GPPort *dev)
 	if (!dev->pl->fd)
 		return (GP_OK);
 
-	/* If baudrate is up to date, do nothing */
-	if (dev->pl->baudrate == dev->settings.serial.speed)
+	/* If baudrate and parity are up to date, do nothing */
+	if (dev->pl->baudrate == dev->settings.serial.speed
+	    && dev->pl->parity == dev->settings.serial.parity)
 		return (GP_OK);
 
 	GP_LOG_D ("Setting baudrate to %d...", dev->settings.serial.speed);
@@ -798,6 +801,7 @@ gp_port_serial_check_speed (GPPort *dev)
         tio.c_cc[VTIME] = 0;
 
 	if (dev->settings.serial.parity != GP_PORT_SERIAL_PARITY_OFF) {
+	    GP_LOG_D ("Setting parity to %s...", dev->settings.serial.parity == GP_PORT_SERIAL_PARITY_ODD?"odd":"even");
 	    tio.c_iflag &= ~IGNPAR;
 	    tio.c_iflag |= INPCK | PARMRK ;
 	    tio.c_cflag |= PARENB;
@@ -855,6 +859,7 @@ gp_port_serial_check_speed (GPPort *dev)
 #endif
 
 	dev->pl->baudrate = dev->settings.serial.speed;
+	dev->pl->parity = dev->settings.serial.parity;
         return GP_OK;
 }
 
