@@ -72,13 +72,13 @@ int qtkn_decode(unsigned char *raw, int width, int height, unsigned char **out) 
 
 	len = qtk_ppm_size(width, height);
 
-	tmp = malloc(width * height * sizeof(unsigned short));
+	tmp = malloc((size_t)width * (size_t)height * sizeof(unsigned short));
 	if (tmp == NULL) {
 		free(header);
 		return GP_ERROR_NO_MEMORY;
 	}
 
-	tmp_c = malloc(width * height);
+	tmp_c = malloc((size_t)width * (size_t)height);
 	if (tmp_c == NULL) {
 		free(header);
 		free(tmp);

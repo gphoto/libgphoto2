@@ -92,7 +92,7 @@ int qtkt_decode(unsigned char *raw, int width, int height, unsigned char **out) 
 		}
 	}
 
-	tmp = malloc((width + 4) * (height + 4));
+	tmp = malloc((size_t)(width + 4) * (size_t)(height + 4));
 	if (tmp == NULL) {
 		free(header);
 		return GP_ERROR_NO_MEMORY;
