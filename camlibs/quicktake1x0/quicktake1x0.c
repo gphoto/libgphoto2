@@ -200,7 +200,6 @@ camera_get_info (Camera *camera)
 	#define BATTERY_IDX    0x02
 	#define NUM_PICS_IDX   0x04
 	#define LEFT_PICS_IDX  0x06
-	#define QUALITY_IDX    0x07
 	#define MONTH_IDX      0x10
 	#define DAY_IDX        0x11
 	#define YEAR_IDX       0x12
@@ -208,6 +207,7 @@ camera_get_info (Camera *camera)
 	#define MIN_IDX        0x14
 	#define SEC_IDX        0x15
 	#define FLASH_IDX      0x16
+	#define QUALITY_IDX    0x1B
 	#define NAME_IDX       0x2F
 
 	/* Ping it */

@@ -30,8 +30,8 @@ typedef enum {
 } Quicktake1x0Model;
 
 typedef enum {
-	QUALITY_STANDARD = 1,
-	QUALITY_HIGH
+	QUALITY_HIGH     = 0x10,
+	QUALITY_STANDARD = 0x20
 } QuickTake1x0Quality;
 
 typedef enum {
