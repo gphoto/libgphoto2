@@ -30,7 +30,7 @@
 
 #include <gphoto2/gphoto2-library.h>
 
-int qtk_thumbnail_decode(unsigned char *raw, unsigned char **out) {
+static int qt100_thumbnail_decode(unsigned char *raw, unsigned char **out) {
 	int s, v, p1, p2, r, g, b, len;
 	char *header;
 	unsigned char *ptr;
@@ -67,4 +67,85 @@ int qtk_thumbnail_decode(unsigned char *raw, unsigned char **out) {
 	}
 
 	return GP_OK;
+}
+
+static int qt150_thumbnail_decode(unsigned char *raw, unsigned char **out) {
+	int len;
+	char *header;
+	unsigned char *ptr, *orig;
+	unsigned char *cur_in;
+	unsigned char line[QT1X0_THUMB_WIDTH*2], *cur_out;
+	int i, a, b, c, d, y;
+
+	header = qtk_ppm_header(QT1X0_THUMB_WIDTH, QT1X0_THUMB_HEIGHT);
+
+	len = qtk_ppm_size(QT1X0_THUMB_WIDTH, QT1X0_THUMB_HEIGHT);
+	*out = ptr = calloc(1, len);
+	if (ptr == NULL) {
+		free(header);
+		return GP_ERROR_NO_MEMORY;
+	}
+
+	strcpy((char *)ptr, header);
+	ptr += strlen(header);
+	free(header);
+
+	orig = ptr;
+	cur_in = raw;
+	for (y = 0; y < QT1X0_THUMB_HEIGHT; y+=2) {
+		cur_out = line;
+		for (i = 0; i < QT1X0_THUMB_WIDTH; i++) {
+			c = *cur_in++;
+			a   = (((c>>4) & 0b00001111) << 4);
+			b   = (((c)    & 0b00001111) << 4);
+			*cur_out++ = a;
+			*cur_out++ = b;
+		}
+		cur_out = line;
+
+		for (i = 0; i < QT1X0_THUMB_WIDTH * 2; ) {
+			if (i < QT1X0_THUMB_WIDTH*3/2) {
+				a = *cur_out++;
+				b = *cur_out++;
+				c = *cur_out++;
+
+				*(ptr) = a;
+				*(ptr + 3) = b;
+				*(ptr + 3*QT1X0_THUMB_WIDTH) = c;
+				ptr++;
+
+				*(ptr) = a;
+				*(ptr + 3) = b;
+				*(ptr + 3*QT1X0_THUMB_WIDTH) = c;
+				ptr++;
+
+				*(ptr) = a;
+				*(ptr + 3) = b;
+				*(ptr + 3*QT1X0_THUMB_WIDTH) = c;
+				ptr++;
+
+				i+=3;
+				ptr+=3;
+			} else {
+				i++;
+				ptr += 3;
+
+				d = *cur_out++;
+				*(ptr++) = d;
+				*(ptr++) = d;
+				*(ptr++) = d;
+			}
+		}
+		//ptr += 3*QT1X0_THUMB_WIDTH;
+	}
+
+	return GP_OK;
+}
+
+int qtk_thumbnail_decode(unsigned char *raw, unsigned char **out, Quicktake1x0Model model) {
+	if (model == QUICKTAKE_MODEL_100) {
+		return qt100_thumbnail_decode(raw, out);
+	} else {
+		return qt150_thumbnail_decode(raw, out);
+	}
 }

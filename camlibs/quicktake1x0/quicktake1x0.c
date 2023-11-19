@@ -712,7 +712,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CHECK_RESULT(receive_data(camera->port, data, raw_size));
 
 		/* And decode the thumbnail to PPM */
-		CHECK_RESULT(qtk_thumbnail_decode(data, &ppm_data));
+		CHECK_RESULT(qtk_thumbnail_decode(data, &ppm_data, camera->pl->model));
+
 		free(data);
 		data = ppm_data;
 
