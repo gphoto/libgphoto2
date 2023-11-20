@@ -1,6 +1,6 @@
 /* qtkt-decoder.c
  *
-   Copyright 1997-2018 by Dave Coffin, dcoffin a cybercom o net
+ * Copyright 1997-2018 by Dave Coffin, dcoffin a cybercom o net
  * Copyright 2023, Colin Leroy-Mira <colin@colino.net>
  *
  * QTKT decoder heavily inspired from dcraw.c.
@@ -48,11 +48,15 @@ static int qt100_thumbnail_decode(unsigned char *raw, unsigned char **out) {
 	ptr += strlen(header);
 	free(header);
 
+	/* The 2400 bytes buffer represent 80x60 pixels at 4bpp.
+	 * It is very logical to decode as each half-byte represents
+	 * the next pixel.
+	 */
 	for (s = 0; s < QT1X0_THUMB_SIZE; s++) {
 		v = raw[s];
 
 		p1 = ((v >> 4) & 0b00001111) << 4;
-    p2 = ((v >> 0) & 0b00001111) << 4;
+		p2 = ((v >> 0) & 0b00001111) << 4;
 
 		/* FIXME do color thumbnails */
 		r = g = b = p1;
@@ -72,7 +76,7 @@ static int qt100_thumbnail_decode(unsigned char *raw, unsigned char **out) {
 static int qt150_thumbnail_decode(unsigned char *raw, unsigned char **out) {
 	int len;
 	char *header;
-	unsigned char *ptr, *orig;
+	unsigned char *ptr;
 	unsigned char *cur_in;
 	unsigned char line[QT1X0_THUMB_WIDTH*2], *cur_out;
 	int i, a, b, c, d, y;
@@ -90,7 +94,15 @@ static int qt150_thumbnail_decode(unsigned char *raw, unsigned char **out) {
 	ptr += strlen(header);
 	free(header);
 
-	orig = ptr;
+	/* The 2400 bytes buffer represent 80x60 pixels at 4bpp.
+	 * It is harder to decode as the half-bytes do not
+	 * represent one pixel after the other.
+	 * Every 80 bytes represent 2 lines. The first 60 bytes
+	 * (120 half-bytes) represent pixels at:
+	 * 0,y ; 1,y ; 0,y+1 ; 2,y ; 3,y ; 2,y+1 ; etc
+	 * The last 20 bytes (40 half-bytes) represent the pixels
+	 * at 1,y+1 ; 3,y+1 ; 5,y+1 ; etc
+	 */
 	cur_in = raw;
 	for (y = 0; y < QT1X0_THUMB_HEIGHT; y+=2) {
 		cur_out = line;
@@ -136,7 +148,6 @@ static int qt150_thumbnail_decode(unsigned char *raw, unsigned char **out) {
 				*(ptr++) = d;
 			}
 		}
-		//ptr += 3*QT1X0_THUMB_WIDTH;
 	}
 
 	return GP_OK;
