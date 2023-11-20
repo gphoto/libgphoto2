@@ -2702,6 +2702,8 @@ static struct {
 	{"Fuji:Fujifilm GFX 100S",		0x04cb, 0x02ea, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/603 */
 	{"Fuji:Fujifilm X-S10",			0x04cb, 0x02ea, PTP_CAP_PREVIEW},	/* only webcam mode apparently */
+	/* email */
+	{"Fuji:Fujifilm X-H2S",			0x04cb, 0x02f0, 0},
 	{"Fuji:Fujifilm X-H2",			0x04cb, 0x02f2, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/888 */
 	{"Fuji:Fujifilm X-T5",			0x04cb, 0x02fc, PTP_CAP|PTP_CAP_PREVIEW},
