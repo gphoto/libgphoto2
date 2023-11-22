@@ -370,6 +370,7 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 			continue;
 		}
 		GP_LOG_E ("ret type %d", hdr.type);
+		break;
 	}
 	if (curread < toread)
 		return PTP_RC_GeneralError;
