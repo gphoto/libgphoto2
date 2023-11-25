@@ -388,7 +388,26 @@ GP_CHECK_LIBRARY([LIBUSB1],[libusb-1.0],[>= 1.0.0],
 		AC_DEFINE([HAVE_LIBUSB_WRAP_SYS_DEVICE], [1],
 		          [Define if libusb-1.0 has libusb_wrap_sys_device])
 	])
+
+	save_CFLAGS="$CFLAGS"
+	CFLAGS="$CFLAGS $LIBUSB1_CFLAGS"
+
+	AC_COMPILE_IFELSE([dnl
+	AC_LANG_PROGRAM([[
+	# include "libusb.h"
+	]], [[
+	enum libusb_option opt = LIBUSB_OPTION_NO_DEVICE_DISCOVERY;
+	]])dnl
+	], [dnl
+	  AC_DEFINE([HAVE_LIBUSB_OPTION_NO_DEVICE_DISCOVERY], [1],
+		    [whether we have LIBUSB_OPTION_NO_DEVICE_DISCOVERY])
+	  AC_MSG_RESULT([yes])
+	], [dnl
+	  AC_MSG_RESULT([no])
+	])
+
 	LIBS="$save_LIBS"
+	CFLAGS="$save_CFLAGS"
 ], [],
 		[default-on],
 		[http://libusb.sourceforge.net/]

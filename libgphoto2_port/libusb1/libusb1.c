@@ -131,7 +131,9 @@ static int has_external_fd()
         return 0;
     if(external_sys_device.h)
         return 1;
+#ifdef HAVE_LIBUSB_OPTION_NO_DEVICE_DISCOVERY
     libusb_set_option(NULL,LIBUSB_OPTION_NO_DEVICE_DISCOVERY,NULL);
+#endif
     C_LIBUSB (libusb_init (&external_sys_device.ctx), GP_ERROR_IO);
     LOG_ON_LIBUSB_E(libusb_wrap_sys_device(external_sys_device.ctx,gp_port_usb_get_sys_device(),&external_sys_device.h));
     external_sys_device.d = libusb_get_device(external_sys_device.h);
