@@ -1150,7 +1150,7 @@ static void yuv_live_to_jpeg(unsigned char *p_yuv,
 	struct		jpeg_error_mgr jerr;
 	JSAMPROW	row_ptr[1];
 	uint8_t		*outbuf = NULL, *tmprowbuf = NULL;
-	uint64_t	outlen = 0;
+	unsigned long	outlen = 0;
 	unsigned int	row_inc;
 	int		sshift, dshift, xshift, skip;
 
@@ -1161,8 +1161,8 @@ static void yuv_live_to_jpeg(unsigned char *p_yuv,
 		sshift = 6;
 		dshift = (width/height > 2) ? 6 : 12;
 		xshift = 4;
-	/* Digic 6 cameras: 8 bit per element UYVY,
-	 * 4 bytes used to encode 2 pixels, need 6 bytes raw YUV data for jpeg encoding */
+		/* Digic 6 cameras: 8 bit per element UYVY,
+		 * 4 bytes used to encode 2 pixels, need 6 bytes raw YUV data for jpeg encoding */
 	} else {
 		row_inc = buf_width*2;
 		sshift = 4;
