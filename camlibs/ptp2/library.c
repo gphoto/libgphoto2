@@ -1357,6 +1357,11 @@ static struct {
 	{"Sony:Alpha-A6600 (MTP)",	0x054c, 0x0d0f, 0},
 	{"Sony:Alpha-A6600 (PC Control)",	0x054c, 0x0d10, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* https://github.com/gphoto/libgphoto2/issues/944 */
+	{"Sony:Alpha-A6100 (MTP)",		0x054c, 0x0d13, 0},
+	/* https://github.com/gphoto/libgphoto2/issues/943 */
+	{"Sony:Alpha-A6100 (PC Control)",	0x054c, 0x0d14, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* email report */
 	{"Sony:DSC-A7S III (MTP)",		0x054c, 0x0d17, 0},
 	/* Elijah Parker, mail@timelapseplus.com */
