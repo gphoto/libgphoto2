@@ -20,8 +20,6 @@
  * Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA  02110-1301  USA
  */
-#define _GNU_SOURCE
-#define _DARWIN_C_SOURCE
 
 #include "config.h"
 
@@ -382,11 +380,7 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 	int result, generic;
 #ifdef HAVE_REGEX
 	regex_t pattern;
-#ifdef HAVE_GNU_REGEX
-	const char *rv;
-#else
 	regmatch_t match;
-#endif
 #endif
 
 	C_PARAMS (list && path);
@@ -412,15 +406,6 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 		GP_LOG_D ("Trying '%s'...", list->info[i]->path);
 
 		/* Compile the pattern */
-#ifdef HAVE_GNU_REGEX
-		memset (&pattern, 0, sizeof (pattern));
-		rv = re_compile_pattern (list->info[i]->path,
-					 strlen (list->info[i]->path), &pattern);
-		if (rv) {
-			GP_LOG_D ("%s", rv);
-			continue;
-		}
-#else
 		result = regcomp (&pattern, list->info[i]->path, REG_ICASE);
 		if (result) {
 			char buf[1024];
@@ -430,24 +415,14 @@ gp_port_info_list_lookup_path (GPPortInfoList *list, const char *path)
 				GP_LOG_E ("regcomp failed");
 			return (GP_ERROR_UNKNOWN_PORT);
 		}
-#endif
 
 		/* Try to match */
-#ifdef HAVE_GNU_REGEX
-		result = re_match (&pattern, path, strlen (path), 0, NULL);
-		regfree (&pattern);
-		if (result < 0) {
-			GP_LOG_D ("re_match failed (%i)", result);
-			continue;
-		}
-#else
 		result = regexec (&pattern, path, 1, &match, 0);
 		regfree (&pattern);
 		if (result) {
 			GP_LOG_D ("regexec failed");
 			continue;
 		}
-#endif
 		gp_port_info_new (&newinfo);
 		gp_port_info_set_type (newinfo, list->info[i]->type);
 		newinfo->library_filename = strdup(list->info[i]->library_filename);

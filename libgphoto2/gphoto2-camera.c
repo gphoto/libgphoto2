@@ -25,6 +25,7 @@
  */
 
 #include "config.h"
+
 #include <gphoto2/gphoto2-camera.h>
 
 #include <stdlib.h>

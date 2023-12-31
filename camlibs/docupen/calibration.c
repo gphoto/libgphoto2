@@ -2,6 +2,9 @@
  *
  * Copyright 2020 Ondrej Zary <ondrej@zary.sk>
  */
+
+#include "config.h"
+
 #include <math.h>
 #include <gphoto2/gphoto2-library.h>
 #include "docupen.h"

@@ -22,6 +22,8 @@
  * Integrated into gphoto2 by Marcus Meissner <marcus@jet.franken.de>, Dec 2001
  */
 
+#include "config.h"
+
 #include <string.h>
 #include "saturate.h"
 

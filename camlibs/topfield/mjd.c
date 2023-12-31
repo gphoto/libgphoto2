@@ -23,6 +23,8 @@
 
 /* MJD conversions as per Annex C of ETSI EN 300 468 */
 
+#include "config.h"
+
 #include "mjd.h"
 #include "tf_bytes.h"
 

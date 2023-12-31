@@ -30,6 +30,7 @@
  ****************************************************/
 
 #include "config.h"
+
 #include "dc3200.h"
 
 #include <stdlib.h>

@@ -22,7 +22,9 @@
  */
 
 #include "config.h"
+
 #include <gphoto2/gphoto2-library.h>
+
 
 /**
  * \brief Get a unique camera id

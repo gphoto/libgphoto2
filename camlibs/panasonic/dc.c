@@ -18,6 +18,7 @@
 
         This is a Panasonic DC series common routines.
 */
+
 #include "config.h"
 
 #include <stdio.h>

@@ -19,6 +19,7 @@
  */
 
 #include "config.h"
+
 #include "ricoh.h"
 
 #include <stdlib.h>

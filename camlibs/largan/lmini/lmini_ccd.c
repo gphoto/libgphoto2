@@ -3,6 +3,8 @@
  * Code probably grafted from Largan Lmini SDK.
  */
 
+#include "config.h"
+
 #include <string.h>
 
 #include "lmini_ccd.h"

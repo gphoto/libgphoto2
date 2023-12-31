@@ -21,8 +21,6 @@
  * XDISCVRY.X3C file sent on start, empty.
  */
 
-#define _DEFAULT_SOURCE
-
 #include "config.h"
 
 #ifdef HAVE_LIBXML2

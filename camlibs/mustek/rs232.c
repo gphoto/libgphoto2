@@ -21,6 +21,8 @@
  * supports rs232 and USB.
  */
 
+#include "config.h"
+
 #include <gphoto2/gphoto2-library.h>
 #include <gphoto2/gphoto2-result.h>
 

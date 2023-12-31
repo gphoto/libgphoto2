@@ -18,6 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
+#include "config.h"
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>

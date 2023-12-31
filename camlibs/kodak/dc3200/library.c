@@ -30,6 +30,7 @@
  ****************************************************/
 
 #include "config.h"
+
 #include "library.h"
 
 #include <stdlib.h>

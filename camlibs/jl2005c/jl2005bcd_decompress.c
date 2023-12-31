@@ -24,14 +24,12 @@
  * Boston, MA  02110-1301  USA
  */
 
-#define _DEFAULT_SOURCE
+#include "config.h"
 
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "config.h"
 
 #ifdef HAVE_LIBJPEG
 #include "libgphoto2/gphoto2-endian.h"

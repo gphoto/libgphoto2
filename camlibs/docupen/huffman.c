@@ -4,6 +4,8 @@
  * based on code found in package sfftobmp (Thanks Peter!)
  */
 
+#include "config.h"
+
 #include <stdlib.h>
 #include <string.h>
 #include "huffman.h"

@@ -20,6 +20,7 @@
  *
  * Copyright 2001-2002 Vince Weaver <vince@deater.net>
  */
+
 #include "config.h"
 
 #include <stdio.h>

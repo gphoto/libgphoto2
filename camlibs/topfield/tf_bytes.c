@@ -21,6 +21,8 @@
 
 */
 
+#include "config.h"
+
 #include <stdio.h>
 #include "tf_bytes.h"
 

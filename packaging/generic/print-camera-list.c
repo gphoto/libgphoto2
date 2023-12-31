@@ -44,6 +44,8 @@ ARGV0 " prints the camera list in the specified format FORMAT on stdout.\n" \
 "status code.\n"
 
 
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
@@ -55,8 +57,6 @@ ARGV0 " prints the camera list in the specified format FORMAT on stdout.\n" \
 
 /* for detailed version message */
 #include <gphoto2/gphoto2-version.h>
-
-#include "config.h"
 
 #ifndef TRUE
 #define TRUE  (0==0)

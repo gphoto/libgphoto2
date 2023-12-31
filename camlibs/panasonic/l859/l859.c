@@ -15,7 +15,9 @@
 	This is the Panasonic PV-L859 camera gPhoto library source code.
 
 */
+
 #include "config.h"
+
 #include "l859.h"
 
 #include <stdlib.h>

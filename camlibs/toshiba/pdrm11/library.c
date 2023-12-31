@@ -19,6 +19,7 @@
  */
 
 #include "config.h"
+
 #include "pdrm11.h"
 
 #include <stdint.h>

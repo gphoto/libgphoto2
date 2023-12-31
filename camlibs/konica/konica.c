@@ -19,6 +19,7 @@
  */
 
 #include "config.h"
+
 #include "konica.h"
 
 #include <stdlib.h>

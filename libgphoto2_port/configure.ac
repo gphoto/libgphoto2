@@ -25,6 +25,8 @@ AM_SILENT_RULES([no])
 
 AC_LANG([C])
 
+dnl Enable extra system functions like flock, strdup, re_compile_pattern and others.
+AC_USE_SYSTEM_EXTENSIONS
 
 
 dnl Flag all GP_ strings in result as error unless specifically allowed.
@@ -512,14 +514,6 @@ dnl guess directory to install *.pc into
 dnl --------------------------------------------------------------------
 pkgconfigdir='${libdir}/pkgconfig'
 AC_SUBST([pkgconfigdir])
-
-
-dnl ----------------------------------------------------------------------
-dnl GNU regex?
-dnl ----------------------------------------------------------------------
-AC_CHECK_FUNC([re_compile_pattern],
-              [AC_DEFINE([HAVE_GNU_REGEX], [1],
-	                 [Define if you have GNU regex.])])
 
 
 dnl ----------------------------------------------------------------------

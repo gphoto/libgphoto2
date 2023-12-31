@@ -18,6 +18,8 @@
  * Boston, MA  02110-1301  USA
  */
 
+#include "config.h"
+
 #include "sx330z.h"
 
 /* sprintf */

@@ -21,6 +21,7 @@
  */
 
 #include "config.h"
+
 #include "libgphoto2/jpeg.h"
 
 #include <stdio.h>
