@@ -73,7 +73,7 @@ libgphoto2 has _not_ (yet?) been ported to any operating system from MicroSoft.
 - Java: [gphoto2-java](https://github.com/mvysny/gphoto2-java), [libgphoto2-jna](https://github.com/angryelectron/libgphoto2-jna)
 - Python: [python-gphoto2](https://github.com/jim-easterbrook/python-gphoto2), [gphoto2-cffi](https://github.com/jbaiter/gphoto2-cffi)
 - C#: [libgphoto2-sharp](https://github.com/gphoto/libgphoto2-sharp)
-- Go: [go-gphoto2](https://github.com/aqiank/go-gphoto2)
+- Go: [gphoto2-go](https://github.com/weebney/gphoto2-go)
 - Rust: [gphoto-rs](https://github.com/dcuddeback/gphoto-rs)
 - Node.js: [node-gphoto2](https://github.com/lwille/node-gphoto2)
 - Ruby: [ffi-gphoto2](https://github.com/zaeleus/ffi-gphoto2)
