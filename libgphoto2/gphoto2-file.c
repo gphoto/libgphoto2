@@ -596,6 +596,8 @@ static const char *mime_table[] = {
     "arw",  GP_MIME_ARW,
     "raf",  GP_MIME_RAF,
     "txt",  GP_MIME_TXT,
+    "qtk",  GP_MIME_QTKT,
+    "qtk",  GP_MIME_QTKN,
     NULL};
 /**
  * @param file a #CameraFile
@@ -1106,6 +1108,8 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 		GP_MIME_ARW,  "arw",
 		GP_MIME_RAF,  "raf",
 		GP_MIME_TXT,  "txt",
+		GP_MIME_QTKT, "qtk",
+		GP_MIME_QTKN, "qtk",
 		NULL};
 
 	C_PARAMS (file);

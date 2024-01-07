@@ -555,6 +555,7 @@ GP_CAMLIB([polaroid_pdc320],[outdated])dnl
 GP_CAMLIB([polaroid_pdc640],[outdated])dnl
 GP_CAMLIB([polaroid_pdc700],[outdated])dnl
 GP_CAMLIB([ptp2])dnl
+GP_CAMLIB([quicktake1x0])dnl
 GP_CAMLIB([ricoh],[outdated])dnl
 GP_CAMLIB([ricoh_g3])dnl
 GP_CAMLIB([samsung],[outdated])dnl

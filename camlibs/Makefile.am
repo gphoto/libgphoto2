@@ -132,6 +132,7 @@ include pccam600/Makefile-files
 include pentax/Makefile-files
 include polaroid/Makefile-files
 include ptp2/Makefile-files
+include quicktake1x0/Makefile-files
 include ricoh/Makefile-files
 include samsung/Makefile-files
 include sierra/Makefile-files

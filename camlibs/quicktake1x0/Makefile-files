@@ -1,0 +1,20 @@
+# -*- Makefile-automake -*-
+
+#EXTRA_DIST              += %reldir%/ChangeLog
+
+
+EXTRA_LTLIBRARIES       += quicktake1x0.la
+
+quicktake1x0_la_SOURCES       =
+quicktake1x0_la_SOURCES      += %reldir%/quicktake1x0.c
+quicktake1x0_la_SOURCES      += %reldir%/qtk-thumbnail-decoder.c
+quicktake1x0_la_SOURCES      += %reldir%/qtkt-decoder.c
+quicktake1x0_la_SOURCES      += %reldir%/qtkn-decoder.c
+quicktake1x0_la_SOURCES      += %reldir%/qtk-helpers.c
+quicktake1x0_la_SOURCES      += %reldir%/quicktake1x0.h
+
+quicktake1x0_la_CFLAGS        = $(camlib_cflags)
+quicktake1x0_la_CPPFLAGS      = $(camlib_cppflags)
+quicktake1x0_la_DEPENDENCIES  = $(camlib_dependencies)
+quicktake1x0_la_LDFLAGS       = $(camlib_ldflags)
+quicktake1x0_la_LIBADD        = $(camlib_libadd)

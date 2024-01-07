@@ -84,6 +84,9 @@ scanner.
 Hans de Goede <hdegoede@redhat.com>
 ST2205 Picture Frame support (and usbdiskdirect port driver).
 
+Colin Leroy-Mira <colin@colino.net>
+Apple QuickTake 1x0 driver.
+
 =========================================================================
 git migration authors
 

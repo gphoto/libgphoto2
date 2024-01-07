@@ -43,6 +43,8 @@ extern "C" {
 #define GP_MIME_JPEG      "image/jpeg"
 #define GP_MIME_TIFF      "image/tiff"
 #define GP_MIME_BMP       "image/bmp"
+#define GP_MIME_QTKN      "image/qtkn"
+#define GP_MIME_QTKT      "image/qtkt"
 #define GP_MIME_QUICKTIME "video/quicktime"
 #define GP_MIME_AVI       "video/x-msvideo"
 #define GP_MIME_CRW       "image/x-canon-raw"
