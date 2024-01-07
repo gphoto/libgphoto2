@@ -1152,6 +1152,8 @@ static struct {
 	{"Sony:SLT-A65V (PTP mode)",  0x054c, 0x0574, 0},
 	/* Irina Iakovleva <irina.bunger@gmail.com> */
 	{"Sony:SLT-A77V (PTP mode)",  0x054c, 0x0577, 0},
+	/* Josh Rovero <josh.rovero@gmail.com> */
+	{"Sony:NEX-5N (PTP mode)",    0x054c, 0x0579, 0},
 	/* Jose Velez <jvelez00@gmail.com> */
 	{"Sony:NEX-7 (PTP mode)",     0x054c, 0x057d, 0},
 
