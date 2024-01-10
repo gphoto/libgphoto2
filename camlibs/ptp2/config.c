@@ -9382,7 +9382,7 @@ _get_Panasonic_ColorTemp(CONFIG_GET_ARGS) {
     gp_widget_set_name (*widget, menu->name);
 
     for (i = 0; i < listCount; i++) {
-        sprintf(buf,_("%d"), list[i]);
+        sprintf(buf,"%d", list[i]);
         if (list[i] == currentVal) {
             gp_widget_set_value (*widget, buf);
             valset = 1;
@@ -9454,7 +9454,7 @@ _get_Panasonic_AFMode(CONFIG_GET_ARGS) {
 
     for (i = 0; i < listCount; i++) {
         for (j=0;j<sizeof(panasonic_aftable)/sizeof(panasonic_aftable[0]);j++) {
-            sprintf(buf,_("%d"), list[i]);
+            sprintf(buf,"%d", list[i]);
             if ((list[i] == currentVal) && (j == currentVal)) {
                 gp_widget_set_value (*widget, panasonic_aftable[j].str);
                 valset = 1;
@@ -9553,7 +9553,7 @@ _get_Panasonic_ExpMode(CONFIG_GET_ARGS) {
 
     for (i = 0; i < listCount; i++) {
         for (j=0;j<sizeof(panasonic_rmodetable)/sizeof(panasonic_rmodetable[0]);j++) {
-            sprintf(buf,_("%d"), list[i]);
+            sprintf(buf,"%d", list[i]);
             if ((list[i] == currentVal) && (j == currentVal)) {
                 gp_widget_set_value (*widget, panasonic_rmodetable[j].str);
                 valset = 1;
