@@ -67,6 +67,7 @@ camlibs/ptp2/fujiptpip.c
 camlibs/ptp2/library.c
 camlibs/ptp2/ptp.c
 camlibs/ptp2/ptpip.c
+camlibs/quicktake1x0/quicktake1x0.c
 camlibs/ricoh/g3.c
 camlibs/ricoh/library.c
 camlibs/ricoh/ricoh.c
