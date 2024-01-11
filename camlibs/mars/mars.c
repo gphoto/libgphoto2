@@ -29,6 +29,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <math.h>
+#include <unistd.h>
 
 #include <libgphoto2/gamma.h>
 
