@@ -71,7 +71,7 @@ int qtk_ppm_size(int width, int height) {
 	return len;
 }
 
-unsigned char getbithuff (int nbits, unsigned char **raw, ushort *huff)
+unsigned char getbithuff (int nbits, unsigned char **raw, unsigned short *huff)
 {
 	static unsigned bitbuf = 0;
 	static int vbits = 0;
