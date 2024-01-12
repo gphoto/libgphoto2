@@ -33,6 +33,7 @@
 #include <string.h>
 #include <gphoto2/gphoto2.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "libgphoto2/i18n.h"
 
@@ -726,5 +727,3 @@ int coolshot_build_thumbnail (char *data, int *size)
 
 	return( GP_OK );
 }
-
-

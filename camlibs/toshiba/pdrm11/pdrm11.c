@@ -23,6 +23,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <gphoto2/gphoto2.h>
 #include "libgphoto2/gphoto2-endian.h"
@@ -252,4 +253,3 @@ int pdrm11_delete_file(GPPort *port, int picNum)
 
 	return(GP_OK);
 }
-

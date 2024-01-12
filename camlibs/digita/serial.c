@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "libgphoto2/gphoto2-endian.h"
 #include "digita.h"
@@ -336,4 +337,3 @@ int digita_serial_open(CameraPrivateLibrary *dev, Camera *camera)
 
 	return negotiated ? 0 : -1;
 }
-

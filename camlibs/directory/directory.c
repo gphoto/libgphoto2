@@ -43,6 +43,7 @@
 # include <sys/mount.h>
 #endif
 #include <fcntl.h>
+#include <unistd.h>
 
 /* will happen only on Win32 */
 #ifndef HAVE_LSTAT

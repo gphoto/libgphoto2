@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+
 #include <gphoto2/gphoto2.h>
 
 #include "libgphoto2/i18n.h"

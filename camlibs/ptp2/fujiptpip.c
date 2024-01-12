@@ -49,6 +49,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <unistd.h>
 #include <errno.h>
 #include <sys/types.h>
 #ifdef HAVE_SYS_SELECT_H
