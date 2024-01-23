@@ -1618,7 +1618,7 @@ static struct {
 	{"Nikon:Coolpix S2600 (PTP mode)",0x04b0, 0x032d, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 
 	/* dougvj@gmail.com */
-	{"Nikon:Coolpix L810  (PTP mode)",0x04b0, 0x032f, PTP_CAP},
+	{"Nikon:Coolpix L810  (PTP mode)",0x04b0, 0x032f, PTP_CAP|PTP_NIKON_BROKEN_CAP},
 
 	/* Borja Latorre <borja.latorre@csic.es> */
 	{"Nikon:Coolpix S3200",		  0x04b0, 0x0334, PTP_CAP},
