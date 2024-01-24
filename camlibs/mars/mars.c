@@ -421,11 +421,11 @@ mars_white_balance (unsigned char *data, unsigned int size, float saturation,
 
 	histogram(data, size, htable_r, htable_g, htable_b);
 	x = 1;
-	for (r = 48; r < 208; r++)
+	for (d = 48; d < 208; d++)
 	{
-		x += htable_r[r];
-		x += htable_g[r];
-		x += htable_r[r];
+		x += htable_r[d];
+		x += htable_g[d];
+		x += htable_b[d];
 	}
 	new_gamma = sqrt((double) (x * 1.5) / (double) (size * 3));
 	x=0;
