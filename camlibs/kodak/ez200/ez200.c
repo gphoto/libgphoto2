@@ -329,7 +329,7 @@ camera_init(Camera *camera, GPContext *context)
         /* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-	camera->pl = calloc (sizeof (CameraPrivateLibrary), 1);
+	camera->pl = calloc (1, sizeof (CameraPrivateLibrary));
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
 
 	/* Connect to the camera */

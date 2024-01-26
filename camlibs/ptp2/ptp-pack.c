@@ -821,7 +821,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	if (n > (total - (*offset))/sizeof(val->a.v[0].member))\
 		return 0;				\
 	val->a.count = n;				\
-	val->a.v = calloc(sizeof(val->a.v[0]),n);	\
+	val->a.v = calloc(n, sizeof(val->a.v[0]));	\
 	if (!val->a.v) return 0;			\
 	for (j=0;j<n;j++)				\
 		CTVAL(val->a.v[j].member, func);	\
@@ -1118,7 +1118,7 @@ duplicate_PropertyValue (const PTPPropertyValue *src, PTPPropertyValue *dst, uin
 		unsigned int i;
 
 		dst->a.count = src->a.count;
-		dst->a.v = calloc (sizeof(src->a.v[0]),src->a.count);
+		dst->a.v = calloc (src->a.count, sizeof(src->a.v[0]));
 		for (i=0;i<src->a.count;i++)
 			duplicate_PropertyValue (&src->a.v[i], &dst->a.v[i], type & ~PTP_DTC_ARRAY_MASK);
 		return;
@@ -1161,7 +1161,7 @@ duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 		break;
 	case PTP_DPFF_Enumeration:
 		dst->FORM.Enum.NumberOfValues = src->FORM.Enum.NumberOfValues;
-		dst->FORM.Enum.SupportedValue = calloc (sizeof(dst->FORM.Enum.SupportedValue[0]),src->FORM.Enum.NumberOfValues);
+		dst->FORM.Enum.SupportedValue = calloc (src->FORM.Enum.NumberOfValues, sizeof(dst->FORM.Enum.SupportedValue[0]));
 		for (i = 0; i<src->FORM.Enum.NumberOfValues ; i++)
 			duplicate_PropertyValue (&src->FORM.Enum.SupportedValue[i], &dst->FORM.Enum.SupportedValue[i], src->DataType);
 		break;
@@ -2031,7 +2031,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 		curdata += size;
 		entries++;
 	}
-	ce = calloc (sizeof(PTPCanon_changes_entry),(entries+1));
+	ce = calloc (entries + 1, sizeof(PTPCanon_changes_entry));
 	if (!ce) return 0;
 
 	curdata = data;
@@ -2158,7 +2158,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = propxcnt;
 			free (dpd->FORM.Enum.SupportedValue);
-			dpd->FORM.Enum.SupportedValue = calloc (sizeof (PTPPropertyValue),propxcnt);
+			dpd->FORM.Enum.SupportedValue = calloc (propxcnt, sizeof (PTPPropertyValue));
 
 			switch (proptype) {
 			case PTP_DPC_CANON_EOS_ImageFormat:
@@ -2955,7 +2955,7 @@ ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, P
 	if (!*cnt)
 		return;
 
-	*ec = calloc(sizeof(PTPContainer),(*cnt));
+	*ec = calloc((*cnt), sizeof(PTPContainer));
 
 	for (i=0;i<*cnt;i++) {
 		memset(&(*ec)[i],0,sizeof(PTPContainer));
@@ -2989,7 +2989,7 @@ ptp_unpack_Nikon_EC_EX (PTPParams *params, unsigned char* data, unsigned int len
 	if (!*cnt)
 		return 1;
 
-	*ec = calloc(sizeof(PTPContainer),(*cnt));
+	*ec = calloc((*cnt), sizeof(PTPContainer));
 	offset = PTP_nikon_ec_ex_Code+sizeof(uint16_t);
 
 	for (i=0;i<*cnt;i++) {
@@ -3218,7 +3218,7 @@ ptp_unpack_ptp11_manifest (
 		return 0;
 	numberoifs = dtoh64ap(params,data);
 	curoffset = 8;
-	xoifs = calloc(sizeof(PTPObjectFilesystemInfo),numberoifs);
+	xoifs = calloc(numberoifs, sizeof(PTPObjectFilesystemInfo));
 	if (!xoifs)
 		return 0;
 
