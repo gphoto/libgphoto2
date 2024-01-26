@@ -1076,7 +1076,7 @@ storage_info_func (CameraFilesystem *fs,
 		unsigned int totalk = get_u32(&reply.data);
 		unsigned int freek = get_u32(&reply.data[4]);
 
-		sif = *storageinformations = calloc(sizeof(CameraStorageInformation),1);
+		sif = *storageinformations = calloc(1, sizeof(CameraStorageInformation));
 		*nrofstorageinformations = 1;
 
 		sif->fields |= GP_STORAGEINFO_BASE;
@@ -1212,7 +1212,7 @@ camera_init (Camera *camera, GPContext *context)
 	gp_port_set_timeout (camera->port, TF_PROTOCOL_TIMEOUT);
 	gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 
-	camera->pl = calloc (sizeof (CameraPrivateLibrary),1);
+	camera->pl = calloc (1, sizeof (CameraPrivateLibrary));
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;
 
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)

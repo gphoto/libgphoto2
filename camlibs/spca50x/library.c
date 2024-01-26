@@ -565,7 +565,7 @@ camera_init (Camera *camera, GPContext *context)
 			break;
 	}
 
-	camera->pl = calloc (sizeof (CameraPrivateLibrary), 1);
+	camera->pl = calloc (1, sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
 	camera->pl->gpdev = camera->port;

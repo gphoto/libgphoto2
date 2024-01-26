@@ -1091,7 +1091,7 @@ storage_info_func (
 	canon_int_get_disk_name_info (camera, root, &camera->pl->cached_capacity,
 				    &camera->pl->cached_available, context);
 
-	*sinfos = (CameraStorageInformation*) calloc (sizeof (CameraStorageInformation), 1);
+	*sinfos = (CameraStorageInformation*) calloc (1, sizeof (CameraStorageInformation));
 	*nrofsinfos = 1;
 	(*sinfos)->fields = GP_STORAGEINFO_BASE;
 	strcpy ((*sinfos)->basedir, "/");

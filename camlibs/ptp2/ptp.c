@@ -1473,7 +1473,7 @@ c0 03 00 05 bc 02 1e 00
 		return PTP_RC_GeneralError;
 	}
 
-	*liveviewsizes = calloc (sizeof(PanasonicLiveViewSize),count);
+	*liveviewsizes = calloc (count, sizeof(PanasonicLiveViewSize));
 	for (i = 0;i < count; i++) {
 		(*liveviewsizes)[i].height	= dtoh16a (data + 12 + i*structsize);
 		(*liveviewsizes)[i].width	= dtoh16a (data + 12 + 2 + i*structsize);
@@ -3175,7 +3175,7 @@ ptp_canon_gettreesize (PTPParams* params,
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetTreeSize);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	*cnt = dtoh32a(data);
-	*entries = calloc(sizeof(PTPCanon_directtransfer_entry),(*cnt));
+	*entries = calloc((*cnt), sizeof(PTPCanon_directtransfer_entry));
 	if (!*entries) {
 		ret = PTP_RC_GeneralError;
 		goto exit;
@@ -3927,7 +3927,7 @@ ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	memcpy (dpd, &params->canon_props[i].dpd, sizeof (*dpd));
 	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
 		/* need to duplicate the Enumeration alloc */
-		dpd->FORM.Enum.SupportedValue = calloc (sizeof (PTPPropertyValue),dpd->FORM.Enum.NumberOfValues);
+		dpd->FORM.Enum.SupportedValue = calloc (dpd->FORM.Enum.NumberOfValues, sizeof (PTPPropertyValue));
 		memcpy (dpd->FORM.Enum.SupportedValue,
 			params->canon_props[i].dpd.FORM.Enum.SupportedValue,
 			sizeof (PTPPropertyValue)*dpd->FORM.Enum.NumberOfValues
@@ -5962,7 +5962,7 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
 	xdata = data + 4;
 	xsize = size - 4;
 
-	*props = calloc(sizeof(uint16_t),nums);
+	*props = calloc(nums, sizeof(uint16_t));
 	*numprops = nums;
 	for (i=0;i<nums;i++) {
 		PTPDevicePropDesc	dpd;
