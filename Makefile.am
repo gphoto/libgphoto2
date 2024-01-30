@@ -64,11 +64,11 @@ DISTCLEANFILES = libgphoto2/gphoto2-endian.h
 
 source-code-check:
 	@echo "######## Finding // comments"
-	find $(srcdir) -type f -name '*.[ch]' -exec egrep -H '(^//|[^:]//)' {} \;
+	find $(srcdir) -type f -name '*.[ch]' -exec grep -E -H '(^//|[^:]//)' {} \;
 	@echo "######## Finding remainders of Arnaud's comment replacement"
-	find $(srcdir) -type f -name '*.[ch]' -exec egrep -H 'http:/\*' {} \;
+	find $(srcdir) -type f -name '*.[ch]' -exec grep -E -H 'http:/\*' {} \;
 	@echo "######## Finding explicit libintl.h references"
-	find $(srcdir) -type f -name '*.[ch]' -exec egrep -H '^#.*include.*libintl\.h' {} \;
+	find $(srcdir) -type f -name '*.[ch]' -exec grep -E -H '^#.*include.*libintl\.h' {} \;
 
 
 ########################################################################
