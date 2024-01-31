@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 
 	/* Now open all cameras we autodected for usage */
 	printf("Number of cameras: %d\n", count);
-	cams = calloc (count, sizeof (Camera*));
+	cams = calloc (sizeof (Camera*),count);
         for (i = 0; i < count; i++) {
                 gp_list_get_name  (list, i, &name);
                 gp_list_get_value (list, i, &value);

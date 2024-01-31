@@ -646,7 +646,7 @@ gp_filesystem_new (CameraFilesystem **fs)
 
 	C_MEM (*fs = calloc (1, sizeof (CameraFilesystem)));
 
-	(*fs)->rootfolder = calloc (1, sizeof (CameraFilesystemFolder));
+	(*fs)->rootfolder = calloc (sizeof (CameraFilesystemFolder), 1);
 	if (!(*fs)->rootfolder) {
 		free (*fs);
 		return (GP_ERROR_NO_MEMORY);
@@ -716,7 +716,7 @@ internal_append (CameraFilesystem *fs, CameraFilesystemFolder *f,
 	if (*new)
 		return (GP_ERROR_FILE_EXISTS);
 
-	C_MEM ((*new) = calloc (1, sizeof (CameraFilesystemFile)));
+	C_MEM ((*new) = calloc (sizeof (CameraFilesystemFile), 1));
 	(*new)->name = strdup (filename);
 	if (!(*new)->name) {
 		free (*new);

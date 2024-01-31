@@ -1866,7 +1866,7 @@ camera_init (Camera *camera, GPContext *context)
 	int		tries;
 	char		*result;
 
-	camera->pl = calloc(1, sizeof(CameraPrivateLibrary));
+	camera->pl = calloc(sizeof(CameraPrivateLibrary),1);
 
 	/* First, set up all the function pointers */
 	camera->functions->exit                 = camera_exit;

@@ -1021,7 +1021,7 @@ camera_init (Camera *camera, GPContext *context)
 {
 	CameraPrivateLibrary	*cpl;
 
-	cpl = calloc (1, sizeof (CameraPrivateLibrary));
+	cpl = calloc (sizeof (CameraPrivateLibrary), 1);
 	/* pslr = pslr_init (model, device); ... but it basically just opens the fd */
 	cpl->pslr.fd = camera->port;
 
