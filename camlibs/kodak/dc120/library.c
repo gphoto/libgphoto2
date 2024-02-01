@@ -22,6 +22,10 @@
 #define _POSIX_C_SOURCE 199309L
 #include "config.h"
 
+/* Must be included before including unistd.h to define _XOPEN_SOURCE
+   before unistd.h on FreeBSD. */
+#include <gphoto2/gphoto2-port-portability.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

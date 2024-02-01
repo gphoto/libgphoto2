@@ -18,7 +18,7 @@
  * Boston, MA  02110-1301  USA
  */
 #define _DEFAULT_SOURCE
-#define _POSIX_C_SOURCE 1
+#define _POSIX_C_SOURCE 199506
 #define _DARWIN_C_SOURCE
 #include "config.h"
 
