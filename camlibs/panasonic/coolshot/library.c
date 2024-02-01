@@ -29,6 +29,10 @@
 
 #include "config.h"
 
+/* Must be included before including unistd.h to define _XOPEN_SOURCE
+   before unistd.h on FreeBSD. */
+#include <gphoto2/gphoto2-port-portability.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <gphoto2/gphoto2.h>
