@@ -391,7 +391,7 @@ loadCmd (Camera *camera,char* cmd) {
 	curl_easy_setopt(curl, CURLOPT_URL, URL);
 
 	lmb.size = 0;
-	lmb.data = malloc(0);
+	lmb.data = malloc(1);
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &lmb);
 
@@ -764,7 +764,7 @@ GetPixRange(Camera *camera, int start, int num) {
 		curl_easy_setopt(curl, CURLOPT_URL, URL);
 
 		lmb.size = 0;
-		lmb.data = malloc(0);
+		lmb.data = malloc(1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &lmb);
 
@@ -1792,7 +1792,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename, C
 		}
 #endif
 		lmb.size = 0;
-		lmb.data = malloc(0);
+		lmb.data = malloc(1);
 		curl_easy_setopt(imageUrl, CURLOPT_WRITEFUNCTION, write_callback);
 		curl_easy_setopt(imageUrl, CURLOPT_WRITEDATA, &lmb);
 
