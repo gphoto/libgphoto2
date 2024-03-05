@@ -1,8 +1,12 @@
 libgphoto2 2.5.31.1 development
 
+quicktake1x0:
+* New Apple Quicktake (serial camera) driver
+
 ptp2:
 * Added ids:
   - Canon EOS R100
+
 translations:
 * added georgian, friulian
 ------------------------------------------------------------------------------
