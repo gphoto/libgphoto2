@@ -388,7 +388,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	/* Olympus seems to use OMSYSTEM as manufacturer for the OM-1 */
-	if (    di->Manufacturer && 
+	if (    di->Manufacturer &&
 		(	!strcmp(di->Manufacturer,"OLYMPUS")  || !strcmp(di->Manufacturer,"OMSYSTEM")) &&
 		(	!strncmp(di->Model,"E-M",3) || !strncmp(di->Model,"OM-",3))
 	) {
@@ -1375,7 +1375,7 @@ static struct {
 
 	/* via email */
 	{"Sony:ZV-E10 (Control)",		0x054c, 0x0d97, PTP_CAP|PTP_CAP_PREVIEW},
-	
+
 	/* Thomas Schaad, napstertom@gmail.com */
 	{"Sony:ILCE-7RM3A (PC Control)",	0x054c, 0x0d9b, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -1936,6 +1936,8 @@ static struct {
 	{"Olympus:E-M1 MII",  	  	  0x07b4, 0x0135, PTP_CAP|PTP_CAP_PREVIEW},
 	/* email */
 	{"Olympus:OM-1",  	  	  0x07b4, 0x0136, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Louie Lu <git@louie.lu> */
+	{"Olympus:OM-1MarkII",        0x33a2, 0x0136, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
