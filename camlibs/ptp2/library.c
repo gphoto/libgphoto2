@@ -6508,8 +6508,10 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			propval.u16 = 0x0004;
 			C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
 			C_PTP_REP (ptp_initiatecapture(params, 0x00000000, 0x00000000));
-			propval.u16 = 0x0001;
-			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+			if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
+				propval.u16 = 0x0001;
+				LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+			}
 			return GP_ERROR;
 		}
 
