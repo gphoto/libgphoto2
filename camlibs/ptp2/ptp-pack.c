@@ -1012,6 +1012,7 @@ outofmemory:
 #define PTP_dpd_Sony_ChangeMethod		4
 #define PTP_dpd_Sony_GetSet			5
 #define PTP_dpd_Sony_FactoryDefaultValue	6
+	/* PTP_dpd_SonyCurrentValue 		6 + sizeof(DataType) */
 
 static inline int
 ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *poffset)
@@ -1060,6 +1061,7 @@ ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *
 		return 1;
 
 	dpd->FormFlag=dtoh8a(&data[*poffset]);
+	ptp_debug (params, "formflag 0x%04x", dpd->FormFlag);
 	*poffset+=sizeof(uint8_t);
 
 	switch (dpd->FormFlag) {
@@ -1095,6 +1097,40 @@ ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *
 				break;
 			}
 		}
+		}
+	}
+	if (dpdlen >= *poffset + 2) {
+		uint16_t val = dtoh16a(&data[*poffset]);
+
+		/* check if we have a secondary list of items, this is for newer Sonys (2024) */
+		if (val < 0x200) {	/* actually would be 0x5XXX or 0xDxxx */
+			if (dpd->FormFlag == PTP_DPFF_Enumeration) {
+				int i;
+
+				N = dtoh16a(&data[*poffset]);
+				*poffset+=sizeof(uint16_t);
+				dpd->FORM.Enum.SupportedValue = calloc(N,sizeof(dpd->FORM.Enum.SupportedValue[0]));
+				if (!dpd->FORM.Enum.SupportedValue)
+					goto outofmemory;
+
+				for (i=0;i<N;i++) {
+					ret = ptp_unpack_DPV (params, data, poffset, dpdlen, &dpd->FORM.Enum.SupportedValue[i], dpd->DataType);
+
+					/* Slightly different handling here. The HP PhotoSmart 120
+					 * specifies an enumeration with N in wrong endian
+					 * 00 01 instead of 01 00, so we count the enum just until the
+					 * the end of the packet.
+					 */
+					if (!ret) {
+						if (!i)
+							goto outofmemory;
+						dpd->FORM.Enum.NumberOfValues = i;
+						break;
+					}
+				}
+			} else {
+				ptp_debug (params, "apparently not a enum, but also no value (formflags is %d, value is 0x%04x)", dpd->FormFlag, val);
+			}
 		}
 	}
 #undef N
