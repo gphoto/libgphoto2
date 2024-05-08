@@ -62,7 +62,6 @@ extern "C" {
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 #include <gphoto2/gphoto2-port-log.h>
-extern const StringFlagItem gpi_gphoto_port_type_map[];
 #endif
 
 int gp_port_info_new (GPPortInfo *info);
