@@ -8995,7 +8995,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	case	GP_FILE_TYPE_PREVIEW: {
 		unsigned char	*ximage = NULL;
-		unsigned int	xlen;
+		unsigned int	xlen = 0;
 		char		buf[200];
 
 		/* If thumb size is 0, and the ofc is not an image type (0x38xx or 0xb8xx)
