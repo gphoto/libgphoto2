@@ -2536,6 +2536,8 @@ static struct {
 	{"Canon:PowerShot SX70 HS",		0x04a9, 0x32ee, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/614 */
 	{"Canon:EOS M200",			0x04a9, 0x32ef, PTP_CAP|PTP_CAP_PREVIEW},
+	/* from Thorsten Ludewig via email */
+	{"Canon:PowerShot G7 X Mark III",	0x04a9, 0x32f0, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/781 */
 	{"Canon:EOS Rebel T8i",			0x04a9, 0x32f1, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/810 */
