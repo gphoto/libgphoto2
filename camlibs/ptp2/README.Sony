@@ -1,0 +1,20 @@
+On July 5th, Sony reached out to me (Marcus Meissner).
+
+Dear Marcus Meissner,
+
+Thanks for your efforts to support Sony cameras in gphoto2.
+
+In the last years, Sony has put additional focus on supporting
+integrators who control the camera remotely. We launched Camera remote
+SDK<https://support.d-imaging.sony.co.jp/app/sdk/en/index.html>, and
+improved it step by step as well as launched additional products or
+added features in existing cameras for improved remote control.
+
+In addition, we recently decided to officially support low level control
+of our cameras using USB-PTP protocol, and to release the documentation
+of Sony PTP commands publicly without Non   Disclosure Agreement to allow
+the open source community to use it easily. Please apply on  Camera remote
+Command<https://support.d-imaging.sony.co.jp/app/cameraremotecommand/en/index.html>
+if not already done.
+
+[also internal contact email offered for questions, and potential loans]
