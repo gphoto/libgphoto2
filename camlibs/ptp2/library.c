@@ -1827,6 +1827,9 @@ static struct {
 	/* https://github.com/gphoto/gphoto2/issues/630 */
 	{"Nikon:Zf",                      0x04b0, 0x0453, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* via email */
+	{"Nikon:Z6 III",                  0x04b0, 0x0454, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
 	/* https://github.com/gphoto/libgphoto2/issues/569 */
 	{"Nikon:V1",    		  0x04b0, 0x0601, PTP_CAP|PTP_NIKON_1},
