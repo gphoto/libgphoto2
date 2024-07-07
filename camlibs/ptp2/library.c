@@ -4959,11 +4959,11 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	}
 	/* half-press */
 	propval.u16 = 2;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterHalfRelease, &propval, PTP_DTC_UINT16));
 
 	/* full-press */
 	propval.u16 = 2;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterRelease, &propval, PTP_DTC_UINT16));
 
 	/* Check if we are in manual focus to skip the wait for focus */
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FocusMode, &dpd));
@@ -5010,11 +5010,11 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 	/* release full-press */
 	propval.u16 = 1;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterRelease, &propval, PTP_DTC_UINT16));
 
 	/* release half-press */
 	propval.u16 = 1;
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterHalfRelease, &propval, PTP_DTC_UINT16));
 
 	GP_LOG_D ("waiting for image availability");
 	event_start = time_now();
@@ -6395,11 +6395,11 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		/* half-press */
 		propval.u16 = 2;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterHalfRelease, &propval, PTP_DTC_UINT16));
 
 		/* full-press */
 		propval.u16 = 2;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterRelease, &propval, PTP_DTC_UINT16));
 
 		/* Wait for focus only in automatic focus mode */
 		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_FocusMode, &dpd));
@@ -6440,11 +6440,11 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		/* release full-press */
 		propval.u16 = 1;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &propval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterRelease, &propval, PTP_DTC_UINT16));
 
 		/* release half-press */
 		propval.u16 = 1;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &propval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterHalfRelease, &propval, PTP_DTC_UINT16));
 
 		return GP_OK;
 	}

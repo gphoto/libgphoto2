@@ -8920,7 +8920,7 @@ _put_Sony_Autofocus(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value(widget, &val));
 	xpropval.u16 = val ? 2 : 1;
 
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &xpropval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterHalfRelease, &xpropval, PTP_DTC_UINT16));
 	*alreadyset = 1;
 	return GP_OK;
 }
@@ -8996,7 +8996,7 @@ _put_Sony_Capture(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value(widget, &val));
 	xpropval.u16 = val ? 2 : 1;
 
-	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &xpropval, PTP_DTC_UINT16));
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterRelease, &xpropval, PTP_DTC_UINT16));
 	*alreadyset = 1;
 	return GP_OK;
 }
@@ -9022,16 +9022,16 @@ _put_Sony_Bulb(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
 		xpropval.u16 = 1;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &xpropval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterHalfRelease, &xpropval, PTP_DTC_UINT16));
 
 		xpropval.u16 = 2;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_StillImage, &xpropval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_RequestOneShooting, &xpropval, PTP_DTC_UINT16));
 	} else {
 		xpropval.u16 = 1;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_Capture, &xpropval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterRelease, &xpropval, PTP_DTC_UINT16));
 
 		xpropval.u16 = 1;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AutoFocus, &xpropval, PTP_DTC_UINT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterHalfRelease, &xpropval, PTP_DTC_UINT16));
 	}
 	*alreadyset = 1;
 	return GP_OK;
@@ -10772,12 +10772,12 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Synchronize camera date and time with PC (UTC)"),"syncdatetimeutc", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 
-	{ N_("Auto-Focus"),                     "autofocus",        PTP_DPC_SONY_AutoFocus, PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Autofocus,            _put_Sony_Autofocus },
+	{ N_("Auto-Focus"),                     "autofocus",        PTP_DPC_SONY_ShutterHalfRelease, PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Autofocus,            _put_Sony_Autofocus },
 	{ N_("Manual-Focus"), 			"manualfocus", 	    PTP_DPC_SONY_NearFar,   PTP_VENDOR_SONY,   PTP_DTC_INT16,   _get_Sony_ManualFocus, _put_Sony_ManualFocus },
-	{ N_("Capture"),                        "capture",          PTP_DPC_SONY_Capture,   PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Capture,              _put_Sony_Capture },
+	{ N_("Capture"),                        "capture",          PTP_DPC_SONY_ShutterRelease,   PTP_VENDOR_SONY,   PTP_DTC_UINT16,  _get_Sony_Capture,              _put_Sony_Capture },
 	{ N_("Power Down"),                     "powerdown",        0,  0,                  PTP_OC_PowerDown,                   _get_PowerDown,                 _put_PowerDown },
 	{ N_("Focus Lock"),                     "focuslock",        0,  PTP_VENDOR_CANON,   PTP_OC_CANON_FocusLock,             _get_Canon_FocusLock,           _put_Canon_FocusLock },
-	{ N_("Bulb Mode"),                      "bulb",             PTP_DPC_SONY_StillImage,PTP_VENDOR_SONY,   0,               _get_Sony_Bulb,                 _put_Sony_Bulb },
+	{ N_("Bulb Mode"),                      "bulb",             PTP_DPC_SONY_RequestOneShooting,PTP_VENDOR_SONY,   0,               _get_Sony_Bulb,                 _put_Sony_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_BulbStart,         _get_Canon_EOS_Bulb,            _put_Canon_EOS_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_OC_OLYMPUS_OMD_Capture,      _get_Olympus_OMD_Bulb,                _put_Olympus_OMD_Bulb },
@@ -10812,12 +10812,12 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_QX_Connect,             _get_Sony_QX_Movie,             _put_Sony_QX_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_PANASONIC,PTP_OC_PANASONIC_MovieRecControl,  _get_Panasonic_Movie,           _put_Panasonic_Movie },
 	{ N_("Movie Mode"),                     "eosmoviemode",     0,  PTP_VENDOR_CANON,   0,                                  _get_Canon_EOS_MovieModeSw,     _put_Canon_EOS_MovieModeSw },
-	{ N_("Focus Magnify"),                  "focusmagnify",     PTP_DPC_SONY_FocusMagnify, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Focus Magnify Exit"),             "focusmagnifyexit", PTP_DPC_SONY_FocusMagnifyExit, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
-	{ N_("Focus Magnify Up"),               "focusmagnifyup",   PTP_DPC_SONY_FocusMagnifyUp, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp,   _put_Sony_FocusMagnifyProp },
-	{ N_("Focus Magnify Down"),             "focusmagnifydown", PTP_DPC_SONY_FocusMagnifyDown, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
-	{ N_("Focus Magnify Left"),             "focusmagnifyleft", PTP_DPC_SONY_FocusMagnifyLeft, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
-	{ N_("Focus Magnify Right"),            "focusmagnifyright",PTP_DPC_SONY_FocusMagnifyRight, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp,_put_Sony_FocusMagnifyProp },
+	{ N_("Focus Magnifier"),                "focusmagnifier",     PTP_DPC_SONY_FocusMagnifier, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Focus Magnifier Cancel"),         "focusmagnifierexit", PTP_DPC_SONY_FocusMagnifierCancel, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
+	{ N_("Remote Key Up"),                  "remotekeyup",   PTP_DPC_SONY_RemoteKeyUp, PTP_VENDOR_SONY, PTP_DTC_UINT16,	_get_Sony_FocusMagnifyProp,   _put_Sony_FocusMagnifyProp },
+	{ N_("Remote Key Down"),                "remotekeydown", PTP_DPC_SONY_RemoteKeyDown, PTP_VENDOR_SONY, PTP_DTC_UINT16,	_get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
+	{ N_("Remote Key Left"),                "remotekeyleft", PTP_DPC_SONY_RemoteKeyLeft, PTP_VENDOR_SONY, PTP_DTC_UINT16,	_get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
+	{ N_("Remote Key Right"),               "remotekeyright",PTP_DPC_SONY_RemoteKeyRight, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp,_put_Sony_FocusMagnifyProp },
 	{ N_("PTP Opcode"),                     "opcode",           0,  0,                  PTP_OC_GetDeviceInfo,               _get_Generic_OPCode,            _put_Generic_OPCode },
 	{ 0,0,0,0,0,0,0 },
 };

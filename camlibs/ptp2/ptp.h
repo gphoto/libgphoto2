@@ -3115,28 +3115,32 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_PriorityMode			0xD25A
 #define PTP_DPC_SONY_PcSaveImageSize			0xD268
 #define PTP_DPC_SONY_PcSaveImageFormat			0xD269
-#define PTP_DPC_SONY_AutoFocus				0xD2C1 /* ? half-press */
-#define PTP_DPC_SONY_Capture				0xD2C2 /* ? full-press */
-#define PTP_DPC_SONY_FocusMagnify			0xD2CB
-#define PTP_DPC_SONY_FocusMagnifyExit			0xD2CC
-#define PTP_DPC_SONY_FocusMagnifyUp	    		0xD2CD
-#define PTP_DPC_SONY_FocusMagnifyDown			0xD2CE
-#define PTP_DPC_SONY_FocusMagnifyLeft			0xD2CF
-#define PTP_DPC_SONY_FocusMagnifyRight			0xD2D0
-/* D2DB (2) , D2D3 (2) , D2C8 (2) also seen in Camera Remote related to D2C2 */
-/* S1 ?
- * AEL - d2c3
- * FEL - d2c9
- * AFL - d2c4
- * AWBL - d2d9
- */
-/* semi control opcodes */
-#define PTP_DPC_SONY_Movie				0xD2C8 /* ? */
-#define PTP_DPC_SONY_StillImage				0xD2C7 /* ? */
+#define PTP_DPC_SONY_ShutterHalfRelease			0xD2C1 /* ? half-press */
+#define PTP_DPC_SONY_ShutterRelease			0xD2C2 /* ? full-press */
+#define PTP_DPC_SONY_AELButton				0xD2C3
+#define PTP_DPC_SONY_AFLButton				0xD2C4
+#define PTP_DPC_SONY_ReleaseLock			0xD2C5
+#define PTP_DPC_SONY_RequestOneShooting			0xD2C7
+#define PTP_DPC_SONY_MovieRecButtonHold			0xD2C8
+#define PTP_DPC_SONY_FELButton				0xD2C9
+#define PTP_DPC_SONY_MediaFormat			0xD2CA
+#define PTP_DPC_SONY_FocusMagnifier			0xD2CB
+#define PTP_DPC_SONY_FocusMagnifierCancel		0xD2CC
+#define PTP_DPC_SONY_RemoteKeyUp	    		0xD2CD
+#define PTP_DPC_SONY_RemoteKeyDown			0xD2CE
+#define PTP_DPC_SONY_RemoteKeyLeft			0xD2CF
+#define PTP_DPC_SONY_RemoteKeyRight			0xD2D0
+#define PTP_DPC_SONY_AFMFHold				0xD2D2
+#define PTP_DPC_SONY_CancelPixelShiftShooting		0xD2D3
+#define PTP_DPC_SONY_PixelShiftShootingMode		0xD2D4
+#define PTP_DPC_SONY_HFRStandby				0xD2D5
+#define PTP_DPC_SONY_HFRRecordingCancel			0xD2D6
+#define PTP_DPC_SONY_FocusStepNear			0xD2D7
+#define PTP_DPC_SONY_FocusStepFar			0xD2D8
+#define PTP_DPC_SONY_AWBLButton				0xD2D9
+
 
 #define PTP_DPC_SONY_NearFar				0xD2D1
-/*#define PTP_DPC_SONY_AutoFocus				0xD2D2 something related */
-
 #define PTP_DPC_SONY_AF_Area_Position			0xD2DC
 
 /* Sony QX properties */

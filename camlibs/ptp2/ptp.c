@@ -7554,12 +7554,12 @@ ptp_get_property_description(PTPParams* params, uint16_t dpc)
 		{PTP_DPC_SONY_ISO2, N_("ISO")},				/* 0xD226 */
 		{PTP_DPC_SONY_ShutterSpeed2, N_("Shutter speed")},	/* 0xD229 */
 		{PTP_DPC_SONY_LiveViewSettingEffect, N_("Live View Setting Effect")},
-		{PTP_DPC_SONY_Movie, N_("Movie")},			/* 0xD2C8 */
-		{PTP_DPC_SONY_StillImage, N_("Still Image")},		/* 0xD2C7 */
+		{PTP_DPC_SONY_MovieRecButtonHold, "MovieRecButtonHold"},/* 0xD2C8 */
+		{PTP_DPC_SONY_RequestOneShooting, "RequestOneShooting"},/* 0xD2C7 */
 		{PTP_DPC_SONY_SensorCrop, N_("Sensor Crop")},
-		{PTP_DPC_SONY_AutoFocus, N_("Autofocus")},
+		{PTP_DPC_SONY_ShutterHalfRelease, "ShutterHalfRelease"},
 		{PTP_DPC_SONY_FocusArea, N_("Focus Area")},
-		{PTP_DPC_SONY_Capture, N_("Capture")},
+		{PTP_DPC_SONY_ShutterRelease, "ShutterRelease"},
 		{PTP_DPC_WhiteBalance, N_("White Balance")},		/* 0x5005 */
 		{PTP_DPC_SONY_Zoom, N_("Zoom")},
 		{PTP_DPC_SONY_StillImageStoreDestination, N_("Capture Target")},
