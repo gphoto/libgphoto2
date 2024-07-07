@@ -648,21 +648,27 @@ typedef struct _PTPIPHeader PTPIPHeader;
  * or
  *  3 params: 3,0,0,: IN: data 8 bytes all 0
  */
-#define PTP_OC_SONY_SDIOConnect			0x9201
+#define PTP_OC_SONY_SDIO_Connect		0x9201
 /* 9202: 1 param, 0xc8; IN data:
  * 16 bit: 0xc8
  * ptp array 32 bit: index, 16 bit values of propcodes  */
-#define PTP_OC_SONY_GetSDIOGetExtDeviceInfo	0x9202
+#define PTP_OC_SONY_SDIO_GetExtDeviceInfo	0x9202
 
 #define PTP_OC_SONY_GetDevicePropdesc		0x9203
 #define PTP_OC_SONY_GetDevicePropertyValue	0x9204
 /* 1 param, 16bit propcode, SEND DATA: propvalue */
-#define PTP_OC_SONY_SetControlDeviceA		0x9205
+#define PTP_OC_SONY_SDIO_SetExtDevicePropValue	0x9205
 #define PTP_OC_SONY_GetControlDeviceDesc	0x9206
 /* 1 param, 16bit propcode, SEND DATA: propvalue */
-#define PTP_OC_SONY_SetControlDeviceB		0x9207
+#define PTP_OC_SONY_SDIO_ControlDevice		0x9207
 /* get all device property data at once */
-#define PTP_OC_SONY_GetAllDevicePropData	0x9209	/* gets a 4126 byte blob of device props ?*/
+#define PTP_OC_SONY_SDIO_GetAllExtDevicePropInfo	0x9209	/* gets a 4126 byte blob of device props ?*/
+#define PTP_OC_SONY_SDIO_OpenSession			0x9210
+#define PTP_OC_SONY_SDIO_GetPartialLargeObject		0x9211
+#define PTP_OC_SONY_SDIO_SetContentsTransferMode	0x9212
+#define PTP_OC_SONY_SDIO_GetDisplayStringList		0x9215
+#define PTP_OC_SONY_SDIO_GetLensInformation		0x9223
+#define PTP_OC_SONY_SDIO_OperationsResultsSupported	0x922f
 
 #define PTP_OC_SONY_QX_SetExtPictureProfile	0x96F2
 #define PTP_OC_SONY_QX_GetExtPictureProfile	0x96F3
@@ -3071,6 +3077,12 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_DateTimeUTC			0xD176 /* check */
 
 /* Sony A900 */
+#define PTP_DPC_SONY_IrisModeSetting			0xD001
+#define PTP_DPC_SONY_FocalDistanceInMeter		0xD004
+#define PTP_DPC_SONY_FocalDistanceInFeet		0xD005
+#define PTP_DPC_SONY_FocalDistanceUnitSetting		0xD006
+#define PTP_DPC_SONY_FocusModeSetting			0xD007
+
 #define PTP_DPC_SONY_DPCCompensation			0xD200
 #define PTP_DPC_SONY_DRangeOptimize			0xD201
 #define PTP_DPC_SONY_ImageSize				0xD203

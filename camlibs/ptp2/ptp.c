@@ -4459,7 +4459,7 @@ ptp_sony_sdioconnect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 
-	PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIOConnect, p1, p2, p3);
+	PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_Connect, p1, p2, p3);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL));
 	free (data);
 	return PTP_RC_OK;
@@ -4510,9 +4510,9 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	*props = NULL;
 	*size = 0;
 	if(has_sony_mode_300(params)) {
-		PTP_CNT_INIT(ptp, PTP_OC_SONY_GetSDIOGetExtDeviceInfo, 0x12c /* newer mode (300) */);
+		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x12c /* newer mode (300) */);
 	} else {
-		PTP_CNT_INIT(ptp, PTP_OC_SONY_GetSDIOGetExtDeviceInfo, 0x0c8 /* older mode (200) */);
+		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x0c8 /* older mode (200) */);
 	}
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize));
 	if (xsize == 0) {
@@ -4710,7 +4710,7 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 
 uint16_t
 ptp_sony_getalldevicepropdesc (PTPParams* params) {
-	return _ptp_sony_getalldevicepropdesc (params, PTP_OC_SONY_GetAllDevicePropData);
+	return _ptp_sony_getalldevicepropdesc (params, PTP_OC_SONY_SDIO_GetAllExtDevicePropInfo);
 }
 
 uint16_t
@@ -4727,7 +4727,7 @@ ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
 	unsigned char	*data;
 	uint32_t	size;
 
-	PTP_CNT_INIT(ptp, PTP_OC_SONY_SetControlDeviceA, propcode);
+	PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_SetExtDevicePropValue, propcode);
 	size = ptp_pack_DPV(params, value, &data, datatype);
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
 	free(data);
@@ -4759,7 +4759,7 @@ ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
 	unsigned char	*data;
 	uint32_t	size;
 
-	PTP_CNT_INIT(ptp, PTP_OC_SONY_SetControlDeviceB, propcode);
+	PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_ControlDevice, propcode);
 	size = ptp_pack_DPV(params, value, &data , datatype);
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
 	free(data);
@@ -4863,7 +4863,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
-		ptp_operation_issupported(params, PTP_OC_SONY_GetAllDevicePropData)
+		ptp_operation_issupported(params, PTP_OC_SONY_SDIO_GetAllExtDevicePropInfo)
 	) {
 		CHECK_PTP_RC(ptp_sony_getalldevicepropdesc (params));
 
@@ -4949,7 +4949,7 @@ ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 	/* FIXME: change the cache? hmm */
 	/* this works for some methods, but not for all */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
-		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceA)
+		ptp_operation_issupported(params, PTP_OC_SONY_SDIO_SetExtDevicePropValue)
 	)
 		return ptp_sony_setdevicecontrolvaluea (params, propcode, value, datatype);
 	/* Sony QX method */
@@ -8987,14 +8987,14 @@ ptp_opcode_trans_t ptp_opcode_canon_trans[] = {
 };
 
 ptp_opcode_trans_t ptp_opcode_sony_trans[] = {
-	{PTP_OC_SONY_SDIOConnect,"SDIOConnect"},
-	{PTP_OC_SONY_GetSDIOGetExtDeviceInfo,"GetSDIOGetExtDeviceInfo"},
+	{PTP_OC_SONY_SDIO_Connect,"SDIO_Connect"},
+	{PTP_OC_SONY_SDIO_GetExtDeviceInfo,"SDIO_GetExtDeviceInfo"},
 	{PTP_OC_SONY_GetDevicePropdesc,"GetDevicePropdesc"},
 	{PTP_OC_SONY_GetDevicePropertyValue,"GetDevicePropertyValue"},
-	{PTP_OC_SONY_SetControlDeviceA,"SetControlDeviceA"},
+	{PTP_OC_SONY_SDIO_SetExtDevicePropValue,"SDIO_SetExtDevicePropValue"},
 	{PTP_OC_SONY_GetControlDeviceDesc,"GetControlDeviceDesc"},
-	{PTP_OC_SONY_SetControlDeviceB,"SetControlDeviceB"},
-	{PTP_OC_SONY_GetAllDevicePropData,"GetAllDevicePropData"},
+	{PTP_OC_SONY_SDIO_ControlDevice,"SDIO_ControlDevice"},
+	{PTP_OC_SONY_SDIO_GetAllExtDevicePropInfo,"SDIO_GetAllExtDevicePropInfo"},
 	{PTP_OC_SONY_QX_GetAllDevicePropData,"QX_GetAllDevicePropData"},
 	{PTP_OC_SONY_QX_SetControlDeviceB,"QX_SetControlDeviceB"},
 	{PTP_OC_SONY_QX_SetControlDeviceA,"QX_SetControlDeviceA"},

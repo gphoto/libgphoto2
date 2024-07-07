@@ -712,7 +712,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	if (di->VendorExtensionID == PTP_VENDOR_SONY) {
 		unsigned int i;
 
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_SONY_GetSDIOGetExtDeviceInfo)) {
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_SONY_SDIO_GetExtDeviceInfo)) {
 			int opcodes = 0, propcodes = 0, events = 0, j,k,l;
 			uint16_t  	*xprops;
 			unsigned int	xsize;
@@ -5781,7 +5781,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
-		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
+		ptp_operation_issupported(params, PTP_OC_SONY_SDIO_ControlDevice)
 	) {
 		return camera_sony_capture (camera, type, path, context);
 	}
@@ -6386,7 +6386,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 	/* Sony Alpha */
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
-		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
+		ptp_operation_issupported(params, PTP_OC_SONY_SDIO_ControlDevice)
 	) {
 		PTPPropertyValue	propval;
 		struct timeval		event_start;
@@ -7031,7 +7031,7 @@ downloadnow:
 	}
 
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
-		ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB)
+		ptp_operation_issupported(params, PTP_OC_SONY_SDIO_ControlDevice)
 	) {
 		PTPObjectInfo		oi;
 		PTPDevicePropDesc	dpd;
@@ -7853,7 +7853,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				APPEND_TXT (_("Nikon Capture 3, "));
 			break;
 		case PTP_VENDOR_SONY:
-			if (ptp_operation_issupported(params, PTP_OC_SONY_SetControlDeviceB))
+			if (ptp_operation_issupported(params, PTP_OC_SONY_SDIO_ControlDevice))
 				APPEND_TXT (_("Sony Capture, "));
 			break;
 		default:

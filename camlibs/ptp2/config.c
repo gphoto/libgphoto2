@@ -10808,7 +10808,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("CHDK Script"),                    "chdk_script",      0,  PTP_VENDOR_CANON,   PTP_OC_CHDK,                        _get_Canon_CHDK_Script,         _put_Canon_CHDK_Script },
 	{ N_("Movie Capture"),                  "movie",            0,  0,                  PTP_OC_InitiateOpenCapture,         _get_OpenCapture,               _put_OpenCapture },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartMovieRecInCard,   _get_Nikon_Movie,               _put_Nikon_Movie },
-	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_SDIOConnect,            _get_Sony_Movie,                _put_Sony_Movie },
+	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_SDIO_Connect,           _get_Sony_Movie,                _put_Sony_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_QX_Connect,             _get_Sony_QX_Movie,             _put_Sony_QX_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_PANASONIC,PTP_OC_PANASONIC_MovieRecControl,  _get_Panasonic_Movie,           _put_Panasonic_Movie },
 	{ N_("Movie Mode"),                     "eosmoviemode",     0,  PTP_VENDOR_CANON,   0,                                  _get_Canon_EOS_MovieModeSw,     _put_Canon_EOS_MovieModeSw },
