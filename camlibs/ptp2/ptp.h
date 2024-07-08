@@ -1283,7 +1283,20 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* Sony */
 #define PTP_EC_Sony_ObjectAdded			0xC201
 #define PTP_EC_Sony_ObjectRemoved		0xC202
-#define PTP_EC_Sony_PropertyChanged		0xC203
+#define PTP_EC_Sony_DevicePropChanged		0xC203
+#define PTP_EC_Sony_CapturedEvent		0xC206
+#define PTP_EC_Sony_CWBCaptureResult		0xC208
+#define PTP_EC_Sony_CameraSettingReadResult	0xC209
+#define PTP_EC_Sony_FTPSettingReadResult	0xC20A
+#define PTP_EC_Sony_MediaFormatResult		0xC20B
+#define PTP_EC_Sony_FTPDisplayNameListChanged	0xC20C
+#define PTP_EC_Sony_ContentsTransferEvent	0xC20D
+#define PTP_EC_Sony_DisplayListChangedEvent	0xC20F
+#define PTP_EC_Sony_FocusPositionResult		0xC218
+#define PTP_EC_Sony_LensInformationChanged	0xC21B
+#define PTP_EC_Sony_OperationResult		0xC222
+#define PTP_EC_Sony_AFStatus			0xC223
+#define PTP_EC_Sony_MovieRecOperationsResult	0xC224
 
 /* MTP Event codes */
 #define PTP_EC_MTP_ObjectPropChanged		0xC801

@@ -4980,7 +4980,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			C_PTP (ptp_check_event (params));
 			if (ptp_get_one_event(params, &event)) {
 				GP_LOG_D ("during shutterbutton press event.code=%04x Param1=%08x", event.Code, event.Param1);
-				if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
+				if (	(event.Code == PTP_EC_Sony_DevicePropChanged) &&
 					(event.Param1 == PTP_DPC_SONY_FocusFound)
 				) {
 					GP_LOG_D ("SONY FocusFound change received, 0xd213... ending press");
@@ -6415,7 +6415,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				C_PTP (ptp_check_event (params));
 				if (ptp_get_one_event(params, &event)) {
 					GP_LOG_D ("during event.code=%04x Param1=%08x", event.Code, event.Param1);
-					if (	(event.Code == PTP_EC_Sony_PropertyChanged) &&
+					if (	(event.Code == PTP_EC_Sony_DevicePropChanged) &&
 						(event.Param1 == PTP_DPC_SONY_FocusFound)
 					) {
 						GP_LOG_D ("SONY FocusFound change received, 0xd213... ending press");
@@ -7381,7 +7381,7 @@ handleregular:
 #endif
 			break;
 		}
-		case PTP_EC_Sony_PropertyChanged: /* same as DevicePropChanged, just go there */
+		case PTP_EC_Sony_DevicePropChanged: /* same as DevicePropChanged, just go there */
 			event.Code = PTP_EC_DevicePropChanged;
 			break;
 		}
