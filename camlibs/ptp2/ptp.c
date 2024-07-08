@@ -4454,12 +4454,12 @@ ptp_nikon_curve_download (PTPParams* params, unsigned char **data, unsigned int 
  *
  **/
 uint16_t
-ptp_sony_sdioconnect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
+ptp_sony_sdioconnect (PTPParams* params, uint32_t phase, uint32_t p2, uint32_t p3)
 {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 
-	PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_Connect, p1, p2, p3);
+	PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_Connect, phase, p2, p3);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL));
 	free (data);
 	return PTP_RC_OK;
@@ -4510,9 +4510,9 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	*props = NULL;
 	*size = 0;
 	if(has_sony_mode_300(params)) {
-		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x12c /* newer mode (300) */);
+		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x12c /* newer mode (3.00) */);
 	} else {
-		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x0c8 /* older mode (200) */);
+		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x0c8 /* older mode (2.00) */);
 	}
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize));
 	if (xsize == 0) {
