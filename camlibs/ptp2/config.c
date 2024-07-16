@@ -509,8 +509,10 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 			propval.u16 = 0x0001;
 			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, 0xd38c, &propval, PTP_DTC_UINT16));
 
-			propval.u16 = 0x0002;
-			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+			if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
+				propval.u16 = 0x0002;
+				LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+			}
 
 			return GP_OK;
 		}
@@ -628,8 +630,11 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 				params->inliveview = 0;
 			}
 
-			propval.u16 = 0x0001;
-			C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+			if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
+				propval.u16 = 0x0001;
+				C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+			}
+
 			return GP_OK;
 		}
 		break;
