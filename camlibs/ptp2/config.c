@@ -633,7 +633,7 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 			if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
 				propval.u16 = 0x0001;
 				C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
-            }
+			}
 
 			return GP_OK;
 		}
