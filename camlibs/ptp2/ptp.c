@@ -4510,7 +4510,7 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	*props = NULL;
 	*size = 0;
 	if(has_sony_mode_300(params)) {
-		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x12c /* newer mode (3.00) */);
+		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x12c /* newer mode (3.00) */, 1);
 	} else {
 		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x0c8 /* older mode (2.00) */);
 	}
