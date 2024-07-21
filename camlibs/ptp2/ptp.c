@@ -4504,7 +4504,7 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 {
 	PTPContainer	ptp;
 	unsigned char	*xdata = NULL;
-	unsigned int 	xsize, psize1 = 0, psize2 = 0;
+	unsigned int 	xsize, psize1 = 0, psize2 = 0, i;
 	uint16_t	*props1 = NULL,*props2 = NULL;
 
 	*props = NULL;
@@ -4519,11 +4519,19 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 		ptp_debug (params, "No special operations sent?");
 		return PTP_RC_OK;
 	}
+	ptp_debug (params, "camera version is %d", dtoh16a(xdata));
 
 	psize1 = ptp_unpack_uint16_t_array (params, xdata+2, 0, xsize, &props1);
-	ptp_debug (params, "xsize %d, got size %d\n", xsize, psize1*2 + 2 + 4);
+	ptp_debug (params, "device properties:");
+	for (i=0;i<psize1;i++) {
+		ptp_debug (params, "\t0x%04x",props1[i]);
+	}
 	if (psize1*2 + 2 + 4 < xsize) {
 		psize2 = ptp_unpack_uint16_t_array(params,xdata+2+psize1*2+4, 0, xsize, &props2);
+		ptp_debug (params, "controls:");
+		for (i=0;i<psize2;i++) {
+			ptp_debug (params, "\t0x%04x",props2[i]);
+		}
 	}
 	*props = calloc(psize1+psize2, sizeof(uint16_t));
 	if (!*props) {
