@@ -715,12 +715,16 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_SONY_SDIO_GetExtDeviceInfo)) {
 			int opcodes = 0, propcodes = 0, events = 0, j,k,l;
 			uint16_t  	*xprops;
-			unsigned int	xsize;
+			unsigned int	xsize = 0;
+			unsigned int	tries = 20;
 			PTPPropertyValue propval;
 
 			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 1, 0, 0));
 			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 2, 0, 0));
-			C_PTP (ptp_sony_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize));
+
+			while ((xsize == 0) && (tries--)) {
+				C_PTP (ptp_sony_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize));
+			}
 
 			for (i=0;i<xsize;i++) {
 				switch (xprops[i] & 0x7000) {
