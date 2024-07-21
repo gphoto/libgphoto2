@@ -1169,6 +1169,14 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_RC_MTP_Invalid_WFC_Syntax		0xA121
 #define PTP_RC_MTP_WFC_Version_Not_Supported	0xA122
 
+/* Sony */
+#define PTP_RC_Sony_AuthenticationFailed	0xA101
+#define PTP_RC_Sony_PasswordLengthOverMax	0xA102
+#define PTP_RC_Sony_PasswordIncludesInvalidChar	0xA103
+#define PTP_RC_Sony_FeatureVersionInvalidValue	0xA104
+#define PTP_RC_Sony_TemporaryStorageFull	0xA105
+#define PTP_RC_Sony_CameraStatusError		0xA106
+
 /* libptp2 extended ERROR codes */
 #define PTP_ERROR_NODEVICE		0x02F9
 #define PTP_ERROR_TIMEOUT		0x02FA
@@ -1520,6 +1528,8 @@ typedef struct _PTPObjectFilesystemInfo PTPObjectFilesystemInfo;
 #define PTP_OFC_CANON_CHDK_CRW			0xb1ff
 /* Sony */
 #define PTP_OFC_SONY_RAW			0xb101
+#define PTP_OFC_SONY_HEIF			0xb110
+#define PTP_OFC_SONY_MPO			0xb301
 /* Fuji */
 #define PTP_OFC_FUJI_RAF			0xb103
 /* MTP extensions */
