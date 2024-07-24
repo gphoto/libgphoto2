@@ -1018,16 +1018,16 @@ static inline int
 ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *poffset)
 {
 	unsigned int ret;
-	unsigned int changemethod, getset;
+	unsigned int isenabled, getset;
 
 	memset (dpd, 0, sizeof(*dpd));
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_Sony_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_Sony_DataType]);
 
-	changemethod = dtoh8a(&data[PTP_dpd_Sony_ChangeMethod]);
+	isenabled = dtoh8a(&data[PTP_dpd_Sony_ChangeMethod]);
 	getset = dtoh8a(&data[PTP_dpd_Sony_GetSet]);
 
-	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, changemethod %d getset %d", dpd->DevicePropertyCode, dpd->DataType, changemethod, getset);
+	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, isEnabled %d getset %d", dpd->DevicePropertyCode, dpd->DataType, isenabled, getset);
 	/* our investigations seem not correct ... some with 2/0 are settable */
 	switch (getset) {
 	case 0:	/* read only */
