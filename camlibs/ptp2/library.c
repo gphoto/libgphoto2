@@ -7441,14 +7441,14 @@ handleregular:
 
 		*eventtype = GP_EVENT_UNKNOWN;
 		/* cached devprop should have been flushed I think... */
-		ret = ptp_generic_getdevicepropdesc (params, event.Param1&0xffff, &dpd);
+		ret = ptp_generic_getdevicepropdesc (params, event.Param1, &dpd);
 
 		/* Nikon Z6 II reports a prop changed event 501c, but getdevicepropdesc fails with devicepropnot supported
 		 * (reported via email)
 		 */
 		if (ret == PTP_RC_DevicePropNotSupported) {
-			C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-			sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
+			C_MEM (*eventdata = malloc(strlen("PTP Property 01234567 changed")+1));
+			sprintf (*eventdata, "PTP Property %08x changed", event.Param1);
 			break;
 		}
 		if (ret != PTP_RC_OK)
@@ -7456,13 +7456,13 @@ handleregular:
 
 		ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 		if (ret == GP_OK) {
-			C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"\" to \"\"")+strlen(name)+1+strlen(content?content:"")));
-			sprintf (*eventdata, "PTP Property %04x changed, \"%s\" to \"%s\"", event.Param1 & 0xffff, name, content?content:"");
+			C_MEM (*eventdata = malloc(strlen("PTP Property 01234567 changed, \"\" to \"\"")+strlen(name)+1+strlen(content?content:"")));
+			sprintf (*eventdata, "PTP Property %08x changed, \"%s\" to \"%s\"", event.Param1, name, content?content:"");
 			free (name);
 			free (content);
 		} else {
-			C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-			sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
+			C_MEM (*eventdata = malloc(strlen("PTP Property 01234567 changed")+1));
+			sprintf (*eventdata, "PTP Property %08x changed", event.Param1);
 		}
 		ptp_free_devicepropdesc (&dpd);
 		break;
