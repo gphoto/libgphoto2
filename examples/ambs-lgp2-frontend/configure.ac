@@ -21,6 +21,7 @@ AC_PROG_CC
 
 
 m4_pattern_forbid([^PKG_CHECK_MODULES])dnl
+PKG_CHECK_MODULES([LIBEXIF], [libexif])
 PKG_CHECK_MODULES([LIBGPHOTO2], [libgphoto2])
 
 
