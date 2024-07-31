@@ -8963,6 +8963,7 @@ ptp_opcode_trans_t ptp_opcode_canon_trans[] = {
 	{PTP_OC_CANON_EOS_NotifySaveComplete,"EOS_NotifySaveComplete"},
 	{PTP_OC_CANON_EOS_GetObjectURL,"EOS_GetObjectURL"},
 	{PTP_OC_CANON_SetRemoteShootingMode,"SetRemoteShootingMode"},
+	{PTP_OC_CANON_SetModeDialDisable,"SetModeDialDisable"},
 	{PTP_OC_CANON_EOS_SetFELock,"EOS_SetFELock"},
 	{PTP_OC_CANON_DeleteWebServiceData,"DeleteWebServiceData"},
 	{PTP_OC_CANON_GetGpsMobilelinkObjectInfo,"GetGpsMobilelinkObjectInfo"},
