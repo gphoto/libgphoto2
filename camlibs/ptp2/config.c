@@ -10216,6 +10216,26 @@ _put_CHDK(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static int
+_get_Canon_SetModeDialDisable(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	int val = 0;
+	gp_widget_set_value  (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Canon_SetModeDialDisable(CONFIG_PUT_ARGS) {
+	PTPParams *params = &(camera->pl->params);
+	int val;
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_SetModeDialDisable))
+		return (GP_ERROR_NOT_SUPPORTED);
+	CR (gp_widget_get_value(widget, &val));
+	C_PTP (ptp_canon_setmodedialdisable(params, val));
+	return GP_OK;
+}
+
 static struct {
 	char	*name;
 	char	*label;
@@ -10818,6 +10838,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Remote Key Down"),                "remotekeydown", PTP_DPC_SONY_RemoteKeyDown, PTP_VENDOR_SONY, PTP_DTC_UINT16,	_get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
 	{ N_("Remote Key Left"),                "remotekeyleft", PTP_DPC_SONY_RemoteKeyLeft, PTP_VENDOR_SONY, PTP_DTC_UINT16,	_get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
 	{ N_("Remote Key Right"),               "remotekeyright",PTP_DPC_SONY_RemoteKeyRight, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp,_put_Sony_FocusMagnifyProp },
+	{ N_("Canon Disable Mode Dial"),		"disablemodedial",	0,	PTP_VENDOR_CANON,	PTP_OC_CANON_SetModeDialDisable,	_get_Canon_SetModeDialDisable,	_put_Canon_SetModeDialDisable },
 	{ N_("PTP Opcode"),                     "opcode",           0,  0,                  PTP_OC_GetDeviceInfo,               _get_Generic_OPCode,            _put_Generic_OPCode },
 	{ 0,0,0,0,0,0,0 },
 };
