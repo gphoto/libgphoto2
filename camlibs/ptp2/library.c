@@ -3245,6 +3245,10 @@ camera_exit (Camera *camera, GPContext *context)
 			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_SetRemoteMode)) {
 				C_PTP (ptp_canon_eos_setremotemode(params, 1));
 			}
+			/* re-enable the mode dial (it may fail with PTP general error 0x2002 )*/
+			if (ptp_operation_issupported(params, PTP_OC_CANON_SetModeDialDisable)) {
+				ptp_canon_setmodedialdisable(params, 0);
+			}
 			break;
 		case PTP_VENDOR_NIKON:
 			if (ptp_operation_issupported(params, PTP_OC_NIKON_EndLiveView))
@@ -10097,6 +10101,10 @@ camera_init (Camera *camera, GPContext *context)
 				C_PTP (ptp_canon_eos_setremotemode(params, 1));
 			}
 		}
+		/* enable software setting of the mode dial (ignore potential error) */
+		if (ptp_operation_issupported(params, PTP_OC_CANON_SetModeDialDisable)) {
+			ptp_canon_setmodedialdisable(params, 1);
+		}		
 		break;
 	case PTP_VENDOR_NIKON:
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_CurveDownload))

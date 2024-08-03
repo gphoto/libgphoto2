@@ -329,6 +329,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_RequestTranscodeCancel	0x9079 /* 1 arg: oid? */
 
 #define PTP_OC_CANON_SetRemoteShootingMode	0x9086
+#define PTP_OC_CANON_SetModeDialDisable		0x9088
 
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
 #define PTP_OC_CANON_EOS_GetStorageIDs		0x9101
@@ -4290,6 +4291,16 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  *
  **/
 #define ptp_canon_initiatecaptureinmemory(params) ptp_generic_no_data(params,PTP_OC_CANON_InitiateCaptureInMemory,0)
+/**
+ * ptp_canon_setmodedialdisable:
+ *
+ * This operation allows software setting of the mode dial. THe software setting is disabled by default.
+ * The operation has one parameter, with the value 0 or 1.
+ * Parameter 0 disables the software setting of the mode dial, 1 allows software setting of the mode dial.
+ * When software setting is allowed the physical mode dial is disabled. This situation remains until the camera is
+ * powered off, or the camera is disconnected.
+ */
+#define ptp_canon_setmodedialdisable(params, onoff) ptp_generic_no_data(params,PTP_OC_CANON_SetModeDialDisable,1, onoff)
 /**
  * ptp_canon_eos_requestdevicepropvalue:
  *
