@@ -466,7 +466,8 @@ skip:
 	 * NOT NEEDED for EOS M6 Mark II ... this behaves like a regular EOS no-M and will disable tethering if we set output=8.
 	 */
 	if (	is_canon_eos_m (params) &&
-		(strcmp(params->deviceinfo.Model,"Canon EOS M6 Mark II") != 0)
+		(strcmp(params->deviceinfo.Model,"Canon EOS M6 Mark II") != 0)&&
+		(strcmp(params->deviceinfo.Model,"Canon EOS M50m2") != 0)
 	) {
 		/* This code is needed on EOS m3 at least. might not be needed on others ... mess :/ */
 		PTPPropertyValue    ct_val;
