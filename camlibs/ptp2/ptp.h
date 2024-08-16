@@ -2744,6 +2744,27 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_1_ReleaseWithoutCard		0xF019 /* no sd card */
 #define PTP_DPC_NIKON_1_MovQuality			0xF01C
 
+/* here start the > 0x10000 series ... yes. confirmed in SDK for newer Z */
+#define PTP_DPC_NIKON_MovieProResToneMode		0x1D000
+#define PTP_DPC_NIKON_MovieH265ToneMode			0x1D001
+#define PTP_DPC_NIKON_SpecialShootingMode		0x1D002
+#define PTP_DPC_NIKON_AFSubjectDetection		0x1D005
+#define PTP_DPC_NIKON_MovieAFSubjectDetection		0x1D006
+#define PTP_DPC_NIKON_ViewModeEaseOfViewing		0x1D007
+#define PTP_DPC_NIKON_ViewModeWhiteBalance		0x1D008
+#define PTP_DPC_NIKON_ViewModeWbColorTemp		0x1D009
+#define PTP_DPC_NIKON_ViewModeWbTuneColorTemp		0x1D00A
+#define PTP_DPC_NIKON_ViewModePictureControl		0x1D00B
+#define PTP_DPC_NIKON_ViewModeBrightenShadow		0x1D00C
+#define PTP_DPC_NIKON_StarlightView			0x1D00E
+#define PTP_DPC_NIKON_MovieTVLockSetting		0x1D00F
+#define PTP_DPC_NIKON_MovieAVLockSetting		0x1D00F
+#define PTP_DPC_NIKON_SilentMode			0x1D011
+#define PTP_DPC_NIKON_ShutterSoundEffect		0x1D012
+#define PTP_DPC_NIKON_AFWhenSubjectNotDetected		0x1D014
+#define PTP_DPC_NIKON_FocusPointLock			0x1D015
+#define PTP_DPC_NIKON_MovieFocusPointLock		0x1D016
+
 /* Fuji specific */
 
 #define PTP_DPC_FUJI_FilmSimulation			0xD001
