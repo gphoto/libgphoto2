@@ -36,7 +36,7 @@ int camera_list_config (Camera *camera, CameraList *list, GPContext *context);
 int camera_prepare_capture (Camera *camera, GPContext *context);
 int camera_unprepare_capture (Camera *camera, GPContext *context);
 int camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int value);
-int have_prop(Camera *camera, uint16_t vendor, uint16_t prop);
+int have_prop(Camera *camera, uint16_t vendor, uint32_t prop);
 int camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, char **content, GPContext *context);
 
 /* library.c */

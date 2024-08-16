@@ -55,7 +55,7 @@
 #define SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
 
 int
-have_prop(Camera *camera, uint16_t vendor, uint16_t prop) {
+have_prop(Camera *camera, uint16_t vendor, uint32_t prop) {
 	unsigned int i;
 
 	/* prop 0 matches */
@@ -684,7 +684,7 @@ typedef int (*put_menu_func)(CONFIG_MENU_PUT_ARGS);
 struct submenu {
 	char 		*label;
 	char		*name;
-	uint16_t	propid;
+	uint32_t	propid;
 	uint16_t	vendorid;
 	uint32_t	type;	/* for 32bit alignment */
 	get_func	getfunc;
@@ -11476,7 +11476,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 	CameraWidget	*section, *widget, *window;
 	unsigned int	menuno, submenuno;
 	int 		ret;
-	uint16_t	*setprops = NULL;
+	uint32_t	*setprops = NULL;
 	unsigned int	i;
 	int		nrofsetprops = 0;
 	PTPParams	*params = &camera->pl->params;
@@ -12222,7 +12222,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 	int 		ret;
 	PTPParams	*params = &camera->pl->params;
 	CameraAbilities	ab;
-	uint16_t	propid = dpd->DevicePropertyCode;
+	uint32_t	propid = dpd->DevicePropertyCode;
 	CameraWidget	*widget;
 
 	*name = NULL;

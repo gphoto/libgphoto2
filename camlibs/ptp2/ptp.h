@@ -1688,7 +1688,8 @@ typedef struct _PTPPropDescStringForm PTPPropDescStringForm;
 /* Device Property Describing Dataset (DevicePropDesc) */
 
 struct _PTPDevicePropDesc {
-	uint16_t		DevicePropertyCode;
+	/* while this is 16 bit in the standard, Nikon for some weird reason started using 0x0001Dxxx */
+	uint32_t		DevicePropertyCode;
 	uint16_t		DataType;
 	uint8_t			GetSet;
 	PTPPropertyValue	FactoryDefaultValue;
@@ -4086,15 +4087,15 @@ uint16_t ptp_sendobject_from_handler  (PTPParams* params, PTPDataHandler*, uint6
 #define ptp_initiateopencapture(params,storageid,ofc)	ptp_generic_no_data(params,PTP_OC_InitiateOpenCapture,2,storageid,ofc)
 #define ptp_terminateopencapture(params,transid)	ptp_generic_no_data(params,PTP_OC_TerminateOpenCapture,1,transid)
 
-uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint16_t propcode,
+uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint32_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
-uint16_t ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode,
+uint16_t ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode,
 				PTPDevicePropDesc *dpd);
-uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint16_t propcode,
+uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint32_t propcode,
 				PTPPropertyValue* value, uint16_t datatype);
-uint16_t ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
+uint16_t ptp_setdevicepropvalue (PTPParams* params, uint32_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
-uint16_t ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
+uint16_t ptp_generic_setdevicepropvalue (PTPParams* params, uint32_t propcode,
                         	PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
                         uint32_t objectformatcode, uint32_t associationOH,
@@ -4800,7 +4801,7 @@ void ptp_debug			(PTPParams *params, const char *format, ...);
 void ptp_error			(PTPParams *params, const char *format, ...);
 
 
-const char* ptp_get_property_description(PTPParams* params, uint16_t dpc);
+const char* ptp_get_property_description(PTPParams* params, uint32_t dpc);
 
 const char* ptp_get_opcode_name(PTPParams* params, uint16_t opcode);
 const char* ptp_get_event_code_name(PTPParams* params, uint16_t event_code);

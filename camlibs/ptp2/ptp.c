@@ -2755,7 +2755,7 @@ ptp_sendobject_fromfd (PTPParams* params, int fd, uint64_t size)
 #define PROPCACHE_TIMEOUT 5	/* seconds */
 
 uint16_t
-ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
+ptp_getdevicepropdesc (PTPParams* params, uint32_t propcode,
 			PTPDevicePropDesc* devicepropertydesc)
 {
 	PTPContainer	ptp;
@@ -2777,7 +2777,7 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 
 		ret = ptp_olympus_parse_output_xml (params,(char*)data,size,&code);
 		if (ret == PTP_RC_OK) {
-			int x;
+			uint32_t x;
 
 			if (	(xmlChildElementCount(code) == 1) &&
 					(!strcmp((char*)code->name,"c1014"))
@@ -2808,7 +2808,7 @@ ptp_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 
 
 uint16_t
-ptp_getdevicepropvalue (PTPParams* params, uint16_t propcode,
+ptp_getdevicepropvalue (PTPParams* params, uint32_t propcode,
 			PTPPropertyValue* value, uint16_t datatype)
 {
 	PTPContainer	ptp;
@@ -2826,7 +2826,7 @@ ptp_getdevicepropvalue (PTPParams* params, uint16_t propcode,
 }
 
 uint16_t
-ptp_setdevicepropvalue (PTPParams* params, uint16_t propcode,
+ptp_setdevicepropvalue (PTPParams* params, uint32_t propcode,
 			PTPPropertyValue *value, uint16_t datatype)
 {
 	PTPContainer	ptp;
@@ -4846,7 +4846,7 @@ ptp_sony_9281 (PTPParams* params, uint32_t param1) {
 /* Cache time in seconds. Should perhaps be more granular... */
 
 uint16_t
-ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePropDesc *dpd)
+ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePropDesc *dpd)
 {
 	unsigned int	i;
 	time_t		now;
@@ -4942,7 +4942,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint16_t propcode, PTPDevicePr
  *
  **/
 uint16_t
-ptp_generic_setdevicepropvalue (PTPParams* params, uint16_t propcode,
+ptp_generic_setdevicepropvalue (PTPParams* params, uint32_t propcode,
 	PTPPropertyValue *value, uint16_t datatype)
 {
 	unsigned int i;
@@ -6202,12 +6202,12 @@ ptp_strerror(uint16_t ret, uint16_t vendor)
 }
 
 const char*
-ptp_get_property_description(PTPParams* params, uint16_t dpc)
+ptp_get_property_description(PTPParams* params, uint32_t dpc)
 {
 	int i;
 	/* Device Property descriptions */
 	struct {
-		uint16_t dpc;
+		uint32_t dpc;
 		const char *txt;
 	} ptp_device_properties[] = {
 		{PTP_DPC_Undefined,		N_("Undefined PTP Property")},
