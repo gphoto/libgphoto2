@@ -2662,7 +2662,7 @@ static unsigned int olcsizes[0x15][13] = {
 				switch (curmask) {
 				case CANON_EOS_OLC_BUTTON: {
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					ce[i].u.info = malloc(strlen("Button 1234567"));
+					ce[i].u.info = malloc(strlen("Button 1234567")+1);
 					sprintf(ce[i].u.info, "Button %d",  dtoh16a(curdata+curoff));
 					i++;
 					break;
@@ -2890,27 +2890,27 @@ static unsigned int olcsizes[0x15][13] = {
 			break;
 		case PTP_EC_CANON_EOS_CTGInfoCheckComplete: /* some form of storage catalog ? */
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("CTGInfoCheckComplete 0x012345678"));
+			ce[i].u.info = malloc(strlen("CTGInfoCheckComplete 0x012345678")+1);
 			sprintf (ce[i].u.info, "CTGInfoCheckComplete 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_StorageStatusChanged:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("StorageStatusChanged 0x012345678"));
+			ce[i].u.info = malloc(strlen("StorageStatusChanged 0x012345678")+1);
 			sprintf (ce[i].u.info, "StorageStatusChanged 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_StorageInfoChanged:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("StorageInfoChanged 0x012345678"));
+			ce[i].u.info = malloc(strlen("StorageInfoChanged 0x012345678")+1);
 			sprintf (ce[i].u.info, "StorageInfoChanged 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_StoreAdded:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("StoreAdded 0x012345678"));
+			ce[i].u.info = malloc(strlen("StoreAdded 0x012345678")+1);
 			sprintf (ce[i].u.info, "StoreAdded 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_StoreRemoved:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("StoreRemoved 0x012345678"));
+			ce[i].u.info = malloc(strlen("StoreRemoved 0x012345678")+1);
 			sprintf (ce[i].u.info, "StoreRemoved 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_ObjectRemoved:
