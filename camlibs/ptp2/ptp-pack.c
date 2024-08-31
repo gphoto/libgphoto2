@@ -1009,8 +1009,8 @@ outofmemory:
 /* Device Property pack/unpack */
 #define PTP_dpd_Sony_DevicePropertyCode		0
 #define PTP_dpd_Sony_DataType			2
-#define PTP_dpd_Sony_ChangeMethod		4
-#define PTP_dpd_Sony_GetSet			5
+#define PTP_dpd_Sony_GetSet		4
+#define PTP_dpd_Sony_IsEnabled			5
 #define PTP_dpd_Sony_FactoryDefaultValue	6
 	/* PTP_dpd_SonyCurrentValue 		6 + sizeof(DataType) */
 
@@ -1024,24 +1024,23 @@ ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_Sony_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_Sony_DataType]);
 
-	isenabled = dtoh8a(&data[PTP_dpd_Sony_ChangeMethod]);
 	getset = dtoh8a(&data[PTP_dpd_Sony_GetSet]);
+	isenabled = dtoh8a(&data[PTP_dpd_Sony_IsEnabled]);
 
 	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, isEnabled %d getset %d", dpd->DevicePropertyCode, dpd->DataType, isenabled, getset);
-	/* our investigations seem not correct ... some with 2/0 are settable */
-	switch (getset) {
-	case 0:	/* read only */
-	case 2: /* camera side only */
-		/* FIXME: dpd->GetSet=0; seems not right ... some values still can be set */
-		dpd->GetSet=1;
+
+	dpd->GetSet = getset;
+	switch (isenabled) {
+	case 0: /* grayed out */
+		dpd->GetSet = 0;	/* just to be safe */
 		break;
-	case 1: /* writeable */
-		dpd->GetSet=1;
+	case 1: /* enabled */
 		break;
-	default: /* values over 128 ... likely action triggers */
-		dpd->GetSet=1;
+	case 2: /* display only */
+		dpd->GetSet = 0;	/* just to be safe */
 		break;
 	}
+
 	dpd->FormFlag=PTP_DPFF_None;
 
 	*poffset = PTP_dpd_Sony_FactoryDefaultValue;
