@@ -307,23 +307,23 @@ gp_logv (GPLogLevel level, const char *domain, const char *format,
 	if (!log_funcs_count || level > log_max_level)
 		return;
 
-    int has_allocated = 0;
+	int has_allocated = 0;
 	for (i = 0; i < log_funcs_count; i++)
 		if (log_funcs[i].level >= level)
-        {
-            if (!has_allocated)
-            {
-                // Only allocate when any of the functions will log
-                str = gpi_vsnprintf(format, args);
-                if (!str) {
-                    GP_LOG_E ("Malloc for expanding format string '%s' failed.", format);
-                    return;
-                }
-                has_allocated = 1;
-            }
+		{
+			if (!has_allocated)
+			{
+				// Only allocate when any of the functions will log
+				str = gpi_vsnprintf(format, args);
+				if (!str) {
+					GP_LOG_E ("Malloc for expanding format string '%s' failed.", format);
+					return;
+				}
+				has_allocated = 1;
+			}
 
 			log_funcs[i].func (level, domain, str, log_funcs[i].data);
-        }
+		}
 	free (str);
 }
 
