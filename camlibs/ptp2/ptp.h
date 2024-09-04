@@ -4677,6 +4677,21 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * sdram=1, card=0
  */
 #define ptp_nikon_capture2(params,af,target) ptp_generic_no_data(params,PTP_OC_NIKON_InitiateCaptureRecInMedia,2,af?0xfffffffe:0xffffffff,target)
+
+/**
+ * ptp_nikon_capture2_1:
+ * For Nikon D3x
+ *
+ * This command captures a picture on the Nikon.
+ *
+ * params:      PTPParams*
+ * opmode: 	real image or dustreference
+ *
+ * Return values: Some PTP_RC_* code.
+ * 0xffffffff == regular image,  0x00000010 == dust reference
+ */
+#define ptp_nikon_capture2_1(params) ptp_generic_no_data(params,PTP_OC_NIKON_InitiateCaptureRecInMedia,1,0xffffffff)
+
 /**
  * ptp_nikon_capture_sdram:
  *
