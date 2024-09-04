@@ -280,7 +280,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 
 		ret = gp_camera_wait_for_event(camera, 1, &evttype, &data, context);
 		if (ret < GP_OK) break;
-		if (data) free (data);
+		free (data);
 		if (evttype == GP_EVENT_TIMEOUT) break;
 	}
 

@@ -577,10 +577,7 @@ gp_camera_free (Camera *camera)
 		camera->fs = NULL;
 	}
 
-        if (camera->functions) {
-                free (camera->functions);
-		camera->functions = NULL;
-	}
+	free (camera->functions);
 
 	free (camera);
 

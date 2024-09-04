@@ -162,10 +162,8 @@ static int get_info_func (CameraFilesystem *fs, const char *folder,
 
 static int camera_exit (Camera *camera, GPContext *context)
 {
-	if (camera->pl) {
-		free (camera->pl);
-		camera->pl = NULL;
-	}
+	free (camera->pl);
+	camera->pl = NULL;
 
 	return (GP_OK);
 }

@@ -331,7 +331,7 @@ g3_cwd_command( GPPort *port, const char *folder) {
 	ret = g3_ftp_command_and_reply(port, cmd, &reply);
 	free(cmd);
 	if (ret < GP_OK) {
-		if (reply) free(reply);
+		free(reply);
 		return ret;
 	}
 	if (reply[0]=='5') /* Failed, most likely no such directory */
@@ -421,8 +421,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	buf = NULL; /* now owned by libgphoto2 filesystem */
 
 out:
-	if (buf) free(buf);
-	if (reply) free(reply);
+	free(buf);
+	free(reply);
 	return (GP_OK);
 }
 
@@ -460,8 +460,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *fn, CameraF
 	ret = g3_channel_read(camera->port, &channel, &reply, &len); /* reply */
 	if (ret < GP_OK) goto out;
 out:
-	if (buf) free(buf);
-	if (reply) free(reply);
+	free(buf);
+	free(reply);
 	return (GP_OK);
 }
 #endif
@@ -771,8 +771,8 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			ret = GP_ERROR_IO;
 	}
 out:
-	if (buf) free(buf);
-	if (reply) free(reply);
+	free(buf);
+	free(reply);
 	return ret;
 }
 
@@ -872,8 +872,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			ret = GP_ERROR_IO;
 	}
 out:
-	if (buf) free(buf);
-	if (reply) free(reply);
+	free(buf);
+	free(reply);
 	return (GP_OK);
 }
 

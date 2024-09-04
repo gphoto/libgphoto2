@@ -173,7 +173,7 @@ QVblockrecv (Camera *camera, unsigned char **buf, unsigned long int *buf_len)
 		/* Allocate the memory */
 		new = (unsigned char*)realloc (*buf, sizeof (char) * (*buf_len + size));
 		if (new == (unsigned char*)0) {
-			if (*buf != (unsigned char*)0) free(*buf);
+			free(*buf);
 			return (GP_ERROR_NO_MEMORY);
 		}
 		*buf = new;

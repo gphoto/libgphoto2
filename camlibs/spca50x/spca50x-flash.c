@@ -59,7 +59,7 @@ free_files (CameraPrivateLibrary *pl)
 	int i;
 	if (pl->flash_files) {
 		for (i = 0; i < pl->num_files_on_flash; i++) {
-			if(pl->flash_files[i].thumb) free (pl->flash_files[i].thumb);
+			free (pl->flash_files[i].thumb);
 		}
 		free(pl->flash_files);
 		pl->flash_files = NULL;

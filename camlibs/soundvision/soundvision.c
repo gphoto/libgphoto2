@@ -255,7 +255,7 @@ static int soundvision_file_get (Camera *camera, const char *filename, int thumb
 
 file_get_error:
 
-    if (*data!=NULL) free(*data);
+    free(*data);
     return result;
 }
 

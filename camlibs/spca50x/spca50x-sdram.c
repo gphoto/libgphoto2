@@ -865,15 +865,11 @@ spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype)
 	/* Reset image and movie counter */
 	lib->num_images = lib->num_movies = 0;
 
-	if (lib->fats) {
-		free (lib->fats);
-		lib->fats = NULL;
-	}
+	free (lib->fats);
+	lib->fats = NULL;
 
-	if (lib->sdram_files) {
-		free (lib->sdram_files);
-		lib->sdram_files = NULL;
-	}
+	free (lib->sdram_files);
+	lib->sdram_files = NULL;
 
 	lib->fats = calloc (lib->num_fats , SPCA50X_FAT_PAGE_SIZE);
 	lib->sdram_files = calloc (lib->num_files_on_sdram , sizeof (struct SPCA50xFile));

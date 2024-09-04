@@ -2282,8 +2282,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file,
 		if (status != 0x40) {
 			GP_DEBUG ("canon_put_file_usb: write 1 failed! (returned %i)", status);
 			gp_context_error(context, _("File upload failed."));
-			if(newdata)
-				free(newdata);
+			free(newdata);
 			free(packet);
 			return GP_ERROR_CORRUPTED_DATA;
 		}
@@ -2293,8 +2292,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file,
 			GP_DEBUG ("canon_put_file_usb: read 1 failed! "
 				  "(returned %i, expected %i)", status, 0x40);
 			gp_context_error(context, _("File upload failed."));
-			if(newdata)
-				free(newdata);
+			free(newdata);
 			free(packet);
 			return GP_ERROR_CORRUPTED_DATA;
 		}
@@ -2329,8 +2327,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file,
 			GP_DEBUG ("canon_put_file_usb: write 2 failed! "
 				  "(returned %i, expected %li)", status, len1+0x40);
 			gp_context_error(context, _("File upload failed."));
-			if(newdata)
-				free(newdata);
+			free(newdata);
 			free(packet);
 			if ( status < 0 )
 				return GP_ERROR_OS_FAILURE;
@@ -2343,8 +2340,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file,
 			GP_DEBUG ("canon_put_file_usb: read 2 failed! "
 				  "(returned %i, expected %i)", status, 0x5c);
 			gp_context_error(context, _("File upload failed."));
-			if(newdata)
-				free(newdata);
+			free(newdata);
 			free(packet);
 			if ( status < 0 )
 				return GP_ERROR_OS_FAILURE;
@@ -2357,8 +2353,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file,
 			GP_DEBUG ("canon_put_file_usb: read 3 failed! "
 				  "(returned %i, expected %i)", status, 0x5c);
 			gp_context_error(context, _("File upload failed."));
-			if(newdata)
-				free(newdata);
+			free(newdata);
 			free(packet);
 			if ( status < 0 )
 				return GP_ERROR_OS_FAILURE;
@@ -2385,8 +2380,7 @@ canon_usb_put_file (Camera *camera, CameraFile *file,
 		gp_context_message(context, _("File was too big. You may have to turn your camera off and back on before uploading more files."));
         }
 
-        if(newdata)
-		free(newdata);
+        free(newdata);
         free(packet);
         return GP_OK;
 }

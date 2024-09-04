@@ -130,14 +130,10 @@ static int
 camera_exit (Camera *camera, GPContext *context)
 {
 	if (camera->pl) {
-		if (camera->pl->fats) {
-			free (camera->pl->fats);
-			camera->pl->fats = NULL;
-		}
-		if (camera->pl->files) {
-			free (camera->pl->files);
-			camera->pl->files = NULL;
-		}
+		free (camera->pl->fats);
+		camera->pl->fats = NULL;
+		free (camera->pl->files);
+		camera->pl->files = NULL;
 
 		free (camera->pl);
 		camera->pl = NULL;

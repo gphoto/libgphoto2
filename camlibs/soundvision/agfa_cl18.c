@@ -156,7 +156,7 @@ int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename) {
        return ret;
     }
 
-    if (dev->file_list) free(dev->file_list);
+    free(dev->file_list);
     dev->file_list = (char *)buffer;
 
     ret=soundvision_send_command(SOUNDVISION_GET_PIC_SIZE,0,dev);
@@ -221,7 +221,7 @@ int agfa_get_file_list(CameraPrivateLibrary *dev) {
 	return GP_ERROR_CORRUPTED_DATA;
     }
 
-    if (dev->file_list) free(dev->file_list);
+    free(dev->file_list);
 
     dev->file_list = malloc(taken * 13);
     if (!dev->file_list) {

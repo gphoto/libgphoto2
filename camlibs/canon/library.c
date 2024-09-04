@@ -902,8 +902,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			}
 			if (ret != GP_OK) {
 				GP_DEBUG ("get_file_func: GP_FILE_TYPE_PREVIEW: couldn't extract JPEG thumbnail data");
-				if (data)
-					free (data);
+				free (data);
 				data = NULL;
 				return ret;
 			}
