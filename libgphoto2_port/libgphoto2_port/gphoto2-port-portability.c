@@ -38,131 +38,131 @@
 
 void gp_port_win_convert_path (char *path) {
 
-        int x;
+	int x;
 
-        if (strchr(path, '\\'))
-                /* already converted */
-                return;
+	if (strchr(path, '\\'))
+		/* already converted */
+		return;
 
-        if (path[0] != '.') {
-                path[0] = path[1];
-                path[1] = ':';
-                path[2] = '\\';
-        }
+	if (path[0] != '.') {
+		path[0] = path[1];
+		path[1] = ':';
+		path[2] = '\\';
+	}
 
-        for (x=0; x<strlen(path); x++)
-                if (path[x] == '/')
-                        path[x] = '\\';
+	for (x=0; x<strlen(path); x++)
+		if (path[x] == '/')
+			path[x] = '\\';
 }
 
 int gp_system_mkdir (const char *dirname) {
 
-        if (_mkdir(dirname) < 0)
-                return (GP_ERROR);
-        return (GP_OK);
+	if (_mkdir(dirname) < 0)
+		return (GP_ERROR);
+	return (GP_OK);
 }
 
 int gp_system_rmdir (const char *dirname) {
 
-        if (_rmdir(dirname) < 0)
-                return (GP_ERROR);
-        return (GP_OK);
+	if (_rmdir(dirname) < 0)
+		return (GP_ERROR);
+	return (GP_OK);
 }
 
 
 gp_system_dir gp_system_opendir (const char *dirname) {
 
-        GPPORTWINDIR *d;
-        DWORD dr;
-        int x;
-        d = (GPPORTWINDIR*)malloc(sizeof(GPPORTWINDIR));
-        d->handle = INVALID_HANDLE_VALUE;
-        d->got_first = 0;
-        strcpy(d->dir, dirname);
-        d->drive_count = 0;
-        d->drive_index = 0;
+	GPPORTWINDIR *d;
+	DWORD dr;
+	int x;
+	d = (GPPORTWINDIR*)malloc(sizeof(GPPORTWINDIR));
+	d->handle = INVALID_HANDLE_VALUE;
+	d->got_first = 0;
+	strcpy(d->dir, dirname);
+	d->drive_count = 0;
+	d->drive_index = 0;
 
-        dr = GetLogicalDrives();
+	dr = GetLogicalDrives();
 
-        for (x=0; x<32; x++) {
-                if ((dr >> x) & 0x0001) {
-                        sprintf(d->drive[d->drive_count], "%c", 'A' + x);
-                        d->drive_count += 1;
-                }
-        }
+	for (x=0; x<32; x++) {
+		if ((dr >> x) & 0x0001) {
+			sprintf(d->drive[d->drive_count], "%c", 'A' + x);
+			d->drive_count += 1;
+		}
+	}
 
-        return (d);
+	return (d);
 }
 
 gp_system_dirent gp_system_readdir (gp_system_dir d) {
 
-        char dirn[1024];
+	char dirn[1024];
 
-        if (strcmp(d->dir, "/")==0) {
-                if (d->drive_index == d->drive_count)
-                        return (NULL);
-                strcpy(d->search.cFileName, d->drive[d->drive_index]);
-                d->drive_index += 1;
-                return (&(d->search));
-        }
-
-
-        /* Append the wildcard */
-
-        strcpy(dirn, d->dir);
-        gp_port_win_convert_path(dirn);
-
-        if (dirn[strlen(dirn)-1] != '\\')
-                strcat(dirn, "\\");
-        strcat(dirn, "*");
+	if (strcmp(d->dir, "/")==0) {
+		if (d->drive_index == d->drive_count)
+			return (NULL);
+		strcpy(d->search.cFileName, d->drive[d->drive_index]);
+		d->drive_index += 1;
+		return (&(d->search));
+	}
 
 
-        if (d->handle == INVALID_HANDLE_VALUE) {
-                d->handle = FindFirstFile(dirn, &(d->search));
-                if (d->handle == INVALID_HANDLE_VALUE)
-                        return NULL;
-        } else {
-                if (!FindNextFile(d->handle, &(d->search)))
-                        return NULL;
-        }
+	/* Append the wildcard */
 
-        return (&(d->search));
+	strcpy(dirn, d->dir);
+	gp_port_win_convert_path(dirn);
+
+	if (dirn[strlen(dirn)-1] != '\\')
+		strcat(dirn, "\\");
+	strcat(dirn, "*");
+
+
+	if (d->handle == INVALID_HANDLE_VALUE) {
+		d->handle = FindFirstFile(dirn, &(d->search));
+		if (d->handle == INVALID_HANDLE_VALUE)
+			return NULL;
+	} else {
+		if (!FindNextFile(d->handle, &(d->search)))
+			return NULL;
+	}
+
+	return (&(d->search));
 }
 
 const char *gp_system_filename (gp_system_dirent de) {
 
-        return (de->cFileName);
+	return (de->cFileName);
 }
 
 int gp_system_closedir (gp_system_dir d) {
-        FindClose(d->handle);
-        free(d);
-        return (1);
+	FindClose(d->handle);
+	free(d);
+	return (1);
 }
 
 int gp_system_is_file (const char *filename) {
 
-        struct stat st;
+	struct stat st;
 
-        gp_port_win_convert_path(filename);
+	gp_port_win_convert_path(filename);
 
-        if (stat(filename, &st)!=0)
-                return 0;
-        return (st.st_mode & _S_IFREG);
+	if (stat(filename, &st)!=0)
+		return 0;
+	return (st.st_mode & _S_IFREG);
 }
 
 int gp_system_is_dir (const char *dirname) {
 
-        struct stat st;
+	struct stat st;
 
-        if (strlen(dirname) <= 3)
-                return 1;
+	if (strlen(dirname) <= 3)
+		return 1;
 
-        gp_port_win_convert_path(dirname);
+	gp_port_win_convert_path(dirname);
 
-        if (stat(dirname, &st)!=0)
-                return 0;
-        return (st.st_mode & _S_IFDIR);
+	if (stat(dirname, &st)!=0)
+		return 0;
+	return (st.st_mode & _S_IFDIR);
 }
 
 
@@ -177,9 +177,9 @@ int gp_system_is_dir (const char *dirname) {
  * \return a gphoto error code
  */
 int gp_system_mkdir (const char *dirname) {
-        if (mkdir(dirname, 0777)<0)
-                return (GP_ERROR);
-        return (GP_OK);
+	if (mkdir(dirname, 0777)<0)
+		return (GP_ERROR);
+	return (GP_OK);
 }
 
 /**
@@ -208,7 +208,7 @@ int gp_system_rmdir (const char *dirname) {
  * \return a directory handle for use in gp_system_readdir() and gp_system_closedir()
  */
 gp_system_dir gp_system_opendir (const char *dirname) {
-        return (opendir(dirname));
+	return (opendir(dirname));
 }
 
 /**
@@ -222,7 +222,7 @@ gp_system_dir gp_system_opendir (const char *dirname) {
  * \return a new gp_system_dirent or NULL
  */
 gp_system_dirent gp_system_readdir (gp_system_dir d) {
-        return (readdir(d));
+	return (readdir(d));
 }
 
 /**
@@ -234,7 +234,7 @@ gp_system_dirent gp_system_readdir (gp_system_dir d) {
  * \return the filename of the directory entry
  */
 const char *gp_system_filename (gp_system_dirent de) {
-        return (de->d_name);
+	return (de->d_name);
 }
 
 /**
@@ -246,8 +246,8 @@ const char *gp_system_filename (gp_system_dirent de) {
  * \return a gphoto error code
  */
 int gp_system_closedir (gp_system_dir dir) {
-        closedir(dir);
-        return (GP_OK);
+	closedir(dir);
+	return (GP_OK);
 }
 
 /**
@@ -260,11 +260,11 @@ int gp_system_closedir (gp_system_dir dir) {
  * \return boolean flag whether passed filename is a file.
  */
 int gp_system_is_file (const char *filename) {
-        struct stat st;
+	struct stat st;
 
-        if (stat(filename, &st)!=0)
-                return 0;
-        return (!S_ISDIR(st.st_mode));
+	if (stat(filename, &st)!=0)
+		return 0;
+	return (!S_ISDIR(st.st_mode));
 }
 
 /**
@@ -277,10 +277,10 @@ int gp_system_is_file (const char *filename) {
  * \return boolean flag whether passed filename is a directory.
  */
 int gp_system_is_dir (const char *dirname) {
-        struct stat st;
+	struct stat st;
 
-        if (stat(dirname, &st)!=0)
-                return 0;
-        return (S_ISDIR(st.st_mode));
+	if (stat(dirname, &st)!=0)
+		return 0;
+	return (S_ISDIR(st.st_mode));
 }
 #endif

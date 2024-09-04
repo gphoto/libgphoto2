@@ -308,16 +308,16 @@ gp_camera_new (Camera **camera)
 
 	C_PARAMS (camera);
 
-        C_MEM (*camera = calloc (1, sizeof (Camera)));
+	C_MEM (*camera = calloc (1, sizeof (Camera)));
 
-        (*camera)->functions = calloc (1, sizeof (CameraFunctions));
-        (*camera)->pc        = calloc (1, sizeof (CameraPrivateCore));
+	(*camera)->functions = calloc (1, sizeof (CameraFunctions));
+	(*camera)->pc        = calloc (1, sizeof (CameraPrivateCore));
 	if (!(*camera)->functions || !(*camera)->pc) {
 		result = GP_ERROR_NO_MEMORY;
 		goto error;
 	}
 
-        (*camera)->pc->ref_count = 1;
+	(*camera)->pc->ref_count = 1;
 
 	/* Create the filesystem */
 	result = gp_filesystem_new (&(*camera)->fs);
@@ -329,7 +329,7 @@ gp_camera_new (Camera **camera)
 	if (result < GP_OK)
 		goto error;
 
-        return(GP_OK);
+	return(GP_OK);
 
 error:
 	gp_camera_free (*camera);
@@ -628,11 +628,11 @@ gp_camera_autodetect (CameraList *list, GPContext *context)
 	if (ret < GP_OK) goto out;
 
 	/* ... and autodetect the currently attached cameras. */
-        ret = gp_abilities_list_detect (al, il, xlist, context);
+	ret = gp_abilities_list_detect (al, il, xlist, context);
 	if (ret < GP_OK) goto out;
 
 	/* Filter out the "usb:" entry */
-        ret = gp_list_count (xlist);
+	ret = gp_list_count (xlist);
 	if (ret < GP_OK) goto out;
 	for (i=0;i<ret;i++) {
 		const char *name, *value;
@@ -697,7 +697,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 		char		*ppath;
 		GPPortType	ptype;
 		GPPortInfo	info;
-        	CameraList	*list;
+		CameraList	*list;
 
 		result = gp_list_new (&list);
 		if (result < GP_OK)
@@ -864,7 +864,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 		gp_context_error (context, _("This camera does "
 			"not provide any configuration options."));
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->get_config (
@@ -940,8 +940,8 @@ gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **wi
 	gp_widget_set_readonly (*widget, ro);
 
 	switch (type) {
-        case GP_WIDGET_MENU:
-        case GP_WIDGET_RADIO: {
+	case GP_WIDGET_MENU:
+	case GP_WIDGET_RADIO: {
 		char *value;
 		int i, nrofchoices;
 
@@ -956,35 +956,35 @@ gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **wi
 		gp_widget_set_value (*widget, value);
 		break;
 	}
-        case GP_WIDGET_TEXT: {
+	case GP_WIDGET_TEXT: {
 		char *value;
 
 		gp_widget_get_value (child, &value);
 		gp_widget_set_value (*widget, value);
 		break;
 	}
-        case GP_WIDGET_RANGE: {
+	case GP_WIDGET_RANGE: {
 		float value, rmin, rmax, rstep;
 
 		gp_widget_get_range (child, &rmin, &rmax, &rstep);
 		gp_widget_set_range (*widget, rmin, rmax, rstep);
 		gp_widget_get_value (child, &value);
 		gp_widget_set_value (*widget, &value);
-                break;
+		break;
 	}
-        case GP_WIDGET_TOGGLE:
-        case GP_WIDGET_DATE: {
+	case GP_WIDGET_TOGGLE:
+	case GP_WIDGET_DATE: {
 		int value;
 
 		gp_widget_get_value (child, &value);
 		gp_widget_set_value (*widget, &value);
-                break;
+		break;
 	}
-        case GP_WIDGET_BUTTON:
-        case GP_WIDGET_SECTION:
-        case GP_WIDGET_WINDOW:
-        default:
-                ret = GP_ERROR_BAD_PARAMETERS;
+	case GP_WIDGET_BUTTON:
+	case GP_WIDGET_SECTION:
+	case GP_WIDGET_WINDOW:
+	default:
+		ret = GP_ERROR_BAD_PARAMETERS;
 		break;
 	}
 out:
@@ -1014,20 +1014,20 @@ _get_widget_names (CameraWidget *widget, CameraList *list)
 
 	gp_widget_get_type (widget, &type);
 	switch (type) {
-        case GP_WIDGET_MENU:
-        case GP_WIDGET_RADIO:
-        case GP_WIDGET_TEXT:
-        case GP_WIDGET_RANGE:
-        case GP_WIDGET_TOGGLE:
-        case GP_WIDGET_DATE: {
+	case GP_WIDGET_MENU:
+	case GP_WIDGET_RADIO:
+	case GP_WIDGET_TEXT:
+	GP_WIDGET_RANGE:
+	case GP_WIDGET_TOGGLE:
+	case GP_WIDGET_DATE: {
 		const char *name;
 
 		gp_widget_get_name (widget, &name);
 		gp_list_append (list, name, NULL);
-                break;
+		break;
 	}
-        case GP_WIDGET_SECTION:
-        case GP_WIDGET_WINDOW: {
+	case GP_WIDGET_SECTION:
+	case GP_WIDGET_WINDOW: {
 		int i, nrofchildren;
 
 		nrofchildren = gp_widget_count_children (widget);
@@ -1039,8 +1039,8 @@ _get_widget_names (CameraWidget *widget, CameraList *list)
 		}
 		break;
 	}
-        case GP_WIDGET_BUTTON:
-        default:
+	case GP_WIDGET_BUTTON:
+	default:
 		break;
 	}
 
@@ -1108,7 +1108,7 @@ gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		gp_context_error (context, _("This camera does "
 			"not support setting configuration options."));
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->set_config (camera,
@@ -1173,35 +1173,35 @@ gp_camera_set_single_config (Camera *camera, const char *name, CameraWidget *wid
 	gp_widget_get_type (child, &type);
 	ret = GP_OK;
 	switch (type) {
-        case GP_WIDGET_MENU:
-        case GP_WIDGET_RADIO:
-        case GP_WIDGET_TEXT: {
+	case GP_WIDGET_MENU:
+	case GP_WIDGET_RADIO:
+	case GP_WIDGET_TEXT: {
 		char *value;
 
 		gp_widget_get_value (widget, &value);
 		gp_widget_set_value (child, value);
 		break;
 	}
-        case GP_WIDGET_RANGE: {
+	case GP_WIDGET_RANGE: {
 		float value;
 
 		gp_widget_get_value (widget, &value);
 		gp_widget_set_value (child, &value);
-                break;
+		break;
 	}
-        case GP_WIDGET_TOGGLE:
-        case GP_WIDGET_DATE: {
+	case GP_WIDGET_TOGGLE:
+	case GP_WIDGET_DATE: {
 		int value;
 
 		gp_widget_get_value (widget, &value);
 		gp_widget_set_value (child, &value);
-                break;
+		break;
 	}
-        case GP_WIDGET_BUTTON:
-        case GP_WIDGET_SECTION:
-        case GP_WIDGET_WINDOW:
-        default:
-                ret = GP_ERROR_BAD_PARAMETERS;
+	case GP_WIDGET_BUTTON:
+	case GP_WIDGET_SECTION:
+	case GP_WIDGET_WINDOW:
+	default:
+		ret = GP_ERROR_BAD_PARAMETERS;
 		break;
 	}
 	gp_widget_set_changed (child, 1);
@@ -1237,7 +1237,7 @@ gp_camera_get_summary (Camera *camera, CameraText *summary, GPContext *context)
 		gp_context_error (context, _("This camera does "
 				  "not support summaries."));
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->summary (camera,
@@ -1268,7 +1268,7 @@ gp_camera_get_manual (Camera *camera, CameraText *manual, GPContext *context)
 		gp_context_error (context, _("This camera "
 			"does not provide a manual."));
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->manual (camera,
@@ -1300,7 +1300,7 @@ gp_camera_get_about (Camera *camera, CameraText *about, GPContext *context)
 		gp_context_error (context, _("This camera does "
 			"not provide information about the driver."));
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->about (camera,
@@ -1333,7 +1333,7 @@ gp_camera_capture (Camera *camera, CameraCaptureType type,
 	if (!camera->functions->capture) {
 		gp_context_error (context, _("This camera can not capture."));
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->capture (camera,
@@ -1363,7 +1363,7 @@ gp_camera_trigger_capture (Camera *camera, GPContext *context)
 	if (!camera->functions->trigger_capture) {
 		gp_context_error (context, _("This camera can not trigger capture."));
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->trigger_capture (camera,
 						context), context);
@@ -1397,7 +1397,7 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		gp_context_error (context, _("This camera can "
 			"not capture previews."));
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->capture_preview (
@@ -1436,7 +1436,7 @@ gp_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
  */
 int
 gp_camera_wait_for_event (Camera *camera, int timeout,
-		          CameraEventType *eventtype, void **eventdata,
+			  CameraEventType *eventtype, void **eventdata,
 			  GPContext *context)
 {
 	C_PARAMS (camera);
@@ -1444,7 +1444,7 @@ gp_camera_wait_for_event (Camera *camera, int timeout,
 
 	if (!camera->functions->wait_for_event) {
 		CAMERA_UNUSED (camera, context);
-                return (GP_ERROR_NOT_SUPPORTED);
+		return (GP_ERROR_NOT_SUPPORTED);
 	}
 	CHECK_RESULT_OPEN_CLOSE (camera, camera->functions->wait_for_event (
 					camera, timeout, eventtype, eventdata,
@@ -1478,7 +1478,7 @@ gp_camera_folder_list_files (Camera *camera, const char *folder,
 
 	CR (camera, gp_list_sort (list), context);
 	CAMERA_UNUSED (camera, context);
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /**
@@ -1506,7 +1506,7 @@ gp_camera_folder_list_folders (Camera *camera, const char* folder,
 
 	CR (camera, gp_list_sort (list), context);
 	CAMERA_UNUSED (camera, context);
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /**

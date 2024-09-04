@@ -45,7 +45,7 @@ camera_eosviewfinder(Camera *camera, GPContext *context, int onoff) {
 		goto out;
 	}
 	switch (type) {
-        case GP_WIDGET_TOGGLE:
+	case GP_WIDGET_TOGGLE:
 		break;
 	default:
 		fprintf (stderr, "widget has bad type %d\n", type);
@@ -99,7 +99,7 @@ camera_auto_focus(Camera *camera, GPContext *context, int onoff) {
 		goto out;
 	}
 	switch (type) {
-        case GP_WIDGET_TOGGLE:
+	case GP_WIDGET_TOGGLE:
 		break;
 	default:
 		fprintf (stderr, "widget has bad type %d\n", type);
@@ -161,7 +161,7 @@ camera_manual_focus (Camera *camera, int xx, GPContext *context) {
 		goto out;
 	}
 	switch (type) {
-        case GP_WIDGET_RADIO: {
+	case GP_WIDGET_RADIO: {
 		int choices = gp_widget_count_choices (child);
 
 		ret = gp_widget_get_value (child, &mval);
@@ -184,7 +184,7 @@ camera_manual_focus (Camera *camera, int xx, GPContext *context) {
 		}
 		break;
 	}
-        case GP_WIDGET_RANGE:
+	case GP_WIDGET_RANGE:
 		ret = gp_widget_get_value (child, &rval);
 		if (ret < GP_OK) {
 			fprintf (stderr, "could not get widget value: %d\n", ret);

@@ -62,9 +62,9 @@ get_config_value_string (Camera *camera, const char *key, char **str, GPContext 
 		goto out;
 	}
 	switch (type) {
-        case GP_WIDGET_MENU:
-        case GP_WIDGET_RADIO:
-        case GP_WIDGET_TEXT:
+	case GP_WIDGET_MENU:
+	case GP_WIDGET_RADIO:
+	case GP_WIDGET_TEXT:
 		break;
 	default:
 		fprintf (stderr, "widget has bad type %d\n", type);
@@ -121,9 +121,9 @@ set_config_value_string (Camera *camera, const char *key, const char *val, GPCon
 		goto out;
 	}
 	switch (type) {
-        case GP_WIDGET_MENU:
-        case GP_WIDGET_RADIO:
-        case GP_WIDGET_TEXT:
+	case GP_WIDGET_MENU:
+	case GP_WIDGET_RADIO:
+	case GP_WIDGET_TEXT:
 		break;
 	default:
 		fprintf (stderr, "widget has bad type %d\n", type);
@@ -178,7 +178,7 @@ canon_enable_capture (Camera *camera, int onoff, GPContext *context) {
 		goto out;
 	}
 	switch (type) {
-        case GP_WIDGET_TOGGLE:
+	case GP_WIDGET_TOGGLE:
 		break;
 	default:
 		fprintf (stderr, "widget has bad type %d\n", type);

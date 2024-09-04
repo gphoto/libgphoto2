@@ -405,8 +405,8 @@ int gp_camera_trigger_capture 	 (Camera *camera, GPContext *context);
 int gp_camera_capture_preview 	 (Camera *camera, CameraFile *file,
 				  GPContext *context);
 int gp_camera_wait_for_event     (Camera *camera, int timeout,
-		                  CameraEventType *eventtype, void **eventdata,
-			          GPContext *context);
+				  CameraEventType *eventtype, void **eventdata,
+				  GPContext *context);
 
 int gp_camera_get_storageinfo    (Camera *camera, CameraStorageInformation**,
 				   int *, GPContext *context);
@@ -437,20 +437,20 @@ int gp_camera_folder_remove_dir   (Camera *camera, const char *folder,
 /** \name Operations on files
  * @{
  */
-int gp_camera_file_get_info 	(Camera *camera, const char *folder,
+int gp_camera_file_get_info	(Camera *camera, const char *folder,
 				 const char *file, CameraFileInfo *info,
 				 GPContext *context);
-int gp_camera_file_set_info 	(Camera *camera, const char *folder,
+int gp_camera_file_set_info	(Camera *camera, const char *folder,
 				 const char *file, CameraFileInfo info,
 				 GPContext *context);
 int gp_camera_file_get		(Camera *camera, const char *folder,
 				 const char *file, CameraFileType type,
 				 CameraFile *camera_file, GPContext *context);
 int gp_camera_file_read		(Camera *camera, const char *folder, const char *file,
-		    		 CameraFileType type,
-		    		 uint64_t offset, char *buf, uint64_t *size,
-		    		 GPContext *context);
-int gp_camera_file_delete     	(Camera *camera, const char *folder,
+				 CameraFileType type,
+				 uint64_t offset, char *buf, uint64_t *size,
+				 GPContext *context);
+int gp_camera_file_delete	(Camera *camera, const char *folder,
 				 const char *file, GPContext *context);
 /**@}*/
 
@@ -468,9 +468,9 @@ typedef unsigned int (* CameraTimeoutStartFunc) (Camera *camera,
 typedef void         (* CameraTimeoutStopFunc)  (Camera *camera,
 						 unsigned int id, void *data);
 void         gp_camera_set_timeout_funcs (Camera *camera,
-				          CameraTimeoutStartFunc start_func,
-				          CameraTimeoutStopFunc  stop_func,
-				          void *data);
+					  CameraTimeoutStartFunc start_func,
+					  CameraTimeoutStopFunc  stop_func,
+					  void *data);
 int          gp_camera_start_timeout     (Camera *camera, unsigned int timeout,
 					  CameraTimeoutFunc func);
 void         gp_camera_stop_timeout      (Camera *camera, unsigned int id);

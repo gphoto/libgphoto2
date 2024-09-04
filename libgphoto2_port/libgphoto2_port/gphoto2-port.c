@@ -84,7 +84,7 @@ gp_port_new (GPPort **port)
 {
 	C_PARAMS (port);
 
-        GP_LOG_D ("Creating new device...");
+	GP_LOG_D ("Creating new device...");
 
 	C_MEM (*port = calloc (1, sizeof (GPPort)));
 
@@ -94,7 +94,7 @@ gp_port_new (GPPort **port)
 		return (GP_ERROR_NO_MEMORY);
 	}
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static int
@@ -301,7 +301,7 @@ gp_port_close (GPPort *port)
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "close", port->pc->ops->close);
-        CHECK_RESULT (port->pc->ops->close(port));
+	CHECK_RESULT (port->pc->ops->close(port));
 
 	return (GP_OK);
 }
@@ -323,7 +323,7 @@ gp_port_reset (GPPort *port)
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "reset", port->pc->ops->reset);
-        CHECK_RESULT (port->pc->ops->reset(port));
+	CHECK_RESULT (port->pc->ops->reset(port));
 
 	return (GP_OK);
 }
@@ -372,9 +372,9 @@ gp_port_free (GPPort *port)
 		port->pc = NULL;
 	}
 
-        free (port);
+	free (port);
 
-        return GP_OK;
+	return GP_OK;
 }
 
 /**
@@ -394,9 +394,9 @@ gp_port_write (GPPort *port, const char *data, int size)
 {
 	int retval;
 
-        gp_log (GP_LOG_DATA, __func__, "Writing %i = 0x%x bytes to port...", size, size);
+	gp_log (GP_LOG_DATA, __func__, "Writing %i = 0x%x bytes to port...", size, size);
 
- 	C_PARAMS (port && data);
+	C_PARAMS (port && data);
 	CHECK_INIT (port);
 
 	/* Check if we wrote all bytes */
@@ -427,7 +427,7 @@ gp_port_write (GPPort *port, const char *data, int size)
 int
 gp_port_read (GPPort *port, char *data, int size)
 {
-        int retval;
+	int retval;
 
 	gp_log (GP_LOG_DATA, __func__, "Reading %i = 0x%x bytes from port...", size, size);
 
@@ -463,7 +463,7 @@ gp_port_read (GPPort *port, char *data, int size)
 int
 gp_port_check_int (GPPort *port, char *data, int size)
 {
-        int retval;
+	int retval;
 
 	gp_log (GP_LOG_DATA, __func__, "Reading %i = 0x%x bytes from interrupt endpoint...", size, size);
 
@@ -496,9 +496,9 @@ gp_port_check_int (GPPort *port, char *data, int size)
 int
 gp_port_check_int_fast (GPPort *port, char *data, int size)
 {
-        int retval;
+	int retval;
 
-        gp_log (GP_LOG_DATA, __func__, "Reading %i = 0x%x bytes from interrupt endpoint...", size, size);
+	gp_log (GP_LOG_DATA, __func__, "Reading %i = 0x%x bytes from interrupt endpoint...", size, size);
 
 	C_PARAMS (port);
 	CHECK_INIT (port);
@@ -536,10 +536,10 @@ gp_port_set_timeout (GPPort *port, int timeout)
 {
 	C_PARAMS (port);
 
-        GP_LOG_D ("Setting port timeout to %i milliseconds.", timeout);
-        port->timeout = timeout;
+	GP_LOG_D ("Setting port timeout to %i milliseconds.", timeout);
+	port->timeout = timeout;
 
-        return GP_OK;
+	return GP_OK;
 }
 
 /** Deprecated */
@@ -571,9 +571,9 @@ gp_port_get_timeout (GPPort *port, int *timeout)
 	C_PARAMS (port);
 
 	GP_LOG_D ("Current port timeout is %i milliseconds.", port->timeout);
-        *timeout = port->timeout;
+	*timeout = port->timeout;
 
-        return GP_OK;
+	return GP_OK;
 }
 
 /**
@@ -595,16 +595,16 @@ gp_port_set_settings (GPPort *port, GPPortSettings settings)
 	C_PARAMS (port);
 	CHECK_INIT (port);
 
-        /*
+	/*
 	 * We copy the settings to settings_pending and call update on the
 	 * port.
 	 */
-        memcpy (&port->settings_pending, &settings,
+	memcpy (&port->settings_pending, &settings,
 		sizeof (port->settings_pending));
 	CHECK_SUPP (port, "update", port->pc->ops->update);
-        CHECK_RESULT (port->pc->ops->update (port));
+	CHECK_RESULT (port->pc->ops->update (port));
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /** Deprecated */
@@ -634,9 +634,9 @@ gp_port_get_settings (GPPort *port, GPPortSettings *settings)
 {
 	C_PARAMS (port);
 
-        memcpy (settings, &(port->settings), sizeof (gp_port_settings));
+	memcpy (settings, &(port->settings), sizeof (gp_port_settings));
 
-        return GP_OK;
+	return GP_OK;
 }
 
 /**
@@ -657,7 +657,7 @@ gp_port_get_pin (GPPort *port, GPPin pin, GPLevel *level)
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "get_pin", port->pc->ops->get_pin);
-        CHECK_RESULT (port->pc->ops->get_pin (port, pin, level));
+	CHECK_RESULT (port->pc->ops->get_pin (port, pin, level));
 
 	GP_LOG_D ("Level of pin %i: %i", pin, *level);
 
@@ -742,8 +742,8 @@ gp_port_send_break (GPPort *port, int duration)
 	C_PARAMS (port);
 	CHECK_INIT (port);
 
-        CHECK_SUPP (port, "send_break", port->pc->ops->send_break);
-        CHECK_RESULT (port->pc->ops->send_break (port, duration));
+	CHECK_SUPP (port, "send_break", port->pc->ops->send_break);
+	CHECK_RESULT (port->pc->ops->send_break (port, duration));
 
 	return (GP_OK);
 }
@@ -769,7 +769,7 @@ gp_port_flush (GPPort *port, int direction)
 	CHECK_SUPP (port, "flush", port->pc->ops->flush);
 	CHECK_RESULT (port->pc->ops->flush (port, direction));
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 
@@ -796,7 +796,7 @@ gp_port_usb_find_device (GPPort *port, int idvendor, int idproduct)
 	CHECK_SUPP (port, "find_device", port->pc->ops->find_device);
 	CHECK_RESULT (port->pc->ops->find_device (port, idvendor, idproduct));
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /**
@@ -820,7 +820,7 @@ gp_port_usb_find_device_by_class (GPPort *port, int mainclass, int subclass, int
 	CHECK_SUPP (port, "find_device_by_class", port->pc->ops->find_device_by_class);
 	CHECK_RESULT (port->pc->ops->find_device_by_class (port, mainclass, subclass, protocol));
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /**
@@ -842,9 +842,9 @@ gp_port_usb_clear_halt (GPPort *port, int ep)
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "clear_halt", port->pc->ops->clear_halt);
-        CHECK_RESULT (port->pc->ops->clear_halt (port, ep));
+	CHECK_RESULT (port->pc->ops->clear_halt (port, ep));
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /**
@@ -865,7 +865,7 @@ int
 gp_port_usb_msg_write (GPPort *port, int request, int value, int index,
 	char *bytes, int size)
 {
-        int retval;
+	int retval;
 
 	GP_LOG_DATA (bytes, size, "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x):",
 		     request, value, index, size, size);
@@ -874,10 +874,10 @@ gp_port_usb_msg_write (GPPort *port, int request, int value, int index,
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_write", port->pc->ops->msg_write);
-        retval = port->pc->ops->msg_write(port, request, value, index, bytes, size);
+	retval = port->pc->ops->msg_write(port, request, value, index, bytes, size);
 	CHECK_RESULT (retval);
 
-        return (retval);
+	return (retval);
 }
 
 /**
@@ -898,7 +898,7 @@ int
 gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
 	char *bytes, int size)
 {
-        int retval;
+	int retval;
 
 	gp_log (GP_LOG_DATA, __func__, "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
 		request, value, index, size, size);
@@ -907,13 +907,13 @@ gp_port_usb_msg_read (GPPort *port, int request, int value, int index,
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_read", port->pc->ops->msg_read);
-        retval = port->pc->ops->msg_read (port, request, value, index, bytes, size);
+	retval = port->pc->ops->msg_read (port, request, value, index, bytes, size);
 	CHECK_RESULT (retval);
 
 	LOG_DATA (bytes, retval, size, "Read", "USB message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)",
 		  request, value, index, size, size);
 
-        return (retval);
+	return (retval);
 }
 
 /*
@@ -938,7 +938,7 @@ int
 gp_port_usb_msg_interface_write (GPPort *port, int request,
 	int value, int index, char *bytes, int size)
 {
-        int retval;
+	int retval;
 
 	GP_LOG_DATA (bytes, size, "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
 		     request, value, index, size, size);
@@ -947,11 +947,11 @@ gp_port_usb_msg_interface_write (GPPort *port, int request,
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_build", port->pc->ops->msg_interface_write);
-        retval = port->pc->ops->msg_interface_write(port, request,
-        		value, index, bytes, size);
+	retval = port->pc->ops->msg_interface_write(port, request,
+			value, index, bytes, size);
 	CHECK_RESULT (retval);
 
-        return (retval);
+	return (retval);
 }
 
 
@@ -973,7 +973,7 @@ int
 gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
 	char *bytes, int size)
 {
-        int retval;
+	int retval;
 
 	gp_log (GP_LOG_DATA, __func__, "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
 		request, value, index, size, size);
@@ -982,14 +982,14 @@ gp_port_usb_msg_interface_read (GPPort *port, int request, int value, int index,
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_read", port->pc->ops->msg_interface_read);
-        retval = port->pc->ops->msg_interface_read (port, request,
-        		value, index, bytes, size);
+	retval = port->pc->ops->msg_interface_read (port, request,
+			value, index, bytes, size);
 	CHECK_RESULT (retval);
 
 	LOG_DATA (bytes, retval, size, "Read", "USB message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)",
 		  request, value, index, size, size);
 
-        return (retval);
+	return (retval);
 }
 
 
@@ -1016,7 +1016,7 @@ int
 gp_port_usb_msg_class_write (GPPort *port, int request,
 	int value, int index, char *bytes, int size)
 {
-        int retval;
+	int retval;
 
 	GP_LOG_DATA (bytes, size, "Writing message (request=0x%x value=0x%x index=0x%x size=%i=0x%x):",
 		     request, value, index, size, size);
@@ -1025,11 +1025,11 @@ gp_port_usb_msg_class_write (GPPort *port, int request,
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_build", port->pc->ops->msg_class_write);
-        retval = port->pc->ops->msg_class_write(port, request,
-        		value, index, bytes, size);
+	retval = port->pc->ops->msg_class_write(port, request,
+			value, index, bytes, size);
 	CHECK_RESULT (retval);
 
-        return (retval);
+	return (retval);
 }
 
 
@@ -1051,7 +1051,7 @@ int
 gp_port_usb_msg_class_read (GPPort *port, int request, int value, int index,
 	char *bytes, int size)
 {
-        int retval;
+	int retval;
 
 	gp_log (GP_LOG_DATA, __func__, "Reading message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)...",
 		request, value, index, size, size);
@@ -1060,14 +1060,14 @@ gp_port_usb_msg_class_read (GPPort *port, int request, int value, int index,
 	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "msg_read", port->pc->ops->msg_class_read);
-        retval = port->pc->ops->msg_class_read (port, request,
-        		value, index, bytes, size);
+	retval = port->pc->ops->msg_class_read (port, request,
+			value, index, bytes, size);
 	CHECK_RESULT (retval);
 
 	LOG_DATA (bytes, retval, size, "Read", "USB message (request=0x%x value=0x%x index=0x%x size=%i=0x%x)",
 		  request, value, index, size, size);
 
-        return (retval);
+	return (retval);
 }
 
 /**

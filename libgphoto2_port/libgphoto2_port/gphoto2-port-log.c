@@ -72,7 +72,7 @@ gpi_vsnprintf (const char* format, va_list args)
  * Use gp_log_add_func() and gp_log_remove_func() to access it.
  */
 typedef struct {
-	int id;			/**< Internal id */
+	int          id;	/**< Internal id */
 	GPLogLevel   level;	/**< Internal loglevel */
 	GPLogFunc    func;	/**< Internal function pointer to call */
 	void        *data;	/**< Private data supplied by caller */
@@ -177,17 +177,17 @@ gp_log_remove_func (int id)
  * HEXDUMP_BLOCK_DISTANCE and/or HEXDUMP_OFFSET_WIDTH.
  */
 #define HEXDUMP_COMPLETE_LINE {\
-        curline[HEXDUMP_OFFSET_WIDTH - 4] = hexchars[(index >> 12) & 0xf]; \
-        curline[HEXDUMP_OFFSET_WIDTH - 3] = hexchars[(index >>  8) & 0xf]; \
-        curline[HEXDUMP_OFFSET_WIDTH - 2] = hexchars[(index >>  4) & 0xf]; \
-        curline[HEXDUMP_OFFSET_WIDTH - 1] = '0'; \
-        curline[HEXDUMP_OFFSET_WIDTH + 0] = ' '; \
-        curline[HEXDUMP_OFFSET_WIDTH + 1] = ' '; \
-        curline[HEXDUMP_MIDDLE] = '-'; \
-        curline[HEXDUMP_INIT_Y-2] = ' '; \
-        curline[HEXDUMP_INIT_Y-1] = ' '; \
-        curline[HEXDUMP_LINE_WIDTH] = '\n'; \
-        curline = curline + (HEXDUMP_LINE_WIDTH + 1);}
+	curline[HEXDUMP_OFFSET_WIDTH - 4] = hexchars[(index >> 12) & 0xf]; \
+	curline[HEXDUMP_OFFSET_WIDTH - 3] = hexchars[(index >>  8) & 0xf]; \
+	curline[HEXDUMP_OFFSET_WIDTH - 2] = hexchars[(index >>  4) & 0xf]; \
+	curline[HEXDUMP_OFFSET_WIDTH - 1] = '0'; \
+	curline[HEXDUMP_OFFSET_WIDTH + 0] = ' '; \
+	curline[HEXDUMP_OFFSET_WIDTH + 1] = ' '; \
+	curline[HEXDUMP_MIDDLE] = '-'; \
+	curline[HEXDUMP_INIT_Y-2] = ' '; \
+	curline[HEXDUMP_INIT_Y-1] = ' '; \
+	curline[HEXDUMP_LINE_WIDTH] = '\n'; \
+	curline = curline + (HEXDUMP_LINE_WIDTH + 1);}
 
 /**
  * \brief Log data
@@ -244,35 +244,35 @@ gp_log_data (const char *domain, const char *data, unsigned int size, const char
 	}
 
 	for (index = 0; index < size; ++index) {
-                value = (unsigned char)data[index];
-                curline[x] = hexchars[value >> 4];
-                curline[x+1] = hexchars[value & 0xf];
-                curline[x+2] = ' ';
-                curline[y++] = ((value>=32)&&(value<127))?value:'.';
-                x += 3;
-                if ((index & 0xf) == 0xf) { /* end of line */
-                        x = HEXDUMP_INIT_X;
-                        y = HEXDUMP_INIT_Y;
-                        HEXDUMP_COMPLETE_LINE;
-                }
-        }
-        if ((index & 0xf) != 0) { /* not at end of line yet? */
-                /* if so, complete this line */
-                while (y < HEXDUMP_INIT_Y + 16) {
-                        curline[x+0] = ' ';
-                        curline[x+1] = ' ';
-                        curline[x+2] = ' ';
-                        curline[y++] = ' ';
-                        x += 3;
-                }
-                HEXDUMP_COMPLETE_LINE;
-        }
-        curline[0] = '\0';
+		value = (unsigned char)data[index];
+		curline[x] = hexchars[value >> 4];
+		curline[x+1] = hexchars[value & 0xf];
+		curline[x+2] = ' ';
+		curline[y++] = ((value>=32)&&(value<127))?value:'.';
+		x += 3;
+		if ((index & 0xf) == 0xf) { /* end of line */
+			x = HEXDUMP_INIT_X;
+			y = HEXDUMP_INIT_Y;
+			HEXDUMP_COMPLETE_LINE;
+		}
+	}
+	if ((index & 0xf) != 0) { /* not at end of line yet? */
+		/* if so, complete this line */
+		while (y < HEXDUMP_INIT_Y + 16) {
+			curline[x+0] = ' ';
+			curline[x+1] = ' ';
+			curline[x+2] = ' ';
+			curline[y++] = ' ';
+			x += 3;
+		}
+		HEXDUMP_COMPLETE_LINE;
+	}
+	curline[0] = '\0';
 
-        if (size == original_size)
-                gp_log (GP_LOG_DATA, domain, "%s (hexdump of %d bytes)\n%s", msg, size, result);
-        else
-                gp_log (GP_LOG_DATA, domain, "%s (hexdump of the first %d of %d bytes)\n%s", msg, size, original_size, result);
+	if (size == original_size)
+		gp_log (GP_LOG_DATA, domain, "%s (hexdump of %d bytes)\n%s", msg, size, result);
+	else
+		gp_log (GP_LOG_DATA, domain, "%s (hexdump of the first %d of %d bytes)\n%s", msg, size, original_size, result);
 
 exit:
 	free (msg);

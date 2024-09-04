@@ -29,9 +29,9 @@
 
 
 int gp_bayer_expand (unsigned char *input, int w, int h, unsigned char *output,
-                     BayerTile tile);
+	BayerTile tile);
 int gp_bayer_decode (unsigned char *input, int w, int h, unsigned char *output,
-		     BayerTile tile);
+	BayerTile tile);
 int gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile);
 /*
  * The following two functions use an alternative procedure called Adaptive
@@ -43,7 +43,7 @@ int gp_bayer_interpolate (unsigned char *image, int w, int h, BayerTile tile);
  */
 
 int gp_ahd_decode (unsigned char *input, int w, int h, unsigned char *output,
-		     BayerTile tile);
+	BayerTile tile);
 int gp_ahd_interpolate (unsigned char *image, int w, int h, BayerTile tile);
 
 #endif /* !defined(LIBGPHOTO2_BAYER_H) */

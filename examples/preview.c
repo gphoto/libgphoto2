@@ -21,9 +21,9 @@
 
 #include "samples.h"
 
-static void errordumper(GPLogLevel level, const char *domain, const char *str,
-                 void *data) {
-  printf("%s (data %p)\n", str,data);
+static void errordumper(GPLogLevel level, const char *domain, const char *str, void *data)
+{
+	printf("%s (data %p)\n", str,data);
 }
 
 /* This seems to have no effect on where images go
@@ -186,7 +186,7 @@ main(int argc, char **argv) {
 		gp_file_unref(file);
 	/*
 		sprintf(output_file, "image-%03d.jpg", i);
-	        capture_to_file(canon, canoncontext, output_file);
+		capture_to_file(canon, canoncontext, output_file);
 	*/
 	}
 	retval = camera_eosviewfinder(canon,canoncontext,0);

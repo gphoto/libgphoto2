@@ -24,23 +24,23 @@
 static int aperture;
 static float shutterspeed;
 
-static void errordumper(GPLogLevel level, const char *domain, const char *str,
-                 void *data) {
-  fprintf(stdout, "%s\n", str);
+static void errordumper(GPLogLevel level, const char *domain, const char *str, void *data)
+{
+	fprintf(stdout, "%s\n", str);
 }
 
 static void
 ctx_error_func (GPContext *context, const char *str, void *data)
 {
-        fprintf  (stderr, "\n*** Contexterror ***              \n%s\n",str);
-        fflush   (stderr);
+	fprintf  (stderr, "\n*** Contexterror ***              \n%s\n",str);
+	fflush   (stderr);
 }
 
 static void
 ctx_status_func (GPContext *context, const char *str, void *data)
 {
-        fprintf  (stderr, "%s\n", str);
-        fflush   (stderr);
+	fprintf  (stderr, "%s\n", str);
+	fflush   (stderr);
 }
 
 static
@@ -51,16 +51,16 @@ GPContext* sample_create_context() {
 	context = gp_context_new();
 
 	/* All the parts below are optional! */
-        gp_context_set_error_func (context, ctx_error_func, NULL);
-        gp_context_set_status_func (context, ctx_status_func, NULL);
+	gp_context_set_error_func (context, ctx_error_func, NULL);
+	gp_context_set_status_func (context, ctx_status_func, NULL);
 
 	/* also:
 	gp_context_set_cancel_func    (p->context, ctx_cancel_func,  p);
-        gp_context_set_message_func   (p->context, ctx_message_func, p);
-        if (isatty (STDOUT_FILENO))
-                gp_context_set_progress_funcs (p->context,
-                        ctx_progress_start_func, ctx_progress_update_func,
-                        ctx_progress_stop_func, p);
+	gp_context_set_message_func   (p->context, ctx_message_func, p);
+	if (isatty (STDOUT_FILENO))
+		gp_context_set_progress_funcs (p->context,
+			ctx_progress_start_func, ctx_progress_update_func,
+			ctx_progress_stop_func, p);
 	 */
 	return context;
 }
@@ -115,9 +115,9 @@ get_config_value_string (Camera *camera, const char *key, char **str, GPContext 
 		goto out;
 	}
 	switch (type) {
-        case GP_WIDGET_MENU:
-        case GP_WIDGET_RADIO:
-        case GP_WIDGET_TEXT:
+	case GP_WIDGET_MENU:
+	case GP_WIDGET_RADIO:
+	case GP_WIDGET_TEXT:
 		break;
 	default:
 		fprintf (stderr, "widget has bad type %d\n", type);
@@ -174,9 +174,9 @@ set_config_value_string (Camera *camera, const char *key, const char *val, GPCon
 		goto out;
 	}
 	switch (type) {
-        case GP_WIDGET_MENU:
-        case GP_WIDGET_RADIO:
-        case GP_WIDGET_TEXT:
+	case GP_WIDGET_MENU:
+	case GP_WIDGET_RADIO:
+	case GP_WIDGET_TEXT:
 		/* This is the actual set call. Note that we keep
 		 * ownership of the string and have to free it if necessary.
 		 */
@@ -186,7 +186,7 @@ set_config_value_string (Camera *camera, const char *key, const char *val, GPCon
 			goto out;
 		}
 		break;
-        case GP_WIDGET_TOGGLE: {
+	case GP_WIDGET_TOGGLE: {
 		int ival;
 
 		sscanf(val,"%d",&ival);
@@ -321,9 +321,9 @@ main(int argc, char **argv) {
 	int	retval, iso, tries;
 	char	buf[20];
 	GPContext *context = sample_create_context();
-        /*int	fd;*/
-        CameraFile *file;
-        /*CameraFilePath camera_file_path;*/
+	/*int	fd;*/
+	CameraFile *file;
+	/*CameraFilePath camera_file_path;*/
 
 	gp_log_add_func(GP_LOG_ERROR, errordumper, NULL);
 	gp_camera_new(&camera);
@@ -404,31 +404,31 @@ main(int argc, char **argv) {
 
 #if 0
 
-        printf("Capturing.\n");
+	printf("Capturing.\n");
 
-        retval = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
-        if (retval != GP_OK) {
+	retval = gp_camera_capture(camera, GP_CAPTURE_IMAGE, &camera_file_path, context);
+	if (retval != GP_OK) {
 		printf("  capture failed: %d\n", retval);
 		exit(1);
 	}
 
-        printf("Pathname on the camera: %s/%s\n", camera_file_path.folder, camera_file_path.name);
+	printf("Pathname on the camera: %s/%s\n", camera_file_path.folder, camera_file_path.name);
 
-        fd = open("capture.jpg", O_CREAT | O_WRONLY | O_BINARY, 0644);
+	fd = open("capture.jpg", O_CREAT | O_WRONLY | O_BINARY, 0644);
 
-        retval = gp_file_new_from_fd(&file, fd);
-        if (retval != GP_OK) printf("  gp_file_new failed: %d\n", retval);
+	retval = gp_file_new_from_fd(&file, fd);
+	if (retval != GP_OK) printf("  gp_file_new failed: %d\n", retval);
 
-        retval = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name,
-                     GP_FILE_TYPE_NORMAL, file, context);
-        if (retval != GP_OK) printf("  file_get failed: %d\n", retval);
+	retval = gp_camera_file_get(camera, camera_file_path.folder, camera_file_path.name,
+		     GP_FILE_TYPE_NORMAL, file, context);
+	if (retval != GP_OK) printf("  file_get failed: %d\n", retval);
 
-        printf("Deleting downloaded image.\n");
-        retval = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name,
-                        context);
-        if (retval != GP_OK) printf("  Retval: %d\n", retval);
+	printf("Deleting downloaded image.\n");
+	retval = gp_camera_file_delete(camera, camera_file_path.folder, camera_file_path.name,
+			context);
+	if (retval != GP_OK) printf("  Retval: %d\n", retval);
 
-        gp_file_free(file);
+	gp_file_free(file);
 
 #endif
 #if 1
