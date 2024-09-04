@@ -2474,6 +2474,7 @@ static struct deviceproptableu16 canon_shutterspeed[] = {
 	{ "1/6000",	0x009c,0 },
 	{ "1/6400",	0x009d,0 },
 	{ "1/8000",	0x00a0,0 },
+	{ "1/16000",	0x00a8,0 },
 };
 GENERIC16TABLE(Canon_ShutterSpeed,canon_shutterspeed)
 
@@ -2567,6 +2568,10 @@ static struct deviceproptableu32 canon_eos_afmethod[] = {
 	{ N_("LiveZoneLargeV"),		8, 0 },
 	{ N_("LiveCatchAF"),		9, 0 },
 	{ N_("LiveSpotAF"),		10, 0 },
+	{ N_("FlexibleZoneAF1"),	11, 0 },
+	{ N_("FlexibleZoneAF2"),	12, 0 },
+	{ N_("FlexibleZoneAF3"),	13, 0 },
+	{ N_("WholeAreaAF"),		14, 0 },
 };
 GENERIC32TABLE(Canon_EOS_AFMethod,canon_eos_afmethod)
 
