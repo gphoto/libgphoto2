@@ -762,15 +762,15 @@ END
 Label: AF Method
 Readonly: 0
 Type: RADIO
-Current: Unknown value 000e
+Current: WholeAreaAF
 Choice: 0 LiveSpotAF
 Choice: 1 Live
 Choice: 2 LiveSingleExpandCross
 Choice: 3 LiveSingleExpandSurround
-Choice: 4 Unknown value 000b
-Choice: 5 Unknown value 000c
-Choice: 6 Unknown value 000d
-Choice: 7 Unknown value 000e
+Choice: 4 FlexibleZoneAF1
+Choice: 5 FlexibleZoneAF2
+Choice: 6 FlexibleZoneAF3
+Choice: 7 WholeAreaAF
 END
 /main/capturesettings/storageid
 Label: Storage Device
