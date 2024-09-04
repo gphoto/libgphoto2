@@ -56,12 +56,12 @@ typedef struct
 
 static uw32_t uw_value(unsigned int value) /* Convert from host-integer to uw32_t */
 {
-   uw32_t ret;
-   ret.c1 = (value       & 0x000000ffUL);
-   ret.c2 = (value >> 8  & 0x000000ffUL);
-   ret.c3 = (value >> 16 & 0x000000ffUL);
-   ret.c4 = (value >> 24 & 0x000000ffUL);
-   return ret;
+	uw32_t ret;
+	ret.c1 = (value       & 0x000000ffUL);
+	ret.c2 = (value >> 8  & 0x000000ffUL);
+	ret.c3 = (value >> 16 & 0x000000ffUL);
+	ret.c4 = (value >> 24 & 0x000000ffUL);
+	return ret;
 }
 
 static unsigned char
@@ -89,13 +89,13 @@ cmdbyte (unsigned char nr) {
  * 31 byte length */
 typedef struct
 {
-      uw4c_t magic;		/* The letters U S B C for packets sent to camera */
-      uw32_t tag;		/* The SCSI command tag */
-      uw32_t rw_length;		/* Length of data to be read or written next */
-      unsigned char flags;	/* in / out flag mostly */
-      unsigned char lun;	/* 0 here */
-      unsigned char length;	/* of the CDB... but 0x0c is used here in the traces */
-      unsigned char cdb[16];
+	uw4c_t magic;		/* The letters U S B C for packets sent to camera */
+	uw32_t tag;		/* The SCSI command tag */
+	uw32_t rw_length;		/* Length of data to be read or written next */
+	unsigned char flags;	/* in / out flag mostly */
+	unsigned char lun;	/* 0 here */
+	unsigned char length;	/* of the CDB... but 0x0c is used here in the traces */
+	unsigned char cdb[16];
 } uw_header_t;
 
 /*
@@ -106,20 +106,20 @@ typedef struct
  * linux/include/linux/usb/storage.h, struct bulk_cs_wrap */
 typedef struct
 {
-      uw4c_t magic;	/* The letters U S B S for packets from camera */
-      uw32_t tag;	/* A copy of whatever value the host made up */
-      uw32_t residue;	/* residual read? */
-      char   status;	/* status byte */
+	uw4c_t magic;	/* The letters U S B S for packets from camera */
+	uw32_t tag;	/* A copy of whatever value the host made up */
+	uw32_t residue;	/* residual read? */
+	char   status;	/* status byte */
 } uw_response_t;
 
 
 /* In the SCSI API, the CDB[16] block. */
 typedef struct
 {
-      unsigned char cmd;
-      char   zero1[8];
-      uw32_t length;
-      char   zero2[3];
+	unsigned char cmd;
+	char   zero1[8];
+	uw32_t length;
+	char   zero2[3];
 } uw_scsicmd_t;
 
 #pragma pack()
@@ -399,8 +399,8 @@ olympus_xml_transfer (PTPParams *params,
 	PTPContainer	ptp2;
 	int		res;
 	PTPObjectInfo	oi;
-        unsigned char	*resxml, *oidata = NULL;
-        uint32_t	size, newhandle;
+	unsigned char	*resxml, *oidata = NULL;
+	uint32_t	size, newhandle;
 	uint16_t	ret;
 	PTPParams	*outerparams = params->outer_params;
 
@@ -1198,9 +1198,9 @@ is_outer_operation (PTPParams* params, uint16_t opcode) {
 
 	/* Do nothing here, either do stuff in senddata, getdata or getresp,
 	 * which will get the PTPContainer req too. */
-        for (i=0;i<params->outer_deviceinfo.OperationsSupported_len;i++)
-                if (params->outer_deviceinfo.OperationsSupported[i]==opcode)
-                        return TRUE;
+	for (i=0;i<params->outer_deviceinfo.OperationsSupported_len;i++)
+		if (params->outer_deviceinfo.OperationsSupported[i]==opcode)
+			return TRUE;
 	GP_LOG_D ("is_outer_operation %04x - is WRAPPED", opcode);
 	return FALSE;
 }
@@ -1211,8 +1211,8 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 	PTPContainer	ptp2;
 	int		res;
 	PTPObjectInfo	oi;
-        unsigned char	*resxml, *oidata = NULL;
-        uint32_t	size, newhandle;
+	unsigned char	*resxml, *oidata = NULL;
+	uint32_t	size, newhandle;
 	uint16_t	ret;
 	PTPParams	*outerparams = params->outer_params;
 	char		*evxml;
