@@ -101,8 +101,8 @@ struct _PTPUSBBulkContainer {
 			uint32_t param4;
 			uint32_t param5;
 		} params;
-       /* this must be set to the maximum of PTP_USB_BULK_PAYLOAD_LEN_WRITE
-        * and PTP_USB_BULK_PAYLOAD_LEN_READ */
+		/* this must be set to the maximum of PTP_USB_BULK_PAYLOAD_LEN_WRITE
+		* and PTP_USB_BULK_PAYLOAD_LEN_READ */
 		unsigned char data[PTP_USB_BULK_PAYLOAD_LEN_READ];
 	} payload;
 };
@@ -3969,12 +3969,12 @@ uint16_t ptp_generic_no_data	(PTPParams* params, uint16_t opcode, unsigned int c
 uint16_t ptp_opensession	(PTPParams *params, uint32_t session);
 
 uint16_t ptp_transaction_new (PTPParams* params, PTPContainer* ptp,
-                uint16_t flags, uint64_t sendlen,
-                PTPDataHandler *handler
+		uint16_t flags, uint64_t sendlen,
+		PTPDataHandler *handler
 );
 uint16_t ptp_transaction (PTPParams* params, PTPContainer* ptp,
-                uint16_t flags, uint64_t sendlen,
-                unsigned char **data, unsigned int *recvlen
+		uint16_t flags, uint64_t sendlen,
+		unsigned char **data, unsigned int *recvlen
 );
 
 /**
@@ -4045,7 +4045,7 @@ uint16_t ptp_getpartialobject	(PTPParams* params, uint32_t handle, uint32_t offs
 				uint32_t maxbytes, unsigned char** object,
 				uint32_t *len);
 uint16_t ptp_getpartialobject_to_handler (PTPParams* params, uint32_t handle, uint32_t offset,
-                        	uint32_t maxbytes, PTPDataHandler *handler);
+				uint32_t maxbytes, PTPDataHandler *handler);
 
 uint16_t ptp_getthumb		(PTPParams *params, uint32_t handle,
 				unsigned char** object, unsigned int *len);
@@ -4103,12 +4103,12 @@ uint16_t ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode,
 uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint32_t propcode,
 				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_setdevicepropvalue (PTPParams* params, uint32_t propcode,
-                        	PTPPropertyValue* value, uint16_t datatype);
+				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_generic_setdevicepropvalue (PTPParams* params, uint32_t propcode,
-                        	PTPPropertyValue* value, uint16_t datatype);
+				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
-                        uint32_t objectformatcode, uint32_t associationOH,
-        		uint64_t *numoifs, PTPObjectFilesystemInfo **oifs);
+				uint32_t objectformatcode, uint32_t associationOH,
+				uint64_t *numoifs, PTPObjectFilesystemInfo **oifs);
 uint16_t ptp_getstreaminfo (PTPParams *params, uint32_t streamid, PTPStreamInfo *si);
 uint16_t ptp_getstream (PTPParams* params, unsigned char **data, unsigned int *size);
 
@@ -4436,7 +4436,7 @@ uint16_t ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1, unsigned 
 uint16_t ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t oid, uint32_t off, uint32_t xsize, unsigned char**data);
 uint16_t ptp_canon_eos_getpartialobjectex (PTPParams* params, uint32_t oid, uint32_t off, uint32_t xsize, unsigned char**data);
 uint16_t ptp_canon_eos_getobjectinfoex (PTPParams* params, uint32_t storageid, uint32_t objectid, uint32_t unk,
-        PTPCANONFolderEntry **entries, unsigned int *nrofentries);
+	PTPCANONFolderEntry **entries, unsigned int *nrofentries);
 uint16_t ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsigned int size);
 #define ptp_canon_eos_setremotemode(params,p1) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetRemoteMode,1,p1)
 #define ptp_canon_eos_seteventmode(params,p1) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetEventMode,1,p1)
@@ -4460,7 +4460,7 @@ uint16_t ptp_canon_eos_905f (PTPParams* params, uint32_t);
 uint16_t ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
 uint16_t ptp_canon_eos_setdevicepropvalue (PTPParams* params, uint16_t propcode,
-                        	PTPPropertyValue* value, uint16_t datatype);
+				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
 uint16_t ptp_nikon_curve_download (PTPParams* params,
 				unsigned char **data, unsigned int *size);
@@ -4481,13 +4481,13 @@ uint16_t ptp_sony_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 uint16_t ptp_sony_getalldevicepropdesc (PTPParams* params);
 uint16_t ptp_sony_qx_getalldevicepropdesc (PTPParams* params);
 uint16_t ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
-                        	PTPPropertyValue* value, uint16_t datatype);
+				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_sony_qx_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
-                        	PTPPropertyValue* value, uint16_t datatype);
+				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
-                        	PTPPropertyValue* value, uint16_t datatype);
+				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_sony_qx_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
-                        	PTPPropertyValue* value, uint16_t datatype);
+				PTPPropertyValue* value, uint16_t datatype);
 uint16_t ptp_sony_9280 (PTPParams* params, uint32_t additional, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4, uint8_t x, uint8_t y);
 uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
 /**
@@ -4817,7 +4817,7 @@ const char* ptp_get_event_code_name(PTPParams* params, uint16_t event_code);
 
 int
 ptp_render_property_value(PTPParams* params, uint16_t dpc,
-                          PTPDevicePropDesc *dpd, unsigned int length, char *out);
+				PTPDevicePropDesc *dpd, unsigned int length, char *out);
 int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
 int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
 MTPProperties *ptp_get_new_object_prop_entry(MTPProperties **props, int *nrofprops);
@@ -4858,11 +4858,11 @@ typedef struct tagptp_chdk_videosettings {
 
 /* the following happens to match what is used in CHDK, but is not part of the protocol */
 typedef struct {
-    unsigned size;
-    unsigned script_id; /* id of script message is to/from  */
-    unsigned type;
-    unsigned subtype;
-    char data[];
+	unsigned size;
+	unsigned script_id; /* id of script message is to/from  */
+	unsigned type;
+	unsigned subtype;
+	char data[];
 } ptp_chdk_script_msg;
 
 /*
