@@ -74,16 +74,12 @@ int dimagev_shutter(dimagev_t *dimagev) {
 	if ( gp_port_write(dimagev->dev, (char *)p->buffer, p->length) < GP_OK ) {
 		GP_DEBUG( "dimagev_shutter::unable to write packet");
 
-		if ( p != NULL ) {
-			free(p);
-		}
+		free(p);
 
 		return GP_ERROR_IO;
 	}
 
-	if ( p != NULL ) {
-		free(p);
-	}
+	free(p);
 
 
 	if ( sleep(1) != 0 ) {

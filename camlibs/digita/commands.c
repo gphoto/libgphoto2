@@ -123,8 +123,7 @@ int digita_get_file_list(CameraPrivateLibrary *dev)
 		goto end;
 	}
 
-	if (dev->file_list)
-		free(dev->file_list);
+	free(dev->file_list);
 
 	dev->file_list = malloc(taken * sizeof(struct file_item));
 	if (!dev->file_list) {

@@ -112,10 +112,9 @@ int mdc800_openCamera (Camera *camera)
 
 int mdc800_closeCamera (Camera *camera)
 {
-    if (camera->pl) {
 	free(camera->pl);
 	camera->pl = NULL;
-    }
+
     return GP_OK;
 }
 

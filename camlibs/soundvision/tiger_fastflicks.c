@@ -160,7 +160,7 @@ int tiger_upload_file(CameraPrivateLibrary *dev,
     return GP_OK;
 
 upload_error:
-    if (our_data!=NULL) free(our_data);
+    free(our_data);
     GP_DEBUG("Error in tiger_upload_file");
     return result;
 }
@@ -317,7 +317,7 @@ int tiger_get_file_list(CameraPrivateLibrary *dev) {
        }
 
 
-       if (dev->file_list) free(dev->file_list);
+       free(dev->file_list);
 
        dev->file_list = malloc(taken * 13);
 
@@ -350,7 +350,7 @@ int tiger_get_file_list(CameraPrivateLibrary *dev) {
 
 list_files_error:
 
-    if (buffer!=NULL) free(buffer);
+    free(buffer);
     return ret;
 }
 

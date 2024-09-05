@@ -241,7 +241,7 @@ int main(int argc, char **argv) {
 
 		ret = gp_camera_wait_for_event(camera, 1, &evttype, &data, context);
 		if (ret < GP_OK) break;
-		if (data) free (data);
+		free (data);
 		if (evttype == GP_EVENT_TIMEOUT) break;
 	}
 

@@ -566,9 +566,7 @@ udev_middle_func (const func_params_t *params, void **data)
 static int
 udev_end_func (const func_params_t *params, void *data)
 {
-	if (data != NULL) {
-		free(data);
-	}
+	free(data);
 	printf ("\nLABEL=\"libgphoto2_rules_end\"\n");
 	return 0;
 }

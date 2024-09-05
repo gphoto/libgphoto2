@@ -3291,7 +3291,7 @@ ptp_unpack_ptp11_manifest (
 	return 1;
 tooshort:
 	for (i = 0; i < numberoifs; i++)
-		if (xoifs[i].Filename) free (xoifs[i].Filename);
+		free (xoifs[i].Filename);
 	free (xoifs);
 	return 0;
 }

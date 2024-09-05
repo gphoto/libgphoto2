@@ -254,8 +254,7 @@ exit:
 		fclose (fin);
 	if (fout)
 		fclose (fout);
-	if (buf)
-		free (buf);
+	free (buf);
 	if (im)
 		gdImageDestroy (im);
 	if (im_in)

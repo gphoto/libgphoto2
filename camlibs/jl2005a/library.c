@@ -300,10 +300,9 @@ camera_exit (Camera *camera, GPContext *context)
 	GP_DEBUG ("jl2005a camera_exit");
 	jl2005a_reset(camera, camera->port);
 	gp_port_close(camera->port);
-	if (camera->pl) {
-		free (camera->pl);
-		camera->pl = NULL;
-	}
+	free (camera->pl);
+	camera->pl = NULL;
+
 	return GP_OK;
 }
 

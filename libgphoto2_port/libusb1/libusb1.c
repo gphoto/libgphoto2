@@ -634,8 +634,7 @@ gp_libusb1_close (GPPort *port)
 
 	irq_iter=port->pl->irqs_head;
 	while (irq_iter != NULL) {
-		if (irq_iter->data)
-			free(irq_iter->data);
+		free(irq_iter->data);
 		irq_next = irq_iter->next;
 		free(irq_iter);
 		irq_iter = irq_next;
@@ -867,8 +866,7 @@ handleirq:
 			   (irq_cur->next->status == LIBUSB_TRANSFER_NO_DEVICE)
 		) {
 			port->pl->irqs_head = irq_cur->next;
-			if (irq_cur->data)
-				free(irq_cur->data);
+			free(irq_cur->data);
 			free(irq_cur);
 			irq_cur = port->pl->irqs_head;
 		}
@@ -881,8 +879,7 @@ handleirq:
 			   (irq_cur->next->status != LIBUSB_TRANSFER_NO_DEVICE)
         ) {
 			port->pl->irqs_head = irq_cur->next;
-			if (irq_cur->data)
-				free(irq_cur->data);
+			free(irq_cur->data);
 			free(irq_cur);
 			irq_cur = port->pl->irqs_head;
 		}

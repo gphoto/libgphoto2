@@ -1383,7 +1383,7 @@ ptp_olympus_init_pc_mode (PTPParams* params)
 	//ptp_debug (params,"PTP: (Olympus Init) getting response...");
 	//gp_port_set_timeout (camera->port, timeout);
 	//ret=ptp_transaction(params, &ptp, PTP_DP_RESPONSEONLY, size, &data, NULL);
-	//if(data) free(data);
+	//free(data);
 	return ret;
 }
 

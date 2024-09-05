@@ -290,10 +290,8 @@ camera_exit (Camera *camera, GPContext *context)
 {
 	GP_DEBUG ("Aox camera_exit");
 
-	if (camera->pl) {
-		free (camera->pl);
-		camera->pl = NULL;
-	}
+	free (camera->pl);
+	camera->pl = NULL;
 
 	return GP_OK;
 }

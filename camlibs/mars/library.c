@@ -341,10 +341,9 @@ camera_exit (Camera *camera, GPContext *context)
 	GP_DEBUG ("Mars camera_exit");
 	mars_reset(camera->port);
 	gp_port_close(camera->port);
-	if (camera->pl) {
-		free (camera->pl);
-		camera->pl = NULL;
-	}
+	free (camera->pl);
+	camera->pl = NULL;
+
 	return GP_OK;
 }
 
