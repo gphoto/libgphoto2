@@ -122,7 +122,7 @@ static struct _GPPortExternalSysDevice {
     libusb_device_handle *h;
     libusb_device *d;
     libusb_context *ctx;
-    libusb_device *dl[1]; 
+    libusb_device *dl[1];
 } external_sys_device = { NULL, NULL, NULL, { NULL } };
 
 static int has_external_fd()
@@ -185,8 +185,8 @@ load_devicelist (GPPortPrivateLibrary *pl) {
 
 	time(&xtime);
 #if HAVE_LIBUSB_WRAP_SYS_DEVICE
-    if(!has_external_fd()) /* when external device present no need to research for Android */ 
-#endif        
+    if(!has_external_fd()) /* when external device present no need to research for Android */
+#endif
     {
 	if (xtime != pl->devslastchecked) {
 		if (pl->nrofdevs)
@@ -197,7 +197,7 @@ load_devicelist (GPPortPrivateLibrary *pl) {
 		pl->descs = NULL;
 	}
     }
-    
+
     #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
     if(has_external_fd()) {
         pl->nrofdevs = 1;
@@ -238,7 +238,7 @@ gp_port_library_list (GPPortInfoList *list)
     }
 #else
        C_LIBUSB (libusb_init (&ctx), GP_ERROR_IO);
-#endif       
+#endif
 
 	/* TODO: make sure libusb_exit gets called in all error paths inside this function */
 
@@ -254,8 +254,8 @@ gp_port_library_list (GPPortInfoList *list)
         nrofdevs = 1;
         devs = external_sys_device.dl;
     }
-    else 
-#endif        
+    else
+#endif
     {
 	nrofdevs = libusb_get_device_list (ctx, &devs);
 	if (!nrofdevs) {
@@ -371,8 +371,8 @@ gp_port_library_list (GPPortInfoList *list)
 	}
 
 #ifdef  HAVE_LIBUSB_WRAP_SYS_DEVICE
-    if(!has_external_fd()) 
-#endif        
+    if(!has_external_fd())
+#endif
     {
 	libusb_free_device_list (devs, 1);
 	libusb_exit (ctx); /* should free all stuff above */
@@ -403,8 +403,8 @@ static int gp_libusb1_init (GPPort *port)
     if(has_external_fd()) {
         port->pl->ctx = external_sys_device.ctx;
     }
-    else 
-#endif        
+    else
+#endif
     {
 	if (LOG_ON_LIBUSB_E (libusb_init (&port->pl->ctx))) {
 		free (port->pl);
@@ -432,15 +432,15 @@ gp_libusb1_exit (GPPort *port)
 #endif
         if (port->pl->nrofdevs) {
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
-            if(!has_external_fd()) 
-#endif      
+            if(!has_external_fd())
+#endif
             {
 			libusb_free_device_list (port->pl->devs, 1);
             }
         }
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
-        if(!has_external_fd()) 
-#endif                
+        if(!has_external_fd())
+#endif
         {
 		libusb_exit (port->pl->ctx);
         }
@@ -474,8 +474,8 @@ gp_libusb1_open (GPPort *port)
         port->pl->dh = external_sys_device.h;
         port->pl->d = libusb_get_device(external_sys_device.h);
     }
-    else 
-#endif        
+    else
+#endif
     {
 	C_LIBUSB (libusb_open (port->pl->d, &port->pl->dh), GP_ERROR_IO);
     }
@@ -594,7 +594,7 @@ gp_libusb1_close (GPPort *port)
 
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
     if(gp_port_usb_get_sys_device() == -1) {
-#endif        
+#endif
 	if (libusb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
 		int saved_errno = errno;
@@ -627,7 +627,7 @@ gp_libusb1_close (GPPort *port)
 	libusb_close (port->pl->dh);
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
     }
-#endif        
+#endif
 
 	struct _PrivateIrqCompleted *irq_iter;
 	struct _PrivateIrqCompleted *irq_next;

@@ -10103,7 +10103,7 @@ camera_init (Camera *camera, GPContext *context)
 		/* enable software setting of the mode dial (ignore potential error) */
 		if (ptp_operation_issupported(params, PTP_OC_CANON_SetModeDialDisable)) {
 			ptp_canon_setmodedialdisable(params, 1);
-		}		
+		}
 		break;
 	case PTP_VENDOR_NIKON:
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_CurveDownload))

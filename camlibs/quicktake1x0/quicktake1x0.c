@@ -100,7 +100,7 @@ qt1x0_send_ping(GPPort *port)
 static int
 qt1x0_initialize (Camera *camera)
 {
-	/* "Hello" command, sent at 9600bps, 8n1. At bytes 6-7, the desired serial 
+	/* "Hello" command, sent at 9600bps, 8n1. At bytes 6-7, the desired serial
 	 * speed is indicated. the last byte is a checksum:
 	 * (sum of the preceding bytes)&0xFF
 	 */
