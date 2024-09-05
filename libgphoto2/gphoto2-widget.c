@@ -401,7 +401,7 @@ gp_widget_set_value (CameraWidget *widget, const void *value)
 			free (widget->value_string);
 		} else
 			widget->changed = 1;
-		widget->value_string = strdup ((char*)value);
+		C_MEM (widget->value_string = strdup ((char*)value));
 		return (GP_OK);
 	case GP_WIDGET_RANGE:
 		if (widget->value_float != *((float*)value)) {
@@ -765,7 +765,7 @@ gp_widget_add_choice (CameraWidget *widget, const char *choice)
 		  (widget->type == GP_WIDGET_MENU));
 
 	C_MEM (widget->choice = realloc (widget->choice, sizeof(char*)*(widget->choice_count+1)));
-	widget->choice[widget->choice_count] = strdup(choice);
+	C_MEM (widget->choice[widget->choice_count] = strdup(choice));
 	widget->choice_count += 1;
 	return (GP_OK);
 }
