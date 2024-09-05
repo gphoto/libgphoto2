@@ -117,19 +117,19 @@ chdk_generic_script_run (
 				case PTP_CHDK_TYPE_STRING:
 					GP_LOG_D("string %s", msg->data);
 					if (*table) {
-						*table = realloc(*table,strlen(*table)+strlen(msg->data)+1);
+						C_MEM (*table = realloc(*table,strlen(*table)+strlen(msg->data)+1));
 						strcat(*table,msg->data);
 					} else {
-						*table = strdup(msg->data);
+						C_MEM (*table = strdup(msg->data));
 					}
 					break;
 				case PTP_CHDK_TYPE_TABLE:
 					GP_LOG_D("table %s", msg->data);
 					if (*table) {
-						*table = realloc(*table,strlen(*table)+strlen(msg->data)+1);
+						C_MEM (*table = realloc(*table,strlen(*table)+strlen(msg->data)+1));
 						strcat(*table,msg->data);
 					} else {
-						*table = strdup(msg->data);
+						C_MEM (*table = strdup(msg->data));
 					}
 					break;
 				default: GP_LOG_E("unknown chdk msg->type %d", msg->subtype);break;
@@ -178,7 +178,7 @@ chdk_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	char			*xfolder;
 
 	/* strip leading / of folders, except for the root folder */
-	xfolder=strdup(folder);
+	C_MEM (xfolder=strdup(folder));
 	if (strlen(folder)>2 && (xfolder[strlen(xfolder)-1] == '/'))
 		xfolder[strlen(xfolder)-1] = '\0';
 
@@ -250,7 +250,7 @@ nexttable:
 					name = t+strlen("name=.");
 					s = strchr(name,'"');
 					if (s) *s='\0';
-					name = strdup(name);
+					C_MEM (name = strdup(name));
 					GP_LOG_D("name is %s", name);
 					*s = '"';
 				}

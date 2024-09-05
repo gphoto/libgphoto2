@@ -676,10 +676,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			/* The J5 so far goes up to 0xf01c */
 #define NIKON_1_ADDITIONAL_DEVPROPS 29
 			if (i==di->DevicePropertiesSupported_len) {
-				di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + NIKON_1_ADDITIONAL_DEVPROPS+3));
-				if (!di->DevicePropertiesSupported) {
-					C_MEM (di->DevicePropertiesSupported);
-				}
+				C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + NIKON_1_ADDITIONAL_DEVPROPS+3)));
 				for (i=0;i<NIKON_1_ADDITIONAL_DEVPROPS;i++)
 					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xf000 | i;
 
@@ -7479,7 +7476,7 @@ handleregular:
 		/* objectinfo might not even be loaded yet, but this could be 0 / NULL ... but the compare will trigger */
 		oldparent = ob->oi.ParentObject;
 		oldstorage = ob->oi.StorageID;
-		oldfn = strdup(ob->oi.Filename?ob->oi.Filename:"<null>");
+		C_MEM (oldfn = strdup(ob->oi.Filename?ob->oi.Filename:"<null>"));
 
 		ob->flags &= ~PTPOBJECT_OBJECTINFO_LOADED;
 
@@ -8569,7 +8566,7 @@ ptp_mtp_parse_metadata (
 		end = strstr (begin, propname2);
 		if (!end) continue;
 		*end = '\0';
-		content = strdup(begin);
+		C_MEM (content = strdup(begin));
 		if (!content) {
 			free (props);
 			C_MEM (content);

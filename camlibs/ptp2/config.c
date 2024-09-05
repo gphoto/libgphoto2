@@ -12298,7 +12298,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 						continue;
 					}
 					CR (gp_widget_get_name (widget, (const char**)name));
-					*name = strdup(*name?*name:"<null>");
+					C_MEM (*name = strdup(*name?*name:"<null>"));
 					CR (gp_widget_get_type (widget, &type));
 					switch (type) {
 					case GP_WIDGET_RADIO:
@@ -12306,7 +12306,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					case GP_WIDGET_TEXT: {
 						char *val;
 						CR (gp_widget_get_value (widget, &val));
-						*content = strdup(val?val:"<null>");
+						C_MEM (*content = strdup(val?val:"<null>"));
 						break;
 					}
 					case GP_WIDGET_RANGE: {
@@ -12314,11 +12314,11 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 						float fval;
 						CR (gp_widget_get_value (widget, &fval));
 						sprintf(buf,"%f",fval);
-						*content = strdup(buf);
+						C_MEM (*content = strdup(buf));
 						break;
 					}
 					default:
-						*content = strdup("Unhandled type");
+						C_MEM (*content = strdup("Unhandled type"));
 						/* FIXME: decode value ... ? date? toggle? */
 						break;
 					}
@@ -12338,7 +12338,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					continue;
 				}
 				CR (gp_widget_get_name (widget, (const char**)name));
-				*name = strdup(*name);
+				C_MEM (*name = strdup(*name));
 				CR (gp_widget_get_type (widget, &type));
 				switch (type) {
 				case GP_WIDGET_RADIO:
@@ -12346,7 +12346,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 				case GP_WIDGET_TEXT: {
 					char *val;
 					CR (gp_widget_get_value (widget, &val));
-					*content = strdup(val);
+					C_MEM (*content = strdup(val));
 					break;
 				}
 				case GP_WIDGET_RANGE: {
@@ -12354,11 +12354,11 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					float fval;
 					CR (gp_widget_get_value (widget, &fval));
 					sprintf(buf,"%f",fval);
-					*content = strdup(buf);
+					C_MEM (*content = strdup(buf));
 					break;
 				}
 				default:
-					*content = strdup("Unhandled type");
+					C_MEM (*content = strdup("Unhandled type"));
 					/* FIXME: decode value ... ? date? toggle? */
 					break;
 				}
@@ -12376,7 +12376,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					continue;
 				}
 				CR (gp_widget_get_name (widget, (const char**)name));
-				*name = strdup(*name);
+				C_MEM (*name = strdup(*name));
 				CR (gp_widget_get_type (widget, &type));
 				switch (type) {
 				case GP_WIDGET_RADIO:
@@ -12384,7 +12384,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 				case GP_WIDGET_TEXT: {
 					char *val;
 					CR (gp_widget_get_value (widget, &val));
-					*content = strdup(val?val:"NULL");
+					C_MEM (*content = strdup(val?val:"NULL"));
 					break;
 				}
 				case GP_WIDGET_RANGE: {
@@ -12392,11 +12392,11 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					float fval;
 					CR (gp_widget_get_value (widget, &fval));
 					sprintf(buf,"%f",fval);
-					*content = strdup(buf);
+					C_MEM (*content = strdup(buf));
 					break;
 				}
 				default:
-					*content = strdup("Unhandled type");
+					C_MEM (*content = strdup("Unhandled type"));
 					/* FIXME: decode value ... ? date? toggle? */
 					break;
 				}
@@ -12417,12 +12417,12 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 			sprintf (buf, N_("PTP Property 0x%04x"), propid);
 			label = buf;
 		}
-		*name = strdup (label);
+		C_MEM (*name = strdup (label));
 		switch (dpd->DataType) {
 #define X(dtc,val,fmt) 							\
 		case dtc:						\
 			sprintf (buf, fmt, dpd->CurrentValue.val);	\
-			*content = strdup (buf);				\
+			C_MEM (*content = strdup (buf));		\
 			return GP_OK;					\
 
 		X(PTP_DTC_INT8,i8,"%d")
@@ -12435,11 +12435,11 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 		X(PTP_DTC_UINT64,u64,"%ld")
 #undef X
 		case PTP_DTC_STR:
-			*content = strdup (dpd->CurrentValue.str?dpd->CurrentValue.str:"<null>");
+			C_MEM (*content = strdup (dpd->CurrentValue.str?dpd->CurrentValue.str:"<null>"));
 			return GP_OK;
 		default:
 			sprintf(buf, "Unknown type 0x%04x", dpd->DataType);
-			*content = strdup (buf);
+			C_MEM (*content = strdup (buf));
 			return GP_OK;
 		}
 	}
