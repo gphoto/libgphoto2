@@ -77,6 +77,7 @@ Makefile.in
 /gp-gettext-setup.mk
 /gphoto2-config
 /libgphoto2/gphoto2-endian.h
+/libgphoto2/_stdint.h
 /libgphoto2_port/ABOUT-NLS
 /libgphoto2_port/aclocal.m4
 /libgphoto2_port/auto-aux/
@@ -137,6 +138,8 @@ Makefile.in
 /tests/print-libgphoto2-version
 /tests/test-camera-list
 /tests/test-endian
+/tests/test-i18n
+/tests/test-init-localedir
 /tests/test-filesys
 /tests/test-gphoto2
 /tests/test-pedantic-c11
