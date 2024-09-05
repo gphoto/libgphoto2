@@ -74,22 +74,22 @@ static int load_settings (void);
 int
 gp_setting_get (char *id, char *key, char *value)
 {
-        int x;
+	int x;
 
 	C_PARAMS (id && key);
 
 	if (!glob_setting_count)
 		load_settings ();
 
-        for (x=0; x<glob_setting_count; x++) {
-                if ((strcmp(glob_setting[x].id, id)==0) &&
+	for (x=0; x<glob_setting_count; x++) {
+		if ((strcmp(glob_setting[x].id, id)==0) &&
 		    (strcmp(glob_setting[x].key, key)==0)) {
-                        strcpy(value, glob_setting[x].value);
-                        return (GP_OK);
-                }
-        }
-        strcpy(value, "");
-        return(GP_ERROR);
+			strcpy(value, glob_setting[x].value);
+			return (GP_OK);
+		}
+	}
+	strcpy(value, "");
+	return(GP_ERROR);
 }
 
 /**
@@ -106,7 +106,7 @@ gp_setting_get (char *id, char *key, char *value)
 int
 gp_setting_set (char *id, char *key, char *value)
 {
-        int x;
+	int x;
 
 	C_PARAMS (id && key);
 
@@ -115,20 +115,20 @@ gp_setting_set (char *id, char *key, char *value)
 
 	GP_LOG_D ("Setting key '%s' to value '%s' (%s)", key, value, id);
 
-        for (x=0; x<glob_setting_count; x++) {
-                if ((strcmp(glob_setting[x].id, id)==0) &&
+	for (x=0; x<glob_setting_count; x++) {
+		if ((strcmp(glob_setting[x].id, id)==0) &&
 		    (strcmp(glob_setting[x].key, key)==0)) {
-                        strcpy(glob_setting[x].value, value);
-                        save_settings ();
-                        return (GP_OK);
-                }
+			strcpy(glob_setting[x].value, value);
+			save_settings ();
+			return (GP_OK);
+		}
 	}
-        strcpy(glob_setting[glob_setting_count].id, id);
-        strcpy(glob_setting[glob_setting_count].key, key);
-        strcpy(glob_setting[glob_setting_count++].value, value);
-        save_settings ();
+	strcpy(glob_setting[glob_setting_count].id, id);
+	strcpy(glob_setting[glob_setting_count].key, key);
+	strcpy(glob_setting[glob_setting_count++].value, value);
+	save_settings ();
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static int
@@ -208,16 +208,16 @@ load_settings (void)
 		if (!fgets(buf, 1023, f))
 			break;
 		if (strlen(buf)>2) {
-		     buf[strlen(buf)-1] = '\0';
-		     id = strtok(buf, "=");
-		     strcpy(glob_setting[glob_setting_count].id,id);
-		     key = strtok(NULL, "=");
-		     strcpy(glob_setting[glob_setting_count].key,key);
-		     value = strtok(NULL, "\0");
-		     if (value)
-			strcpy(glob_setting[glob_setting_count++].value, value);
-		       else
-			strcpy(glob_setting[glob_setting_count++].value, "");
+			buf[strlen(buf)-1] = '\0';
+			id = strtok(buf, "=");
+			strcpy(glob_setting[glob_setting_count].id,id);
+			key = strtok(NULL, "=");
+			strcpy(glob_setting[glob_setting_count].key,key);
+			value = strtok(NULL, "\0");
+			if (value)
+				strcpy(glob_setting[glob_setting_count++].value, value);
+			else
+				strcpy(glob_setting[glob_setting_count++].value, "");
 		}
 	}
 	fclose (f);

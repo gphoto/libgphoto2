@@ -17,7 +17,7 @@ static CameraAbilitiesList	*abilities = NULL;
 int
 sample_autodetect (CameraList *list, GPContext *context) {
 	gp_list_reset (list);
-        return gp_camera_autodetect (list, context);
+	return gp_camera_autodetect (list, context);
 }
 
 /*
@@ -41,11 +41,11 @@ sample_open_camera (Camera ** camera, const char *model, const char *port, GPCon
 	}
 
 	/* First lookup the model / driver */
-        m = gp_abilities_list_lookup_model (abilities, model);
+	m = gp_abilities_list_lookup_model (abilities, model);
 	if (m < GP_OK) return ret;
-        ret = gp_abilities_list_get_abilities (abilities, m, &a);
+	ret = gp_abilities_list_get_abilities (abilities, m, &a);
 	if (ret < GP_OK) return ret;
-        ret = gp_camera_set_abilities (*camera, a);
+	ret = gp_camera_set_abilities (*camera, a);
 	if (ret < GP_OK) return ret;
 
 	if (!portinfolist) {
@@ -59,25 +59,25 @@ sample_open_camera (Camera ** camera, const char *model, const char *port, GPCon
 	}
 
 	/* Then associate the camera with the specified port */
-        p = gp_port_info_list_lookup_path (portinfolist, port);
-        switch (p) {
-        case GP_ERROR_UNKNOWN_PORT:
-                fprintf (stderr, "The port you specified "
-                        "('%s') can not be found. Please "
-                        "specify one of the ports found by "
-                        "'gphoto2 --list-ports' and make "
-                        "sure the spelling is correct "
-                        "(i.e. with prefix 'serial:' or 'usb:').",
-                                port);
-                break;
-        default:
-                break;
-        }
-        if (p < GP_OK) return p;
+	p = gp_port_info_list_lookup_path (portinfolist, port);
+	switch (p) {
+	case GP_ERROR_UNKNOWN_PORT:
+		fprintf (stderr, "The port you specified "
+			"('%s') can not be found. Please "
+			"specify one of the ports found by "
+			"'gphoto2 --list-ports' and make "
+			"sure the spelling is correct "
+			"(i.e. with prefix 'serial:' or 'usb:').",
+				port);
+		break;
+	default:
+		break;
+	}
+	if (p < GP_OK) return p;
 
-        ret = gp_port_info_list_get_info (portinfolist, p, &pi);
-        if (ret < GP_OK) return ret;
-        ret = gp_camera_set_port_info (*camera, pi);
-        if (ret < GP_OK) return ret;
+	ret = gp_port_info_list_get_info (portinfolist, p, &pi);
+	if (ret < GP_OK) return ret;
+	ret = gp_camera_set_port_info (*camera, pi);
+	if (ret < GP_OK) return ret;
 	return GP_OK;
 }

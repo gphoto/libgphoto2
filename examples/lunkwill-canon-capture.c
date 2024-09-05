@@ -22,12 +22,11 @@
 
 #include "samples.h"
 
-static void errordumper(GPLogLevel level, const char *domain, const char *str,
-                 void *data) {
-  struct timeval tv;
+static void errordumper(GPLogLevel level, const char *domain, const char *str, void *data) {
+	struct timeval tv;
 
-  gettimeofday (&tv, NULL);
-  fprintf(stdout, "%d.%d: %s\n", (int)tv.tv_sec, (int)tv.tv_usec, str);
+	gettimeofday (&tv, NULL);
+	fprintf(stdout, "%d.%d: %s\n", (int)tv.tv_sec, (int)tv.tv_usec, str);
 }
 
 /* This seems to have no effect on where images go

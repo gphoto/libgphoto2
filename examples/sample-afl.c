@@ -10,8 +10,8 @@
  *
  */
 
-static void errordumper(GPLogLevel level, const char *domain, const char *str,
-                 void *data) {
+static void errordumper(GPLogLevel level, const char *domain, const char *str, void *data)
+{
 	/* Do not log ... but let it appear here so we discover debug paths */
 	fprintf(stderr, "%s:%s\n", domain, str);
 }
@@ -145,7 +145,7 @@ int main(int argc, char **argv) {
 	CameraAbilitiesList      *abilities = NULL;
 
 
-        gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
+	gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
 
 	context = sample_create_context (); /* see context.c */
 
@@ -162,9 +162,9 @@ int main(int argc, char **argv) {
 	ret = gp_port_info_list_lookup_path (gpinfolist, buf);
 	if (ret < GP_OK) return ret;
 
-        /* Detect all the cameras that can be autodetected... */
-        ret = gp_list_new (&list);
-        if (ret < GP_OK) return 1;
+	/* Detect all the cameras that can be autodetected... */
+	ret = gp_list_new (&list);
+	if (ret < GP_OK) return 1;
 
 	/* Load all the camera drivers we have... */
 	ret = gp_abilities_list_new (&abilities);
@@ -185,7 +185,7 @@ int main(int argc, char **argv) {
 	fprintf(stderr, "name is %s\n", name);
 
 	ret = sample_open_camera (&camera, name, buf, context);
-        if (ret < GP_OK) {
+	if (ret < GP_OK) {
 		fprintf(stderr,"camera %s at %s not found.\n", name, buf);
 		gp_list_free (list);
 		goto out;

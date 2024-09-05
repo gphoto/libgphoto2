@@ -134,7 +134,7 @@ gp_list_free (CameraList *list)
 	 */
 	list->ref_count = 0;
 	free (list);
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /**
@@ -190,16 +190,16 @@ gp_list_append (CameraList *list, const char *name, const char *value)
 	} else {
 		list->entry[list->used].value = NULL;
 	}
-        list->used++;
-        return (GP_OK);
+	list->used++;
+	return (GP_OK);
 }
 
 static int
 cmp_list (const void *a, const void *b) {
-        const struct _entry *ca = a;
-        const struct _entry *cb = b;
+	const struct _entry *ca = a;
+	const struct _entry *cb = b;
 
-        return strcmp (ca->name, cb->name);
+	return strcmp (ca->name, cb->name);
 }
 
 /**
@@ -230,7 +230,7 @@ gp_list_count (CameraList *list)
 {
 	C_PARAMS (list && list->ref_count);
 
-        return (list->used);
+	return (list->used);
 }
 
 /**

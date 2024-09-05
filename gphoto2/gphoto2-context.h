@@ -80,7 +80,7 @@ typedef void         (* GPContextProgressStopFunc)   (GPContext *context,
 
 /* Setting those functions (frontends) */
 void gp_context_set_idle_func      (GPContext *context,
-			            GPContextIdleFunc func,     void *data);
+				    GPContextIdleFunc func,     void *data);
 void gp_context_set_progress_funcs (GPContext *context,
 				    GPContextProgressStartFunc  start_func,
 				    GPContextProgressUpdateFunc update_func,

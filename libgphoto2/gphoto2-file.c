@@ -56,17 +56,17 @@
  * \internal
  */
 struct _CameraFile {
-        char		mime_type [64];
-        char		name [MAX_PATH];
-        int		ref_count;
-        time_t		mtime;
+	char		mime_type [64];
+	char		name [MAX_PATH];
+	int		ref_count;
+	time_t		mtime;
 
 	CameraFileAccessType	accesstype;
 
 	/* for GP_FILE_ACCESSTYPE_MEMORY files */
-        unsigned long	size;
-        unsigned char	*data;
-        unsigned long	offset;	/* read pointer */
+	unsigned long	size;
+	unsigned char	*data;
+	unsigned long	offset;	/* read pointer */
 
 	/* for GP_FILE_ACCESSTYPE_FD files */
 	int		fd;
@@ -242,7 +242,7 @@ gp_file_append (CameraFile *file, const char *data,
 		GP_LOG_E ("Unknown file access type %d", file->accesstype);
 		return GP_ERROR;
 	}
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /**
@@ -300,7 +300,7 @@ gp_file_slurp (CameraFile *file, char *data,
 		GP_LOG_E ("Unknown file access type %d", file->accesstype);
 		return GP_ERROR;
 	}
-        return (GP_OK);
+	return (GP_OK);
 }
 
 
@@ -608,10 +608,10 @@ static const char *mime_table[] = {
 int
 gp_file_open (CameraFile *file, const char *filename)
 {
-        FILE *fp;
-        char *name, *dot;
-        long size, size_read;
-        int  i;
+	FILE *fp;
+	char *name, *dot;
+	long size, size_read;
+	int  i;
 	struct stat s;
 
 
@@ -619,12 +619,12 @@ gp_file_open (CameraFile *file, const char *filename)
 
 	CHECK_RESULT (gp_file_clean (file));
 
-        fp = fopen(filename, "r");
-        if (!fp)
+	fp = fopen(filename, "r");
+	if (!fp)
 		return (GP_ERROR);
 	fseek (fp, 0, SEEK_END);
-        size = ftell (fp);
-        rewind (fp);
+	size = ftell (fp);
+	rewind (fp);
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
@@ -657,34 +657,35 @@ gp_file_open (CameraFile *file, const char *filename)
 		break;
 	}
 
-        name = strrchr (filename, '/');
-        if (name)
-                strncpy (file->name, name + 1, sizeof (file->name));
-           else
-                strncpy (file->name, filename, sizeof (file->name));
+	name = strrchr (filename, '/');
+	if (name)
+		strncpy (file->name, name + 1, sizeof (file->name));
+	else
+		strncpy (file->name, filename, sizeof (file->name));
 
-        /* MIME lookup */
-        dot = strrchr (filename, '.');
-        if (dot) {
-            for (i = 0; mime_table[i] ; i+=2)
-                if (!strcasecmp (mime_table[i], dot+1)) {
-                    strncpy (file->mime_type, mime_table[i+1], sizeof(file->mime_type));
-                    break;
-                }
-            if (!mime_table[i])
-                /*
-                 * We did not found the type in the lookup table,
-                 * so we use the file suffix as mime type.
-                 * Note: This should probably use GP_MIME_UNKNOWN instead
-                 * of returning a non-standard type.
-                 */
-                sprintf(file->mime_type, "image/%s", dot + 1);
-        } else
-            /*
-             * Damn, no filename suffix...
-             */
-            strncpy (file->mime_type, GP_MIME_UNKNOWN,
-		     sizeof (file->mime_type));
+	/* MIME lookup */
+	dot = strrchr (filename, '.');
+	if (dot) {
+		for (i = 0; mime_table[i] ; i+=2)
+			if (!strcasecmp (mime_table[i], dot+1)) {
+				strncpy (file->mime_type, mime_table[i+1], sizeof(file->mime_type));
+				break;
+			}
+		if (!mime_table[i])
+			/*
+			* We did not found the type in the lookup table,
+			* so we use the file suffix as mime type.
+			* Note: This should probably use GP_MIME_UNKNOWN instead
+			* of returning a non-standard type.
+			*/
+			sprintf(file->mime_type, "image/%s", dot + 1);
+	} else {
+		/*
+		* Damn, no filename suffix...
+		*/
+		strncpy (file->mime_type, GP_MIME_UNKNOWN,
+			sizeof (file->mime_type));
+	}
 
 	if (stat (filename, &s) != -1) {
 		file->mtime = s.st_mtime;
@@ -692,7 +693,7 @@ gp_file_open (CameraFile *file, const char *filename)
 		file->mtime = time (NULL);
 	}
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 
@@ -704,10 +705,10 @@ gp_file_open (CameraFile *file, const char *filename)
 int
 gp_file_clean (CameraFile *file)
 {
-        /*
+	/*
 	 * Frees a CameraFile's components, not the CameraFile itself.
 	 * This is used to prep a CameraFile struct to be filled.
-         */
+	 */
 
 	C_PARAMS (file);
 
@@ -722,7 +723,7 @@ gp_file_clean (CameraFile *file)
 	default:break;
 	}
 	strcpy (file->name, "");
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /**
@@ -1035,7 +1036,7 @@ int
 gp_file_detect_mime_type (CameraFile *file)
 {
 	const char TIFF_SOI_MARKER[] = {(char) 0x49, (char) 0x49, (char) 0x2A,
-				        (char) 0x00, (char) 0x08, '\0' };
+					(char) 0x00, (char) 0x08, '\0' };
 	const char JPEG_SOI_MARKER[] = {(char) 0xFF, (char) 0xD8, '\0' };
 
 	C_PARAMS (file);
@@ -1116,7 +1117,7 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 
 	GP_LOG_D ("Adjusting file name for mime type '%s'...", file->mime_type);
 	for (x = 0; table[x]; x += 2)
-                if (!strcmp (file->mime_type, table[x])) {
+		if (!strcmp (file->mime_type, table[x])) {
 
 			/* Search the current suffix and erase it */
 			suffix = strrchr (file->name, '.');

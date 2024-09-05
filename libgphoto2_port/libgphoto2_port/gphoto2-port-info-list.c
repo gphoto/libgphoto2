@@ -224,7 +224,7 @@ gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 	for (generic = i = 0; i < list->count; i++)
 		if (!strlen (list->info[i]->name))
 			generic++;
-        return (list->count - 1 - generic);
+	return (list->count - 1 - generic);
 }
 
 
@@ -238,13 +238,13 @@ foreach_func (const char *filename, lt_ptr data)
 	GPPortType type;
 	unsigned int j, old_size = list->count;
 	int result;
-    char *prefix = getenv(IOLIBDIR_PREFIX_ENV);
+	char *prefix = getenv(IOLIBDIR_PREFIX_ENV);
 
 	GP_LOG_D ("Called for filename '%s'.", filename );
-    if(prefix && !strstr(filename,prefix)) {
-        GP_LOG_D("Skipping filename '%s' not matching %s.",filename,prefix);
-        return (0); 
-    }
+	if(prefix && !strstr(filename,prefix)) {
+		GP_LOG_D("Skipping filename '%s' not matching %s.",filename,prefix);
+		return (0);
+	}
 
 	lh = lt_dlopenext (filename);
 	if (!lh) {
@@ -333,7 +333,7 @@ gp_port_info_list_load (GPPortInfoList *list)
 		GP_LOG_E ("No iolibs found in '%s'", iolibs);
 		return GP_ERROR_LIBRARY;
 	}
-        return (GP_OK);
+	return (GP_OK);
 }
 
 /**

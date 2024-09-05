@@ -430,7 +430,7 @@ lookup_folder_file (
 		CameraList	*list;
 		int		ret;
 		/*
-                 * The folder is dirty. List the files in it to make it clean.
+		 * The folder is dirty. List the files in it to make it clean.
 		 */
 		GP_LOG_D ("Folder %s is dirty. "
 			"Listing files in there to make folder clean...", folder);

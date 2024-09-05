@@ -27,21 +27,21 @@
 #include <gphoto2/gphoto2-file.h>
 
 typedef enum {
-    JPEG_START=0xD8,        JPEG_COMMENT=0xFE,      JPEG_APPO=0xE0,
-    JPEG_QUANTIZATION=0xDB, JPEG_HUFFMAN=0xC4,      JPEG_SOFC0=0xC0,
-    JPEG_SSSEAHAL=0xDA,     JPEG_EOI=0xD9
+	JPEG_START=0xD8,        JPEG_COMMENT=0xFE,      JPEG_APPO=0xE0,
+	JPEG_QUANTIZATION=0xDB, JPEG_HUFFMAN=0xC4,      JPEG_SOFC0=0xC0,
+	JPEG_SSSEAHAL=0xDA,     JPEG_EOI=0xD9
 } jpegmarker;
 
 typedef struct chunk{
-    int size;
-    unsigned char *data;
+	int size;
+	unsigned char *data;
 } chunk;
 
 typedef char jpeg_quantization_table[64];
 
 typedef struct jpeg {
-    int count;
-    struct chunk *marker[20]; /* I think this should be big enough */
+	int count;
+	struct chunk *marker[20]; /* I think this should be big enough */
 }jpeg;
 
 chunk *gpi_jpeg_chunk_new(int length);
@@ -71,11 +71,11 @@ chunk *gpi_jpeg_make_quantization(const jpeg_quantization_table * table, char nu
 jpeg_quantization_table *gpi_jpeg_quantization2table(chunk *qmarker);
 
 jpeg *gpi_jpeg_header(int width, int height,
-    char vh1, char vh2, char vh3,
-    char q1, char q2, char q3,
-    const jpeg_quantization_table *quant1, const jpeg_quantization_table *quant2,
-    char huffset1, char huffset2, char huffset3,
-    chunk *huff1, chunk *huff2, chunk *huff3, chunk *huff4);
+	char vh1, char vh2, char vh3,
+	char q1, char q2, char q3,
+	const jpeg_quantization_table *quant1, const jpeg_quantization_table *quant2,
+	char huffset1, char huffset2, char huffset3,
+	chunk *huff1, chunk *huff2, chunk *huff3, chunk *huff4);
 
 char gpi_jpeg_write(CameraFile *file, const char *name, jpeg *myjpeg);
 
