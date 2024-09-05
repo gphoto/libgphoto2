@@ -13,7 +13,7 @@
  * ./fuzzer -detect_leaks=0 CORPUS/
  *
  * FIXME:
- * - currently this seems to have memory leaks, it slows down and gets more and more memory over time. 
+ * - currently this seems to have memory leaks, it slows down and gets more and more memory over time.
  *   restarting cures it for a while
  * - It crashes on start in 80% of the cases. You might need retry multiple times to start it.
  *   reason is i think the fuzzer creates a bitmap in an area where the loaded camlibs are mapped into after the fact.

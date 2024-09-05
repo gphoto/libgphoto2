@@ -302,7 +302,7 @@ camera_tether(Camera *camera, GPContext *context) {
 						free (val);
 					}
 				}
-				
+
 				free(evtdata);
 			} else {
 				printf("Unknown event.\n");
