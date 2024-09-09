@@ -1020,6 +1020,9 @@ ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *
 	unsigned int ret;
 	unsigned int isenabled, getset;
 
+	if (!data || dpdlen < PTP_dpd_Sony_FactoryDefaultValue)
+		return 0;
+
 	memset (dpd, 0, sizeof(*dpd));
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_Sony_DevicePropertyCode]);
 	dpd->DataType=dtoh16a(&data[PTP_dpd_Sony_DataType]);
@@ -3245,7 +3248,7 @@ ptp_unpack_ptp11_manifest (
 	unsigned int		curoffset;
 	PTPObjectFilesystemInfo	*xoifs;
 
-	if (datalen < 8)
+	if (!data || datalen < 8)
 		return 0;
 	numberoifs = dtoh64ap(params,data);
 	curoffset = 8;
