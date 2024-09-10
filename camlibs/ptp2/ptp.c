@@ -517,16 +517,13 @@ ptp_getdeviceinfo (PTPParams* params, PTPDeviceInfo* deviceinfo)
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int	size;
-	int		ret;
+	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetDeviceInfo);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ret = ptp_unpack_DI(params, data, deviceinfo, size);
+	ret = ptp_unpack_DI(params, data, deviceinfo, size) ? PTP_RC_OK : PTP_ERROR_IO;
 	free(data);
-	if (ret)
-		return PTP_RC_OK;
-	else
-		return PTP_ERROR_IO;
+	return ret;
 }
 
 uint16_t
@@ -535,16 +532,13 @@ ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int	size;
-	int		ret;
+	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetDeviceInfoEx);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ret = ptp_unpack_EOS_DI(params, data, di, size);
+	ret = ptp_unpack_EOS_DI(params, data, di, size) ? PTP_RC_OK : PTP_ERROR_IO;
 	free (data);
-	if (ret)
-		return PTP_RC_OK;
-	else
-		return PTP_ERROR_IO;
+	return ret;
 }
 
 uint16_t
@@ -553,16 +547,13 @@ ptp_getstreaminfo (PTPParams *params, uint32_t streamid, PTPStreamInfo *si)
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int	size;
-	int		ret;
+	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetStreamInfo, streamid);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ret = ptp_unpack_StreamInfo(params, data, si, size);
+	ret = ptp_unpack_StreamInfo(params, data, si, size) ? PTP_RC_OK : PTP_ERROR_IO;
 	free (data);
-	if (ret)
-		return PTP_RC_OK;
-	else
-		return PTP_ERROR_IO;
+	return ret;
 }
 
 uint16_t
@@ -571,8 +562,7 @@ ptp_getstream (PTPParams *params, unsigned char **data, unsigned int *size)
 	PTPContainer	ptp;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetStream);
-	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
-	return PTP_RC_OK;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
 uint16_t
@@ -581,8 +571,7 @@ ptp_leica_getstreamdata (PTPParams *params, unsigned char **data, unsigned int *
 	PTPContainer	ptp;
 
 	PTP_CNT_INIT(ptp, PTP_OC_LEICA_LEGetStreamData);
-	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
-	return PTP_RC_OK;
+	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
 uint16_t
@@ -952,23 +941,22 @@ uint16_t
 ptp_olympus_omd_capture (PTPParams* params)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 	unsigned int	size = 0;
-	unsigned char	*buffer = NULL;
+	unsigned char	*data = NULL;
 
 /* these two trigger the capture ... one might be "shutter down", the other "shutter up"? */
 	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_OMD_Capture, 0x3); // initiate capture
-	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL));
 	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_OMD_Capture, 0x6); // initiate capture
-	ret = ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL));
 
 	usleep(500);
 
 /* this only fetches changed props */
 	PTP_CNT_INIT(ptp, 0x9486); /* query changed properties */
-	ret =  ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &buffer, &size);
-	free (buffer);
-	return ret;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
+	free (data);
+	return PTP_RC_OK;
 }
 /**
  * ptp_olympus_bulbstart:
@@ -1029,7 +1017,7 @@ ptp_sigma_fp_liveview_image (PTPParams* params, unsigned char **data, unsigned i
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
-static uint16_t
+static uint16_t /* TODO: why is this return value ignored at all call sights? */
 ptp_sigma_fp_parse_ifdlist (PTPParams* params, unsigned char *data, unsigned int size)
 {
 	uint32_t	datalen, entrycount, offset;
@@ -1087,12 +1075,11 @@ uint16_t
 ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCameraInfo);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
-	if (ret != PTP_RC_OK) return ret;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
 	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
+	free(data);
 	return PTP_RC_OK;
 }
 
@@ -1100,12 +1087,11 @@ uint16_t
 ptp_sigma_fp_getcamcansetinfo5 (PTPParams* params, unsigned char **data, unsigned int *size)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamCanSetInfo5);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
-	if (ret != PTP_RC_OK) return ret;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
 	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
+	free(data);
 	return PTP_RC_OK;
 }
 
@@ -1113,12 +1099,11 @@ uint16_t
 ptp_sigma_fp_getcamdatagroupfocus (PTPParams* params, unsigned char **data, unsigned int *size)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamDataGroupFocus);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
-	if (ret != PTP_RC_OK) return ret;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
 	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
+	free(data);
 	return PTP_RC_OK;
 }
 
@@ -1126,12 +1111,11 @@ uint16_t
 ptp_sigma_fp_getcamdatagroupmovie (PTPParams* params, unsigned char **data, unsigned int *size)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamDataGroupMovie);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
-	if (ret != PTP_RC_OK) return ret;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
 	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
+	free(data);
 	return PTP_RC_OK;
 }
 
@@ -1203,21 +1187,19 @@ uint16_t
 ptp_sigma_fp_getcapturestatus (PTPParams* params, unsigned int p1, SIGMAFP_CaptureStatus*status)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 	unsigned char	*data = NULL;
 	unsigned int	size = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCaptureStatus, p1);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
-	if (ret != PTP_RC_OK) return ret;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 
 	if (size < 7) {
 		ptp_debug (params, "size %d is smaller than expected 7", size);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	if (data[0] != 6) {
 		ptp_debug (params, "byte size %d is smaller than expected 6", data[0]);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	status->imageid		= data[1];
 	status->imagedbhead	= data[2];
@@ -1228,7 +1210,11 @@ ptp_sigma_fp_getcapturestatus (PTPParams* params, unsigned int p1, SIGMAFP_Captu
 	ptp_debug (params, "ptp_sigma_fp_getcapturestatus: imageid 0x%02x, imagedbhead 0x%02x, imagedbtail 0x%02x, status 0x%04x, dest 0x%02x",
 		status->imageid, status->imagedbhead, status->imagedbtail, status->status, status->destination
 	);
-	return ret;
+	free(data);
+	return PTP_RC_OK;
+error:
+	free(data);
+	return PTP_RC_GeneralError;
 }
 
 uint16_t
@@ -1244,41 +1230,39 @@ uint16_t
 ptp_sigma_fp_getpictfileinfo2 (PTPParams* params, SIGMAFP_PictFileInfo2Ex *pictinfo)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 	unsigned int	off;
-	char		*data = NULL;
+	unsigned char	*data = NULL;
 	unsigned int	size = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetPictFileInfo2);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, (unsigned char**)&data, &size);
-	if (ret != PTP_RC_OK) return ret;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 
 	if (size < 60) {
 		ptp_debug (params, "size %d is smaller than expected 60", size);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
-	if (dtoh32a((unsigned char*)data) != 56) {
-		ptp_debug (params, "dword size %d is smaller than expected 56", dtoh32a((unsigned char*)data));
-		return PTP_RC_GeneralError;
+	if (dtoh32a(data) != 56) {
+		ptp_debug (params, "dword size %d is smaller than expected 56", dtoh32a(data));
+		goto error;
 	}
 	memset(pictinfo, 0, sizeof(*pictinfo));
-	pictinfo->fileaddress = dtoh32a((unsigned char*)(&data[12]));	/* perhaps ? */
-	pictinfo->filesize = dtoh32a((unsigned char*)(&data[16]));
-	strncpy(pictinfo->fileext, data+28, 4);
-	pictinfo->width = dtoh16a((unsigned char*)(&data[32]));
-	pictinfo->height = dtoh16a((unsigned char*)(&data[34]));
-	off = dtoh32a((unsigned char*)(&data[20]));
+	pictinfo->fileaddress = dtoh32a(&data[12]);	/* perhaps ? */
+	pictinfo->filesize = dtoh32a(&data[16]);
+	strncpy(pictinfo->fileext, (char*)data+28, 4);
+	pictinfo->width = dtoh16a(&data[32]);
+	pictinfo->height = dtoh16a(&data[34]);
+	off = dtoh32a(&data[20]);
 	if (off > size) {
 		ptp_debug (params, "off %d is larger than size %d", off, size);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
-	strncpy(pictinfo->path, data+off, 9);
-	off = dtoh32a((unsigned char*)(&data[24]));
+	strncpy(pictinfo->path, (char*)data+off, 9);
+	off = dtoh32a(&data[24]);
 	if (off > size) {
 		ptp_debug (params, "off %d is larger than size %d", off, size);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
-	strncpy(pictinfo->name, data+off, 9);
+	strncpy(pictinfo->name, (char*)data+off, 9);
 
 #if 0
 uint16_t        pictureformat;	/* ? */
@@ -1300,6 +1284,9 @@ uint32_t        fileaddress;	/* 12,13,14,15 */
 #endif
 	free (data);
 	return PTP_RC_OK;
+error:
+	free (data);
+	return PTP_RC_GeneralError;
 }
 
 uint16_t
@@ -1315,8 +1302,7 @@ uint16_t
 ptp_sigma_fp_snap (PTPParams* params, unsigned int mode, unsigned int amount)
 {
 	PTPContainer	ptp;
-	unsigned char	*data = malloc(4);
-	uint16_t	ret;
+	unsigned char	data[4];
 
 	data[0] = 0x02;			/* num data bytes */
 	data[1] = mode;
@@ -1324,22 +1310,17 @@ ptp_sigma_fp_snap (PTPParams* params, unsigned int mode, unsigned int amount)
 	data[3] = 0x02+mode+amount;	/* checksum, just add everything */
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_Snap);
-	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 4, (unsigned char**)&data, 0);
-	free (data);
-	return ret;
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, 0);
 }
 
 uint16_t
 ptp_sigma_fp_clearimagedbsingle (PTPParams* params, uint32_t id)
 {
 	PTPContainer	ptp;
-	unsigned char	*data = calloc(8,1);
-	uint16_t	ret;
+	unsigned char	data[8] = {0};
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_ClearImageDBSingle, id);
-	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 8, (unsigned char**)&data, 0);
-	free (data);
-	return ret;
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, 0);
 }
 
 uint16_t
@@ -1410,14 +1391,13 @@ uint16_t
 ptp_panasonic_9401 (PTPParams* params, uint32_t param1)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 	unsigned int	*size = 0;
-	unsigned char   *data = NULL;
+	unsigned char	*data = NULL;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_9401, param1);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, size);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, size));
 	free(data);
-	return ret;
+	return PTP_RC_OK;
 }
 
 /* liveview format query
@@ -1430,7 +1410,7 @@ ptp_panasonic_9414_0d800012 (PTPParams* params, PanasonicLiveViewSize **liveview
 	PTPContainer	ptp;
 	unsigned int	i;
 	unsigned int	size = 0;
-	unsigned char   *data = NULL;
+	unsigned char	*data = NULL;
 	uint32_t	blobsize;
 	uint16_t	count;
 	uint16_t	structsize;
@@ -1451,29 +1431,32 @@ d0 02 c0 03 5e 01 1e 00
 c0 03 00 05 bc 02 1e 00
 
  */
-	if (size < 8) return PTP_RC_GeneralError;
+	if (size < 8)
+		goto error;
 
 	blobsize = dtoh32a(data+4);
 	if (size - 8 < blobsize) {
 		ptp_debug (params, "blobsize expected %d, but size is only %d", blobsize, size - 8);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	if (blobsize < 4) {
 		ptp_debug (params, "blobsize expected at least 4, but is only %d", blobsize);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	count		= dtoh16a (data+8);
 	structsize	= dtoh16a (data+10);
 	if (structsize != 8) {
 		ptp_debug (params, "structsize expected 8, but is %d", structsize);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	if (count * structsize > blobsize) {
 		ptp_debug (params, "%d * %d = %d is larger than %d", count, structsize, count * structsize, blobsize);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 
 	*liveviewsizes = calloc (count, sizeof(PanasonicLiveViewSize));
+	if (!*liveviewsizes)
+		goto error;
 	for (i = 0;i < count; i++) {
 		(*liveviewsizes)[i].height	= dtoh16a (data + 12 + i*structsize);
 		(*liveviewsizes)[i].width	= dtoh16a (data + 12 + 2 + i*structsize);
@@ -1483,6 +1466,9 @@ c0 03 00 05 bc 02 1e 00
 	*nrofliveviewsizes = count;
 	free(data);
 	return PTP_RC_OK;
+error:
+	free(data);
+	return PTP_RC_GeneralError;
 }
 
 uint16_t
@@ -1505,16 +1491,17 @@ e0 01 80 02
 1e 00
 
  */
-	if (size < 8) return PTP_RC_GeneralError;
+	if (size < 8)
+		goto error;
 
 	blobsize = dtoh32a(data+4);
 	if (size - 8 < blobsize) {
 		ptp_debug (params, "blobsize expected %d, but size is only %d", blobsize, size - 8);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	if (blobsize < 8) {
 		ptp_debug (params, "blobsize expected at least 8, but is only %d", blobsize);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	liveviewsize->height	= dtoh16a (data + 8 + 0);
 	liveviewsize->width	= dtoh16a (data + 8 + 2);
@@ -1522,18 +1509,19 @@ e0 01 80 02
 	liveviewsize->freq	= dtoh16a (data + 8 + 6);
 	free(data);
 	return PTP_RC_OK;
+error:
+	free(data);
+	return PTP_RC_GeneralError;
 }
 
 uint16_t
 ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
 {
 	PTPContainer	ptp;
-	unsigned char	*data;
-	uint16_t	ret;
+	unsigned char	data[16] = {0};
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetLiveViewParameters, 0x0d800011);
 
-	data = malloc(16);
 	htod32a(data+0 , 0x0d800011);
 	htod32a(data+4 , 8);
 	htod16a(data+8 , liveviewsize->height);
@@ -1541,9 +1529,7 @@ ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
 	htod16a(data+12, liveviewsize->x);
 	htod16a(data+14, liveviewsize->freq);
 
-	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 16, (unsigned char**)&data, 0);
-	free (data);
-	return ret;
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, 0);
 }
 
 uint16_t
@@ -1577,17 +1563,20 @@ ptp_panasonic_getdevicepropertysize (PTPParams *params, uint32_t propcode)
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_9107, propcode, 0, 0);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	if (!data) return PTP_RC_GeneralError;
 
-	if (size < 4) return PTP_RC_GeneralError;
+	if (size < 4) goto error;
 	uint32_t headerLength 		= dtoh32a( (data) + 4 );
-	if (size < 4 + 6 * 4) return PTP_RC_GeneralError;
+	if (size < 4 + 6 * 4) goto error;
 	uint32_t propertyCode 		= dtoh32a( (data) + 4 + 6 * 4 );
-	if (size < headerLength * 4 + 2 * 4) return PTP_RC_GeneralError;
+	if (size < headerLength * 4 + 2 * 4) goto error;
 
 	ptp_debug(params, "header: %u, code: %u\n", headerLength, propertyCode);
 
+	free(data);
 	return PTP_RC_OK;
+error:
+	free(data);
+	return PTP_RC_GeneralError;
 }
 
 uint16_t
@@ -1595,7 +1584,6 @@ ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode)
 {
 	PTPContainer	ptp;
 	unsigned char	data[10];
-	unsigned char	*xdata = data;
 	uint32_t 	propcode = 0x03010011;
 	uint32_t 	type = 2;
 
@@ -1604,7 +1592,7 @@ ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode)
 	htod16a(&data[8], mode);	/* memcpy(&data[8], &mode, 2); */
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ManualFocusDrive, propcode);
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, NULL);
 }
 
 uint16_t
@@ -1612,7 +1600,6 @@ ptp_panasonic_recordmode (PTPParams* params, uint16_t mode)
 {
 	PTPContainer	ptp;
 	unsigned char	data[10];
-	unsigned char	*xdata = data;
 	uint32_t 	propcode = 0x06000011;
 	uint32_t 	type = 2;
 
@@ -1621,7 +1608,7 @@ ptp_panasonic_recordmode (PTPParams* params, uint16_t mode)
 	htod16a(&data[8], mode);	/* memcpy(&data[8], &mode, 2); */
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_9409, propcode);
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, NULL);
 }
 
 uint16_t
@@ -1655,13 +1642,15 @@ ptp_panasonic_getcapturetarget (PTPParams* params, uint16_t *target)
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetCaptureTarget, 0x08000090);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	if (!data) return PTP_RC_GeneralError;
-	if (size < 10) return PTP_RC_GeneralError;
-	if (dtoh32a(data) != 0x08000091) return PTP_RC_GeneralError;
-	if (dtoh32a(data+4) != 2) return PTP_RC_GeneralError;
+	if (size < 10) goto error;
+	if (dtoh32a(data) != 0x08000091) goto error;
+	if (dtoh32a(data+4) != 2) goto error;
 	*target = dtoh16a(data+8);
-	free (data);
+	free(data);
 	return PTP_RC_OK;
+error:
+	free(data);
+	return PTP_RC_GeneralError;
 }
 
 uint16_t
@@ -1669,14 +1658,13 @@ ptp_panasonic_setcapturetarget (PTPParams* params, uint16_t mode) // mode == 1 =
 {
 	PTPContainer	ptp;
 	unsigned char	data[10];
-	unsigned char	*xdata = (unsigned char*)data;
 
 	htod32a(data, 	  0x08000091);	/* capturetarget */
 	htod32a(&data[4], 2); 		/* size */
 	htod16a(&data[8], mode);
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetCaptureTarget, 0);
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, NULL);
 }
 
 uint16_t
@@ -1693,7 +1681,6 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ListProperty, propcode, 0, 0);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	if (!data) return PTP_RC_GeneralError;
 	if (size < 8)
 		return PTP_RC_GeneralError;
 
@@ -1752,29 +1739,28 @@ ptp_panasonic_getrecordingstatus (PTPParams *params, uint32_t propcode, uint16_t
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int 	size = 0;
-	uint16_t	ret = PTP_RC_OK;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_PollEvents, propcode);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	if (!data)
-		return PTP_RC_GeneralError;
 
-	if(size < 8)
-		return PTP_RC_GeneralError;
+	if(size < 8) goto error;
 	*valuesize = dtoh32a( (data + 4) );
 
-	if(size < 8u + (*valuesize)) return PTP_RC_GeneralError;
+	if(size < 8u + (*valuesize)) goto error;
 	if(*valuesize == 4) {
 		*currentValue = dtoh32a( (data + 8) );
 	} else if(*valuesize == 2) {
 		*currentValue = (uint32_t) dtoh16a( (data + 8) );
 	} else {
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	//printf("ptp_panasonic_getdeviceproperty: size: %lu, valuesize: %d, currentValue: %lu\n", size, *valuesize, *currentValue);
 
-	free (data);
-	return ret;
+	free(data);
+	return PTP_RC_OK;
+error:
+	free(data);
+	return PTP_RC_GeneralError;
 }
 
 uint16_t
@@ -1783,27 +1769,28 @@ ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t 
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int 	size = 0;
-	uint16_t	ret = PTP_RC_OK;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_GetProperty, propcode);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	if (!data) return PTP_RC_GeneralError;
 
-	if(size < 8) return PTP_RC_GeneralError;
+	if(size < 8) goto error;
 	*valuesize = dtoh32a( (data + 4) );
 
-	if(size < 8u + (*valuesize)) return PTP_RC_GeneralError;
+	if(size < 8u + (*valuesize)) goto error;
 	if(*valuesize == 4) {
 		*currentValue = dtoh32a( (data + 8) );
 	} else if(*valuesize == 2) {
 		*currentValue = (uint32_t) dtoh16a( (data + 8) );
 	} else {
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	//printf("ptp_panasonic_getdeviceproperty: size: %lu, valuesize: %d, currentValue: %lu\n", size, *valuesize, *currentValue);
 
-	free (data);
-	return ret;
+	free(data);
+	return PTP_RC_OK;
+error:
+	free(data);
+	return PTP_RC_GeneralError;
 }
 
 #ifdef HAVE_LIBXML2
@@ -1886,10 +1873,9 @@ ptp_olympus_getdeviceinfo (PTPParams* params, PTPDeviceInfo *di)
 	memset (di, 0, sizeof(PTPDeviceInfo));
 
 	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_GetDeviceInfo);
-	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
-	/* TODO: check for error, only parse_output_xml if ret == PTP_RC_OK?
-	 * where is 'data' going to be deallocated? */
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	ret = ptp_olympus_parse_output_xml(params,(char*)data,size,&code);
+	free(data);
 	if (ret != PTP_RC_OK)
 		return ret;
 
@@ -2148,20 +2134,16 @@ ptp_getstorageinfo (PTPParams* params, uint32_t storageid,
 			PTPStorageInfo* storageinfo)
 {
 	PTPContainer	ptp;
+	uint16_t	ret;
 	unsigned char	*data = NULL;
 	unsigned int	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetStorageInfo, storageid);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	if (!data || !size)
-		return PTP_RC_GeneralError;
 	memset(storageinfo, 0, sizeof(*storageinfo));
-	if (!ptp_unpack_SI(params, data, storageinfo, size)) {
-		free(data);
-		return PTP_RC_GeneralError;
-	}
+	ret = ptp_unpack_SI(params, data, storageinfo, size) ? PTP_RC_OK : PTP_RC_GeneralError;
 	free(data);
-	return PTP_RC_OK;
+	return ret;
 }
 
 /**
@@ -2218,6 +2200,7 @@ ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
 	uint64_t *numoifs, PTPObjectFilesystemInfo **oifs
 ) {
 	PTPContainer	ptp;
+	uint16_t	ret;
 	unsigned int	size = 0;
 	unsigned char	*data = NULL;
 
@@ -2225,8 +2208,9 @@ ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
 	*numoifs = 0;
 	PTP_CNT_INIT(ptp, PTP_OC_GetFilesystemManifest, storage, objectformatcode, associationOH);
 	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_ptp11_manifest (params, data, size, numoifs, oifs);
-	return PTP_RC_OK;
+	ret = ptp_unpack_ptp11_manifest (params, data, size, numoifs, oifs);
+	free(data);
+	return ret;
 }
 
 /**
@@ -3170,7 +3154,6 @@ ptp_canon_gettreesize (PTPParams* params,
 	PTPCanon_directtransfer_entry **entries, unsigned int *cnt)
 {
 	PTPContainer	ptp;
-	uint16_t	ret = PTP_RC_OK;
 	unsigned char	*data = NULL, *cur;
 	unsigned int	size, i;
 
@@ -3178,10 +3161,8 @@ ptp_canon_gettreesize (PTPParams* params,
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	*cnt = dtoh32a(data);
 	*entries = calloc((*cnt), sizeof(PTPCanon_directtransfer_entry));
-	if (!*entries) {
-		ret = PTP_RC_GeneralError;
-		goto exit;
-	}
+	if (!*entries)
+		goto error;
 	cur = data+4;
 	for (i=0;i<*cnt;i++) {
 		unsigned char len;
@@ -3190,9 +3171,11 @@ ptp_canon_gettreesize (PTPParams* params,
 			break;
 		cur += 4+(cur[4]*2+1);
 	}
-exit:
 	free (data);
-	return ret;
+	return PTP_RC_OK;
+error:
+	free (data);
+	return PTP_RC_GeneralError;
 }
 
 /**
@@ -3974,9 +3957,10 @@ ptp_canon_eos_getobjectinfoex (
 	PTPCANONFolderEntry **entries, unsigned int *nrofentries
 ) {
 	PTPContainer	ptp;
-	uint16_t	ret = PTP_RC_OK;
 	unsigned char	*data = NULL, *xdata;
 	unsigned int	size, i;
+
+	*entries = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetObjectInfoEx, storageid, oid, unk);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
@@ -3985,22 +3969,16 @@ ptp_canon_eos_getobjectinfoex (
 		return PTP_RC_OK;
 	}
 
-	if (size < 4) {
-		ret = PTP_RC_GeneralError;
-		goto exit;
-	}
+	if (size < 4)
+		goto error;
 	/* check for integer overflow */
-	if (dtoh32a(data) >= INT_MAX/sizeof(PTPCANONFolderEntry))  {
-		ret = PTP_RC_GeneralError;
-		goto exit;
-	}
+	if (dtoh32a(data) >= INT_MAX/sizeof(PTPCANONFolderEntry))
+		goto error;
 
 	*nrofentries = dtoh32a(data);
 	*entries = calloc(*nrofentries , sizeof(PTPCANONFolderEntry));
-	if (!*entries) {
-		ret = PTP_RC_GeneralError;
-		goto exit;
-	}
+	if (!*entries)
+		goto error;
 
 	xdata = data+sizeof(uint32_t);
 	for (i=0;i<*nrofentries;i++) {
@@ -4008,35 +3986,28 @@ ptp_canon_eos_getobjectinfoex (
 
 		if (4 + (xdata - data) > size) {
 			ptp_debug (params, "reading canon FEs run over read data size? (1)\n");
-			free (*entries);
-			*entries = NULL;
-			*nrofentries = 0;
-			ret = PTP_RC_GeneralError;
-			goto exit;
+			goto error;
 		}
 		entrysize = dtoh32a(xdata);
 		if ((entrysize + (xdata-data)) > size) {
 			ptp_debug (params, "reading canon FEs run over read data size? (2)\n");
-			free (*entries);
-			*entries = NULL;
-			*nrofentries = 0;
-			ret = PTP_RC_GeneralError;
-			goto exit;
+			goto error;
 		}
 		if (entrysize < 4 + 48 + 4)  {
 			ptp_debug (params, "%d entry size %d does not match expected 56\n", i, entrysize);
-			free (*entries);
-			*entries = NULL;
-			*nrofentries = 0;
-			ret = PTP_RC_GeneralError;
-			goto exit;
+			goto error;
 		}
 		ptp_unpack_Canon_EOS_FE (params, &xdata[4], entrysize - 4, &((*entries)[i]));
 		xdata += entrysize;
 	}
-exit:
 	free (data);
-	return ret;
+	return PTP_RC_OK;
+error:
+	free (*entries);
+	*entries = NULL;
+	*nrofentries = 0;
+	free (data);
+	return PTP_RC_GeneralError;
 }
 
 /**
@@ -4185,6 +4156,7 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 			break;
 		case PTP_DPC_CANON_EOS_CustomFuncEx:
 			/* special handling of CustomFuncEx properties */
+			free(params->canon_props[i].dpd.CurrentValue.str);
 			params->canon_props[i].dpd.CurrentValue.str = strdup( value->str );
 			break;
 		default:
@@ -4236,17 +4208,14 @@ ptp_canon_getpartialobject (PTPParams* params, uint32_t handle,
 				uint32_t* readnum)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 	unsigned char	*data = NULL;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetPartialObjectEx, handle, offset, size, pos);
-	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL);
-	if (ret==PTP_RC_OK) {
-		*block=data;
-		*readnum=ptp.Param1;
-	}
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, NULL));
+	*block=data;
+	*readnum=ptp.Param1;
 	free (data);
-	return ret;
+	return PTP_RC_OK;
 }
 
 /**
@@ -4269,13 +4238,11 @@ uint16_t
 ptp_canon_getviewfinderimage (PTPParams* params, unsigned char** image, uint32_t* size)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetViewfinderImage);
-	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, image, NULL);
-	if (ret==PTP_RC_OK)
-		*size=ptp.Param1;
-	return ret;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, image, NULL));
+	*size=ptp.Param1;
+	return PTP_RC_OK;
 }
 
 /**
@@ -4338,32 +4305,22 @@ ptp_canon_getobjectinfo (PTPParams* params, uint32_t store, uint32_t p2,
 			    PTPCANONFolderEntry** entries, uint32_t* entnum)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 	unsigned char	*data = NULL;
 	unsigned int	i, size;
 
 	*entnum = 0;
 	*entries = NULL;
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetObjectInfoEx, store, p2, parent, handle);
-	data = NULL;
-	size = 0;
-	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
-	if (ret != PTP_RC_OK)
-		goto exit;
-	if (!data)
-		return ret;
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (ptp.Param1 > size/PTP_CANON_FolderEntryLen) {
 		ptp_debug (params, "param1 is %d, size is only %d", ptp.Param1, size);
-		ret = PTP_RC_GeneralError;
-		goto exit;
+		goto error;
 	}
 
 	*entnum = ptp.Param1;
 	*entries= calloc(*entnum, sizeof(PTPCANONFolderEntry));
-	if (*entries == NULL) {
-		ret = PTP_RC_GeneralError;
-		goto exit;
-	}
+	if (*entries == NULL)
+		goto error;
 	for(i=0; i<(*entnum); i++) {
 		if (size < i*PTP_CANON_FolderEntryLen) break;
 		ptp_unpack_Canon_FE(params,
@@ -4371,9 +4328,11 @@ ptp_canon_getobjectinfo (PTPParams* params, uint32_t store, uint32_t p2,
 				    &((*entries)[i]) );
 	}
 
-exit:
 	free (data);
-	return ret;
+	return PTP_RC_OK;
+error:
+	free (data);
+	return PTP_RC_GeneralError;
 }
 
 /**
@@ -4537,11 +4496,10 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	}
 	*props = calloc(psize1+psize2, sizeof(uint16_t));
 	if (!*props) {
-		ptp_debug (params, "oom during malloc?");
 		free (props1);
 		free (props2);
 		free (xdata);
-		return PTP_RC_OK;
+		return PTP_RC_GeneralError;
 	}
 	*size = psize1+psize2;
 	memcpy (*props, props1, psize1*sizeof(uint16_t));
@@ -4576,11 +4534,10 @@ ptp_sony_qx_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned i
 	}
 	*props = calloc(psize1+psize2, sizeof(uint16_t));
 	if (!*props) {
-		ptp_debug (params, "oom during malloc?");
 		free (props1);
 		free (props2);
 		free (xdata);
-		return PTP_RC_OK;
+		return PTP_RC_GeneralError;
 	}
 	*size = psize1+psize2;
 	memcpy (*props, props1, psize1*sizeof(uint16_t));
@@ -4602,7 +4559,6 @@ ptp_sony_getdevicepropdesc (PTPParams* params, uint16_t propcode, PTPDevicePropD
 
 	PTP_CNT_INIT(ptp, PTP_OC_SONY_GetDevicePropdesc, propcode);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	if (!data) return PTP_RC_GeneralError;
 	/* first 16 bit is 0xc8 0x00, then an array of 16 bit PTP ids */
 	ret = ptp_unpack_Sony_DPD(params,data,dpd,size,&len) ? PTP_RC_OK : PTP_RC_GeneralError;
 	free (data);
@@ -4625,8 +4581,6 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 
 	PTP_CNT_INIT(ptp, opcode);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	if (!data)
-		return PTP_RC_GeneralError;
 	if (size <= 8) {
 		free (data);
 		return PTP_RC_GeneralError;
@@ -4799,7 +4753,6 @@ ptp_sony_9280 (PTPParams* params, uint32_t param1,
 {
 	PTPContainer	ptp;
 	unsigned char 	buf[18];
-	unsigned char	*buffer;
 
 	PTP_CNT_INIT(ptp, 0x9280, param1);
 
@@ -4814,8 +4767,7 @@ ptp_sony_9280 (PTPParams* params, uint32_t param1,
 	/* only sent in the case where additional is 2 */
 	buf[16]= x; buf[17]= y;
 
-	buffer=buf;
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 16+additional, &buffer, NULL);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 16+additional, (unsigned char**)&buf, NULL);
 }
 
 uint16_t
@@ -4823,12 +4775,11 @@ ptp_sony_9281 (PTPParams* params, uint32_t param1) {
 	PTPContainer	ptp;
 	unsigned int	size = 0;
 	unsigned char	*buffer = NULL;
-	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, 0x9281, param1);
-	ret =  ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &buffer, &size);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &buffer, &size));
 	free (buffer);
-	return ret;
+	return PTP_RC_OK;
 }
 
 /**
@@ -5199,7 +5150,6 @@ uint16_t
 ptp_nikon_getwifiprofilelist (PTPParams* params)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 	unsigned char	*data = NULL;
 	unsigned int	size, pos, profn, n;
 	char		*buffer;
@@ -5208,29 +5158,29 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetProfileAllData);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 
-	ret = PTP_RC_Undefined; /* FIXME: Add more precise error code */
-
 	if (size < 2)
-		goto exit;
+		goto error;
 
 	params->wifi_profiles_version = data[0];
 	params->wifi_profiles_number = data[1];
 	free(params->wifi_profiles);
 
 	params->wifi_profiles = calloc(params->wifi_profiles_number,sizeof(PTPNIKONWifiProfile));
+	if (!params->wifi_profiles)
+		goto error;
 
 	pos = 2;
 	profn = 0;
 	while (profn < params->wifi_profiles_number && pos < size) {
 		if (pos+6 >= size)
-			goto exit;
+			goto error;
 		params->wifi_profiles[profn].id = data[pos++];
 		params->wifi_profiles[profn].valid = data[pos++];
 
 		n = dtoh32a(&data[pos]);
 		pos += 4;
 		if (pos+n+4 >= size)
-			goto exit;
+			goto error;
 		strncpy(params->wifi_profiles[profn].profile_name, (char*)&data[pos], n);
 		params->wifi_profiles[profn].profile_name[16] = '\0';
 		pos += n;
@@ -5240,25 +5190,25 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 		params->wifi_profiles[profn].icon_type = data[pos++];
 
 		if (!ptp_unpack_string(params, data, pos, size, &len, &buffer))
-			goto exit;
+			goto error;
 		strncpy(params->wifi_profiles[profn].creation_date, buffer, sizeof(params->wifi_profiles[profn].creation_date));
 		free (buffer);
 		pos += (len*2+1);
 		if (pos+1 >= size)
-			goto exit;
+			goto error;
 		/* FIXME: check if it is really last usage date */
 		if (!ptp_unpack_string(params, data, pos, size, &len, &buffer))
-			goto exit;
+			goto error;
 		strncpy(params->wifi_profiles[profn].lastusage_date, buffer, sizeof(params->wifi_profiles[profn].lastusage_date));
 		free (buffer);
 		pos += (len*2+1);
 		if (pos+5 >= size)
-			goto exit;
+			goto error;
 
 		n = dtoh32a(&data[pos]);
 		pos += 4;
 		if (pos+n >= size)
-			goto exit;
+			goto error;
 		strncpy(params->wifi_profiles[profn].essid, (char*)&data[pos], n);
 		params->wifi_profiles[profn].essid[32] = '\0';
 		pos += n;
@@ -5281,10 +5231,11 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 	ptp_nikon_writewifiprofile(params, &test);
 #endif
 	/* everything went Ok */
-	ret = PTP_RC_OK;
-exit:
-	free (data);
-	return ret;
+	free(data);
+	return PTP_RC_OK;
+error:
+	free(data);
+	return PTP_RC_GeneralError;
 }
 
 /**
@@ -5607,14 +5558,15 @@ uint16_t
 ptp_mtp_setobjectproplist (PTPParams* params, MTPProperties *props, int nrofprops)
 {
 	PTPContainer	ptp;
+	uint16_t	ret;
 	unsigned char	*data = NULL;
 	uint32_t	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_MTP_SetObjPropList);
 	size = ptp_pack_OPL(params,props,nrofprops,&data);
-	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL));
+	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
 	free(data);
-	return PTP_RC_OK;
+	return ret;
 }
 
 uint16_t
@@ -5632,8 +5584,6 @@ ptp_mtpz_getwmdrmpdappresponse (PTPParams* params, unsigned char **response, uin
 	PTPContainer ptp;
 
 	PTP_CNT_INIT(ptp, PTP_OC_MTP_WMDRMPD_GetWMDRMPDAppResponse);
-	*size = 0;
-	*response = NULL;
 	return ptp_transaction (params, &ptp, PTP_DP_GETDATA, 0, response, size);
 }
 
@@ -5953,26 +5903,23 @@ uint16_t
 ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numprops)
 {
 	PTPContainer	ptp;
-	uint16_t	ret;
 	unsigned char	*xdata;
 	unsigned char	*data = NULL;
 	unsigned int	nums, i, newoffset, xsize, size  = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_FUJI_GetDeviceInfo);
-	ret = ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 
-	if (ret != PTP_RC_OK) return ret;
-
-	if (size < 8) {
-		free (data);
-		return PTP_RC_GeneralError;
-	}
+	if (size < 8)
+		goto error;
 
 	nums = dtoh32a(data);
 	xdata = data + 4;
 	xsize = size - 4;
 
 	*props = calloc(nums, sizeof(uint16_t));
+	if (!*props)
+		goto error;
 	*numprops = nums;
 	for (i=0;i<nums;i++) {
 		PTPDevicePropDesc	dpd;
@@ -5985,7 +5932,10 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
 		xsize	-= 4+newoffset;
 	}
 	free (data);
-	return ret;
+	return PTP_RC_OK;
+error:
+	free (data);
+	return PTP_RC_GeneralError;
 }
 
 uint16_t

@@ -588,7 +588,7 @@ ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsig
 {
 	uint8_t storagedescriptionlen;
 
-	if (len < 26) return 0;
+	if (!data || len < 26) return 0;
 	si->StorageType=dtoh16a(&data[PTP_si_StorageType]);
 	si->FilesystemType=dtoh16a(&data[PTP_si_FilesystemType]);
 	si->AccessCapability=dtoh16a(&data[PTP_si_AccessCapability]);
@@ -754,7 +754,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 	uint8_t capturedatelen;
 	char *capture_date;
 
-	if (len < PTP_oi_SequenceNumber)
+	if (!data || len < PTP_oi_SequenceNumber)
 		return;
 
 	oi->Filename = oi->Keywords = NULL;
@@ -1019,6 +1019,9 @@ ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *
 {
 	unsigned int ret;
 	unsigned int isenabled, getset;
+
+	if (!data || dpdlen < PTP_dpd_Sony_FactoryDefaultValue)
+		return 0;
 
 	memset (dpd, 0, sizeof(*dpd));
 	dpd->DevicePropertyCode=dtoh16a(&data[PTP_dpd_Sony_DevicePropertyCode]);
@@ -2978,9 +2981,7 @@ ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, P
 	unsigned int i;
 
 	*ec = NULL;
-	if (data == NULL)
-		return;
-	if (len < PTP_nikon_ec_Code)
+	if (!data || len < PTP_nikon_ec_Code)
 		return;
 	*cnt = dtoh16a(&data[PTP_nikon_ec_Length]);
 	if (*cnt > (len-PTP_nikon_ec_Code)/PTP_nikon_ec_Size) { /* broken cnt? */
@@ -3012,9 +3013,7 @@ ptp_unpack_Nikon_EC_EX (PTPParams *params, unsigned char* data, unsigned int len
 	unsigned int i, offset;
 
 	*ec = NULL;
-	if (data == NULL)
-		return 0;
-	if (len < PTP_nikon_ec_ex_Code)
+	if (!data || len < PTP_nikon_ec_ex_Code)
 		return 0;
 	*cnt = dtoh16a(&data[PTP_nikon_ec_ex_Length]);
 	if (*cnt > (len-PTP_nikon_ec_ex_Code)/4) { /* broken cnt? simple first check ... due to dynamic size, we need to do more later */
@@ -3249,7 +3248,7 @@ ptp_unpack_ptp11_manifest (
 	unsigned int		curoffset;
 	PTPObjectFilesystemInfo	*xoifs;
 
-	if (datalen < 8)
+	if (!data || datalen < 8)
 		return 0;
 	numberoifs = dtoh64ap(params,data);
 	curoffset = 8;
