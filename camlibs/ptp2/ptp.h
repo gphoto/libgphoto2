@@ -1833,7 +1833,7 @@ struct _PTPCanon_changes_entry {
 	enum _PTPCanon_changes_types	type;
 	union {
 		struct _PTPCanon_New_Object	object;	/* TYPE_OBJECTINFO */
-		char				*info;
+		char				info[84]; /* 84 is minimum sizeof(object) and sufficient for current use cases */
 		uint16_t			propid;
 		int				status;
 	} u;

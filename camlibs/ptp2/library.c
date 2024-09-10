@@ -3224,11 +3224,8 @@ camera_exit (Camera *camera, GPContext *context)
 
 					if ((exit_result = ptp_check_eos_events (params)) != PTP_RC_OK)
 						goto exitfailed;
-					while (ptp_get_one_eos_event (params, &entry)) {
+					while (ptp_get_one_eos_event (params, &entry))
 						GP_LOG_D ("missed EOS ptp type %d", entry.type);
-						if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN)
-							free (entry.u.info);
-					}
 					camera->pl->checkevents = 0;
 				}
 				if (params->inliveview && ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder))
@@ -4478,7 +4475,6 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			switch (entry.type) {
 			case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
 				GP_LOG_D ("entry unknown: %s", entry.u.info);
-				free (entry.u.info);
 				continue; /* in loop ... do not poll while draining the queue */
 			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
 				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
@@ -6124,7 +6120,7 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 				ptp_check_eos_events (params);
 				while (ptp_get_one_eos_event (params, &entry)) {
 					GP_LOG_D ("entry type %04x", entry.type);
-					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && entry.u.info && sscanf (entry.u.info, "Button %d", &button)) {
+					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && sscanf (entry.u.info, "Button %d", &button)) {
 						GP_LOG_D ("Button %d", button);
 						switch (button) {
 							/* Indicates a successful Half-Press(?) on M2, where it
@@ -6810,19 +6806,19 @@ camera_wait_for_event (Camera *camera, int timeout,
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO:
 					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("Focus Info 12345678901234567890123456789")+1));
+					C_MEM (*eventdata = malloc(strlen("Focus Info ") + strlen(entry.u.info)+1));
 					sprintf (*eventdata, "Focus Info %s", entry.u.info);
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK:
 					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("Focus Mask 12345678901234567890123456789")+1));
+					C_MEM (*eventdata = malloc(strlen("Focus Mask ") + strlen(entry.u.info)+1));
 					sprintf (*eventdata, "Focus Mask %s", entry.u.info);
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
 					/* only return if interesting stuff happened */
-					if (entry.u.info) {
+					if (entry.u.info[0] != 0) {
 						*eventtype = GP_EVENT_UNKNOWN;
-						*eventdata = entry.u.info; /* take over the allocated string allocation ownership */
+						C_MEM(*eventdata = strdup(entry.u.info));
 						return GP_OK;
 					}
 					/* continue otherwise */

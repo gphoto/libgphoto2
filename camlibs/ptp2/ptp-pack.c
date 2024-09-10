@@ -2028,6 +2028,13 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint16_t proptype)
 	return &params->canon_props[j].dpd;
 }
 
+#define PTP_CANON_SET_INFO( ENTRY, MSG, ...) \
+	do {						\
+		int c = snprintf(ENTRY.u.info, sizeof(ENTRY.u.info), MSG, ##__VA_ARGS__);		\
+		if (c > (int)sizeof(ENTRY.u.info))							\
+			ptp_debug(params, "buffer overflow in PTP_CANON_SET_INFO, complete msg is: "	\
+					MSG, ##__VA_ARGS__);						\
+	} while (0)
 
 static inline int
 ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int datasize, PTPCanon_changes_entry **pce)
@@ -2095,7 +2102,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 		}
 
 		ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-		ce[i].u.info = NULL;
+		ce[i].u.info[0] = 0;
 		switch (type) {
 		case PTP_EC_CANON_EOS_ObjectContentChanged:
 			if (size < PTP_ece_OA_ObjectID+1) {
@@ -2614,7 +2621,7 @@ static unsigned int olcsizes[0x15][13] = {
 			}
 			if (olcver == 0) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = strdup("OLC version is unknown");
+				PTP_CANON_SET_INFO(ce[i], "OLC version is unknown");
 				ptp_debug (params, "event %d: OLC version is 0, skipping (might get set later)", i);
 				break;
 			}
@@ -2631,14 +2638,14 @@ static unsigned int olcsizes[0x15][13] = {
 			}
 			if (size < 14) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = strdup("OLC size too small");
+				PTP_CANON_SET_INFO(ce[i], "OLC size too small");
 				ptp_debug (params, "event %d: OLC unexpected size %d", i, size);
 				break;
 			}
 			len = dtoh32a(curdata+8);
 			if ((len != size-8) && (len != size-4)) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-				ce[i].u.info = strdup("OLC size unexpected");
+				PTP_CANON_SET_INFO(ce[i], "OLC size unexpected");
 				ptp_debug (params, "event %d: OLC unexpected size %d for blob len %d (not -4 nor -8)", i, size, len);
 				break;
 			}
@@ -2664,8 +2671,7 @@ static unsigned int olcsizes[0x15][13] = {
 				switch (curmask) {
 				case CANON_EOS_OLC_BUTTON: {
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					ce[i].u.info = malloc(strlen("Button 1234567")+1);
-					sprintf(ce[i].u.info, "Button %d",  dtoh16a(curdata+curoff));
+					PTP_CANON_SET_INFO(ce[i], "Button %d",  dtoh16a(curdata+curoff));
 					i++;
 					break;
 				}
@@ -2727,8 +2733,7 @@ static unsigned int olcsizes[0x15][13] = {
 				case 0x0010: {
 					/* mask 0x0010: 4 bytes, 04 00 00 00 observed */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					ce[i].u.info = malloc(strlen("OLCInfo event 0x0010 content 01234567")+1);
-					sprintf(ce[i].u.info,"OLCInfo event 0x0010 content %02x%02x%02x%02x",
+					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0010 content %02x%02x%02x%02x",
 						curdata[curoff],
 						curdata[curoff+1],
 						curdata[curoff+2],
@@ -2743,8 +2748,7 @@ static unsigned int olcsizes[0x15][13] = {
 					 * has the form of 00 00 01 00 XX XX, where the last two bytes
 					 * stand for the number of seconds remaining until the shot */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					ce[i].u.info = malloc(strlen("OLCInfo event 0x0020 content 0123456789ab")+1);
-					sprintf(ce[i].u.info,"OLCInfo event 0x0020 content %02x%02x%02x%02x%02x%02x",
+					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0020 content %02x%02x%02x%02x%02x%02x",
 						curdata[curoff],
 						curdata[curoff+1],
 						curdata[curoff+2],
@@ -2760,8 +2764,7 @@ static unsigned int olcsizes[0x15][13] = {
 					/* mask 0x0040: 7 bytes, 01 01 00 00 00 00 00 observed */
 					/* exposure indicator */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					ce[i].u.info = malloc(strlen("OLCInfo exposure indicator 012345678901234567890123456789abcd")+1);
-					sprintf(ce[i].u.info,"OLCInfo exposure indicator %d,%d,%d.%d (%02x%02x%02x%02x)",
+					PTP_CANON_SET_INFO(ce[i], "OLCInfo exposure indicator %d,%d,%d.%d (%02x%02x%02x%02x)",
 						curdata[curoff],
 						curdata[curoff+1],
 						value/10,abs(value)%10,
@@ -2776,8 +2779,7 @@ static unsigned int olcsizes[0x15][13] = {
 				case 0x0080: {
 					/* mask 0x0080: 4 bytes, 00 00 00 00 observed */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					ce[i].u.info = malloc(strlen("OLCInfo event 0x0080 content 01234567")+1);
-					sprintf(ce[i].u.info,"OLCInfo event 0x0080 content %02x%02x%02x%02x",
+					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0080 content %02x%02x%02x%02x",
 						curdata[curoff],
 						curdata[curoff+1],
 						curdata[curoff+2],
@@ -2789,8 +2791,7 @@ static unsigned int olcsizes[0x15][13] = {
 				case 0x0100: {
 					/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and 00 00 00 00 01 00 (on focus) observed */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO;
-					ce[i].u.info = malloc(strlen("0123456789ab")+1);
-					sprintf(ce[i].u.info,"%02x%02x%02x%02x%02x%02x",
+					PTP_CANON_SET_INFO(ce[i], "%02x%02x%02x%02x%02x%02x",
 						curdata[curoff],
 						curdata[curoff+1],
 						curdata[curoff+2],
@@ -2804,8 +2805,7 @@ static unsigned int olcsizes[0x15][13] = {
 				case 0x0200: {
 					/* mask 0x0200: 7 bytes, 00 00 00 00 00 00 00 observed */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK;
-					ce[i].u.info = malloc(strlen("0123456789abcd0123456789abcdef")+1);
-					sprintf(ce[i].u.info,"%02x%02x%02x%02x%02x%02x%02x",
+					PTP_CANON_SET_INFO(ce[i], "%02x%02x%02x%02x%02x%02x%02x",
 						curdata[curoff],
 						curdata[curoff+1],
 						curdata[curoff+2],
@@ -2820,8 +2820,7 @@ static unsigned int olcsizes[0x15][13] = {
 				case 0x0400: {
 					/* mask 0x0400: 7 bytes, 00 00 00 00 00 00 00 observed */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					ce[i].u.info = malloc(strlen("OLCInfo event 0x0400 content 0123456789abcd")+1);
-					sprintf(ce[i].u.info,"OLCInfo event 0x0400 content %02x%02x%02x%02x%02x%02x%02x",
+					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0400 content %02x%02x%02x%02x%02x%02x%02x",
 						curdata[curoff],
 						curdata[curoff+1],
 						curdata[curoff+2],
@@ -2837,8 +2836,7 @@ static unsigned int olcsizes[0x15][13] = {
 					/* mask 0x0800: 8 bytes, 00 00 00 00 00 00 00 00 and 19 01 00 00 00 00 00 00 and others observed */
 					/*   might be mask of focus points selected */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					ce[i].u.info = malloc(strlen("OLCInfo event 0x0800 content 0123456789abcdef")+1);
-					sprintf(ce[i].u.info,"OLCInfo event 0x0800 content %02x%02x%02x%02x%02x%02x%02x%02x",
+					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0800 content %02x%02x%02x%02x%02x%02x%02x%02x",
 						curdata[curoff],
 						curdata[curoff+1],
 						curdata[curoff+2],
@@ -2855,8 +2853,7 @@ static unsigned int olcsizes[0x15][13] = {
 					/* mask 0x1000: 1 byte, 00 observed */
 					/* mask 0x1000: 8 byte too on 5ds, type 11 (has shuttercount inside) */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					ce[i].u.info = malloc(strlen("OLCInfo event 0x1000 content 01")+1);
-					sprintf(ce[i].u.info,"OLCInfo event 0x1000 content %02x",
+					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x1000 content %02x",
 						curdata[curoff]
 					);
 					i++;
@@ -2870,8 +2867,7 @@ static unsigned int olcsizes[0x15][13] = {
 			}
 			/* handle more masks */
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("OLCInfo event mask 0123456789")+1);
-			sprintf(ce[i].u.info, "OLCInfo event mask=%x",  mask);
+			PTP_CANON_SET_INFO(ce[i], "OLCInfo event mask=%x",  mask);
 			break;
 		}
 		case PTP_EC_CANON_EOS_CameraStatusChanged:
@@ -2887,33 +2883,27 @@ static unsigned int olcsizes[0x15][13] = {
 			break;
 		case PTP_EC_CANON_EOS_BulbExposureTime:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("BulbExposureTime 123456789012345678"));
-			sprintf (ce[i].u.info, "BulbExposureTime %u",  dtoh32a(curdata+8));
+			PTP_CANON_SET_INFO(ce[i], "BulbExposureTime %u",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_CTGInfoCheckComplete: /* some form of storage catalog ? */
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("CTGInfoCheckComplete 0x012345678")+1);
-			sprintf (ce[i].u.info, "CTGInfoCheckComplete 0x%08x",  dtoh32a(curdata+8));
+			PTP_CANON_SET_INFO(ce[i], "CTGInfoCheckComplete 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_StorageStatusChanged:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("StorageStatusChanged 0x012345678")+1);
-			sprintf (ce[i].u.info, "StorageStatusChanged 0x%08x",  dtoh32a(curdata+8));
+			PTP_CANON_SET_INFO(ce[i], "StorageStatusChanged 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_StorageInfoChanged:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("StorageInfoChanged 0x012345678")+1);
-			sprintf (ce[i].u.info, "StorageInfoChanged 0x%08x",  dtoh32a(curdata+8));
+			PTP_CANON_SET_INFO(ce[i], "StorageInfoChanged 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_StoreAdded:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("StoreAdded 0x012345678")+1);
-			sprintf (ce[i].u.info, "StoreAdded 0x%08x",  dtoh32a(curdata+8));
+			PTP_CANON_SET_INFO(ce[i], "StoreAdded 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_StoreRemoved:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			ce[i].u.info = malloc(strlen("StoreRemoved 0x012345678")+1);
-			sprintf (ce[i].u.info, "StoreRemoved 0x%08x",  dtoh32a(curdata+8));
+			PTP_CANON_SET_INFO(ce[i], "StoreRemoved 0x%08x",  dtoh32a(curdata+8));
 			break;
 		case PTP_EC_CANON_EOS_ObjectRemoved:
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED;
@@ -2923,8 +2913,7 @@ static unsigned int olcsizes[0x15][13] = {
 			switch (type) {
 #define XX(x)		case PTP_EC_CANON_EOS_##x: 								\
 				ptp_debug (params, "event %u: unhandled EOS event "#x" (size %u)", i, size); 	\
-				ce[i].u.info = malloc(strlen("unhandled EOS event "#x" (size 12345678901)")+1);	\
-				sprintf (ce[i].u.info, "unhandled EOS event "#x" (size %u)",  size);		\
+				PTP_CANON_SET_INFO(ce[i], "unhandled EOS event "#x" (size %u)",  size);		\
 				break;
 			XX(RequestGetEvent)
 			XX(RequestGetObjectInfoEx)
