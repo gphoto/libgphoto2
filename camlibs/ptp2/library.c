@@ -6120,7 +6120,7 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 				ptp_check_eos_events (params);
 				while (ptp_get_one_eos_event (params, &entry)) {
 					GP_LOG_D ("entry type %04x", entry.type);
-					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && sscanf (entry.u.info, "Button %d", &button)) {
+					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && sscanf (entry.u.info, "Button %d", &button) == 1) {
 						GP_LOG_D ("Button %d", button);
 						switch (button) {
 							/* Indicates a successful Half-Press(?) on M2, where it
