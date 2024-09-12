@@ -225,22 +225,13 @@ int dc3200_get_data(Camera *camera, unsigned char **data, unsigned long *data_le
 
 	if(folder) {
 		if(filename) {
-			file = malloc(strlen(folder) + strlen(filename) + 2);
-			if(!file)
-				return GP_ERROR;
-
 			/* concatenate the folder + filename */
-			strcpy(file, folder);
-			/* append the filename */
-			if(folder[strlen(folder)-1] != '\\')
-				strcat(file, "\\");
-			strcat(file, filename);
-
+			file = aprintf("%s%s%s", folder, folder[strlen(folder)-1] != '\\' ? "\\" : "", filename);
 		} else {
 			file = strdup(folder);
-			if(!file)
-				return GP_ERROR;
 		}
+		if(!file)
+			return GP_ERROR;
 	} else {
 		return GP_ERROR;
 	}

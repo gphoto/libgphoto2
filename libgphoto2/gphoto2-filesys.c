@@ -1465,10 +1465,7 @@ recursive_folder_scan (
 		char *xfolder;
 		ret = recursive_folder_scan (f, lookforfile, &xfolder);
 		if (ret == GP_OK) {
-			C_MEM ((*foldername) = malloc (strlen (folder->name) + 1 + strlen (xfolder) + 1));
-			strcpy ((*foldername),folder->name);
-			strcat ((*foldername),"/");
-			strcat ((*foldername),xfolder);
+			*foldername = aprintf("%s/%s", folder->name, xfolder);
 			free (xfolder);
 			return GP_OK;
 		}

@@ -955,8 +955,7 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 		if (path->folder[0] != '/') {
 			free (path);
 			*eventtype = GP_EVENT_UNKNOWN;
-			*eventdata = malloc(strlen("Failed to get added filename?")+1);
-			strcpy (*eventdata, "Failed to get added filename?");
+			*eventdata = aprintf("Failed to get added filename?");
 		}
 		free ( camera->pl->directory_state );
 		camera->pl->directory_state = final_state;
@@ -965,8 +964,7 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 	}
 	default:
 		*eventtype = GP_EVENT_UNKNOWN;
-		*eventdata = malloc(strlen("Unknown CANON event 0x01 0x02 0x03 0x04 0x05")+1);
-		sprintf (*eventdata,"Unknown CANON event 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",buf2[0],buf2[1],buf2[2],buf2[3],buf2[4]);
+		*eventdata = aprintf("Unknown CANON event 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x",buf2[0],buf2[1],buf2[2],buf2[3],buf2[4]);
 		return GP_OK;
 	}
 	return GP_OK;

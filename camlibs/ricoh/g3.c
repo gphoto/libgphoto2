@@ -190,7 +190,7 @@ g3_ftp_command_and_reply(GPPort *port, char *cmd, char **reply) {
 	unsigned int len;
 	char *realcmd, *s;
 
-	realcmd = malloc(strlen(cmd)+2+1);strcpy(realcmd, cmd);strcat(realcmd, "\r\n");
+	realcmd = aprintf("%s\r\n", cmd);
 
 	gp_log(GP_LOG_DEBUG, "g3" , "sending %s", cmd);
 	ret = g3_channel_write(port, 1, realcmd, strlen(realcmd));
@@ -326,8 +326,7 @@ g3_cwd_command( GPPort *port, const char *folder) {
 	char *cmd, *reply = NULL;
 	int ret;
 
-	cmd = malloc(strlen("CWD ") + strlen(folder) + 2 + 1);
-	sprintf(cmd,"CWD %s", folder);
+	cmd = aprintf("CWD %s", folder);
 	ret = g3_ftp_command_and_reply(port, cmd, &reply);
 	free(cmd);
 	if (ret < GP_OK) {
@@ -365,8 +364,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			msg = _("Downloading image...");
 		if (strstr(filename,"wav") || strstr(filename,"WAV"))
 			msg = _("Downloading audio...");
-		cmd = malloc(strlen("RETR ") + strlen(filename) + 2 + 1);
-		sprintf(cmd,"RETR %s", filename);
+		cmd = aprintf("RETR %s", filename);
 		ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
 		free(cmd);
 		if (ret < GP_OK) goto out;
@@ -386,8 +384,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
                         ret = GP_ERROR_FILE_NOT_FOUND;
 			goto out;
 		}
-		cmd = malloc(strlen("-SRET ") + strlen(filename) + 2 + 1);
-		sprintf(cmd,"-SRET %s", filename);
+		cmd = aprintf("-SRET %s", filename);
 		ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
 		free(cmd);
 		if (ret < GP_OK) goto out;
@@ -446,8 +443,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *fn, CameraF
 	ret = gp_file_get_data_and_size (file, &imgdata, &size);
 	if (ret < GP_OK) goto out;
 
-	cmd = malloc(strlen("-STOR ") + 20 + strlen(fn) + 2 + 1);
-	sprintf(cmd,"-STOR %ld %s", size, fn);
+	cmd = aprintf("-STOR %ld %s", size, fn);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &buf);
 	free(cmd);
 	if (ret < GP_OK) goto out;
@@ -478,9 +474,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	if (ret < GP_OK)
 		return ret;
 
-	cmd = malloc(strlen("DELE ")+strlen(filename)+1);
-	if (!cmd) return GP_ERROR_NO_MEMORY;
-	sprintf(cmd,"DELE %s",filename);
+	cmd = aprintf("DELE %s", filename);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK)
 		goto out;
@@ -651,9 +645,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (!strcmp(filename+9,"MTA") || !strcmp(filename+9,"mta"))
 		strcpy(info->file.type,"text/plain");
 
-	cmd = malloc(strlen("-FDAT ")+strlen(folder)+1+strlen(filename)+1);
-	if (!cmd) return GP_ERROR_NO_MEMORY;
-	sprintf(cmd, "-FDAT %s/%s", folder,filename);
+	cmd = aprintf("-FDAT %s/%s", folder,filename);
 	ret = g3_ftp_command_and_reply(camera->port, cmd, &reply);
 	if (ret < GP_OK) goto out;
 	if (sscanf(reply, "200 date=%d:%d:%d %d:%d:%d",
