@@ -305,13 +305,10 @@ gp_port_library_list (GPPortInfoList *list)
 
 		gp_port_info_new (&info);
 		gp_port_info_set_type (info, GP_PORT_SERIAL);
-		C_MEM (xname = malloc (strlen("serial:")+strlen(path)+1));
-		strcpy (xname, "serial:");
-		strcat (xname, path);
+		xname = aprintf("serial:%s", path);
 		gp_port_info_set_path (info, xname);
 		free (xname);
-		C_MEM (xname = malloc (100));
-		snprintf (xname, 100, _("Serial Port %i"), x);
+		xname = aprintf(_("Serial Port %i"), x);
 		gp_port_info_set_name (info, xname);
 		free (xname);
 		CHECK (gp_port_info_list_append (list, info));

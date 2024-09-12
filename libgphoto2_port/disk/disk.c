@@ -132,15 +132,13 @@ gp_port_library_list (GPPortInfoList *list)
 				if (-1 == stat(path, &stbuf))
 					continue;
 			}
-			s = malloc (strlen(_("Media '%s'"))+strlen(mntent->mnt_fsname)+1);
-			sprintf (s, _("Media '%s'"), mntent->mnt_fsname);
+			s = aprintf (_("Media '%s'"), mntent->mnt_fsname);
 			gp_port_info_new (&info);
 			gp_port_info_set_type (info, GP_PORT_DISK);
 			gp_port_info_set_name (info, s);
 			free (s);
 
-			s = malloc (strlen("disk:")+strlen(mntent->mnt_dir)+1);
-			sprintf (s, "disk:%s", mntent->mnt_dir);
+			s = aprintf ("disk:%s", mntent->mnt_dir);
 			gp_port_info_set_path (info, s);
 			if (gp_port_info_list_lookup_path (list, s) >= GP_OK) {
 				free (s);
@@ -213,13 +211,11 @@ gp_port_library_list (GPPortInfoList *list)
 			}
 			gp_port_info_new (&info);
 			gp_port_info_set_type (info, GP_PORT_DISK);
-			s = malloc (strlen(_("Media '%s'"))+strlen(mntent->mnt_fsname)+1);
-			sprintf (s, _("Media '%s'"),  mntent->mnt_fsname);
+			s = aprintf (_("Media '%s'"),  mntent->mnt_fsname);
 			gp_port_info_set_name (info, s);
 			free (s);
 
-			s = malloc (strlen("disk:")+strlen(mntent->mnt_dir)+1);
-			sprintf (s, "disk:%s", mntent->mnt_dir);
+			s = aprintf ("disk:%s", mntent->mnt_dir);
 			gp_port_info_set_path (info, s);
 			if (gp_port_info_list_lookup_path (list, s) >= GP_OK) {
 				free (s);

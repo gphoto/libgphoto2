@@ -6770,8 +6770,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventtype = GP_EVENT_UNKNOWN;
 					if (PTP_DPC_CANON_EOS_FocusInfoEx == entry.u.propid) {
 						if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
-							C_MEM (*eventdata = malloc(strlen("FocusInfo ")+strlen(dpd.CurrentValue.str)+1));
-							sprintf (*eventdata, "FocusInfo %s", dpd.CurrentValue.str);
+							*eventdata = aprintf("FocusInfo %s", dpd.CurrentValue.str);
 							ptp_free_devicepropdesc (&dpd);
 							return GP_OK;
 						}
@@ -6782,13 +6781,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 					dpd.DevicePropertyCode = entry.u.propid;
 					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 					if (ret == GP_OK) {
-						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"\" to \"\"")+strlen(name)+1+strlen(content?content:"")));
-						sprintf (*eventdata, "PTP Property %04x changed, \"%s\" to \"%s\"", entry.u.propid, name, content?content:"");
+						*eventdata = aprintf("PTP Property %04x changed, \"%s\" to \"%s\"", entry.u.propid, name, content?content:"");
 						free (name);
 						free (content);
 					} else {
-						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-						sprintf (*eventdata, "PTP Property %04x changed", entry.u.propid);
+						*eventdata = aprintf("PTP Property %04x changed", entry.u.propid);
 					}
 					ptp_free_devicepropdesc (&dpd);
 					return GP_OK;
@@ -6800,19 +6797,16 @@ camera_wait_for_event (Camera *camera, int timeout,
 						*eventdata = NULL;
 					} else {
 						*eventtype = GP_EVENT_UNKNOWN;
-						C_MEM (*eventdata = malloc(strlen("Camera Status 123456789012345")+1));
-						sprintf (*eventdata, "Camera Status %d", entry.u.status);
+						*eventdata = aprintf("Camera Status %d", entry.u.status);
 					}
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO:
 					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("Focus Info ") + strlen(entry.u.info)+1));
-					sprintf (*eventdata, "Focus Info %s", entry.u.info);
+					*eventdata = aprintf("Focus Info %s", entry.u.info);
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK:
 					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("Focus Mask ") + strlen(entry.u.info)+1));
-					sprintf (*eventdata, "Focus Mask %s", entry.u.info);
+					*eventdata = aprintf("Focus Mask %s", entry.u.info);
 					return GP_OK;
 				case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
 					/* only return if interesting stuff happened */
@@ -6827,8 +6821,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					ptp_remove_object_from_cache(params, entry.u.object.oid);
 					gp_filesystem_reset (camera->fs);
 					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("Object Removed")+1));
-					sprintf (*eventdata, "ObjectRemoved");
+					*eventdata = aprintf("ObjectRemoved");
 					return GP_OK;
 				default:
 					GP_LOG_D ("Unhandled EOS event 0x%04x", entry.type);
@@ -7305,21 +7298,18 @@ sonyout:
 
 					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 					if (ret == GP_OK) {
-						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed, \"\" to \"\"")+strlen(name)+1+strlen(content?content:"")));
-						sprintf (*eventdata, "PTP Property %04x changed, \"%s\" to \"%s\"", event.Param1 & 0xffff, name, content?content:"");
+						*eventdata = aprintf("PTP Property %04x changed, \"%s\" to \"%s\"", event.Param1 & 0xffff, name, content?content:"");
 						free (name);
 						free (content);
 					} else {
-						C_MEM (*eventdata = malloc(strlen("PTP Property 0123 changed")+1));
-						sprintf (*eventdata, "PTP Property %04x changed", event.Param1 & 0xffff);
+						*eventdata = aprintf("PTP Property %04x changed", event.Param1 & 0xffff);
 					}
 					ptp_free_devicepropdesc (&dpd);
 					return GP_OK;
 				}
 				default:
 					*eventtype = GP_EVENT_UNKNOWN;
-					C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
-					sprintf (*eventdata, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
+					*eventdata = aprintf("PTP Event %04x, Param1 %08x", event.Code, event.Param1);
 					return GP_OK;
 				}
 			}
@@ -7425,8 +7415,7 @@ handleregular:
 	}
 	case PTP_EC_DeviceInfoChanged:
 		*eventtype = GP_EVENT_UNKNOWN;
-		C_MEM (*eventdata = malloc(strlen("PTP Deviceinfo changed")+1));
-		sprintf (*eventdata, "PTP Deviceinfo changed");
+		*eventdata = aprintf("PTP Deviceinfo changed");
 		C_PTP_REP (ptp_getdeviceinfo (params, &params->deviceinfo));
 		CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
 		print_debug_deviceinfo(params, &params->deviceinfo);
@@ -7443,8 +7432,7 @@ handleregular:
 		 * (reported via email)
 		 */
 		if (ret == PTP_RC_DevicePropNotSupported) {
-			C_MEM (*eventdata = malloc(strlen("PTP Property 01234567 changed")+1));
-			sprintf (*eventdata, "PTP Property %08x changed", event.Param1);
+			*eventdata = aprintf("PTP Property %08x changed", event.Param1);
 			break;
 		}
 		if (ret != PTP_RC_OK)
@@ -7452,13 +7440,11 @@ handleregular:
 
 		ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 		if (ret == GP_OK) {
-			C_MEM (*eventdata = malloc(strlen("PTP Property 01234567 changed, \"\" to \"\"")+strlen(name)+1+strlen(content?content:"")));
-			sprintf (*eventdata, "PTP Property %08x changed, \"%s\" to \"%s\"", event.Param1, name, content?content:"");
+			*eventdata = aprintf("PTP Property %08x changed, \"%s\" to \"%s\"", event.Param1, name, content?content:"");
 			free (name);
 			free (content);
 		} else {
-			C_MEM (*eventdata = malloc(strlen("PTP Property 01234567 changed")+1));
-			sprintf (*eventdata, "PTP Property %08x changed", event.Param1);
+			*eventdata = aprintf("PTP Property %08x changed", event.Param1);
 		}
 		ptp_free_devicepropdesc (&dpd);
 		break;
@@ -7507,25 +7493,21 @@ handleregular:
 		ptp_remove_object_from_cache(params, event.Param1);
 		gp_filesystem_reset (camera->fs);
 		*eventtype = GP_EVENT_UNKNOWN;
-		C_MEM (*eventdata = malloc(strlen("PTP ObjectRemoved, Param1 01234567")+1));
-		sprintf (*eventdata, "PTP ObjectRemoved, Param1 %08x", event.Param1);
+		*eventdata = aprintf("PTP ObjectRemoved, Param1 %08x", event.Param1);
 		break;
 	case PTP_EC_StoreAdded:
 		gp_filesystem_reset (camera->fs);
 		*eventtype = GP_EVENT_UNKNOWN;
-		C_MEM (*eventdata = malloc(strlen("PTP StoreAdded, Param1 01234567")+1));
-		sprintf (*eventdata, "PTP StoreAdded, Param1 %08x", event.Param1);
+		*eventdata = aprintf("PTP StoreAdded, Param1 %08x", event.Param1);
 		break;
 	case PTP_EC_StoreRemoved:
 		gp_filesystem_reset (camera->fs);
 		*eventtype = GP_EVENT_UNKNOWN;
-		C_MEM (*eventdata = malloc(strlen("PTP StoreRemoved, Param1 01234567")+1));
-		sprintf (*eventdata, "PTP StoreRemoved, Param1 %08x", event.Param1);
+		*eventdata = aprintf("PTP StoreRemoved, Param1 %08x", event.Param1);
 		break;
 	default:
 		*eventtype = GP_EVENT_UNKNOWN;
-		C_MEM (*eventdata = malloc(strlen("PTP Event 0123, Param1 01234567")+1));
-		sprintf (*eventdata, "PTP Event %04x, Param1 %08x", event.Code, event.Param1);
+		*eventdata = aprintf("PTP Event %04x, Param1 %08x", event.Code, event.Param1);
 		break;
 	}
 	return GP_OK;

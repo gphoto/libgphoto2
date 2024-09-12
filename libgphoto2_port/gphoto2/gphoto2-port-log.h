@@ -218,6 +218,19 @@ __attribute__((__format__(printf,4,5)))
   char*
   gpi_vsnprintf (const char* format, va_list args);
 
+static inline char*
+aprintf(const char *fmt, ...)
+{
+	va_list ap;
+	char* res;
+
+	va_start(ap, fmt);
+	res = gpi_vsnprintf(fmt, ap);
+	va_end(ap);
+
+	return res;
+}
+
 #define C_MEM(MEM) do {\
 	if ((MEM) == NULL) {\
 		GP_LOG_E ("Out of memory: '%s' failed.", #MEM);\

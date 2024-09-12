@@ -47,11 +47,7 @@ recursive_directory(Camera *camera, const char *folder, GPContext *context, int 
 
 		if (!strlen(newfolder)) continue;
 
-		buf = malloc (strlen(folder) + 1 + strlen(newfolder) + 1);
-		strcpy(buf, folder);
-		if (strcmp(folder,"/"))		/* avoid double / */
-			strcat(buf, "/");
-		strcat(buf, newfolder);
+		buf = aprintf("%s%s%s", folder, strcmp(folder, "/") ? "/" : "", newfolder);
 
 		fprintf(stderr,"newfolder=%s\n", newfolder);
 

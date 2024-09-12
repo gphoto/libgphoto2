@@ -453,10 +453,7 @@ read_directories(const char *path, struct ptp_dirent *parent) {
 		cur = malloc(sizeof(struct ptp_dirent));
 		if (!cur) break;
 		cur->name = strdup(gp_system_filename(de));
-		cur->fsname = malloc(strlen(path)+1+strlen(gp_system_filename(de))+1);
-		strcpy(cur->fsname,path);
-		strcat(cur->fsname,"/");
-		strcat(cur->fsname,gp_system_filename(de));
+		cur->fsname = aprintf("%s/%s", path, gp_system_filename(de));
 		cur->id = ptp_objectid++;
 		cur->next = first_dirent;
 		cur->parent = parent;

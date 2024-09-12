@@ -182,9 +182,7 @@ chdk_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (strlen(folder)>2 && (xfolder[strlen(xfolder)-1] == '/'))
 		xfolder[strlen(xfolder)-1] = '\0';
 
-	C_MEM (lua = malloc(strlen(luascript)+strlen(xfolder)+1));
-
-	sprintf(lua,luascript,xfolder);
+	lua = aprintf(luascript, xfolder);
 	free(xfolder);
 
 	ret = chdk_generic_script_run (params, lua, &table, &retint, context);
@@ -327,8 +325,7 @@ chdk_get_info_func (CameraFilesystem *fs, const char *folder, const char *filena
 	const char 		*luascript = "\nreturn os.stat('A%s/%s')";
 	char 			*lua = NULL;
 
-	C_MEM (lua = malloc(strlen(luascript)+strlen(folder)+strlen(filename)+1));
-	sprintf(lua,luascript,folder,filename);
+	lua = aprintf(luascript, folder, filename);
 	ret = chdk_generic_script_run (params, lua, &table, &retint, context);
 	free (lua);
 	if (table) {
@@ -361,8 +358,7 @@ chdk_delete_file_func (CameraFilesystem *fs, const char *folder,
 	const char 		*luascript = "\nreturn os.remove('A%s/%s')";
 	char 			*lua = NULL;
 
-	C_MEM (lua = malloc(strlen(luascript)+strlen(folder)+strlen(filename)+1));
-	sprintf(lua,luascript,folder,filename);
+	lua = aprintf(luascript, folder, filename);
 	ret = chdk_generic_script_run (params, lua, NULL, NULL, context);
 	free (lua);
 	return ret;

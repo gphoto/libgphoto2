@@ -188,22 +188,13 @@ get_path (Camera *camera, const char *folder, const char *filename) {
 	char	*xfolder, *xfilename;
 
 	xfolder = strdup_to_latin1 (folder);
-	if (!xfolder)
-		return NULL;
 	xfilename = _convert_for_device (camera, filename);
-	if (!xfilename) {
-		free (xfolder);
+	if (!xfolder || !xfilename)
 		return NULL;
-	}
-	path = malloc(strlen(xfolder)+1+strlen(xfilename)+1);
-	if (!path) {
-		free (xfolder);
-		return NULL;
-	}
-	strcpy (path, xfolder);
-	strcat (path, "/");
+
+	path = aprintf("%s/%s", xfolder, xfilename);
 	backslash (path);
-	strcat (path, xfilename);
+
 	free (xfolder);
 	free (xfilename);
 	return path;
