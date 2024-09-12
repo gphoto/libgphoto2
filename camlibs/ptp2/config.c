@@ -456,6 +456,9 @@ skip:
 	C_PTP (ptp_check_eos_events (params));
 	params->eos_captureenabled = 1;
 
+	/* Initialize time for camera_keep_device_on polling */
+	params->starttime = time_now();
+
 	/* run this only on EOS M, not on PowerShot SX */
 	/* I lost track where it is needed.
 	 * Need it:
@@ -11505,9 +11508,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
 		ptp_check_eos_events (params);
-		/* Otherwise the camera will auto-shutdown */
-		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn))
-			C_PTP (ptp_canon_eos_keepdeviceon (params));
+		camera_keep_device_on (camera);
 	}
 
 	if (mode == MODE_GET) {
@@ -12231,18 +12232,6 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 
 	memset (&ab, 0, sizeof(ab));
 	gp_camera_get_abilities (camera, &ab);
-	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-		(ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteRelease) ||
-		 ptp_operation_issupported(params, PTP_OC_CANON_EOS_RemoteReleaseOn)
-		)
-	) {
-		if (!params->eos_captureenabled)
-			camera_prepare_capture (camera, context);
-		ptp_check_eos_events (params);
-		/* Otherwise the camera will auto-shutdown */
-		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn))
-			C_PTP (ptp_canon_eos_keepdeviceon (params));
-	}
 
 	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
 		if (!menus[menuno].submenus) { /* Custom menu ... not exposed to by-property method */
@@ -12427,4 +12416,23 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 	}
 	/* not found */
 	return GP_ERROR_BAD_PARAMETERS;
+}
+
+int
+camera_keep_device_on(Camera *camera)
+{
+	PTPParams *params = &camera->pl->params;
+
+	if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn)) {
+		/* GP_LOG_D("time since last ping: %dms", time_since(params->starttime)); */
+		/* use params->starttime which is not used for EOS devices otherwise to
+		 * ping the EOS about every 10s. Interestingly, the EOS R8 has an Auto Power Off
+		 * timer that can be set to 15s minimum but it does not power off for at least
+		 * several minutes while still connected to USB, even without any traffic. */
+		if (time_since(params->starttime) > 10 * 1000) {
+			C_PTP (ptp_canon_eos_keepdeviceon (params));
+			params->starttime = time_now();
+		}
+	}
+	return GP_OK;
 }
