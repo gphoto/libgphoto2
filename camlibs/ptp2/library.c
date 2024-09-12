@@ -182,22 +182,6 @@ print_debug_deviceinfo (PTPParams *params, PTPDeviceInfo *di)
 	}
 }
 
-/* struct timeval is simply two long int values, so passing it by value is not expensive.
- * It is most likely going to be inlined anyway and therefore 'free'. Passing it by value
- * leads to a cleaner interface. */
-static struct timeval
-time_now() {
-	struct timeval curtime;
-	gettimeofday (&curtime, NULL);
-	return curtime;
-}
-
-static int
-time_since (const struct timeval start) {
-	struct timeval curtime = time_now();
-	return ((curtime.tv_sec - start.tv_sec)*1000)+((curtime.tv_usec - start.tv_usec)/1000);
-}
-
 static int
 waiting_for_timeout (int *current_wait, struct timeval start, int timeout) {
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
@@ -3592,7 +3576,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 			ptp_free_devicepropdesc (&dpd);
 
 			/* Otherwise the camera will auto-shutdown */
-			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn)) C_PTP (ptp_canon_eos_keepdeviceon (params));
+			CR (camera_keep_device_on (camera));
 
 			params->inliveview = 1;
 			event_start = time_now();
@@ -4517,7 +4501,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			break;
 
 		/* not really proven to help keep it on */
-		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn)) C_PTP_REP (ptp_canon_eos_keepdeviceon (params));
+		CR (camera_keep_device_on (camera));
 		gp_context_idle (context);
 	} while (waiting_for_timeout (&back_off_wait, capture_start, EOS_CAPTURE_TIMEOUT));
 
@@ -6614,11 +6598,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 		do {
 			PTPCanon_changes_entry	entry;
 
-			/* keep device alive */
-			if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_KeepDeviceOn)) C_PTP (ptp_canon_eos_keepdeviceon (params));
+			CR (camera_keep_device_on (camera));
 
-			C_PTP_REP_MSG (ptp_check_eos_events (params),
-				       _("Canon EOS Get Changes failed"));
+			if (params->nrofbacklogentries == 0)
+				C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
+
 			while (ptp_get_one_eos_event (params, &entry)) {
 				back_off_wait = 0;
 				GP_LOG_D ("entry type %04x", entry.type);
