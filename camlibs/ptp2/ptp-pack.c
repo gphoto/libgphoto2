@@ -2615,10 +2615,8 @@ static unsigned int olcsizes[0x15][13] = {
 			unsigned int		olcver = 0, j;
 
 			dpd = _lookup_or_allocate_canon_prop(params, PTP_DPC_CANON_EOS_OLCInfoVersion);
-			if (dpd) {
-				ptp_debug (params, "olcinfoversion is %d", dpd->CurrentValue.u32);
+			if (dpd)
 				olcver = dpd->CurrentValue.u32;
-			}
 			if (olcver == 0) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 				PTP_CANON_SET_INFO(ce[i], "OLC version is unknown");
@@ -2626,10 +2624,11 @@ static unsigned int olcsizes[0x15][13] = {
 				break;
 			}
 			if (olcver >= sizeof(olcsizes)/sizeof(olcsizes[0])) {
-				ptp_debug (params, "event %d: OLC version is %d, assuming latest known", i, olcver);
+				ptp_debug (params, "event %d: OLC version is 0x%02x, assuming latest known", i, olcver);
 				olcver = sizeof(olcsizes)/sizeof(olcsizes[0])-1;
 			}
 
+			ptp_debug (params, "event %d: OLC version is 0x%02x", i, olcver);
 			ptp_debug (params, "event %d: EOS event OLCInfoChanged (size %d)", i, size);
 			if (size >= 0x8) {	/* event info */
 				unsigned int k;
