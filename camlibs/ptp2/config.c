@@ -8166,7 +8166,6 @@ _put_STR_as_time(CONFIG_PUT_ARGS) {
 	struct tm	xtm;
 #endif
 	struct tm	*pxtm;
-	char		asctime[64];
 
 	camtime = 0;
 	CR (gp_widget_get_value (widget,&camtime));
@@ -8177,13 +8176,10 @@ _put_STR_as_time(CONFIG_PUT_ARGS) {
 	pxtm = localtime (&camtime);
 #endif
 	/* 20020101T123400.0 is returned by the HP Photosmart */
-	sprintf(asctime,"%04d%02d%02dT%02d%02d%02d",pxtm->tm_year+1900,pxtm->tm_mon+1,pxtm->tm_mday,pxtm->tm_hour,pxtm->tm_min,pxtm->tm_sec);
-
 	/* if the camera reported fractional seconds, also add it */
-	if (strchr(dpd->CurrentValue.str,'.'))
-		strcat(asctime,".0");
-
-	C_MEM (propval->str = strdup(asctime));
+	propval->str = aprintf("%04d%02d%02dT%02d%02d%02d%s",
+			       pxtm->tm_year + 1900, pxtm->tm_mon + 1, pxtm->tm_mday, pxtm->tm_hour, pxtm->tm_min, pxtm->tm_sec,
+			       strchr(dpd->CurrentValue.str,'.') ? ".0" : "");
 	return (GP_OK);
 }
 
@@ -12308,11 +12304,9 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 						break;
 					}
 					case GP_WIDGET_RANGE: {
-						char buf[20];
 						float fval;
 						CR (gp_widget_get_value (widget, &fval));
-						sprintf(buf,"%f",fval);
-						C_MEM (*content = strdup(buf));
+						*content = aprintf("%f", fval);
 						break;
 					}
 					default:
@@ -12348,11 +12342,9 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					break;
 				}
 				case GP_WIDGET_RANGE: {
-					char buf[20];
 					float fval;
 					CR (gp_widget_get_value (widget, &fval));
-					sprintf(buf,"%f",fval);
-					C_MEM (*content = strdup(buf));
+					*content = aprintf("%f", fval);
 					break;
 				}
 				default:
@@ -12386,11 +12378,9 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 					break;
 				}
 				case GP_WIDGET_RANGE: {
-					char buf[20];
 					float fval;
 					CR (gp_widget_get_value (widget, &fval));
-					sprintf(buf,"%f",fval);
-					C_MEM (*content = strdup(buf));
+					*content = aprintf("%f", fval);
 					break;
 				}
 				default:
@@ -12405,22 +12395,17 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 	}
 
 	if (have_prop(camera, params->deviceinfo.VendorExtensionID, propid)) {
-		char			buf[21], *label;
+		const char *label;
 
 		GP_LOG_D ("Getting generic PTP property 0x%04x", propid );
-		sprintf(buf,"%04x", propid);
 
-		label = (char*)ptp_get_property_description(params, propid);
-		if (!label) {
-			sprintf (buf, N_("PTP Property 0x%04x"), propid);
-			label = buf;
-		}
-		C_MEM (*name = strdup (label));
+		label = ptp_get_property_description(params, propid);
+		*name = label ? strdup(label) : aprintf (N_("PTP Property 0x%04x"), propid);
+
 		switch (dpd->DataType) {
 #define X(dtc,val,fmt) 							\
 		case dtc:						\
-			sprintf (buf, fmt, dpd->CurrentValue.val);	\
-			C_MEM (*content = strdup (buf));		\
+			*content = aprintf (fmt, dpd->CurrentValue.val);\
 			return GP_OK;					\
 
 		X(PTP_DTC_INT8,i8,"%d")
@@ -12436,8 +12421,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 			C_MEM (*content = strdup (dpd->CurrentValue.str?dpd->CurrentValue.str:"<null>"));
 			return GP_OK;
 		default:
-			sprintf(buf, "Unknown type 0x%04x", dpd->DataType);
-			C_MEM (*content = strdup (buf));
+			*content = aprintf("Unknown type 0x%04x", dpd->DataType);
 			return GP_OK;
 		}
 	}
