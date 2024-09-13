@@ -1746,16 +1746,14 @@ static int
 ptp_datetime_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	struct tm		*tm;
 	time_t			xtime;
-	char			xdate[40];
 
 	desc->DevicePropertyCode	= 0x5011;
 	desc->DataType			= 0xffff;	/* string */
 	desc->GetSet			= 1;		/* get only */
 	time(&xtime);
 	tm = gmtime(&xtime);
-	sprintf(xdate,"%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
-	desc->FactoryDefaultValue.str	= strdup (xdate);
-	desc->CurrentValue.str		= strdup (xdate);
+	desc->FactoryDefaultValue.str	= aprintf("%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
+	desc->CurrentValue.str		= strdup (desc->FactoryDefaultValue.str);
 	desc->FormFlag			= 0; /* no form */
 	/*ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5011, 0xffffffff);*/
 	return 1;
@@ -1765,12 +1763,10 @@ static int
 ptp_datetime_getvalue (vcamera* cam, PTPPropertyValue *val) {
 	struct tm		*tm;
 	time_t			xtime;
-	char			xdate[40];
 
 	time(&xtime);
 	tm = gmtime(&xtime);
-	sprintf(xdate,"%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
-	val->str = strdup (xdate);
+	val->str = aprintf("%04d%02d%02dT%02d%02d%02d",tm->tm_year + 1900,tm->tm_mon + 1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
 	/*ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5011, 0xffffffff);*/
 	return 1;
 }
