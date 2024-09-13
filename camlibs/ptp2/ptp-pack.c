@@ -135,7 +135,7 @@ dtoh64ap (PTPParams *params, const unsigned char *a)
  * len - in ptp string characters currently
  */
 static inline int
-ptp_unpack_string(PTPParams *params, unsigned char* data, uint32_t offset, uint32_t total, uint8_t *len, char **retstr)
+ptp_unpack_string(PTPParams *params, const unsigned char* data, uint32_t offset, uint32_t total, uint8_t *len, char **retstr)
 {
 	uint8_t length;
 	uint16_t string[PTP_MAXSTRLEN+1];
@@ -206,7 +206,7 @@ ucs2strlen(uint16_t const * const unicstr)
 
 
 static inline void
-ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t offset, uint8_t *len)
+ptp_pack_string(PTPParams *params, const char *string, unsigned char* data, uint16_t offset, uint8_t *len)
 {
 	int packedlen = 0;
 	uint16_t ucs2str[PTP_MAXSTRLEN+1];
@@ -219,9 +219,9 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 	if (params->cd_locale_to_ucs2 != (iconv_t)-1) {
 		size_t nconv;
 		size_t convmax = PTP_MAXSTRLEN * 2; /* Includes the terminator */
-		char *stringp = string;
+		char *inbuf = (char*)string; /* the 'internet' says iconv will not change the input string */
 
-		nconv = iconv(params->cd_locale_to_ucs2, &stringp, &convlen,
+		nconv = iconv(params->cd_locale_to_ucs2, &inbuf, &convlen,
 			&ucs2strp, &convmax);
 		if (nconv == (size_t) -1)
 			ucs2str[0] = 0x0000U;
@@ -255,7 +255,7 @@ ptp_pack_string(PTPParams *params, char *string, unsigned char* data, uint16_t o
 }
 
 static inline unsigned char *
-ptp_get_packed_stringcopy(PTPParams *params, char *string, uint32_t *packed_size)
+ptp_get_packed_stringcopy(PTPParams *params, const char *string, uint32_t *packed_size)
 {
 	uint8_t packed[PTP_MAXSTRLEN*2+3], len;
 	size_t plen;
@@ -280,7 +280,7 @@ ptp_get_packed_stringcopy(PTPParams *params, char *string, uint32_t *packed_size
 }
 
 static inline uint32_t
-ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, unsigned int offset, unsigned int datalen, uint32_t **array)
+ptp_unpack_uint32_t_array(PTPParams *params, const unsigned char* data, unsigned int offset, unsigned int datalen, uint32_t **array)
 {
 	uint32_t n, i=0;
 
@@ -314,7 +314,7 @@ ptp_unpack_uint32_t_array(PTPParams *params, unsigned char* data, unsigned int o
 }
 
 static inline uint32_t
-ptp_pack_uint32_t_array(PTPParams *params, uint32_t *array, uint32_t arraylen, unsigned char **data )
+ptp_pack_uint32_t_array(PTPParams *params, const uint32_t *array, uint32_t arraylen, unsigned char **data )
 {
 	uint32_t i=0;
 
@@ -328,7 +328,7 @@ ptp_pack_uint32_t_array(PTPParams *params, uint32_t *array, uint32_t arraylen, u
 }
 
 static inline uint32_t
-ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, unsigned int offset, unsigned int datalen, uint16_t **array)
+ptp_unpack_uint16_t_array(PTPParams *params, const unsigned char* data, unsigned int offset, unsigned int datalen, uint16_t **array)
 {
 	uint32_t n, i=0;
 
@@ -368,7 +368,7 @@ ptp_unpack_uint16_t_array(PTPParams *params, unsigned char* data, unsigned int o
 #define PTP_di_OperationsSupported	10
 
 static inline int
-ptp_unpack_DI (PTPParams *params, unsigned char* data, PTPDeviceInfo *di, unsigned int datalen)
+ptp_unpack_DI (PTPParams *params, const unsigned char* data, PTPDeviceInfo *di, unsigned int datalen)
 {
 	uint8_t len;
 	unsigned int totallen;
@@ -507,7 +507,7 @@ ptp_free_DI (PTPDeviceInfo *di) {
 
 /* EOS Device Info unpack */
 static inline int
-ptp_unpack_EOS_DI (PTPParams *params, unsigned char* data, PTPCanonEOSDeviceInfo *di, unsigned int datalen)
+ptp_unpack_EOS_DI (PTPParams *params, const unsigned char* data, PTPCanonEOSDeviceInfo *di, unsigned int datalen)
 {
 	unsigned int totallen = 4;
 
@@ -547,7 +547,7 @@ ptp_free_EOS_DI (PTPCanonEOSDeviceInfo *di)
 #define PTP_oh				 0
 
 static inline void
-ptp_unpack_OH (PTPParams *params, unsigned char* data, PTPObjectHandles *oh, unsigned int len)
+ptp_unpack_OH (PTPParams *params, const unsigned char* data, PTPObjectHandles *oh, unsigned int len)
 {
 	if (len) {
 		oh->n = ptp_unpack_uint32_t_array(params, data, PTP_oh, len, &oh->Handler);
@@ -562,7 +562,7 @@ ptp_unpack_OH (PTPParams *params, unsigned char* data, PTPObjectHandles *oh, uns
 #define PTP_sids			 0
 
 static inline void
-ptp_unpack_SIDs (PTPParams *params, unsigned char* data, PTPStorageIDs *sids, unsigned int len)
+ptp_unpack_SIDs (PTPParams *params, const unsigned char* data, PTPStorageIDs *sids, unsigned int len)
 {
 	sids->n = 0;
 	sids->Storage = NULL;
@@ -584,7 +584,7 @@ ptp_unpack_SIDs (PTPParams *params, unsigned char* data, PTPStorageIDs *sids, un
 #define PTP_si_StorageDescription	26
 
 static inline int
-ptp_unpack_SI (PTPParams *params, unsigned char* data, PTPStorageInfo *si, unsigned int len)
+ptp_unpack_SI (PTPParams *params, const unsigned char* data, PTPStorageInfo *si, unsigned int len)
 {
 	uint8_t storagedescriptionlen;
 
@@ -748,7 +748,7 @@ ptp_unpack_PTPTIME (const char *str) {
 }
 
 static inline void
-ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsigned int len)
+ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, unsigned int len)
 {
 	uint8_t filenamelen;
 	uint8_t capturedatelen;
@@ -829,7 +829,7 @@ ptp_unpack_OI (PTPParams *params, unsigned char* data, PTPObjectInfo *oi, unsign
 
 static inline unsigned int
 ptp_unpack_DPV (
-	PTPParams *params, unsigned char* data, unsigned int *offset, unsigned int total,
+	PTPParams *params, const unsigned char* data, unsigned int *offset, unsigned int total,
 	PTPPropertyValue* value, uint16_t datatype
 ) {
 	if (*offset >= total)	/* we are at the end or over the end of the buffer */
@@ -923,7 +923,7 @@ ptp_unpack_DPV (
 #define PTP_dpd_FactoryDefaultValue	5
 
 static inline int
-ptp_unpack_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *newoffset)
+ptp_unpack_DPD (PTPParams *params, const unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *newoffset)
 {
 	unsigned int offset = 0, ret;
 
@@ -1015,7 +1015,7 @@ outofmemory:
 	/* PTP_dpd_SonyCurrentValue 		6 + sizeof(DataType) */
 
 static inline int
-ptp_unpack_Sony_DPD (PTPParams *params, unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *poffset)
+ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *poffset)
 {
 	unsigned int ret;
 	unsigned int isenabled, getset;
@@ -1214,7 +1214,7 @@ duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 #define PTP_opd_FactoryDefaultValue	5
 
 static inline int
-ptp_unpack_OPD (PTPParams *params, unsigned char* data, PTPObjectPropDesc *opd, unsigned int opdlen)
+ptp_unpack_OPD (PTPParams *params, const unsigned char* data, PTPObjectPropDesc *opd, unsigned int opdlen)
 {
 	unsigned int offset=0, ret;
 	uint8_t	len;
@@ -1490,7 +1490,7 @@ _compare_func(const void* x, const void *y) {
 }
 
 static inline int
-ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, unsigned int len)
+ptp_unpack_OPL (PTPParams *params, const unsigned char* data, MTPProperties **pprops, unsigned int len)
 {
 	uint32_t prop_count;
 	MTPProperties *props = NULL;
@@ -1568,7 +1568,7 @@ ptp_unpack_OPL (PTPParams *params, unsigned char* data, MTPProperties **pprops, 
 #define PTP_ec_Param3		20
 
 static inline void
-ptp_unpack_EC (PTPParams *params, unsigned char* data, PTPContainer *ec, unsigned int len)
+ptp_unpack_EC (PTPParams *params, const unsigned char* data, PTPContainer *ec, unsigned int len)
 {
 	unsigned int	length;
 	int	type;
@@ -1617,7 +1617,7 @@ ptp_unpack_EC (PTPParams *params, unsigned char* data, PTPContainer *ec, unsigne
 #define PTP_cfe_Filename		15
 
 static inline void
-ptp_unpack_Canon_FE (PTPParams *params, unsigned char* data, PTPCANONFolderEntry *fe)
+ptp_unpack_Canon_FE (PTPParams *params, const unsigned char* data, PTPCANONFolderEntry *fe)
 {
 	int i;
 	if (data==NULL)
@@ -1692,7 +1692,7 @@ ObjectInfo for 'IMG_0199.JPG':
 #define PTP_cefe_Time			48
 
 static inline void
-ptp_unpack_Canon_EOS_FE (PTPParams *params, unsigned char* data, unsigned int size, PTPCANONFolderEntry *fe)
+ptp_unpack_Canon_EOS_FE (PTPParams *params, const unsigned char* data, unsigned int size, PTPCANONFolderEntry *fe)
 {
 	int i;
 
@@ -1710,7 +1710,7 @@ ptp_unpack_Canon_EOS_FE (PTPParams *params, unsigned char* data, unsigned int si
 
 
 static inline uint16_t
-ptp_unpack_EOS_ImageFormat (PTPParams* params, unsigned char** data )
+ptp_unpack_EOS_ImageFormat (PTPParams* params, const unsigned char** data )
 {
 	/*
 	  EOS ImageFormat entries (of at least the 5DM2 and the 400D) look like this:
@@ -1835,7 +1835,7 @@ ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value
  * size=NxN,size2=NxN,points={NxNxNxN,NxNxNxN,...},selected={0,1,2}
  */
 static inline char*
-ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data, uint32_t datasize )
+ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint32_t datasize )
 {
 	uint32_t size 			= dtoh32a( *data );
 	uint32_t halfsize		= dtoh16a( (*data) + 4);
@@ -1925,7 +1925,7 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, unsigned char** data, uint32_t da
 
 
 static inline char*
-ptp_unpack_EOS_CustomFuncEx (PTPParams* params, unsigned char** data )
+ptp_unpack_EOS_CustomFuncEx (PTPParams* params, const unsigned char** data )
 {
 	uint32_t s = dtoh32a( *data );
 	uint32_t n = s/4, i;
@@ -2037,10 +2037,10 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint16_t proptype)
 	} while (0)
 
 static inline int
-ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int datasize, PTPCanon_changes_entry **pce)
+ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned int datasize, PTPCanon_changes_entry **pce)
 {
 	int	i = 0, entries = 0;
-	unsigned char	*curdata = data;
+	const unsigned char *curdata = data;
 	PTPCanon_changes_entry *ce;
 
 	if (data==NULL)
@@ -2165,7 +2165,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
 			uint32_t	propxtype = dtoh32a(&curdata[PTP_ece_Prop_Desc_Type]);
 			uint32_t	propxcnt = dtoh32a(&curdata[PTP_ece_Prop_Desc_Count]);
-			unsigned char	*xdata = &curdata[PTP_ece_Prop_Desc_Data];
+			const unsigned char	*xdata = &curdata[PTP_ece_Prop_Desc_Data];
 			unsigned int	j;
 			PTPDevicePropDesc	*dpd;
 
@@ -2255,7 +2255,7 @@ ptp_unpack_CANON_changes (PTPParams *params, unsigned char* data, unsigned int d
 			if (size >= 0xc) {	/* property info */
 				unsigned int j;
 				uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
-				unsigned char	*xdata = &curdata[PTP_ece_Prop_Val_Data];
+				const unsigned char	*xdata = &curdata[PTP_ece_Prop_Val_Data];
 				PTPDevicePropDesc	*dpd;
 
 				if (size < PTP_ece_Prop_Val_Data) {
@@ -2965,7 +2965,7 @@ static unsigned int olcsizes[0x15][13] = {
 #define PTP_nikon_ec_Param1		4
 #define PTP_nikon_ec_Size		6
 static inline void
-ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, PTPContainer **ec, unsigned int *cnt)
+ptp_unpack_Nikon_EC (PTPParams *params, const unsigned char* data, unsigned int len, PTPContainer **ec, unsigned int *cnt)
 {
 	unsigned int i;
 
@@ -2997,7 +2997,7 @@ ptp_unpack_Nikon_EC (PTPParams *params, unsigned char* data, unsigned int len, P
 #define PTP_nikon_ec_ex_Code		2
 
 static inline int
-ptp_unpack_Nikon_EC_EX (PTPParams *params, unsigned char* data, unsigned int len, PTPContainer **ec, unsigned int *cnt)
+ptp_unpack_Nikon_EC_EX (PTPParams *params, const unsigned char* data, unsigned int len, PTPContainer **ec, unsigned int *cnt)
 {
 	unsigned int i, offset;
 
@@ -3228,7 +3228,7 @@ ptp_unpack_canon_directory (
 static inline int
 ptp_unpack_ptp11_manifest (
 	PTPParams		*params,
-	unsigned char		*data,
+	const unsigned char	*data,
 	unsigned int 		datalen,
 	uint64_t		*numoifs,
 	PTPObjectFilesystemInfo	**oifs
@@ -3285,7 +3285,7 @@ tooshort:
 }
 
 static inline void
-ptp_unpack_chdk_lv_data_header (PTPParams *params, unsigned char* data, lv_data_header *header)
+ptp_unpack_chdk_lv_data_header (PTPParams *params, const unsigned char* data, lv_data_header *header)
 {
 	int off = 0;
 	if (data==NULL)
@@ -3302,7 +3302,7 @@ ptp_unpack_chdk_lv_data_header (PTPParams *params, unsigned char* data, lv_data_
 }
 
 static inline void
-ptp_unpack_chdk_lv_framebuffer_desc (PTPParams *params, unsigned char* data, lv_framebuffer_desc *fd)
+ptp_unpack_chdk_lv_framebuffer_desc (PTPParams *params, const unsigned char* data, lv_framebuffer_desc *fd)
 {
 	int off = 0;
 	if (data==NULL)
@@ -3319,7 +3319,8 @@ ptp_unpack_chdk_lv_framebuffer_desc (PTPParams *params, unsigned char* data, lv_
 }
 
 static inline int
-ptp_unpack_StreamInfo (PTPParams *params, unsigned char *data, PTPStreamInfo *si, unsigned int size) {
+ptp_unpack_StreamInfo (PTPParams *params, const unsigned char *data, PTPStreamInfo *si, unsigned int size)
+{
 	if (!data) return PTP_RC_GeneralError;
 	if (size < 36) return PTP_RC_GeneralError;
 
