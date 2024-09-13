@@ -3092,10 +3092,8 @@ _put_Fuji_FocusPoint(CONFIG_PUT_ARGS) {
 	PTPParams *params = &(camera->pl->params);
 	GPContext *context = ((PTPData *) params->data)->context;
 	PTPPropertyValue pval;
-	char *focus_point;
 
-	CR (gp_widget_get_value(widget, &focus_point));
-	C_MEM (pval.str = strdup(focus_point));
+	CR (gp_widget_get_value(widget, &pval.str));
 	C_PTP_REP(ptp_setdevicepropvalue(params, PTP_DPC_FUJI_FocusArea4, &pval, PTP_DTC_STR));
 	*alreadyset = 1;
 	return GP_OK;
