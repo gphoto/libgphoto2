@@ -12356,8 +12356,8 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 				return GP_OK;
 			}
 			/* Sigma FP special handling */
-			if (have_sigma_prop(params,cursub->vendorid,cursub->propid) &&
-				(cursub->propid == propid)
+			if (	(cursub->propid == propid) &&
+				have_sigma_prop(params,cursub->vendorid,cursub->propid)
 			) {
 				GP_LOG_D ("Getting Sigma property '%s' / 0x%04x", cursub->label, cursub->propid );
 				ret = cursub->getfunc (camera, &widget, cursub, dpd);
