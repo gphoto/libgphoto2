@@ -269,8 +269,8 @@ QVpicattr (Camera *camera, int n, unsigned char *picattr)
 
 	cmd[0] = 'D';
 	cmd[1] = 'Y';
-        cmd[2] = STX;
-        cmd[3] = n+1;
+	cmd[2] = STX;
+	cmd[3] = n+1;
 	CR (QVsend (camera, cmd, 4, &b, 1));
 	*picattr = b;
 
@@ -386,33 +386,33 @@ QVcapture (Camera *camera)
 int
 QVstatus (Camera *camera, char *status)
 {
-        unsigned char cmd[3];
+	unsigned char cmd[3];
 
-        cmd[0] = 'D';
-        cmd[1] = 'S';
-        cmd[2] = STX;
-        CR (QVsend (camera, cmd, 3, (unsigned char *)status, 2));
+	cmd[0] = 'D';
+	cmd[1] = 'S';
+	cmd[2] = STX;
+	CR (QVsend (camera, cmd, 3, (unsigned char *)status, 2));
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 int
 QVreset (Camera *camera)
 {
-        unsigned char cmd[2];
+	unsigned char cmd[2];
 
 	cmd[0] = 'Q';
 	cmd[1] = 'R';
 	CR (QVsend (camera, cmd, 2, NULL, 0));
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 int
 QVsetspeed (Camera *camera, int speed)
 {
 	unsigned char cmd[3];
-        gp_port_settings settings;
+	gp_port_settings settings;
 
 	cmd[0] = 'C';
 	cmd[1] = 'B';
@@ -426,9 +426,9 @@ QVsetspeed (Camera *camera, int speed)
 	}
 	CR (QVsend (camera, cmd, 3, NULL, 0));
 
-        CR (gp_port_get_settings (camera->port, &settings));
-        settings.serial.speed = speed;
-        CR (gp_port_set_settings (camera->port, settings));
+	CR (gp_port_get_settings (camera->port, &settings));
+	settings.serial.speed = speed;
+	CR (gp_port_set_settings (camera->port, settings));
 
 	CR (QVping (camera));
 

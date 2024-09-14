@@ -44,7 +44,7 @@
 
 static int
 decode_panel	(unsigned char *panel_out, unsigned char *panel,
-                    		int panelwidth, int height, int color);
+		 int panelwidth, int height, int color);
 
 int
 sq_decompress (SQModel model, unsigned char *output, unsigned char *data,
@@ -107,13 +107,13 @@ sq_decompress (SQModel model, unsigned char *output, unsigned char *data,
 	switch(model) {
 	case(SQ_MODEL_MAGPIX):
 	case(SQ_MODEL_POCK_CAM):
-        for (i = 0; i < h; i++) {
-	        for (m = 0 ; m < w/2; m++) {
-	                temp = output[w*i +m];
-	                output[w*i + m] = output[w*i + w -1 -m];
-	                output[w*i + w - 1 - m] = temp;
-	        }
-	}
+		for (i = 0; i < h; i++) {
+			for (m = 0; m < w/2; m++) {
+				temp = output[w*i +m];
+				output[w*i + m] = output[w*i + w -1 -m];
+				output[w*i + w - 1 - m] = temp;
+			}
+		}
 		break;
 	default: ; 		/* default is "do nothing" */
 	}
@@ -163,7 +163,7 @@ int decode_panel (unsigned char *panel_out, unsigned char *panel,
 					tempval = (temp_line[2*i]) + diff;
 				else
 					tempval = (temp_line[2*i]
-				        + panel_out[m*panelwidth+2*i-1])/2 + diff;
+						+ panel_out[m*panelwidth+2*i-1])/2 + diff;
 				tempval = MIN(tempval, 0xff);
 				tempval = MAX(tempval, 0);
 				panel_out[m*panelwidth+2*i] = tempval;
@@ -193,7 +193,7 @@ int decode_panel (unsigned char *panel_out, unsigned char *panel,
 					tempval = (temp_line[0]+temp_line[1])/2 + diff;
 				else
 					tempval = (temp_line[2*i+1]
-				        + panel_out[2*m*panelwidth+2*i-1])/2 + diff;
+						+ panel_out[2*m*panelwidth+2*i-1])/2 + diff;
 				tempval = MIN(tempval, 0xff);
 				tempval = MAX(tempval, 0);
 				panel_out[2*m*panelwidth+2*i] = tempval;

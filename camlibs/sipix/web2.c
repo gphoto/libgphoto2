@@ -678,8 +678,8 @@ static CameraFilesystemFuncs fsfuncs = {
 int
 camera_init (Camera *camera, GPContext *context)
 {
-        camera->functions->exit                 = camera_exit;
-        camera->functions->about                = camera_about;
+	camera->functions->exit                 = camera_exit;
+	camera->functions->about                = camera_about;
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	return web2_init(camera->port, context);
 }

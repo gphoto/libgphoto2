@@ -142,7 +142,7 @@ static int l859_disconnect(Camera *camera) {
 	if (l859_sendcmd(camera, L859_CMD_RESET) != GP_OK)
 		return GP_ERROR;
 	if (gp_port_read(camera->port, camera->pl->buf, 1) == GP_ERROR)
-                return GP_ERROR;
+		return GP_ERROR;
 
 	GP_DEBUG ("Camera disconnected.");
 
@@ -614,13 +614,13 @@ static CameraFilesystemFuncs fsfuncs = {
 
 int camera_init (Camera *camera, GPContext *context) {
 
-        int ret;
+	int ret;
 	GPPortSettings settings;
 
-        /* First, set up all the function pointers */
-        camera->functions->exit    = camera_exit;
-        camera->functions->summary = camera_summary;
-        camera->functions->manual  = camera_manual;
+	/* First, set up all the function pointers */
+	camera->functions->exit    = camera_exit;
+	camera->functions->summary = camera_summary;
+	camera->functions->manual  = camera_manual;
 	camera->functions->about   = camera_about;
 
 	/* Allocate memory for a read/write buffer */
@@ -628,19 +628,19 @@ int camera_init (Camera *camera, GPContext *context) {
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
 
-        gp_port_set_timeout (camera->port, 2000);
+	gp_port_set_timeout (camera->port, 2000);
 	gp_port_get_settings(camera->port, &settings);
 	camera->pl->speed = settings.serial.speed;
 	settings.serial.speed      = 9600; /* hand shake speed */
 	settings.serial.bits       = 8;
 	settings.serial.parity     = 0;
 	settings.serial.stopbits   = 1;
-        gp_port_set_settings(camera->port, settings);
+	gp_port_set_settings(camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-        ret = l859_connect (camera);
+	ret = l859_connect (camera);
 	if (ret < 0) {
 		free (camera->pl);
 		camera->pl = NULL;

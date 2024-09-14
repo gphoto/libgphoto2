@@ -167,8 +167,8 @@ struct stv680_user_info {
 #define STV0680_VGA_HEIGHT	484
 
 int stv0680_try_cmd(GPPort *port, unsigned char cmd,
-                unsigned short data,
-                unsigned char *response, unsigned char response_len);
+	unsigned short data,
+	unsigned char *response, unsigned char response_len);
 
 
 #endif /* !defined(CAMLIBS_STV0680_STV0680_H) */

@@ -308,7 +308,7 @@ sony_packet_write(Camera * camera, Packet * p)
 	GP_DEBUG(
 			"sony_packet_write()");
 
-        /**
+	/**
 	 * This usleep is necessary when using (relatively) fast CPUs,
 	 * as P4 2Ghz. Without it gphoto2 stops with a segmentation fault
 	 * and the --debug message sony_packet_validate: invalid sequence

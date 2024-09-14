@@ -3706,11 +3706,11 @@ typedef struct _PTPParams PTPParams;
 
 typedef uint16_t (* PTPDataGetFunc)	(PTPParams* params, void*priv,
 					unsigned long wantlen,
-	                                unsigned char *data, unsigned long *gotlen);
+					unsigned char *data, unsigned long *gotlen);
 
 typedef uint16_t (* PTPDataPutFunc)	(PTPParams* params, void*priv,
 					unsigned long sendlen,
-	                                unsigned char *data);
+					unsigned char *data);
 typedef struct _PTPDataHandler {
 	PTPDataGetFunc		getfunc;
 	PTPDataPutFunc		putfunc;
@@ -3727,7 +3727,7 @@ typedef uint16_t (* PTPIOSendData)	(PTPParams* params, PTPContainer* ptp,
 
 typedef uint16_t (* PTPIOGetResp)	(PTPParams* params, PTPContainer* resp);
 typedef uint16_t (* PTPIOGetData)	(PTPParams* params, PTPContainer* ptp,
-	                                 PTPDataHandler *putter);
+					 PTPDataHandler *putter);
 typedef uint16_t (* PTPIOCancelReq)	(PTPParams* params, uint32_t transaction_id);
 typedef uint16_t (* PTPIODevStatReq) (PTPParams* params);
 
@@ -3923,7 +3923,7 @@ uint16_t ptp_usb_senddata	(PTPParams* params, PTPContainer* ptp,
 				 uint64_t size, PTPDataHandler *handler);
 uint16_t ptp_usb_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_usb_getdata	(PTPParams* params, PTPContainer* ptp,
-	                         PTPDataHandler *handler);
+				 PTPDataHandler *handler);
 uint16_t ptp_usb_event_async	(PTPParams *params, PTPEventCbFn cb, void *user_data);
 uint16_t ptp_usb_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_usb_event_check	(PTPParams* params, PTPContainer* event);
@@ -3943,7 +3943,7 @@ uint16_t ptp_ptpip_senddata	(PTPParams* params, PTPContainer* ptp,
 				uint64_t size, PTPDataHandler *handler);
 uint16_t ptp_ptpip_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_ptpip_getdata	(PTPParams* params, PTPContainer* ptp,
-	                         PTPDataHandler *handler);
+				 PTPDataHandler *handler);
 uint16_t ptp_ptpip_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_ptpip_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_ptpip_event_check_queue	(PTPParams* params, PTPContainer* event);
@@ -3955,7 +3955,7 @@ uint16_t ptp_fujiptpip_senddata	(PTPParams* params, PTPContainer* ptp,
 				uint64_t size, PTPDataHandler *handler);
 uint16_t ptp_fujiptpip_getresp	(PTPParams* params, PTPContainer* resp);
 uint16_t ptp_fujiptpip_getdata	(PTPParams* params, PTPContainer* ptp,
-	                         PTPDataHandler *handler);
+				 PTPDataHandler *handler);
 uint16_t ptp_fujiptpip_event_wait	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_fujiptpip_event_check	(PTPParams* params, PTPContainer* event);
 uint16_t ptp_fujiptpip_event_check_queue(PTPParams* params, PTPContainer* event);

@@ -453,7 +453,7 @@ camera_init (Camera *camera, GPContext *context)
 	int ret = 0;
 
 	/* First, set up all the function pointers */
-        camera->functions->manual	= camera_manual;
+	camera->functions->manual	= camera_manual;
 	camera->functions->summary	= camera_summary;
 	camera->functions->about	= camera_about;
 	camera->functions->exit		= camera_exit;

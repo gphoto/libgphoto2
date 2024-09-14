@@ -313,7 +313,7 @@ static int get_file_func(CameraFilesystem *fs, const char *folder,
 	switch (type) {
 	case GP_FILE_TYPE_NORMAL:
 		GP_DEBUG("digita/get_file_func: Getting picture");
-	        data = digita_file_get(camera, folder, filename, 0, &buflen, context);
+		data = digita_file_get(camera, folder, filename, 0, &buflen, context);
 		break;
 	case GP_FILE_TYPE_PREVIEW:
 		GP_DEBUG("digita/get_file_func: Getting thumbnail");
@@ -407,18 +407,18 @@ static int digita_file_delete(Camera *camera, const char *folder,
 	if (digita_get_file_list(camera->pl) < 0)
 		return 0;
 
-        return GP_OK;
+	return GP_OK;
 }
 
 static int delete_file_func(CameraFilesystem *fs, const char *folder,
 		const char *filename, void *user_data, GPContext *context)
 {
-        Camera *camera = user_data;
+	Camera *camera = user_data;
 
 	if (folder[0] == '/')
 		folder++;
 
-        return digita_file_delete(camera, folder, filename, context);
+	return digita_file_delete(camera, folder, filename, context);
 }
 
 static CameraFilesystemFuncs fsfuncs = {

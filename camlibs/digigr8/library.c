@@ -357,8 +357,7 @@ camera_capture_preview(Camera *camera, CameraFile *file, GPContext *context)
 	gp_port_read(camera->port, (char *)get_size, 0x50);
 	GP_DEBUG("get_size[0x40] = 0x%x\n", get_size[0x40]);
 	lighting = get_size[0x48];
-        b = get_size[0x40] | get_size[0x41] << 8 | get_size[0x42] << 16
-						| get_size[0x43]<<24;
+	b = get_size[0x40] | get_size[0x41] << 8 | get_size[0x42] << 16 | get_size[0x43]<<24;
 	GP_DEBUG("b = 0x%x\n", b);
 	raw_data = malloc(b);
 
@@ -393,7 +392,7 @@ camera_capture_preview(Camera *camera, CameraFile *file, GPContext *context)
 	GP_DEBUG ("size = %i\n", size);
 	gp_ahd_decode (frame_data, w , h , ptr, BAYER_TILE_BGGR);
 	free(frame_data);
-        if (lighting < 0x40) {
+	if (lighting < 0x40) {
 		GP_DEBUG(
 		"Low light condition. Default gamma. No white balance.\n");
 		gp_gamma_fill_table (gtable, .65);
@@ -441,7 +440,7 @@ camera_init(Camera *camera, GPContext *context)
 
 	/* Now, set up all the function pointers */
 	camera->functions->summary	= camera_summary;
-        camera->functions->manual	= camera_manual;
+	camera->functions->manual	= camera_manual;
 	camera->functions->about	= camera_about;
 	camera->functions->capture_preview
 					= camera_capture_preview;

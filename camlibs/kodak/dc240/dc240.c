@@ -57,7 +57,7 @@ static const struct camera_to_usb {
 	{ "Kodak:DC280", 0x040A, 0x0130 },
 	{ "Kodak:DC3400", 0x040A, 0x0132 },
 	{ "Kodak:DC5000", 0x040A, 0x0131 },
-        { NULL, 0, 0 }
+	{ NULL, 0, 0 }
 };
 
 /*
@@ -69,29 +69,29 @@ int
 camera_abilities (CameraAbilitiesList *list)
 {
 	CameraAbilities a;
-        int i;
+	int i;
 
-        for (i = 0; camera_to_usb[i].name; i++)
-        {
-	    memset (&a, 0, sizeof (a));
-            strcpy(a.model, camera_to_usb[i].name);
-	    a.status = GP_DRIVER_STATUS_PRODUCTION;
-            a.port     = GP_PORT_SERIAL | GP_PORT_USB;
-            a.speed[0] = 9600;
-            a.speed[1] = 19200;
-            a.speed[2] = 38400;
-            a.speed[3] = 57600;
-            a.speed[4] = 115200;
-            a.speed[5] = 0;
-            a.usb_vendor  = camera_to_usb[i].idVendor;
-            a.usb_product = camera_to_usb[i].idProduct;
-            a.operations        = 	GP_OPERATION_CAPTURE_IMAGE;
-            a.file_operations   = 	GP_FILE_OPERATION_DELETE |
-                                        GP_FILE_OPERATION_PREVIEW;
-            a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
+	for (i = 0; camera_to_usb[i].name; i++)
+	{
+		memset (&a, 0, sizeof (a));
+		strcpy(a.model, camera_to_usb[i].name);
+		a.status = GP_DRIVER_STATUS_PRODUCTION;
+		a.port     = GP_PORT_SERIAL | GP_PORT_USB;
+		a.speed[0] = 9600;
+		a.speed[1] = 19200;
+		a.speed[2] = 38400;
+		a.speed[3] = 57600;
+		a.speed[4] = 115200;
+		a.speed[5] = 0;
+		a.usb_vendor  = camera_to_usb[i].idVendor;
+		a.usb_product = camera_to_usb[i].idProduct;
+		a.operations        = 	GP_OPERATION_CAPTURE_IMAGE;
+		a.file_operations   = 	GP_FILE_OPERATION_DELETE |
+					GP_FILE_OPERATION_PREVIEW;
+		a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
 
-            gp_abilities_list_append(list, a);
-        }
+		gp_abilities_list_append(list, a);
+	}
 	return (GP_OK);
 }
 
@@ -148,7 +148,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = data;
 
 	return (dc240_file_action (camera, DC240_ACTION_DELETE, NULL, folder,
-    				   filename, context));
+				   filename, context));
 }
 
 static int
@@ -176,38 +176,38 @@ camera_capture (Camera *camera, CameraCaptureType type,
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-    char buf [32 * 1024];
-    char temp [1024];
-    int retval;
-    DC240StatusTable table;
+	char buf[32 * 1024];
+	char temp[1024];
+	int retval;
+	DC240StatusTable table;
 
-    retval = dc240_get_status (camera, &table, context);
-    if (retval == GP_OK) {
-	sprintf (buf, _("Model: Kodak %s\n"), dc240_convert_type_to_camera(table.cameraType));
-	sprintf (temp, _("Firmware version: %d.%02d\n"), table.fwVersInt, table.fwVersDec);
-	strcat (buf, temp);
-	sprintf (temp, _("Battery status: %s, AC Adapter: %s\n"),
-		 dc240_get_battery_status_str(table.battStatus),
-		 dc240_get_ac_status_str(table.acAdapter));
-	strcat (buf, temp);
-	sprintf (temp, _("Number of pictures: %d\n"), table.numPict);
-	strcat (buf, temp);
-	sprintf (temp, _("Space remaining: High: %d, Medium: %d, Low: %d\n"),
-		 table.remPictHigh, table.remPictMed, table.remPictLow);
-	strcat (buf, temp);
+	retval = dc240_get_status (camera, &table, context);
+	if (retval == GP_OK) {
+		sprintf (buf, _("Model: Kodak %s\n"), dc240_convert_type_to_camera(table.cameraType));
+		sprintf (temp, _("Firmware version: %d.%02d\n"), table.fwVersInt, table.fwVersDec);
+		strcat (buf, temp);
+		sprintf (temp, _("Battery status: %s, AC Adapter: %s\n"),
+			dc240_get_battery_status_str(table.battStatus),
+			dc240_get_ac_status_str(table.acAdapter));
+		strcat (buf, temp);
+		sprintf (temp, _("Number of pictures: %d\n"), table.numPict);
+		strcat (buf, temp);
+		sprintf (temp, _("Space remaining: High: %d, Medium: %d, Low: %d\n"),
+			table.remPictHigh, table.remPictMed, table.remPictLow);
+		strcat (buf, temp);
 
-	sprintf (temp, _("Memory card status (%d): %s\n"), table.memCardStatus,
-		 dc240_get_memcard_status_str(table.memCardStatus));
-	strcat (buf, temp);
+		sprintf (temp, _("Memory card status (%d): %s\n"), table.memCardStatus,
+			dc240_get_memcard_status_str(table.memCardStatus));
+		strcat (buf, temp);
 
-	sprintf (temp, _("Total pictures captured: %d, Flashes fired: %d\n"),
-		 table.totalPictTaken, table.totalStrobeFired);
-	strcat (buf, temp);
+		sprintf (temp, _("Total pictures captured: %d, Flashes fired: %d\n"),
+			table.totalPictTaken, table.totalStrobeFired);
+		strcat (buf, temp);
 
 
-	strcpy(summary->text, buf);
-    }
-    return retval;
+		strcpy(summary->text, buf);
+	}
+	return retval;
 }
 
 static int

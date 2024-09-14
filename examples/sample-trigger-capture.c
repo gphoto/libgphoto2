@@ -34,9 +34,9 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 	CameraFilePath	*path;
 	void		*data;
 	int		retval;
-        struct timeval	start, curtime;
+	struct timeval	start, curtime;
 
-        gettimeofday (&start, NULL);
+	gettimeofday (&start, NULL);
 	data = NULL;
 	if (nrofqueue)
 		waittime = 10; /* just drain the event queue */
@@ -44,7 +44,7 @@ wait_event_and_download (Camera *camera, int waittime, GPContext *context) {
 	while (1) {
 		int timediff;
 
-	        gettimeofday (&curtime, NULL);
+		gettimeofday (&curtime, NULL);
 
 		timediff = ((curtime.tv_sec - start.tv_sec)*1000)+((curtime.tv_usec - start.tv_usec)/1000);
 		if (timediff >= waittime)

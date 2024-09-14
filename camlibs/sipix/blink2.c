@@ -45,19 +45,17 @@
 #define BLINK2_GET_FIRMWARE_ID		0x18
 
 static int
-blink2_getnumpics(
-    GPPort *port, GPContext *context, unsigned int *numpics
-) {
-    unsigned char buf[2];
-    int ret;
+blink2_getnumpics (GPPort *port, GPContext *context, unsigned int *numpics) {
+	unsigned char buf[2];
+	int ret;
 
-    ret = gp_port_usb_msg_read(port, BLINK2_GET_NUMPICS, 0x03, 0, (char*)buf, 2);
-    if (ret < GP_OK)
-	return ret;
-    gp_log(GP_LOG_DEBUG, "blink2","ret is %d", ret);
-    if (ret < 2) return GP_ERROR_IO_READ;
-    *numpics = (buf[0]<<8) | buf[1];
-    return GP_OK;
+	ret = gp_port_usb_msg_read(port, BLINK2_GET_NUMPICS, 0x03, 0, (char*)buf, 2);
+	if (ret < GP_OK)
+		return ret;
+	gp_log(GP_LOG_DEBUG, "blink2", "ret is %d", ret);
+	if (ret < 2) return GP_ERROR_IO_READ;
+	*numpics = (buf[0]<<8) | buf[1];
+	return GP_OK;
 }
 
 #ifdef HAVE_LIBJPEG
@@ -65,17 +63,17 @@ blink2_getnumpics(
 static void _jpeg_init_source(j_decompress_ptr cinfo) { }
 
 static boolean _jpeg_fill_input_buffer(j_decompress_ptr cinfo) {
-    fprintf(stderr,"(), should not get here.\n");
-    return FALSE;
+	fprintf(stderr, "(), should not get here.\n");
+	return FALSE;
 }
 
-static void _jpeg_skip_input_data(j_decompress_ptr cinfo,long num_bytes) {
-    fprintf(stderr,"(%ld), should not get here.\n",num_bytes);
+static void _jpeg_skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
+	fprintf(stderr, "(%ld), should not get here.\n", num_bytes);
 }
 
 static boolean _jpeg_resync_to_restart(j_decompress_ptr cinfo, int desired) {
-    fprintf(stderr,"(desired=%d), should not get here.\n",desired);
-    return FALSE;
+	fprintf(stderr, "(desired=%d), should not get here.\n", desired);
+	return FALSE;
 }
 static void _jpeg_term_source(j_decompress_ptr cinfo) { }
 #endif
@@ -182,18 +180,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 	free(xbuf);
 
-        image_no = gp_filesystem_number(fs, folder, filename, context);
-        if(image_no < 0) {
+	image_no = gp_filesystem_number(fs, folder, filename, context);
+	if(image_no < 0) {
 		free(addrs);
-                return image_no;
+		return image_no;
 	}
 	if (image_no < 0 || (unsigned int)image_no >= numpics) {
 		free(addrs);
 		gp_log(GP_LOG_DEBUG, "blink2","image %d requested, but only %d pics on camera?", image_no, numpics);
-                return GP_ERROR;
+		return GP_ERROR;
 	}
-        switch (type) {
-        case GP_FILE_TYPE_NORMAL:
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
 #ifdef HAVE_LIBJPEG
 {
 		char *convline,*convline2,*rawline;
@@ -205,9 +203,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		memset( buf, 0, sizeof(buf));
 		if (addrs[image_no].type)
-        		gp_file_set_mime_type (file, GP_MIME_AVI);
+			gp_file_set_mime_type (file, GP_MIME_AVI);
 		else
-        		gp_file_set_mime_type (file, GP_MIME_JPEG);
+			gp_file_set_mime_type (file, GP_MIME_JPEG);
 		start = addrs[image_no].start;
 		len = addrs[image_no].len;
 
@@ -302,23 +300,23 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(convline);
 		free(rawline);
 		free(jpegdata);
-        	gp_file_set_mime_type (file, GP_MIME_PPM);
+		gp_file_set_mime_type (file, GP_MIME_PPM);
 		jpeg_destroy_decompress(&dinfo);
 		break;
 	}
 #else
 	/* fall through to raw mode if no libjpeg */
 #endif
-        case GP_FILE_TYPE_RAW: {
+	case GP_FILE_TYPE_RAW: {
 		char buf2[4096];
 		unsigned int start, len;
 		unsigned int curread;
 		memset( buf, 0, sizeof(buf));
 
 		if (addrs[image_no].type)
-        		gp_file_set_mime_type (file, GP_MIME_AVI);
+			gp_file_set_mime_type (file, GP_MIME_AVI);
 		else
-        		gp_file_set_mime_type (file, GP_MIME_JPEG);
+			gp_file_set_mime_type (file, GP_MIME_JPEG);
 
 		start = addrs[image_no].start;
 		len = addrs[image_no].len;
@@ -329,7 +327,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		buf[4] = (len >> 24) & 0xff;
 		buf[5] = (len >> 16) & 0xff;
 		buf[6] = (len >>  8) & 0xff;
-		buf[7] =  len        & 0xff;
+		buf[7] =  len	& 0xff;
 		result = gp_port_usb_msg_write(camera->port,BLINK2_GET_MEMORY,0x03,0,(char*)buf,8);
 		if (result < GP_OK)
 			break;
@@ -349,21 +347,20 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			if (result < GP_OK)
 				break;
 		} while (len>0);
-                break;
-        }
-	default:
-                result = GP_ERROR_NOT_SUPPORTED;
 		break;
-        }
+	}
+	default:
+		result = GP_ERROR_NOT_SUPPORTED;
+		break;
+	}
 	free(addrs);
-        if (result < 0)
-                return result;
-        return (GP_OK);
+	if (result < 0)
+		return result;
+	return (GP_OK);
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
-                 GPContext *context)
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int ret;
@@ -373,12 +370,11 @@ delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
 	if (ret < GP_OK)
 		return ret;
 	if (ret < 1) return GP_ERROR_IO_READ;
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
-camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
-                GPContext *context)
+camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
 {
 	int ret;
 	unsigned int oldnumpics, numpics;
@@ -405,9 +401,9 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		return ret;
 	if (numpics == oldnumpics)
 		return (GP_ERROR);
-        strcpy (path->folder,"/");
-        sprintf (path->name,"image%04d.pnm",numpics-1);
-        return (GP_OK);
+	strcpy (path->folder, "/");
+	sprintf (path->name, "image%04d.pnm", numpics-1);
+	return (GP_OK);
 }
 
 
@@ -459,7 +455,7 @@ camera_init (Camera *camera, GPContext *context)
 	int ret;
 	GPPortSettings settings;
 
-        camera->functions->capture              = camera_capture;
+	camera->functions->capture              = camera_capture;
 
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	gp_port_get_settings( camera->port, &settings);

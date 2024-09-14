@@ -110,7 +110,7 @@ __attribute__((__format__(printf,4,5)))
 #ifdef _GPHOTO2_INTERNAL_CODE
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
 #define GP_DEBUG(...) \
-        gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, __VA_ARGS__)
+	gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, __VA_ARGS__)
 
 /*
  * GP_LOG_D/E:
@@ -123,7 +123,7 @@ __attribute__((__format__(printf,4,5)))
 
 #elif defined(__GNUC__) &&  __GNUC__ >= 2
 #define GP_DEBUG(msg, params...) \
-        gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
+	gp_log(GP_LOG_DEBUG, GP_MODULE "/" __FILE__, msg, ##params)
 /*
  * GP_LOG_D/E:
  * simple helper macros for convenient and consistent logging of error

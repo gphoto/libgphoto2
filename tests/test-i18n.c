@@ -62,10 +62,10 @@ void print_locale_list(const size_t list_count,
 		char *locale = setlocale(LC_ALL, list[i]);
 		if (locale) {
 			printf("Translated empty string to '%s' (%s):\n",
-			       list[i], locale);
-		        indented_print("    ",
-				       dgettext(GETTEXT_PACKAGE_LIBGPHOTO2,
-						""));
+				list[i], locale);
+			indented_print("    ",
+				dgettext(GETTEXT_PACKAGE_LIBGPHOTO2,
+					""));
 			setlocale(LC_ALL, "C");
 		} else {
 			printf("Skipping locale: '%s'\n", list[i]);

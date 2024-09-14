@@ -75,7 +75,7 @@ ez200_init (GPPort *port, Model *model, Info *info) {
 	READ(port, PICTURE, 0, 0, &c, 1);
 	memcpy (info, &c, 1);
 	GP_DEBUG("number of pics : %i", c);
-        return GP_OK;
+	return GP_OK;
 }
 
 /*  quit photo mode  */
@@ -91,7 +91,7 @@ ez200_exit (GPPort *port) {
 static int
 ez200_get_picture_size (GPPort *port, int n) {
 	unsigned char c[4];
-        unsigned int size = 0;
+	unsigned int size = 0;
 	memset (c,0,sizeof(c));
 
 	GP_DEBUG("Running ez200_get_picture_size");
@@ -112,12 +112,12 @@ ez200_read_data (GPPort *port, char *data, int size) {
 	/* Read Data by blocks */
 	while(size > 0) {
 		int len = (size>MAX_BULK)?MAX_BULK:size;
-	        ret = gp_port_read  (port, data, len);
+		ret = gp_port_read  (port, data, len);
 		if (ret < GP_OK) return ret;
 		data += len;
 		size -= len;
 	}
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -126,8 +126,8 @@ ez200_read_picture_data (GPPort *port, char *data, int size, int n) {
 
 	memset(c,0,sizeof(c));
 	/* ask picture n transfert */
-    	READ(port, PICTURE, n, 1, c, 3);
-        return ez200_read_data (port, data, size);
+	READ(port, PICTURE, n, 1, c, 3);
+	return ez200_read_data (port, data, size);
 }
 
 
@@ -145,55 +145,55 @@ struct _CameraPrivateLibrary {
 };
 
 static const struct {
-   	char *name;
+	char *name;
 	CameraDriverStatus status;
-   	unsigned short idVendor;
-   	unsigned short idProduct;
+	unsigned short idVendor;
+	unsigned short idProduct;
 } models[] = {
-        {"Kodak EZ200", GP_DRIVER_STATUS_PRODUCTION, 0x040a, 0x0300},
+	{"Kodak EZ200", GP_DRIVER_STATUS_PRODUCTION, 0x040a, 0x0300},
 	{NULL,0,0,0}
 };
 
 int
 camera_id (CameraText *id)
 {
-    	strcpy (id->text, "Kodak EZ200 camera");
-    	return GP_OK;
+	strcpy (id->text, "Kodak EZ200 camera");
+	return GP_OK;
 }
 
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-    	int i;
-    	CameraAbilities a;
+	int i;
+	CameraAbilities a;
 
-    	for (i = 0; models[i].name; i++) {
-        	memset (&a, 0, sizeof(a));
-       		strcpy (a.model, models[i].name);
-       		a.status = models[i].status;
-       		a.port   = GP_PORT_USB;
-       		a.usb_vendor = models[i].idVendor;
-       		a.usb_product= models[i].idProduct;
+	for (i = 0; models[i].name; i++) {
+		memset (&a, 0, sizeof(a));
+		strcpy (a.model, models[i].name);
+		a.status = models[i].status;
+		a.port   = GP_PORT_USB;
+		a.usb_vendor = models[i].idVendor;
+		a.usb_product= models[i].idProduct;
 		a.operations = GP_OPERATION_NONE;
-       		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
-       		a.file_operations   = GP_FILE_OPERATION_NONE;
-       		gp_abilities_list_append (list, a);
-    	}
-    	return GP_OK;
+		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+		a.file_operations   = GP_FILE_OPERATION_NONE;
+		gp_abilities_list_append (list, a);
+	}
+	return GP_OK;
 }
 
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context) {
-    	sprintf (summary->text,_("Your USB camera is a Kodak EZ200.\n"
-			"Number of PICs = %i\n"
-       			), ez200_get_num_pics(camera->pl->info));
+	sprintf (summary->text, _("Your USB camera is a Kodak EZ200.\n"
+				"Number of PICs = %i\n"
+			), ez200_get_num_pics(camera->pl->info));
 	return GP_OK;
 }
 
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) {
-    	strcpy (about->text, _("Kodak EZ200 driver\nBucas Jean-Francois <jfbucas@tuxfamily.org>\n"));
-    	return GP_OK;
+	strcpy (about->text, _("Kodak EZ200 driver\nBucas Jean-Francois <jfbucas@tuxfamily.org>\n"));
+	return GP_OK;
 }
 
 /*
@@ -207,19 +207,18 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	WRITE(camera->port,0,0x8003,0,NULL,0);
 	WRITE(camera->port,5,0x0000,0,NULL,0);
 
-        return GP_OK;
+	return GP_OK;
 }
 */
 
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
-                 GPContext *context) {
-        Camera *camera = data;
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data, GPContext *context) {
+	Camera *camera = data;
 
 	WRITE (camera->port, ERASE, 0, 1, NULL, 0);
 	ez200_wait_status_ok(camera->port);
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -235,8 +234,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data;
-        int n, len, ret;
+	Camera *camera = user_data;
+	int n, len, ret;
 	char *data, *data_start;
 
 	n = gp_filesystem_number(camera->fs, "/", filename, context);
@@ -253,7 +252,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	data_start = data + (HEADER_SIZE - DATA_HEADER_SIZE);
 	GP_DEBUG("data - data_start : %p %p : %lx",data, data_start, (long) (data_start - data));
 
-    	ret = ez200_read_picture_data   (camera->port, data_start, len, n);
+	ret = ez200_read_picture_data   (camera->port, data_start, len, n);
 	if (ret < GP_OK) return ret;
 	ret = ez200_read_picture_header (camera->port, data);
 	if (ret < GP_OK) return ret;
@@ -326,7 +325,7 @@ camera_init(Camera *camera, GPContext *context)
 	GP_DEBUG("inep = %x", settings.usb.inep);
 	GP_DEBUG("outep = %x", settings.usb.outep);
 
-        /* Tell the CameraFilesystem where to get lists from */
+	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	camera->pl = calloc (1, sizeof (CameraPrivateLibrary));

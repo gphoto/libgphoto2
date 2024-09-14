@@ -47,9 +47,10 @@ int gp_port_usb_msg_class_read    (GPPort *port, int request, int value, int ind
 }
 
 int gp_port_send_scsi_cmd (GPPort *port, int to_dev,
-                                char *cmd, int cmd_size,
-                                char *sense, int sense_size,
-                                char *data, int data_size) {
+			   char *cmd, int cmd_size,
+			   char *sense, int sense_size,
+			   char *data, int data_size)
+{
 	if (!to_dev) {
 		__coverity_tainted_data_argument__(data);
 		__coverity_tainted_data_argument__(sense);
@@ -62,8 +63,8 @@ void gp_log_data (const char *domain, const char *data, unsigned int size, const
 
 uint16_t
 ptp_transaction (PTPParams* params, PTPContainer* ptp,
-                uint16_t flags, uint64_t sendlen,
-                unsigned char **data, unsigned int *recvlen) {
+		 uint16_t flags, uint64_t sendlen,
+		 unsigned char** data, unsigned int* recvlen) {
 	if ((flags & 0xff) == 0x2) {
 		__coverity_tainted_data_argument__(data);
 		__coverity_tainted_data_argument__(recvlen);

@@ -41,7 +41,7 @@ static const struct camera_to_usb {
 	  unsigned short idProduct;
 	  int serial;
 } camera_to_usb[] = {
-        /* http://www.vvl.co.uk/products/co-processors/680/680.htm */
+	/* http://www.vvl.co.uk/products/co-processors/680/680.htm */
 	{ "STM:USB Dual-mode camera",   0x0553, 0x0202, 1 },
 	{ "STV0680",                    0x0553, 0x0202, 1 },
 
@@ -270,61 +270,59 @@ static int
 delete_all_func (CameraFilesystem *fs, const char* folder, void *data,
 		 GPContext *context)
 {
-        Camera *camera = data;
+	Camera *camera = data;
 	if (strcmp (folder, "/"))
 		return (GP_ERROR_DIRECTORY_NOT_FOUND);
 	return stv0680_delete_all(camera->port);
 }
 
 static int
-storage_info_func (CameraFilesystem *fs,
-                CameraStorageInformation **sinfos,
-                int *nrofsinfos,
-                void *data, GPContext *context
-) {
-    Camera *camera = (Camera*)data;
-    GPPort *port = camera->port;
-    struct stv680_camera_info caminfo;
-    struct stv680_image_info imginfo;
-    int ret;
-    CameraStorageInformation *sinfo;
+storage_info_func (CameraFilesystem *fs, CameraStorageInformation **sinfos,
+		   int *nrofsinfos, void *data, GPContext *context)
+{
+	Camera *camera = (Camera*)data;
+	GPPort *port = camera->port;
+	struct stv680_camera_info caminfo;
+	struct stv680_image_info imginfo;
+	int ret;
+	CameraStorageInformation *sinfo;
 
-    /* Get Camera Information */
-    if ((ret = stv0680_try_cmd(port, CMDID_GET_CAMERA_INFO,
-				0, (void*)&caminfo, sizeof(caminfo)) < 0))
-	return ret;
+	/* Get Camera Information */
+	if ((ret = stv0680_try_cmd(port, CMDID_GET_CAMERA_INFO,
+		0, (void*)&caminfo, sizeof(caminfo)) < 0))
+		return ret;
 
-    sinfo = malloc(sizeof(CameraStorageInformation));
-    if (!sinfo) return GP_ERROR_NO_MEMORY;
+	sinfo = malloc(sizeof(CameraStorageInformation));
+	if (!sinfo) return GP_ERROR_NO_MEMORY;
 
-    *sinfos = sinfo;
-    *nrofsinfos = 1;
+	*sinfos = sinfo;
+	*nrofsinfos = 1;
 
-    sinfo->fields  = GP_STORAGEINFO_BASE;
-    strcpy(sinfo->basedir, "/");
+	sinfo->fields  = GP_STORAGEINFO_BASE;
+	strcpy(sinfo->basedir, "/");
 
-    sinfo->fields |= GP_STORAGEINFO_ACCESS;
-    sinfo->access  = GP_STORAGEINFO_AC_READONLY_WITH_DELETE;
-    sinfo->fields |= GP_STORAGEINFO_STORAGETYPE;
-    sinfo->type    = GP_STORAGEINFO_ST_FIXED_RAM;
-    sinfo->fields |= GP_STORAGEINFO_FILESYSTEMTYPE;
-    sinfo->fstype  = GP_STORAGEINFO_FST_GENERICFLAT;
+	sinfo->fields |= GP_STORAGEINFO_ACCESS;
+	sinfo->access  = GP_STORAGEINFO_AC_READONLY_WITH_DELETE;
+	sinfo->fields |= GP_STORAGEINFO_STORAGETYPE;
+	sinfo->type    = GP_STORAGEINFO_ST_FIXED_RAM;
+	sinfo->fields |= GP_STORAGEINFO_FILESYSTEMTYPE;
+	sinfo->fstype  = GP_STORAGEINFO_FST_GENERICFLAT;
 
-    sinfo->fields |= GP_STORAGEINFO_MAXCAPACITY;
-    if (caminfo.hardware_config & HWCONFIG_MEMSIZE_16MBIT)
-        sinfo->capacitykbytes = 16*1024/8;
-    else
-        sinfo->capacitykbytes = 64*1024/8;
+	sinfo->fields |= GP_STORAGEINFO_MAXCAPACITY;
+	if (caminfo.hardware_config & HWCONFIG_MEMSIZE_16MBIT)
+		sinfo->capacitykbytes = 16*1024/8;
+	else
+		sinfo->capacitykbytes = 64*1024/8;
 
-    if ((ret = stv0680_try_cmd(port, CMDID_GET_IMAGE_INFO, 0,
-		    (void*)&imginfo, sizeof(imginfo))!=GP_OK))
-	return ret;
+	if ((ret = stv0680_try_cmd(port, CMDID_GET_IMAGE_INFO, 0,
+		(void*)&imginfo, sizeof(imginfo))!=GP_OK))
+		return ret;
 
-    sinfo->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
-    sinfo->freeimages =
-	    ((imginfo.maximages[0]<<8)|imginfo.maximages[1]) -
-	    ((imginfo.index[0]<<8)|imginfo.index[1]);
-    return GP_OK;
+	sinfo->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
+	sinfo->freeimages =
+		((imginfo.maximages[0]<<8)|imginfo.maximages[1]) -
+		((imginfo.index[0]<<8)|imginfo.index[1]);
+	return GP_OK;
 }
 
 
@@ -339,20 +337,20 @@ int camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 
-        /* First, set up all the function pointers */
-        camera->functions->summary              = camera_summary;
-        camera->functions->about                = camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->summary              = camera_summary;
+	camera->functions->about                = camera_about;
 	camera->functions->capture_preview	= camera_capture_preview;
 	camera->functions->capture		= camera_capture;
 
 	gp_port_get_settings(camera->port, &settings);
 	switch(camera->port->type) {
 	case GP_PORT_SERIAL:
-        	gp_port_set_timeout(camera->port, 1000);
+		gp_port_set_timeout(camera->port, 1000);
 		settings.serial.speed = 115200;
-        	settings.serial.bits = 8;
-        	settings.serial.parity = 0;
-        	settings.serial.stopbits = 1;
+		settings.serial.bits = 8;
+		settings.serial.parity = 0;
+		settings.serial.stopbits = 1;
 		break;
 	case GP_PORT_USB:
 		/* Use the defaults the core parsed */
@@ -366,6 +364,6 @@ int camera_init (Camera *camera, GPContext *context)
 	/* Set up the filesystem */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-        /* test camera */
-        return stv0680_ping(camera->port);
+	/* test camera */
+	return stv0680_ping(camera->port);
 }

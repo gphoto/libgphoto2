@@ -238,7 +238,7 @@ do_cmd_turbo(Camera *camera, char *state, GPContext *context)
 	char buf[1024];
 
 	/* check if we want to use turbo mode. Default is YES */
-        if (GP_OK == gp_setting_get("topfield","turbo", buf))
+	if (GP_OK == gp_setting_get("topfield","turbo", buf))
 		if (!strcmp(buf,"no"))
 			return GP_OK;
 
@@ -391,12 +391,12 @@ decode_dir(Camera *camera, struct tf_packet *p, int listdirs, CameraList *list)
 	}
 
 #if 0
-        /* This makes the assumption that the timezone of the Toppy and the system
-         * that puppy runs on are the same. Given the limitations on the length of
-         * USB cables, this condition is likely to be satisfied. */
-        timestamp = tfdt_to_time(&entries[i].stamp);
-        printf("%c %20llu %24.24s %s\n", type, get_u64(&entries[i].size),
-               ctime(&timestamp), entries[i].name);
+	/* This makes the assumption that the timezone of the Toppy and the system
+	 * that puppy runs on are the same. Given the limitations on the length of
+	 * USB cables, this condition is likely to be satisfied. */
+	timestamp = tfdt_to_time(&entries[i].stamp);
+	printf("%c %20llu %24.24s %s\n", type, get_u64(&entries[i].size),
+	       ctime(&timestamp), entries[i].name);
 #endif
     }
 }
@@ -440,12 +440,12 @@ decode_and_get_info(Camera *camera, const char *folder, struct tf_packet *p, con
 			break;
 	}
 #if 0
-        /* This makes the assumption that the timezone of the Toppy and the system
-         * that puppy runs on are the same. Given the limitations on the length of
-         * USB cables, this condition is likely to be satisfied. */
-        timestamp = tfdt_to_time(&entries[i].stamp);
-        printf("%c %20llu %24.24s %s\n", type, get_u64(&entries[i].size),
-               ctime(&timestamp), entries[i].name);
+	/* This makes the assumption that the timezone of the Toppy and the system
+	 * that puppy runs on are the same. Given the limitations on the length of
+	 * USB cables, this condition is likely to be satisfied. */
+	timestamp = tfdt_to_time(&entries[i].stamp);
+	printf("%c %20llu %24.24s %s\n", type, get_u64(&entries[i].size),
+	       ctime(&timestamp), entries[i].name);
 #endif
     }
 }
@@ -482,71 +482,71 @@ do_hdd_rename(Camera *camera, char *srcPath, char *dstPath, GPContext *context)
 
 static void progressStats(uint64_t totalSize, uint64_t bytes, time_t startTime)
 {
-    int delta = time(NULL) - startTime;
+	int delta = time(NULL) - startTime;
 
-    if(quiet)
-        return;
+	if (quiet)
+		return;
 
-    if(delta > 0)
-    {
-        double rate = bytes / delta;
-        int eta = (totalSize - bytes) / rate;
+	if (delta > 0)
+	{
+		double rate = bytes / delta;
+		int eta = (totalSize - bytes) / rate;
 
-        fprintf(stderr,
-                "\r%6.2f%%, %5.2f Mbits/s, %02d:%02d:%02d elapsed, %02d:%02d:%02d remaining",
-                100.0 * ((double) (bytes) / (double) totalSize),
-                ((bytes * 8.0) / delta) / (1000 * 1000), delta / (60 * 60),
-                (delta / 60) % 60, delta % 60, eta / (60 * 60),
-                (eta / 60) % 60, eta % 60);
-    }
+		fprintf(stderr,
+			"\r%6.2f%%, %5.2f Mbits/s, %02d:%02d:%02d elapsed, %02d:%02d:%02d remaining",
+			100.0 * ((double)(bytes) / (double)totalSize),
+			((bytes * 8.0) / delta) / (1000 * 1000), delta / (60 * 60),
+			(delta / 60) % 60, delta % 60, eta / (60 * 60),
+			(eta / 60) % 60, eta % 60);
+	}
 }
 
 static void finalStats(uint64_t bytes, time_t startTime)
 {
-    int delta = time(NULL) - startTime;
+	int delta = time(NULL) - startTime;
 
-    if(quiet)
-        return;
+	if (quiet)
+		return;
 
-    if(delta > 0)
-    {
-        fprintf(stderr, "\n%.2f Mbytes in %02d:%02d:%02d (%.2f Mbits/s)\n",
-                (double) bytes / (1000.0 * 1000.0),
-                delta / (60 * 60), (delta / 60) % 60, delta % 60,
-                ((bytes * 8.0) / delta) / (1000.0 * 1000.0));
-    }
+	if (delta > 0)
+	{
+		fprintf(stderr, "\n%.2f Mbytes in %02d:%02d:%02d (%.2f Mbits/s)\n",
+			(double)bytes / (1000.0 * 1000.0),
+			delta / (60 * 60), (delta / 60) % 60, delta % 60,
+			((bytes * 8.0) / delta) / (1000.0 * 1000.0));
+	}
 }
 #endif
 
 static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 {
-        CameraWidget *section, *turbo;
+	CameraWidget *section, *turbo;
 	char buf[1024];
 	int val;
 
-        gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
-        gp_widget_set_name (*window, "config");
+	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
+	gp_widget_set_name (*window, "config");
 
-        gp_widget_new (GP_WIDGET_SECTION, _("Driver Settings"), &section);
+	gp_widget_new (GP_WIDGET_SECTION, _("Driver Settings"), &section);
 	gp_widget_set_name (section, "driver");
-        gp_widget_append (*window, section);
+	gp_widget_append (*window, section);
 
 	gp_widget_new (GP_WIDGET_RADIO, _("Turbo mode"), &turbo);
-        gp_widget_set_name (turbo, "turbo");
-        gp_widget_add_choice (turbo,_("On"));
-        gp_widget_add_choice (turbo,_("Off"));
-        gp_widget_append (section, turbo);
+	gp_widget_set_name (turbo, "turbo");
+	gp_widget_add_choice (turbo, _("On"));
+	gp_widget_add_choice (turbo, _("Off"));
+	gp_widget_append (section, turbo);
 
-        if (GP_OK == gp_setting_get("topfield","turbo", buf)) {
-		if (!strcmp(buf,"no"))
+	if (GP_OK == gp_setting_get("topfield", "turbo", buf)) {
+		if (!strcmp(buf, "no"))
 			val = 0;
 		else
 			val = 1;
 	} else {
 		val = 1; /* enabled by default */
 	}
-        gp_widget_set_value ( turbo, val?_("On"):_("Off"));
+	gp_widget_set_value (turbo, val ? _("On") : _("Off"));
 	return GP_OK;
 }
 
@@ -566,7 +566,7 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 		const char* val;
 		int ival;
 
-	        gp_widget_set_changed (turbo, FALSE);
+		gp_widget_set_changed (turbo, FALSE);
 		ret = gp_widget_get_value (turbo, &val);
 		if (ret == GP_OK) {
 			ival = !strcmp (val, _("On"));
@@ -1078,7 +1078,7 @@ storage_info_func (CameraFilesystem *fs,
 		sif->access = GP_STORAGEINFO_AC_READWRITE;
 		sif->fields |= GP_STORAGEINFO_FILESYSTEMTYPE;
 		sif->fstype = GP_STORAGEINFO_FST_GENERICHIERARCHICAL;
-                sif->fields |= GP_STORAGEINFO_MAXCAPACITY;
+		sif->fields |= GP_STORAGEINFO_MAXCAPACITY;
 		sif->capacitykbytes = totalk / 1024;
 		sif->fields |= GP_STORAGEINFO_FREESPACEKBYTES;
 		sif->freekbytes = freek / 1024;
@@ -1101,7 +1101,7 @@ static int
 make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
                void *data, GPContext *context)
 {
-        Camera *camera = data;
+	Camera *camera = data;
 	char *path = get_path (camera, folder, foldername);
 	struct tf_packet reply;
 	int r;

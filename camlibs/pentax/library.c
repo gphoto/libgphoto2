@@ -115,53 +115,53 @@ camera_abilities (CameraAbilitiesList *list)
 
 	strcpy (a.model, "Pentax:K30");
 	a.usb_vendor		= 0x25fb;
-        a.usb_product           = 0x0132;
-        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
-                return ret;
+	a.usb_product           = 0x0132;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 
-        strcpy (a.model, "Pentax:K5II");
+	strcpy (a.model, "Pentax:K5II");
 	a.usb_vendor		= 0x25fb;
-        a.usb_product           = 0x0148;
-        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
-                return ret;
+	a.usb_product           = 0x0148;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 
 	/* TommyLimKW @ Twitter */
-        strcpy (a.model, "Pentax:K5IIs");
+	strcpy (a.model, "Pentax:K5IIs");
 	a.usb_vendor		= 0x25fb;
-        a.usb_product           = 0x014a;
-        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
-                return ret;
+	a.usb_product           = 0x014a;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 
-        strcpy (a.model, "Pentax:K3");
+	strcpy (a.model, "Pentax:K3");
 	a.usb_vendor		= 0x25fb;
-        a.usb_product           = 0x0164;
-        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
-                return ret;
+	a.usb_product           = 0x0164;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 
-        strcpy (a.model, "Pentax:K1");
+	strcpy (a.model, "Pentax:K1");
 	a.usb_vendor		= 0x25fb;
-        a.usb_product           = 0x0178;
-        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
-                return ret;
+	a.usb_product           = 0x0178;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 
-        strcpy (a.model, "Pentax:K3II");
+	strcpy (a.model, "Pentax:K3II");
 	a.usb_vendor		= 0x25fb;
-        a.usb_product           = 0x017a;
-        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
-                return ret;
+	a.usb_product           = 0x017a;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 
 	/* Keld Henningsen <drawsacircle@hotmail.com> */
-        strcpy (a.model, "Pentax:K70");
+	strcpy (a.model, "Pentax:K70");
 	a.usb_vendor		= 0x25fb;
-        a.usb_product           = 0x017c;
-        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
-                return ret;
+	a.usb_product           = 0x017c;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 	/* fifu7fi@gmail.com */
-        strcpy (a.model, "Pentax:KP");
+	strcpy (a.model, "Pentax:KP");
 	a.usb_vendor		= 0x25fb;
-        a.usb_product           = 0x017e;
-        if (GP_OK != (ret = gp_abilities_list_append (list, a)))
-                return ret;
+	a.usb_product           = 0x017e;
+	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
+		return ret;
 
 	/* https://github.com/asalamon74/pktriggercord/issues/21 */
 	strcpy (a.model, "Pentax:K1II");
@@ -181,25 +181,25 @@ camera_abilities (CameraAbilitiesList *list)
 
 int scsi_write(GPPort *port, uint8_t *cmd, uint32_t cmdLen,
                uint8_t *buf, uint32_t bufLen) {
-        int ret;
-        char sense_buffer[32];
+	int ret;
+	char sense_buffer[32];
 
-        ret = gp_port_send_scsi_cmd (port, 1, (char*)cmd, cmdLen,
-                sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
-        if (ret == GP_OK) return PSLR_OK;
-        return PSLR_SCSI_ERROR;
+	ret = gp_port_send_scsi_cmd (port, 1, (char*)cmd, cmdLen,
+		sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
+	if (ret == GP_OK) return PSLR_OK;
+	return PSLR_SCSI_ERROR;
 }
 
 int scsi_read(GPPort *port, uint8_t *cmd, uint32_t cmdLen,
               uint8_t *buf, uint32_t bufLen)
 {
-        int ret;
-        char sense_buffer[32];
+	int ret;
+	char sense_buffer[32];
 
-        ret = gp_port_send_scsi_cmd (port, 0, (char*)cmd, cmdLen,
-                sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
-        if (ret == GP_OK) return bufLen;
-        return -PSLR_SCSI_ERROR;
+	ret = gp_port_send_scsi_cmd (port, 0, (char*)cmd, cmdLen,
+		sense_buffer, sizeof(sense_buffer), (char*)buf, bufLen);
+	if (ret == GP_OK) return bufLen;
+	return -PSLR_SCSI_ERROR;
 }
 
 void close_drive(GPPort **port) {
@@ -328,7 +328,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	const char		*mimes[2];
 	int			buftypes[2], jpegres[2], nrofdownloads = 1;
 	char			*fns[2], *lastfn = NULL;
-        struct timeval  	event_start;
+	struct timeval  	event_start;
 
 	gp_log (GP_LOG_DEBUG, "pentax", "camera_capture");
 
@@ -471,7 +471,7 @@ static int
 camera_wait_for_event (Camera *camera, int timeout,
                        CameraEventType *eventtype, void **eventdata,
                        GPContext *context) {
-        struct timeval  event_start;
+	struct timeval  event_start;
 	CameraFilePath	*path;
 	pslr_handle_t	p = &camera->pl->pslr;
 	int		ret, length;
@@ -829,12 +829,12 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		int i, resolution = -1;
 		int *valid_resolutions;
 
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		valid_resolutions = pslr_get_model_jpeg_resolutions (&camera->pl->pslr);
 
 		gp_widget_get_value (w, &sval);
 		for (i = 0; i < MAX_RESOLUTION_SIZE; i++)
-	        {
+		{
 			int foo;
 
 			sscanf(sval, "%d", &foo);
@@ -854,7 +854,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		pslr_exposure_mode_t exposuremode;
 
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 
 		exposuremode = PSLR_EXPOSURE_MODE_MAX;
@@ -879,7 +879,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		int iso;
 
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &iso)) {
 			/* pslr_set_iso(&camera->pl->pslr, iso); */
@@ -910,7 +910,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		/* FIXME: decoding is strange. the UI shows number of stars
 		 * on k20d: 4 stars = 3, 3 stars = 0, 2 stars = 1, 1 star = 2
 		 */
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d", &qual)) {
 			pslr_set_jpeg_stars (&camera->pl->pslr, qual);
@@ -923,7 +923,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	if ((ret == GP_OK) && gp_widget_changed (w)) {
 		pslr_rational_t speed;
 
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d/%d", &speed.nom, &speed.denom)) {
 			pslr_set_shutter(&camera->pl->pslr, speed);
@@ -946,7 +946,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		pslr_rational_t aperture;
 		int apt1,apt2;
 
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &sval);
 		if (sscanf(sval, "%d.%d", &apt1, &apt2)) {
 			if (apt1<11) {
@@ -983,7 +983,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 			return GP_ERROR;
 		}
 
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &bulb);
 		pslr_bulb (&camera->pl->pslr, bulb);
 

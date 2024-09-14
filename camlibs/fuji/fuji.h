@@ -28,7 +28,7 @@ enum _FujiCmd {
 	FUJI_CMD_PIC_GET	= 0x02,
 	FUJI_CMD_PIC_GET_THUMB  = 0x00,
 	FUJI_CMD_SPEED		= 0x07,
-        FUJI_CMD_VERSION        = 0x09,
+	FUJI_CMD_VERSION	= 0x09,
 	FUJI_CMD_PIC_NAME	= 0x0a,
 	FUJI_CMD_PIC_COUNT	= 0x0b,
 
@@ -40,30 +40,30 @@ enum _FujiCmd {
 	FUJI_CMD_UNKNOWN4	= 0x11, /* Figure this out! */
 	FUJI_CMD_UNKNOWN5	= 0x13, /* Figure this out! */
 
-        FUJI_CMD_PIC_SIZE       = 0x17,
-        FUJI_CMD_PIC_DEL        = 0x19,
+	FUJI_CMD_PIC_SIZE	= 0x17,
+	FUJI_CMD_PIC_DEL	= 0x19,
 	FUJI_CMD_AVAIL_MEM	= 0x1b,
 
 	FUJI_CMD_UNKNOWN10	= 0x20, /* Figure this out! */
 	FUJI_CMD_UNKNOWN11	= 0x22, /* Figure this out! */
 
-	FUJI_CMD_TAKE           = 0x27,
+	FUJI_CMD_TAKE		= 0x27,
 	FUJI_CMD_MODEL		= 0x29,
 
-	FUJI_CMD_UNKNOWN13      = 0x2a, /* Figure this out! */
+	FUJI_CMD_UNKNOWN13	= 0x2a, /* Figure this out! */
 	FUJI_CMD_UNKNOWN14	= 0x2b, /* Figure this out! */
 	FUJI_CMD_UNKNOWN15	= 0x2e, /* Figure this out! */
 
 	/* Flash related commands */
 	FUJI_CMD_FLASH_GET	= 0x30,
 	FUJI_CMD_FLASH_SET	= 0x32,
-        FUJI_CMD_FLASH_CHARGE   = 0x34,
+	FUJI_CMD_FLASH_CHARGE	= 0x34,
 
-        FUJI_CMD_CMDS_VALID     = 0x4c,
+	FUJI_CMD_CMDS_VALID	= 0x4c,
 
 	FUJI_CMD_UNKNOWN16	= 0x51, /* Figure this out! */
 
-        FUJI_CMD_PREVIEW        = 0x64,
+	FUJI_CMD_PREVIEW	= 0x64,
 
 	/* Configurable settings */
 	FUJI_CMD_ID_GET		= 0x80,

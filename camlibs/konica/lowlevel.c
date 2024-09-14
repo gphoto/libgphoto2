@@ -429,11 +429,11 @@ while (read < rbs_internal) {
 		  * these, it now downloads images etc.
 		  */
 #ifndef LESSER_ESCAPES
-	        if ((*buf == STX) || (*buf == ETX) || (*buf == ENQ ) ||
+		if ((*buf == STX) || (*buf == ETX) || (*buf == ENQ) ||
 		    (*buf == ACK) || (*buf == XOFF) || (*buf == XON) ||
 		    (*buf == NACK) || (*buf == ETB)) {
 #else /* LESSER_ESCAPES */
-	        if ((*buf == STX) ||  (*buf == XOFF) || (*buf == XON)) {
+		if ((*buf == STX) ||  (*buf == XOFF) || (*buf == XON)) {
 #endif /* LESSER_ESCAPES */
 			GP_DEBUG ("Wrong ESC masking!");
 			error_flag = 1;
@@ -610,7 +610,7 @@ l_send_receive (
 	/* Send data. */
 	CHECK (l_send (p, c, send_buffer, send_buffer_size));
 
-        /* Receive data. */
+	/* Receive data. */
 	if (image_buffer_size)
 		*receive_buffer_size = *image_buffer_size;
 	CHECK (l_receive (p, c, receive_buffer, receive_buffer_size,
@@ -620,7 +620,7 @@ l_send_receive (
 	if ((*receive_buffer_size > 1) &&
 	    (((*receive_buffer)[0] == send_buffer[0]) &&
 	     ((*receive_buffer)[1] == send_buffer[1])))
-	    return (GP_OK);
+		return (GP_OK);
 
 	/* We didn't receive control data yet. */
 	*image_buffer = *receive_buffer;

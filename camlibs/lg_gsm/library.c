@@ -51,20 +51,20 @@ struct _CameraPrivateLibrary {
 };
 
 static struct {
-   	char *name;
+	char *name;
 	CameraDriverStatus status;
-   	unsigned short idVendor;
-   	unsigned short idProduct;
+	unsigned short idVendor;
+	unsigned short idProduct;
 } models[] = {
-        {"LG T5100", GP_DRIVER_STATUS_EXPERIMENTAL, 0x1004, 0x6005},
+	{"LG T5100", GP_DRIVER_STATUS_EXPERIMENTAL, 0x1004, 0x6005},
 	{NULL,0,0,0}
 };
 
 int
 camera_id (CameraText *id)
 {
-    	strcpy (id->text, "LG GSM camera");
-    	return GP_OK;
+	strcpy (id->text, "LG GSM camera");
+	return GP_OK;
 }
 
 int
@@ -113,9 +113,9 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-    	strcpy (about->text, _("LG GSM generic driver\n"
-			    "Guillaume Bedot <littletux@zarb.org>\n"));
-    	return GP_OK;
+	strcpy (about->text, _("LG GSM generic driver\n"
+		"Guillaume Bedot <littletux@zarb.org>\n"));
+	return GP_OK;
 }
 
 /*************** File and Downloading Functions *******************/
@@ -137,7 +137,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 {
 	Camera *camera = user_data;
 
-        int k;
+	int k;
 	char *data;
 	unsigned int len;
 
@@ -191,9 +191,9 @@ camera_init(Camera *camera, GPContext *context)
 	int ret = 0;
 
 	/* First, set up all the function pointers */
-	camera->functions->summary      = camera_summary;
-	camera->functions->about        = camera_about;
-	camera->functions->exit	    = camera_exit;
+	camera->functions->summary  = camera_summary;
+	camera->functions->about    = camera_about;
+	camera->functions->exit     = camera_exit;
 
 	GP_DEBUG ("Initializing the camera\n");
 	ret = gp_port_get_settings(camera->port,&settings);
@@ -201,17 +201,17 @@ camera_init(Camera *camera, GPContext *context)
 		return ret;
 
 	switch (camera->port->type) {
-		case GP_PORT_SERIAL:
-			return GP_ERROR;
-		case GP_PORT_USB:
-			settings.usb.config = 1;
-			settings.usb.altsetting = 0;
-			settings.usb.interface = 1;
-			settings.usb.inep = 0x81;
-			settings.usb.outep =0x02;
-			break;
-		default:
-			return GP_ERROR;
+	case GP_PORT_SERIAL:
+		return GP_ERROR;
+	case GP_PORT_USB:
+		settings.usb.config = 1;
+		settings.usb.altsetting = 0;
+		settings.usb.interface = 1;
+		settings.usb.inep = 0x81;
+		settings.usb.outep =0x02;
+		break;
+	default:
+		return GP_ERROR;
 	}
 
 	ret = gp_port_set_settings(camera->port,settings);
@@ -222,7 +222,7 @@ camera_init(Camera *camera, GPContext *context)
 	GP_DEBUG("inep = %x\n", settings.usb.inep);
 	GP_DEBUG("outep = %x\n", settings.usb.outep);
 
-        /* Tell the CameraFilesystem where to get lists from */
+	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));

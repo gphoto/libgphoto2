@@ -168,8 +168,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CHECK (tp6801_read_raw_file (camera, idx, &raw))
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_set_name (file, filename);
-		gp_file_set_data_and_size (file, raw,
-		                           tp6801_filesize (camera));
+		gp_file_set_data_and_size (file, raw, tp6801_filesize (camera));
 
 		return GP_OK;
 	}
@@ -398,8 +397,8 @@ storage_info_func (CameraFilesystem *fs,
 
 	imagesize = tp6801_filesize (camera);
 	if (imagesize) {
-        	sinfo->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
-        	sinfo->freeimages = free / imagesize;
+		sinfo->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
+		sinfo->freeimages = free / imagesize;
 	}
 
 	return GP_OK;

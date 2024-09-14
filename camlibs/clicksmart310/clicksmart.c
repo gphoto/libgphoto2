@@ -148,10 +148,10 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 
 	gp_port_usb_msg_interface_write(port, 6, 0x1fff - n, 1, NULL, 0);
 	c = 0;
-	while (c != 1){
-	  int r;
-	  if ((r = CLICKSMART_READ_STATUS (port, &c)) < GP_OK)
-		return r;
+	while (c != 1) {
+		int r;
+		if ((r = CLICKSMART_READ_STATUS (port, &c)) < GP_OK)
+			return r;
 	}
 	/* Get the size of the data and calculate the size to download, which
 	 * is the next multiple of 0x100. Only for the hi-res photos is the
@@ -160,9 +160,9 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 
 	size=(priv->catalog[16*n + 12] * 0x100)+(priv->catalog[16*n + 11]);
 	if (size == 0)	/* for lo-res photos the above calculation gives 0 */
-	  size = (priv->catalog[16*n + 5] * 0x100);
+		size = (priv->catalog[16*n + 5] * 0x100);
 	if (size == 0)	/* this means data corruption */
-          return GP_ERROR;
+		return GP_ERROR;
 
 	remainder = size%0x200;
 
@@ -171,10 +171,10 @@ clicksmart_read_pic_data (CameraPrivateLibrary *priv, GPPort *port,
 	if (!*data) return GP_ERROR;
 	/* Download the data */
 	while (offset < size-remainder) {
-	  GP_DEBUG("offset: %x\n", offset);
-	  if (gp_port_read(port, (char *)*data + offset, 0x200) < GP_OK)
-		break;
-	  offset = offset + 0x200;
+		GP_DEBUG("offset: %x\n", offset);
+		if (gp_port_read(port, (char *)*data + offset, 0x200) < GP_OK)
+			break;
+		offset = offset + 0x200;
 	}
 
 	remainder=((remainder+0xff)/0x100)*0x100;
@@ -215,7 +215,7 @@ clicksmart_reset (GPPort *port)
 	gp_port_usb_msg_interface_write(port, 0, 2, CS_CH_READY, NULL, 0);
 	CLICKSMART_READ (port, CS_CH_CLEAR, &c);
 	CLICKSMART_READ (port, CS_CH_CLEAR, &c);
-    	return GP_OK;
+	return GP_OK;
 }
 
 /* create_jpeg_from_data adapted from camlibs/spca50x */
@@ -223,7 +223,7 @@ clicksmart_reset (GPPort *port)
 int create_jpeg_from_data (unsigned char * dst, unsigned char * src,
 			int qIndex, int w, int h, unsigned char format,
 			int o_size, int *size,
-		        int omit_huffman_table, int omit_escape)
+			int omit_huffman_table, int omit_escape)
 {
 	int i = 0;
 	unsigned char *start;
@@ -241,9 +241,9 @@ int create_jpeg_from_data (unsigned char * dst, unsigned char * src,
 
 	/* copy Huffman table */
 	if (!omit_huffman_table) {
-	    memcpy (dst, SPCA50xJPGDefaultHeaderPart2,
-			    SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH);
-	    dst += SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH;
+		memcpy (dst, SPCA50xJPGDefaultHeaderPart2,
+			SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH);
+		dst += SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH;
 	}
 	memcpy (dst, SPCA50xJPGDefaultHeaderPart3,
 			SPCA50X_JPG_DEFAULT_HEADER_PART3_LENGTH);

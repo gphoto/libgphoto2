@@ -55,12 +55,12 @@ struct _CameraPrivateLibrary {
 };
 
 static const struct {
-   	char *name;
+	char *name;
 	CameraDriverStatus status;
-   	unsigned short idVendor;
-   	unsigned short idProduct;
+	unsigned short idVendor;
+	unsigned short idProduct;
 } models[] = {
-        {"Aiptek PenCam VGA+", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0111},
+	{"Aiptek PenCam VGA+", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0111},
 	{"Trust Spyc@m 100", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0110},
  	{"Emprex PCD3600", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Vivitar Vivicam 55", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
@@ -86,34 +86,34 @@ static const struct {
 int
 camera_id (CameraText *id)
 {
-    	strcpy (id->text, "Aiptek PenCam VGA+");
-    	return GP_OK;
+	strcpy (id->text, "Aiptek PenCam VGA+");
+	return GP_OK;
 }
 
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-    	int i;
-    	CameraAbilities a;
+	int i;
+	CameraAbilities a;
 
-    	for (i = 0; models[i].name; i++) {
-        	memset (&a, 0, sizeof(a));
-       		strcpy (a.model, models[i].name);
-       		a.status = models[i].status;
-       		a.port   = GP_PORT_USB;
-       		a.speed[0] = 0;
-       		a.usb_vendor = models[i].idVendor;
-       		a.usb_product= models[i].idProduct;
-       		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
+	for (i = 0; models[i].name; i++) {
+		memset (&a, 0, sizeof(a));
+		strcpy (a.model, models[i].name);
+		a.status = models[i].status;
+		a.port   = GP_PORT_USB;
+		a.speed[0] = 0;
+		a.usb_vendor = models[i].idVendor;
+		a.usb_product= models[i].idProduct;
+		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
 			a.operations = GP_OPERATION_NONE;
 		else
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
-       		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-       		a.file_operations   = GP_FILE_OPERATION_PREVIEW
-					| GP_FILE_OPERATION_RAW;
-       		gp_abilities_list_append (list, a);
-    	}
-    	return GP_OK;
+		a.folder_operations = GP_FOLDER_OPERATION_NONE;
+		a.file_operations   = GP_FILE_OPERATION_PREVIEW
+				    | GP_FILE_OPERATION_RAW;
+		gp_abilities_list_append (list, a);
+	}
+	return GP_OK;
 }
 
 static int
@@ -121,20 +121,20 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 	int num_pics = mars_get_num_pics(camera->pl->info);
 
-    	sprintf (summary->text,ngettext(
+	sprintf (summary->text, ngettext(
 		"Mars MR97310 camera.\nThere is %i photo in it.\n",
-    		"Mars MR97310 camera.\nThere are %i photos in it.\n",
+		"Mars MR97310 camera.\nThere are %i photos in it.\n",
 		num_pics), num_pics
 	);
-    	return GP_OK;
+	return GP_OK;
 }
 
 static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	strcpy(manual->text,
 	_(
-        "This driver supports cameras with Mars MR97310 chip (and direct\n"
-        "equivalents ??Pixart PACx07?\?).\n"
+	"This driver supports cameras with Mars MR97310 chip (and direct\n"
+	"equivalents ??Pixart PACx07?\?).\n"
 	"These cameras do not support deletion of photos, nor uploading\n"
 	"of data.\n"
 	"Decoding of compressed photos may or may not work well\n"
@@ -151,9 +151,9 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-    	strcpy (about->text, _("Mars MR97310 camera library\n"
-			    "Theodore Kilgore <kilgota@auburn.edu>\n"));
-    	return GP_OK;
+	strcpy (about->text, _("Mars MR97310 camera library\n"
+		"Theodore Kilgore <kilgota@auburn.edu>\n"));
+	return GP_OK;
 }
 
 /*************** File and Downloading Functions *******************/
@@ -162,7 +162,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-        Camera *camera = data;
+	Camera *camera = data;
 	int i = 0, n;
 	char name[30];
 
@@ -172,9 +172,9 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			sprintf (name, "mr%03isnd.wav", i+1);
 		} else
 			sprintf (name, "mr%03ipic.ppm", i+1);
-	    	gp_list_append (list, name, NULL);
-    	}
-    	return GP_OK;
+		gp_list_append (list, name, NULL);
+	}
+	return GP_OK;
 }
 
 static int
@@ -192,10 +192,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data;
-  	int w=0, h = 0, b = 0, k;
-    	unsigned char *data;
-    	unsigned char  *ppm;
+	Camera *camera = user_data;
+	int w=0, h = 0, b = 0, k;
+	unsigned char *data;
+	unsigned char  *ppm;
 	unsigned char *p_data = NULL;
 	unsigned char gtable[256], photo_code, res_code, compressed;
 	unsigned char audio = 0;
@@ -203,21 +203,21 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	int size = 0, raw_size = 0;
 	float gamma_factor;
 
-    	GP_DEBUG ("Downloading pictures!\n");
+	GP_DEBUG ("Downloading pictures!\n");
 
 	/* These are cheap cameras. There ain't no EXIF data. */
 	if (GP_FILE_TYPE_EXIF == type) return GP_ERROR_FILE_EXISTS;
 
 
-    	/* Get the number of the photo on the camera */
+	/* Get the number of the photo on the camera */
 	k = gp_filesystem_number (camera->fs, "/", filename, context);
-    	/* Determine the resolution setting from the PAT table */
+	/* Determine the resolution setting from the PAT table */
 	photo_code = camera->pl->info[8*k];
 	res_code = photo_code & 0x0f;
 	/* Compression presence or absence is seen here, and is given again
 	 * by the camera, in the header of raw data for each photo.
 	 */
-    	compressed = (photo_code >> 4) & 2;
+	compressed = (photo_code >> 4) & 2;
 	switch (res_code) {
 	case 0: w = 176; h = 144; break;
 	case 1: audio = 1; break;
@@ -235,30 +235,30 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	b = ((b+ 0x1b0)/0x2000 + 1) * 0x2000;
 
 	if (w*h > b) {
-		GP_DEBUG ("w=%d, h=%d, w*h=%d, bytes read=%d\n", w,h,w*h,b);
+		GP_DEBUG ("w=%d, h=%d, w*h=%d, bytes read=%d\n", w, h, w*h, b);
 		return GP_ERROR_CORRUPTED_DATA;
 	}
 
-	data = calloc (b,1);
+	data = calloc (b, 1);
 	if (!data) return GP_ERROR_NO_MEMORY;
 
-	GP_DEBUG ("buffersize= %i = 0x%x bytes\n", b,b);
+	GP_DEBUG ("buffersize= %i = 0x%x bytes\n", b, b);
 
 	mars_read_picture_data (camera, camera->pl->info,
-					    camera->port, (char *)data, b, k);
+		camera->port, (char *)data, b, k);
 	/* The first 128 bytes are junk, so we toss them.*/
 	memmove(data, data+128, b - 128);
 	if (audio) {
 		p_data = malloc (raw_size+256);
-		if (!p_data) {free (data); return GP_ERROR_NO_MEMORY;}
+		if (!p_data) { free (data); return GP_ERROR_NO_MEMORY; }
 		memset (p_data, 0, raw_size+256);
-    		sprintf ((char *)p_data, "RIFF");
+		sprintf ((char *)p_data, "RIFF");
 		p_data[4] = (raw_size+36)&0xff;
 		p_data[5] = ((raw_size+36)>>8)&0xff;
 		p_data[6] = ((raw_size+36)>>16)&0xff;
 		p_data[7] = ((raw_size+36)>>24)&0xff;
-    		sprintf ((char *)p_data+8, "WAVE");\
-    		sprintf ((char *)p_data+12, "fmt ");
+		sprintf ((char *)p_data+8, "WAVE");
+		sprintf ((char *)p_data+12, "fmt ");
 		p_data[16] = 0x10;
 		p_data[20] = 1;
 		p_data[22] = 1;
@@ -268,14 +268,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		p_data[29] = 0x1F;
 		p_data[32] = 1;
 		p_data[34] = 8;
-    		sprintf ((char *)p_data+36, "data");
+		sprintf ((char *)p_data+36, "data");
 		p_data[40] = (raw_size)&0xff;
 		p_data[41] = ((raw_size)>>8)&0xff;
 		p_data[42] = ((raw_size)>>16)&0xff;
 		p_data[43] = ((raw_size)>>24)&0xff;
 		memcpy (p_data+44, data, raw_size);
 		gp_file_set_mime_type(file, GP_MIME_WAV);
-		gp_file_set_data_and_size(file, (char *)p_data , raw_size+44);
+		gp_file_set_data_and_size(file, (char *)p_data, raw_size+44);
 		return GP_OK;
 	}
 
@@ -314,7 +314,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	ppm = malloc (w * h * 3 + 256);  /* Data + header */
 	if (!ppm) {free (p_data); return GP_ERROR_NO_MEMORY;}
 	memset (ppm, 0, w * h * 3 + 256);
-    	sprintf ((char *)ppm,
+	sprintf ((char *)ppm,
 		"P6\n"
 		"# CREATOR: gphoto2, Mars library\n"
 		"%d %d\n"
@@ -326,11 +326,11 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_gamma_fill_table (gtable, gamma_factor );
 	gp_gamma_correct_single (gtable, ptr, w * h);
 	mars_white_balance (ptr, w*h, 1.4, gamma_factor);
-        gp_file_set_mime_type (file, GP_MIME_PPM);
+	gp_file_set_mime_type (file, GP_MIME_PPM);
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 	free (p_data);
 
-        return GP_OK;
+	return GP_OK;
 }
 
 /*************** Exit and Initialization Functions ******************/
@@ -360,7 +360,7 @@ camera_init(Camera *camera, GPContext *context)
 	int ret = 0;
 
 	/* First, set up all the function pointers */
-        camera->functions->manual	= camera_manual;
+	camera->functions->manual	= camera_manual;
 	camera->functions->summary      = camera_summary;
 	camera->functions->about        = camera_about;
 	camera->functions->exit	    = camera_exit;
@@ -370,19 +370,19 @@ camera_init(Camera *camera, GPContext *context)
 	if (ret < 0) return ret;
 
 	switch (camera->port->type) {
-		case GP_PORT_SERIAL:
-			return ( GP_ERROR );
-		case GP_PORT_USB:
-			settings.usb.config = 1;
-			settings.usb.altsetting = 0;
-			settings.usb.interface = 0;
+	case GP_PORT_SERIAL:
+		return (GP_ERROR);
+	case GP_PORT_USB:
+		settings.usb.config = 1;
+		settings.usb.altsetting = 0;
+		settings.usb.interface = 0;
 		/*	settings.usb.inep = 0x82;	*/
 		/* inep 0x83 used for commands. Switch to 0x82 for data! */
-			settings.usb.inep = 0x83;
-			settings.usb.outep = 0x04;
-			break;
-		default:
-			return ( GP_ERROR );
+		settings.usb.inep = 0x83;
+		settings.usb.outep = 0x04;
+		break;
+	default:
+		return (GP_ERROR);
 	}
 
 	ret = gp_port_set_settings(camera->port,settings);
@@ -392,7 +392,7 @@ camera_init(Camera *camera, GPContext *context)
 	GP_DEBUG("inep = %x\n", settings.usb.inep);
 	GP_DEBUG("outep = %x\n", settings.usb.outep);
 
-        /* Tell the CameraFilesystem where to get lists from */
+	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));

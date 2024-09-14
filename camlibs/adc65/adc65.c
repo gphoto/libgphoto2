@@ -74,15 +74,15 @@ adc65_ping(Camera *camera) {
 
 static int
 adc65_file_count (Camera *camera) {
-        unsigned char cmd, resp[65538];
+	unsigned char cmd, resp[65538];
 	int ret;
 
-        GP_DEBUG("Getting the number of pictures.");
-        cmd = 0x00;
-        ret = adc65_exchange(camera, &cmd, 1, resp, 65538);
+	GP_DEBUG("Getting the number of pictures.");
+	cmd = 0x00;
+	ret = adc65_exchange(camera, &cmd, 1, resp, 65538);
 	if (ret < 2) /* must have at least a 2 byte reply */
-                return ret;
-        return resp[1] - 1;
+		return ret;
+	return resp[1] - 1;
 }
 
 static char *
@@ -102,7 +102,7 @@ adc65_read_data (Camera *camera, unsigned char *cmd, int cmd_size, int data_type
 			/* get the picture */
 			ret = adc65_exchange (camera, cmd, cmd_size, resp, 2);
 			if (ret < 2)
-			    return NULL;
+				return NULL;
 
 			us = malloc (65536);
 			if (!us)
@@ -224,23 +224,23 @@ get_file_func (	CameraFilesystem *fs, const char *folder,
 		CameraFile *file, void *user_data, GPContext *context)
 {
 	Camera *camera = user_data;
-        int size, num;
-	char *data;
+	int size, num;
+	char* data;
 
-        gp_file_set_mime_type (file, GP_MIME_PPM);
-        num = gp_filesystem_number (fs, folder, filename, context);
+	gp_file_set_mime_type (file, GP_MIME_PPM);
+	num = gp_filesystem_number (fs, folder, filename, context);
 	if (num < 0)
 		return num;
-        data = adc65_read_picture (camera, num, &size);
-        if (!data)
+	data = adc65_read_picture (camera, num, &size);
+	if (!data)
 		return GP_ERROR;
-	return gp_file_append (file,data,size);
+	return gp_file_append (file, data, size);
 }
 
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context) {
-        strcpy (about->text, _("Adc65\nBenjamin Moos <benjamin@psnw.com>"));
-        return GP_OK;
+	strcpy (about->text, _("Adc65\nBenjamin Moos <benjamin@psnw.com>"));
+	return GP_OK;
 }
 
 static CameraFilesystemFuncs fsfuncs = {

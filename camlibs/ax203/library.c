@@ -403,8 +403,8 @@ storage_info_func (CameraFilesystem *fs,
 
 	imagesize = ax203_filesize (camera);
 	if (imagesize) {
-        	sinfo->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
-        	sinfo->freeimages = free / imagesize;
+		sinfo->fields |= GP_STORAGEINFO_FREESPACEIMAGES;
+		sinfo->freeimages = free / imagesize;
 	}
 
 	return GP_OK;

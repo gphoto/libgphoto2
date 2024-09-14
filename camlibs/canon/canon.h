@@ -513,8 +513,7 @@ struct _CameraPrivateLibrary
 
 	int remote_control;   /* is the camera currently under USB control? */
 
-	canonCaptureSizeClass capture_size; /* Size class for remote-
-                                               captured images */
+	canonCaptureSizeClass capture_size; /* Size class for remote-captured images */
 
 	unsigned int body_id;	/* hardware serial number for some cameras */
 

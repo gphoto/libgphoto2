@@ -121,38 +121,38 @@ static int
 fuji_send (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 	   unsigned char last, GPContext *context)
 {
-        unsigned char b[1024], check;
-        unsigned int i;
+	unsigned char b[1024], check;
+	unsigned int i;
 
-        /* Send header */
-        b[0] = ESC;
-        b[1] = STX;
-        CR (gp_port_write (camera->port, (char *)b, 2));
+	/* Send header */
+	b[0] = ESC;
+	b[1] = STX;
+	CR (gp_port_write (camera->port, (char *)b, 2));
 
-        /*
+	/*
 	 * Escape the data we are going to send.
 	 * Calculate the checksum.
 	 */
 	check = (last ? ETX : ETB);
-        memcpy (b, cmd, cmd_len);
-        for (i = 0; i < cmd_len; i++) {
+	memcpy (b, cmd, cmd_len);
+	for (i = 0; i < cmd_len; i++) {
 		check ^= b[i];
-                if (b[i] == ESC) {
-                        memmove (b + i + 1, b + i, cmd_len - i);
-                        b[i] = ESC;
-                        i++;
-                        cmd_len++;
-                }
-        }
+		if (b[i] == ESC) {
+			memmove (b + i + 1, b + i, cmd_len - i);
+			b[i] = ESC;
+			i++;
+			cmd_len++;
+		}
+	}
 
-        /* Send data */
-        CR (gp_port_write (camera->port, (char *)b, cmd_len));
+	/* Send data */
+	CR (gp_port_write (camera->port, (char *)b, cmd_len));
 
-        /* Send footer */
-        b[0] = ESC;
-        b[1] = (last ? ETX : ETB);
-        b[2] = check;
-        CR (gp_port_write (camera->port, (char *)b, 3));
+	/* Send footer */
+	b[0] = ESC;
+	b[1] = (last ? ETX : ETB);
+	b[2] = check;
+	CR (gp_port_write (camera->port, (char *)b, 3));
 
 	return (GP_OK);
 }
@@ -300,8 +300,7 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 	 */
 	p = ((*buf_len > 1024) ? 1 : 0);
 	if (p)
-		id = gp_context_progress_start (context, *buf_len,
-					        _("Downloading..."));
+		id = gp_context_progress_start (context, *buf_len, _("Downloading..."));
 	*buf_len = 0;
 	retries = 0;
 	while (!last) {
@@ -310,7 +309,7 @@ fuji_transmit (Camera *camera, unsigned char *cmd, unsigned int cmd_len,
 			retries++;
 			while (gp_port_read (camera->port, (char *)&c, 1) >= 0);
 			if (++retries > 2)
-			    return (r);
+				return (r);
 			GP_DEBUG ("Retrying...");
 			c = NAK;
 			CR (gp_port_write (camera->port, (char *)&c, 1));
@@ -842,22 +841,22 @@ fuji_get_cmds (Camera *camera, unsigned char *cmds, GPContext *context)
 
 static int get_picture_info(int num,char *name,CameraPrivateLibrary *camdata){
 
-          DBG("Getting name...");
+	DBG("Getting name...");
 
-	  strncpy(name,fuji_picture_name(num),100);
+	strncpy(name, fuji_picture_name(num), 100);
 
-	  DBG2("%s\n",name);
+	DBG2("%s\n", name);
 
-	  /*
-	   * To find the picture number, go to the first digit. According to
-	   * recent Exif specs, n_off can be either 3 or 4.
-	   */
-	  if (camdata->has_cmd[FUJI_SIZE])   fuji_size=fuji_picture_size(num);
-	  else {
-	    fuji_size=70000;  /* this is an overestimation for DS7 */
-	    DBG2("Image size not obtained, guessing %d",fuji_size);
-	  };
-	  return (fuji_size);
+	/*
+	 * To find the picture number, go to the first digit. According to
+	 * recent Exif specs, n_off can be either 3 or 4.
+	 */
+	if (camdata->has_cmd[FUJI_SIZE])   fuji_size=fuji_picture_size(num);
+	else {
+		fuji_size=70000;  /* this is an overestimation for DS7 */
+		DBG2("Image size not obtained, guessing %d", fuji_size);
+	};
+	return (fuji_size);
 };
 
 static void get_picture_list (FujiData *fjd)
@@ -875,10 +874,10 @@ static void get_picture_list (FujiData *fjd)
 	};
 
 	for (i = 1; i <= pictures; i++) {
-	        DBG("Getting name...");
+		DBG("Getting name...");
 
-	        name = strdup(fuji_picture_name(i));
-	        pinfo[i].name = name;
+		name = strdup(fuji_picture_name(i));
+		pinfo[i].name = name;
 
 		DBG2("%s\n",name);
 
@@ -905,7 +904,7 @@ static int download_picture(int n,int thumb,CameraFile *file,CameraPrivateLibrar
 	DBG3("download_picture: %d,%s",n,thumb?"thumb":"pic");
 
 	if (!thumb) {
-	        fuji_size=get_picture_info(n,name,fjd);
+		fuji_size=get_picture_info(n,name,fjd);
 		DBG3("Info %3d   %12s ", n, name);
 	}
 	else fuji_size=10500;  /* Probably not same for all cams, better way ? */

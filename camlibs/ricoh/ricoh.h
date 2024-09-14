@@ -99,7 +99,7 @@ int ricoh_get_cam_mem   (Camera *camera, GPContext *context, int *mem);
 int ricoh_get_cam_amem  (Camera *camera, GPContext *context, int *mem);
 
 int ricoh_get_copyright (Camera *camera, GPContext *context,
-		         const char **copyright);
+			 const char **copyright);
 int ricoh_set_copyright (Camera *camera, GPContext *context,
 			 const char *copyright);
 

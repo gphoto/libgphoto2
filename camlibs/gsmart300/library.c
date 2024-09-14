@@ -260,15 +260,14 @@ get_file_func (CameraFilesystem *fs, const char *folder,
 	Camera *camera = user_data;
 	int number, filetype;
 
-	CHECK (number = gp_filesystem_number (camera->fs, folder, filename,
-				              context));
+	CHECK (number = gp_filesystem_number (camera->fs, folder, filename, context));
 	switch (type) {
 		case GP_FILE_TYPE_NORMAL:
 			CHECK (gsmart300_request_file (camera->pl, file, number));
 			break;
 		case GP_FILE_TYPE_PREVIEW:
 			CHECK (gsmart300_request_thumbnail
-			       (camera->pl, file, number, &filetype));
+				(camera->pl, file, number, &filetype));
 			if (filetype == GSMART_FILE_TYPE_IMAGE) {
 				CHECK (gp_file_set_mime_type (file, GP_MIME_BMP));
 			}
@@ -289,8 +288,7 @@ get_info_func (CameraFilesystem *fs, const char *folder,
 	struct GsmartFile *file;
 
 	/* Get the file number from the CameraFileSystem */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename,
-				         context));
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
 
 	CHECK (gsmart300_get_file_info (camera->pl, n, &file));
 
@@ -321,17 +319,16 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	int n, c;
 
 	/* Get the file number from the CameraFileSystem */
-	CHECK (n = gp_filesystem_number (camera->fs, folder, filename,
-				         context));
+	CHECK (n = gp_filesystem_number (camera->fs, folder, filename, context));
 	CHECK (c = gp_filesystem_count (camera->fs, folder, context));
 	if (n + 1 != c) {
 		const char *name;
 
 		gp_filesystem_name (fs, "/", c - 1, &name, context);
 		gp_context_error (context,
-											_("Your camera only supports deleting "
-												"the last file on the camera. In this "
-												"case, this is file '%s'."), name);
+			_("Your camera only supports deleting "
+				"the last file on the camera. In this "
+				"case, this is file '%s'."), name);
 		return (GP_ERROR);
 	}
 	CHECK (gsmart300_delete_file (camera->pl, n));

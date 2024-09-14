@@ -515,8 +515,8 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 		x += htable_g[r];
 		x += htable_b[r];
 	}
-        gamma = sqrt((double) (x ) / (double) (size * 2));
-        GP_DEBUG("Provisional gamma correction = %1.2f\n", gamma);
+	gamma = sqrt((double) (x ) / (double) (size * 2));
+	GP_DEBUG("Provisional gamma correction = %1.2f\n", gamma);
 
 	if(gamma < .1) {
 		new_gamma = .50;
@@ -526,8 +526,8 @@ white_balance (unsigned char *data, unsigned int size, float saturation)
 		new_gamma = 0.60;
 	else
 		new_gamma = gamma;
-        if (new_gamma > 1.2) new_gamma = 1.2;
-        GP_DEBUG("Gamma correction = %1.2f\n", new_gamma);
+	if (new_gamma > 1.2) new_gamma = 1.2;
+	GP_DEBUG("Gamma correction = %1.2f\n", new_gamma);
 	gp_gamma_fill_table(gtable, new_gamma);
 	gp_gamma_correct_single(gtable,data,size);
 

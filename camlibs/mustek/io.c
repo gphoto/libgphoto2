@@ -57,7 +57,7 @@ int mdc800_io_sendCommand_with_retry (GPPort *port,unsigned char* command, unsig
 
 	while (try < maxtries)
 	{
-	        usleep(MDC800_DEFAULT_COMMAND_RETRY_DELAY*1000);
+		usleep(MDC800_DEFAULT_COMMAND_RETRY_DELAY*1000);
 		if (port->type == GP_PORT_USB)
 			ret=mdc800_usb_sendCommand(port,command, buffer, length );
 		else

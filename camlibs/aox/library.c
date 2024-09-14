@@ -56,81 +56,81 @@ struct _CameraPrivateLibrary {
 };
 
 static struct {
-   	char *name;
+	char *name;
 	CameraDriverStatus status;
-   	unsigned short idVendor;
-   	unsigned short idProduct;
+	unsigned short idVendor;
+	unsigned short idProduct;
 } models[] = {
-        {"Concord EyeQMini_1", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2182},
-        {"Concord EyeQMini_2", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2180},
-        {"D-MAX DM3588", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2130},
+	{"Concord EyeQMini_1", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2182},
+	{"Concord EyeQMini_2", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2180},
+	{"D-MAX DM3588", GP_DRIVER_STATUS_EXPERIMENTAL, 0x03e8, 0x2130},
 	{NULL,0,0,0}
 };
 
 int
 camera_id (CameraText *id)
 {
-    	strcpy (id->text, "Aox chipset camera");
-    	return GP_OK;
+	strcpy (id->text, "Aox chipset camera");
+	return GP_OK;
 }
 
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-    	int i;
-    	CameraAbilities a;
+	int i;
+	CameraAbilities a;
 
-    	for (i = 0; models[i].name; i++) {
-        	memset (&a, 0, sizeof(a));
-       		strcpy (a.model, models[i].name);
-       		a.status = models[i].status;
-       		a.port   = GP_PORT_USB;
-       		a.speed[0] = 0;
-       		a.usb_vendor = models[i].idVendor;
-       		a.usb_product= models[i].idProduct;
-       		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
+	for (i = 0; models[i].name; i++) {
+		memset (&a, 0, sizeof(a));
+		strcpy (a.model, models[i].name);
+		a.status = models[i].status;
+		a.port = GP_PORT_USB;
+		a.speed[0] = 0;
+		a.usb_vendor = models[i].idVendor;
+		a.usb_product = models[i].idProduct;
+		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
 			a.operations = GP_OPERATION_NONE;
 		else
 			a.operations = GP_OPERATION_CAPTURE_IMAGE;
-       		a.folder_operations = GP_FOLDER_OPERATION_NONE;
-       		a.file_operations   = GP_FILE_OPERATION_PREVIEW;
-       		gp_abilities_list_append (list, a);
-    	}
-    	return GP_OK;
+		a.folder_operations = GP_FOLDER_OPERATION_NONE;
+		a.file_operations = GP_FILE_OPERATION_PREVIEW;
+		gp_abilities_list_append (list, a);
+	}
+	return GP_OK;
 }
 
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
 
-	int num_lo_pics =aox_get_num_lo_pics(camera->pl->info);
-	int num_hi_pics =aox_get_num_hi_pics(camera->pl->info);
+	int num_lo_pics = aox_get_num_lo_pics(camera->pl->info);
+	int num_hi_pics = aox_get_num_hi_pics(camera->pl->info);
 
-    	sprintf (summary->text,_("Your USB camera has an Aox chipset.\n"
+	sprintf (summary->text, _("Your USB camera has an Aox chipset.\n"
 			"Number of lo-res PICs = %i\n"
 			"Number of hi-res PICs = %i\n"
 			"Number of PICs = %i\n"
-       			), num_lo_pics, num_hi_pics, num_lo_pics+num_hi_pics);
+			), num_lo_pics, num_hi_pics, num_lo_pics + num_hi_pics);
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-    	strcpy (about->text, _("Aox generic driver\n"
-			    "Theodore Kilgore <kilgota@auburn.edu>\n"));
-    	return GP_OK;
+	strcpy (about->text, _("Aox generic driver\n"
+			"Theodore Kilgore <kilgota@auburn.edu>\n"));
+	return GP_OK;
 }
 
 /*************** File and Downloading Functions *******************/
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-                void *data, GPContext *context)
+		void *data, GPContext *context)
 {
-        Camera *camera = data;
+	Camera *camera = data;
 	int num_lo_pics = aox_get_num_lo_pics (camera->pl->info);
 	int num_hi_pics = aox_get_num_hi_pics (camera->pl->info);
 	int n = num_hi_pics + num_lo_pics;
@@ -148,7 +148,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		snprintf( name, sizeof(name), "aox_pic%03i.ppm", i+1 );
 		gp_list_append(list, name, NULL);
 	}
-    	return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -156,7 +156,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data;
+	Camera *camera = user_data;
 
 /* The camera will always download the low-resolution pictures first, if any.
  * As those are compressed, they are not of fixed size. Unfortunately, the
@@ -166,7 +166,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
  * resolution pictures are just Bayer data; their headers will be discarded.
  */
 
-        int i, j, k, n, num_lo_pics, num_hi_pics, w = 0, h = 0;
+	int i, j, k, n, num_lo_pics, num_hi_pics, w = 0, h = 0;
 	unsigned char temp;
 	unsigned char *data;
 	unsigned char *p_data = NULL;
@@ -204,7 +204,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	data = malloc(len);
 	if (!data) {
 		printf("Malloc failed\n"); return 0;}
-    	aox_read_picture_data (camera->port, (char *)data, len, n);
+	aox_read_picture_data (camera->port, (char *)data, len, n);
 
 	switch (type) {
 	case GP_FILE_TYPE_EXIF:
@@ -229,19 +229,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			/* Stripping useless header */
 			p_data = data + 0x98;
 			/* Picture is mirror-imaged.*/
-    			for (i = 0; i < h; ++i) {
-				for (j = 0 ; j < w/2; j++) {
-        				temp = p_data[w*i +j];
-        				p_data[w*i +j] = p_data[w*i+ w -1 -j];
-        				p_data[w*i + w  - 1 - j] = temp;
+			for (i = 0; i < h; ++i) {
+				for (j = 0; j < w / 2; j++) {
+					temp = p_data[w * i + j];
+					p_data[w * i + j] = p_data[w * i + w - 1 - j];
+					p_data[w * i + w - 1 - j] = temp;
 				}
-    			}
+			}
 			/* Not only this, but some columns are
 			 * interchanged, too. */
 			for (i = 0; i < w*h/4; i++) {
-				temp = p_data[4*i +1];
-				p_data[4*i + 1] = p_data[4*i+2];
-				p_data[4*i+2] = temp;
+				temp = p_data[4 * i + 1];
+				p_data[4 * i + 1] = p_data[4 * i + 2];
+				p_data[4 * i + 2] = temp;
 			}
 			/* And now create a ppm file, with our own header */
 			header_len = snprintf(header, 127,
@@ -256,16 +256,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				return GP_ERROR_NO_MEMORY;
 			}
 			if (camera->pl->model == AOX_MODEL_DMAX)
-			    gp_bayer_decode (p_data, w, h,
-					output, BAYER_TILE_RGGB);
+				gp_bayer_decode (p_data, w, h, output, BAYER_TILE_RGGB);
 			else
-			    gp_bayer_decode (p_data, w, h,
-					output, BAYER_TILE_GRBG);
+				gp_bayer_decode (p_data, w, h, output, BAYER_TILE_GRBG);
 			/* gamma correction of .70 may not be optimal. */
 			gp_gamma_fill_table (gtable, .65);
 			gp_gamma_correct_single (gtable, output, w * h);
-    			gp_file_set_mime_type (file, GP_MIME_PPM);
-    			gp_file_append (file, header, header_len);
+			gp_file_set_mime_type (file, GP_MIME_PPM);
+			gp_file_append (file, header, header_len);
 			gp_file_append (file, (char *)output, 3*w*h);
 		}
 		free (data);
@@ -317,9 +315,9 @@ camera_init(Camera *camera, GPContext *context)
 	ret = gp_port_get_settings(camera->port,&settings);
 	if (ret < 0) return ret;
 
-        ret = gp_camera_get_abilities(camera,&abilities);
-        if (ret < 0) return ret;
-        GP_DEBUG("product number is 0x%x\n", abilities.usb_product);
+	ret = gp_camera_get_abilities(camera, &abilities);
+	if (ret < 0) return ret;
+	GP_DEBUG("product number is 0x%x\n", abilities.usb_product);
 
 	switch (camera->port->type) {
 		case GP_PORT_SERIAL:
@@ -342,7 +340,7 @@ camera_init(Camera *camera, GPContext *context)
 	GP_DEBUG("inep = %x\n", settings.usb.inep);
 	GP_DEBUG("outep = %x\n", settings.usb.outep);
 
-        /* Tell the CameraFilesystem where to get lists from */
+	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));

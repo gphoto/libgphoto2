@@ -1264,7 +1264,7 @@ ax203_encode_image(Camera *camera, int **src, char *dest, unsigned int dest_size
 		free (jpeg_dest);
 		/* Round size up to a multiple of 256 because of ax3003
 		   abfs size granularity. */
-                return (jpeg_size + 0xff) & ~0xff;
+		return (jpeg_size + 0xff) & ~0xff;
 #else
 		return GP_ERROR_NOT_SUPPORTED;
 #endif

@@ -72,13 +72,13 @@ int lg_gsm_init (GPPort *port, Model *model, Info *info)
 	/*GP_DEBUG("info[20] = 0x%x\n", firmware[26]);*/
 	GP_DEBUG("Leaving lg_gsm_init\n");
 
-        return GP_OK;
+	return GP_OK;
 }
 
 unsigned int lg_gsm_get_picture_size  (GPPort *port, int pic)
 {
 
-        unsigned int size;
+	unsigned int size;
 	/* example : list photos 2 & 3: 0x04000800000040000000
 	   + 0100 : from
 	   + 0200 : to
@@ -206,7 +206,7 @@ int lg_gsm_read_picture_data (GPPort *port, char *data, unsigned int datasize, u
 	READ(port, oknok, 6);
 	GP_DEBUG("Leaving lg_gsm_read_picture_data\n");
 
-        return GP_OK;
+	return GP_OK;
 }
 
 int lg_gsm_list_files (GPPort *port, CameraList *list)
@@ -270,5 +270,5 @@ int lg_gsm_list_files (GPPort *port, CameraList *list)
 
 	GP_DEBUG("Leaving lg_gsm_list_files\n");
 
-        return GP_OK;
+	return GP_OK;
 }

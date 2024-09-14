@@ -503,15 +503,15 @@ CameraFilesystemFuncs fsfuncs = {
 int
 camera_init (Camera *camera, GPContext *context)
 {
-        /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
-        camera->functions->get_config           = camera_config_get;
-        camera->functions->set_config           = camera_config_set;
-        camera->functions->capture              = camera_capture;
-        camera->functions->capture_preview      = camera_capture_preview;
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->exit                 = camera_exit;
+	camera->functions->get_config           = camera_config_get;
+	camera->functions->set_config           = camera_config_set;
+	camera->functions->capture              = camera_capture;
+	camera->functions->capture_preview      = camera_capture_preview;
+	camera->functions->summary              = camera_summary;
+	camera->functions->manual               = camera_manual;
+	camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);

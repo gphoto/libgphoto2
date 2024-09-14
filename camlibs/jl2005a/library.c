@@ -112,7 +112,7 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 {
 	strcpy(manual->text,
 	_(
-        "This driver supports cameras with Jeilin jl2005a chip \n"
+	"This driver supports cameras with Jeilin jl2005a chip \n"
 	"These cameras do not support deletion of photos, nor uploading\n"
 	"of data. \n"
 	"Decoding of compressed photos may or may not work well\n"
@@ -130,7 +130,7 @@ static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
 	strcpy (about->text, _("jl2005a camera library\n"
-			    "Theodore Kilgore <kilgota@auburn.edu>\n"));
+		"Theodore Kilgore <kilgota@auburn.edu>\n"));
 	return GP_OK;
 }
 

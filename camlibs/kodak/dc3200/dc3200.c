@@ -478,23 +478,23 @@ int camera_init (Camera *camera, GPContext *context)
 	if (!camera->pl)
 		return (GP_ERROR_NO_MEMORY);
 
-        /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->exit                 = camera_exit;
+	camera->functions->manual               = camera_manual;
+	camera->functions->about                = camera_about;
 
 	/* Set up the CameraFilesystem */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-        /* initialize the camera */
+	/* initialize the camera */
 	ret = init (camera);
 	if (ret < 0) {
 		free (camera->pl);
 		camera->pl = NULL;
-                return (ret);
-        }
+		return (ret);
+	}
 
-        ret = dc3200_keep_alive (camera);
+	ret = dc3200_keep_alive (camera);
 	if (ret < 0) {
 		free (camera->pl);
 		camera->pl = NULL;

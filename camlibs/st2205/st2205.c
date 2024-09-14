@@ -830,9 +830,9 @@ st2205_init(Camera *camera)
 		  { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, }
 	};
 	const int uncompressed_firmware_checksums[] = {
-	        0x00ab02fc, /* Frame 96x64 from blokker (Netherlands) */
-	        0x00aa8060, /* Blokker frame with picframe hacked firmware */
-	        0 };
+		0x00ab02fc, /* Frame 96x64 from blokker (Netherlands) */
+		0x00aa8060, /* Blokker frame with picframe hacked firmware */
+		0 };
 
 	GP_DEBUG ("st2205_init called");
 

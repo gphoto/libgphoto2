@@ -52,7 +52,7 @@ struct _GPPortPrivateLibrary {
 GPPortType
 gp_port_library_type (void)
 {
-        return GP_PORT_PTPIP;
+	return GP_PORT_PTPIP;
 }
 
 /* thanks to Avahi this makes more trouble than its worth */
@@ -236,13 +236,13 @@ gp_port_ptpip_close (GPPort *port)
 static int
 gp_port_ptpip_write (GPPort *port, const char *bytes, int size)
 {
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
 gp_port_ptpip_read(GPPort *port, char *bytes, int size)
 {
-        return GP_OK;
+	return GP_OK;
 }
 
 static int

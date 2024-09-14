@@ -50,23 +50,23 @@
 
 static const struct
 {
- char *model;
- int usb_vendor;
- int usb_product;
+	char *model;
+	int usb_vendor;
+	int usb_product;
 } models[]= {
- {"Traveler:SX330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
- {"Maginon:SX330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
- {"Skanhex:SX-330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
- {"Medion:MD 9700",USB_VENDOR_TRAVELER,USB_PRODUCT_MD9700},
- {"Jenoptik:JD-3300z3",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
+	{"Traveler:SX330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
+	{"Maginon:SX330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
+	{"Skanhex:SX-330z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
+	{"Medion:MD 9700",USB_VENDOR_TRAVELER,USB_PRODUCT_MD9700},
+	{"Jenoptik:JD-3300z3",USB_VENDOR_TRAVELER,USB_PRODUCT_SX330Z},
 
- {"Traveler:SX410z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
- {"Concord:EyeQ 4330",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
- {"Jenoptik:JD-4100z3",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
- {"Medion:MD 6000",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
- {"Maginon SX-410z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
- {"Lifetec:LT 5995",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
- {NULL,0,0}
+	{"Traveler:SX410z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
+	{"Concord:EyeQ 4330",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
+	{"Jenoptik:JD-4100z3",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
+	{"Medion:MD 6000",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
+	{"Maginon SX-410z",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
+	{"Lifetec:LT 5995",USB_VENDOR_TRAVELER,USB_PRODUCT_SX410Z},
+	{NULL,0,0}
 };
 
 
@@ -76,25 +76,25 @@ static const struct
 int
 camera_abilities (CameraAbilitiesList *list)
 {
- int i;
- CameraAbilities a;
- for(i=0;models[i].model;i++)
- {
-  memset(&a,0,sizeof(CameraAbilities));
-  strcpy(a.model,models[i].model);
-  a.usb_vendor  = models[i].usb_vendor;
-  a.usb_product = models[i].usb_product;
-  a.status      = GP_DRIVER_STATUS_EXPERIMENTAL;
-  a.port        = GP_PORT_USB;
-  a.speed[0]    = 0;
-  a.operations  = GP_OPERATION_NONE;
-  a.file_operations = GP_FILE_OPERATION_PREVIEW|
-     			GP_FILE_OPERATION_DELETE|
-                        GP_FILE_OPERATION_EXIF;
-  a.folder_operations = GP_FOLDER_OPERATION_NONE;
-  CR(gp_abilities_list_append(list,a));
- } /* all models... */
- return(GP_OK);
+	int i;
+	CameraAbilities a;
+	for (i=0;models[i].model;i++)
+	{
+		memset(&a, 0, sizeof(CameraAbilities));
+		strcpy(a.model, models[i].model);
+		a.usb_vendor  = models[i].usb_vendor;
+		a.usb_product = models[i].usb_product;
+		a.status      = GP_DRIVER_STATUS_EXPERIMENTAL;
+		a.port        = GP_PORT_USB;
+		a.speed[0]    = 0;
+		a.operations  = GP_OPERATION_NONE;
+		a.file_operations = GP_FILE_OPERATION_PREVIEW|
+			GP_FILE_OPERATION_DELETE|
+			GP_FILE_OPERATION_EXIF;
+		a.folder_operations = GP_FOLDER_OPERATION_NONE;
+		CR(gp_abilities_list_append(list, a));
+	} /* all models... */
+	return(GP_OK);
 } /* camera_abilities */
 
 
@@ -190,14 +190,14 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
  * 	Delete file function (working ..)
  */
 static int
-del_file_func(CameraFilesystem *fs,const char *folder,const char *filename,
-   	void *user_data,GPContext *context)
+del_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
+	void *user_data, GPContext *context)
 {
- Camera *camera=user_data;
- /*int id;*/
- if (strcmp(folder,"/")) return(GP_ERROR_DIRECTORY_NOT_FOUND);
- GP_DEBUG("Deleting : %s",filename);
- return(sx330z_delete_file(camera,context,filename));
+	Camera *camera=user_data;
+	/*int id;*/
+	if (strcmp(folder, "/")) return(GP_ERROR_DIRECTORY_NOT_FOUND);
+	GP_DEBUG("Deleting : %s", filename);
+	return(sx330z_delete_file(camera, context, filename));
 } /* delete  file func */
 
 
@@ -207,24 +207,21 @@ del_file_func(CameraFilesystem *fs,const char *folder,const char *filename,
 int
 camera_id(CameraText *id)
 {
- strcpy(id->text,"Traveler SX330z");
- return (GP_OK);
+	strcpy(id->text, "Traveler SX330z");
+	return (GP_OK);
 } /* camera id */
-
-
-
 
 /*
  * Camera about
  */
 static int
-camera_about(Camera *camera,CameraText *about,GPContext *context)
+camera_about(Camera *camera, CameraText *about, GPContext *context)
 {
- strcpy(about->text,_("(Traveler) SX330z Library (And other Aldi-cams).\n"
-	"Even other Vendors like Jenoptik, Skanhex, Maginon should work.\n"
-	"Please send bugreports and comments.\n"
-	"Dominik Kuhlen <kinimod@users.sourceforge.net>\n"));
- return(GP_OK);
+	strcpy(about->text, _("(Traveler) SX330z Library (And other Aldi-cams).\n"
+		"Even other Vendors like Jenoptik, Skanhex, Maginon should work.\n"
+		"Please send bugreports and comments.\n"
+		"Dominik Kuhlen <kinimod@users.sourceforge.net>\n"));
+	return(GP_OK);
 } /* camera about */
 
 
@@ -235,9 +232,9 @@ camera_about(Camera *camera,CameraText *about,GPContext *context)
 int
 camera_exit(Camera *camera, GPContext *context)
 {
- if (camera->pl)
-  free(camera->pl);
- return(GP_OK);
+	if (camera->pl)
+		free(camera->pl);
+	return(GP_OK);
 }
 
 
@@ -251,35 +248,35 @@ static CameraFilesystemFuncs fsfuncs = {
  * OK, lets get serious !
  */
 int
-camera_init(Camera *camera,GPContext *context)
+camera_init(Camera *camera, GPContext *context)
 {
- GPPortSettings settings;
- CameraAbilities abilities;
- /* try to contact the camera ...*/
- /*CR(gp_port_get_settings(camera->port,&settings));*/
+	GPPortSettings settings;
+	CameraAbilities abilities;
+	/* try to contact the camera ...*/
+	/*CR(gp_port_get_settings(camera->port,&settings));*/
 
- camera->functions->about=camera_about;
- camera->functions->exit=camera_exit;
- gp_port_get_settings(camera->port,&settings);
- if (camera->port->type!=GP_PORT_USB)
- {
-  gp_context_error(context,_("sx330z is USB only"));
-  return(GP_ERROR_UNKNOWN_PORT);
- }
-/* GP_DEBUG("camera_init : in = %x",camera->port->settings.usb.inep);*/
- CR(gp_port_set_settings(camera->port,settings));
- CR(gp_port_set_timeout(camera->port,TIMEOUT));
+	camera->functions->about=camera_about;
+	camera->functions->exit=camera_exit;
+	gp_port_get_settings(camera->port, &settings);
+	if (camera->port->type!=GP_PORT_USB)
+	{
+		gp_context_error(context, _("sx330z is USB only"));
+		return(GP_ERROR_UNKNOWN_PORT);
+	}
+	/* GP_DEBUG("camera_init : in = %x",camera->port->settings.usb.inep);*/
+	CR(gp_port_set_settings(camera->port, settings));
+	CR(gp_port_set_timeout(camera->port, TIMEOUT));
 
- CR(gp_filesystem_set_funcs(camera->fs, &fsfuncs, camera));
+	CR(gp_filesystem_set_funcs(camera->fs, &fsfuncs, camera));
 
- camera->pl=malloc(sizeof(CameraPrivateLibrary));
- if (!camera->pl)
-   return(GP_ERROR_NO_MEMORY);
+	camera->pl=malloc(sizeof(CameraPrivateLibrary));
+	if (!camera->pl)
+		return(GP_ERROR_NO_MEMORY);
 
- CR(gp_camera_get_abilities(camera, &abilities));
- camera->pl->usb_product=abilities.usb_product; /* some models differ in Thumbnail size */
-/* GP_DEBUG("sx330z Camera_init : sx init %04x",camera->pl->usb_product); */
- return(sx330z_init(camera,context));
+	CR(gp_camera_get_abilities(camera, &abilities));
+	camera->pl->usb_product=abilities.usb_product; /* some models differ in Thumbnail size */
+	/* GP_DEBUG("sx330z Camera_init : sx init %04x",camera->pl->usb_product); */
+	return(sx330z_init(camera, context));
 
 } /* camera init */
 

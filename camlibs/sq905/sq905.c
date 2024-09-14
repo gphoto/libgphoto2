@@ -254,25 +254,25 @@ sq_preprocess (SQModel model, int comp_ratio, unsigned char is_in_clip,
 
 	if (!is_in_clip) {
 		/* Turning the picture right-side up. */
-    		for (i = 0; i < b/2; ++i) {
-        		temp = data[i];
-        		data[i] = data[b -1 -i];
-        		data[b - 1 - i] = temp;
-    		}
+		for (i = 0; i < b/2; ++i) {
+			temp = data[i];
+			data[i] = data[b -1 -i];
+			data[b - 1 - i] = temp;
+		}
 		/* But clip frames are already right-side-up */
-    	}
+	}
 	/*
 	 * POCK_CAM needs de-mirror-imaging, too. But if a photo is
 	 * compressed we de-mirror after decompression, so not here.
 	 */
 	if ((model == SQ_MODEL_POCK_CAM) && (comp_ratio == 1)) {
-    		for (i = 0; i < h; i++) {
-			for (m = 0 ; m < w/2; m++) {
-        			temp = data[w*i +m];
+		for (i = 0; i < h; i++) {
+			for (m = 0; m < w/2; m++) {
+				temp = data[w*i +m];
 				data[w*i + m] = data[w*i + w -1 -m];
 				data[w*i + w - 1 - m] = temp;
 			}
-    		}
+		}
 	}
 	return GP_OK;
 }

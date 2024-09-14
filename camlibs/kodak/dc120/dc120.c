@@ -300,7 +300,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context) {
 	CameraList *list;
 	int   count;
-        const char* name;
+	const char* name;
 
 	if (type != GP_CAPTURE_IMAGE)
 		return (GP_ERROR_NOT_SUPPORTED);
@@ -323,53 +323,51 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	CHECK_RESULT (gp_filesystem_append (camera->fs,
 					    path->folder,
 					    path->name, context));
-        return (GP_OK);
+	return (GP_OK);
 
 }
 
-static int camera_summary (Camera *camera, CameraText *summary,
-			   GPContext *context)
+static int camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-    static char summary_string[2048] = "";
-    char buff[1024];
-    Kodak_dc120_status status;
+	static char summary_string[2048] = "";
+	char buff[1024];
+	Kodak_dc120_status status;
 
-    if (dc120_get_status (camera, &status, context))
-    {
-        strcpy(summary_string,"Kodak DC120\n");
+	if (dc120_get_status (camera, &status, context))
+	{
+		strcpy(summary_string, "Kodak DC120\n");
 
-        snprintf(buff,1024,"Camera Identification: %s\n",status.camera_id);
-        strcat(summary_string,buff);
+		snprintf(buff, 1024, "Camera Identification: %s\n", status.camera_id);
+		strcat(summary_string, buff);
 
-        snprintf(buff,1024,"Camera Type: %d\n",status.camera_type_id);
-        strcat(summary_string,buff);
+		snprintf(buff, 1024, "Camera Type: %d\n", status.camera_type_id);
+		strcat(summary_string, buff);
 
-        snprintf(buff,1024,"Firmware: %d.%d\n",status.firmware_major,status.firmware_minor);
-        strcat(summary_string,buff);
+		snprintf(buff, 1024, "Firmware: %d.%d\n", status.firmware_major, status.firmware_minor);
+		strcat(summary_string, buff);
 
-        snprintf(buff,1024,"Battery Status: %d\n",status.batteryStatusId);
-        strcat(summary_string,buff);
+		snprintf(buff, 1024, "Battery Status: %d\n", status.batteryStatusId);
+		strcat(summary_string, buff);
 
-        snprintf(buff,1024,"AC Status: %d\n",status.acStatusId);
-        strcat(summary_string,buff);
+		snprintf(buff, 1024, "AC Status: %d\n", status.acStatusId);
+		strcat(summary_string, buff);
 
-        strftime(buff,1024,"Time: %a, %d %b %Y %T\n",localtime((time_t *)&status.time));
-        strcat(summary_string,buff);
+		strftime(buff, 1024, "Time: %a, %d %b %Y %T\n", localtime((time_t *)&status.time));
+		strcat(summary_string, buff);
 
-        snprintf(buff,1024,"Total Pictures Taken: %d\n",
-		 status.taken_pict_mem + status.taken_pict_card );
-        strcat(summary_string,buff);
+		snprintf(buff, 1024, "Total Pictures Taken: %d\n",
+			status.taken_pict_mem + status.taken_pict_card);
+		strcat(summary_string, buff);
 
-    }
+	}
 
-    strcpy(summary->text, summary_string);
+	strcpy(summary->text, summary_string);
 
-    return (GP_OK);
+	return (GP_OK);
 }
 
 
-static int camera_manual (Camera *camera, CameraText *manual,
-			  GPContext *context)
+static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	strcpy (manual->text,
 		_("The Kodak DC120 camera uses the KDC file format "
@@ -401,41 +399,41 @@ static CameraFilesystemFuncs fsfuncs = {
 
 int camera_init (Camera *camera, GPContext *context) {
 
-        GPPortSettings settings;
+	GPPortSettings settings;
 	int speed;
 
-        /* First, set up all the function pointers */
+	/* First, set up all the function pointers */
 	camera->functions->capture 	= camera_capture;
 	camera->functions->summary 	= camera_summary;
-        camera->functions->manual       = camera_manual;
-        camera->functions->about        = camera_about;
+	camera->functions->manual       = camera_manual;
+	camera->functions->about        = camera_about;
 
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	/* Configure the port (remember the speed) */
 	gp_port_get_settings (camera->port, &settings);
 	speed = settings.serial.speed;
-        settings.serial.speed    = 9600;
-        settings.serial.bits     = 8;
-        settings.serial.parity   = 0;
-        settings.serial.stopbits = 1;
-        gp_port_set_settings (camera->port, settings);
-        gp_port_set_timeout (camera->port, TIMEOUT);
+	settings.serial.speed    = 9600;
+	settings.serial.bits     = 8;
+	settings.serial.parity   = 0;
+	settings.serial.stopbits = 1;
+	gp_port_set_settings (camera->port, settings);
+	gp_port_set_timeout (camera->port, TIMEOUT);
 
-        /* Reset the camera to 9600 */
-        gp_port_send_break (camera->port, 2);
+	/* Reset the camera to 9600 */
+	gp_port_send_break (camera->port, 2);
 
-        /* Wait for it to update */
-        usleep(1500 * 1000);
+	/* Wait for it to update */
+	usleep(1500 * 1000);
 
 	if (dc120_set_speed (camera, speed) == GP_ERROR) {
-                return (GP_ERROR);
-        }
+		return (GP_ERROR);
+	}
 
-        /* Try to talk after speed change */
-        if (dc120_get_status(camera, NULL, context) == GP_ERROR) {
-                return (GP_ERROR);
-        }
+	/* Try to talk after speed change */
+	if (dc120_get_status(camera, NULL, context) == GP_ERROR) {
+		return (GP_ERROR);
+	}
 
-        return (GP_OK);
+	return (GP_OK);
 }

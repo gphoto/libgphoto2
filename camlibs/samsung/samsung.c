@@ -177,18 +177,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_NEXT));
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_START));
 		CHECK_RESULT (SDSC_receive (camera->port, buffer, SDSC_INFOSIZE));
-		if (!strcmp((char*)buffer,filename))
-		    break;
+		if (!strcmp((char*)buffer, filename))
+			break;
 		if (is_null(buffer)) { /* skipped to the end of the camera? */
-		    /* Since we start at a random position, we wrap around. */
-		    continue;
-	        }
+			/* Since we start at a random position, we wrap around. */
+			continue;
+		}
 		/* We are at the first item again, so break. */
-		if (havefirst && !strcmp((char*)first,(char*)buffer))
+		if (havefirst && !strcmp((char*)first, (char*)buffer))
 			return GP_ERROR_BAD_PARAMETERS;
 		if (!havefirst) {
 			havefirst = 1;
-			strcpy((char*)first,(char*)buffer);
+			strcpy((char*)first, (char*)buffer);
 		}
 	}
 	/* The buffer header has
@@ -214,9 +214,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			return result;
 		gp_file_append(file,(char *)buffer,SDSC_BLOCKSIZE);
 		curread += SDSC_BLOCKSIZE;
-	        gp_context_progress_update(context, pid, curread);
+		gp_context_progress_update(context, pid, curread);
 		if (gp_context_cancel(context) == GP_CONTEXT_FEEDBACK_CANCEL)
-		    return GP_ERROR_CANCEL;
+			return GP_ERROR_CANCEL;
 		CHECK_RESULT (SDSC_send (camera->port, SDSC_BINARY));
 	}
 	gp_context_progress_stop(context, pid);
@@ -289,7 +289,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			strcpy(info->file.type,GP_MIME_JPEG);
 			sscanf((char *)buffer+12,"%lld",(long long int *)&info->file.size);
 			return GP_OK;
-	        }
+		}
 		/* We are at the first item again */
 		if (havefirst && !strcmp((char*)first,(char*)buffer))
 			break;
@@ -312,8 +312,8 @@ camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 
-        /* First, set up all the function pointers */
-        camera->functions->about                = camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);

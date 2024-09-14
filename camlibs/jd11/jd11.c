@@ -273,25 +273,25 @@ static CameraFilesystemFuncs fsfuncs = {
 
 int camera_init (Camera *camera, GPContext *context)
 {
-        gp_port_settings settings;
+	gp_port_settings settings;
 
-        /* First, set up all the function pointers */
-        camera->functions->manual	= camera_manual;
-        camera->functions->about	= camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->manual	= camera_manual;
+	camera->functions->about	= camera_about;
 	camera->functions->get_config	= camera_config_get;
 	camera->functions->set_config	= camera_config_set;
 
-        /* Configure port */
-        gp_port_set_timeout(camera->port, 1000);
+	/* Configure port */
+	gp_port_set_timeout(camera->port, 1000);
 	gp_port_get_settings(camera->port, &settings);
-        settings.serial.speed	= 115200;
-        settings.serial.bits	= 8;
-        settings.serial.parity	= 0;
-        settings.serial.stopbits= 1;
-        gp_port_set_settings(camera->port, settings);
+	settings.serial.speed	= 115200;
+	settings.serial.bits	= 8;
+	settings.serial.parity	= 0;
+	settings.serial.stopbits= 1;
+	gp_port_set_settings(camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_funcs(camera->fs, &fsfuncs, camera);
-        /* test camera */
-        return jd11_ping(camera->port);
+	/* test camera */
+	return jd11_ping(camera->port);
 }
