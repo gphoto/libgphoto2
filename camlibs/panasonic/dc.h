@@ -95,24 +95,24 @@ void dsc_errorprint(int error, char *file, int line);
 /* Pre-procesor macros for verbose messaging and debugging */
 
 #define DEBUG_PRINT_LOW(ARGS) \
-        GP_DEBUG( "%s: %s", __FILE__, dsc_msgprintf ARGS );
+	GP_DEBUG( "%s: %s", __FILE__, dsc_msgprintf ARGS );
 
 #define DEBUG_PRINT_MEDIUM(ARGS) \
-        GP_DEBUG( "%s: %s", __FILE__, dsc_msgprintf ARGS );
+	GP_DEBUG( "%s: %s", __FILE__, dsc_msgprintf ARGS );
 
 #define DEBUG_PRINT_HIGH(ARGS) \
-        GP_DEBUG( "%s: %s", __FILE__, dsc_msgprintf ARGS );
+	GP_DEBUG( "%s: %s", __FILE__, dsc_msgprintf ARGS );
 
 #define RETURN_ERROR(ERROR) { \
-        dsc_errorprint(ERROR, __FILE__, __LINE__); \
-        return GP_ERROR; \
-        }
+	dsc_errorprint(ERROR, __FILE__, __LINE__); \
+	return GP_ERROR; \
+	}
 
 #define CHECK(OPERATION) \
-        if ((result = OPERATION) < 0) { \
-                dsc_errorprint(EDSCSERRNO, __FILE__, __LINE__); \
-                return result; \
-        }
+	if ((result = OPERATION) < 0) { \
+		dsc_errorprint(EDSCSERRNO, __FILE__, __LINE__); \
+		return result; \
+	}
 
 /* End of dc.h */
 

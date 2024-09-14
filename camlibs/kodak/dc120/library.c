@@ -59,14 +59,14 @@ dc120_packet_new (int command_byte) {
  */
 static int
 dc120_response_ok (unsigned char response) {
-  /* This is stupid. how do you get a constant of type signed char?? (Ralf) */
-	 if( response == 0x00 || /* Command completed */
-	     response == 0x10 || /* Command ready */
-	     response == 0xd1 || /* Command received (ACK) */
-	     response == 0xd2 )  /* Correct packet */
-	   return (GP_OK);
-         else
-	   return (GP_ERROR);
+	/* This is stupid. how do you get a constant of type signed char?? (Ralf) */
+	if (response == 0x00 || /* Command completed */
+	    response == 0x10 || /* Command ready */
+	    response == 0xd1 || /* Command received (ACK) */
+	    response == 0xd2 )  /* Correct packet */
+		return (GP_OK);
+	else
+		return (GP_ERROR);
 }
 
 /** Writes a packet to the port.
@@ -169,21 +169,21 @@ read_data_write_again:
 
 			/* Do some command-specific stuff */
 			switch (cmd_packet[0]) {
-			   case 0x4A:
+			case 0x4A:
 				/* Set size and num_packets for camera filenames*/
 				if (packets_received==1)
 					*size = ((unsigned char)packet[0] * 256 +
 					         (unsigned char)packet[1])* 20 + 2;
 				num_packets = (*size + block_size-1) / block_size;
 				break;
-			   case 0x64:
-			   case 0x54:
+			case 0x64:
+			case 0x54:
 				/* If thumbnail, cancel rest of image transfer */
 				if ((num_packets == 16)&&(packets_received==16))
 					p[0] = CANCL;
 				/* No break on purpose */
 				break;
-			   default:
+			default:
 				/* Nada */
 				break;
 			}
@@ -194,10 +194,10 @@ read_data_write_again:
 
 			/* Copy in data */
 			if (packets_received == num_packets)
-			  bytes_received = *size - ((num_packets-1) * block_size);
+				bytes_received = *size - ((num_packets-1) * block_size);
 			else
-			  bytes_received = block_size;
-			gp_file_append(file, packet, bytes_received );
+				bytes_received = block_size;
+			gp_file_append(file, packet, bytes_received);
 
 		}
 	}
@@ -295,66 +295,66 @@ int dc120_get_status (Camera *camera, Kodak_dc120_status *status, GPContext *con
 	size = 256;
 	retval = dc120_packet_read_data(camera, file, p, &size, 256, context);
 
-        if( retval == (GP_OK) && status != NULL )
-        {
-	    const char *data;
-	    long unsigned int  lsize;
+	if (retval == (GP_OK) && status != NULL)
+	{
+		const char *data;
+		long unsigned int  lsize;
 
-	    gp_file_get_data_and_size( file, &data, &lsize );
-	    if( lsize<122 ) {
-	      gp_file_free (file);
-	      free (p);
-	      return (GP_ERROR);
-	    }
+		gp_file_get_data_and_size(file, &data, &lsize);
+		if (lsize<122) {
+			gp_file_free (file);
+			free (p);
+			return (GP_ERROR);
+		}
 
-            memset((char*)status,0,sizeof(*status));
+		memset((char*)status, 0, sizeof(*status));
 
-            status->camera_type_id        = data[1];
-            status->firmware_major        = data[2];
-            status->firmware_minor        = data[3];
-            status->batteryStatusId       = data[8];
-            status->acStatusId            = data[9];
+		status->camera_type_id        = data[1];
+		status->firmware_major        = data[2];
+		status->firmware_minor        = data[3];
+		status->batteryStatusId       = data[8];
+		status->acStatusId            = data[9];
 
-            /* seconds since unix epoc */
-            status->time = CAMERA_EPOC + (
-		data[12] * 0x1000000 +
-                data[13] * 0x10000 +
-                data[14] * 0x100 +
-                data[15]) / 2;
+		/* seconds since unix epoc */
+		status->time = CAMERA_EPOC + (
+			data[12] * 0x1000000 +
+			data[13] * 0x10000 +
+			data[14] * 0x100 +
+			data[15]) / 2;
 
-	    status->af_mode               = data[16] & 0x0f;
-	    status->zoom_mode             = (data[16] & 0x30)>>4;
-            status->flash_charged         = data[18];
-            status->compression_mode_id   = data[19];
-            status->flash_mode            = data[20];
-            status->exposure_compensation = (data[2]&0x40?-1:1) * (data[21] & 0x3f);
-            status->light_value           = data[22];
-            status->manual_exposure       = data[23];
-            status->exposure_time = (data[24] * 0x1000000 +
-				     data[25] * 0x10000 +
-				     data[26] * 0x100 +
-				     data[27]) / 2;
-            status->shutter_delay         = data[29];
-            status->memory_card           = data[30];
-            status->front_cover           = data[31];
-            status->date_format           = data[32];
-            status->time_format           = data[33];
-            status->distance_format       = data[34];
-            status->taken_pict_mem        = data[36] * 0x100 + data[37];
-            for( i=0; i<4; i++ ) {
-		status->remaining_pic_mem[i]     =
-		    data[46+i*2] * 0x100 +
-		    data[47+i*2];
-	    }
-            status->taken_pict_card       = data[56] * 0x100 + data[57];
-            for( i=0; i<4; i++ ) {
-		status->remaining_pic_card[i]     =
-		    data[66+i*2] * 0x100 +
-		    data[67+i*2];
-	    }
-            strncpy( status->card_id,   data + 77, 32 );
-            strncpy( status->camera_id, data + 90, 32 );
-        }
+		status->af_mode               = data[16] & 0x0f;
+		status->zoom_mode             = (data[16] & 0x30)>>4;
+		status->flash_charged         = data[18];
+		status->compression_mode_id   = data[19];
+		status->flash_mode            = data[20];
+		status->exposure_compensation = (data[2]&0x40 ? -1 : 1) * (data[21] & 0x3f);
+		status->light_value           = data[22];
+		status->manual_exposure       = data[23];
+		status->exposure_time = (data[24] * 0x1000000 +
+			data[25] * 0x10000 +
+			data[26] * 0x100 +
+			data[27]) / 2;
+		status->shutter_delay         = data[29];
+		status->memory_card           = data[30];
+		status->front_cover           = data[31];
+		status->date_format           = data[32];
+		status->time_format           = data[33];
+		status->distance_format       = data[34];
+		status->taken_pict_mem        = data[36] * 0x100 + data[37];
+		for (i=0; i<4; i++) {
+			status->remaining_pic_mem[i]     =
+				data[46+i*2] * 0x100 +
+				data[47+i*2];
+		}
+		status->taken_pict_card       = data[56] * 0x100 + data[57];
+		for (i=0; i<4; i++) {
+			status->remaining_pic_card[i]     =
+				data[66+i*2] * 0x100 +
+				data[67+i*2];
+		}
+		strncpy(status->card_id, data + 77, 32);
+		strncpy(status->camera_id, data + 90, 32);
+	}
 
 
 	gp_file_free(file);
@@ -431,11 +431,11 @@ int dc120_get_filenames (Camera *camera, int from_card, int album_number, Camera
 	gp_file_get_data_and_size (file, &file_data, &file_size);
 	x=2;
 	while (x < size) {
-	        if( file_data[x] != '\0' ) {
-		    strncpy(buf, (char*) &file_data[x], 11);
-		    buf[7] = '.';
-		    buf[11] = '\0';
- 		    gp_list_append(list, buf, NULL);
+		if (file_data[x] != '\0') {
+			strncpy(buf, (char*)&file_data[x], 11);
+			buf[7] = '.';
+			buf[11] = '\0';
+			gp_list_append(list, buf, NULL);
 		}
 		x += 20;
 	}
@@ -483,8 +483,8 @@ static int dc120_get_file_preview (Camera *camera, CameraFile *file, int file_nu
 
 static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, char *cmd_packet, int *size, GPContext *context)
 {
-        CameraFile *size_file; /* file used to determine the filesize */
-  	char *p;
+	CameraFile *size_file; /* file used to determine the filesize */
+	char *p;
 	const char *file_data;
 	long unsigned int file_size;
 	unsigned int offset;
@@ -508,12 +508,12 @@ static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, ch
 	gp_file_get_data_and_size (size_file, &file_data, &file_size);
 
 	offset = 2 + (file_number-1) * 20;
-	if( file_size < (offset+19) )
-	  {
-	    gp_file_free(size_file);
-	    free (p);
-	    return (GP_ERROR);
-	  }
+	if (file_size < (offset+19))
+	{
+		gp_file_free(size_file);
+		free (p);
+		return (GP_ERROR);
+	}
 
 	*size = (unsigned char)file_data[offset + 16] * 256*256*256 +
 		(unsigned char)file_data[offset + 17] * 256*256 +
@@ -525,7 +525,7 @@ static int dc120_get_file (Camera *camera, CameraFile *file, int file_number, ch
 	free (p);
 
 	if (dc120_packet_read_data(camera, file, cmd_packet, size, 1024, context)==GP_ERROR)
-	    return (GP_ERROR);
+		return (GP_ERROR);
 
 
 	return (GP_OK);
@@ -544,12 +544,12 @@ static int dc120_wait_for_completion (Camera *camera, GPContext *context) {
 
 		retval = dc120_packet_read(camera, p, 1);
 		switch (retval) {
-		   case GP_ERROR:
+		case GP_ERROR:
 			return (GP_ERROR);
 			break;
-		   case GP_ERROR_TIMEOUT:
+		case GP_ERROR_TIMEOUT:
 			break;
-		   default:
+		default:
 			done = 1;
 		}
 		gp_context_progress_update (context, id, x);
@@ -596,19 +596,19 @@ int dc120_file_action (Camera *camera, int action, int from_card, int album_numb
 	p[4] = album_number;
 
 	switch (action) {
-	   case DC120_ACTION_PREVIEW:
-		p[0] = (from_card? 0x64 : 0x54);
+	case DC120_ACTION_PREVIEW:
+		p[0] = (from_card ? 0x64 : 0x54);
 		retval = dc120_get_file_preview(camera, file, file_number, p, &size, context);
 		break;
-	   case DC120_ACTION_IMAGE:
-		p[0] = (from_card? 0x64 : 0x54);
+	case DC120_ACTION_IMAGE:
+		p[0] = (from_card ? 0x64 : 0x54);
 		retval = dc120_get_file(camera, file, file_number, p, &size, context);
 		break;
-	   case DC120_ACTION_DELETE:
-		p[0] = (from_card? 0x7B : 0x7A);
+	case DC120_ACTION_DELETE:
+		p[0] = (from_card ? 0x7B : 0x7A);
 		retval = dc120_delete_file(camera, p, context);
 		break;
-	   default:
+	default:
 		retval = GP_ERROR;
 	}
 	free(p);
@@ -617,20 +617,18 @@ int dc120_file_action (Camera *camera, int action, int from_card, int album_numb
 
 int dc120_capture (Camera *camera, CameraFilePath *path, GPContext *context)
 {
-    int   retval;
-    char *p      = dc120_packet_new(0x77);
+	int   retval;
+	char *p      = dc120_packet_new(0x77);
 
-    /* Take the picture to Flash memory */
-    if (dc120_packet_write(camera, p, 8, 1) == GP_ERROR) {
-	retval = (GP_ERROR);
-    }
-    else if ( dc120_wait_for_completion(camera, context) == GP_ERROR ) {
-	retval = (GP_ERROR);
-    }
-    else {
-	retval = (GP_OK);
-    }
+	/* Take the picture to Flash memory */
+	if (dc120_packet_write(camera, p, 8, 1) == GP_ERROR) {
+		retval = (GP_ERROR);
+	} else if (dc120_wait_for_completion(camera, context) == GP_ERROR) {
+		retval = (GP_ERROR);
+	} else {
+		retval = (GP_OK);
+	}
 
-    free( p );
-    return retval;
+	free(p);
+	return retval;
 }

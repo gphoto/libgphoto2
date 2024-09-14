@@ -33,25 +33,25 @@ int main(int argc, char **argv) {
 	/* Now open all cameras we autodected for usage */
 	printf("Number of cameras: %d\n", count);
 	cams = calloc (count, sizeof (Camera*));
-        for (i = 0; i < count; i++) {
-                gp_list_get_name  (list, i, &name);
-                gp_list_get_value (list, i, &value);
+	for (i = 0; i < count; i++) {
+		gp_list_get_name  (list, i, &name);
+		gp_list_get_value (list, i, &value);
 		ret = sample_open_camera (&cams[i], name, value, context);
-		if (ret < GP_OK) fprintf(stderr,"Camera %s on port %s failed to open\n", name, value);
-        }
+		if (ret < GP_OK) fprintf(stderr, "Camera %s on port %s failed to open\n", name, value);
+	}
 	/* Now call a simple function in each of those cameras. */
 	for (i = 0; i < count; i++) {
 		CameraText	text;
 		char 		*owner;
-	        ret = gp_camera_get_summary (cams[i], &text, context);
+		ret = gp_camera_get_summary (cams[i], &text, context);
 		if (ret < GP_OK) {
 			fprintf (stderr, "Failed to get summary.\n");
 			continue;
 		}
 
-                gp_list_get_name  (list, i, &name);
-                gp_list_get_value (list, i, &value);
-                printf("%-30s %-16s\n", name, value);
+		gp_list_get_name  (list, i, &name);
+		gp_list_get_value (list, i, &value);
+		printf("%-30s %-16s\n", name, value);
 		printf("Summary:\n%s\n", text.text);
 
 		/* Query a simple string configuration variable. */

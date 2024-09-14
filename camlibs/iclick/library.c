@@ -54,59 +54,58 @@
 #define GP_MODULE "iclick"
 
 static struct {
-   	char *name;
+	char *name;
 	CameraDriverStatus status;
-   	unsigned short idVendor;
-   	unsigned short idProduct;
+	unsigned short idVendor;
+	unsigned short idProduct;
 } models[] = {
-        {"iClick 5X",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9153},
+	{"iClick 5X",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9153},
 	{NULL,0,0,0}
 };
 
 int
 camera_id (CameraText *id)
 {
-    	strcpy (id->text, "iClick 5X");
+	strcpy (id->text, "iClick 5X");
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-    	int i;
-    	CameraAbilities a;
+	int i;
+	CameraAbilities a;
 
-    	for (i = 0; models[i].name; i++) {
-        	memset (&a, 0, sizeof(a));
-       		strcpy (a.model, models[i].name);
-       		a.status = models[i].status;
-       		a.port   = GP_PORT_USB;
-       		a.speed[0] = 0;
-       		a.usb_vendor = models[i].idVendor;
-       		a.usb_product= models[i].idProduct;
-       		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
+	for (i = 0; models[i].name; i++) {
+		memset (&a, 0, sizeof(a));
+		strcpy (a.model, models[i].name);
+		a.status = models[i].status;
+		a.port   = GP_PORT_USB;
+		a.speed[0] = 0;
+		a.usb_vendor = models[i].idVendor;
+		a.usb_product= models[i].idProduct;
+		if (a.status == GP_DRIVER_STATUS_EXPERIMENTAL)
 			a.operations = GP_OPERATION_NONE;
 		else
 			a.operations = GP_OPERATION_CAPTURE_PREVIEW;
-       		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW + GP_FILE_OPERATION_RAW;
-       		gp_abilities_list_append (list, a);
-    	}
+		gp_abilities_list_append (list, a);
+	}
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-    	sprintf (summary->text,_("Your USB camera is an iClick 5X.\n"
-				"The total number of pictures taken is %i\n"),
+	sprintf (summary->text, _("Your USB camera is an iClick 5X.\n"
+			"The total number of pictures taken is %i\n"),
+		 camera->pl->nb_entries);
 
-				camera->pl->nb_entries);
-
-    	return GP_OK;
+	return GP_OK;
 }
 
 static int camera_manual (Camera *camera, CameraText *manual, GPContext *context)
@@ -131,10 +130,10 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-    	strcpy (about->text, _("iClick 5X driver\n"
-			    "Theodore Kilgore <kilgota@auburn.edu>\n"));
+	strcpy (about->text, _("iClick 5X driver\n"
+		"Theodore Kilgore <kilgota@auburn.edu>\n"));
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 /*************** File and Downloading Functions *******************/
@@ -144,7 +143,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-        Camera *camera = data;
+	Camera *camera = data;
 	int i;
 	unsigned char buf[1024];
 	GP_DEBUG ("List files in %s\n", folder);
@@ -166,7 +165,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data;
+	Camera *camera = user_data;
 	int entry, w, h; /* frame; */
 	unsigned char *frame_data, *frame_ptr;
 	unsigned char *ppm, *ptr;
@@ -259,7 +258,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_RAW:
 		gp_file_set_mime_type (file, GP_MIME_RAW);
 		gp_file_adjust_name_for_mime_type (file);
-	        gp_file_set_data_and_size (file, (char *)frame_data, datasize);
+		gp_file_set_data_and_size (file, (char *)frame_data, datasize);
 		return (GP_OK);
 	default:
 		return GP_ERROR_NOT_SUPPORTED;
@@ -297,7 +296,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_file_set_mime_type (file, GP_MIME_PPM);
 	gp_file_set_data_and_size (file, (char *)ppm, ppmsize);
 	free (frame_data);
-        return GP_OK;
+	return GP_OK;
 }
 
 
@@ -333,10 +332,10 @@ camera_init(Camera *camera, GPContext *context)
 	int ret = 0;
 
 	/* First, set up all the function pointers */
-	camera->functions->summary      = camera_summary;
-        camera->functions->manual	= camera_manual;
-	camera->functions->about        = camera_about;
-	camera->functions->exit	    	= camera_exit;
+	camera->functions->summary = camera_summary;
+	camera->functions->manual  = camera_manual;
+	camera->functions->about   = camera_about;
+	camera->functions->exit    = camera_exit;
 
 	GP_DEBUG ("Initializing the camera\n");
 
@@ -346,7 +345,7 @@ camera_init(Camera *camera, GPContext *context)
 	ret = gp_port_set_settings(camera->port,settings);
 	if (ret < 0) return ret;
 
-        /* Tell the CameraFilesystem where to get lists from */
+	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));

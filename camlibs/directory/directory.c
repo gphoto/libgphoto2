@@ -125,60 +125,60 @@ static const char *
 get_mime_type (const char *filename)
 {
 
-        char *dot;
-        int x=0;
+	char *dot;
+	int x=0;
 
-        dot = strrchr(filename, '.');
-        if (dot) {
+	dot = strrchr(filename, '.');
+	if (dot) {
 		for (x = 0; mime_table[x].extension; x++) {
 			if (!strcasecmp (mime_table[x].extension, dot+1))
 				return (mime_table[x].mime_type);
-                }
+		}
 	}
 
-        return (NULL);
+	return (NULL);
 }
 
 int camera_id (CameraText *id)
 {
-        strcpy(id->text, "directory");
+	strcpy(id->text, "directory");
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 
 int camera_abilities (CameraAbilitiesList *list)
 {
-        CameraAbilities a;
+	CameraAbilities a;
 
 	memset(&a, 0, sizeof(a));
-        strcpy(a.model, "Directory Browse");
+	strcpy(a.model, "Directory Browse");
 	a.status = GP_DRIVER_STATUS_PRODUCTION;
-        a.port     = GP_PORT_DISK;
-        a.speed[0] = 0;
+	a.port     = GP_PORT_DISK;
+	a.speed[0] = 0;
 
-        a.operations = GP_OPERATION_NONE;
+	a.operations = GP_OPERATION_NONE;
 
 #ifdef DEBUG
-        a.file_operations = GP_FILE_OPERATION_PREVIEW |
+	a.file_operations = GP_FILE_OPERATION_PREVIEW |
 			    GP_FILE_OPERATION_DELETE |
 			    GP_FILE_OPERATION_EXIF;
 #else
 	a.file_operations = GP_FILE_OPERATION_DELETE |
 			    GP_FILE_OPERATION_EXIF;
 #endif
-        a.folder_operations = GP_FOLDER_OPERATION_MAKE_DIR |
+	a.folder_operations = GP_FOLDER_OPERATION_MAKE_DIR |
 			      GP_FOLDER_OPERATION_REMOVE_DIR |
 			      GP_FOLDER_OPERATION_PUT_FILE;
 
-        gp_abilities_list_append(list, a);
+	gp_abilities_list_append(list, a);
 
 	/* Since "Directory Browse" is hardcoded in clients,
 	 * better also add a new name here.
 	 */
-        strcpy(a.model, "Mass Storage Camera");
-        gp_abilities_list_append(list, a);
-        return (GP_OK);
+	strcpy(a.model, "Mass Storage Camera");
+	gp_abilities_list_append(list, a);
+	return (GP_OK);
 }
 
 static int
@@ -395,9 +395,9 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		return (GP_ERROR);
 	}
 
-        info->preview.fields = GP_FILE_INFO_NONE;
-        info->file.fields = GP_FILE_INFO_SIZE |
-                            GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS |
+	info->preview.fields = GP_FILE_INFO_NONE;
+	info->file.fields = GP_FILE_INFO_SIZE |
+			    GP_FILE_INFO_TYPE | GP_FILE_INFO_PERMISSIONS |
 			    GP_FILE_INFO_MTIME;
 
 	info->file.mtime = st.st_mtime;
@@ -406,12 +406,12 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 		info->file.permissions |= GP_FILE_PERM_READ;
 	if (st.st_mode & S_IWUSR)
 		info->file.permissions |= GP_FILE_PERM_DELETE;
-        info->file.size = st.st_size;
+	info->file.size = st.st_size;
 	mime_type = get_mime_type (file);
 	if (!mime_type)
 		mime_type = GP_MIME_UNKNOWN;
 	strcpy (info->file.type, mime_type);
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static int
@@ -446,10 +446,10 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 
 #if 0 /* implement this using new api -Marcus */
 	if (info.file.fields & GP_FILE_INFO_NAME) {
-        	if (!strcasecmp (info.file.name, file))
-        	        return (GP_OK);
+		if (!strcasecmp (info.file.name, file))
+			return (GP_OK);
 
-	        /* We really have to rename the poor file... */
+		/* We really have to rename the poor file... */
 		if (strlen (folder) == 1) {
 			snprintf (path_old, sizeof (path_old), "/%s",
 				  file);
@@ -461,29 +461,29 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 			snprintf (path_new, sizeof (path_new), "%s/%s",
 				  folder, info.file.name);
 		}
-                retval = rename (path_old, path_new);
+		retval = rename (path_old, path_new);
 		if (retval != 0) {
-	                switch (errno) {
-	                case EISDIR:
-	                        return (GP_ERROR_DIRECTORY_EXISTS);
-	                case EEXIST:
-	                        return (GP_ERROR_FILE_EXISTS);
-	                case EINVAL:
-	                        return (GP_ERROR_BAD_PARAMETERS);
-	                case EIO:
-	                        return (GP_ERROR_IO);
-	                case ENOMEM:
-	                        return (GP_ERROR_NO_MEMORY);
-	                case ENOENT:
-	                        return (GP_ERROR_FILE_NOT_FOUND);
-	                default:
-	                        return (GP_ERROR);
-	                }
-	        }
+			switch (errno) {
+			case EISDIR:
+				return (GP_ERROR_DIRECTORY_EXISTS);
+			case EEXIST:
+				return (GP_ERROR_FILE_EXISTS);
+			case EINVAL:
+				return (GP_ERROR_BAD_PARAMETERS);
+			case EIO:
+				return (GP_ERROR_IO);
+			case ENOMEM:
+				return (GP_ERROR_NO_MEMORY);
+			case ENOENT:
+				return (GP_ERROR_FILE_NOT_FOUND);
+			default:
+				return (GP_ERROR);
+			}
+		}
 	}
 #endif
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static int
@@ -491,7 +491,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-        char path[1024];
+	char path[1024];
 	int result = GP_OK;
 	struct stat stbuf;
 	int fd, id;
@@ -589,19 +589,19 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 static int
 camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
-        strcpy (manual->text, _("The Directory Browse \"camera\" lets "
+	strcpy (manual->text, _("The Directory Browse \"camera\" lets "
 		"you index photos on your hard drive."));
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-        strcpy (about->text, _("Directory Browse Mode - written "
+	strcpy (about->text, _("Directory Browse Mode - written "
 		"by Scott Fritzinger <scottf@unr.edu>."));
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static int
@@ -783,8 +783,8 @@ static CameraFilesystemFuncs fsfuncs = {
 int
 camera_init (Camera *camera, GPContext *context)
 {
-        /* First, set up all the function pointers */
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
-        return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
+	/* First, set up all the function pointers */
+	camera->functions->manual               = camera_manual;
+	camera->functions->about                = camera_about;
+	return gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 }

@@ -459,26 +459,25 @@ sierra_write_packet (Camera *camera, char *packet, GPContext *context)
 static int
 sierra_clear_usb_halt(Camera *camera)
 {
-
-	if ( (camera->port->type == GP_PORT_USB) &&
-	     !(camera->pl->flags & SIERRA_WRAP_USB_MASK) &&
-	     !(camera->pl->flags & SIERRA_NO_USB_CLEAR) )
+	if ((camera->port->type == GP_PORT_USB) &&
+		!(camera->pl->flags & SIERRA_WRAP_USB_MASK) &&
+		!(camera->pl->flags & SIERRA_NO_USB_CLEAR))
 		gp_port_usb_clear_halt(camera->port, GP_PORT_USB_ENDPOINT_IN);
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static int
 sierra_write_nak (Camera *camera, GPContext *context)
 {
-        char buf[4096];
-        int ret;
+	char buf[4096];
+	int ret;
 
-        GP_DEBUG ("* sierra_write_nack");
+	GP_DEBUG ("* sierra_write_nack");
 
-        buf[0] = SIERRA_PACKET_NAK;
-        ret = sierra_write_packet (camera, buf, context);
+	buf[0] = SIERRA_PACKET_NAK;
+	ret = sierra_write_packet (camera, buf, context);
 	sierra_clear_usb_halt(camera);
-        return (ret);
+	return (ret);
 }
 
 /**
@@ -798,10 +797,10 @@ sierra_transmit_ack (Camera *camera, char *packet, GPContext *context)
 			}
 
 			/*
-                         * The camera has ended this session and
-                         * reverted the speed back to 19200. Reinitialize
+			 * The camera has ended this session and
+			 * reverted the speed back to 19200. Reinitialize
 			 * the connection.
-                         */
+			 */
 			CHECK (sierra_init (camera, context));
 			CHECK (sierra_set_speed (camera, SIERRA_SPEED_19200,
 						 context));
@@ -931,15 +930,15 @@ sierra_init (Camera *camera, GPContext *context)
 }
 
 static struct {
-        SierraSpeed speed;
-        int bit_rate;
+	SierraSpeed speed;
+	int bit_rate;
 } SierraSpeeds[] = {
-        {SIERRA_SPEED_9600  ,   9600},
-        {SIERRA_SPEED_19200 ,  19200},
-        {SIERRA_SPEED_38400 ,  38400},
-        {SIERRA_SPEED_57600 ,  57600},
-        {SIERRA_SPEED_115200, 115200},
-        {0, 0}
+	{SIERRA_SPEED_9600  ,   9600},
+	{SIERRA_SPEED_19200 ,  19200},
+	{SIERRA_SPEED_38400 ,  38400},
+	{SIERRA_SPEED_57600 ,  57600},
+	{SIERRA_SPEED_115200, 115200},
+	{0, 0}
 };
 
 int
@@ -1204,7 +1203,7 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 }
 
 int sierra_get_string_register (Camera *camera, int reg, int fnumber,
-                                CameraFile *file, unsigned char *b,
+				CameraFile *file, unsigned char *b,
 				unsigned int *b_len, GPContext *context)
 {
 	unsigned char p[34816];

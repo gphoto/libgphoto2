@@ -57,16 +57,15 @@
 struct _CameraPrivateLibrary {
 	GPPort *gpdev;
 
-        int device_type;
-        int reset_times,odd_command;
+	int device_type;
+	int reset_times, odd_command;
 	int num_pictures;
 	char *file_list;
 
 };
 
 /* commands.c */
-int32_t soundvision_send_command(uint32_t command, uint32_t argument,
-				                                          CameraPrivateLibrary *dev);
+int32_t soundvision_send_command(uint32_t command, uint32_t argument, CameraPrivateLibrary *dev);
 int soundvision_reset(CameraPrivateLibrary *dev, char *revision, char *status);
 
 int soundvision_get_revision(CameraPrivateLibrary *dev,char *revision);
@@ -93,10 +92,10 @@ int agfa_capture(CameraPrivateLibrary *dev, CameraFilePath *path);
 int agfa_delete_picture(CameraPrivateLibrary *dev, const char *filename);
 int agfa_get_file_list(CameraPrivateLibrary *dev);
 int agfa_get_pic(CameraPrivateLibrary *dev, const char *filename,
-		                    unsigned char *data,int size);
+		 unsigned char *data,int size);
 int agfa_get_pic_size(CameraPrivateLibrary *dev, const char *filename);
 int agfa_get_thumb(CameraPrivateLibrary *dev, const char *filename,
-		                      unsigned char *data,int size);
+		   unsigned char *data,int size);
 int agfa_get_thumb_size(CameraPrivateLibrary *dev, const char *filename);
 
 
@@ -113,10 +112,10 @@ int tiger_capture(CameraPrivateLibrary *dev, CameraFilePath *path);
 int tiger_get_mem(CameraPrivateLibrary *dev, int *num_pics, int *mem_total, int *mem_free);
 int tiger_get_file_list(CameraPrivateLibrary *dev);
 int tiger_get_pic(CameraPrivateLibrary *dev, const char *filename,
-		                    unsigned char *data,int size);
+		  unsigned char *data,int size);
 int tiger_get_pic_size(CameraPrivateLibrary *dev, const char *filename);
 int tiger_get_thumb(CameraPrivateLibrary *dev, const char *filename,
-		                      unsigned char *data,int size);
+		    unsigned char *data,int size);
 int tiger_get_thumb_size(CameraPrivateLibrary *dev, const char *filename);
 
 #endif /* !defined(CAMLIBS_SOUNDVISION_SOUNDVISION_H) */

@@ -105,14 +105,14 @@ models[] =
 	{"Aiptek:Smart Megacam", 0x04fc, 0x504b,
 		BRIDGE_SPCA504, 0 },
 	{"Benq:DC1300", 0x04a5, 0x3003,
-	        BRIDGE_SPCA504, 0 },
+		BRIDGE_SPCA504, 0 },
 	/* Some other 500a cams with flash */
 	{"Trust:Familycam 300", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_FLASH},
 	{"D-Link:DSC 350+", 0x084d, 0x0003,
 		BRIDGE_SPCA500, SPCA50X_FLASH},
-        {"Minton:S-Cam F5", 0x084d, 0x0003,
-	        BRIDGE_SPCA500, SPCA50X_FLASH},
+	{"Minton:S-Cam F5", 0x084d, 0x0003,
+		BRIDGE_SPCA500, SPCA50X_FLASH},
 	{"PureDigital:Ritz Disposable", 0x04fc, 0xffff,
 		BRIDGE_SPCA504B_PD, SPCA50X_FLASH},
 	{NULL, 0, 0, 0, 0}
@@ -141,7 +141,7 @@ camera_abilities (CameraAbilitiesList *list)
 		a.status = GP_DRIVER_STATUS_TESTING;
 
 		a.file_operations = GP_FILE_OPERATION_PREVIEW
-			          | GP_FILE_OPERATION_DELETE;
+				  | GP_FILE_OPERATION_DELETE;
 
 		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
 
@@ -155,8 +155,8 @@ camera_abilities (CameraAbilitiesList *list)
 				a.operations = GP_OPERATION_CAPTURE_IMAGE;
 		}
 		if (models[x].bridge == BRIDGE_SPCA504B_PD) {
-                            a.operations = GP_OPERATION_CAPTURE_IMAGE;
-                }
+			    a.operations = GP_OPERATION_CAPTURE_IMAGE;
+		}
 		if (models[x].bridge == BRIDGE_SPCA500) {
 			/* TEST enable capture for the DSC-350 style cams */
 			if (a.usb_vendor == 0x084d) {

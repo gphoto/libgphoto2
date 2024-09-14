@@ -50,8 +50,8 @@ static int spca50x_mode_set_download (CameraPrivateLibrary * lib);
 static int spca50x_download_data (CameraPrivateLibrary * lib, uint32_t start,
 				 unsigned int size, uint8_t * buf);
 static int spca50x_get_FATs (CameraPrivateLibrary * lib, int dramtype);
-static int spca50x_sdram_get_file_count_and_fat_count
-                            (CameraPrivateLibrary * lib, int dramtype);
+static int spca50x_sdram_get_file_count_and_fat_count (
+		CameraPrivateLibrary * lib, int dramtype);
 static int spca50x_get_avi_thumbnail (CameraPrivateLibrary * lib,
 				     uint8_t ** buf, unsigned int *len,
 				     struct SPCA50xFile *g_file);
@@ -67,7 +67,7 @@ static inline uint8_t *put_dword (uint8_t * ptr, uint32_t value);
 
 static int
 spca50x_sdram_get_fat_page (CameraPrivateLibrary * lib, int index,
-		            int dramtype, uint8_t *p)
+			    int dramtype, uint8_t *p)
 {
 	switch (dramtype) {
 		case 4:	/* 128 Mbit */
@@ -92,7 +92,7 @@ spca50x_sdram_get_fat_page (CameraPrivateLibrary * lib, int index,
 
 static int
 spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
-		                            int dramtype)
+					    int dramtype)
 {
 	uint8_t theFat[256];
 
@@ -128,7 +128,7 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 	} else {
 		while (1) {
 			CHECK (spca50x_sdram_get_fat_page (lib, lib->num_fats,
-					            dramtype, theFat));
+						    dramtype, theFat));
 			if (theFat[0] == 0xFF)
 				break;
 

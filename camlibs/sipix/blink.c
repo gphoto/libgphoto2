@@ -738,18 +738,18 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char *xdata, *ydata;
 
 
-	if (strcmp(folder,"/"))
-	    return GP_ERROR_BAD_PARAMETERS;
-        image_no = gp_filesystem_number(fs, folder, filename, context);
+	if (strcmp(folder, "/"))
+		return GP_ERROR_BAD_PARAMETERS;
+	image_no = gp_filesystem_number(fs, folder, filename, context);
 
-        /* size */
+	/* size */
 	do {
 		gp_port_usb_msg_read (camera->port, 1, image_no , 1, reply, 8);
 	} while(reply[0]!=0);
 
 	picsize = reply[1] | (reply[2] << 8) | ( reply[3] << 16);
 	/* Setup bulk transfer */
-    	do {
+	do {
 		gp_port_usb_msg_read (camera->port, 2, image_no , 0, reply, 6);
 	} while(reply[0]!=0);
 

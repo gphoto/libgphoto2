@@ -304,14 +304,14 @@ static CameraFilesystemFuncs fsfuncs = {
 int
 camera_init (Camera *camera, GPContext *context)
 {
-        /* First, set up all the function pointers */
-        /* camera->functions->exit                 = camera_exit; */
-        camera->functions->get_config		= camera_config_get;
-        camera->functions->set_config		= camera_config_set;
-        camera->functions->capture              = camera_capture;
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
+	/* First, set up all the function pointers */
+	/* camera->functions->exit                 = camera_exit; */
+	camera->functions->get_config		= camera_config_get;
+	camera->functions->set_config		= camera_config_set;
+	camera->functions->capture              = camera_capture;
+	camera->functions->summary              = camera_summary;
+	camera->functions->manual               = camera_manual;
+	camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
@@ -319,13 +319,13 @@ camera_init (Camera *camera, GPContext *context)
 	/* Configure port */
 	gp_port_set_timeout(camera->port,MDC800_DEFAULT_COMMAND_RETRY_DELAY);
 	if (camera->port->type == GP_PORT_SERIAL) {
-	    GPPortSettings settings;
-	    gp_port_get_settings(camera->port, &settings);
-	    settings.serial.speed   = 57600;
-	    settings.serial.bits    = 8;
-	    settings.serial.parity  = 0;
-	    settings.serial.stopbits= 1;
-	    gp_port_set_settings(camera->port, settings);
+		GPPortSettings settings;
+		gp_port_get_settings(camera->port, &settings);
+		settings.serial.speed   = 57600;
+		settings.serial.bits    = 8;
+		settings.serial.parity  = 0;
+		settings.serial.stopbits= 1;
+		gp_port_set_settings(camera->port, settings);
 	}
 	return mdc800_openCamera(camera);
 }

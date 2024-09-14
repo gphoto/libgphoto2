@@ -76,7 +76,7 @@ mars_init (Camera *camera, GPPort *port, Info *info)
 	 * camera reports 0x02 it is "jammed" and we must clear it.
 	 */
 
-    	m_read(port, c, 16);
+	m_read(port, c, 16);
 	if (c[0] == 0x02) {
 		gp_port_write(port, "\x19", 1);
 		gp_port_read(port, c, 16);
@@ -97,7 +97,7 @@ mars_init (Camera *camera, GPPort *port, Info *info)
 		memmove(info, info + 144, 0x1f70); /* Saving config */
 
 	GP_DEBUG("Leaving mars_init\n");
-        return GP_OK;
+	return GP_OK;
 }
 
 int
@@ -123,7 +123,7 @@ mars_get_pic_data_size (Info *info, int n)
 }
 
 static int
-set_usb_in_endpoint	(Camera *camera, int inep)
+set_usb_in_endpoint (Camera *camera, int inep)
 {
 	GPPortSettings settings;
 	gp_port_get_settings ( camera ->port, &settings);
@@ -134,18 +134,18 @@ set_usb_in_endpoint	(Camera *camera, int inep)
 
 
 static int
-mars_read_data         (GPPort *port, char *data, int size)
+mars_read_data (GPPort *port, char *data, int size)
 {
 	int MAX_BULK = 0x2000;
 	int len = 0;
 	while(size > 0) {
 		len = (size>MAX_BULK)?MAX_BULK:size;
-	        gp_port_read  (port, data, len);
+		gp_port_read  (port, data, len);
     		data += len;
 		size -= len;
 	}
 
-        return 1;
+	return 1;
 }
 
 int
@@ -247,63 +247,63 @@ int mars_decompress (unsigned char *inp, unsigned char *outp, int width,
 
 	/* first two pixels in first two rows are stored as raw 8-bit */
 	if (row < 2) {
-    		GET_CODE;
-    		bitpos += 8;
-    		*outp++ = code;
+		GET_CODE;
+		bitpos += 8;
+		*outp++ = code;
 
-    		GET_CODE;
-    		bitpos += 8;
-    		*outp++ = code;
+		GET_CODE;
+		bitpos += 8;
+		*outp++ = code;
 
-    		col += 2;
+		col += 2;
 	}
 
 	while (col < width) {
-    		/* get bitcode */
-    		GET_CODE;
-    		/* update bit position */
-    		bitpos += table[code].len;
+		/* get bitcode */
+		GET_CODE;
+		/* update bit position */
+		bitpos += table[code].len;
 
-    		/* calculate pixel value */
-    		if (table[code].is_abs) {
-    			/* get 5 more bits and use them as absolute value */
-    			GET_CODE;
-    			val = (code & 0xF8);
-    			bitpos += 5;
+		/* calculate pixel value */
+		if (table[code].is_abs) {
+			/* get 5 more bits and use them as absolute value */
+			GET_CODE;
+			val = (code & 0xF8);
+			bitpos += 5;
 
-    			}else {
-    				/* value is relative to top or left pixel */
-    				val = table[code].val;
-    				lp =  outp[-2];
-    				if (row > 1) {
-					if (col > 1)
-						tlp = outp[-2*width-2];
-        				tp  = outp[-2*width];
-        				if (col < width-2)
-        					trp = outp[-2*width+2];
-    				}
-    				if (row < 2) {
-        				/* top row: relative to left pixel */
-        				val += lp;
-    				}else if (col < 2) {
-        				/* left column: relative to top pixel */
-        				/* initial estimate */
-        				val += (tp + trp)/2;
-    				}else if (col > width - 3) {
-        				/* left column: relative to top pixel */
-        				val += (tp + lp + tlp +1)/3;
-					/* main area: average of left and top pixel */
-    				}else {
-        				/* initial estimate for predictor */
-					tlp>>=1;
-					trp>>=1;
-					val += (lp + tp + tlp + trp +1)/3;
-    				}
-    			}
-    			/* store pixel */
-    			*outp++ = CLAMP(val);
-    			col++;
+		} else {
+			/* value is relative to top or left pixel */
+			val = table[code].val;
+			lp =  outp[-2];
+			if (row > 1) {
+				if (col > 1)
+					tlp = outp[-2*width-2];
+				tp  = outp[-2*width];
+				if (col < width-2)
+					trp = outp[-2*width+2];
+			}
+			if (row < 2) {
+				/* top row: relative to left pixel */
+				val += lp;
+			} else if (col < 2) {
+				/* left column: relative to top pixel */
+				/* initial estimate */
+				val += (tp + trp)/2;
+			} else if (col > width - 3) {
+				/* left column: relative to top pixel */
+				val += (tp + lp + tlp +1)/3;
+				/* main area: average of left and top pixel */
+			} else {
+				/* initial estimate for predictor */
+				tlp>>=1;
+				trp>>=1;
+				val += (lp + tp + tlp + trp +1)/3;
+			}
 		}
+		/* store pixel */
+		*outp++ = CLAMP(val);
+		col++;
+	}
 	}
 	return GP_OK;
 }
@@ -342,7 +342,7 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	memset(c,0,sizeof(c));
 
 	/*Routine used in initialization, photo download, and reset. */
-    	m_read(port, c, 16);
+	m_read(port, c, 16);
 	m_command(port, start, 2, c);
 	m_command(port, do_something, 2, c);
 	m_command(port, address1, 2, c);
@@ -350,8 +350,8 @@ mars_routine (Info *info, GPPort *port, char param, int n)
 	c[0] = 0;
 	gp_port_write(port, address2, 2);
 	/* Moving the memory cursor to the given address? */
-	while (( c[0] != 0xa) ) {
-    		if (m_read(port, c, 16) < 16)
+	while ((c[0] != 0xa)) {
+		if (m_read(port, c, 16) < 16)
 			break;
 	}
 

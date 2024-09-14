@@ -233,8 +233,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			result[19] = 0x00;
 
 			memmove(&result[20],
-			       &result[app1len + 4],
-			       (unsigned int)(size - app1len - 4));
+				&result[app1len + 4],
+				(unsigned int)(size - app1len - 4));
 
 			size = size - app1len + 20 + 4;
 
@@ -439,8 +439,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		result[19] = 0x00;
 
 		memmove(&result[20],
-		       &result[app1len + 4],
-		       (unsigned int)(size - app1len - 4));
+			&result[app1len + 4],
+			(unsigned int)(size - app1len - 4));
 
 		size = size - app1len + 24;
 
@@ -664,10 +664,10 @@ camera_init (Camera *camera, GPContext *context)
 
 	GP_DEBUG(" * camera_init()");
 
-        /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
-        camera->functions->summary              = camera_summary;
-        camera->functions->about                = camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->exit = camera_exit;
+	camera->functions->summary = camera_summary;
+	camera->functions->about = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);

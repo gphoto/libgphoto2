@@ -138,7 +138,7 @@ static int dsc1_delete(Camera *camera, uint8_t index) {
 
 static int dsc1_selectimage(Camera *camera, uint8_t index)
 {
-        int	size = 0;
+	int	size = 0;
 
 	DEBUG_PRINT_MEDIUM(("Selecting image: %i.", index));
 
@@ -332,7 +332,7 @@ int camera_id (CameraText *id) {
 int camera_abilities (CameraAbilitiesList *list) {
 
 	CameraAbilities a;
-        int             result;
+	int             result;
 
 	memset (&a, 0, sizeof(a));
 	strcpy(a.model, "Panasonic:DC1000");
@@ -486,7 +486,7 @@ static int delete_file_func (CameraFilesystem *fs, const char *folder,
 	/* index is the 0-based image number on the camera */
 	CHECK (index = gp_filesystem_number (camera->fs, folder, filename,
 					     context));
-        index++;
+	index++;
 
 	return dsc1_delete(camera, index);
 }
@@ -511,12 +511,12 @@ static CameraFilesystemFuncs fsfuncs = {
 
 int camera_init (Camera *camera, GPContext *context) {
 
-        int ret, selected_speed;
+	int ret, selected_speed;
 	GPPortSettings settings;
 
-        /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
-        camera->functions->about                = camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->exit                 = camera_exit;
+	camera->functions->about                = camera_about;
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
@@ -529,14 +529,14 @@ int camera_init (Camera *camera, GPContext *context) {
 	}
 
 	/* Configure the port (remember the selected speed) */
-        gp_port_set_timeout(camera->port, 5000);
+	gp_port_set_timeout(camera->port, 5000);
 	gp_port_get_settings(camera->port, &settings);
 	selected_speed = settings.serial.speed;
-        settings.serial.speed      = 9600; /* hand shake speed */
-        settings.serial.bits       = 8;
-        settings.serial.parity     = 0;
-        settings.serial.stopbits   = 1;
-        gp_port_set_settings(camera->port, settings);
+	settings.serial.speed      = 9600; /* hand shake speed */
+	settings.serial.bits       = 8;
+	settings.serial.parity     = 0;
+	settings.serial.stopbits   = 1;
+	gp_port_set_settings(camera->port, settings);
 
 	/* Set up the filesystem */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);

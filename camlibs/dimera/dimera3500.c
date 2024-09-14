@@ -82,17 +82,17 @@ Dimera_Preview( long *size, Camera *camera, GPContext *context );
 /* Gphoto2 */
 
 struct _CameraPrivateLibrary {
-        unsigned exposure;
-        int auto_exposure;
-        int auto_flash;
+	unsigned exposure;
+	int auto_exposure;
+	int auto_flash;
 };
 
 
 static const char *models[] = {
-        "Mustek:VDC-3500",
-        "Relisys:Dimera 3500",
-        "Trust:DC-3500",
-        NULL
+	"Mustek:VDC-3500",
+	"Relisys:Dimera 3500",
+	"Trust:DC-3500",
+	NULL
 };
 
 
@@ -376,14 +376,14 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 }
 
 static int camera_capture_preview(Camera *camera, CameraFile *file, GPContext *context) {
-        long size;
+	long size;
 	uint8_t *data;
 
 	gp_file_set_mime_type (file, GP_MIME_PGM);
 
-        data = Dimera_Preview( &size, camera, context);
-        if (!data)
-                return GP_ERROR;
+	data = Dimera_Preview (&size, camera, context);
+	if (!data)
+		return GP_ERROR;
 	return gp_file_set_data_and_size (file, (char *)data, size);
 }
 
@@ -860,7 +860,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Exposure level on preview"), &w);
 	if (gp_widget_changed (w)) {
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &wvalue);
 		camera->pl->exposure = MAX(MIN_EXPOSURE,MIN(MAX_EXPOSURE,atoi(wvalue)));
 		gp_setting_set ("dimera3500", "exposure", wvalue);
@@ -869,7 +869,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Automatic exposure adjustment on preview"), &w);
 	if (gp_widget_changed (w)) {
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &val);
 		camera->pl->auto_exposure = val;
 		sprintf(str, "%d", val);
@@ -879,7 +879,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 
 	gp_widget_get_child_by_label (window, _("Automatic flash on capture"), &w);
 	if (gp_widget_changed (w)) {
-	        gp_widget_set_changed (w, 0);
+		gp_widget_set_changed (w, 0);
 		gp_widget_get_value (w, &val);
 		camera->pl->auto_flash = val;
 		sprintf(str, "%d", val);
@@ -901,18 +901,18 @@ static CameraFilesystemFuncs fsfuncs = {
 int camera_init (Camera *camera, GPContext *context) {
 
 	GPPortSettings settings;
-        int ret, selected_speed;
-        char buf[1024];
+	int ret, selected_speed;
+	char buf[1024];
 
-        /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
-        camera->functions->capture              = camera_capture;
-        camera->functions->capture_preview      = camera_capture_preview;
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
-        camera->functions->get_config           = camera_get_config;
-        camera->functions->set_config           = camera_set_config;
+	/* First, set up all the function pointers */
+	camera->functions->exit                 = camera_exit;
+	camera->functions->capture              = camera_capture;
+	camera->functions->capture_preview      = camera_capture_preview;
+	camera->functions->summary              = camera_summary;
+	camera->functions->manual               = camera_manual;
+	camera->functions->about                = camera_about;
+	camera->functions->get_config           = camera_get_config;
+	camera->functions->set_config           = camera_set_config;
 
 	/* Get the settings and remember the selected speed */
 	gp_port_get_settings (camera->port, &settings);
@@ -926,77 +926,77 @@ int camera_init (Camera *camera, GPContext *context) {
 		return (GP_ERROR_NO_MEMORY);
 	}
 
-        /* Set the default exposure */
-        if (gp_setting_get ("dimera3500", "exposure", buf) == GP_OK)
-            camera->pl->exposure = atoi(buf);
-        else
-            camera->pl->exposure = DEFAULT_EXPOSURE;
+	/* Set the default exposure */
+	if (gp_setting_get ("dimera3500", "exposure", buf) == GP_OK)
+		camera->pl->exposure = atoi(buf);
+	else
+		camera->pl->exposure = DEFAULT_EXPOSURE;
 
-        /* Set automatic exposure enable setting for capture preview mode */
-        if (gp_setting_get ("dimera3500", "auto_exposure", buf) == GP_OK)
-            camera->pl->auto_exposure = atoi(buf);
-        else
-            camera->pl->auto_exposure = 1;
+	/* Set automatic exposure enable setting for capture preview mode */
+	if (gp_setting_get ("dimera3500", "auto_exposure", buf) == GP_OK)
+		camera->pl->auto_exposure = atoi(buf);
+	else
+		camera->pl->auto_exposure = 1;
 
-        /* Set flag to use flash, if necessary, when capturing picture */
-        if (gp_setting_get ("dimera3500", "auto_flash", buf) == GP_OK)
-            camera->pl->auto_flash = atoi(buf);
-        else
-            camera->pl->auto_flash = 1;
+	/* Set flag to use flash, if necessary, when capturing picture */
+	if (gp_setting_get ("dimera3500", "auto_flash", buf) == GP_OK)
+		camera->pl->auto_flash = atoi(buf);
+	else
+		camera->pl->auto_flash = 1;
 
-        GP_DEBUG("Opening port");
-        if ( (ret = mesa_port_open(camera->port)) != GP_OK)
-        {
-                gp_log(GP_LOG_ERROR, "dimera/dimera3500", "Camera Open Failed");
+	GP_DEBUG("Opening port");
+	if ((ret = mesa_port_open(camera->port)) != GP_OK)
+	{
+		gp_log(GP_LOG_ERROR, "dimera/dimera3500", "Camera Open Failed");
 		free (camera->pl);
 		camera->pl = NULL;
 		gp_context_error (context, _("Problem opening port"));
-                return ret;
-        }
+		return ret;
+	}
 
-        GP_DEBUG("Resetting camera");
-        if ( (ret = mesa_reset(camera->port)) != GP_OK )
-        {
-                gp_log(GP_LOG_ERROR, "dimera/dimera3500", "Camera Reset Failed");
+	GP_DEBUG("Resetting camera");
+	if ((ret = mesa_reset(camera->port)) != GP_OK)
+	{
+		gp_log(GP_LOG_ERROR, "dimera/dimera3500", "Camera Reset Failed");
 		free (camera->pl);
 		camera->pl = NULL;
 		gp_context_error (context, _("Problem resetting camera"));
-                return ret;
-        }
+		return ret;
+	}
 
-        GP_DEBUG("Setting speed");
-        if ( (ret = mesa_set_speed(camera->port, selected_speed)) != GP_OK )
-        {
-                gp_log(GP_LOG_ERROR, "dimera/dimera3500", "Camera Speed Setting Failed");
+	GP_DEBUG("Setting speed");
+	if ((ret = mesa_set_speed(camera->port, selected_speed)) != GP_OK)
+	{
+		gp_log(GP_LOG_ERROR, "dimera/dimera3500", "Camera Speed Setting Failed");
 		free (camera->pl);
 		camera->pl = NULL;
 		gp_context_error (context, _("Problem setting camera communication speed"));
-                return ret;
-        }
+		return ret;
+	}
 
 
-        GP_DEBUG("Checking for modem");
-        switch ( ret = mesa_modem_check(camera->port) )
-        {
-        case GP_ERROR_IO:
-        case GP_ERROR_TIMEOUT:
-                gp_log(GP_LOG_ERROR, "dimera/dimera3500", "No or Unknown Response");
+	GP_DEBUG("Checking for modem");
+	switch (ret = mesa_modem_check(camera->port))
+	{
+	case GP_ERROR_IO:
+	case GP_ERROR_TIMEOUT:
+		gp_log(GP_LOG_ERROR, "dimera/dimera3500", "No or Unknown Response");
 		free (camera->pl);
 		camera->pl = NULL;
 		gp_context_error (context, _("No response from camera"));
-                return GP_ERROR_TIMEOUT;
-        case GP_ERROR_MODEL_NOT_FOUND:
-                gp_log(GP_LOG_ERROR, "dimera/dimera3500", "Probably a modem");
+		return GP_ERROR_TIMEOUT;
+	case GP_ERROR_MODEL_NOT_FOUND:
+		gp_log(GP_LOG_ERROR, "dimera/dimera3500", "Probably a modem");
 		free (camera->pl);
 		camera->pl = NULL;
 		gp_context_error (context, _("Looks like a modem, not a camera"));
-                return GP_ERROR_MODEL_NOT_FOUND;
-        case GP_OK:
-                break;
+		return GP_ERROR_MODEL_NOT_FOUND;
+	case GP_OK:
+		break;
 	default:
 		/* Hopefully, gp_camera_set_error was called for this error */
 		return ret;
-        }
+	}
 	/* Tell the filesystem where to get listings and info from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	return (GP_OK);

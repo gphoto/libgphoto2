@@ -110,7 +110,7 @@ bool dp_init_calibration(Camera *camera, bool force)
 	int i, j;
 
 	if (camera->pl->lut)
-                return true;
+		return true;
 
 	lut_file = malloc(64 + strlen(getenv("HOME")));
 	if (!lut_file)

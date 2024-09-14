@@ -17,9 +17,9 @@
 
 #include "samples.h"
 
-static void errordumper(GPLogLevel level, const char *domain, const char *str,
-                 void *data) {
-  fprintf(stdout, "%s\n", str);
+static void
+errordumper(GPLogLevel level, const char *domain, const char *str, void *data) {
+	fprintf(stdout, "%s\n", str);
 }
 
 static void

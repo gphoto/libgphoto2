@@ -48,59 +48,59 @@
 #define GP_MODULE "clicksmart310"
 
 static const struct {
-   	char *name;
+	char *name;
 	CameraDriverStatus status;
-   	unsigned short idVendor;
-   	unsigned short idProduct;
+	unsigned short idVendor;
+	unsigned short idProduct;
 } models[] = {
-        {"Logitech Clicksmart 310", GP_DRIVER_STATUS_TESTING, 0x46d, 0x0900},
+	{"Logitech Clicksmart 310", GP_DRIVER_STATUS_TESTING, 0x46d, 0x0900},
 	{NULL,0,0,0}
 };
 
 int
 camera_id (CameraText *id)
 {
-    	strcpy (id->text, "Logitech Clicksmart 310");
+	strcpy (id->text, "Logitech Clicksmart 310");
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 
 int
 camera_abilities (CameraAbilitiesList *list)
 {
-    	int i;
-    	CameraAbilities a;
+	int i;
+	CameraAbilities a;
 
-    	for (i = 0; models[i].name; i++) {
-        	memset (&a, 0, sizeof(a));
-       		strcpy (a.model, models[i].name);
-       		a.status = models[i].status;
-       		a.port   = GP_PORT_USB;
-       		a.speed[0] = 0;
-       		a.usb_vendor = models[i].idVendor;
-       		a.usb_product= models[i].idProduct;
+	for (i = 0; models[i].name; i++) {
+		memset (&a, 0, sizeof(a));
+		strcpy (a.model, models[i].name);
+		a.status = models[i].status;
+		a.port   = GP_PORT_USB;
+		a.speed[0] = 0;
+		a.usb_vendor = models[i].idVendor;
+		a.usb_product= models[i].idProduct;
 		a.operations = GP_OPERATION_NONE;
-       		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
-;
+		a.folder_operations = GP_FOLDER_OPERATION_DELETE_ALL;
+		;
 		a.file_operations   = GP_FILE_OPERATION_PREVIEW
-						+ GP_FILE_OPERATION_RAW;
-       		gp_abilities_list_append (list, a);
-    	}
+				    + GP_FILE_OPERATION_RAW;
+		gp_abilities_list_append (list, a);
+	}
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 static int
 camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 {
-    	sprintf (summary->text,ngettext(
+	sprintf (summary->text, ngettext(
 			"Your Logitech Clicksmart 310 has %i picture in it.\n",
 			"Your Logitech Clicksmart 310 has %i pictures in it.\n",
 			camera->pl->num_pics
 			),
 		camera->pl->num_pics);
-    	return GP_OK;
+	return GP_OK;
 }
 
 
@@ -135,10 +135,10 @@ static int camera_manual (Camera *camera, CameraText *manual, GPContext *context
 static int
 camera_about (Camera *camera, CameraText *about, GPContext *context)
 {
-    	strcpy (about->text, _("Logitech Clicksmart 310 driver\n"
+	strcpy (about->text, _("Logitech Clicksmart 310 driver\n"
 			    "Theodore Kilgore <kilgota@auburn.edu>\n"));
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 /*************** File and Downloading Functions *******************/
@@ -148,10 +148,10 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-        Camera *camera = data;
+	Camera *camera = data;
 	int n;
 	GP_DEBUG ("List files in %s\n", folder);
-    	n = camera->pl->num_pics;
+	n = camera->pl->num_pics;
 	gp_list_populate(list, "cs%03i.jpeg", n);
 	return GP_OK;
 }
@@ -162,7 +162,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       CameraFileType type, CameraFile *file, void *user_data,
 	       GPContext *context)
 {
-    	Camera *camera = user_data;
+	Camera *camera = user_data;
 	int w=0, h=0, b=0;
 	int k, res;
 	unsigned char *data;
@@ -171,7 +171,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	unsigned char jpeg_format;
 
 	/* Get the entry number of the photo on the camera */
-    	k = gp_filesystem_number (camera->fs, "/", filename, context);
+	k = gp_filesystem_number (camera->fs, "/", filename, context);
 
 	if (GP_FILE_TYPE_EXIF==type) return GP_ERROR_FILE_EXISTS;
 
@@ -180,7 +180,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	res = clicksmart_get_res_setting (camera->pl, k);
 
-    	switch (res) {
+	switch (res) {
 	case 0: w = 352;
 		h = 288;
 		jpeg_format = JPEG_CIF_FORMAT;
@@ -202,10 +202,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if (GP_FILE_TYPE_RAW == type) {	/* type is GP_FILE_TYPE_RAW */
 		gp_file_set_mime_type (file, GP_MIME_RAW);
-	        gp_file_set_data_and_size (file, (char *)data, b);
+		gp_file_set_data_and_size (file, (char *)data, b);
 		/* Reset camera when done, for more graceful exit. */
 		if (k +1 == camera->pl->num_pics) {
-	    		clicksmart_reset (camera->port);
+			clicksmart_reset (camera->port);
 		}
 		return GP_OK;
 	}
@@ -225,13 +225,13 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	GP_DEBUG("width:  %d, height:  %d, data size:  %d\n", w, h, b);
 	create_jpeg_from_data (jpeg_out, data, 3, w, h, jpeg_format,
-		    b, &file_size, 0, 0);
+		b, &file_size, 0, 0);
 
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
 	gp_file_set_data_and_size (file, (char *)jpeg_out, file_size);
 	/* Reset camera when done, for more graceful exit. */
 	if (k +1 == camera->pl->num_pics) {
-    		clicksmart_reset (camera->port);
+		clicksmart_reset (camera->port);
 	}
 	free(data);
 	return GP_OK;
@@ -276,10 +276,10 @@ camera_init(Camera *camera, GPContext *context)
 	int ret = 0;
 
 	/* First, set up all the function pointers */
-	camera->functions->summary      = camera_summary;
-        camera->functions->manual	= camera_manual;
-	camera->functions->about        = camera_about;
-	camera->functions->exit	    	= camera_exit;
+	camera->functions->summary = camera_summary;
+	camera->functions->manual  = camera_manual;
+	camera->functions->about   = camera_about;
+	camera->functions->exit    = camera_exit;
 
 	GP_DEBUG ("Initializing the camera\n");
 
@@ -303,7 +303,7 @@ camera_init(Camera *camera, GPContext *context)
 	ret = gp_port_set_settings(camera->port,settings);
 	if (ret < 0) return ret;
 
-        /* Tell the CameraFilesystem where to get lists from */
+	/* Tell the CameraFilesystem where to get lists from */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl) return GP_ERROR_NO_MEMORY;

@@ -111,8 +111,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	long int camSize = 0;
 
 	/* Get the number of the picture from the filesystem */
-	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename,
-					        context));
+	CHECK_RESULT (n = gp_filesystem_number (camera->fs, folder, filename, context));
 
 	/* Prepare the transaction */
 	CHECK_RESULT (QVpicattr (camera, n, &attr));
@@ -149,25 +148,24 @@ static int
 delete_file_func (CameraFilesystem *fs, const char *folder,
                   const char *filename, void *data, GPContext *context)
 {
-        Camera *camera = data;
-        int nr ;
+	Camera *camera = data;
+	int nr ;
 	CameraFileInfo info;
 
-        nr = gp_filesystem_number(fs, folder, filename, context);
-        if (nr < 0)
-            return nr;
+	nr = gp_filesystem_number(fs, folder, filename, context);
+	if (nr < 0)
+		return nr;
 
 	CHECK_RESULT (get_info_func(fs, folder, filename, &info, data, context));
 
-        if (info.file.permissions == GP_FILE_PERM_READ) {
-                gp_context_error(context, _("Image %s is delete protected."),
-                        filename);
-                return (GP_ERROR);
-        }
+	if (info.file.permissions == GP_FILE_PERM_READ) {
+		gp_context_error(context, _("Image %s is delete protected."), filename);
+		return (GP_ERROR);
+	}
 
 	CHECK_RESULT (QVdelete (camera, nr));
 
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -234,10 +232,10 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	info->preview.size = size_thumb;
 
 	CHECK_RESULT (QVpicattr (camera, n, &attr));
-        if (attr&1)
-                info->file.permissions = GP_FILE_PERM_READ;
-        else
-                info->file.permissions = GP_FILE_PERM_ALL;
+	if (attr&1)
+		info->file.permissions = GP_FILE_PERM_READ;
+	else
+		info->file.permissions = GP_FILE_PERM_ALL;
 
 	return (GP_OK);
 }
@@ -245,33 +243,33 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 {
-        CameraWidget *child;
-        float battery;
+	CameraWidget *child;
+	float battery;
 	char status[2];
-        char t[1024];
+	char t[1024];
 
-        gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
+	gp_widget_new (GP_WIDGET_WINDOW, _("Camera Configuration"), window);
 
-        CHECK_RESULT (QVbattery (camera, &battery));
+	CHECK_RESULT (QVbattery (camera, &battery));
 	gp_widget_new (GP_WIDGET_TEXT, _("Battery"), &child);
-        gp_widget_set_name (child, "battery");
-        snprintf(t,sizeof(t),"%.1f V",battery);
+	gp_widget_set_name (child, "battery");
+	snprintf(t,sizeof(t),"%.1f V",battery);
 	gp_widget_set_value (child, t);
-        gp_widget_append (*window, child);
+	gp_widget_append (*window, child);
 
 	CHECK_RESULT (QVstatus (camera, status));
 	gp_widget_new (GP_WIDGET_RADIO, _("Brightness"), &child);
-        gp_widget_set_name (child, "brightness");
-        gp_widget_add_choice (child, _("Too bright"));
-        gp_widget_add_choice (child, _("Too dark"));
-        gp_widget_add_choice (child, _("OK"));
-        if (status[0]&0x80) strcpy (t, _("Too bright"));
-        else if (status[0]&0x40) strcpy (t, _("Too dark"));
+	gp_widget_set_name (child, "brightness");
+	gp_widget_add_choice (child, _("Too bright"));
+	gp_widget_add_choice (child, _("Too dark"));
+	gp_widget_add_choice (child, _("OK"));
+	if (status[0]&0x80) strcpy (t, _("Too bright"));
+	else if (status[0]&0x40) strcpy (t, _("Too dark"));
 	else strcpy (t, _("OK"));
-        gp_widget_set_value (child, t);
-        gp_widget_append (*window, child);
+	gp_widget_set_value (child, t);
+	gp_widget_append (*window, child);
 
-        return (GP_OK);
+	return (GP_OK);
 }
 
 static int
@@ -321,12 +319,12 @@ camera_init (Camera *camera, GPContext *context)
 	gp_port_settings settings;
 	int selected_speed;
 
-        /* First, set up all the function pointers */
-        camera->functions->get_config   = camera_config_get;
+	/* First, set up all the function pointers */
+	camera->functions->get_config   = camera_config_get;
 	camera->functions->capture      = camera_capture;
 	camera->functions->summary	= camera_summary;
 	camera->functions->exit		= camera_exit;
-        camera->functions->about        = camera_about;
+	camera->functions->about        = camera_about;
 
 	/* Now, tell the filesystem where to get lists and info */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);

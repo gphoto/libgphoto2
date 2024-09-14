@@ -192,7 +192,7 @@ static int gp_port_serial_check_speed (GPPort *dev);
 GPPortType
 gp_port_library_type ()
 {
-        return (GP_PORT_SERIAL);
+	return (GP_PORT_SERIAL);
 }
 
 static int
@@ -421,8 +421,8 @@ gp_port_serial_close (GPPort *dev)
 						  "'%s' (%s)."),
 					   dev->settings.serial.port,
 					   strerror(saved_errno));
-	                return GP_ERROR_IO;
-	        }
+			return GP_ERROR_IO;
+		}
 		dev->pl->fd = 0;
 	}
 
@@ -458,7 +458,7 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 	CHECK (gp_port_serial_check_speed (dev));
 
 	len = 0;
-        while (len < size) {
+	while (len < size) {
 
 		/*
 		 * Make sure we write all data while handling
@@ -470,34 +470,34 @@ gp_port_serial_write (GPPort *dev, const char *bytes, int size)
 			switch (saved_errno) {
 			case EAGAIN:
 			case EINTR:
-                                ret = 0;
-                                break;
-                        default:
+				ret = 0;
+				break;
+			default:
 				gp_port_set_error (dev, _("Could not write "
 							  "to port (%s)"),
 						   strerror(saved_errno));
-                                return GP_ERROR_IO_WRITE;
-                        }
+				return GP_ERROR_IO_WRITE;
+			}
 		}
 		len += ret;
-        }
+	}
 
-        /* wait till all bytes are really sent */
+	/* wait till all bytes are really sent */
 #ifdef HAVE_TERMIOS_H
-        tcdrain (dev->pl->fd);
+	tcdrain (dev->pl->fd);
 #else
-        ioctl (dev->pl->fd, TCDRAIN, 0);
+	ioctl (dev->pl->fd, TCDRAIN, 0);
 #endif
-        return len;
+	return len;
 }
 
 
 static int
 gp_port_serial_read (GPPort *dev, char *bytes, int size)
 {
-        struct timeval timeout;
-        fd_set readfs;          /* file descriptor set */
-        int readen = 0, now;
+	struct timeval timeout;
+	fd_set readfs;          /* file descriptor set */
+	int readen = 0, now;
 
 	C_PARAMS (dev);
 
@@ -508,18 +508,18 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 	/* Make sure we are operating at the specified speed */
 	CHECK (gp_port_serial_check_speed (dev));
 
-        FD_ZERO (&readfs);
-        FD_SET (dev->pl->fd, &readfs);
+	FD_ZERO (&readfs);
+	FD_SET (dev->pl->fd, &readfs);
 
-        while (readen < size) {
+	while (readen < size) {
 
 		/* Set timeout value within input loop */
-                timeout.tv_usec = (dev->timeout % 1000) * 1000;
-                timeout.tv_sec = (dev->timeout / 1000);
+		timeout.tv_usec = (dev->timeout % 1000) * 1000;
+		timeout.tv_sec = (dev->timeout / 1000);
 
 		/* Any data available? */
-                if (!select (dev->pl->fd + 1, &readfs, NULL, NULL, &timeout))
-                        return GP_ERROR_TIMEOUT;
+		if (!select (dev->pl->fd + 1, &readfs, NULL, NULL, &timeout))
+			return GP_ERROR_TIMEOUT;
 		if (!FD_ISSET (dev->pl->fd, &readfs))
 			return (GP_ERROR_TIMEOUT);
 
@@ -566,38 +566,38 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 		}
 		bytes += now;
 		readen += now;
-        }
+	}
 
-        return readen;
+	return readen;
 }
 
 #ifdef HAVE_TERMIOS_H
 static int
 get_termios_bit (GPPort *dev, GPPin pin, int *bit)
 {
-        switch (pin) {
-        case GP_PIN_RTS:
-                *bit = TIOCM_RTS;
-                break;
-        case GP_PIN_DTR:
-                *bit = TIOCM_DTR;
-                break;
-        case GP_PIN_CTS:
-                *bit = TIOCM_CTS;
-                break;
-        case GP_PIN_DSR:
-                *bit = TIOCM_DSR;
-                break;
-        case GP_PIN_CD:
-                *bit = TIOCM_CD;
-                break;
-        case GP_PIN_RING:
-                *bit = TIOCM_RNG;
-                break;
-        default:
-                gp_port_set_error (dev, _("Unknown pin %i."), pin);
-                return GP_ERROR_IO;
-        }
+	switch (pin) {
+	case GP_PIN_RTS:
+		*bit = TIOCM_RTS;
+		break;
+	case GP_PIN_DTR:
+		*bit = TIOCM_DTR;
+		break;
+	case GP_PIN_CTS:
+		*bit = TIOCM_CTS;
+		break;
+	case GP_PIN_DSR:
+		*bit = TIOCM_DSR;
+		break;
+	case GP_PIN_CD:
+		*bit = TIOCM_CD;
+		break;
+	case GP_PIN_RING:
+		*bit = TIOCM_RNG;
+		break;
+	default:
+		gp_port_set_error (dev, _("Unknown pin %i."), pin);
+		return GP_ERROR_IO;
+	}
 	return (GP_OK);
 }
 #endif
@@ -615,43 +615,43 @@ gp_port_serial_get_pin (GPPort *dev, GPPin pin, GPLevel *level)
 
 #ifdef HAVE_TERMIOS_H
 	CHECK (get_termios_bit (dev, pin, &bit));
-        if (ioctl (dev->pl->fd, TIOCMGET, &j) < 0) {
+	if (ioctl (dev->pl->fd, TIOCMGET, &j) < 0) {
 		int saved_errno = errno;
 		gp_port_set_error (dev, _("Could not get level of pin %i "
-					  "(%s)."),
-				   pin, strerror(saved_errno));
-                return GP_ERROR_IO;
-        }
-        *level = j & bit;
+			"(%s)."),
+			pin, strerror(saved_errno));
+		return GP_ERROR_IO;
+	}
+	*level = j & bit;
 #else
 # ifdef __GCC__
-#  warning ACCESSING PINS IS NOT IMPLEMENTED FOR NON-TERMIOS SYSTEMS!
+	#  warning ACCESSING PINS IS NOT IMPLEMENTED FOR NON-TERMIOS SYSTEMS!
 # endif
 #endif
 
-        return (GP_OK);
+		return (GP_OK);
 }
 
 static int
 gp_port_serial_set_pin (GPPort *dev, GPPin pin, GPLevel level)
 {
 #ifdef HAVE_TERMIOS_H
-        int bit, request;
+	int bit, request;
 #endif
 
 	C_PARAMS (dev);
 
 #ifdef HAVE_TERMIOS_H
 	CHECK (get_termios_bit (dev, pin, &bit));
-        switch (level) {
+	switch (level) {
 	case GP_LEVEL_LOW:
 		request = TIOCMBIS;
 		break;
 	default:
 		request = TIOCMBIC;
 		break;
-        }
-        if (ioctl (dev->pl->fd, request, &bit) < 0) {
+	}
+	if (ioctl (dev->pl->fd, request, &bit) < 0) {
 		int saved_errno = errno;
 		gp_port_set_error (dev, _("Could not set level of pin %i to "
 					  "%i (%s)."),
@@ -664,7 +664,7 @@ gp_port_serial_set_pin (GPPort *dev, GPPin pin, GPLevel level)
 # endif
 #endif
 
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -698,53 +698,53 @@ static speed_t
 gp_port_serial_baudconv (int baudrate)
 {
 #define BAUDCASE(x)     case (x): { ret = B##x; break; }
-        speed_t ret;
+	speed_t ret;
 
-        switch (baudrate) {
+	switch (baudrate) {
 
-                /* POSIX defined baudrates */
-                BAUDCASE(0);
-                BAUDCASE(50);
-                BAUDCASE(75);
-                BAUDCASE(110);
-                BAUDCASE(134);
-                BAUDCASE(150);
-                BAUDCASE(200);
-                BAUDCASE(300);
-                BAUDCASE(600);
-                BAUDCASE(1200);
-                BAUDCASE(1800);
-                BAUDCASE(2400);
-                BAUDCASE(4800);
-                BAUDCASE(9600);
-                BAUDCASE(19200);
-                BAUDCASE(38400);
+		/* POSIX defined baudrates */
+		BAUDCASE(0);
+		BAUDCASE(50);
+		BAUDCASE(75);
+		BAUDCASE(110);
+		BAUDCASE(134);
+		BAUDCASE(150);
+		BAUDCASE(200);
+		BAUDCASE(300);
+		BAUDCASE(600);
+		BAUDCASE(1200);
+		BAUDCASE(1800);
+		BAUDCASE(2400);
+		BAUDCASE(4800);
+		BAUDCASE(9600);
+		BAUDCASE(19200);
+		BAUDCASE(38400);
 
-                /* non POSIX values */
+		/* non POSIX values */
 #ifdef B7200
-                BAUDCASE(7200);
+		BAUDCASE(7200);
 #endif
 #ifdef B14400
-                BAUDCASE(14400);
+		BAUDCASE(14400);
 #endif
 #ifdef B28800
-                BAUDCASE(28800);
+		BAUDCASE(28800);
 #endif
 #ifdef B57600
-                BAUDCASE(57600);
+		BAUDCASE(57600);
 #endif
 #ifdef B115200
-                BAUDCASE(115200);
+		BAUDCASE(115200);
 #endif
 #ifdef B230400
-                BAUDCASE(230400);
+		BAUDCASE(230400);
 #endif
-        default:
+	default:
 		ret = (speed_t) baudrate;
 		GP_LOG_D ("Baudrate %d unknown - using as is", baudrate);
-        }
+	}
 
-        return ret;
+	return ret;
 #undef BAUDCASE
 }
 
@@ -774,28 +774,28 @@ gp_port_serial_check_speed (GPPort *dev)
 	speed = gp_port_serial_baudconv (dev->settings.serial.speed);
 
 #ifdef HAVE_TERMIOS_H
-        if (tcgetattr(dev->pl->fd, &tio) < 0) {
+	if (tcgetattr(dev->pl->fd, &tio) < 0) {
 		gp_port_set_error (dev, _("Could not set the baudrate to %d"),
 				   dev->settings.serial.speed);
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
-        tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;
+		return GP_ERROR_IO_SERIAL_SPEED;
+	}
+	tio.c_cflag = (tio.c_cflag & ~CSIZE) | CS8;
 
-        /* Set into raw, no echo mode */
-        tio.c_iflag &= ~(IGNBRK | IGNCR | INLCR | ICRNL |
-                         IXANY | IXON | IXOFF | INPCK | ISTRIP);
+	/* Set into raw, no echo mode */
+	tio.c_iflag &= ~(IGNBRK | IGNCR | INLCR | ICRNL |
+			 IXANY | IXON | IXOFF | INPCK | ISTRIP);
 #ifdef IUCLC
-        tio.c_iflag &= ~IUCLC;
+	tio.c_iflag &= ~IUCLC;
 #endif
-        tio.c_iflag |= (BRKINT | IGNPAR);
-        tio.c_oflag &= ~OPOST;
-        tio.c_lflag &= ~(ICANON | ISIG | ECHO | ECHONL | ECHOE |
-                         ECHOK | IEXTEN);
-        tio.c_cflag &= ~(CRTSCTS | PARENB | PARODD);
-        tio.c_cflag |= CLOCAL | CREAD;
+	tio.c_iflag |= (BRKINT | IGNPAR);
+	tio.c_oflag &= ~OPOST;
+	tio.c_lflag &= ~(ICANON | ISIG | ECHO | ECHONL | ECHOE |
+			 ECHOK | IEXTEN);
+	tio.c_cflag &= ~(CRTSCTS | PARENB | PARODD);
+	tio.c_cflag |= CLOCAL | CREAD;
 
-        tio.c_cc[VMIN] = 1;
-        tio.c_cc[VTIME] = 0;
+	tio.c_cc[VMIN] = 1;
+	tio.c_cc[VTIME] = 0;
 
 	if (dev->settings.serial.parity != GP_PORT_SERIAL_PARITY_OFF) {
 	    GP_LOG_D ("Setting parity to %s...", dev->settings.serial.parity == GP_PORT_SERIAL_PARITY_ODD?"odd":"even");
@@ -809,16 +809,16 @@ gp_port_serial_check_speed (GPPort *dev)
 	/* Set the new speed. */
 	cfsetispeed (&tio, speed);
 	cfsetospeed (&tio, speed);
-        if (tcsetattr (dev->pl->fd, TCSANOW, &tio) < 0) {
+	if (tcsetattr (dev->pl->fd, TCSANOW, &tio) < 0) {
 		GP_LOG_E ("Error on 'tcsetattr'.");
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
+		return GP_ERROR_IO_SERIAL_SPEED;
+	}
 
 	/* Clear O_NONBLOCK. */
-        if (fcntl (dev->pl->fd, F_SETFL, 0) < 0) {
+	if (fcntl (dev->pl->fd, F_SETFL, 0) < 0) {
 		GP_LOG_E ("Error on 'fcntl'.");
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
+		return GP_ERROR_IO_SERIAL_SPEED;
+	}
 
 	/*
 	 * Verify if the speed change has been successful.
@@ -841,23 +841,23 @@ gp_port_serial_check_speed (GPPort *dev)
 	}
 
 #else /* !HAVE_TERMIOS_H */
-        if (ioctl (dev->pl->fd, TIOCGETP, &ttyb) < 0) {
-                perror("ioctl(TIOCGETP)");
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
-        ttyb.sg_ispeed = dev->settings.serial.speed;
-        ttyb.sg_ospeed = dev->settings.serial.speed;
-        ttyb.sg_flags = 0;
+	if (ioctl (dev->pl->fd, TIOCGETP, &ttyb) < 0) {
+		perror("ioctl(TIOCGETP)");
+		return GP_ERROR_IO_SERIAL_SPEED;
+	}
+	ttyb.sg_ispeed = dev->settings.serial.speed;
+	ttyb.sg_ospeed = dev->settings.serial.speed;
+	ttyb.sg_flags = 0;
 
-        if (ioctl (dev->pl->fd, TIOCSETP, &ttyb) < 0) {
-                perror("ioctl(TIOCSETP)");
-                return GP_ERROR_IO_SERIAL_SPEED;
-        }
+	if (ioctl (dev->pl->fd, TIOCSETP, &ttyb) < 0) {
+		perror("ioctl(TIOCSETP)");
+		return GP_ERROR_IO_SERIAL_SPEED;
+	}
 #endif
 
 	dev->pl->baudrate = dev->settings.serial.speed;
 	dev->pl->parity = dev->settings.serial.parity;
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -880,17 +880,17 @@ gp_port_serial_send_break (GPPort *dev, int duration)
 	/* Make sure we are operating at the specified speed */
 	CHECK (gp_port_serial_check_speed (dev));
 
-        /* Duration is in milliseconds */
+	/* Duration is in milliseconds */
 #ifdef HAVE_TERMIOS_H
-        tcsendbreak (dev->pl->fd, duration / 310);
-        tcdrain (dev->pl->fd);
+	tcsendbreak (dev->pl->fd, duration / 310);
+	tcdrain (dev->pl->fd);
 #else
 # ifdef __GCC__
 #  warning SEND BREAK NOT IMPLEMENTED FOR NON TERMIOS SYSTEMS!
 # endif
 #endif
 
-        return GP_OK;
+	return GP_OK;
 }
 
 GPPortOperations *
@@ -898,22 +898,22 @@ gp_port_library_operations ()
 {
 	GPPortOperations *ops;
 
-        ops = malloc (sizeof (GPPortOperations));
+	ops = malloc (sizeof (GPPortOperations));
 	if (!ops)
 		return (NULL);
-        memset (ops, 0, sizeof (GPPortOperations));
+	memset (ops, 0, sizeof (GPPortOperations));
 
-        ops->init   = gp_port_serial_init;
-        ops->exit   = gp_port_serial_exit;
-        ops->open   = gp_port_serial_open;
-        ops->close  = gp_port_serial_close;
-        ops->read   = gp_port_serial_read;
-        ops->write  = gp_port_serial_write;
-        ops->update = gp_port_serial_update;
-        ops->get_pin = gp_port_serial_get_pin;
-        ops->set_pin = gp_port_serial_set_pin;
-        ops->send_break = gp_port_serial_send_break;
-        ops->flush  = gp_port_serial_flush;
+	ops->init   = gp_port_serial_init;
+	ops->exit   = gp_port_serial_exit;
+	ops->open   = gp_port_serial_open;
+	ops->close  = gp_port_serial_close;
+	ops->read   = gp_port_serial_read;
+	ops->write  = gp_port_serial_write;
+	ops->update = gp_port_serial_update;
+	ops->get_pin = gp_port_serial_get_pin;
+	ops->set_pin = gp_port_serial_set_pin;
+	ops->send_break = gp_port_serial_send_break;
+	ops->flush  = gp_port_serial_flush;
 
-        return (ops);
+	return (ops);
 }

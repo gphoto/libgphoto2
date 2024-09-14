@@ -430,8 +430,8 @@ static void Set_ISO(Camera *camera,const char * ISOValue) {
 static char*
 generic_setting_getter(Camera *camera, char *type) {
 	char		*result, *s;
-        xmlDocPtr       docin;
-        xmlNodePtr      docroot, output;
+	xmlDocPtr       docin;
+	xmlNodePtr      docroot, output;
 	xmlAttr		*attr;
 	char		url[50];
 
@@ -725,8 +725,8 @@ static char*
 GetPixRange(Camera *camera, int start, int num) {
 	long		NumPix;
 	int		numreadint;
-        xmlDocPtr       docin, docin2;
-        xmlNodePtr      docroot, docroot2, output, output2, next;
+	xmlDocPtr       docin, docin2;
+	xmlNodePtr      docroot, docroot2, output, output2, next;
 	xmlChar 	*xchar, *numread;
 	char*		SoapMsg;
 	CURL 		*curl;
@@ -1089,15 +1089,15 @@ static struct aperturemap {
 static int
 camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 {
-        CameraWidget	*widget,*section;
-        int		valset;
-        unsigned int 	i;
+	CameraWidget	*widget,*section;
+	int		valset;
+	unsigned int 	i;
 	char		*val;
 
 	switchToRecMode (camera);
 
-        gp_widget_new (GP_WIDGET_WINDOW, _("Lumix Configuration"), window);
-        gp_widget_set_name (*window, "config");
+	gp_widget_new (GP_WIDGET_WINDOW, _("Lumix Configuration"), window);
+	gp_widget_set_name (*window, "config");
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Camera Settings"), &section);
 	gp_widget_set_name (section, "settings");
@@ -1367,14 +1367,14 @@ camera_config_set (Camera *camera, CameraWidget *window, GPContext *context)
 static int
 strend(const char *s, const char *t)
 {
-    size_t ls = strlen(s); // find length of s
-    size_t lt = strlen(t); // find length of t
-    if (ls >= lt)  // check if t can fit in s
-    {
-        // point s to where t should start and compare the strings from there
-        return (0 == memcmp(t, s + (ls - lt), lt));
-    }
-    return 0; // t was longer than s
+	size_t ls = strlen(s); // find length of s
+	size_t lt = strlen(t); // find length of t
+	if (ls >= lt)  // check if t can fit in s
+	{
+		// point s to where t should start and compare the strings from there
+		return (0 == memcmp(t, s + (ls - lt), lt));
+	}
+	return 0; // t was longer than s
 }
 
 static char*
@@ -1383,33 +1383,33 @@ processNode(xmlTextReaderPtr reader) {
 	char* lookupImgtag="";
 
 	switch (ReadoutMode) {
-	case 0 : //'jpg
+	case 0: //'jpg
 		lookupImgtag = "CAM_RAW_JPG";
-	break;
-	case 1 :// 'raw
+		break;
+	case 1:// 'raw
 		lookupImgtag = "CAM_RAW";
-	break;
-	case 2  ://'thumb
+		break;
+	case 2://'thumb
 		lookupImgtag = "CAM_LRGTN";
-	break;
+		break;
 	}
 
-    const xmlChar *name;
+	const xmlChar *name;
 
-    name = xmlTextReaderConstName(reader);
-    if (name == NULL)
-	name = BAD_CAST "--";
+	name = xmlTextReaderConstName(reader);
+	if (name == NULL)
+		name = BAD_CAST "--";
 
-    if (xmlTextReaderNodeType(reader) == 1) {  // Element
-	while (xmlTextReaderMoveToNextAttribute(reader)) {
-		if (strend((char*)xmlTextReaderConstValue(reader),lookupImgtag)) {
-			xmlTextReaderRead(reader);
-			ret = (char*)xmlTextReaderConstValue(reader);
-			printf("the image file is %s\n" ,ret);
+	if (xmlTextReaderNodeType(reader) == 1) {  // Element
+		while (xmlTextReaderMoveToNextAttribute(reader)) {
+			if (strend((char*)xmlTextReaderConstValue(reader), lookupImgtag)) {
+				xmlTextReaderRead(reader);
+				ret = (char*)xmlTextReaderConstValue(reader);
+				printf("the image file is %s\n", ret);
+			}
 		}
 	}
-    }
-    return ret;
+	return ret;
 }
 
 /*
@@ -1469,61 +1469,61 @@ case RAW:
 */
 static int
 add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *context, char *ximage, size_t size) {
-        int                     ret;
-        CameraFile              *file = NULL;
-        CameraFileInfo          info;
+	int                     ret;
+	CameraFile              *file = NULL;
+	CameraFileInfo          info;
 
-        ret = gp_file_new(&file);
-        if (ret!=GP_OK) return ret;
-        gp_file_set_mtime (file, time(NULL));
-        strcpy(info.file.type, GP_MIME_JPEG);
+	ret = gp_file_new(&file);
+	if (ret!=GP_OK) return ret;
+	gp_file_set_mtime (file, time(NULL));
+	strcpy(info.file.type, GP_MIME_JPEG);
 
-        GP_LOG_D ("setting size");
-        ret = gp_file_set_data_and_size(file, ximage, size);
-        if (ret != GP_OK) {
-                gp_file_free (file);
-                return ret;
-        }
-        GP_LOG_D ("append to fs");
-        ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
-        if (ret != GP_OK) {
-                gp_file_free (file);
-                return ret;
-        }
-        GP_LOG_D ("adding filedata to fs");
-        ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
-        if (ret != GP_OK) {
-                gp_file_free (file);
-                return ret;
-        }
+	GP_LOG_D ("setting size");
+	ret = gp_file_set_data_and_size(file, ximage, size);
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
+	GP_LOG_D ("append to fs");
+	ret = gp_filesystem_append(camera->fs, path->folder, path->name, context);
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
+	GP_LOG_D ("adding filedata to fs");
+	ret = gp_filesystem_set_file_noop(camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+	if (ret != GP_OK) {
+		gp_file_free (file);
+		return ret;
+	}
 
-        /* We have now handed over the file, disclaim responsibility by unref. */
-        gp_file_unref (file);
+	/* We have now handed over the file, disclaim responsibility by unref. */
+	gp_file_unref (file);
 
-        /* we also get the fs info for free, so just set it */
-        info.file.fields = GP_FILE_INFO_TYPE |
-                        /*GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |*/
-                        GP_FILE_INFO_SIZE /*| GP_FILE_INFO_MTIME */ ;
-        strcpy(info.file.type, GP_MIME_JPEG);
+	/* we also get the fs info for free, so just set it */
+	info.file.fields = GP_FILE_INFO_TYPE |
+		/*GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |*/
+		GP_FILE_INFO_SIZE /*| GP_FILE_INFO_MTIME */;
+	strcpy(info.file.type, GP_MIME_JPEG);
 
-        info.preview.fields = 0; /* so far none */
-/*
-        info.file.width         = oi->ImagePixWidth;
-        info.file.height        = oi->ImagePixHeight;
-        info.file.size          = oi->ObjectCompressedSize;
-        info.file.mtime         = time(NULL);
+	info.preview.fields = 0; /* so far none */
+	/*
+	info.file.width         = oi->ImagePixWidth;
+	info.file.height        = oi->ImagePixHeight;
+	info.file.size          = oi->ObjectCompressedSize;
+	info.file.mtime         = time(NULL);
 
-        info.preview.fields = GP_FILE_INFO_TYPE |
-                        GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
-                        GP_FILE_INFO_SIZE;
-        strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, oi->ThumbFormat);
-        info.preview.width      = oi->ThumbPixWidth;
-        info.preview.height     = oi->ThumbPixHeight;
-        info.preview.size       = oi->ThumbCompressedSize;
-*/
+	info.preview.fields = GP_FILE_INFO_TYPE |
+			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
+			GP_FILE_INFO_SIZE;
+	strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, oi->ThumbFormat);
+	info.preview.width      = oi->ThumbPixWidth;
+	info.preview.height     = oi->ThumbPixHeight;
+	info.preview.size       = oi->ThumbCompressedSize;
+	*/
 
-        GP_LOG_D ("setting fileinfo in fs");
-        return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
+	GP_LOG_D ("setting fileinfo in fs");
+	return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 }
 
 static int
@@ -1540,10 +1540,10 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 	reader = xmlReaderForDoc((xmlChar*)GetPixRange(camera,NumberPix(camera)-1,1), NULL,"noname.xml", XML_PARSE_DTDATTR |  /* default DTD attributes */ XML_PARSE_NOENT);
 	ret = xmlTextReaderRead(reader);
 	while (ret == 1) {
-	    imageURL = processNode(reader);
-            if (strlen(imageURL))
-		break;
-            ret = xmlTextReaderRead(reader);
+		imageURL = processNode(reader);
+		if (strlen(imageURL))
+			break;
+		ret = xmlTextReaderRead(reader);
 	}
 
 	GP_DEBUG("the image URL is  %s\n",imageURL);

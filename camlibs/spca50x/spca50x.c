@@ -180,7 +180,7 @@ spca50x_capture (CameraPrivateLibrary * lib)
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	sleep (2);
 #endif
-        CHECK (gp_port_usb_msg_write
+	CHECK (gp_port_usb_msg_write
 		(lib->gpdev, 0x06, 0x0000, 0x0003, NULL, 0));
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
 	sleep (3);

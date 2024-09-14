@@ -378,10 +378,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 	case GP_FILE_TYPE_EXIF:
 		msg = _("Downloading EXIF data...");
-		if (!strstr(filename,".JPG") && !strstr(filename,".jpg")) {
-			gp_context_error (context,_("No EXIF data available for %s."),
-                                          filename);
-                        ret = GP_ERROR_FILE_NOT_FOUND;
+		if (!strstr(filename, ".JPG") && !strstr(filename, ".jpg")) {
+			gp_context_error (context, _("No EXIF data available for %s."),
+				filename);
+			ret = GP_ERROR_FILE_NOT_FOUND;
 			goto out;
 		}
 		cmd = aprintf("-SRET %s", filename);
@@ -397,9 +397,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (seek == -2) {
 			/* FIXME: pretty bad, the camera has some time out problems
 			 * if this happens */
-			gp_context_error (context,_("No EXIF data available for %s."),
-                                          filename);
-                        ret = GP_ERROR_FILE_NOT_FOUND;
+			gp_context_error (context, _("No EXIF data available for %s."),
+				filename);
+			ret = GP_ERROR_FILE_NOT_FOUND;
 			g3_channel_read(camera->port, &channel, &reply, &len); /* reply */
 			goto out;
 		}
@@ -844,7 +844,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 				time = (ubuf[n*32+14]) | (ubuf[n*32+15]<<8);
 
 				/* from kernel fs/fat/, time_dos2unix. */
-        			month = ((date >> 5) - 1) & 15;
+				month = ((date >> 5) - 1) & 15;
 				year = date >> 9;
 				info.file.mtime =
 					(time & 31)*2+60*((time >> 5) & 63)+
@@ -885,18 +885,18 @@ camera_init (Camera *camera, GPContext *context)
 	/*char *buf;*/
 	GPPortSettings settings;
 
-        /* First, set up all the needed function pointers */
-        camera->functions->summary              = camera_summary;
-        camera->functions->about                = camera_about;
+	/* First, set up all the needed function pointers */
+	camera->functions->summary              = camera_summary;
+	camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
 
-        gp_port_get_settings(camera->port, &settings);
+	gp_port_get_settings(camera->port, &settings);
 	settings.usb.inep = 0x81;
 	settings.usb.outep = 0x02;
 	settings.usb.intep = 0x83;
-        gp_port_set_settings(camera->port, settings);
+	gp_port_set_settings(camera->port, settings);
 	/*
 	 * The port is already provided with camera->port (and
 	 * already open). You just have to use functions like

@@ -52,7 +52,7 @@ GPPortType
 gp_port_library_type (void)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
-        return GP_PORT_USB;
+	return GP_PORT_USB;
 }
 
 int
@@ -176,16 +176,16 @@ static int
 gp_port_vusb_reset(GPPort *port)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
-        C_PARAMS (port && port->pl);
+	C_PARAMS (port && port->pl);
 
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
 gp_port_vusb_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
-        C_PARAMS (port && port->pl && timeout >= 0);
+	C_PARAMS (port && port->pl && timeout >= 0);
 
 	return port->pl->vcamera->readint(port->pl->vcamera, (unsigned char*)bytes, size, timeout);
 }
@@ -200,28 +200,28 @@ gp_port_vusb_update (GPPort *port)
 static int
 gp_port_vusb_clear_halt_lib(GPPort *port, int ep)
 {
-        unsigned char internal_ep;
+	unsigned char internal_ep;
 
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
-        C_PARAMS (port && port->pl);
+	C_PARAMS (port && port->pl);
 
-        switch (ep) {
-        case GP_PORT_USB_ENDPOINT_IN :
-                internal_ep = port->settings.usb.inep;
-                break;
-        case GP_PORT_USB_ENDPOINT_OUT :
-                internal_ep = port->settings.usb.outep;
-                break;
-        case GP_PORT_USB_ENDPOINT_INT :
-                internal_ep = port->settings.usb.intep;
-                break;
-        default:
-                gp_port_set_error (port, "Bad EndPoint argument 0x%x", ep);
-                return GP_ERROR_BAD_PARAMETERS;
-        }
+	switch (ep) {
+	case GP_PORT_USB_ENDPOINT_IN :
+		internal_ep = port->settings.usb.inep;
+		break;
+	case GP_PORT_USB_ENDPOINT_OUT :
+		internal_ep = port->settings.usb.outep;
+		break;
+	case GP_PORT_USB_ENDPOINT_INT :
+		internal_ep = port->settings.usb.intep;
+		break;
+	default:
+		gp_port_set_error (port, "Bad EndPoint argument 0x%x", ep);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
 	gp_log(GP_LOG_DEBUG,"gp_port_vusb_clear_halt_lib","clearing halt on ep 0x%x", internal_ep);
 	/* now clear halt */
-        return GP_OK;
+	return GP_OK;
 }
 
 /* The next two functions support the nonstandard request types 0x41 (write)
@@ -229,16 +229,16 @@ gp_port_vusb_clear_halt_lib(GPPort *port, int ep)
  */
 static int
 gp_port_vusb_msg_interface_write_lib(GPPort *port, int request,
-        int value, int index, char *bytes, int size)
+	int value, int index, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
-        return GP_OK;
+	return GP_OK;
 }
 
 
 static int
 gp_port_vusb_msg_interface_read_lib(GPPort *port, int request,
-        int value, int index, char *bytes, int size)
+	int value, int index, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(req=%x, value=%x, index=%d, size=%d)", request, value, index, size);
 	return port->pl->vcamera->read(port->pl->vcamera, 0x81, (unsigned char*)bytes, size);
@@ -250,7 +250,7 @@ gp_port_vusb_msg_interface_read_lib(GPPort *port, int request,
  */
 static int
 gp_port_vusb_msg_class_write_lib(GPPort *port, int request,
-        int value, int index, char *bytes, int size)
+	int value, int index, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 	return GP_OK;
@@ -260,16 +260,16 @@ gp_port_vusb_msg_class_write_lib(GPPort *port, int request,
 
 static int
 gp_port_vusb_msg_class_read_lib(GPPort *port, int request,
-        int value, int index, char *bytes, int size)
+	int value, int index, char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
-        return GP_OK;	/* or bytes */
+	return GP_OK;	/* or bytes */
 }
 
 
 static int
 gp_port_vusb_msg_write_lib(GPPort *port, int request, int value, int index,
-        char *bytes, int size)
+	char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
 	return GP_OK;
@@ -277,7 +277,7 @@ gp_port_vusb_msg_write_lib(GPPort *port, int request, int value, int index,
 
 static int
 gp_port_vusb_msg_read_lib(GPPort *port, int request, int value, int index,
-        char *bytes, int size)
+	char *bytes, int size)
 {
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(req=%x, value=%x, index=%x, size=%d)", request, value, index, size);
 	return port->pl->vcamera->read(port->pl->vcamera, index, (unsigned char*)bytes, size);
@@ -321,18 +321,18 @@ gp_port_vusb_find_device_lib(GPPort *port, int idvendor, int idproduct)
 
 	if ((idvendor == vendor) && (idproduct == product)) {
 #endif
-                port->settings.usb.config	= 1;
-                port->settings.usb.interface	= 1;
-                port->settings.usb.altsetting	= 1;
+		port->settings.usb.config	= 1;
+		port->settings.usb.interface	= 1;
+		port->settings.usb.altsetting	= 1;
 
-                port->settings.usb.inep  = 0x81;
-                port->settings.usb.outep = 0x02;
-                port->settings.usb.intep = 0x83;
-                port->settings.usb.maxpacketsize = 512;
+		port->settings.usb.inep  = 0x81;
+		port->settings.usb.outep = 0x02;
+		port->settings.usb.intep = 0x83;
+		port->settings.usb.maxpacketsize = 512;
 		return GP_OK;
 	}
 	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(0x%04x,0x%04x)", idvendor, idproduct);
-        return GP_ERROR_IO_USB_FIND;
+	return GP_ERROR_IO_USB_FIND;
 }
 
 static int
@@ -342,18 +342,18 @@ gp_port_vusb_find_device_by_class_lib(GPPort *port, int class, int subclass, int
 
 #ifdef FUZZ_PTP
 	if ((class == 6) && (subclass == 1) && (protocol == 1)) {
-                port->settings.usb.config	= 1;
-                port->settings.usb.interface	= 1;
-                port->settings.usb.altsetting	= 1;
+		port->settings.usb.config	= 1;
+		port->settings.usb.interface	= 1;
+		port->settings.usb.altsetting	= 1;
 
-                port->settings.usb.inep  = 0x81;
-                port->settings.usb.outep = 0x02;
-                port->settings.usb.intep = 0x83;
-                port->settings.usb.maxpacketsize = 512;
+		port->settings.usb.inep  = 0x81;
+		port->settings.usb.outep = 0x02;
+		port->settings.usb.intep = 0x83;
+		port->settings.usb.maxpacketsize = 512;
 		return GP_OK;
 	}
 #endif
-        return GP_ERROR_IO_USB_FIND;
+	return GP_ERROR_IO_USB_FIND;
 }
 
 
@@ -376,20 +376,20 @@ gp_port_library_operations (void)
 	ops->write	= gp_port_vusb_write;
 	ops->reset	= gp_port_vusb_reset;
 
-        ops->check_int 	= gp_port_vusb_check_int;
-        ops->update 	= gp_port_vusb_update;
-        ops->clear_halt = gp_port_vusb_clear_halt_lib;
-        ops->msg_write  = gp_port_vusb_msg_write_lib;
-        ops->msg_read   = gp_port_vusb_msg_read_lib;
+	ops->check_int 	= gp_port_vusb_check_int;
+	ops->update 	= gp_port_vusb_update;
+	ops->clear_halt = gp_port_vusb_clear_halt_lib;
+	ops->msg_write  = gp_port_vusb_msg_write_lib;
+	ops->msg_read   = gp_port_vusb_msg_read_lib;
 
-        ops->msg_interface_write	= gp_port_vusb_msg_interface_write_lib;
-        ops->msg_interface_read		= gp_port_vusb_msg_interface_read_lib;
-        ops->msg_class_write  		= gp_port_vusb_msg_class_write_lib;
-        ops->msg_class_read   		= gp_port_vusb_msg_class_read_lib;
-        ops->send_scsi_cmd   		= gp_port_vusb_send_scsi_cmd;
-        ops->seek   			= gp_port_vusb_seek;
+	ops->msg_interface_write	= gp_port_vusb_msg_interface_write_lib;
+	ops->msg_interface_read		= gp_port_vusb_msg_interface_read_lib;
+	ops->msg_class_write  		= gp_port_vusb_msg_class_write_lib;
+	ops->msg_class_read   		= gp_port_vusb_msg_class_read_lib;
+	ops->send_scsi_cmd   		= gp_port_vusb_send_scsi_cmd;
+	ops->seek   			= gp_port_vusb_seek;
 
-        ops->find_device 		= gp_port_vusb_find_device_lib;
-        ops->find_device_by_class	= gp_port_vusb_find_device_by_class_lib;
+	ops->find_device 		= gp_port_vusb_find_device_lib;
+	ops->find_device_by_class	= gp_port_vusb_find_device_by_class_lib;
 	return ops;
 }

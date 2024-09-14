@@ -263,11 +263,11 @@ void mdc800_createDialog (void )
 
 	/* done with the widgets */
 
-   toggle = gtk_toggle_button_new();
+	toggle = gtk_toggle_button_new();
 	gtk_widget_show(toggle);
 	gtk_widget_hide(toggle);
-        gtk_box_pack_start(GTK_BOX(GTK_DIALOG(mdc800_dialog.dialog)->action_area),
-                           toggle, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(GTK_DIALOG(mdc800_dialog.dialog)->action_area),
+		toggle, TRUE, TRUE, 0);
 
 	mdc800_dialog.save_button = gtk_button_new_with_label("Save");
 	gtk_widget_show(mdc800_dialog.save_button);
@@ -359,7 +359,7 @@ int mdc800_setupDialog (void)
 	/* Baudrate */
 	if (!mdc800_io_using_usb) {
 		int speed;
-	        mdc800_getSpeed(camera,&speed);
+		mdc800_getSpeed (camera, &speed);
 		mdc800_ComboBox_SetEntry (mdc800_dialog.baud, mdc800_baud_rate_string, speed);
 	}
 
@@ -408,12 +408,12 @@ int mdc800_setupConfig (void)
 	value = mdc800_ComboBox_GetEntry (mdc800_dialog.light, mdc800_wb_string,4);
 	switch (value)
 	{
-		case 0: value=1; break;
-		case 1: value=2; break;
-		case 2: value=4; break;
-		case 3: value=8; break;
-		default:
-			return -1;
+	case 0: value=1; break;
+	case 1: value=2; break;
+	case 2: value=4; break;
+	case 3: value=8; break;
+	default:
+		return -1;
 	}
 	if (!mdc800_setWB (value))
 		return -1;
@@ -422,9 +422,9 @@ int mdc800_setupConfig (void)
 
 	/* Set LCD ON/OFF... */
 	if (GTK_WIDGET_STATE(mdc800_dialog.lcd_on) == GTK_STATE_ACTIVE)
-	  	mdc800_enableLCD (1);
+		mdc800_enableLCD (1);
 	else
-	  	mdc800_enableLCD (0);
+		mdc800_enableLCD (0);
 	update_progress(62);
 
 

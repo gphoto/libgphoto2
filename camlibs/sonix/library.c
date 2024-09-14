@@ -160,7 +160,7 @@ static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
                 void *data, GPContext *context)
 {
-        Camera *camera = data;
+	Camera *camera = data;
 	int i = 0;
 	char name[16];
 	int(avitype);
@@ -366,25 +366,25 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 					sonix_decode (frame_data,
 					data+offset+CAM_OFFSET, w, h);
 					sonix_cols_reverse(frame_data, w, h);
-                                        gp_ahd_decode(frame_data, w, h, ptr+
-                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
-                                                            BAYER_TILE_GBRG);
+					gp_ahd_decode(frame_data, w, h, ptr+
+						SAKAR_AVI_FRAME_HEADER_LENGTH,
+						BAYER_TILE_GBRG);
 					break;
 				case DECOMP:
 					sonix_decode (frame_data,
-					data+offset+CAM_OFFSET, w, h);
+						data+offset+CAM_OFFSET, w, h);
 					sonix_rows_reverse(frame_data, w, h);
-                                        gp_ahd_decode(frame_data, w, h, ptr+
-                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
-                                                            BAYER_TILE_GRBG);
+					gp_ahd_decode(frame_data, w, h, ptr+
+						SAKAR_AVI_FRAME_HEADER_LENGTH,
+						BAYER_TILE_GRBG);
 					break;
 				default:
 					memcpy(frame_data, data + offset
-					    +CAM_OFFSET, frame_size);
+						+CAM_OFFSET, frame_size);
 					sonix_rows_reverse(frame_data, w, h);
-                                        gp_ahd_decode(frame_data, w, h, ptr+
-                                            SAKAR_AVI_FRAME_HEADER_LENGTH,
-                                                            BAYER_TILE_GRBG);
+					gp_ahd_decode(frame_data, w, h, ptr+
+						SAKAR_AVI_FRAME_HEADER_LENGTH,
+						BAYER_TILE_GRBG);
 				}
 				white_balance(ptr+SAKAR_AVI_FRAME_HEADER_LENGTH,
 						w * h, 1.2);
@@ -431,15 +431,15 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			if (camera->pl->post&REVERSE) {
 			sonix_decode (p_data, data+CAM_OFFSET, w, h);
 			sonix_byte_reverse(p_data, w*h);
-                        gp_ahd_decode(p_data, w, h, ptr, BAYER_TILE_BGGR);
+			gp_ahd_decode(p_data, w, h, ptr, BAYER_TILE_BGGR);
 			break;
 		case DECOMP:
 			sonix_decode (p_data, data+CAM_OFFSET, w, h);
-                        gp_ahd_decode(p_data, w, h, ptr, BAYER_TILE_RGGB);
+			gp_ahd_decode(p_data, w, h, ptr, BAYER_TILE_RGGB);
 			break;
 		default:
 			memcpy (p_data, data+CAM_OFFSET, w*h);
-                        gp_ahd_decode(p_data, w, h, ptr, BAYER_TILE_RGGB);
+			gp_ahd_decode(p_data, w, h, ptr, BAYER_TILE_RGGB);
 		}
 		free (p_data);
 		white_balance(ptr, w * h, 1.2);
@@ -458,7 +458,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		free(data);
 		return	GP_ERROR_NOT_SUPPORTED;
 	}
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -567,8 +567,8 @@ camera_init(Camera *camera, GPContext *context)
 	GP_DEBUG("product number is 0x%x\n", abilities.usb_product);
 
 	/* First, set up all the function pointers */
-        camera->functions->capture	= camera_capture;
-        camera->functions->manual	= camera_manual;
+	camera->functions->capture	= camera_capture;
+	camera->functions->manual	= camera_manual;
 	camera->functions->summary	= camera_summary;
 	camera->functions->about	= camera_about;
 	camera->functions->exit		= camera_exit;

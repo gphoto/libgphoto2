@@ -62,10 +62,10 @@ static char* enigma13_static_toc=NULL;
 
 static int enigma13_about (Camera *camera, CameraText *about, GPContext *context)
 {
-        strcpy (about->text, _("Download program for Digital Dream Enigma 1.3. "
-                "by <olivier@aixmarseille.com>, and adapted from spca50x driver. "
-                "Thank you, spca50x team, it was easy to port your driver on this cam! "));
-        return (GP_OK);
+	strcpy (about->text, _("Download program for Digital Dream Enigma 1.3. "
+		"by <olivier@aixmarseille.com>, and adapted from spca50x driver. "
+		"Thank you, spca50x team, it was easy to port your driver on this cam! "));
+	return (GP_OK);
 }
 
 
@@ -78,17 +78,16 @@ static int enigma13_about (Camera *camera, CameraText *about, GPContext *context
  */
 static int enigma13_detect_storage_type (Camera *camera)
 {
-        int i;
-        char buf[3];
+	int i;
+	char buf[3];
 
-        for (i=0;i<3;i++)
-        {
-                CHECK (gp_port_usb_msg_read (camera->port, 0x28, 0x0000,
-                                        i, &buf[i], 0x01));
-        }
-        gp_log(GP_LOG_DEBUG, "enigma13","Camera storage information sdram: 0x%x flash 0x%x card: 0x%x\n"
-                        , buf[0], buf[1], buf[2]);
-        return GP_OK;
+	for (i=0;i<3;i++)
+	{
+		CHECK (gp_port_usb_msg_read (camera->port, 0x28, 0x0000, i, &buf[i], 0x01));
+	}
+	gp_log(GP_LOG_DEBUG, "enigma13","Camera storage information sdram: 0x%x flash 0x%x card: 0x%x\n"
+			, buf[0], buf[1], buf[2]);
+	return GP_OK;
 }
 #endif
 
@@ -106,11 +105,11 @@ static int
 enigma13_flash_delete_all(CameraFilesystem *fs, const char *folder, void *data,
                  GPContext *context)
 {
-   Camera *cam;
-   gp_log(GP_LOG_DEBUG, "enigma13","Delete all files");
-   cam = data;
-   CHECK (gp_port_usb_msg_write (cam->port, 0x52, 0x0, 0x0, NULL, 0x0) );
-   return GP_OK;
+	Camera *cam;
+	gp_log(GP_LOG_DEBUG, "enigma13", "Delete all files");
+	cam = data;
+	CHECK (gp_port_usb_msg_write (cam->port, 0x52, 0x0, 0x0, NULL, 0x0));
+	return GP_OK;
 }
 
 
@@ -124,17 +123,15 @@ enigma13_flash_delete_all(CameraFilesystem *fs, const char *folder, void *data,
  */
 static int enigma13_wait_for_ready(Camera *camera)
 {
-        int timeout = ENIGMA13_WAIT_FOR_READY_TIMEOUT_S;
-        char ready = 1;
-        while (timeout--) {
-                sleep(1);
-                CHECK (gp_port_usb_msg_read (camera->port,
-                              0x21, 0x0000, 0x0000,
-                              (char*)&ready, 0x01));
-                if (ready==0)
-                        return GP_OK;
-        }
-        return GP_ERROR;
+	int timeout = ENIGMA13_WAIT_FOR_READY_TIMEOUT_S;
+	char ready = 1;
+	while (timeout--) {
+		sleep(1);
+		CHECK (gp_port_usb_msg_read (camera->port, 0x21, 0x0000, 0x0000, (char*)&ready, 0x01));
+		if (ready==0)
+			return GP_OK;
+	}
+	return GP_ERROR;
 }
 
 
@@ -148,14 +145,12 @@ static int enigma13_wait_for_ready(Camera *camera)
  */
 static int enigma13_get_filecount (Camera *camera, int *filecount)
 {
-        uint16_t response = 0;
-        CHECK(enigma13_wait_for_ready(camera));
-        CHECK (gp_port_usb_msg_read (camera->port,
-                             0x54, 0x0000, 0x0000,
-                             (char*)&response, 0x02));
-        le16toh (response);
-        *filecount = response;
-        return GP_OK;
+	uint16_t response = 0;
+	CHECK(enigma13_wait_for_ready(camera));
+	CHECK (gp_port_usb_msg_read (camera->port, 0x54, 0x0000, 0x0000, (char*)&response, 0x02));
+	le16toh (response);
+	*filecount = response;
+	return GP_OK;
 }
 #endif
 
@@ -169,52 +164,44 @@ static int enigma13_get_filecount (Camera *camera, int *filecount)
  */
 static int enigma13_get_toc(Camera *camera, int *filecount, char** toc)
 {
-        char* flash_toc=NULL;
-        int toc_size = 0;
-        char buf[10];
-        uint16_t response = 0;
-        int ret=1;
+	char* flash_toc=NULL;
+	int toc_size = 0;
+	char buf[10];
+	uint16_t response = 0;
+	int ret=1;
 
-        CHECK(enigma13_wait_for_ready(camera));
-        CHECK (gp_port_usb_msg_read (camera->port,
-                             0x54, 0x0000, 0x0000,
-                             (char*)&response, 0x02));
-        le16toh (response);
-        *filecount = response;
+	CHECK(enigma13_wait_for_ready(camera));
+	CHECK (gp_port_usb_msg_read (camera->port, 0x54, 0x0000, 0x0000, (char*)&response, 0x02));
+	le16toh (response);
+	*filecount = response;
 
-        /* Calc toc size */
-        toc_size = (response) * 0x20;
+	/* Calc toc size */
+	toc_size = (response) * 0x20;
 
-        if (toc_size % 0x200 != 0)
-           toc_size = ((toc_size / 0x200) + 1) * 0x200;
+	if (toc_size % 0x200 != 0)
+		toc_size = ((toc_size / 0x200) + 1) * 0x200;
 
 	CHECK(enigma13_wait_for_ready(camera));
 
-        CHECK (gp_port_usb_msg_write (camera->port, 0x54,
-                           response, 0x0001,
-                          NULL, 0x0000));
-        /* Wait until cam is ready to send the T.O.C */
+	CHECK (gp_port_usb_msg_write (camera->port, 0x54, response, 0x0001, NULL, 0x0000));
+	/* Wait until cam is ready to send the T.O.C */
 	usleep(ENIGMA13_WAIT_TOC_DELAY_MS * 1000);
 
-        CHECK (gp_port_usb_msg_read (camera->port, 0x21,
-                           0x0000, 0x0000,
-                          buf, 0x01));
-        if (buf[0]!=0x41) return GP_ERROR;
+	CHECK (gp_port_usb_msg_read (camera->port, 0x21, 0x0000, 0x0000, buf, 0x01));
+	if (buf[0]!=0x41) return GP_ERROR;
 
-        CHECK (gp_port_usb_msg_read (camera->port, 0x21,
-                           0x0000, 0x0002,
-                          buf, 0x01));
-        if (buf[0]!=0x01) return GP_ERROR;
+	CHECK (gp_port_usb_msg_read (camera->port, 0x21, 0x0000, 0x0002, buf, 0x01));
+	if (buf[0]!=0x01) return GP_ERROR;
 
 
-       flash_toc = (char*)malloc(toc_size);
-       if (!flash_toc)
-                return GP_ERROR_NO_MEMORY;
+	flash_toc = (char*)malloc(toc_size);
+	if (!flash_toc)
+		return GP_ERROR_NO_MEMORY;
 
-        ret=gp_port_read (camera->port, flash_toc, toc_size);
-        *toc= flash_toc;
+	ret=gp_port_read (camera->port, flash_toc, toc_size);
+	*toc= flash_toc;
 				gp_log(GP_LOG_DEBUG, "enigma13","Byte transferred :%d ", ret);
-        return ret;
+	return ret;
 
 }
 
@@ -313,12 +300,12 @@ static int file_list_func (CameraFilesystem *fs, const char *folder, CameraList 
 {
 	Camera *camera = data;
 	int	i, numpics;
-        char tmp[20];
+	char tmp[20];
 
-        CHECK(enigma13_get_toc(camera,&numpics,&enigma13_static_toc));
+	CHECK(enigma13_get_toc(camera,&numpics,&enigma13_static_toc));
 
 	for ( i=0; i < numpics; i=i+2 ) {
-                sprintf(tmp,"sunp%04d.jpg",(i/2));
+		sprintf(tmp,"sunp%04d.jpg",(i/2));
 		gp_list_append( list, tmp, NULL);
 	}
 	return (GP_OK);
@@ -337,30 +324,30 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 
 	Camera *camera = data;
-        int image_no, result;
+	int image_no, result;
 
 	char* img_data=NULL;
-        int   img_size=-1;
+	int   img_size=-1;
 
-        image_no = gp_filesystem_number(fs, folder, filename, context);
-        gp_log(GP_LOG_DEBUG, "enigma13","Index of image %d is %s",image_no, filename);
-        switch (type) {
-        case GP_FILE_TYPE_NORMAL:
-        {
-                gp_log(GP_LOG_DEBUG, "enigma13","Downloading raw image");
+	image_no = gp_filesystem_number(fs, folder, filename, context);
+	gp_log(GP_LOG_DEBUG, "enigma13","Index of image %d is %s",image_no, filename);
+	switch (type) {
+	case GP_FILE_TYPE_NORMAL:
+	{
+		gp_log(GP_LOG_DEBUG, "enigma13","Downloading raw image");
 
-                CHECK(enigma13_download_img(camera, enigma13_static_toc, image_no, &img_data, &img_size));
-                result = gp_file_append( file, img_data, img_size);
+		CHECK(enigma13_download_img(camera, enigma13_static_toc, image_no, &img_data, &img_size));
+		result = gp_file_append( file, img_data, img_size);
 
 		break;
 	}
 	default:
-                result = GP_ERROR_NOT_SUPPORTED;
+		result = GP_ERROR_NOT_SUPPORTED;
 		break;
-        }
-        if (result < 0)
-                return result;
-        return (GP_OK);
+	}
+	if (result < 0)
+		return result;
+	return (GP_OK);
 }
 
 int
@@ -400,16 +387,16 @@ camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 
-        camera->functions->about        = enigma13_about;
+	camera->functions->about        = enigma13_about;
 
 	CHECK(gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 	CHECK(gp_port_get_settings( camera->port, &settings));
-        settings.usb.inep = 0x82;
-        settings.usb.outep = 0x03;
-        settings.usb.config = 1;
-        settings.usb.interface = 0;
-        settings.usb.altsetting = 0;
-        CHECK(gp_port_set_timeout (camera->port, ENIGMA13_USB_TIMEOUT_MS));
+	settings.usb.inep = 0x82;
+	settings.usb.outep = 0x03;
+	settings.usb.config = 1;
+	settings.usb.interface = 0;
+	settings.usb.altsetting = 0;
+	CHECK(gp_port_set_timeout (camera->port, ENIGMA13_USB_TIMEOUT_MS));
 	CHECK(gp_port_set_settings( camera->port, settings));
 	return GP_OK;
 

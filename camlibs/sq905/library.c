@@ -73,9 +73,9 @@ static const struct {
 	{"Precision Mini Digital Camera",
 	                      GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
 	{"iConcepts digital camera" ,
-                          GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
-	{"Sakar Kidz Cam 86379",    GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770,
-								    0x9120},
+	                      GP_DRIVER_STATUS_PRODUCTION , 0x2770 , 0x9120},
+	{"Sakar Kidz Cam 86379",
+	                      GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"ViviCam3350",       GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"ViviCam5B",         GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
 	{"DC-N130ta",         GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9120},
@@ -140,8 +140,8 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *context)
 	return GP_OK;
 }
 
-static int camera_manual (Camera *camera, CameraText *manual,
-						    GPContext *context)
+static int
+camera_manual (Camera *camera, CameraText *manual, GPContext *context)
 {
 	strcpy(manual->text,
 	_(
@@ -184,7 +184,7 @@ camera_about (Camera *camera, CameraText *about, GPContext *context)
 
 static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-                void *data, GPContext *context)
+		void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int i,n;
@@ -212,7 +212,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
-		void *data, GPContext *context)
+		  void *data, GPContext *context)
 {
 	Camera *camera = data;
 	int i,n;
@@ -229,7 +229,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
-		      CameraFileInfo *info, void *data, GPContext *context)
+		CameraFileInfo *info, void *data, GPContext *context)
 {
 	memset (info, 0, sizeof(CameraFileInfo));
 	/* FIXME: fill in some stuff? */
@@ -413,7 +413,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		memcpy (rawdata, frame_data, size);
 		memcpy (rawdata+size,camera->pl->catalog+16*entry,16);
 		gp_file_set_mime_type (file, GP_MIME_RAW);
-	        gp_file_set_data_and_size (file, (char *)rawdata, size+16);
+		gp_file_set_data_and_size (file, (char *)rawdata, size+16);
 	}
 	/* Reset camera when done, for more graceful exit. */
 	if ((!(is_in_clip)&&(entry +1 == camera->pl->nb_entries))
@@ -424,8 +424,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 }
 
 static int
-delete_all_func (CameraFilesystem *fs, const char *folder, void *data,
-		 GPContext *context)
+delete_all_func (CameraFilesystem *fs, const char *folder, void *data, GPContext *context)
 {
 	Camera *camera = data;
 
@@ -452,7 +451,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		return GP_ERROR_NO_MEMORY;
 	}
 
-        sq_access_reg(camera->port, CAPTURE);
+	sq_access_reg(camera->port, CAPTURE);
 	sq_read_picture_data (camera->port, camera->pl->last_fetched_data, b);
 	frame_data = camera->pl->last_fetched_data + 0x40;
 	sq_preprocess(camera->pl->model, 1, 0, frame_data, w, h);
@@ -490,7 +489,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 	gp_file_set_data_and_size (file, (char *)ppm, size);
 
 	sq_reset(camera->port);
-        sq_access_reg(camera->port, CAPTURE);
+	sq_access_reg(camera->port, CAPTURE);
 	sq_reset(camera->port);
 
 	return (GP_OK);

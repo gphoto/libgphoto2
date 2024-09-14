@@ -10678,7 +10678,7 @@ _put_nikon_create_wifi_profile (CONFIG_PUT_ARGS)
 		if (!gp_widget_changed (subwidget))
 			continue;
 
-	        gp_widget_set_changed (subwidget, FALSE);
+		gp_widget_set_changed (subwidget, FALSE);
 
 		ret = cursub->putfunc (camera, subwidget, NULL, NULL, NULL);
 	}

@@ -337,7 +337,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	GP_DEBUG ("*** ENTER: get_file_func ***");
 
-        image_no = gp_filesystem_number(fs, folder, filename, context);
+	image_no = gp_filesystem_number(fs, folder, filename, context);
 	if (image_no < 0) return image_no;
 
 	/* Search the image informations */
@@ -425,7 +425,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	GP_DEBUG ("*** ENTER: delete_file_func ***");
 
-        image_no = gp_filesystem_number(fs, folder, filename, context);
+	image_no = gp_filesystem_number(fs, folder, filename, context);
 	if (image_no < 0) return image_no;
 
 	image_no++;
@@ -676,7 +676,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	GP_DEBUG ("*** ENTER: get_info_func ***");
 
-        image_no = gp_filesystem_number(fs, folder, filename, context);
+	image_no = gp_filesystem_number(fs, folder, filename, context);
 	if (image_no < 0)
 		return image_no;
 	image_no++;
@@ -723,8 +723,8 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
 {
 	unsigned char cmd[2], buf[INFO_BUFFER];
 	int ret;
-        CameraWidget *widget;
-        CameraWidget *section;
+	CameraWidget *widget;
+	CameraWidget *section;
 	time_t timestamp=0;
 	float value_float;
 
@@ -753,357 +753,354 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
 	/* Window creation */
 	gp_widget_new (GP_WIDGET_WINDOW, _("Konica Configuration"), window);
 
-        /************************/
-        /* Persistent Settings  */
-        /************************/
-        gp_widget_new (GP_WIDGET_SECTION, _("Persistent Settings"), &section);
-        gp_widget_append (*window, section);
+	/************************/
+	/* Persistent Settings  */
+	/************************/
+	gp_widget_new (GP_WIDGET_SECTION, _("Persistent Settings"), &section);
+	gp_widget_append (*window, section);
 
-        /* Date */
-        gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_set_value (widget, &timestamp);
+	/* Date */
+	gp_widget_new (GP_WIDGET_DATE, _("Date and Time"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_set_value (widget, &timestamp);
 
-        /* Auto Off Time */
-        gp_widget_new (GP_WIDGET_RANGE, _("Auto Off Time"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_set_range (widget, 1, 255, 1);
-        value_float = ((buf[AUTO_OFF_PTR] << 8) + buf[AUTO_OFF_PTR+1]) / 60;
-        gp_widget_set_value (widget, &value_float);
+	/* Auto Off Time */
+	gp_widget_new (GP_WIDGET_RANGE, _("Auto Off Time"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_set_range (widget, 1, 255, 1);
+	value_float = ((buf[AUTO_OFF_PTR] << 8) + buf[AUTO_OFF_PTR+1]) / 60;
+	gp_widget_set_value (widget, &value_float);
 
 
-        /* Resolution */
-        gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Low"));
-        gp_widget_add_choice (widget, _("Medium"));
-        gp_widget_add_choice (widget, _("High"));
-        switch (buf[RESOLUTION_PTR]) {
-	        case 1:
-        	        gp_widget_set_value (widget, _("High"));
-                	break;
-	        case 2:
-        	        gp_widget_set_value (widget, _("Low"));
-	               	break;
-		case 0:
-        	        gp_widget_set_value (widget, _("Medium"));
-                	break;
-        }
+	/* Resolution */
+	gp_widget_new (GP_WIDGET_RADIO, _("Resolution"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Low"));
+	gp_widget_add_choice (widget, _("Medium"));
+	gp_widget_add_choice (widget, _("High"));
+	switch (buf[RESOLUTION_PTR]) {
+	case 1:
+		gp_widget_set_value (widget, _("High"));
+		break;
+	case 2:
+		gp_widget_set_value (widget, _("Low"));
+		break;
+	case 0:
+		gp_widget_set_value (widget, _("Medium"));
+		break;
+	}
 
-        /* LCD */
-        gp_widget_new (GP_WIDGET_RADIO, _("LCD"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("On"));
-        gp_widget_add_choice (widget, _("Off"));
-        switch (buf[LCD_STATE_PTR]) {
-	        case 0:
-        	        gp_widget_set_value (widget, _("On"));
-                	break;
-	        case 1:
-        	        gp_widget_set_value (widget, _("Off"));
-                	break;
-        }
+	/* LCD */
+	gp_widget_new (GP_WIDGET_RADIO, _("LCD"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("On"));
+	gp_widget_add_choice (widget, _("Off"));
+	switch (buf[LCD_STATE_PTR]) {
+	case 0:
+		gp_widget_set_value (widget, _("On"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("Off"));
+		break;
+	}
 
-        /* Icons */
-        gp_widget_new (GP_WIDGET_RADIO, _("Icons"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("On"));
-        gp_widget_add_choice (widget, _("Off"));
-        switch (buf[ICON_STATE_PTR]) {
-	        case 0:
-        	        gp_widget_set_value (widget, _("On"));
-                	break;
-	        case 1:
-        	        gp_widget_set_value (widget, _("Off"));
-                	break;
-        }
+	/* Icons */
+	gp_widget_new (GP_WIDGET_RADIO, _("Icons"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("On"));
+	gp_widget_add_choice (widget, _("Off"));
+	switch (buf[ICON_STATE_PTR]) {
+	case 0:
+		gp_widget_set_value (widget, _("On"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("Off"));
+		break;
+	}
 
-        /****************/
-        /* Localization */
-        /****************/
-        gp_widget_new (GP_WIDGET_SECTION, _("Localization"), &section);
-        gp_widget_append (*window, section);
+	/****************/
+	/* Localization */
+	/****************/
+	gp_widget_new (GP_WIDGET_SECTION, _("Localization"), &section);
+	gp_widget_append (*window, section);
 
-        /* Date format */
-        gp_widget_new (GP_WIDGET_MENU, _("Date Format"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Month/Day/Year"));
-        gp_widget_add_choice (widget, _("Day/Month/Year"));
-        gp_widget_add_choice (widget, _("Year/Month/Day"));
+	/* Date format */
+	gp_widget_new (GP_WIDGET_MENU, _("Date Format"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Month/Day/Year"));
+	gp_widget_add_choice (widget, _("Day/Month/Year"));
+	gp_widget_add_choice (widget, _("Year/Month/Day"));
 	switch (buf[DATE_FORMAT_PTR]) {
-		case 0:
-			gp_widget_set_value (widget, _("Month/Day/Year"));
-			break;
-		case 1:
-			gp_widget_set_value (widget, _("Day/Month/Year"));
-			break;
-		case 2:
-			gp_widget_set_value (widget, _("Year/Month/Day"));
-			break;
+	case 0:
+		gp_widget_set_value (widget, _("Month/Day/Year"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("Day/Month/Year"));
+		break;
+	case 2:
+		gp_widget_set_value (widget, _("Year/Month/Day"));
+		break;
 	}
 
 	/********************************/
-        /* Session-persistent Settings  */
-        /********************************/
-        gp_widget_new (GP_WIDGET_SECTION, _("Session-persistent Settings"),
-                       &section);
-        gp_widget_append (*window, section);
+	/* Session-persistent Settings  */
+	/********************************/
+	gp_widget_new (GP_WIDGET_SECTION, _("Session-persistent Settings"),
+		&section);
+	gp_widget_append (*window, section);
 
-        /* Flash */
-        gp_widget_new (GP_WIDGET_RADIO, _("Flash"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Off"));
-        gp_widget_add_choice (widget, _("On"));
-        gp_widget_add_choice (widget, _("On, red-eye reduction"));
-        gp_widget_add_choice (widget, _("Auto"));
-        gp_widget_add_choice (widget, _("Auto, red-eye reduction"));
-        switch (buf[FLASH_STATE_PTR]) {
-	        case 2:
-        	        gp_widget_set_value (widget, _("Off"));
-                	break;
-	        case 1:
-			if (buf[RED_EYE_STATE_PTR] == 1)
-	        	        gp_widget_set_value (widget,
-					_("On, red-eye reduction"));
-			else
-				gp_widget_set_value (widget, _("On"));
-                	break;
-	        case 0:
-			if (buf[RED_EYE_STATE_PTR] == 1)
-	        	        gp_widget_set_value (widget,
-					_("Auto, red-eye reduction"));
-			else
-				gp_widget_set_value (widget, _("Auto"));
-                	break;
-        }
-
-        /* Exposure */
-        gp_widget_new (GP_WIDGET_RANGE, _("Exposure"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_set_range (widget, -2, 2, 0.1);
-	switch(buf[EXPOSURE_TIME_PTR]) {
-		case 0:
-			value_float = 0;
-			break;
-		case 1:
-			value_float = 0.3;
-			break;
-		case 2:
-			value_float = 0.5;
-			break;
-		case 3:
-			value_float = 0.8;
-			break;
-		case 4:
-			value_float = 1.0;
-			break;
-		case 5:
-			value_float = 1.3;
-			break;
-		case 6:
-			value_float = 1.5;
-			break;
-		case 7:
-			value_float = 1.8;
-			break;
-		case 8:
-			value_float = 2.0;
-			break;
-		case 0xF8:
-			value_float = -2.0;
-			break;
-		case 0xF9:
-			value_float = -1.8;
-			break;
-		case 0xFA:
-			value_float = -1.5;
-			break;
-		case 0xFB:
-			value_float = -1.3;
-			break;
-		case 0xFC:
-			value_float = -1.0;
-			break;
-		case 0xFD:
-			value_float = -0.8;
-			break;
-		case 0xFE:
-			value_float = -0.5;
-			break;
-		case 0xFF:
-			value_float = -0.3;
-			break;
+	/* Flash */
+	gp_widget_new (GP_WIDGET_RADIO, _("Flash"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Off"));
+	gp_widget_add_choice (widget, _("On"));
+	gp_widget_add_choice (widget, _("On, red-eye reduction"));
+	gp_widget_add_choice (widget, _("Auto"));
+	gp_widget_add_choice (widget, _("Auto, red-eye reduction"));
+	switch (buf[FLASH_STATE_PTR]) {
+	case 2:
+		gp_widget_set_value (widget, _("Off"));
+		break;
+	case 1:
+		if (buf[RED_EYE_STATE_PTR] == 1)
+			gp_widget_set_value (widget, _("On, red-eye reduction"));
+		else
+			gp_widget_set_value (widget, _("On"));
+		break;
+	case 0:
+		if (buf[RED_EYE_STATE_PTR] == 1)
+			gp_widget_set_value (widget, _("Auto, red-eye reduction"));
+		else
+			gp_widget_set_value (widget, _("Auto"));
+		break;
 	}
-        gp_widget_set_value (widget, &value_float);
 
-       /* Focus */
-        gp_widget_new (GP_WIDGET_RADIO, _("Focus"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("2.0 m"));
+	/* Exposure */
+	gp_widget_new (GP_WIDGET_RANGE, _("Exposure"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_set_range (widget, -2, 2, 0.1);
+	switch (buf[EXPOSURE_TIME_PTR]) {
+	case 0:
+		value_float = 0;
+		break;
+	case 1:
+		value_float = 0.3;
+		break;
+	case 2:
+		value_float = 0.5;
+		break;
+	case 3:
+		value_float = 0.8;
+		break;
+	case 4:
+		value_float = 1.0;
+		break;
+	case 5:
+		value_float = 1.3;
+		break;
+	case 6:
+		value_float = 1.5;
+		break;
+	case 7:
+		value_float = 1.8;
+		break;
+	case 8:
+		value_float = 2.0;
+		break;
+	case 0xF8:
+		value_float = -2.0;
+		break;
+	case 0xF9:
+		value_float = -1.8;
+		break;
+	case 0xFA:
+		value_float = -1.5;
+		break;
+	case 0xFB:
+		value_float = -1.3;
+		break;
+	case 0xFC:
+		value_float = -1.0;
+		break;
+	case 0xFD:
+		value_float = -0.8;
+		break;
+	case 0xFE:
+		value_float = -0.5;
+		break;
+	case 0xFF:
+		value_float = -0.3;
+		break;
+	}
+	gp_widget_set_value (widget, &value_float);
+
+	/* Focus */
+	gp_widget_new (GP_WIDGET_RADIO, _("Focus"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("2.0 m"));
 	gp_widget_add_choice (widget, _("0.5 m"));
 	gp_widget_add_choice (widget, _("0.1 m"));
-        gp_widget_add_choice (widget, _("Auto"));
-        switch (buf[FOCUS_PTR]) {
-		case 0:
-			gp_widget_set_value (widget, _("Auto"));
-			break;
-		case 1:
-	                gp_widget_set_value (widget, _("2.0 m"));
-	                break;
-	        case 2:
-        	        gp_widget_set_value (widget, _("0.5 m"));
-                	break;
-	        case 3:
-        	        gp_widget_set_value (widget, _("0.1 m"));
-                	break;
-        }
+	gp_widget_add_choice (widget, _("Auto"));
+	switch (buf[FOCUS_PTR]) {
+	case 0:
+		gp_widget_set_value (widget, _("Auto"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("2.0 m"));
+		break;
+	case 2:
+		gp_widget_set_value (widget, _("0.5 m"));
+		break;
+	case 3:
+		gp_widget_set_value (widget, _("0.1 m"));
+		break;
+	}
 
-       /* white balance */
-        gp_widget_new (GP_WIDGET_RADIO, _("White balance"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Office"));
+	/* white balance */
+	gp_widget_new (GP_WIDGET_RADIO, _("White balance"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Office"));
 	gp_widget_add_choice (widget, _("Daylight"));
 	gp_widget_add_choice (widget, _("Auto"));
-        switch (buf[WHITE_BALANCE_PTR]) {
-	        case 0:
-        	        gp_widget_set_value (widget, _("Auto"));
-                	break;
-	        case 1:
-        	        gp_widget_set_value (widget, _("Daylight"));
-                	break;
-	        case 2:
-        	        gp_widget_set_value (widget, _("Office"));
-                	break;
+	switch (buf[WHITE_BALANCE_PTR]) {
+	case 0:
+		gp_widget_set_value (widget, _("Auto"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("Daylight"));
+		break;
+	case 2:
+		gp_widget_set_value (widget, _("Office"));
+		break;
 	}
 
-       /* Sharpness */
-        gp_widget_new (GP_WIDGET_RADIO, _("Sharpness"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Sharp"));
+	/* Sharpness */
+	gp_widget_new (GP_WIDGET_RADIO, _("Sharpness"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Sharp"));
 	gp_widget_add_choice (widget, _("Soft"));
 	gp_widget_add_choice (widget, _("Auto"));
-        switch (buf[SHARPNESS_PTR]) {
-	        case 0:
-        	        gp_widget_set_value (widget, _("Auto"));
-                	break;
-	        case 1:
-        	        gp_widget_set_value (widget, _("Sharp"));
-                	break;
-	        case 2:
-        	        gp_widget_set_value (widget, _("Soft"));
-                	break;
+	switch (buf[SHARPNESS_PTR]) {
+	case 0:
+		gp_widget_set_value (widget, _("Auto"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("Sharp"));
+		break;
+	case 2:
+		gp_widget_set_value (widget, _("Soft"));
+		break;
 	}
 
-       /* Color */
-        gp_widget_new (GP_WIDGET_RADIO, _("Color"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Light"));
+	/* Color */
+	gp_widget_new (GP_WIDGET_RADIO, _("Color"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Light"));
 	gp_widget_add_choice (widget, _("Deep"));
 	gp_widget_add_choice (widget, _("Black and White"));
 	gp_widget_add_choice (widget, _("Sepia"));
 	gp_widget_add_choice (widget, _("Auto"));
-        switch (buf[COLOR_PTR]) {
-	        case 0:
-        	        gp_widget_set_value (widget, _("Auto"));
-                	break;
-	        case 1:
-        	        gp_widget_set_value (widget, _("Light"));
-                	break;
-	        case 2:
-        	        gp_widget_set_value (widget, _("Deep"));
-                	break;
-	        case 3:
-        	        gp_widget_set_value (widget, _("Black and White"));
-                	break;
-	        case 4:
-        	        gp_widget_set_value (widget, _("Sepia"));
-                	break;
+	switch (buf[COLOR_PTR]) {
+	case 0:
+		gp_widget_set_value (widget, _("Auto"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("Light"));
+		break;
+	case 2:
+		gp_widget_set_value (widget, _("Deep"));
+		break;
+	case 3:
+		gp_widget_set_value (widget, _("Black and White"));
+		break;
+	case 4:
+		gp_widget_set_value (widget, _("Sepia"));
+		break;
 	}
 
-       /* Macro */
-        gp_widget_new (GP_WIDGET_RADIO, _("Macro"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("On"));
+	/* Macro */
+	gp_widget_new (GP_WIDGET_RADIO, _("Macro"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("On"));
 	gp_widget_add_choice (widget, _("Off"));
-        switch (buf[MACRO_PTR]) {
-	        case 0:
-        	        gp_widget_set_value (widget, _("Off"));
-                	break;
-	        case 1:
-        	        gp_widget_set_value (widget, _("On"));
-                	break;
+	switch (buf[MACRO_PTR]) {
+	case 0:
+		gp_widget_set_value (widget, _("Off"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("On"));
+		break;
 	}
 
-       /* Zoom */
-        gp_widget_new (GP_WIDGET_RADIO, _("Zoom"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("On"));
+	/* Zoom */
+	gp_widget_new (GP_WIDGET_RADIO, _("Zoom"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("On"));
 	gp_widget_add_choice (widget, _("Off"));
-        switch (buf[ZOOM_PTR]) {
-	        case 0:
-        	        gp_widget_set_value (widget, _("Off"));
-                	break;
-	        case 1:
-        	        gp_widget_set_value (widget, _("On"));
-                	break;
+	switch (buf[ZOOM_PTR]) {
+	case 0:
+		gp_widget_set_value (widget, _("Off"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("On"));
+		break;
 	}
 
-       /* Capture */
-        gp_widget_new (GP_WIDGET_RADIO, _("Capture"), &widget);
-        gp_widget_append (section, widget);
+	/* Capture */
+	gp_widget_new (GP_WIDGET_RADIO, _("Capture"), &widget);
+	gp_widget_append (section, widget);
 	gp_widget_add_choice (widget, _("Single"));
 	gp_widget_add_choice (widget, _("Sequence 9"));
-        switch (buf[CAPTURE_TYPE_PTR]) {
-	        case 0:
-        	        gp_widget_set_value (widget, _("Single"));
-                	break;
-	        case 1:
-        	        gp_widget_set_value (widget, _("Sequence 9"));
-                	break;
+	switch (buf[CAPTURE_TYPE_PTR]) {
+	case 0:
+		gp_widget_set_value (widget, _("Single"));
+		break;
+	case 1:
+		gp_widget_set_value (widget, _("Sequence 9"));
+		break;
 	}
 
-       /* Date display */
-        gp_widget_new (GP_WIDGET_RADIO, _("Date display"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Anywhere"));
+	/* Date display */
+	gp_widget_new (GP_WIDGET_RADIO, _("Date display"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Anywhere"));
 	gp_widget_add_choice (widget, _("Play mode"));
 	gp_widget_add_choice (widget, _("Record mode"));
 	gp_widget_add_choice (widget, _("Everywhere"));
-        switch (buf[REC_DATE_DISP_PTR]) {
-	        case 0:
-			if (buf[PLAY_DATE_DISP_PTR] == 0)
-				gp_widget_set_value (widget, _("Play mode"));
-			else
-        	        	gp_widget_set_value (widget, _("Anywhere"));
-                	break;
-	        case 1:
-			if (buf[PLAY_DATE_DISP_PTR] == 0)
-				gp_widget_set_value (widget, _("Everywhere"));
-			else
-        	        	gp_widget_set_value (widget, _("Record mode"));
-                	break;
+	switch (buf[REC_DATE_DISP_PTR]) {
+	case 0:
+		if (buf[PLAY_DATE_DISP_PTR] == 0)
+			gp_widget_set_value (widget, _("Play mode"));
+		else
+			gp_widget_set_value (widget, _("Anywhere"));
+		break;
+	case 1:
+		if (buf[PLAY_DATE_DISP_PTR] == 0)
+			gp_widget_set_value (widget, _("Everywhere"));
+		else
+			gp_widget_set_value (widget, _("Record mode"));
+		break;
 	}
 
-        /************************/
-        /* Volatile Settings    */
-        /************************/
-        gp_widget_new (GP_WIDGET_SECTION, _("Volatile Settings"), &section);
-        gp_widget_append (*window, section);
+	/************************/
+	/* Volatile Settings    */
+	/************************/
+	gp_widget_new (GP_WIDGET_SECTION, _("Volatile Settings"), &section);
+	gp_widget_append (*window, section);
 
-        /* Self Timer */
-        gp_widget_new (GP_WIDGET_RADIO, _("Self Timer"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Self Timer (next picture only)"));
-        gp_widget_add_choice (widget, _("Normal"));
-        switch (buf[TIMER_PTR]) {
-	        case 1:
-        	        gp_widget_set_value (widget, _("Self Timer ("
-                	                     "next picture only)"));
-	                break;
-	        case 0:
-        	        gp_widget_set_value (widget, _("Normal"));
-                	break;
-	        }
+	/* Self Timer */
+	gp_widget_new (GP_WIDGET_RADIO, _("Self Timer"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Self Timer (next picture only)"));
+	gp_widget_add_choice (widget, _("Normal"));
+	switch (buf[TIMER_PTR]) {
+	case 1:
+		gp_widget_set_value (widget, _("Self Timer (next picture only)"));
+		break;
+	case 0:
+		gp_widget_set_value (widget, _("Normal"));
+		break;
+	}
 	return (GP_OK);
 }
 
@@ -1153,18 +1150,18 @@ camera_summary (Camera *camera, CameraText *text, GPContext *context)
 	timestamp = (unsigned int)timestamp + (8*365 + 2*366)*24*3600-3600;
 	tmp = *localtime(&timestamp);
 	switch (buf[DATE_FORMAT_PTR]) {
-		case 1:
-			snprintf(date_disp,sizeof(date_disp),_("DD/MM/YYYY"));
-			strftime(date,sizeof(date),"%d/%m/%Y %H:%M",&tmp);
-			break;
-		case 2:
-			strftime(date,sizeof(date),"%Y/%m/%d %H:%M",&tmp);
-			snprintf(date_disp,sizeof(date_disp),_("YYYY/MM/DD"));
-			break;
-		default:
-			strftime(date,sizeof(date),"%m/%d/%Y %H:%M",&tmp);
-			snprintf(date_disp,sizeof(date_disp),_("MM/DD/YYYY"));
-			break;
+	case 1:
+		snprintf(date_disp, sizeof(date_disp), _("DD/MM/YYYY"));
+		strftime(date, sizeof(date), "%d/%m/%Y %H:%M", &tmp);
+		break;
+	case 2:
+		strftime(date, sizeof(date), "%Y/%m/%d %H:%M", &tmp);
+		snprintf(date_disp, sizeof(date_disp), _("YYYY/MM/DD"));
+		break;
+	default:
+		strftime(date, sizeof(date), "%m/%d/%Y %H:%M", &tmp);
+		snprintf(date_disp, sizeof(date_disp), _("MM/DD/YYYY"));
+		break;
 	}
 	snprintf(text->text, sizeof(text->text),
 			_("Model: %s\n"
@@ -1272,12 +1269,12 @@ camera_init (Camera *camera, GPContext *context)
 	char cmd[3], buf[1];
 
 	/* First, set up all the function pointers. */
-	camera->functions->capture              = camera_capture;
-	camera->functions->about		= camera_about;
-	camera->functions->get_config		= camera_get_config;
-	camera->functions->set_config		= camera_set_config;
-	camera->functions->summary		= camera_summary;
-	camera->functions->manual		= camera_manual;
+	camera->functions->capture	= camera_capture;
+	camera->functions->about	= camera_about;
+	camera->functions->get_config	= camera_get_config;
+	camera->functions->set_config	= camera_set_config;
+	camera->functions->summary	= camera_summary;
+	camera->functions->manual	= camera_manual;
 
 
 	/* Now, tell the filesystem where to get lists, files and info */

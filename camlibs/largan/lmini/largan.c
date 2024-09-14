@@ -255,10 +255,10 @@ camera_init (Camera *camera, GPContext *context)
 	int ret;
 	GPPortSettings settings;
 
-        /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
-        camera->functions->capture              = camera_capture;
-        camera->functions->about                = camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->exit                 = camera_exit;
+	camera->functions->capture              = camera_capture;
+	camera->functions->about                = camera_about;
 
 	/* Now, tell the filesystem where to get lists, files and info */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);

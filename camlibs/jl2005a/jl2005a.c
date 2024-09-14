@@ -136,14 +136,14 @@ jl2005a_read_picture_data (Camera *camera, GPPort *port,
 	 * downloading them. There is only a starting point and an indicator
 	 * for each frame.
 	 */
-        gp_port_write (port, "\xab\x00", 2);
-        gp_port_write (port, "\xa1\x04", 2);
-        gp_port_write (port, "\xab\x00", 2);
-        gp_port_write (port, "\xa2\x08", 2);
-        gp_port_write (port, "\xab\x00", 2);
-        gp_port_write (port, "\xa1\x05", 2);
-        gp_port_write (port, "\xab\x00", 2);
-        gp_port_write (port, "\xa2\x08", 2);
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_write (port, "\xa1\x04", 2);
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_write (port, "\xa2\x08", 2);
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_write (port, "\xa1\x05", 2);
+	gp_port_write (port, "\xab\x00", 2);
+	gp_port_write (port, "\xa2\x08", 2);
 
 	/* Switch the inep over to 0x81. */
 	set_usb_in_endpoint	(camera, 0x81);

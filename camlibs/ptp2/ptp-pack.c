@@ -1451,7 +1451,7 @@ ptp_pack_OPL (PTPParams *params, MTPProperties *props, int nrofprops, unsigned c
 		packedpropstypes[noitems]= propitr->datatype;
 		totalsize += sizeof(uint16_t);
 		/* Add each property to be sent. */
-	        packedpropslens[noitems] = ptp_pack_DPV (params, &propitr->propval, &packedprops[noitems], propitr->datatype);
+		packedpropslens[noitems] = ptp_pack_DPV (params, &propitr->propval, &packedprops[noitems], propitr->datatype);
 		totalsize += packedpropslens[noitems];
 		noitems ++;
 		propitr ++;

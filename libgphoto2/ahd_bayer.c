@@ -147,10 +147,10 @@ int do_rb_ctr_row(unsigned char *image_h, unsigned char *image_v, int w,
 				}
 				if (x < w-1 && y < h-1) {
 					value += image_h[AD(x+1,2,w)+color]
-					        -image_h[AD(x+1,2,w)+GREEN];
+						-image_h[AD(x+1,2,w)+GREEN];
 					value2+= image_v[AD(x+1,2,w)+color]
 						-image_v[AD(x+1,2,w)+GREEN];
-								div++;
+					div++;
 				}
 				image_h[AD(x,1,w)+color]=
 						CLAMP(
@@ -168,7 +168,7 @@ int do_rb_ctr_row(unsigned char *image_h, unsigned char *image_v, int w,
 						-image_h[AD(x,0,w)+GREEN];
 					value2+= image_v[AD(x,0,w)+color]
 						-image_v[AD(x,0,w)+GREEN];
-						div++;
+					div++;
 				}
 				if (y < h-1) {
 					value += image_h[AD(x,2,w)+color]

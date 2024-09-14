@@ -157,90 +157,90 @@ camera_config_get (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_SECTION, _("Mono mode"), &section);
 	gp_widget_append (*window, section);
 
-        gp_widget_new (GP_WIDGET_RADIO, _("Depth"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("Mono (b/w)"));
-        gp_widget_add_choice (widget, _("Grey (4bpp)"));
-        gp_widget_add_choice (widget, _("Grey (8bpp)"));
-        switch(camera->pl->profile[0x80]) {
-        case 0x00: gp_widget_set_value (widget, _("Mono (b/w)")); break;
-        case 0x01: gp_widget_set_value (widget, _("Grey (4bpp)")); break;
-        case 0x02: gp_widget_set_value (widget, _("Grey (8bpp)")); break;
-        }
+	gp_widget_new (GP_WIDGET_RADIO, _("Depth"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("Mono (b/w)"));
+	gp_widget_add_choice (widget, _("Grey (4bpp)"));
+	gp_widget_add_choice (widget, _("Grey (8bpp)"));
+	switch (camera->pl->profile[0x80]) {
+	case 0x00: gp_widget_set_value (widget, _("Mono (b/w)")); break;
+	case 0x01: gp_widget_set_value (widget, _("Grey (4bpp)")); break;
+	case 0x02: gp_widget_set_value (widget, _("Grey (8bpp)")); break;
+	}
 
-        gp_widget_new (GP_WIDGET_RADIO, _("Lo Resolution"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("100 DPI"));
-        gp_widget_add_choice (widget, _("200 DPI"));
-        switch(camera->pl->profile[0x81]) {
-        case RES_100DPI: gp_widget_set_value (widget, _("100 DPI")); break;
-        case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
-        }
+	gp_widget_new (GP_WIDGET_RADIO, _("Lo Resolution"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("100 DPI"));
+	gp_widget_add_choice (widget, _("200 DPI"));
+	switch (camera->pl->profile[0x81]) {
+	case RES_100DPI: gp_widget_set_value (widget, _("100 DPI")); break;
+	case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
+	}
 
-        gp_widget_new (GP_WIDGET_RADIO, _("Hi Resolution"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("200 DPI"));
-        gp_widget_add_choice (widget, _("400 DPI"));
-        switch(camera->pl->profile[0x82]) {
-        case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
-        case RES_400DPI: gp_widget_set_value (widget, _("400 DPI")); break;
-        }
+	gp_widget_new (GP_WIDGET_RADIO, _("Hi Resolution"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("200 DPI"));
+	gp_widget_add_choice (widget, _("400 DPI"));
+	switch (camera->pl->profile[0x82]) {
+	case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
+	case RES_400DPI: gp_widget_set_value (widget, _("400 DPI")); break;
+	}
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Color Document mode"), &section);
 	gp_widget_append (*window, section);
 
-        gp_widget_new (GP_WIDGET_RADIO, _("Depth"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("NQ (12bpp)"));
-        switch(camera->pl->profile[0x83]) {
-        case 0x04: gp_widget_set_value (widget, _("NQ (12bpp)")); break;
-        }
+	gp_widget_new (GP_WIDGET_RADIO, _("Depth"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("NQ (12bpp)"));
+	switch (camera->pl->profile[0x83]) {
+	case 0x04: gp_widget_set_value (widget, _("NQ (12bpp)")); break;
+	}
 
-        gp_widget_new (GP_WIDGET_RADIO, _("Lo Resolution"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("100 DPI"));
-        gp_widget_add_choice (widget, _("200 DPI"));
-        switch(camera->pl->profile[0x84]) {
-        case RES_100DPI: gp_widget_set_value (widget, _("100 DPI")); break;
-        case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
-        }
+	gp_widget_new (GP_WIDGET_RADIO, _("Lo Resolution"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("100 DPI"));
+	gp_widget_add_choice (widget, _("200 DPI"));
+	switch (camera->pl->profile[0x84]) {
+	case RES_100DPI: gp_widget_set_value (widget, _("100 DPI")); break;
+	case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
+	}
 
-        gp_widget_new (GP_WIDGET_RADIO, _("Hi Resolution"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("200 DPI"));
-        gp_widget_add_choice (widget, _("400 DPI"));
-        switch(camera->pl->profile[0x85]) {
-        case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
-        case RES_400DPI: gp_widget_set_value (widget, _("400 DPI")); break;
-        }
+	gp_widget_new (GP_WIDGET_RADIO, _("Hi Resolution"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("200 DPI"));
+	gp_widget_add_choice (widget, _("400 DPI"));
+	switch (camera->pl->profile[0x85]) {
+	case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
+	case RES_400DPI: gp_widget_set_value (widget, _("400 DPI")); break;
+	}
 
 	gp_widget_new (GP_WIDGET_SECTION, _("Color Photo mode"), &section);
 	gp_widget_append (*window, section);
 
-        gp_widget_new (GP_WIDGET_RADIO, _("Depth"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("HQ (24bpp)"));
-        switch(camera->pl->profile[0x86]) {
-        case 0x08: gp_widget_set_value (widget, _("HQ (24bpp)")); break;
-        }
+	gp_widget_new (GP_WIDGET_RADIO, _("Depth"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("HQ (24bpp)"));
+	switch (camera->pl->profile[0x86]) {
+	case 0x08: gp_widget_set_value (widget, _("HQ (24bpp)")); break;
+	}
 
-        gp_widget_new (GP_WIDGET_RADIO, _("Lo Resolution"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("100 DPI"));
-        gp_widget_add_choice (widget, _("200 DPI"));
-        switch(camera->pl->profile[0x87]) {
-        case RES_100DPI: gp_widget_set_value (widget, _("100 DPI")); break;
-        case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
-        }
+	gp_widget_new (GP_WIDGET_RADIO, _("Lo Resolution"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("100 DPI"));
+	gp_widget_add_choice (widget, _("200 DPI"));
+	switch (camera->pl->profile[0x87]) {
+	case RES_100DPI: gp_widget_set_value (widget, _("100 DPI")); break;
+	case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
+	}
 
-        gp_widget_new (GP_WIDGET_RADIO, _("Hi Resolution"), &widget);
-        gp_widget_append (section, widget);
-        gp_widget_add_choice (widget, _("200 DPI"));
-        gp_widget_add_choice (widget, _("400 DPI"));
-        switch(camera->pl->profile[0x88]) {
-        case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
-        case RES_400DPI: gp_widget_set_value (widget, _("400 DPI")); break;
-        }
+	gp_widget_new (GP_WIDGET_RADIO, _("Hi Resolution"), &widget);
+	gp_widget_append (section, widget);
+	gp_widget_add_choice (widget, _("200 DPI"));
+	gp_widget_add_choice (widget, _("400 DPI"));
+	switch (camera->pl->profile[0x88]) {
+	case RES_200DPI: gp_widget_set_value (widget, _("200 DPI")); break;
+	case RES_400DPI: gp_widget_set_value (widget, _("400 DPI")); break;
+	}
 
 	return GP_OK;
 }
@@ -654,12 +654,12 @@ camera_init (Camera *camera, GPContext *context)
 {
 	char buf[64];
 
-        camera->functions->exit                 = camera_exit;
-        camera->functions->get_config           = camera_config_get;
-        camera->functions->set_config           = camera_config_set;
-        camera->functions->summary              = camera_summary;
-        camera->functions->manual               = camera_manual;
-        camera->functions->about                = camera_about;
+	camera->functions->exit                 = camera_exit;
+	camera->functions->get_config           = camera_config_get;
+	camera->functions->set_config           = camera_config_set;
+	camera->functions->summary              = camera_summary;
+	camera->functions->manual               = camera_manual;
+	camera->functions->about                = camera_about;
 
 	gp_filesystem_set_funcs(camera->fs, &fsfuncs, camera);
 

@@ -238,7 +238,7 @@ gp_port_usb_open (GPPort *port)
 		C_PARAMS (port->pl->d);
 	}
 
-        /*
+	/*
 	 * Open the device using the previous usb_handle returned by
 	 * find_device
 	 */
@@ -394,16 +394,16 @@ gp_port_usb_clear_halt_lib(GPPort *port, int ep)
 static int
 gp_port_usb_write (GPPort *port, const char *bytes, int size)
 {
-        int ret;
+	int ret;
 
-        C_PARAMS (port && port->pl->dh);
+	C_PARAMS (port && port->pl->dh);
 
 	ret = usb_bulk_write (port->pl->dh, port->settings.usb.outep,
-                           (char *) bytes, size, port->timeout);
-        if (ret < 0)
+			   (char *) bytes, size, port->timeout);
+	if (ret < 0)
 		return (GP_ERROR_IO_WRITE);
 
-        return (ret);
+	return (ret);
 }
 
 static int
@@ -415,10 +415,10 @@ gp_port_usb_read(GPPort *port, char *bytes, int size)
 
 	ret = usb_bulk_read(port->pl->dh, port->settings.usb.inep,
 			     bytes, size, port->timeout);
-        if (ret < 0)
+	if (ret < 0)
 		return GP_ERROR_IO_READ;
 
-        return ret;
+	return ret;
 }
 
 static int
@@ -430,11 +430,11 @@ gp_port_usb_reset(GPPort *port)
 	C_PARAMS (port && port->pl->dh);
 
 	ret = usb_reset(port->pl->dh);
-        if (ret < 0) {
+	if (ret < 0) {
 		GP_LOG_E ("gp_port_reset: %d", ret);
 		return GP_ERROR_IO_READ;
 	}
-        return GP_OK;
+	return GP_OK;
 }
 
 static int
@@ -447,12 +447,12 @@ gp_port_usb_check_int (GPPort *port, char *bytes, int size, int timeout)
 	/* 0 timeout is okish ... libusb 0.x it will do 1 poll though */
 	ret = usb_interrupt_read(port->pl->dh, port->settings.usb.intep,
 			     bytes, size, timeout);
-        if (ret < 0) {
+	if (ret < 0) {
 		if ((errno == EAGAIN) || (errno == ETIMEDOUT))
 			return GP_ERROR_TIMEOUT;
 		return GP_ERROR_IO_READ;
 	}
-        return ret;
+	return ret;
 }
 
 static int

@@ -109,15 +109,15 @@ int largan_open (Camera * camera)
 {
 	int ret;
 
-        ret = largan_get_num_pict (camera);
-        if (ret < 0){
-                ret = purge_camera (camera);
-                if (ret == GP_ERROR) {
-                        return ret;
-                }
-                ret = wakeup_camera (camera);
+	ret = largan_get_num_pict (camera);
+	if (ret < 0) {
+		ret = purge_camera (camera);
+		if (ret == GP_ERROR) {
+			return ret;
+		}
+		ret = wakeup_camera (camera);
 	}
-        return ret;     /* here: number of pictures */
+	return ret;     /* here: number of pictures */
 }
 
 /*
@@ -160,21 +160,21 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 	uint32_t pict_size;	/* size of the picture as returned by the camera */
 
 	switch (type) {
-		case LARGAN_PICT:
-			param = 0x01;
-			break;
-		case LARGAN_THUMBNAIL:
-			param = 0x00;
-			break;
-		default:
-			GP_DEBUG ("largan_get_pict(): wrong picture type requested !\n");
-			return GP_ERROR;
+	case LARGAN_PICT:
+		param = 0x01;
+		break;
+	case LARGAN_THUMBNAIL:
+		param = 0x00;
+		break;
+	default:
+		GP_DEBUG ("largan_get_pict(): wrong picture type requested !\n");
+		return GP_ERROR;
 	}
 	ret = largan_send_command (camera, LARGAN_GET_PICT_CMD, param, index);
 	if (ret < 0) {
 		return ret;
 	}
-        ret = largan_recv_reply (camera, &reply, &code, NULL);
+	ret = largan_recv_reply (camera, &reply, &code, NULL);
 /* here we have to receive 7 bytes back
  the 2nd contains 00 for thumbnail or 01 for original picture
  the 3rd contains the picturenumber for an original picture
@@ -183,26 +183,26 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
  bytes 4 5 6 7 contain the number of byte coming in the datastream */
 /* the 1st and the 2nd byte are read here */
 	if (ret < 0) {
-                /* clean up and give it a 2nd chance */
-                wakeup_camera (camera);
-                largan_send_command (camera, LARGAN_GET_PICT_CMD, param, index);
-                GP_DEBUG ("largan_get_pict(): command sent 2nd time\n");
-                ret = largan_recv_reply (camera, &reply, &code, NULL);
-                if (ret < 0) {
-                        /* clean up and give it even a 3rd chance */
-                        wakeup_camera (camera);
-                        sleep (5);
-                        largan_send_command (camera, LARGAN_GET_PICT_CMD, param, index);
-                        GP_DEBUG ("largan_get_pict(): command sent 3rd time\n");
-                        ret = largan_recv_reply (camera, &reply, &code, NULL);
-                        if (ret < 0) {
-                                GP_DEBUG ("largan_get_pict(): timeout after command sent 3rd time\n");
-                                return ret;     /* timeout after 3rd trial */
-                        }
-                }
-        }
-        if ((reply != LARGAN_GET_PICT_CMD) || ((code != 0x01) && (code != 0x00))) {
-                GP_DEBUG ("largan_get_pict(): code != 0x01 && 0x00\n");
+		/* clean up and give it a 2nd chance */
+		wakeup_camera (camera);
+		largan_send_command (camera, LARGAN_GET_PICT_CMD, param, index);
+		GP_DEBUG ("largan_get_pict(): command sent 2nd time\n");
+		ret = largan_recv_reply (camera, &reply, &code, NULL);
+		if (ret < 0) {
+			/* clean up and give it even a 3rd chance */
+			wakeup_camera (camera);
+			sleep (5);
+			largan_send_command (camera, LARGAN_GET_PICT_CMD, param, index);
+			GP_DEBUG ("largan_get_pict(): command sent 3rd time\n");
+			ret = largan_recv_reply (camera, &reply, &code, NULL);
+			if (ret < 0) {
+				GP_DEBUG ("largan_get_pict(): timeout after command sent 3rd time\n");
+				return ret;     /* timeout after 3rd trial */
+			}
+		}
+	}
+	if ((reply != LARGAN_GET_PICT_CMD) || ((code != 0x01) && (code != 0x00))) {
+		GP_DEBUG ("largan_get_pict(): code != 0x01 && 0x00\n");
 		return GP_ERROR;
 	}
 
@@ -265,7 +265,7 @@ int largan_get_pict (Camera * camera, largan_pict_type type,
 		}
 	default:
 		GP_DEBUG ("largan_get_pict(): type not LARGAN_PICT nor LARGAN_THUMBNAIL\n");
-                return GP_ERROR;
+		return GP_ERROR;
 	}
 	return GP_OK;
 }

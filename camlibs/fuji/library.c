@@ -67,25 +67,25 @@ struct _CameraPrivateLibrary {
 };
 
 static const struct {
-        FujiCmd command;
-        const char *name;
+	FujiCmd command;
+	const char *name;
 } Commands[] = {
-        {FUJI_CMD_PIC_GET,              "get picture"},
-        {FUJI_CMD_PIC_GET_THUMB,        "get thumbnail"},
-        {FUJI_CMD_SPEED,                "change speed"},
-        {FUJI_CMD_VERSION,              "get version"},
-        {FUJI_CMD_PIC_NAME,             "get name of picture"},
-        {FUJI_CMD_PIC_COUNT,            "get number of pictures"},
-        {FUJI_CMD_PIC_SIZE,             "get size of picture"},
-        {FUJI_CMD_PIC_DEL,              "delete picture"},
-        {FUJI_CMD_TAKE,                 "capture picture"},
-	{FUJI_CMD_FLASH_GET,		"get flash mode"},
-	{FUJI_CMD_FLASH_SET,		"set flash mode"},
+	{FUJI_CMD_PIC_GET,              "get picture"},
+	{FUJI_CMD_PIC_GET_THUMB,        "get thumbnail"},
+	{FUJI_CMD_SPEED,                "change speed"},
+	{FUJI_CMD_VERSION,              "get version"},
+	{FUJI_CMD_PIC_NAME,             "get name of picture"},
+	{FUJI_CMD_PIC_COUNT,            "get number of pictures"},
+	{FUJI_CMD_PIC_SIZE,             "get size of picture"},
+	{FUJI_CMD_PIC_DEL,              "delete picture"},
+	{FUJI_CMD_TAKE,                 "capture picture"},
+	{FUJI_CMD_FLASH_GET,            "get flash mode"},
+	{FUJI_CMD_FLASH_SET,            "set flash mode"},
 	{FUJI_CMD_FLASH_CHARGE,         "charge flash"},
-        {FUJI_CMD_CMDS_VALID,           "list valid commands"},
-        {FUJI_CMD_PREVIEW,              "capture preview"},
+	{FUJI_CMD_CMDS_VALID,           "list valid commands"},
+	{FUJI_CMD_PREVIEW,              "capture preview"},
 	{FUJI_CMD_DATE_GET,		"get date"},
-        {0, NULL}};
+	{0, NULL} };
 
 static const char *
 cmd_get_name (FujiCmd command)
@@ -384,10 +384,9 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	const char *id;
 
 	/* Date & Time */
-	if ((gp_widget_get_child_by_label (window, _("Date & Time"),
-					   &widget) >= 0) &&
-	     gp_widget_changed (widget)) {
-	        gp_widget_set_changed (widget, 0);
+	if ((gp_widget_get_child_by_label (window, _("Date & Time"), &widget) >= 0) &&
+	    gp_widget_changed (widget)) {
+		gp_widget_set_changed (widget, 0);
 		CR (gp_widget_get_value (widget, &t));
 		tm = localtime (&t);
 		date.year  = tm->tm_year;
@@ -402,7 +401,7 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	/* ID */
 	if ((gp_widget_get_child_by_label (window, _("ID"), &widget) >= 0) &&
 	    gp_widget_changed (widget)) {
-	        gp_widget_set_changed (widget, 0);
+		gp_widget_set_changed (widget, 0);
 		CR (gp_widget_get_value (widget, &id));
 		CR (fuji_id_set (camera, id, context));
 	}

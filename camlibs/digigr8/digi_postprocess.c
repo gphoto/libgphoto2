@@ -53,18 +53,18 @@ digi_first_decompress (unsigned char *output, unsigned char *input,
 	unsigned int bit_counter = 8;
 	unsigned int cycles = 0;
 	int table[9] = { -1, 0, 2, 6, 0x0e, 0x0e, 0x0e, 0x0e, 0xfb};
-	unsigned char lookup_table[16]
-		     ={0, 2, 6, 0x0e, 0xf0, 0xf1, 0xf2, 0xf3, 0xf4,
-		           0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb};
+	unsigned char lookup_table[16] =
+		{0, 2, 6, 0x0e, 0xf0, 0xf1, 0xf2, 0xf3, 0xf4,
+		 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb};
 	unsigned char translator[16] =
-		    {8, 7, 9, 6, 10, 11, 12, 13, 14, 15, 5, 4, 3, 2, 1, 0};
+		{8, 7, 9, 6, 10, 11, 12, 13, 14, 15, 5, 4, 3, 2, 1, 0};
 
 	GP_DEBUG ("Running first_decompress.\n");
 	nibble_to_keep[0] = 0;
 	nibble_to_keep[1] = 0;
 
-        while (bytes_done < outputsize) {
-        	while (parity < 2 ) {
+	while (bytes_done < outputsize) {
+		while (parity < 2 ) {
 			while ( lookup > table[cycles]) {
 				if (bit_counter == 8) {
 					input_byte = input[bytes_used];

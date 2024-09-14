@@ -32,8 +32,7 @@
  *
  */
 
-void errordumper(GPLogLevel level, const char *domain, const char *str,
-                 void *data) {
+void errordumper(GPLogLevel level, const char *domain, const char *str, void *data) {
 	/* Do not log ... but let it appear here so we discover debug paths */
 	//fprintf(stderr, "%s:%s\n", domain, str);
 }
@@ -173,7 +172,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
 	/*CameraFilePath		path;*/
 	CameraList			*list;
 
-        gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
+	gp_log_add_func(GP_LOG_DEBUG, errordumper, NULL);
 
 	if (!gpinfolist) {
 		gp_port_info_list_new (&gpinfolist);

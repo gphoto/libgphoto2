@@ -429,13 +429,13 @@ int camera_init (Camera *camera, GPContext *context)
 {
 	GPPortSettings settings;
 
-        /* First, set up all the function pointers */
-        camera->functions->exit                 = camera_exit;
-        camera->functions->capture              = camera_capture;
-        camera->functions->summary              = camera_summary;
-        camera->functions->about                = camera_about;
+	/* First, set up all the function pointers */
+	camera->functions->exit                 = camera_exit;
+	camera->functions->capture              = camera_capture;
+	camera->functions->summary              = camera_summary;
+	camera->functions->about                = camera_about;
 
-        GP_DEBUG( "initializing the camera");
+	GP_DEBUG ("initializing the camera");
 
 	camera->pl = malloc (sizeof (CameraPrivateLibrary));
 	if (!camera->pl)
@@ -444,35 +444,35 @@ int camera_init (Camera *camera, GPContext *context)
 	camera->pl->dev = camera->port;
 
 	/* Configure the port */
-        gp_port_set_timeout(camera->port, 5000);
+	gp_port_set_timeout(camera->port, 5000);
 	gp_port_get_settings(camera->port, &settings);
-        settings.serial.speed = 38400;
-        settings.serial.bits = 8;
-        settings.serial.parity = 0;
-        settings.serial.stopbits = 1;
-        gp_port_set_settings(camera->port, settings);
+	settings.serial.speed = 38400;
+	settings.serial.bits = 8;
+	settings.serial.parity = 0;
+	settings.serial.stopbits = 1;
+	gp_port_set_settings(camera->port, settings);
 
-        if  ( dimagev_get_camera_data(camera->pl) < GP_OK ) {
-                GP_DEBUG( "camera_init::unable to get current camera data");
+	if (dimagev_get_camera_data(camera->pl) < GP_OK) {
+		GP_DEBUG("camera_init::unable to get current camera data");
 		free (camera->pl);
 		camera->pl = NULL;
-                return GP_ERROR_IO;
-        }
+		return GP_ERROR_IO;
+	}
 
-        if  ( dimagev_get_camera_status(camera->pl) < GP_OK ) {
-                GP_DEBUG( "camera_init::unable to get current camera status");
+	if (dimagev_get_camera_status(camera->pl) < GP_OK) {
+		GP_DEBUG("camera_init::unable to get current camera status");
 		free (camera->pl);
 		camera->pl = NULL;
-                return GP_ERROR_IO;
-        }
+		return GP_ERROR_IO;
+	}
 
 	/* Apparently, trying to set the clock now leaves the camera in an
 	   unstable state. Skipping it for now. */
-        /* if ( dimagev_set_date(camera->pl) < GP_OK ) {
-                GP_DEBUG( "camera_init::unable to set camera to system time");
-        } */
+	/* if ( dimagev_set_date(camera->pl) < GP_OK ) {
+		GP_DEBUG( "camera_init::unable to set camera to system time");
+	} */
 
-	/* Set up the filesystem */
+	   /* Set up the filesystem */
 	gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera);
-        return GP_OK;
+	return GP_OK;
 }

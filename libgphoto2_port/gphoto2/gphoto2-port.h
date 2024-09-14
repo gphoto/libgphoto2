@@ -115,9 +115,9 @@ typedef union _GPPortSettings {
 } GPPortSettings;
 
 enum {
-        GP_PORT_USB_ENDPOINT_IN,	/**< \brief USB bulk IN ep */
-        GP_PORT_USB_ENDPOINT_OUT,	/**< \brief USB bulk OUT ep */
-        GP_PORT_USB_ENDPOINT_INT	/**< \brief USB Interrupt ep */
+	GP_PORT_USB_ENDPOINT_IN,	/**< \brief USB bulk IN ep */
+	GP_PORT_USB_ENDPOINT_OUT,	/**< \brief USB bulk OUT ep */
+	GP_PORT_USB_ENDPOINT_INT	/**< \brief USB Interrupt ep */
 };
 
 typedef struct _GPPortPrivateLibrary GPPortPrivateLibrary;
@@ -141,9 +141,9 @@ typedef struct _GPPort {
 	GPPortType type;		/**< \brief Actual type of this port */
 
  	GPPortSettings settings;	/**< \brief Current port settings. */
-        GPPortSettings settings_pending;/**< \brief Settings to be committed. */
+	GPPortSettings settings_pending;/**< \brief Settings to be committed. */
 
-        int timeout; 			/**< \brief Port timeout in milliseconds. */
+	int timeout; 			/**< \brief Port timeout in milliseconds. */
 
 	GPPortPrivateLibrary *pl;	/**< \brief Camera driver private data pointer. */
 	GPPortPrivateCore    *pc;	/**< \brief Port library private data pointer. */

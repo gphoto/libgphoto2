@@ -202,7 +202,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	case GP_FILE_TYPE_NORMAL:
 		if (file_type == SONY_FILE_MPEG) {
 			rc = sony_mpeg_get(camera, num, file, context);
-                }
+		}
 		else {
 			rc = sony_image_get(camera, num, file, context);
 		}
