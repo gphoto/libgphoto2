@@ -193,7 +193,7 @@ getpicture_logitech_pd(Camera *camera, GPContext *context, unsigned char **rd, c
     for (pc=1;pc<ptc;pc++) {
 	int ret = ultrapocket_command(port, 0, retdata, 0x8000);
 	if (ret < GP_OK) {
-    	    gp_context_progress_stop(context, id);
+	    gp_context_progress_stop(context, id);
 	    free (rawdata);
 	    return ret;
 	}

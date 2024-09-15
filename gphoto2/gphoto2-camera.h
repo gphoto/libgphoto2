@@ -329,7 +329,7 @@ struct _Camera {
 	GPPort           *port;
 	CameraFilesystem *fs;
 	CameraFunctions  *functions;
- 	/**@}*/
+	/**@}*/
 
 	CameraPrivateLibrary  *pl; /**< Private data of camera libraries.    */
 	CameraPrivateCore     *pc; /**< Private data of the core of gphoto2. */

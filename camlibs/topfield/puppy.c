@@ -398,7 +398,7 @@ decode_dir(Camera *camera, struct tf_packet *p, int listdirs, CameraList *list)
 	printf("%c %20llu %24.24s %s\n", type, get_u64(&entries[i].size),
 	       ctime(&timestamp), entries[i].name);
 #endif
-    }
+	}
 }
 
 static void
@@ -447,7 +447,7 @@ decode_and_get_info(Camera *camera, const char *folder, struct tf_packet *p, con
 	printf("%c %20llu %24.24s %s\n", type, get_u64(&entries[i].size),
 	       ctime(&timestamp), entries[i].name);
 #endif
-    }
+	}
 }
 
 #if 0
@@ -1116,16 +1116,16 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		return r;
 	switch (get_u32(&reply.cmd)) {
 	case SUCCESS:
-	    return GP_OK;
-	    break;
+		return GP_OK;
+		break;
 
 	case FAIL:
-	    gp_log (GP_LOG_ERROR, "topfield", "ERROR: Device reports %s\n",
-		    decode_error(&reply));
-	    break;
+		gp_log (GP_LOG_ERROR, "topfield", "ERROR: Device reports %s\n",
+			decode_error(&reply));
+		break;
 
 	default:
-	    gp_log (GP_LOG_ERROR, "topfield", "ERROR: Unhandled packet\n");
+		gp_log (GP_LOG_ERROR, "topfield", "ERROR: Unhandled packet\n");
 	}
 	return GP_ERROR_IO;
 }
@@ -1151,9 +1151,9 @@ camera_abilities (CameraAbilitiesList *list)
 	a.port		= GP_PORT_USB;
 	a.usb_vendor	= 0x11db;
 	a.usb_product	= 0x1000;
-	a.operations        = 	GP_OPERATION_NONE;
-	a.file_operations   = 	GP_FILE_OPERATION_DELETE;
-	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
+	a.operations        = GP_OPERATION_NONE;
+	a.file_operations   = GP_FILE_OPERATION_DELETE;
+	a.folder_operations = GP_FOLDER_OPERATION_NONE;
 	return gp_abilities_list_append(list, a);
 }
 

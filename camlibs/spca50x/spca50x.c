@@ -135,7 +135,7 @@ spca50x_reset (CameraPrivateLibrary * lib)
 					0x0d04, NULL, 0));
 		CHECK (gp_port_usb_msg_write(lib->gpdev, 0x1e, 0, 0, NULL, 0));
 		if (lib->bridge == BRIDGE_SPCA504B_PD) {
- 			CHECK (spca50x_pd_enable (lib));
+			CHECK (spca50x_pd_enable (lib));
 		}
 	}
 #ifndef FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
@@ -214,9 +214,9 @@ create_jpeg_from_data (uint8_t * dst, uint8_t * src, unsigned int qIndex, int w,
 
 	/* copy Huffman table */
 	if (!omit_huffman_table) {
-	    memcpy (dst, SPCA50xJPGDefaultHeaderPart2,
-			    SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH);
-	    dst += SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH;
+		memcpy (dst, SPCA50xJPGDefaultHeaderPart2,
+			SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH);
+		dst += SPCA50X_JPG_DEFAULT_HEADER_PART2_LENGTH;
 	}
 	memcpy (dst, SPCA50xJPGDefaultHeaderPart3,
 			SPCA50X_JPG_DEFAULT_HEADER_PART3_LENGTH);

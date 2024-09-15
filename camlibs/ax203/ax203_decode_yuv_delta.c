@@ -62,7 +62,7 @@ ax203_decode_component_values(char *src, char *dest)
 {
 	int i, table, corr;
 	dest[0] = src[0] & ~0x07;
-       	table = (src[0] >> 1) & 3;
+	table = (src[0] >> 1) & 3;
 
 	for (i = 1; i < 4; i++) {
 		switch (i) {

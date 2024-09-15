@@ -540,9 +540,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_add_choice (child, orientation_to_string (0));
 	gp_widget_add_choice (child, orientation_to_string (1));
 	gp_widget_add_choice (child, orientation_to_string (2));
-       	gp_widget_set_value (child,
-			     orientation_to_string (camera->pl->orientation));
-       	gp_widget_append (*window, child);
+	gp_widget_set_value (child,
+		orientation_to_string (camera->pl->orientation));
+	gp_widget_append (*window, child);
 
 	return GP_OK;
 }

@@ -75,13 +75,13 @@ static const struct camera_to_usb {
 	{ "Micromaxx:Digital Camera",   0x0553, 0x0202, 0 },
 
 	/* http://www.digitaldreamco.com/shop/elegante.htm, VGA */
-       	{ "DigitalDream:l'elegante", 0x0553, 0x0202, 0 },
+	{ "DigitalDream:l'elegante", 0x0553, 0x0202, 0 },
 	/* http://www.digitaldreamco.com/shop/espion.htm, CIF */
-      	{ "DigitalDream:l'espion",   0x0553, 0x0202, 0 },
+	{ "DigitalDream:l'espion",   0x0553, 0x0202, 0 },
 	/* http://www.digitaldreamco.com/shop/lesprit.html, CIF */
-      	{ "DigitalDream:l'esprit",   0x0553, 0x0202, 0 },
+	{ "DigitalDream:l'esprit",   0x0553, 0x0202, 0 },
 	/* http://www.digitaldreamco.com/shop/laronde.htm, VGA */
-      	{ "DigitalDream:la ronde",   0x0553, 0x0202, 0 },
+	{ "DigitalDream:la ronde",   0x0553, 0x0202, 0 },
 	/* https://sf.net/tracker/index.php?func=detail&aid=1000498&group_id=8874&atid=358874 */
 	{ "DigitalDream:l'espion XS", 0x1183, 0x0001, 0 },
 
@@ -220,7 +220,7 @@ static int camera_capture (Camera *camera, CameraCaptureType type, CameraFilePat
 	/* Just added a new picture... */
 	result = stv0680_file_count(camera->port,&count);
 	if (count == oldcount)
-	    return GP_ERROR; /* unclear what went wrong  ... hmm */
+		return GP_ERROR; /* unclear what went wrong  ... hmm */
 	strcpy(path->folder,"/");
 	sprintf(path->name,"image%03i.pnm",count);
 

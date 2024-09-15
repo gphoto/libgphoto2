@@ -1279,7 +1279,7 @@ static int
 ax203_defrag_memory(Camera *camera)
 {
 	char **raw_pictures;
-       	struct ax203_fileinfo *fileinfo;
+	struct ax203_fileinfo *fileinfo;
 	int i, count, ret = GP_OK;
 
 	count = ax203_read_filecount (camera);
@@ -1399,7 +1399,7 @@ static int
 ax203_build_used_mem_table(Camera *camera, struct ax203_fileinfo *table)
 {
 	int i, count, found = 0;
-       	struct ax203_fileinfo fileinfo;
+	struct ax203_fileinfo fileinfo;
 
 	count = ax203_read_filecount (camera);
 	if (count < 0) return count;

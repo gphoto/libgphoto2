@@ -256,12 +256,12 @@ gp_list_find_by_name (CameraList *list, int *index, const char *name)
 	 * camlibs/ptp2/library.c thinks this is faster
 	 */
 	for (i=list->used-1; i >= 0; i--) {
-	  if (0==strcmp(list->entry[i].name, name)) {
-	    if (index) {
-	      (*index) = i;
-	    }
-	    return (GP_OK);
-	  }
+		if (0==strcmp(list->entry[i].name, name)) {
+			if (index) {
+				(*index) = i;
+			}
+			return (GP_OK);
+		}
 	}
 
 	return (GP_ERROR);

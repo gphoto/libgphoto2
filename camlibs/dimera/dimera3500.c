@@ -340,11 +340,11 @@ static int get_info_func (CameraFilesystem *fs, const char *folder, const char *
 	info->file.permissions = GP_FILE_PERM_READ;
 
 	if (std_res) {
-	    info->file.width = 320;
-	    info->file.height = 240;
+		info->file.width = 320;
+		info->file.height = 240;
 	} else {
-	    info->file.width = 640;
-	    info->file.height = 480;
+		info->file.width = 640;
+		info->file.height = 480;
 	}
 	info->file.size = info->file.height*info->file.width*3 + sizeof( Dimera_finehdr ) - 1;
 

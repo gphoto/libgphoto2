@@ -138,7 +138,7 @@ gp_widget_free (CameraWidget *widget)
 	/* Free children recursively */
 	if ((widget->type == GP_WIDGET_WINDOW) ||
 	    (widget->type == GP_WIDGET_SECTION)) {
-	    	for (x = 0; x < gp_widget_count_children (widget); x++)
+		for (x = 0; x < gp_widget_count_children (widget); x++)
 			gp_widget_free (widget->children[x]);
 		free (widget->children);
 	}

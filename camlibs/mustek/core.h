@@ -29,9 +29,9 @@
 #define MDC800_FLASHLIGHT_AUTO		0
 
 struct _CameraPrivateLibrary {
-    unsigned char system_flags[4];
-    int  system_flags_valid;
-    int  memory_source;
+	unsigned char system_flags[4];
+	int  system_flags_valid;
+	int  memory_source;
 };
 
 /* -------------------------------------------------------------------------- */

@@ -47,21 +47,21 @@ mdc800_sendInitialCommand (Camera *camera, unsigned char* answer)
 	unsigned char	command [8]={COMMAND_BEGIN,COMMAND_INIT_CONNECT,0,0,0,COMMAND_END,0,0};
 
 	if (camera->port->type == GP_PORT_USB)
-	    return mdc800_io_sendCommand_with_retry(camera->port,command,answer,8,1,1);
+		return mdc800_io_sendCommand_with_retry(camera->port, command, answer, 8, 1, 1);
 	for (rate=0;rate<3;rate++)
 	{
-	    GPPortSettings settings;
+		GPPortSettings settings;
 
-	    ret = gp_port_get_settings(camera->port,&settings);
-	    if (ret != GP_OK) return ret;
-	    settings.serial.speed = baud_rates[rate];
-	    ret = gp_port_set_settings(camera->port, settings);
-	    if (ret != GP_OK) return ret;
-	    if (GP_OK==mdc800_io_sendCommand_with_retry(camera->port,command,answer,8,1,1)) {
-		printCoreNote("RS232 Baudrate probed at %d.\n",baud_rates[rate]);
-		return GP_OK;
-	    }
-	    printCoreError("Probing RS232 Baudrate with %d fails.\n",baud_rates[rate]);
+		ret = gp_port_get_settings(camera->port, &settings);
+		if (ret != GP_OK) return ret;
+		settings.serial.speed = baud_rates[rate];
+		ret = gp_port_set_settings(camera->port, settings);
+		if (ret != GP_OK) return ret;
+		if (GP_OK==mdc800_io_sendCommand_with_retry(camera->port, command, answer, 8, 1, 1)) {
+			printCoreNote("RS232 Baudrate probed at %d.\n", baud_rates[rate]);
+			return GP_OK;
+		}
+		printCoreError("Probing RS232 Baudrate with %d fails.\n", baud_rates[rate]);
 	}
 	printCoreError ("Probing failed completely.\n");
 	return GP_ERROR_IO;
@@ -85,7 +85,7 @@ int mdc800_openCamera (Camera *camera)
 
 	camera->pl = malloc(sizeof(struct _CameraPrivateLibrary));
 	if (!camera->pl)
-	    return GP_ERROR_NO_MEMORY;
+		return GP_ERROR_NO_MEMORY;
 	camera->pl->system_flags_valid = 0;
 	camera->pl->memory_source = -1;
 
@@ -115,7 +115,7 @@ int mdc800_closeCamera (Camera *camera)
 	free(camera->pl);
 	camera->pl = NULL;
 
-    return GP_OK;
+	return GP_OK;
 }
 
 
@@ -132,20 +132,20 @@ int mdc800_changespeed (Camera *camera,int new)
 
 	printFnkCall ("(mdc800_changespeed) called.\n");
 	if (camera->port->type != GP_PORT_SERIAL) /* USB ... */
-	    return GP_OK;
+		return GP_OK;
 
 	gp_port_get_settings(camera->port,&settings);
 
 	if (settings.serial.speed == baud_rate[new]) /* nothing to do */
-	    return GP_OK;
+		return GP_OK;
 
 	for (oldrate=0;oldrate<sizeof(baud_rate)/sizeof(baud_rate[0]);oldrate++)
-	    if (baud_rate[oldrate] == settings.serial.speed)
-		break;
+		if (baud_rate[oldrate] == settings.serial.speed)
+			break;
 
 	/* We did not find it? Can't happen? */
 	if (oldrate == sizeof(baud_rate)/sizeof(baud_rate[0]))
-	    return GP_ERROR_IO;
+		return GP_ERROR_IO;
 
 	/* Setting communication speed */
 	ret = mdc800_io_sendCommand(camera->port,COMMAND_CHANGE_RS232_BAUD_RATE,new,oldrate,0,0,0);
@@ -181,16 +181,16 @@ int mdc800_getSpeed (Camera *camera, int *speed)
 	GPPortSettings settings;
 
 	if (camera->port->type != GP_PORT_SERIAL)
-	    return GP_ERROR_IO;
+		return GP_ERROR_IO;
 
 	ret = gp_port_get_settings(camera->port,&settings);
 	if (ret!=GP_OK) return ret;
 
 	for (rate=0;rate<3;rate++)
-	    if (settings.serial.speed == baud_rate[rate])
-		break;
+		if (settings.serial.speed == baud_rate[rate])
+			break;
 	if (rate == 3)
-	    return GP_ERROR_IO;
+		return GP_ERROR_IO;
 	*speed = rate;
 	return GP_OK;
 }
@@ -218,7 +218,7 @@ int mdc800_getThumbnail (Camera *camera,int index, void **data, int *size)
 	*size = 4096;
 	*data = malloc(4096);
 	if (!*data)
-	    return GP_ERROR_NO_MEMORY;
+		return GP_ERROR_NO_MEMORY;
 	ret = mdc800_io_sendCommand(camera->port,COMMAND_GET_THUMBNAIL,index/100,(index%100)/10,index%10,*data,4096);
 	if (ret != GP_OK)
 	{
@@ -304,9 +304,9 @@ int mdc800_getSystemStatus (Camera *camera)
 		return GP_OK;
 	fprintf(stderr,"mdc800_getSystemStatus entered...\n");
 	while (tries--) {
-	    ret = mdc800_io_sendCommand(camera->port,COMMAND_GET_SYSTEM_STATUS,0,0,0,camera->pl->system_flags,4);
-	    if (ret == GP_OK)
-		break;
+		ret = mdc800_io_sendCommand(camera->port, COMMAND_GET_SYSTEM_STATUS, 0, 0, 0, camera->pl->system_flags, 4);
+		if (ret == GP_OK)
+			break;
 	}
 	if (ret!=GP_OK)
 	{
@@ -681,7 +681,7 @@ int mdc800_getImageQuality (Camera *camera, unsigned char *retval)
  */
 int mdc800_setImageQuality (Camera *camera,int v)
 {
-    return mdc800_io_sendCommand (camera->port,COMMAND_SET_IMAGE_QUALITY,v,0,0,0,0);
+	return mdc800_io_sendCommand (camera->port, COMMAND_SET_IMAGE_QUALITY, v, 0, 0, 0, 0);
 }
 
 
@@ -692,7 +692,7 @@ int mdc800_setImageQuality (Camera *camera,int v)
  */
 int mdc800_setWB (Camera *camera, int v)
 {
-    return mdc800_io_sendCommand(camera->port,COMMAND_SET_WB,v,0,0,0,0);
+	return mdc800_io_sendCommand(camera->port, COMMAND_SET_WB, v, 0, 0, 0, 0);
 }
 
 
@@ -746,7 +746,7 @@ int mdc800_getExposureMode (Camera *camera,int *retval)
 	int ret;
 	ret = mdc800_io_sendCommand (camera->port,COMMAND_GET_EXPOSURE_MODE,0,0,0,&cretval,1);
 	if (ret == GP_OK)
-	    *retval = cretval;
+		*retval = cretval;
 	return ret;
 }
 

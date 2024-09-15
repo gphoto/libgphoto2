@@ -177,7 +177,7 @@ sx330z_get_toc_page(Camera *camera, GPContext *context, struct traveler_toc_page
  */
 int
 sx330z_get_data(Camera *camera, GPContext *context, const char *filename,
-   		 char **data, unsigned long int *size, int thumbnail)
+	char **data, unsigned long int *size, int thumbnail)
 {
  uint8_t *dptr;
  int pages, cnt, ret;

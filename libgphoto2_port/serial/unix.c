@@ -524,45 +524,45 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 			return (GP_ERROR_TIMEOUT);
 
 		if (dev->settings.serial.parity != GP_PORT_SERIAL_PARITY_OFF) {
-		    unsigned char ffchar[1];
-		    unsigned char nullchar[1];
+			unsigned char ffchar[1];
+			unsigned char nullchar[1];
 
-		    ffchar[0] = 0xff;
-		    nullchar[0] = 0;
-		    now = read (dev->pl->fd, bytes, 1);
-		    if (now < 0)
-			    return GP_ERROR_IO_READ;
-		    if (!memcmp(bytes,ffchar,1)) {
+			ffchar[0] = 0xff;
+			nullchar[0] = 0;
 			now = read (dev->pl->fd, bytes, 1);
 			if (now < 0)
 				return GP_ERROR_IO_READ;
+			if (!memcmp(bytes, ffchar, 1)) {
+				now = read (dev->pl->fd, bytes, 1);
+				if (now < 0)
+					return GP_ERROR_IO_READ;
 
-			/* Parity errors are signaled by the serial layer
-			 * as 0xff 0x00 sequence.
-			 *
-			 * 0xff sent by the camera are escaped as
-			 * 0xff 0xff sequence.
-			 *
-			 * All other 0xff 0xXX sequences are errors.
-			 *
-			 * cf. man tcsetattr, description of PARMRK.
-			 */
-			if (!memcmp(bytes,nullchar,1)) {
-			    gp_port_set_error (dev, _("Parity error."));
-			    return GP_ERROR_IO_READ;
+				/* Parity errors are signaled by the serial layer
+				 * as 0xff 0x00 sequence.
+				 *
+				 * 0xff sent by the camera are escaped as
+				 * 0xff 0xff sequence.
+				 *
+				 * All other 0xff 0xXX sequences are errors.
+				 *
+				 * cf. man tcsetattr, description of PARMRK.
+				 */
+				if (!memcmp(bytes, nullchar, 1)) {
+					gp_port_set_error (dev, _("Parity error."));
+					return GP_ERROR_IO_READ;
+				}
+				if (memcmp(bytes, ffchar, 1)) {
+					gp_port_set_error (dev, _("Unexpected parity response sequence 0xff 0x%02x."), ((unsigned char*)bytes)[0]);
+					return GP_ERROR_IO_READ;
+				}
+				/* Ok, we read 1 byte and it is 0xff */
+				/* FALLTHROUGH */
 			}
-			if (memcmp(bytes,ffchar,1)) {
-			    gp_port_set_error (dev, _("Unexpected parity response sequence 0xff 0x%02x."), ((unsigned char*)bytes)[0]);
-			    return GP_ERROR_IO_READ;
-			}
-			/* Ok, we read 1 byte and it is 0xff */
-			/* FALLTHROUGH */
-		    }
 		} else {
-		    /* Just read the bytes */
-		    now = read (dev->pl->fd, bytes, size - readen);
-		    if (now < 0)
-			    return GP_ERROR_IO_READ;
+			/* Just read the bytes */
+			now = read (dev->pl->fd, bytes, size - readen);
+			if (now < 0)
+				return GP_ERROR_IO_READ;
 		}
 		bytes += now;
 		readen += now;
@@ -798,12 +798,12 @@ gp_port_serial_check_speed (GPPort *dev)
 	tio.c_cc[VTIME] = 0;
 
 	if (dev->settings.serial.parity != GP_PORT_SERIAL_PARITY_OFF) {
-	    GP_LOG_D ("Setting parity to %s...", dev->settings.serial.parity == GP_PORT_SERIAL_PARITY_ODD?"odd":"even");
-	    tio.c_iflag &= ~IGNPAR;
-	    tio.c_iflag |= INPCK | PARMRK ;
-	    tio.c_cflag |= PARENB;
-	    if (dev->settings.serial.parity == GP_PORT_SERIAL_PARITY_ODD)
-		tio.c_cflag |= PARODD;
+		GP_LOG_D ("Setting parity to %s...", dev->settings.serial.parity == GP_PORT_SERIAL_PARITY_ODD ? "odd" : "even");
+		tio.c_iflag &= ~IGNPAR;
+		tio.c_iflag |= INPCK | PARMRK;
+		tio.c_cflag |= PARENB;
+		if (dev->settings.serial.parity == GP_PORT_SERIAL_PARITY_ODD)
+			tio.c_cflag |= PARODD;
 	}
 
 	/* Set the new speed. */

@@ -426,7 +426,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		gpi_jpeg_destroy(myjpeg);
 		free (tempchunk);
 		break;
-    	}
+	}
 	return (GP_OK);
 }
 

@@ -26,14 +26,16 @@
 
 #include "decomp.h"
 
-struct chain { int 	left,val,right; };
+struct chain {
+	int 	left,val,right;
+};
 struct compstate {
-    unsigned char	curmask;
-    unsigned char	bytebuf;
-    unsigned char	*byteptr;
+	unsigned char	curmask;
+	unsigned char	bytebuf;
+	unsigned char	*byteptr;
 
-    struct chain	cl[200];
-    int			stackstart;
+	struct chain	cl[200];
+	int		stackstart;
 };
 
 /* FLOAT_QUERY: 0.860000 1.030000 1.150000. */
@@ -43,13 +45,13 @@ struct compstate {
 /********************************************************/
 static inline int
 jd11_getbit(struct compstate *cs) {
-    int	ret;
-    if (cs->curmask == 0x80)
-	cs->bytebuf = *cs->byteptr++;
-    ret = cs->curmask & cs->bytebuf;
-    cs->curmask >>=1;
-    if (!cs->curmask) cs->curmask = 0x80;
-    return !!ret;
+	int	ret;
+	if (cs->curmask == 0x80)
+		cs->bytebuf = *cs->byteptr++;
+	ret = cs->curmask & cs->bytebuf;
+	cs->curmask >>=1;
+	if (!cs->curmask) cs->curmask = 0x80;
+	return !!ret;
 }
 
 /********************************************************/
@@ -57,17 +59,17 @@ jd11_getbit(struct compstate *cs) {
 /********************************************************/
 static int
 decomp_1byte(struct compstate *cs) {
-    int	xcs = cs->stackstart;
-    int	xbit;
+	int	xcs = cs->stackstart;
+	int	xbit;
 
-    while ((cs->cl[xcs].left>=0) && (cs->cl[xcs].right>=0)) {
-	xbit = jd11_getbit(cs);
-	if (xbit)
-	    xcs = cs->cl[xcs].left;
-	else
-	    xcs = cs->cl[xcs].right;
-    }
-    return cs->cl[xcs].val;
+	while ((cs->cl[xcs].left>=0) && (cs->cl[xcs].right>=0)) {
+		xbit = jd11_getbit(cs);
+		if (xbit)
+			xcs = cs->cl[xcs].left;
+		else
+			xcs = cs->cl[xcs].right;
+	}
+	return cs->cl[xcs].val;
 }
 
 static void

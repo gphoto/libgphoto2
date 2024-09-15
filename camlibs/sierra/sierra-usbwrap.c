@@ -316,7 +316,7 @@ usb_wrap_RDY(gp_port* dev, unsigned int type)
    msg.length    	= uw_value(sizeof(msg));
    msg.packet_type	= UW_PACKET_RDY;
    ret = gp_port_send_scsi_cmd (dev, 1, (char*)&cmd, sizeof(cmd),
-   	 sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
+      sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
    if (ret<GP_OK)
       GP_DEBUG( "usb_wrap_RDY *** FAILED" );
    return ret;
@@ -339,7 +339,7 @@ usb_wrap_STAT(gp_port* dev, unsigned int type)
 
    memset(&msg, 0, sizeof(msg));
    ret = gp_port_send_scsi_cmd (dev, 0, (char*)&cmd, sizeof(cmd),
-   	 sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
+      sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
 
    if (ret < GP_OK)
    {
@@ -389,7 +389,7 @@ usb_wrap_CMND(gp_port* dev, unsigned int type, char* sierra_msg, int sierra_len)
    GP_DEBUG( "usb_wrap_CMND writing %i", msg_len);
 
    ret = gp_port_send_scsi_cmd (dev, 1, (char*)&cmd, sizeof(cmd),
-   	 sense_buffer, sizeof(sense_buffer), (char*)msg, msg_len);
+      sense_buffer, sizeof(sense_buffer), (char*)msg, msg_len);
    free(msg);
 
    if (ret < GP_OK)
@@ -417,7 +417,7 @@ usb_wrap_SIZE(gp_port* dev, unsigned int type, uw32_t* size)
 
    memset(&msg, 0, sizeof(msg));
    ret = gp_port_send_scsi_cmd (dev, 0, (char*)&cmd, sizeof(cmd),
-   	 sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
+      sense_buffer, sizeof(sense_buffer), (char*)&msg, sizeof(msg));
 
    if (ret < GP_OK)
    {
@@ -473,7 +473,7 @@ usb_wrap_DATA (GPPort *dev, unsigned int type, char *sierra_response, int *sierr
    cmd.length	= uw_value(msg_len);
 
    ret = gp_port_send_scsi_cmd (dev, 0, (char*)&cmd, sizeof(cmd),
-   	 sense_buffer, sizeof(sense_buffer), (char*)msg, msg_len);
+      sense_buffer, sizeof(sense_buffer), (char*)msg, msg_len);
 
    if (ret < GP_OK)
    {

@@ -574,18 +574,17 @@ ricoh_get_pic (Camera *camera, GPContext *context, unsigned int n,
 	RicohMode mode;
 
 	GP_DEBUG ("Getting image %i as %s...", n,
-							(type==RICOH_FILE_TYPE_PREVIEW ? "thumbnail":"image"));
+		  (type==RICOH_FILE_TYPE_PREVIEW ? "thumbnail":"image"));
 
 	/* Put camera into play mode, if not already */
 	CR (ricoh_get_mode (camera, context, &mode));
 	if (mode != RICOH_MODE_PLAY)
-	    CR (ricoh_set_mode (camera, context, RICOH_MODE_PLAY));
+		CR (ricoh_set_mode (camera, context, RICOH_MODE_PLAY));
 
 	/* Send picture number */
 	p[0] = n >> 0;
 	p[1] = n >> 8;
-	CR (ricoh_transmit (camera, context, (unsigned char) type,
-			    p, 2, buf, &len));
+	CR (ricoh_transmit (camera, context, (unsigned char) type, p, 2, buf, &len));
 	C_LEN (context, len, 16);
 
 	/*
@@ -839,8 +838,7 @@ ricoh_put_file (Camera *camera, GPContext *context, const char *name,
 	for (i = 0; i < size; i += 128) {
 		memset (block, 0, sizeof (buf));
 		memcpy (block, data + i, MIN (128, size - i));
-		CR (ricoh_transmit (camera, context, 0xa2, block, 128,
-				    buf, &len));
+		CR (ricoh_transmit (camera, context, 0xa2, block, 128, buf, &len));
 		C_LEN (context, len, 0);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL)
 			return (GP_ERROR_CANCEL);

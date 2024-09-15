@@ -135,7 +135,7 @@ ez200_read_picture_data (GPPort *port, char *data, int size, int n) {
 static int
 ez200_read_picture_header(GPPort *port, char *data) {
 	/*  lecture de l'entete :: read header of picture  */
-    	READ(port, PICTURE_HEAD, 3, 3, data, HEADER_SIZE);
+	READ(port, PICTURE_HEAD, 3, 3, data, HEADER_SIZE);
 	return GP_OK;
 }
 

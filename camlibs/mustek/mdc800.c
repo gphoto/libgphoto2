@@ -115,7 +115,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	nr = gp_filesystem_number(fs, folder, filename, context);
 	if (nr < 0)
-	    return nr;
+		return nr;
 
 	ret = mdc800_setTarget (camera,1);
 	if (ret!=GP_OK)

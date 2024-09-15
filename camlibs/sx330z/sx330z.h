@@ -125,7 +125,7 @@ int sx330z_get_toc_page(Camera *camera,GPContext *context,struct traveler_toc_pa
  *  Load image data (thumbnail(exif) / image)
  */
 int sx330z_get_data(Camera *camera,GPContext *context, const char* filename,
-   		    char **,unsigned long int *size,int thumbnail);
+		    char **,unsigned long int *size,int thumbnail);
 
 
 

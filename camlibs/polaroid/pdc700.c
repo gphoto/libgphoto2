@@ -509,7 +509,7 @@ pdc700_info (Camera *camera, PDCInfo *info, GPContext *context)
 	 * 01 20 .. 02
 	 */
 
- 	info->memory = buf[2];
+	info->memory = buf[2];
 
 	/* Power source state (make sure it's valid) */
 	info->ac_power = buf[4];
@@ -518,7 +518,7 @@ pdc700_info (Camera *camera, PDCInfo *info, GPContext *context)
 		info->ac_power = PDC_BOOL_OFF;
 	}
 
- 	info->auto_poweroff = buf[5];
+	info->auto_poweroff = buf[5];
 
 	/* Mode (make sure we know it) */
 	info->mode = buf[6];
@@ -1015,7 +1015,7 @@ static int
 which_radio_button (CameraWidget *window, const char *label,
 		    const char * const *opt)
 {
-  	CameraWidget *child;
+	CameraWidget *child;
 	int i;
 	const char *value;
 
@@ -1038,7 +1038,7 @@ which_radio_button (CameraWidget *window, const char *label,
 static int
 camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 {
-  	CameraWidget *child;
+	CameraWidget *child;
 	int i = 0, r;
 	float range;
 

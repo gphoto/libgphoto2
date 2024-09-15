@@ -33,7 +33,7 @@
 
 #define radc_token(tree, ptr) ((signed char) getbithuff(8, ptr, huff[tree]))
 #define PREDICTOR (c ? (buf[c][y-1][x] + buf[c][y][x+1]) / 2 \
-									 : (buf[c][y-1][x+1] + 2*buf[c][y-1][x] + buf[c][y][x+1]) / 4)
+                     : (buf[c][y-1][x+1] + 2*buf[c][y-1][x] + buf[c][y][x+1]) / 4)
 
 int qtkn_decode(unsigned char *raw, int width, int height, unsigned char **out) {
 	static const char src[] = {
@@ -56,8 +56,8 @@ int qtkn_decode(unsigned char *raw, int width, int height, unsigned char **out) 
 		2,-1, 2,13, 2,26, 3,39, 4,-16, 5,55, 6,-37, 6,76,
 		2,-26, 2,-13, 2,1, 3,-39, 4,16, 5,-55, 6,-76, 6,37
 	};
-  static const unsigned short pt[] =
-    { 0,0, 1280,1344, 2320,3616, 3328,8000, 4095,16383, 65535,16383 };
+	static const unsigned short pt[] =
+		{ 0,0, 1280,1344, 2320,3616, 3328,8000, 4095,16383, 65535,16383 };
 	unsigned short curve[0x10000];
 	unsigned short huff[19][256];
 	int row, col, tree, nreps, rep, step, i, c, s, r, x, y, val, len;
@@ -85,15 +85,15 @@ int qtkn_decode(unsigned char *raw, int width, int height, unsigned char **out) 
 		return GP_ERROR_NO_MEMORY;
 	}
 
-  for (i=2; i < 12; i+=2) {
-    for (c=pt[i-2]; c <= pt[i]; c++) {
-      curve[c] = (float) (c-pt[i-2]) / (pt[i]-pt[i-2]) * (pt[i+1]-pt[i-1]) + pt[i-1] + 0.5;
+	for (i=2; i < 12; i+=2) {
+		for (c=pt[i-2]; c <= pt[i]; c++) {
+			curve[c] = (float)(c-pt[i-2]) / (pt[i]-pt[i-2]) * (pt[i+1]-pt[i-1]) + pt[i-1] + 0.5;
 		}
 	}
 
 	for (s=i=0; i < (int)sizeof src; i+=2) {
 		for (c=0; c < 256 >> src[i]; c++) {
-			((unsigned short *)huff)[s++] = src[i] << 8 | (unsigned char) src[i+1];
+			((unsigned short *)huff)[s++] = src[i] << 8 | (unsigned char)src[i+1];
 		}
 	}
 	s = 3;
@@ -181,8 +181,8 @@ int qtkn_decode(unsigned char *raw, int width, int height, unsigned char **out) 
 		}
 	}
 
-  for (i=0; i < height*width; i++) {
-    tmp_c[i] = LIM(curve[tmp[i]] >> 4, 0, 255);
+	for (i=0; i < height*width; i++) {
+		tmp_c[i] = LIM(curve[tmp[i]] >> 4, 0, 255);
 	}
 
 	*out = calloc(1, len);

@@ -1248,15 +1248,15 @@ get_last_file (Camera *camera, char *directory, char *destname,
 static int
 get_last_picture (Camera *camera, char *directory, char *destname, GPContext* context)
 {
-    GP_DEBUG ("get_last_picture()");
-    return get_last_file(camera, directory, destname, context, 0, destname);
+	GP_DEBUG ("get_last_picture()");
+	return get_last_file(camera, directory, destname, context, 0, destname);
 }
 
 static int
 get_last_dir (Camera *camera, char *directory, char *destname, GPContext* context)
 {
-    GP_DEBUG ("get_last_dir()");
-    return get_last_file(camera, directory, destname, context, 1, destname);
+	GP_DEBUG ("get_last_dir()");
+	return get_last_file(camera, directory, destname, context, 1, destname);
 }
 
 /*
@@ -1267,21 +1267,20 @@ get_last_dir (Camera *camera, char *directory, char *destname, GPContext* contex
 static void
 convert_filename_to_8_3(const char* filename, char* dest)
 {
-    char*c;
-    GP_DEBUG ("convert_filename_to_8_3()");
-    c = strchr(filename, '.');
-    if(!c) {
-	sprintf(dest, "%.8s", filename);
-    }
-    else {
-	int l = c-filename;
-	if(l>8)
-	    l=8;
-	memcpy(dest, filename, l);
-	dest[l]=0;
-	strcat(dest, c);
-	dest[l+4]=0;
-    }
+	char*c;
+	GP_DEBUG ("convert_filename_to_8_3()");
+	c = strchr(filename, '.');
+	if (!c) {
+		sprintf(dest, "%.8s", filename);
+	} else {
+		int l = c-filename;
+		if (l>8)
+			l=8;
+		memcpy(dest, filename, l);
+		dest[l]=0;
+		strcat(dest, c);
+		dest[l+4]=0;
+	}
 }
 
 
