@@ -412,7 +412,7 @@ fd_putfunc(PTPParams* params, void* private,
 	PTPFDHandlerPrivate* priv = (PTPFDHandlerPrivate*)private;
 
 	written = write (priv->fd, data, sendlen);
-	if (written != sendlen)
+	if ((unsigned long)written != sendlen)
 		return PTP_ERROR_IO;
 	return PTP_RC_OK;
 }

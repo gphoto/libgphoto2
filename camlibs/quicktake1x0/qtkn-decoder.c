@@ -112,7 +112,7 @@ int qtkn_decode(unsigned char *raw, int width, int height, unsigned char **out) 
 		for (c=0; c < 3; c++) {
 			val = ((0x1000000/last[c] + 0x7ff) >> 12) * mul[c];
 			s = val > 65564 ? 10:12;
-			x = ~(-1 << (s-1));
+			x = ~((unsigned int)-1 << (s-1));
 			val <<= 12-s;
 			for (i=0; i < (int)(sizeof(buf[0])/sizeof(short)); i++) {
 				((short *)buf[c])[i] = (((short *)buf[c])[i] * val + x) >> s;
