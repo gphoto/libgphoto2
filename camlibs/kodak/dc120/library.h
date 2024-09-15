@@ -31,34 +31,34 @@
 
 /* Status structure. Copied from dc210, thus may not fit. */
 typedef struct {
-    char    camera_type_id;               /* 1 */
-    char    firmware_major;               /* 2 */
-    char    firmware_minor;               /* 3 */
-    char    batteryStatusId;     	        /* 8 battery status */
-    char    acStatusId;                   /* 9 */
-    unsigned long time;	        	/* 12-15 */
-    char    af_mode;  	     	        /* 16 */
-    char    zoom_mode;     	     	/* 16 */
-    char    flash_charged;		/* 18 */
-    char    compression_mode_id;        	/* 19 */
-    char    flash_mode;	        	/* 20 */
-    char    exposure_compensation;	/* 21 */
-    char    light_value;                  /* 22 measured light */
-    char    manual_exposure;              /* 23 */
-    unsigned long exposure_time;          /* 24-27*/
-    char    shutter_delay;                /* 29 */
-    char    memory_card;                  /* 30 */
-    char    front_cover;                  /* 31 */
-    char    date_format;                  /* 32 */
-    char    time_format;                  /* 33 */
-    char    distance_format;              /* 34 */
-    unsigned short taken_pict_mem;        /* 36-37 */
-    unsigned short remaining_pic_mem[4];  /* 46-53 */
-    unsigned short taken_pict_card;       /* 56-57 */
-    unsigned short remaining_pic_card[4]; /* 66-73 */
-    unsigned long  album_count;           /* 122-125 */
-    char    card_id[32];      	        /* 77-88 */
-    char    camera_id[32];      	        /* 90-122 */
+	char    camera_type_id;               /* 1 */
+	char    firmware_major;               /* 2 */
+	char    firmware_minor;               /* 3 */
+	char    batteryStatusId;     	        /* 8 battery status */
+	char    acStatusId;                   /* 9 */
+	unsigned long time;	        	/* 12-15 */
+	char    af_mode;  	     	        /* 16 */
+	char    zoom_mode;     	     	/* 16 */
+	char    flash_charged;		/* 18 */
+	char    compression_mode_id;        	/* 19 */
+	char    flash_mode;	        	/* 20 */
+	char    exposure_compensation;	/* 21 */
+	char    light_value;                  /* 22 measured light */
+	char    manual_exposure;              /* 23 */
+	unsigned long exposure_time;          /* 24-27*/
+	char    shutter_delay;                /* 29 */
+	char    memory_card;                  /* 30 */
+	char    front_cover;                  /* 31 */
+	char    date_format;                  /* 32 */
+	char    time_format;                  /* 33 */
+	char    distance_format;              /* 34 */
+	unsigned short taken_pict_mem;        /* 36-37 */
+	unsigned short remaining_pic_mem[4];  /* 46-53 */
+	unsigned short taken_pict_card;       /* 56-57 */
+	unsigned short remaining_pic_card[4]; /* 66-73 */
+	unsigned long  album_count;           /* 122-125 */
+	char    card_id[32];      	        /* 77-88 */
+	char    camera_id[32];      	        /* 90-122 */
 } Kodak_dc120_status;
 
 int   dc120_set_speed    (Camera *camera, int speed);

@@ -563,9 +563,9 @@ gp_abilities_list_append (CameraAbilitiesList *list, CameraAbilities abilities)
 	C_PARAMS (list);
 
 	if (list->count == list->maxcount) {
-	    C_MEM (list->abilities = realloc (list->abilities,
+		C_MEM (list->abilities = realloc (list->abilities,
 				sizeof (CameraAbilities) * (list->maxcount + 100)));
-	    list->maxcount += 100;
+		list->maxcount += 100;
 	}
 
 	memcpy (&(list->abilities [list->count]), &abilities,

@@ -1290,9 +1290,9 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 		*b_len += packlength;
 
 		if (file) {
-		    CHECK (gp_file_append (file, (char *)&p[4], packlength));
-		    if (total > min_progress_bytes)
-			gp_context_progress_update (context, id, *b_len);
+			CHECK (gp_file_append (file, (char *)&p[4], packlength));
+			if (total > min_progress_bytes)
+				gp_context_progress_update (context, id, *b_len);
 		}
 
 	} while (p[0] != SIERRA_PACKET_DATA_END);

@@ -5623,44 +5623,44 @@ ptp_chdk_download(PTPParams* params, char *remote_fn, PTPDataHandler *handler)
 #if 0
 int ptp_chdk_upload(PTPParams* params, char *local_fn, char *remote_fn)
 {
-  uint16_t ret;
-  PTPContainer ptp;
-  char *buf = NULL;
-  FILE *f;
-  unsigned file_len,data_len,file_name_len;
+	uint16_t ret;
+	PTPContainer ptp;
+	char *buf = NULL;
+	FILE *f;
+	unsigned file_len, data_len, file_name_len;
 
-  PTP_CNT_INIT(ptp, PTP_OC_CHDK, PTP_CHDK_UploadFile);
+	PTP_CNT_INIT(ptp, PTP_OC_CHDK, PTP_CHDK_UploadFile);
 
-  f = fopen(local_fn,"rb");
-  if ( f == NULL )
-  {
-    ptp_error(params,"could not open file \'%s\'",local_fn);
-    return 0;
-  }
+	f = fopen(local_fn, "rb");
+	if (f == NULL)
+	{
+		ptp_error(params, "could not open file \'%s\'", local_fn);
+		return 0;
+	}
 
-  fseek(f,0,SEEK_END);
-  file_len = ftell(f);
-  fseek(f,0,SEEK_SET);
+	fseek(f, 0, SEEK_END);
+	file_len = ftell(f);
+	fseek(f, 0, SEEK_SET);
 
-  file_name_len = strlen(remote_fn);
-  data_len = 4 + file_name_len + file_len;
-  buf = malloc(data_len);
-  memcpy(buf,&file_name_len,4);
-  memcpy(buf+4,remote_fn,file_name_len);
-  fread(buf+4+file_name_len,1,file_len,f);
+	file_name_len = strlen(remote_fn);
+	data_len = 4 + file_name_len + file_len;
+	buf = malloc(data_len);
+	memcpy(buf, &file_name_len, 4);
+	memcpy(buf+4, remote_fn, file_name_len);
+	fread(buf+4+file_name_len, 1, file_len, f);
 
-  fclose(f);
+	fclose(f);
 
-  ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, data_len, &buf, NULL);
+	ret=ptp_transaction(params, &ptp, PTP_DP_SENDDATA, data_len, &buf, NULL);
 
-  free(buf);
+	free(buf);
 
-  if ( ret != PTP_RC_OK )
-  {
-    ptp_error(params,"unexpected return code 0x%x",ret);
-    return 0;
-  }
-  return 1;
+	if (ret != PTP_RC_OK)
+	{
+		ptp_error(params, "unexpected return code 0x%x", ret);
+		return 0;
+	}
+	return 1;
 }
 
 #endif
@@ -5700,7 +5700,7 @@ ptp_chdk_rcgetchunk(PTPParams* params, int fmt, ptp_chdk_rc_chunk *chunk)
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &chunk->data, NULL));
 	chunk->size = ptp.Param1;
 	chunk->last = (ptp.Param2 == 0);
-  	chunk->offset = ptp.Param3; //-1 for none
+	chunk->offset = ptp.Param3; //-1 for none
 	return PTP_RC_OK;
 }
 

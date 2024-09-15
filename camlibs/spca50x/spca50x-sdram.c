@@ -137,7 +137,7 @@ spca50x_sdram_get_file_count_and_fat_count (CameraPrivateLibrary * lib,
 
 			lib->num_fats++;
 		}
- 	}
+	}
 	return (GP_OK);
 }
 
@@ -520,9 +520,8 @@ spca50x_sdram_request_thumbnail (CameraPrivateLibrary * lib, uint8_t ** buf,
 		 * Middle: 640x480                0
 		 * High:  1024x768 (interpolated) 1*/
 		if (lib->bridge == BRIDGE_SPCA500
-  		    && (g_file->fat[20] & 0xFF) == 2) {
-  			return (spca50x_get_image (lib, buf, len, g_file));
-
+		    && (g_file->fat[20] & 0xFF) == 2) {
+			return (spca50x_get_image (lib, buf, len, g_file));
 		} else {
 			return (spca50x_get_image_thumbnail
 				(lib, buf, len, g_file));

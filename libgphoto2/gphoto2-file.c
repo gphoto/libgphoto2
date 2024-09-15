@@ -576,29 +576,30 @@ gp_file_save (CameraFile *file, const char *filename)
  * See also the GP_MIME_* definitions.
  */
 static const char *mime_table[] = {
-    "bmp",  GP_MIME_BMP,
-    "jpg",  GP_MIME_JPEG,
-    "tif",  GP_MIME_TIFF,
-    "ppm",  GP_MIME_PPM,
-    "pgm",  GP_MIME_PGM,
-    "pnm",  GP_MIME_PNM,
-    "png",  GP_MIME_PNG,
-    "wav",  GP_MIME_WAV,
-    "avi",  GP_MIME_AVI,
-    "mp3",  GP_MIME_MP3,
-    "wma",  GP_MIME_WMA,
-    "asf",  GP_MIME_ASF,
-    "ogg",  GP_MIME_OGG,
-    "mpg",  GP_MIME_MPEG,
-    "raw",  GP_MIME_RAW,
-    "mts",  GP_MIME_AVCHD,
-    "m2ts", GP_MIME_AVCHD,
-    "arw",  GP_MIME_ARW,
-    "raf",  GP_MIME_RAF,
-    "txt",  GP_MIME_TXT,
-    "qtk",  GP_MIME_QTKT,
-    "qtk",  GP_MIME_QTKN,
-    NULL};
+	"bmp",  GP_MIME_BMP,
+	"jpg",  GP_MIME_JPEG,
+	"tif",  GP_MIME_TIFF,
+	"ppm",  GP_MIME_PPM,
+	"pgm",  GP_MIME_PGM,
+	"pnm",  GP_MIME_PNM,
+	"png",  GP_MIME_PNG,
+	"wav",  GP_MIME_WAV,
+	"avi",  GP_MIME_AVI,
+	"mp3",  GP_MIME_MP3,
+	"wma",  GP_MIME_WMA,
+	"asf",  GP_MIME_ASF,
+	"ogg",  GP_MIME_OGG,
+	"mpg",  GP_MIME_MPEG,
+	"raw",  GP_MIME_RAW,
+	"mts",  GP_MIME_AVCHD,
+	"m2ts", GP_MIME_AVCHD,
+	"arw",  GP_MIME_ARW,
+	"raf",  GP_MIME_RAF,
+	"txt",  GP_MIME_TXT,
+	"qtk",  GP_MIME_QTKT,
+	"qtk",  GP_MIME_QTKN,
+	NULL
+};
 /**
  * @param file a #CameraFile
  * @param filename

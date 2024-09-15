@@ -82,7 +82,7 @@ struct _CameraPrivateLibrary {
 };
 
 struct lut {
-    unsigned char data[256];
+	unsigned char data[256];
 };
 
 bool dp_cmd(GPPort *port, const char *cmd);

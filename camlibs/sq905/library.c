@@ -346,7 +346,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		}
 		GP_DEBUG("Fetch entry %i\n", to_fetch);
 		sq_read_picture_data
-			    (camera->port, camera->pl->last_fetched_data, b);
+			(camera->port, camera->pl->last_fetched_data, b);
 		camera->pl->last_fetched_entry = to_fetch;
 	} while (camera->pl->last_fetched_entry<entry);
 

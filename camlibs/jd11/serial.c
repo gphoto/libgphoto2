@@ -86,13 +86,13 @@ static int _read_cmd(GPPort *port,unsigned short *xcmd) {
 	do {
 		if (1==(ret=READ(port,buf,1))) {
 			if (buf[0]==0xff) {
-			    if (1==READ(port,buf+1,1)) {
-				*xcmd = (buf[0] << 8)| buf[1];
-				return GP_OK;
-			    }
+				if (1==READ(port, buf+1, 1)) {
+					*xcmd = (buf[0] << 8)| buf[1];
+					return GP_OK;
+				}
 			}
 		} else {
-		    return ret;
+			return ret;
 		}
 	} while (i++<10);
 	return GP_ERROR_IO;

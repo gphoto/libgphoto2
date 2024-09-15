@@ -288,7 +288,7 @@ int dc120_get_status (Camera *camera, Kodak_dc120_status *status, GPContext *con
 	CameraFile *file;
 	char *p = dc120_packet_new(0x7F);
 	int i;
- 	int retval;
+	int retval;
 	int size;
 
 	gp_file_new (&file);

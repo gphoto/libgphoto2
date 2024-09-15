@@ -248,18 +248,18 @@ int jl2005c_reset (Camera *camera, GPPort *port)
 	 * dumped before exit. If that is not yet done, then do it now! */
 	if(camera->pl->data_reg_opened) {
 		while (camera->pl->bytes_read_from_camera <
-				    camera->pl->total_data_in_camera ) {
+					camera->pl->total_data_in_camera ) {
 			if (!camera->pl->data_cache )
 				camera->pl->data_cache = malloc (MAX_DLSIZE);
 			downloadsize = MAX_DLSIZE;
 			if (camera->pl->bytes_read_from_camera + MAX_DLSIZE >=
-				    camera->pl->total_data_in_camera )
+					camera->pl->total_data_in_camera )
 				downloadsize = camera->pl->total_data_in_camera -
 					camera->pl->bytes_read_from_camera;
 			if (downloadsize)
 				jl2005c_read_data (camera->port,
-					    (char *) camera->pl->data_cache,
-					    downloadsize);
+						(char *) camera->pl->data_cache,
+						downloadsize);
 			camera->pl->bytes_read_from_camera += downloadsize;
 		}
 	}

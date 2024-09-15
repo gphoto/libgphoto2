@@ -521,87 +521,87 @@ int stv0680_capture_preview(GPPort *port, char **data, int *size)
 
 
 int stv0680_delete_all(GPPort *port) {
-    return stv0680_try_cmd(port,CMDID_SET_IMAGE_INDEX,0,NULL,0);
+	return stv0680_try_cmd(port, CMDID_SET_IMAGE_INDEX, 0, NULL, 0);
 }
 
 int stv0680_summary(GPPort *port, char *txt)
 {
-    struct stv680_camera_info caminfo;
-    struct stv680_image_info imginfo;
-    int ret;
+	struct stv680_camera_info caminfo;
+	struct stv680_image_info imginfo;
+	int ret;
 
-    strcpy(txt,_("Information on STV0680-based camera:\n"));
-    /* Get Camera Information */
-    if ((ret = stv0680_try_cmd(port, CMDID_GET_CAMERA_INFO,
-				0, (void*)&caminfo, sizeof(caminfo)) < 0))
-	return ret;
-    sprintf(txt+strlen(txt),_("Firmware Revision: %d.%d\n"),
-	    caminfo.firmware_revision[0],
-	    caminfo.firmware_revision[1]
-    );
-    sprintf(txt+strlen(txt),_("ASIC Revision: %d.%d\n"),
-	    caminfo.asic_revision[0],
-	    caminfo.asic_revision[1]
-    );
-    sprintf(txt+strlen(txt),_("Sensor ID: %d.%d\n"),
-	    caminfo.sensor_id[0],
-	    caminfo.sensor_id[1]
-    );
-    /* HWCONFIG_COMMSLINK_MASK ... not really needed, the user knows, he
-     * plugged it in. */
-    sprintf(txt+strlen(txt),_("Camera is configured for lights flickering by %dHz.\n"),
-    	(caminfo.hardware_config & HWCONFIG_FLICKERFREQ_60HZ)?60:50
-    );
-    sprintf(txt+strlen(txt),_("Memory in camera: %d Mbit.\n"),
-    	(caminfo.hardware_config & HWCONFIG_MEMSIZE_16MBIT)?16:64
-    );
-    if (caminfo.hardware_config & HWCONFIG_HAS_THUMBNAILS)
-	strcat(txt,_("Camera supports Thumbnails.\n"));
-    if (caminfo.hardware_config & HWCONFIG_HAS_VIDEO)
-	strcat(txt,_("Camera supports Video.\n"));
-    /* HWCONFIG_STARTUP_COMPLETED ... Would the camera even answer if not ? */
-    if (caminfo.hardware_config & HWCONFIG_IS_MONOCHROME)
-	strcat(txt,_("Camera pictures are monochrome.\n"));
-    if (caminfo.hardware_config & HWCONFIG_MEM_FITTED) /* Is this useful? */
-	strcat(txt,_("Camera has memory.\n"));
+	strcpy(txt, _("Information on STV0680-based camera:\n"));
+	/* Get Camera Information */
+	if ((ret = stv0680_try_cmd(port, CMDID_GET_CAMERA_INFO,
+		0, (void*)&caminfo, sizeof(caminfo)) < 0))
+		return ret;
+	sprintf(txt+strlen(txt), _("Firmware Revision: %d.%d\n"),
+		caminfo.firmware_revision[0],
+		caminfo.firmware_revision[1]
+	);
+	sprintf(txt+strlen(txt), _("ASIC Revision: %d.%d\n"),
+		caminfo.asic_revision[0],
+		caminfo.asic_revision[1]
+	);
+	sprintf(txt+strlen(txt), _("Sensor ID: %d.%d\n"),
+		caminfo.sensor_id[0],
+		caminfo.sensor_id[1]
+	);
+	/* HWCONFIG_COMMSLINK_MASK ... not really needed, the user knows, he
+	 * plugged it in. */
+	sprintf(txt+strlen(txt), _("Camera is configured for lights flickering by %dHz.\n"),
+		(caminfo.hardware_config & HWCONFIG_FLICKERFREQ_60HZ) ? 60 : 50
+	);
+	sprintf(txt+strlen(txt), _("Memory in camera: %d Mbit.\n"),
+		(caminfo.hardware_config & HWCONFIG_MEMSIZE_16MBIT) ? 16 : 64
+	);
+	if (caminfo.hardware_config & HWCONFIG_HAS_THUMBNAILS)
+		strcat(txt, _("Camera supports Thumbnails.\n"));
+	if (caminfo.hardware_config & HWCONFIG_HAS_VIDEO)
+		strcat(txt, _("Camera supports Video.\n"));
+	/* HWCONFIG_STARTUP_COMPLETED ... Would the camera even answer if not ? */
+	if (caminfo.hardware_config & HWCONFIG_IS_MONOCHROME)
+		strcat(txt, _("Camera pictures are monochrome.\n"));
+	if (caminfo.hardware_config & HWCONFIG_MEM_FITTED) /* Is this useful? */
+		strcat(txt, _("Camera has memory.\n"));
 
-    strcat(txt,_("Camera supports videoformats: "));
-    if (caminfo.capabilities & CAP_CIF) strcat(txt,"CIF ");
-    if (caminfo.capabilities & CAP_VGA) strcat(txt,"VGA ");
-    if (caminfo.capabilities & CAP_QCIF) strcat(txt,"QCIF ");
-    if (caminfo.capabilities & CAP_QVGA) strcat(txt,"QVGA ");
-    strcat(txt,"\n");
-    sprintf(txt+strlen(txt),_("Vendor ID: %02x%02x\n"),
-	    caminfo.vendor_id[0],
-	    caminfo.vendor_id[1]
-    );
-    sprintf(txt+strlen(txt),_("Product ID: %02x%02x\n"),
-	    caminfo.product_id[0],
-	    caminfo.product_id[1]
-    );
-    if ((ret = stv0680_try_cmd(port, CMDID_GET_IMAGE_INFO, 0,
-		    (void*)&imginfo, sizeof(imginfo))!=GP_OK))
-	return ret;
-    sprintf(txt+strlen(txt),_("Number of Images: %d\n"),
-	    (imginfo.index[0]<<8)|imginfo.index[1]
-    );
-    sprintf(txt+strlen(txt),_("Maximum number of Images: %d\n"),
-	    (imginfo.maximages[0]<<8)|imginfo.maximages[1]
-    );
-    sprintf(txt+strlen(txt),_("Image width: %d\n"),
-	    (imginfo.width[0]<<8)|imginfo.width[1]
-    );
-    sprintf(txt+strlen(txt),_("Image height: %d\n"),
-	    (imginfo.height[0]<<8)|imginfo.height[1]
-    );
-    sprintf(txt+strlen(txt),_("Image size: %d\n"),
-	    (imginfo.size[0]<<24)|(imginfo.size[1]<<16)|(imginfo.size[2]<<8)|
-	     imginfo.size[3]
-    );
-    sprintf(txt+strlen(txt),_("Thumbnail width: %d\n"),imginfo.thumb_width);
-    sprintf(txt+strlen(txt),_("Thumbnail height: %d\n"),imginfo.thumb_height);
-    sprintf(txt+strlen(txt),_("Thumbnail size: %d\n"),
-	    (imginfo.thumb_size[0]<<8)|imginfo.thumb_size[1]
-    );
-    return GP_OK;
+	strcat(txt, _("Camera supports videoformats: "));
+	if (caminfo.capabilities & CAP_CIF) strcat(txt, "CIF ");
+	if (caminfo.capabilities & CAP_VGA) strcat(txt, "VGA ");
+	if (caminfo.capabilities & CAP_QCIF) strcat(txt, "QCIF ");
+	if (caminfo.capabilities & CAP_QVGA) strcat(txt, "QVGA ");
+	strcat(txt, "\n");
+	sprintf(txt+strlen(txt), _("Vendor ID: %02x%02x\n"),
+		caminfo.vendor_id[0],
+		caminfo.vendor_id[1]
+	);
+	sprintf(txt+strlen(txt), _("Product ID: %02x%02x\n"),
+		caminfo.product_id[0],
+		caminfo.product_id[1]
+	);
+	if ((ret = stv0680_try_cmd(port, CMDID_GET_IMAGE_INFO, 0,
+		(void*)&imginfo, sizeof(imginfo))!=GP_OK))
+		return ret;
+	sprintf(txt+strlen(txt), _("Number of Images: %d\n"),
+		(imginfo.index[0]<<8)|imginfo.index[1]
+	);
+	sprintf(txt+strlen(txt), _("Maximum number of Images: %d\n"),
+		(imginfo.maximages[0]<<8)|imginfo.maximages[1]
+	);
+	sprintf(txt+strlen(txt), _("Image width: %d\n"),
+		(imginfo.width[0]<<8)|imginfo.width[1]
+	);
+	sprintf(txt+strlen(txt), _("Image height: %d\n"),
+		(imginfo.height[0]<<8)|imginfo.height[1]
+	);
+	sprintf(txt+strlen(txt), _("Image size: %d\n"),
+		(imginfo.size[0]<<24)|(imginfo.size[1]<<16)|(imginfo.size[2]<<8)|
+		imginfo.size[3]
+	);
+	sprintf(txt+strlen(txt), _("Thumbnail width: %d\n"), imginfo.thumb_width);
+	sprintf(txt+strlen(txt), _("Thumbnail height: %d\n"), imginfo.thumb_height);
+	sprintf(txt+strlen(txt), _("Thumbnail size: %d\n"),
+		(imginfo.thumb_size[0]<<8)|imginfo.thumb_size[1]
+	);
+	return GP_OK;
 }

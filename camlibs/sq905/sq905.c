@@ -61,7 +61,7 @@ sq_init (GPPort *port, CameraPrivateLibrary *priv)
 	if (!catalog) return GP_ERROR_NO_MEMORY;
 
 	sq_reset (port);
-    	sq_access_reg(port, ID);	/* Access model or chip id */
+	sq_access_reg(port, ID);	/* Access model or chip id */
 
 	sq_read_data (port, c, 4);
 	sq_reset (port);
@@ -203,7 +203,7 @@ sq_reset (GPPort *port)
 {
 	sq_access_reg(port, CLEAR);	/* Release current register */
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 int
@@ -217,10 +217,10 @@ sq_read_picture_data (GPPort *port, unsigned char *data, int size )
 		sq_read_data (port, data + offset, 0x8000);
 		offset = offset + 0x8000;
 	}
- 	sq_read_data (port, data + offset, remainder);
+	sq_read_data (port, data + offset, remainder);
 
-    	SQWRITE (port, 0x0c, 0xc0, 0x00, &c, 1);
-    	return GP_OK;
+	SQWRITE (port, 0x0c, 0xc0, 0x00, &c, 1);
+	return GP_OK;
 }
 
 int
@@ -239,7 +239,7 @@ sq_delete_all (GPPort *port, CameraPrivateLibrary *priv)
 	default:
 		return (GP_ERROR_NOT_SUPPORTED);
 	}
-    	return GP_OK;
+	return GP_OK;
 }
 
 int

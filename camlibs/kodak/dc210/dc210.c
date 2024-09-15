@@ -86,9 +86,9 @@ int camera_abilities (CameraAbilitiesList *list) {
 static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data, GPContext *context)
 {
-    Camera *camera = data;
+	Camera *camera = data;
 
-    return dc210_get_filenames(camera, list, context);
+	return dc210_get_filenames(camera, list, context);
 }
 
 static int get_file_func (CameraFilesystem *fs, const char *folder,

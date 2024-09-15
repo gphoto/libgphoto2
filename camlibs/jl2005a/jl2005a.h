@@ -38,7 +38,7 @@ struct _CameraPrivateLibrary {
 
 
 int jl2005a_init              (Camera *camera, GPPort *port,
-					    CameraPrivateLibrary *priv);
+					CameraPrivateLibrary *priv);
 int jl2005a_get_pic_data_size (GPPort *port, int n);
 int jl2005a_get_pic_width (GPPort *port);
 int jl2005a_get_pic_height (GPPort *port);

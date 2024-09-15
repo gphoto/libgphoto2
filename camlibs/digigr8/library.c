@@ -217,8 +217,8 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 
 	if (GP_FILE_TYPE_EXIF ==type) return GP_ERROR_FILE_EXISTS;
 
-	if (GP_FILE_TYPE_RAW!=type && GP_FILE_TYPE_NORMAL
-				    != type && GP_FILE_TYPE_PREVIEW != type) {
+	if (GP_FILE_TYPE_RAW != type
+		&& GP_FILE_TYPE_NORMAL != type && GP_FILE_TYPE_PREVIEW != type) {
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 

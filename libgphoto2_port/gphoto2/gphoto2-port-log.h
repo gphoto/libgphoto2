@@ -70,8 +70,7 @@ int  gp_log_add_func    (GPLogLevel level, GPLogFunc func, void *data);
 int  gp_log_remove_func (int id);
 
 /* Logging */
-void gp_log      (GPLogLevel level, const char *domain,
-		  const char *format, ...)
+void gp_log      (GPLogLevel level, const char *domain, const char *format, ...)
 #ifdef __GNUC__
 	__attribute__((__format__(printf,3,4)))
 #endif
@@ -83,8 +82,7 @@ void gp_log_with_source_location(
 	__attribute__((__format__(printf,5,6)))
 #endif
 ;
-void gp_logv     (GPLogLevel level, const char *domain, const char *format,
-		  va_list args)
+void gp_logv     (GPLogLevel level, const char *domain, const char *format, va_list args)
 #ifdef __GNUC__
 	__attribute__((__format__(printf,3,0)))
 #endif
@@ -178,39 +176,19 @@ __attribute__((__format__(printf,4,5)))
 
 #ifdef _GPHOTO2_INTERNAL_CODE
 
-  typedef struct StringFlagItem {
-    char *str;
-    unsigned int flag;
-  } StringFlagItem;
+typedef struct StringFlagItem {
+	char *str;
+	unsigned int flag;
+} StringFlagItem;
 
-  typedef void (*string_item_func) (const char *str, void *data);
+typedef void (*string_item_func) (const char *str, void *data);
 
-  const char *
-  gpi_enum_to_string(const unsigned int _enum,
-		     const StringFlagItem *map);
-
-  int
-  gpi_string_to_enum(const char *str,
-		     unsigned int *result,
-		     const StringFlagItem *map);
-
-  void
-  gpi_flags_to_string_list(const unsigned int flags,
-			   const StringFlagItem *map,
-			   string_item_func func, void *data);
-
-  int
-  gpi_string_or_to_flags(const char *str,
-			 unsigned int *flags,
-			 const StringFlagItem *map);
-
-  unsigned int
-  gpi_string_to_flag(const char *str,
-		     const StringFlagItem *map);
-
-  unsigned int
-  gpi_string_list_to_flags(const char *str[],
-			   const StringFlagItem *map);
+const char * gpi_enum_to_string (unsigned int _enum, const StringFlagItem *map);
+int gpi_string_to_enum (const char *str, unsigned int *result, const StringFlagItem *map);
+void gpi_flags_to_string_list (unsigned int flags, const StringFlagItem *map, string_item_func func, void *data);
+int gpi_string_or_to_flags (const char *str, unsigned int *flags, const StringFlagItem *map);
+unsigned int gpi_string_to_flag (const char *str, const StringFlagItem *map);
+unsigned int gpi_string_list_to_flags (const char *str[], const StringFlagItem *map);
 
 /* Allocates a sufficiently large buffer and interpolates the format
 * string with the proveded va_list args. The returned memory has to

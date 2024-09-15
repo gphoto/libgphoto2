@@ -937,10 +937,10 @@ static int download_picture(int n,int thumb,CameraFile *file,CameraPrivateLibrar
 		fuji_count * CLK_TCK / (int)(t2-t1));
 
 	if (fjd->has_cmd[17]&&!thumb){
-	if (!thumb&&(fuji_count != fuji_size)){
-	/* gp_frontend_status(NULL,"Short picture file--disk full or quota exceeded\n"); */
-	    return(GP_ERROR);
-	  };
+		if (!thumb&&(fuji_count != fuji_size)) {
+			/* gp_frontend_status(NULL,"Short picture file--disk full or quota exceeded\n"); */
+			return(GP_ERROR);
+		};
 	};
 	return(GP_OK);
 

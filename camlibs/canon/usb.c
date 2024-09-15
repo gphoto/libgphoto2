@@ -451,7 +451,7 @@ canon_usb_init (Camera *camera, GPContext *context)
 
 #if 0
 	/* FIXME: as raspberry user confirmed the need for those...
- 	 * I am currently not sure why I added them.
+	 * I am currently not sure why I added them.
 	 */
 	gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_IN);
 	gp_port_usb_clear_halt (camera->port, GP_PORT_USB_ENDPOINT_OUT);
@@ -887,7 +887,7 @@ static int canon_usb_poll_interrupt_pipe ( Camera *camera, unsigned char *buf, u
                 /* Either some real data, or failure */
                 if ( status != 0 && status != GP_ERROR_TIMEOUT)
                         break;
-        	gettimeofday ( &cur, NULL );
+		gettimeofday (&cur, NULL);
 		curduration =	(cur.tv_sec-start.tv_sec)*1000 +
 				(cur.tv_usec-start.tv_usec)/1000;
 		if (curduration >= timeout) {

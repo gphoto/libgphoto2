@@ -511,11 +511,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 			/* Marcus note: GetVendorPropCodes crashes at least the V1, the J1 and J2.
 			 * but it works on the J3, J4...
- 			 * V1: crashes protocol flow
- 			 * J1: crashes protocol flow
- 			 * J2: crashes protocol flow
- 			 * J3: works
- 			 * J4: works
+			 * V1: crashes protocol flow
+			 * J1: crashes protocol flow
+			 * J2: crashes protocol flow
+			 * J3: works
+			 * J4: works
 			 * J5: reports invalid opcode
 			 */
 			if (	!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
@@ -927,7 +927,7 @@ static struct {
 	/* EasyShare Z740, Benjamin Mesing <bensmail@gmx.net> */
 	{"Kodak:Z740",   0x040a, 0x0588, 0},
 	/* EasyShare C360, Guilherme de S. Pastore via Debian */
- 	{"Kodak:C360",   0x040a, 0x0589, 0},
+	{"Kodak:C360",   0x040a, 0x0589, 0},
 	/* Giulio Salani <ilfunambolo@gmail.com> */
 	{"Kodak:C310",   0x040a, 0x058a, 0},
 	/* Brandon Sharitt */
@@ -2007,19 +2007,19 @@ static struct {
 	{"Canon:PowerShot A310 (PTP mode)",     0x04a9, 0x30b8, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A85 (PTP mode)",      0x04a9, 0x30b9, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:Digital IXUS 430 (PTP mode)",   0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
- 	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
- 	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
- 	{"Canon:EOS 10D (PTP mode)",      	0x04a9, 0x30bc, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot S410 (PTP mode)",     0x04a9, 0x30ba, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot A95 (PTP mode)",      0x04a9, 0x30bb, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:EOS 10D (PTP mode)",      	0x04a9, 0x30bc, PTPBUG_DELETE_SENDS_EVENT},
 	{"Canon:Digital IXUS 40 (PTP mode)",    0x04a9, 0x30bf, PTPBUG_DELETE_SENDS_EVENT},
 #if 0
 	/* the 30c0 id cannot remote capture, use normal mode. */
- 	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
- 	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:PowerShot SD200 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
+	{"Canon:Digital IXUS 30 (PTP mode)",    0x04a9, 0x30c0, PTPBUG_DELETE_SENDS_EVENT},
 #endif
- 	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
+	{"Canon:PowerShot A520 (PTP mode)",     0x04a9, 0x30c1, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:PowerShot A510 (PTP mode)",     0x04a9, 0x30c2, PTPBUG_DELETE_SENDS_EVENT|PTP_CAP|PTP_CAP_PREVIEW},
 	{"Canon:EOS 1D Mark II (PTP mode)",     0x04a9, 0x30ea, 0},
- 	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, 0},
+	{"Canon:EOS 20D (PTP mode)",            0x04a9, 0x30ec, 0},
 	/* 30ef is the ID in explicit PTP mode.
 	 * 30ee is the ID with the camera in Canon mode, but the camera reacts to
 	 * PTP commands according to:
@@ -2051,9 +2051,9 @@ static struct {
 	/* Rob Lensen <rob@bsdfreaks.nl> */
 	{"Canon:Digital IXUS 55 (PTP mode)",    0x04a9, 0x30ff, 0},
 	{"Canon:PowerShot SD450 (PTP mode)",    0x04a9, 0x30ff, 0},
- 	{"Canon:Optura 600 (PTP mode)",         0x04a9, 0x3105, 0},
+	{"Canon:Optura 600 (PTP mode)",         0x04a9, 0x3105, 0},
 	/* Jeff Mock <jeff@mock.com> */
- 	{"Canon:EOS 5D (PTP mode)",             0x04a9, 0x3102, 0},
+	{"Canon:EOS 5D (PTP mode)",             0x04a9, 0x3102, 0},
 	/* Nick Richards <nick@nedrichards.com> */
 	{"Canon:Digital IXUS 50 (PTP mode)",    0x04a9, 0x310e, PTPBUG_DELETE_SENDS_EVENT},
 	/* http://sourceforge.net/tracker/index.php?func=detail&aid=1640547&group_id=8874&atid=358874 */
@@ -4863,8 +4863,8 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		GP_LOG_D ("Event: 0x%X (2)", event.Code);
 	}
 	if (!found) {
-	    GP_LOG_D ("ERROR: Capture timed out!");
-	    return GP_ERROR_TIMEOUT;
+		GP_LOG_D ("ERROR: Capture timed out!");
+		return GP_ERROR_TIMEOUT;
 	}
 	if (viewfinderwason) { /* disable during capture ... reenable later on. */
 		viewfinderwason = 0;
@@ -9361,7 +9361,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 			}
 		}
 		/* FIXME: need to handle folder additions during capture-image-and-download */
- 	}
+	}
 	return (GP_OK);
 }
 

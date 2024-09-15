@@ -474,9 +474,9 @@ camera_exit (Camera *camera, GPContext *context)
 int
 camera_init (Camera *camera, GPContext *context)
 {
-    	CameraAbilities a;
-    	int i, ret;
-    	char *dump, buf[256];
+	CameraAbilities a;
+	int i, ret;
+	char *dump, buf[256];
 
 	/* First, set up all the function pointers */
 	camera->functions->exit    = camera_exit;

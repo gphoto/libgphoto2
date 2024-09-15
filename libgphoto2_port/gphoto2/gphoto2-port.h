@@ -48,9 +48,9 @@ extern "C" {
  */
 typedef enum _GPPortSerialParity
 {
-    GP_PORT_SERIAL_PARITY_OFF = 0,	/**< \brief Parity is off (disabled) */
-    GP_PORT_SERIAL_PARITY_EVEN,		/**< \brief Parity is even. */
-    GP_PORT_SERIAL_PARITY_ODD		/**< \brief Parity is odd. */
+	GP_PORT_SERIAL_PARITY_OFF = 0,	/**< \brief Parity is off (disabled) */
+	GP_PORT_SERIAL_PARITY_EVEN,		/**< \brief Parity is even. */
+	GP_PORT_SERIAL_PARITY_ODD		/**< \brief Parity is odd. */
 } GPPortSerialParity;
 
 /** \brief Maximum length of receive buffer */
@@ -140,7 +140,7 @@ typedef struct _GPPort {
 	/* For your convenience */
 	GPPortType type;		/**< \brief Actual type of this port */
 
- 	GPPortSettings settings;	/**< \brief Current port settings. */
+	GPPortSettings settings;	/**< \brief Current port settings. */
 	GPPortSettings settings_pending;/**< \brief Settings to be committed. */
 
 	int timeout; 			/**< \brief Port timeout in milliseconds. */

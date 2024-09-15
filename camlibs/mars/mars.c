@@ -51,14 +51,14 @@ m_read (GPPort *port, char *data, int size)
 	ret = gp_port_write(port, "\x21", 1);
 	if (ret < GP_OK) return ret;
 
-    	return gp_port_read(port, data, 16);
+	return gp_port_read(port, data, 16);
 }
 
 static int
 m_command (GPPort *port, char *command, int size, char *response)
 {
 	gp_port_write(port, command, size);
-    	return m_read(port, response, 16);
+	return m_read(port, response, 16);
 }
 
 static int mars_routine (Info *info, GPPort *port, char param, int n);
@@ -141,7 +141,7 @@ mars_read_data (GPPort *port, char *data, int size)
 	while(size > 0) {
 		len = (size>MAX_BULK)?MAX_BULK:size;
 		gp_port_read  (port, data, len);
-    		data += len;
+		data += len;
 		size -= len;
 	}
 
@@ -162,14 +162,14 @@ mars_read_picture_data (Camera *camera, Info *info, GPPort *port,
 	set_usb_in_endpoint (camera, 0x82);
 	mars_read_data (port, data, size);
 	set_usb_in_endpoint (camera, 0x83);
-    	return GP_OK;
+	return GP_OK;
 }
 
 int
 mars_reset (GPPort *port)
 {
 	gp_port_write(port, "\x19\x54", 2);
-    	return GP_OK;
+	return GP_OK;
 }
 
 static void precalc_table(code_table_t *table)
@@ -182,38 +182,38 @@ static void precalc_table(code_table_t *table)
 		val = 0;
 		len = 0;
 		if ((i & 0x80) == 0) {
-    			/* code 0 */
-    			val = 0;
-    			len = 1;
-		}else if ((i & 0xE0) == 0xC0) {
-    			/* code 110 */
-    			val = -3;
-    			len = 3;
-		}else if ((i & 0xE0) == 0xA0) {
-    			/* code 101 */
-    			val = +3;
-    			len = 3;
-		}else if ((i & 0xF0) == 0x80) {
-    			/* code 1000 */
-    			val = +8;
-    			len = 4;
-		}else if ((i & 0xF0) == 0x90) {
-    			/* code 1001 */
-    			val = -8;
-    			len = 4;
-		}else if ((i & 0xF0) == 0xF0) {
-    			/* code 1111 */
-    			val = -20;
-    			len = 4;
-		}else if ((i & 0xF8) == 0xE0) {
-    			/* code 11100 */
-    			val = +20;
-    			len = 5;
-		}else if ((i & 0xF8) == 0xE8) {
-    			/* code 11101xxxxx */
-    			is_abs = 1;
-    			val = 0;	/* value is calculated later */
-    			len = 5;
+			/* code 0 */
+			val = 0;
+			len = 1;
+		} else if ((i & 0xE0) == 0xC0) {
+			/* code 110 */
+			val = -3;
+			len = 3;
+		} else if ((i & 0xE0) == 0xA0) {
+			/* code 101 */
+			val = +3;
+			len = 3;
+		} else if ((i & 0xF0) == 0x80) {
+			/* code 1000 */
+			val = +8;
+			len = 4;
+		} else if ((i & 0xF0) == 0x90) {
+			/* code 1001 */
+			val = -8;
+			len = 4;
+		} else if ((i & 0xF0) == 0xF0) {
+			/* code 1111 */
+			val = -20;
+			len = 4;
+		} else if ((i & 0xF8) == 0xE0) {
+			/* code 11100 */
+			val = +20;
+			len = 5;
+		} else if ((i & 0xF8) == 0xE8) {
+			/* code 11101xxxxx */
+			is_abs = 1;
+			val = 0;	/* value is calculated later */
+			len = 5;
 		}
 		table[i].is_abs = is_abs;
 		table[i].val = val;

@@ -173,7 +173,7 @@ jl2005a_reset (Camera *camera, GPPort *port)
 	for (i=0; i < 4; i++)
 		jl2005a_shortquery(port, 0x1d);
 	/* Supposed to get something like 0x01, 0x01, 0x01, 0x00 */
-    	return GP_OK;
+	return GP_OK;
 }
 
 int jl2005a_read_info_byte(GPPort *port, int n)

@@ -408,7 +408,7 @@ sonix_decode(unsigned char * dst, unsigned char * src, int width, int height)
 		c1val = bits & 0xff;
 		PUT_PIXEL_PAIR;
 		for (x = 2; x < width ; x += 2) {
- 			PARSE_PIXEL(c2val);
+			PARSE_PIXEL(c2val);
 			PARSE_PIXEL(c1val);
 			PUT_PIXEL_PAIR;
 		}
@@ -450,7 +450,7 @@ int sonix_cols_reverse (unsigned char *imagedata, int width, int height)
 		for (col =0; col< width/2 ; col++) {
 			temp = imagedata[row*width + col];
 			imagedata[row*width + col] =
-			    imagedata[row*width + width - 1 - col];
+				imagedata[row*width + width - 1 - col];
 			imagedata[row*width + width - 1 - col] = temp;
 		}
 	}

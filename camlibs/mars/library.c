@@ -62,7 +62,7 @@ static const struct {
 } models[] = {
 	{"Aiptek PenCam VGA+", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0111},
 	{"Trust Spyc@m 100", GP_DRIVER_STATUS_TESTING, 0x08ca, 0x0110},
- 	{"Emprex PCD3600", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
+	{"Emprex PCD3600", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Vivitar Vivicam 55", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Haimei Electronics HE-501A", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
 	{"Elta Medi@ digi-cam", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010e},
@@ -72,7 +72,7 @@ static const struct {
 	{"Argus DC-1610", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"Argus DC-1620", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f},
 	{"Philips P44417B keychain camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},
- 	{"Sakar Digital no. 77379", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
+	{"Sakar Digital no. 77379", GP_DRIVER_STATUS_EXPERIMENTAL, 0x093a, 0x010f},
 	{"ION digital camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010f},
 	{"Argus QuickClix", GP_DRIVER_STATUS_DEPRECATED, 0x093a, 0x010f},
 	{"Pixart Gemini Keychain Camera", GP_DRIVER_STATUS_TESTING, 0x093a, 0x010e},

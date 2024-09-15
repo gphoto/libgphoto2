@@ -146,7 +146,7 @@ int decode_panel (unsigned char *panel_out, unsigned char *panel,
 		return -1;
 
 	for(i=0; i < panelwidth; i++){
-	    temp_line[i] = 0x80;
+		temp_line[i] = 0x80;
 	}
 
 	if (color != GREEN) {

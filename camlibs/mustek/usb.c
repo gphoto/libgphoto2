@@ -104,14 +104,14 @@ static int mdc800_usb_readFromIrq (GPPort *port,int type,unsigned char* data,int
 		if (type)
 		{
 			if (!(mdc800_usb_isReady(data)||mdc800_usb_isBusy(data))) {
-			    fprintf(stderr,"got data.\n");
+				fprintf(stderr, "got data.\n");
 				/* Data received successfully */
 				return GP_OK;
 			}
 		} else {
 			if (mdc800_usb_isReady (data))
 			{
-			    fprintf(stderr,"got readiness.\n");
+				fprintf(stderr, "got readiness.\n");
 				/* Camera response ready */
 				return GP_OK;
 			}
@@ -119,9 +119,9 @@ static int mdc800_usb_readFromIrq (GPPort *port,int type,unsigned char* data,int
 		/* wait the specified time */
 		if (1) {
 
-		    usleep(MDC800_USB_IRQ_INTERVAL * 1000);
+			usleep(MDC800_USB_IRQ_INTERVAL * 1000);
 
-		    timeout-=MDC800_USB_IRQ_INTERVAL;
+			timeout-=MDC800_USB_IRQ_INTERVAL;
 		}
 	}
 	/* Timeout */
@@ -145,7 +145,7 @@ int mdc800_usb_sendCommand(GPPort*port,unsigned char*command,unsigned char*buffe
 
 	ret = mdc800_usb_readFromIrq(port,0,tmp_buffer,MDC800_DEFAULT_TIMEOUT);
 	if (ret != GP_OK) {
-	    fprintf(stderr,"Camera did not get ready before mdc800_usb_sendCommand!\n");
+		fprintf(stderr, "Camera did not get ready before mdc800_usb_sendCommand!\n");
 	}
 
 	if ((ret=gp_port_write(port,(char*)command,8)) != 8)

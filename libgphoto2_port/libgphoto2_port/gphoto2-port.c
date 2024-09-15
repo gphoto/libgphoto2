@@ -1224,24 +1224,24 @@ static int gp_port_usb_fd = -1;
 int
 gp_port_usb_set_sys_device(int fd)
 {
-    gp_port_usb_fd = fd;
-    return  (GP_OK);
+	gp_port_usb_fd = fd;
+	return  (GP_OK);
 }
 
 int
 gp_port_usb_get_sys_device(void)
 {
-    return gp_port_usb_fd;
+	return gp_port_usb_fd;
 }
 #else
 int gp_port_usb_set_sys_device(int fd)
 {
-    return GP_ERROR_NOT_SUPPORTED;
+	return GP_ERROR_NOT_SUPPORTED;
 }
 
 int gp_port_usb_get_sys_device()
 {
-    return -1;
+	return -1;
 }
 #endif
 

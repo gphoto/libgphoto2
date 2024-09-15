@@ -70,7 +70,7 @@ static const struct {
 	{"Vivitar Vivicam3350B", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0c45, 0x800a},
 	{"Genius Smart 300, version 2", GP_DRIVER_STATUS_EXPERIMENTAL,
 	    0x0458, 0x7005},
- 	{NULL,0,0,0}
+	{NULL,0,0,0}
 };
 
 int
@@ -389,8 +389,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 				white_balance(ptr+SAKAR_AVI_FRAME_HEADER_LENGTH,
 						w * h, 1.2);
 				gp_file_append(file, (char *)ptr,
-				    3*frame_size+
-						SAKAR_AVI_FRAME_HEADER_LENGTH);
+					3*frame_size
+					+SAKAR_AVI_FRAME_HEADER_LENGTH);
 				GP_DEBUG("Done with frame number %i\n",i+1);
 			}
 			avitype = 0;

@@ -57,7 +57,7 @@ struct {
 	unsigned short idProduct;
 } models[] = {
 	{"American Idol Keychain Camera", GP_DRIVER_STATUS_TESTING,
-							    0x0979, 0x0224},
+							0x0979, 0x0224},
 	{"NogaNet TDC-15", GP_DRIVER_STATUS_TESTING, 0x0979, 0x0224},
 	{"Cobra DC125", GP_DRIVER_STATUS_EXPERIMENTAL, 0x0979, 0x0224},
 	{NULL,0,0,0}

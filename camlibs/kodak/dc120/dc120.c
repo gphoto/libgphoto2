@@ -77,124 +77,117 @@ int camera_abilities (CameraAbilitiesList *list) {
 static int find_folder( Camera *camera, const char *folder,
 			int *from_card, int *folder_nr, GPContext *context)
 {
-    CameraList *albums = NULL;
-    const char* album_name;
-    size_t folder_len;
-    int i;
-    char *dc120_folder_card   = _("CompactFlash Card");
+	CameraList *albums = NULL;
+	const char* album_name;
+	size_t folder_len;
+	int i;
+	char *dc120_folder_card   = _("CompactFlash Card");
 
-    if( folder[0] != '/' ) {
-	return (GP_ERROR);
-    }
-
-    folder++;
-
-    if( folder[0] == '\0') {
-	/* From memory */
-	*from_card = FALSE;
-	*folder_nr = 0;
-	return (GP_OK);
-    }
-    else if( strncmp(folder, dc120_folder_card, strlen(dc120_folder_card) )==0) {
-	/* From card */
-	*from_card = TRUE;
-	folder += strlen(dc120_folder_card);
-    }
-    else {
-	/* Subfolder in memory */
-	*from_card = FALSE;
-	folder--; /* step back to slash */
-    }
-
-    if ( (folder[0] == 0) ||
-	 (folder[0] == '/' && folder[1] == 0) ) { /* ok, finished */
-	*folder_nr = 0;
-	return (GP_OK);
-    }
-    else if( folder[0] != '/' )
-	return (GP_ERROR);
-
-    folder++; /* remove slash */
-
-    /* Have trailing slash */
-    folder_len = strlen(folder);
-    if (folder[folder_len-1] == '/') {
-	folder_len--;
-    }
-
-  /* ok, now we have a album. first get all albums */
-    if( gp_list_new( &albums ) != (GP_OK) ) {
-	return (GP_ERROR);
-    }
-
-    if( dc120_get_albums(camera, *from_card, albums, context) != (GP_OK) ) {
-	gp_list_free( albums );
-	return (GP_ERROR);
-    }
-
-    /* no check if such a album exist */
-    for( i = 0; i<gp_list_count( albums ); i++ )
-    {
-	gp_list_get_name( albums, i, &album_name );
-	if( strlen( album_name ) == folder_len &&
-	    strncmp( album_name, folder, folder_len ) == 0 )
-	{
-	    *folder_nr = i+1;
-	    gp_list_free( albums ); /* ok, we found it. */
-	    return (GP_OK);
+	if (folder[0] != '/') {
+		return (GP_ERROR);
 	}
-    }
 
-    /* oh, we did not find the folder. bummer. */
-    gp_list_free( albums );
-    return (GP_ERROR);
+	folder++;
+
+	if (folder[0] == '\0') {
+		/* From memory */
+		*from_card = FALSE;
+		*folder_nr = 0;
+		return (GP_OK);
+	} else if (strncmp(folder, dc120_folder_card, strlen(dc120_folder_card))==0) {
+		/* From card */
+		*from_card = TRUE;
+		folder += strlen(dc120_folder_card);
+	} else {
+		/* Subfolder in memory */
+		*from_card = FALSE;
+		folder--; /* step back to slash */
+	}
+
+	if ((folder[0] == 0) ||
+		(folder[0] == '/' && folder[1] == 0)) { /* ok, finished */
+		*folder_nr = 0;
+		return (GP_OK);
+	} else if (folder[0] != '/')
+		return (GP_ERROR);
+
+	folder++; /* remove slash */
+
+	/* Have trailing slash */
+	folder_len = strlen(folder);
+	if (folder[folder_len-1] == '/') {
+		folder_len--;
+	}
+
+	/* ok, now we have a album. first get all albums */
+	if (gp_list_new(&albums) != (GP_OK)) {
+		return (GP_ERROR);
+	}
+
+	if (dc120_get_albums(camera, *from_card, albums, context) != (GP_OK)) {
+		gp_list_free(albums);
+		return (GP_ERROR);
+	}
+
+	/* no check if such a album exist */
+	for (i = 0; i<gp_list_count(albums); i++)
+	{
+		gp_list_get_name(albums, i, &album_name);
+		if (strlen(album_name) == folder_len &&
+			strncmp(album_name, folder, folder_len) == 0)
+		{
+			*folder_nr = i+1;
+			gp_list_free(albums); /* ok, we found it. */
+			return (GP_OK);
+		}
+	}
+
+	/* oh, we did not find the folder. bummer. */
+	gp_list_free(albums);
+	return (GP_ERROR);
 }
 
 static int folder_list_func (CameraFilesystem *fs, const char *folder,
 			     CameraList *list, void *data, GPContext *context)
 {
-    int res;
-    int from_card;
-    int folder_nr;
-    Camera *camera = data;
-    char *dc120_folder_card   = _("CompactFlash Card");
+	int res;
+	int from_card;
+	int folder_nr;
+	Camera *camera = data;
+	char *dc120_folder_card   = _("CompactFlash Card");
 
-    res = find_folder( camera, folder, &from_card, &folder_nr, context);
-    if( res != (GP_OK) ) {
-	return res;
-    }
+	res = find_folder(camera, folder, &from_card, &folder_nr, context);
+	if (res != (GP_OK)) {
+		return res;
+	}
 
-    if( !from_card && folder_nr==0 ) {
-	gp_list_append(list, dc120_folder_card, NULL);
-	return (dc120_get_albums(camera, from_card, list, context));
-    }
-    else if( from_card && folder_nr==0 ) {
-	return (dc120_get_albums(camera, from_card, list, context));
-    }
-    else {
-	return (GP_OK);
-    }
+	if (!from_card && folder_nr==0) {
+		gp_list_append(list, dc120_folder_card, NULL);
+		return (dc120_get_albums(camera, from_card, list, context));
+	} else if (from_card && folder_nr==0) {
+		return (dc120_get_albums(camera, from_card, list, context));
+	} else {
+		return (GP_OK);
+	}
 }
 
 static int file_list_func (CameraFilesystem *fs, const char *folder,
 			   CameraList *list, void *data, GPContext *context)
 {
-    int res;
-    int from_card;
-    int folder_nr;
-    Camera *camera = data;
+	int res;
+	int from_card;
+	int folder_nr;
+	Camera *camera = data;
 
-    res = find_folder( camera, folder, &from_card, &folder_nr, context);
-    if( res != (GP_OK) ) {
-	return res;
-    }
+	res = find_folder(camera, folder, &from_card, &folder_nr, context);
+	if (res != (GP_OK)) {
+		return res;
+	}
 
-    return dc120_get_filenames(camera, from_card, folder_nr, list, context);
+	return dc120_get_filenames(camera, from_card, folder_nr, list, context);
 
-    /* Save the order of the pics (wtf: no filename access on dc120???) */
+	/* Save the order of the pics (wtf: no filename access on dc120???) */
 }
-
-
 
 static int camera_file_action (Camera *camera, int action, CameraFile *file,
 			       const char *folder, const char *filename,
@@ -233,8 +226,8 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 	for( i = 0; i<gp_list_count( files ); i++ ) {
 		gp_list_get_name( files, i, &file_name );
 		if( strcmp( file_name, filename ) == 0 ) {
-	    file_nr = i;  /* ok, we found it. */
-	    break;
+			file_nr = i;  /* ok, we found it. */
+			break;
 		}
 	}
 	gp_list_free( files );
@@ -253,7 +246,7 @@ static int camera_file_action (Camera *camera, int action, CameraFile *file,
 	if (action == DC120_ACTION_PREVIEW) { /* FIXME: marcus, fix type */
 		dot = strrchr(filename, '.');
 		if( dot && strlen( dot )>3 ) {
-	    strcpy( dot+1, "ppm");
+			strcpy( dot+1, "ppm");
 		}
 	}
 	return (dc120_file_action(camera, action, from_card, folder_nr, picnum+1, file, context));

@@ -493,7 +493,7 @@ camera_abilities (CameraAbilitiesList *list)
 static int
 camera_exit (Camera *camera, GPContext *context)
 {
-    	return web2_exit(camera->port, context);
+	return web2_exit(camera->port, context);
 }
 
 static int

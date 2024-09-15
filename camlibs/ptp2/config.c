@@ -1400,7 +1400,7 @@ fallback:										\
 			 If we made a small +-1 adjustment, check for overshoot.	\
 			 However, use enum position instead of value itself for comparisons as enums		\
 			 are not always sorted (e.g. Auto ISO has higher numerical value but comes earlier).	\
-		    */ 									\
+			*/								\
 			overshoot = ((propval.u8 == 0x01) && (posnow > posnew)) || ((propval.u8 == 0xff) && (posnow < posnew)); \
 		} else { 								\
 			overshoot = ((propval.u8 == 0x01) && (dpd.CurrentValue.bits > value)) || ((propval.u8 == 0xff) && (dpd.CurrentValue.bits < value)); \
@@ -6556,11 +6556,11 @@ static struct deviceproptableu8 nikon_moviequality[] = {
 GENERIC8TABLE(Nikon_MovieQuality, nikon_moviequality);
 
 static struct deviceproptableu8 nikon_d850_moviequality[] = {
- 	{"3840x2160; 30p",	0, 0},
+	{"3840x2160; 30p",	0, 0},
 	{"3840x2160; 25p",	1, 0},
 	{"3840x2160; 24p",	2, 0},
 
- 	{"1920x1080; 60p",	3, 0},
+	{"1920x1080; 60p",	3, 0},
 	{"1920x1080; 50p",	4, 0},
 	{"1920x1080; 30p",	5, 0},
 	{"1920x1080; 25p",	6, 0},
@@ -6578,7 +6578,7 @@ GENERIC8TABLE(Nikon_D850_MovieQuality, nikon_d850_moviequality);
 static struct deviceproptableu8 nikon_d5100_moviequality[] = {
 	{"640x424; 25fps; normal",		0, 0},
 	{"640x424; 25fps; high quality",	1, 0},
- 	{"1280x720; 24fps; normal",		2, 0},
+	{"1280x720; 24fps; normal",		2, 0},
 	{"1280x720; 24fps; high quality",	3, 0},
 	{"1280x720; 25fps; normal",		4, 0},
 	{"1280x720; 25fps; high quality",	5, 0},
@@ -6592,7 +6592,7 @@ GENERIC8TABLE(Nikon_D5100_MovieQuality, nikon_d5100_moviequality);
 static struct deviceproptableu8 nikon_d7100_moviequality[] = {
 	{"1920x1080; 60i",	0, 0},
 	{"1920x1080; 50i",	1, 0},
- 	{"1920x1080; 30p",	2, 0},
+	{"1920x1080; 30p",	2, 0},
 	{"1920x1080; 25p",	3, 0},
 	{"1920x1080; 24p",	4, 0},
 	{"1280x720; 60p",	5, 0},
@@ -6608,7 +6608,7 @@ GENERIC8TABLE(Nikon_D7100_MovieQuality2, nikon_d7100_moviequality2);
 
 static struct deviceproptableu8 nikon_1_moviequality[] = {
 	{"1080/60i",	0, 0},
- 	{"1080/30p",	1, 0},
+	{"1080/30p",	1, 0},
 	{"720/60p",	3, 0},
 	{"720/30p",	4, 0},
 };

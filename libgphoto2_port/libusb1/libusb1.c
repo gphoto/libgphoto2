@@ -589,7 +589,7 @@ gp_libusb1_close (GPPort *port)
 	_close_async_interrupts(port);
 
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
-    if(gp_port_usb_get_sys_device() == -1) {
+	if (gp_port_usb_get_sys_device() == -1) {
 #endif
 	if (libusb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
@@ -622,7 +622,7 @@ gp_libusb1_close (GPPort *port)
 
 	libusb_close (port->pl->dh);
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
-    }
+	}
 #endif
 
 	struct _PrivateIrqCompleted *irq_iter;

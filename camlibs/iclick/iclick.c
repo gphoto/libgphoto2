@@ -155,7 +155,7 @@ icl_reset (GPPort *port)
 {
 	icl_access_reg(port, CLEAR);	/* Release current register */
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 int
@@ -171,7 +171,7 @@ icl_read_picture_data (GPPort *port, unsigned char *data, int size )
 	if (remainder)
 		gp_port_read (port, (char *)data + offset, remainder);
 
-    	return GP_OK;
+	return GP_OK;
 }
 
 

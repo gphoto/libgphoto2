@@ -990,11 +990,11 @@ camera_init (Camera *camera, GPContext *context)
 	 */
 	gp_port_usb_msg_read (camera->port, 5, 1, 0, reply, 2);
 	if(reply[0]!=1)
-	    return (GP_ERROR_IO);
+		return (GP_ERROR_IO);
 
 	gp_port_usb_msg_read (camera->port, 5, 0, 0, reply, 8);
 	if(reply[0]!=1)
-	    return (GP_ERROR_IO);
+		return (GP_ERROR_IO);
 
 	return (GP_OK);
 }

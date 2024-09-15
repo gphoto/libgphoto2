@@ -17,7 +17,7 @@
  */
 
 /*
- 	Header for USB Interface
+	Header for USB Interface
 */
 
 #ifndef CAMLIBS_MUSTEK_USB_H
