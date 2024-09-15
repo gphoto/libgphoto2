@@ -982,7 +982,7 @@ int pslr_set_exposure_mode(pslr_handle_t h, pslr_exposure_mode_t mode) {
     }
 
     if ( p->model->need_exposure_mode_conversion ) {
-        mode = exposure_mode_conversion( mode );
+        mode = (pslr_exposure_mode_t)exposure_mode_conversion( mode );
     }
 
     return ipslr_handle_command_x18( p, true, X18_EXPOSURE_MODE, 2, 1, mode, 0);

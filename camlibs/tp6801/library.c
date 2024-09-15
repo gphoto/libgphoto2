@@ -151,9 +151,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	       GPContext *context)
 {
 	Camera *camera = data;
-	int idx, size;
+	int idx;
 #ifdef HAVE_LIBGD
-	int ret;
+	int ret, size;
 	gdImagePtr im;
 	void *gdpng;
 #endif
