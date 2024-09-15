@@ -146,7 +146,8 @@ gp_port_usbdiskdirect_resolve_symlink (const char *link)
 		} else {
 			*slash = 0;
 			len = strlen (path);
-			snprintf (path + len, sizeof (path) - len, "/%s", buf);
+			if (snprintf (path + len, sizeof (path) - len, "/%s", buf) >= (int)sizeof (path) - len)
+				return NULL;
 		}
 
 		if (stat (path, &st))
