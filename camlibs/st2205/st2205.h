@@ -68,7 +68,8 @@ enum {
    all unique and don't change when files with the same name (after converting
    to ascii and truncating) are added / deleted. */
 #define ST2205_SET_FILENAME(dest, name, idx) \
-	snprintf(dest, sizeof(st2205_filename), "%04d-%s.png", (idx) + 1, name)
+	if (snprintf(dest, sizeof(st2205_filename), "%04d-%s.png", (idx) + 1, name) >= (int)sizeof(st2205_filename)) \
+		GP_LOG_E ("extended st2205_filename did not fit into dest")
 
 struct st2205_coord {
 	uint16_t x;

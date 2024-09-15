@@ -2419,19 +2419,15 @@ make_dir_func (CameraFilesystem __unused__ *fs, const char *folder,
 	if (strlen (folder) > 1) {
 		/* folder is something more than / */
 
-		if (strlen (folder) + 1 + strlen (name) > sizeof (gppath) - 1) {
-			GP_DEBUG ("make_dir_func: Arguments too long");
+		if (snprintf (gppath, sizeof(gppath), "%s/%s", folder, name) >= (int)sizeof(gppath)) {
+			GP_LOG_E ("Arguments too long");
 			return GP_ERROR_BAD_PARAMETERS;
 		}
-
-		snprintf (gppath, sizeof(gppath), "%s/%s", folder, name);
 	} else {
-		if (1 + strlen (name) > sizeof (gppath) - 1) {
-			GP_DEBUG ("make_dir_func: Arguments too long");
+		if (snprintf (gppath, sizeof(gppath), "/%s", name) >= (int)sizeof(gppath)) {
+			GP_LOG_E ("Arguments too long");
 			return GP_ERROR_BAD_PARAMETERS;
 		}
-
-		snprintf (gppath, sizeof(gppath), "/%s", name);
 	}
 
 	canonpath = gphoto2canonpath (camera, gppath, context);
@@ -2461,19 +2457,15 @@ remove_dir_func (CameraFilesystem __unused__ *fs, const char *folder,
 	if (strlen (folder) > 1) {
 		/* folder is something more than / */
 
-		if (strlen (folder) + 1 + strlen (name) > sizeof (gppath) - 1) {
-			GP_DEBUG ("make_dir_func: Arguments too long");
+		if (snprintf (gppath, sizeof(gppath), "%s/%s", folder, name) >= (int)sizeof(gppath)) {
+			GP_LOG_E ("Arguments too long");
 			return GP_ERROR_BAD_PARAMETERS;
 		}
-
-		snprintf (gppath, sizeof(gppath), "%s/%s", folder, name);
 	} else {
-		if (1 + strlen (name) > sizeof (gppath) - 1) {
-			GP_DEBUG ("make_dir_func: Arguments too long");
+		if (snprintf (gppath, sizeof(gppath), "/%s", name) >= (int)sizeof(gppath)) {
+			GP_LOG_E ("Arguments too long");
 			return GP_ERROR_BAD_PARAMETERS;
 		}
-
-		snprintf (gppath, sizeof(gppath), "/%s", name);
 	}
 
 	canonpath = gphoto2canonpath (camera, gppath, context);

@@ -5653,7 +5653,8 @@ camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath 
 
 	C_PTP_REP (ptp_sigma_fp_clearimagedbsingle(params, captstatus.imageid));
 
-	snprintf (path->name, sizeof(path->name), "%s%s", pictfileinfoex2.name, pictfileinfoex2.fileext);
+	if (snprintf (path->name, sizeof(path->name), "%s%s", pictfileinfoex2.name, pictfileinfoex2.fileext) >= (int)sizeof(path->name))
+		GP_LOG_E("pictfileinfoex2.name and .fileext did not fit into path->name");
 	strcpy (path->folder,"/");
 
 	ret = gp_file_new (&file);
