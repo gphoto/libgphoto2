@@ -1014,7 +1014,7 @@ _get_widget_names (CameraWidget *widget, CameraList *list)
 	case GP_WIDGET_MENU:
 	case GP_WIDGET_RADIO:
 	case GP_WIDGET_TEXT:
-	GP_WIDGET_RANGE:
+	case GP_WIDGET_RANGE:
 	case GP_WIDGET_TOGGLE:
 	case GP_WIDGET_DATE: {
 		const char *name;
