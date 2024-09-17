@@ -172,6 +172,20 @@ ptp_error (PTPParams *params, const char *format, ...)
 	va_end (args);
 }
 
+/* Helper function to quickly render some bytes into a static string
+ * buffer for immediate copying/snprintf-ing. Parameter fmt is the
+ * format string used for each byte, e.g. "%02x ". */
+const char*
+ptp_bytes2str(const uint8_t* data, int data_size, const char* fmt)
+{
+	static char line[16 * 3 + 1];
+	int pos = 0;
+	for (int i = 0; i < data_size && pos < (int)sizeof(line); ++i) {
+		pos += snprintf(line + pos, sizeof(line) - pos, fmt, data[i]);
+	}
+	return line;
+}
+
 /* Pack / unpack functions */
 
 #include "ptp-pack.c"

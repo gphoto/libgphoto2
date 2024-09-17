@@ -34,6 +34,13 @@
 #include <iconv.h>
 #endif
 
+#ifndef MAX
+# define MAX(a, b) ((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
 static inline uint16_t
 htod16p (PTPParams *params, uint16_t var)
 {
@@ -2628,12 +2635,11 @@ static unsigned int olcsizes[0x15][13] = {
 				olcver = sizeof(olcsizes)/sizeof(olcsizes[0])-1;
 			}
 
-			ptp_debug (params, "event %d: OLC version is 0x%02x", i, olcver);
-			ptp_debug (params, "event %d: EOS event OLCInfoChanged (size %d)", i, size);
+			mask = size >= 14 ? dtoh16a(curdata+8+4) : 0;
+			ptp_debug (params, "event %d: EOS event OLCInfoChanged (size %d, version 0x%02x, mask 0x%04x)", i, size, olcver, mask);
 			if (size >= 0x8) {	/* event info */
-				unsigned int k;
-				for (k=8;k<size;k++)
-					ptp_debug (params, "    %d: %02x", k-8, curdata[k]);
+				for (unsigned k = 8; k < size; k += 16)
+					ptp_debug (params, "    0x%02x: %s", k-8, ptp_bytes2str(curdata + k, MIN(16, size-k), "%02x "));
 			}
 			if (size < 14) {
 				ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
@@ -2648,29 +2654,25 @@ static unsigned int olcsizes[0x15][13] = {
 				ptp_debug (params, "event %d: OLC unexpected size %d for blob len %d (not -4 nor -8)", i, size, len);
 				break;
 			}
-			mask = dtoh16a(curdata+8+4);
-			ptp_debug (params, "event %d: OLC mask 0x%04x length %d / data length %d", i, mask, len, len - 8);
 			curoff = 8+4+4;
 
 			for (j = 0; j <= 12 ; j++) {
-				unsigned int k;
 				unsigned int curmask = 1 << j;
+				unsigned int cursize = MIN(olcsizes[olcver][j], size - curoff);
 				if (curoff > size)
 					break;
 				if (!(mask & curmask))
 					continue;
-				if (curoff+olcsizes[olcver][j] > size) {
-					ptp_debug (params, "event %d: mask 0x%x size of olc entry %d exceeds total size %d", i, mask, curoff+olcsizes[olcver][j], size);
-					break;
+				if (olcsizes[olcver][j] != cursize) {
+					ptp_debug (params, "event %d: mask 0x%04x entry truncated (%d bytes), olcsizes table (%d bytes) wrong?",
+					           i, curmask, cursize, olcsizes[olcver][j]);
 				}
-				ptp_debug (params, "event %d: olcmask 0x%04x", i, curmask);
-				for (k=0;k<olcsizes[olcver][j];k++) {
-					ptp_debug (params, "    %d: %02x", k, curdata[curoff+k]);
-				}
+				ptp_debug (params, "event %d: olcmask 0x%04x, %d bytes: %s", i, curmask, cursize,
+				           ptp_bytes2str(curdata + curoff, cursize, "%02x "));
 				switch (curmask) {
 				case CANON_EOS_OLC_BUTTON: {
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					PTP_CANON_SET_INFO(ce[i], "Button %d",  dtoh16a(curdata+curoff));
+					PTP_CANON_SET_INFO(ce[i], "Button %x",  dtoh16a(curdata+curoff));
 					i++;
 					break;
 				}
@@ -2729,144 +2731,66 @@ static unsigned int olcsizes[0x15][13] = {
 					i++;
 					break;
 				}
-				case 0x0010: {
-					/* mask 0x0010: 4 bytes, 04 00 00 00 observed */
-					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0010 content %02x%02x%02x%02x",
-						curdata[curoff],
-						curdata[curoff+1],
-						curdata[curoff+2],
-						curdata[curoff+3]
-					);
-					i++;
-					break;
-				}
-				case 0x0020: {
-					/* mask 0x0020: 6 bytes, 00 00 00 00 00 00 observed.
-					 * This seems to be the self-timer record: when active,
-					 * has the form of 00 00 01 00 XX XX, where the last two bytes
-					 * stand for the number of seconds remaining until the shot */
-					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0020 content %02x%02x%02x%02x%02x%02x",
-						curdata[curoff],
-						curdata[curoff+1],
-						curdata[curoff+2],
-						curdata[curoff+3],
-						curdata[curoff+4],
-						curdata[curoff+5]
-					);
-					i++;
-					break;
-				}
 				case 0x0040: {
 					int	value = (signed char)curdata[curoff+2];
 					/* mask 0x0040: 7 bytes, 01 01 00 00 00 00 00 observed */
 					/* exposure indicator */
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					PTP_CANON_SET_INFO(ce[i], "OLCInfo exposure indicator %d,%d,%d.%d (%02x%02x%02x%02x)",
-						curdata[curoff],
+					PTP_CANON_SET_INFO(ce[i], "OLCInfo exposure indicator %d,%d,%d.%d (%s)",
+						curdata[curoff+0],
 						curdata[curoff+1],
-						value/10,abs(value)%10,
-						curdata[curoff+3],
-						curdata[curoff+4],
-						curdata[curoff+5],
-						curdata[curoff+6]
+						value/10, abs(value)%10,
+						ptp_bytes2str(curdata + curoff + 3, olcsizes[olcver][j] - 3, "%02x ")
 					);
 					i++;
 					break;
 				}
-				case 0x0080: {
+				case 0x0010:
+					/* mask 0x0010: 4 bytes, 04 00 00 00 observed */
+					/* a full trigger capture cycle on the 5Ds with storing to card looks like this
+					   (first column is the timestamp):
+						0.132778  4 bytes: 04 01 01 71  after EOS_SetRequestOLCInfoGroup
+						0.246439  4 bytes: 04 02 01 70  after EOS_RemoteReleaseOn (0x2,0x0)
+						1.291545  4 bytes: 04 02 01 71  after first "non-busy" EOS_SetDevicePropValueEx
+						2.251470  4 bytes: 04 01 01 71  after object info added
+					   and on the R8 it looks like this (after the same events):
+						0.357627  4 bytes: 04 01 06 2f
+						0.436084  4 bytes: 04 02 06 2e
+						0.942222  4 bytes: 04 02 06 2f
+						0.942969  4 bytes: 04 01 06 2f
+					   This suggests that the very last bit indicates the readiness to process commands
+					   and the second byte may be related to accessing storage.
+					*/
+				case 0x0020:
+					/* mask 0x0020: 6 bytes, 00 00 00 00 00 00 observed.
+					 * This seems to be the self-timer record: when active,
+					 * has the form of 00 00 01 00 XX XX, where the last two bytes
+					 * stand for the number of seconds remaining until the shot */
+				case 0x0080:
 					/* mask 0x0080: 4 bytes, 00 00 00 00 observed */
-					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0080 content %02x%02x%02x%02x",
-						curdata[curoff],
-						curdata[curoff+1],
-						curdata[curoff+2],
-						curdata[curoff+3]
-					);
-					i++;
-					break;
-				}
-				case 0x0100: {
-					/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and 00 00 00 00 01 00 (on focus) observed */
-					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO;
-					PTP_CANON_SET_INFO(ce[i], "%02x%02x%02x%02x%02x%02x",
-						curdata[curoff],
-						curdata[curoff+1],
-						curdata[curoff+2],
-						curdata[curoff+3],
-						curdata[curoff+4],
-						curdata[curoff+5]
-					);
-					i++;
-					break;
-				}
-				case 0x0200: {
+				case 0x0100:
+					/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and
+					 *                       00 00 00 00 01 00 (on focus) observed */
+				case 0x0200:
 					/* mask 0x0200: 7 bytes, 00 00 00 00 00 00 00 observed */
-					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK;
-					PTP_CANON_SET_INFO(ce[i], "%02x%02x%02x%02x%02x%02x%02x",
-						curdata[curoff],
-						curdata[curoff+1],
-						curdata[curoff+2],
-						curdata[curoff+3],
-						curdata[curoff+4],
-						curdata[curoff+5],
-						curdata[curoff+6]
-					);
-					i++;
-					break;
-				}
-				case 0x0400: {
+				case 0x0400:
 					/* mask 0x0400: 7 bytes, 00 00 00 00 00 00 00 observed */
-					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0400 content %02x%02x%02x%02x%02x%02x%02x",
-						curdata[curoff],
-						curdata[curoff+1],
-						curdata[curoff+2],
-						curdata[curoff+3],
-						curdata[curoff+4],
-						curdata[curoff+5],
-						curdata[curoff+6]
-					);
-					i++;
-					break;
-				}
-				case 0x0800: {
-					/* mask 0x0800: 8 bytes, 00 00 00 00 00 00 00 00 and 19 01 00 00 00 00 00 00 and others observed */
-					/*   might be mask of focus points selected */
-					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x0800 content %02x%02x%02x%02x%02x%02x%02x%02x",
-						curdata[curoff],
-						curdata[curoff+1],
-						curdata[curoff+2],
-						curdata[curoff+3],
-						curdata[curoff+4],
-						curdata[curoff+5],
-						curdata[curoff+6],
-						curdata[curoff+7]
-					);
-					i++;
-					break;
-				}
-				case 0x1000: {
+				case 0x0800:
+					/* mask 0x0800: 8 bytes, 00 00 00 00 00 00 00 00 and 19 01 00 00 00 00 00 00 and others observed
+					 * might be mask of focus points selected */
+				case 0x1000:
 					/* mask 0x1000: 1 byte, 00 observed */
-					/* mask 0x1000: 8 byte too on 5ds, type 11 (has shuttercount inside) */
+					/* mask 0x1000: 8 byte too on 5ds, version 0xb (has shuttercount inside)
+					                axxel's 5Ds only contains 1 byte!?! */
+				default:
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x1000 content %02x",
-						curdata[curoff]
-					);
+					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x%04x, %d bytes: %s", curmask, olcsizes[olcver][j],
+						ptp_bytes2str(curdata + curoff, olcsizes[olcver][j], "%02x "));
 					i++;
 					break;
-				}
-				default: {
-					break;
-				}
 				}
 				curoff += olcsizes[olcver][j];
 			}
-			/* handle more masks */
-			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
-			PTP_CANON_SET_INFO(ce[i], "OLCInfo event mask=%x",  mask);
 			break;
 		}
 		case PTP_EC_CANON_EOS_CameraStatusChanged:
@@ -2923,7 +2847,6 @@ static unsigned int olcsizes[0x15][13] = {
 			XX(RequestCancelTransfer)
 			XX(RequestObjectTransferDT)
 			XX(RequestCancelTransferDT)
-			XX(BulbExposureTime)
 			XX(RecordingTime)
 			XX(RequestObjectTransferTS)
 			XX(AfResult)

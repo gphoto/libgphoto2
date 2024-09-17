@@ -4823,6 +4823,7 @@ void ptp_free_object		(PTPObject *oi);
 const char *ptp_strerror	(uint16_t ret, uint16_t vendor);
 void ptp_debug			(PTPParams *params, const char *format, ...);
 void ptp_error			(PTPParams *params, const char *format, ...);
+const char* ptp_bytes2str(const uint8_t* data, int data_size, const char* fmt);
 
 
 const char* ptp_get_property_description(PTPParams* params, uint32_t dpc);
