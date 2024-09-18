@@ -156,6 +156,19 @@ include tp6801/Makefile-files
 
 
 ########################################################################
+# Print build flags for camlibs
+
+CLEANFILES  += camlib-buildflags.stamp
+noinst_DATA += camlib-buildflags.stamp
+camlib-buildflags.stamp: $(camlib_LTLIBRARIES)
+	@test -z "$(camlib_cflags)"   || printf "  %s %-8s %s\n" cam CFLAGS   "$(camlib_cflags)"
+	@test -z "$(camlib_cppflags)" || printf "  %s %-8s %s\n" cam CPPFLAGS "$(camlib_cppflags)"
+	@test -z "$(camlib_libadd)"   || printf "  %s %-8s %s\n" cam LIBADD   "$(camlib_libadd)"
+	@test -z "$(camlib_ldflags)"  || printf "  %s %-8s %s\n" cam LDFLAGS  "$(camlib_ldflags)"
+	@date > $@
+
+
+########################################################################
 # Print list of GP_CAMLIB() definitions suitable for adding to
 # configure.ac
 print-camlibs: Makefile

@@ -28,6 +28,7 @@ ports/serial:
 
 all:
 * IOLIBS and CAMLIBS now runtime configurable
+* Builds use silent rules by default now
 
 
 translations:

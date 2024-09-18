@@ -25,8 +25,8 @@ LOCAL_CLEAN =
 # FIXME: Depend on source files.
 DOXYGEN_STAMPS += $(HTML_APIDOC_DIR).stamp
 $(HTML_APIDOC_DIR).stamp: Doxyfile
-	doxygen Doxyfile
-	echo > $@
+	$(AM_V_GEN)doxygen $$($(AM_V_P) || printf "%s" "-q") Doxyfile
+	@: > $@
 
 $(HTML_APIDOC_DIR).tar.gz: $(HTML_APIDOC_DIR).stamp
 	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_DIR) | GZIP=--best gzip -c) > $@

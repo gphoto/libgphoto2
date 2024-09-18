@@ -47,7 +47,7 @@ dnl   libtool  2014-10-27 2.4.3
 dnl   libtool  2011-10-18 2.4.2
 
 
-AM_SILENT_RULES([no])
+AM_SILENT_RULES([yes])
 
 
 dnl Flag all GP_ strings in result as error unless specifically allowed.

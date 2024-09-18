@@ -57,21 +57,20 @@ dnl if the consistency check has been successful, and have "make all" abort
 dnl     Error: Inconsistent values for GETTEXT_PACKAGE_LIBGPHOTO2 and po/Makevars DOMAIN.
 dnl if the consistency check has failed.
 dnl
+m4_pattern_allow([AM_V_P])dnl
 cat >>${GP_GETTEXT_SETUP_MK} <<EOF
-	@set -ex; \\
+	@set -e; \\
 	MAKEVARS_FILE="\$\$(test -f '$3/Makevars' || echo '\$(srcdir)/')$3/Makevars"; \\
 	MAKEVARS_DOMAIN="\$\$(\$(SED) -n 's/^DOMAIN \\{0,\\}= \\{0,\\}//p' "\$\$MAKEVARS_FILE")"; \\
 	MAKE_TIME_DOMAIN="\$($1)"; \\
-	echo "  MAKEVARS_DOMAIN=\$\$MAKEVARS_DOMAIN"; \\
-	echo "  $1=\$($1)"; \\
 	if test "x\$\$MAKEVARS_DOMAIN" = "x\$($1)"; then \\
-	     echo "Good: Matching gettext domain values (\$($1))"; \\
+	     if \$(AM_V_P); then printf "  %-7s %s\n" CHECK "Good: Matching gettext domain values (\$($1))"; fi; \\
 	     true; \\
 	elif test "x\$\$USE_NLS" = xyes; then \\
-	     echo "Error: Mismatching gettext domain values (\$($1) vs \$\${MAKEVARS_DOMAIN})"; \\
+	     printf "  %-7s %s\n" CHECK "Error: Mismatching gettext domain values (\$($1) vs \$\${MAKEVARS_DOMAIN})"; \\
 	     false; \\
 	else \\
-	     echo "Warning: Mismatching gettext domain values (\$($1) vs \$\${MAKEVARS_DOMAIN})"; \\
+	     printf "  %-7s %s\n" CHECK "Warning: Mismatching gettext domain values (\$($1) vs \$\${MAKEVARS_DOMAIN})"; \\
 	     true; \\
 	fi
 EOF

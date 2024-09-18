@@ -20,7 +20,7 @@ AM_INIT_AUTOMAKE([
 ])
 
 
-AM_SILENT_RULES([no])
+AM_SILENT_RULES([yes])
 
 
 AC_LANG([C])

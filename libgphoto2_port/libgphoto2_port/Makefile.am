@@ -1,4 +1,6 @@
+CLEANFILES =
 EXTRA_DIST =
+noinst_DATA =
 
 
 # included by all *.c files containing translated string literals as
@@ -76,3 +78,13 @@ libgphoto2_port_la_SOURCES      += gphoto2-port-result.c
 libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-locking.h
 libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-version.h
 libgphoto2_port_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-port-library.h
+
+
+CLEANFILES  += libgphoto2_port-buildflags.stamp
+noinst_DATA += libgphoto2_port-buildflags.stamp
+libgphoto2_port-buildflags.stamp: libgphoto2_port.la
+	@test -z "$(libgphoto2_port_la_CFLAGS)"   || printf "  %s %-8s %s\n" lgp CFLAGS   "$(libgphoto2_port_la_CFLAGS)"
+	@test -z "$(libgphoto2_port_la_CPPFLAGS)" || printf "  %s %-8s %s\n" lgp CPPFLAGS "$(libgphoto2_port_la_CPPFLAGS)"
+	@test -z "$(libgphoto2_port_la_LIBADD)"   || printf "  %s %-8s %s\n" lgp LIBADD   "$(libgphoto2_port_la_LIBADD)"
+	@test -z "$(libgphoto2_port_la_LDFLAGS)"  || printf "  %s %-8s %s\n" lgp LDFLAGS  "$(libgphoto2_port_la_LDFLAGS)"
+	@date > $@

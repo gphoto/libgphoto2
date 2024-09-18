@@ -105,3 +105,13 @@ nobase_include_HEADERS =	\
 
 EXTRA_DIST += gphoto2/gphoto2-port-library.h
 EXTRA_DIST += gphoto2/gphoto2-port-locking.h
+
+
+CLEANFILES  += iolib-buildflags.stamp
+noinst_DATA += iolib-buildflags.stamp
+iolib-buildflags.stamp: $(iolib_LTLIBRARIES)
+	@test -z "$(iolib_cflags)"   || printf "  %s %-8s %s\n" iol CFLAGS   "$(iolib_cflags)"
+	@test -z "$(iolib_cppflags)" || printf "  %s %-8s %s\n" iol CPPFLAGS "$(iolib_cppflags)"
+	@test -z "$(iolib_libadd)"   || printf "  %s %-8s %s\n" iol LIBADD   "$(iolib_libadd)"
+	@test -z "$(iolib_ldflags)"  || printf "  %s %-8s %s\n" iol LDFLAGS  "$(iolib_ldflags)"
+	@date > $@

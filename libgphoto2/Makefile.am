@@ -1,4 +1,6 @@
+CLEANFILES =
 EXTRA_DIST =
+noinst_DATA =
 
 
 # included by all *.c files containing translated string literals as
@@ -91,3 +93,13 @@ libgphoto2_la_SOURCES      += gphoto2-setting.c
 libgphoto2_la_SOURCES      += gphoto2-widget.c
 
 libgphoto2_la_DEPENDENCIES += $(top_srcdir)/gphoto2/gphoto2-version.h
+
+
+CLEANFILES  += libgphoto2-buildflags.stamp
+noinst_DATA += libgphoto2-buildflags.stamp
+libgphoto2-buildflags.stamp: libgphoto2.la
+	@test -z "$(libgphoto2_la_CFLAGS)"   || printf "  %s %-8s %s\n" lg2 CFLAGS   "$(libgphoto2_la_CFLAGS)"
+	@test -z "$(libgphoto2_la_CPPFLAGS)" || printf "  %s %-8s %s\n" lg2 CPPFLAGS "$(libgphoto2_la_CPPFLAGS)"
+	@test -z "$(libgphoto2_la_LIBADD)"   || printf "  %s %-8s %s\n" lg2 LIBADD   "$(libgphoto2_la_LIBADD)"
+	@test -z "$(libgphoto2_la_LDFLAGS)"  || printf "  %s %-8s %s\n" lg2 LDFLAGS  "$(libgphoto2_la_LDFLAGS)"
+	@date > $@
