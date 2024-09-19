@@ -64,6 +64,9 @@
 
 #define CHECK_PTP_RC(RESULT) do { uint16_t r = (RESULT); if (r != PTP_RC_OK) return r; } while(0)
 
+#ifndef MIN
+#  define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
 
 /* Initialize a PTPContainer struct. For the usage, see the PTP_CNT_INIT() macro below. */
 static inline
@@ -176,7 +179,7 @@ ptp_error (PTPParams *params, const char *format, ...)
  * buffer for immediate copying/snprintf-ing. Parameter fmt is the
  * format string used for each byte, e.g. "%02x ". */
 const char*
-ptp_bytes2str(const uint8_t* data, int data_size, const char* fmt)
+ptp_bytes2str(const uint8_t *data, int data_size, const char *fmt)
 {
 	static char line[16 * 3 + 1];
 	int pos = 0;
@@ -184,6 +187,13 @@ ptp_bytes2str(const uint8_t* data, int data_size, const char* fmt)
 		pos += snprintf(line + pos, sizeof(line) - pos, fmt, data[i]);
 	}
 	return line;
+}
+
+void
+ptp_debug_data(PTPParams *params, const uint8_t* data, int size)
+{
+	for (int k = 0; k < size; k += 16)
+		ptp_debug (params, "    0x%03x: %s", k, ptp_bytes2str(data + k, MIN(16, size - k), "%02x "));
 }
 
 /* Pack / unpack functions */
@@ -1701,7 +1711,7 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	ptp_debug (params, "ptp_panasonic_getdevicepropertydesc 0x%08x", propcode);
 	while (off < size) {
 		if (off >= size-8) break;
-		ptp_debug (params, "propcode 0x%08lx, size %d", dtoh32a(data+off), dtoh32a(data+off+4));
+		ptp_debug (params, "propcode 0x%08x, size %d", dtoh32a(data+off), dtoh32a(data+off+4));
 		off += dtoh32a(data+off+4)+8;
 	}
 
@@ -6315,7 +6325,6 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		{PTP_DPC_CANON_TypeOfSupportedSlideShow,	N_("Type of Slideshow")},
 		{PTP_DPC_CANON_AverageFilesizes,N_("Average Filesizes")},
 		{PTP_DPC_CANON_ModelID,		N_("Model ID")},
-		{PTP_DPC_CANON_EOS_FixedMovie,	N_("EOS Fixed Movie Switch")},
 
 		{PTP_DPC_CANON_EOS_PowerZoomPosition,"EOS_PowerZoomPosition"},
 		{PTP_DPC_CANON_EOS_StrobeSettingSimple,"EOS_StrobeSettingSimple"},
@@ -6498,6 +6507,7 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		{PTP_DPC_CANON_EOS_MirrorLockupState,"EOS_MirrorLockupState"},
 		{PTP_DPC_CANON_EOS_FlashChargingState,"EOS_FlashChargingState"},
 		{PTP_DPC_CANON_EOS_AloMode,"EOS_AloMode"},
+		{PTP_DPC_CANON_EOS_FixedMovie, "EOS_Fixed_Movie_Switch"},
 		{PTP_DPC_CANON_EOS_OneShotRawOn,"EOS_OneShotRawOn"},
 		{PTP_DPC_CANON_EOS_ErrorForDisplay,"EOS_ErrorForDisplay"},
 		{PTP_DPC_CANON_EOS_AEModeMovie,"EOS_AEModeMovie"},
