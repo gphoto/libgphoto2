@@ -43,15 +43,15 @@ dist-hook:
 else
 
 all-local:
-	@echo "Dummy target $@."
+	@echo "Dummy target $@ without gtk-doc."
 
 dist-hook:
-	@echo "Dummy target $@."
-	@echo "Re-run configure with adequate parameters and run make again to build docs."
+	@echo "Dummy target $@ without gtk-doc."
+	@echo "Re-run configure with gtk-doc and adequate parameters and run make again to build docs."
 
 install-data-local:
-	@echo "Dummy target $@"
-	@echo "Re-run configure with adequate parameters and run make again to build docs."
+	@echo "Dummy target $@ without gtk-doc"
+	@echo "Re-run configure with gtk-doc and adequate parameters and run make again to build docs."
 
 endif
 
