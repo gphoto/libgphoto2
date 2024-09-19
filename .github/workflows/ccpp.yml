@@ -13,7 +13,6 @@ on:
 env:
   LC_ALL: C
   COMMON_CONFIGURE_FLAGS: >-
-    --disable-silent-rules
     --enable-vusb
     --with-camlibs=everything
     SLEEP=no
