@@ -142,62 +142,52 @@ dtoh64ap (PTPParams *params, const unsigned char *a)
  * len - in ptp string characters currently
  */
 static inline int
-ptp_unpack_string(PTPParams *params, const unsigned char* data, uint32_t offset, uint32_t total, uint8_t *len, char **retstr)
+ptp_unpack_string(PTPParams *params, const unsigned char* data, uint32_t *offset, uint32_t size, char **result)
 {
-	uint8_t length;
-	uint16_t string[PTP_MAXSTRLEN+1];
+	uint8_t ucs2len;		/* length of the string in UCS-2 chars, including terminating \0 */
+	uint16_t ucs2src[PTP_MAXSTRLEN+1];
 	/* allow for UTF-8: max of 3 bytes per UCS-2 char, plus final null */
-	char loclstr[PTP_MAXSTRLEN*3+1];
-	size_t nconv, srclen, destlen;
-	char *src, *dest;
+	char utf8dest[PTP_MAXSTRLEN*3+1] = { 0 };
 
-	*len = 0;
-	*retstr = NULL;
-
-	if (offset + 1 > total)
+	if (!data || !offset || !result)
 		return 0;
 
-	length = dtoh8a(&data[offset]);	/* PTP_MAXSTRLEN == 255, 8 bit len */
-	if (length == 0) {		/* nothing to do? */
-		*len = 0;
-		*retstr = strdup("");	/* return an empty string, not NULL */
+	*result = NULL;
+
+	if (*offset + 1 > size)
+		return 0;
+
+	ucs2len = dtoh8a(data + *offset);	/* PTP_MAXSTRLEN == 255, 8 bit len */
+	*offset += 1;
+	if (ucs2len == 0) {		/* nothing to do? */
+		*result = strdup("");	/* return an empty string, not NULL */
 		return 1;
 	}
 
-	if (offset + 1 + length*sizeof(string[0]) > total)
+	if (*offset + ucs2len * sizeof(ucs2src[0]) > size)
 		return 0;
 
-	*len = length;
-
 	/* copy to string[] to ensure correct alignment for iconv(3) */
-	memcpy(string, &data[offset+1], length * sizeof(string[0]));
-	string[length] = 0x0000U;   /* be paranoid!  add a terminator. */
-	loclstr[0] = '\0';
+	memcpy(ucs2src, data + *offset, ucs2len * sizeof(ucs2src[0]));
+	ucs2src[ucs2len] = 0;   /* be paranoid!  add a terminator. */
 
 	/* convert from camera UCS-2 to our locale */
-	src = (char *)string;
-	srclen = length * sizeof(string[0]);
-	dest = loclstr;
-	destlen = sizeof(loclstr)-1;
-	nconv = (size_t)-1;
+	size_t nconv = (size_t)-1;
 #if defined(HAVE_ICONV) && defined(HAVE_LANGINFO_H)
+	char* src = (char *)ucs2src;
+	size_t srclen = ucs2len * sizeof(ucs2src[0]);
+	char* dest = utf8dest;
+	size_t destlen = sizeof(utf8dest)-1;
 	if (params->cd_ucs2_to_locale != (iconv_t)-1)
 		nconv = iconv(params->cd_ucs2_to_locale, &src, &srclen, &dest, &destlen);
 #endif
 	if (nconv == (size_t) -1) { /* do it the hard way */
-		int i;
 		/* try the old way, in case iconv is broken */
-		for (i=0;i<length;i++) {
-			if (dtoh16a(&data[offset+1+2*i])>127)
-				loclstr[i] = '?';
-			else
-				loclstr[i] = dtoh16a(&data[offset+1+2*i]);
-		}
-		dest = loclstr+length;
+		for (int i=0;i<=ucs2len;i++)
+			utf8dest[i] = ucs2src[i] > 127 ? '?' : (char)ucs2src[i];
 	}
-	*dest = '\0';
-	loclstr[sizeof(loclstr)-1] = '\0';   /* be safe? */
-	*retstr = strdup(loclstr);
+	*result = strdup(utf8dest);
+	*offset += 2 * ucs2len;
 	return 1;
 }
 
@@ -286,38 +276,39 @@ ptp_get_packed_stringcopy(PTPParams *params, const char *string, uint32_t *packe
 	return (retcopy);
 }
 
-static inline uint32_t
-ptp_unpack_uint32_t_array(PTPParams *params, const unsigned char* data, unsigned int offset, unsigned int datalen, uint32_t **array)
+static inline int
+ptp_unpack_uint32_t_array(PTPParams *params, const uint8_t* data, uint32_t *offset, uint32_t datalen,
+                          uint32_t **array, uint32_t* arraylen)
 {
-	uint32_t n, i=0;
-
-	if (!data)
-		return 0;
-
-	if (offset >= datalen)
-		return 0;
-
-	if (offset + sizeof(uint32_t) > datalen)
+	if (!array || !arraylen)
 		return 0;
 
 	*array = NULL;
-	n=dtoh32a(&data[offset]);
-	if (n >= UINT_MAX/sizeof(uint32_t))
-		return 0;
-	if (!n)
+	*arraylen = 0;
+
+	if (!data || *offset + sizeof(uint32_t) > datalen)
 		return 0;
 
-	if (offset + sizeof(uint32_t)*(n+1) > datalen) {
-		ptp_debug (params ,"array runs over datalen bufferend (%ld vs %d)", offset + sizeof(uint32_t)*(n+1) , datalen);
+	uint32_t n = dtoh32a(data + *offset);
+	*offset += sizeof(uint32_t);
+	if (n == 0)
+		return 1;
+
+	if (*offset + n * sizeof(uint32_t) > datalen) {
+		ptp_debug (params ,"array runs over datalen buffer end (%ld vs %u)", *offset + n * sizeof(uint32_t) , datalen);
 		return 0;
 	}
 
-	*array = calloc (n,sizeof(uint32_t));
+	*array = calloc (n, sizeof(uint32_t));
 	if (!*array)
 		return 0;
-	for (i=0;i<n;i++)
-		(*array)[i]=dtoh32a(&data[offset+(sizeof(uint32_t)*(i+1))]);
-	return n;
+
+	for (unsigned i=0;i<n;i++)
+		(*array)[i] = dtoh32a(data + *offset + i * sizeof(uint32_t));
+	*offset += n * sizeof(uint32_t);
+	*arraylen = n;
+
+	return 1;
 }
 
 static inline uint32_t
@@ -334,35 +325,39 @@ ptp_pack_uint32_t_array(PTPParams *params, const uint32_t *array, uint32_t array
 	return (arraylen+1)*sizeof(uint32_t);
 }
 
-static inline uint32_t
-ptp_unpack_uint16_t_array(PTPParams *params, const unsigned char* data, unsigned int offset, unsigned int datalen, uint16_t **array)
+static inline int
+ptp_unpack_uint16_t_array(PTPParams *params, const uint8_t* data, uint32_t *offset, uint32_t datalen,
+                          uint16_t **array, uint32_t* arraylen)
 {
-	uint32_t n, i=0;
-
-	if (!data)
+	if (!array || !arraylen)
 		return 0;
+
 	*array = NULL;
+	*arraylen = 0;
 
-	if (datalen - offset < sizeof(uint32_t))
+	if (!data || *offset + sizeof(uint32_t) > datalen)
 		return 0;
-	n=dtoh32a(&data[offset]);
 
-	if (n >= (UINT_MAX - offset - sizeof(uint32_t))/sizeof(uint16_t))
-		return 0;
-	if (!n)
-		return 0;
-	if (offset + sizeof(uint32_t) > datalen)
-		return 0;
-	if (offset + sizeof(uint32_t)+sizeof(uint16_t)*n > datalen) {
-		ptp_debug (params ,"array runs over datalen bufferend (%ld vs %d)", offset + sizeof(uint32_t)+n*sizeof(uint16_t) , datalen);
+	uint32_t n = dtoh32a(data + *offset);
+	*offset += sizeof(uint32_t);
+	if (n == 0)
+		return 1;
+
+	if (*offset + n * sizeof(uint16_t) > datalen) {
+		ptp_debug (params ,"array runs over datalen buffer end (%ld vs %u)", *offset + n * sizeof(uint16_t) , datalen);
 		return 0;
 	}
-	*array = calloc (n,sizeof(uint16_t));
+
+	*array = calloc (n, sizeof(uint16_t));
 	if (!*array)
 		return 0;
-	for (i=0;i<n;i++)
-		(*array)[i]=dtoh16a(&data[offset+(sizeof(uint16_t)*(i+2))]);
-	return n;
+
+	for (unsigned i=0;i<n;i++)
+		(*array)[i] = dtoh16a(data + *offset + i * sizeof(uint16_t));
+	*offset += n * sizeof(uint16_t);
+	*arraylen = n;
+
+	return 1;
 }
 
 /* DeviceInfo pack/unpack */
@@ -377,124 +372,57 @@ ptp_unpack_uint16_t_array(PTPParams *params, const unsigned char* data, unsigned
 static inline int
 ptp_unpack_DI (PTPParams *params, const unsigned char* data, PTPDeviceInfo *di, unsigned int datalen)
 {
-	uint8_t len;
-	unsigned int totallen;
+	unsigned int offset;
 
 	if (!data) return 0;
 	if (datalen < 12) return 0;
 	memset (di, 0, sizeof(*di));
-	di->StandardVersion = dtoh16a(&data[PTP_di_StandardVersion]);
-	di->VendorExtensionID =
-		dtoh32a(&data[PTP_di_VendorExtensionID]);
-	di->VendorExtensionVersion =
-		dtoh16a(&data[PTP_di_VendorExtensionVersion]);
-	if (!ptp_unpack_string(params, data,
-		PTP_di_VendorExtensionDesc,
-		datalen,
-		&len,
-		&di->VendorExtensionDesc)
-	)
+	di->StandardVersion = dtoh16a(data + PTP_di_StandardVersion);
+	di->VendorExtensionID = dtoh32a(data + PTP_di_VendorExtensionID);
+	di->VendorExtensionVersion = dtoh16a(data + PTP_di_VendorExtensionVersion);
+	offset = PTP_di_VendorExtensionDesc;
+	if (!ptp_unpack_string(params, data, &offset, datalen, &di->VendorExtensionDesc))
 		return 0;
-	totallen=len*2+1;
-	if (datalen <= totallen + PTP_di_FunctionalMode + sizeof(uint16_t)) {
-		ptp_debug (params, "datalen %d <= totallen + PTP_di_FunctionalMode + sizeof(uint16_t) %ld",
-		           datalen, totallen + PTP_di_FunctionalMode + sizeof(uint16_t));
+	if (datalen <= offset + sizeof(uint16_t)) {
+		ptp_debug (params, "FunctionalMode outside buffer bounds (%ld > %u)", offset + sizeof(uint16_t), datalen);
 		return 0;
 	}
-	di->FunctionalMode =
-		dtoh16a(&data[PTP_di_FunctionalMode+totallen]);
-	di->OperationsSupported_len = ptp_unpack_uint16_t_array(params, data,
-		PTP_di_OperationsSupported+totallen,
-		datalen,
-		&di->OperationsSupported);
-	totallen=totallen+di->OperationsSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) {
-		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 1", datalen, totallen+PTP_di_OperationsSupported);
+	di->FunctionalMode = dtoh16a(data + offset);
+	offset += 2;
+	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->OperationsSupported, &di->OperationsSupported_len)) {
+		ptp_debug (params, "failed to unpack OperationsSupported array");
 		return 0;
 	}
-	di->EventsSupported_len = ptp_unpack_uint16_t_array(params, data,
-		PTP_di_OperationsSupported+totallen,
-		datalen,
-		&di->EventsSupported);
-	totallen=totallen+di->EventsSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) {
-		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 2", datalen, totallen+PTP_di_OperationsSupported);
+	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->EventsSupported, &di->EventsSupported_len)) {
+		ptp_debug (params, "failed to unpack EventsSupported array");
 		return 0;
 	}
-	di->DevicePropertiesSupported_len =
-		ptp_unpack_uint16_t_array(params, data,
-		PTP_di_OperationsSupported+totallen,
-		datalen,
-		&di->DevicePropertiesSupported);
-	totallen=totallen+di->DevicePropertiesSupported_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) {
-		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 3", datalen, totallen+PTP_di_OperationsSupported);
+	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->DevicePropertiesSupported, &di->DevicePropertiesSupported_len)) {
+		ptp_debug (params, "failed to unpack DevicePropertiesSupported array");
 		return 0;
 	}
-	di->CaptureFormats_len = ptp_unpack_uint16_t_array(params, data,
-		PTP_di_OperationsSupported+totallen,
-		datalen,
-		&di->CaptureFormats);
-	totallen=totallen+di->CaptureFormats_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) {
-		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 4", datalen, totallen+PTP_di_OperationsSupported);
+	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->CaptureFormats, &di->CaptureFormats_len)) {
+		ptp_debug (params, "failed to unpack CaptureFormats array");
 		return 0;
 	}
-	di->ImageFormats_len = ptp_unpack_uint16_t_array(params, data,
-		PTP_di_OperationsSupported+totallen,
-		datalen,
-		&di->ImageFormats);
-	totallen=totallen+di->ImageFormats_len*sizeof(uint16_t)+sizeof(uint32_t);
-	if (datalen <= totallen+PTP_di_OperationsSupported) {
-		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 5", datalen, totallen+PTP_di_OperationsSupported);
+	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->ImageFormats, &di->ImageFormats_len)) {
+		ptp_debug (params, "failed to unpack ImageFormats array");
 		return 0;
 	}
-	if (!ptp_unpack_string(params, data,
-		PTP_di_OperationsSupported+totallen,
-		datalen,
-		&len,
-		&di->Manufacturer)
-	)
-		return 0;
-	totallen+=len*2+1;
+
 	/* be more relaxed ... as these are optional its ok if they are not here */
-	if (datalen <= totallen+PTP_di_OperationsSupported) {
-		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 6", datalen, totallen+PTP_di_OperationsSupported);
-		return 1;
-	}
-	if (!ptp_unpack_string(params, data,
-		PTP_di_OperationsSupported+totallen,
-		datalen,
-		&len,
-		&di->Model)
-	)
-		return 1;
-	totallen+=len*2+1;
-	/* be more relaxed ... as these are optional its ok if they are not here */
-	if (datalen <= totallen+PTP_di_OperationsSupported) {
-		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 7", datalen, totallen+PTP_di_OperationsSupported);
-		return 1;
-	}
-	if (!ptp_unpack_string(params, data,
-		PTP_di_OperationsSupported+totallen,
-		datalen,
-		&len,
-		&di->DeviceVersion)
-	)
-		return 1;
-	totallen+=len*2+1;
-	/* be more relaxed ... as these are optional its ok if they are not here */
-	if (datalen <= totallen+PTP_di_OperationsSupported) {
-		ptp_debug (params, "datalen %d <= totallen+PTP_di_OperationsSupported %d 8", datalen, totallen+PTP_di_OperationsSupported);
-		return 1;
-	}
-	if (!ptp_unpack_string(params, data,
-		PTP_di_OperationsSupported+totallen,
-		datalen,
-		&len,
-		&di->SerialNumber)
-	)
-		return 1;
+	if (!ptp_unpack_string(params, data, &offset, datalen, &di->Manufacturer))
+		ptp_debug (params, "failed to unpack Manufacturer string");
+
+	if (!ptp_unpack_string(params, data, &offset, datalen, &di->Model))
+		ptp_debug (params, "failed to unpack Model string");
+
+	if (!ptp_unpack_string(params, data, &offset, datalen, &di->DeviceVersion))
+		ptp_debug (params, "failed to unpack DeviceVersion string");
+
+	if (!ptp_unpack_string(params, data, &offset, datalen, &di->SerialNumber))
+		ptp_debug (params, "failed to unpack SerialNumber string");
+
 	return 1;
 }
 
@@ -517,29 +445,15 @@ ptp_free_DI (PTPDeviceInfo *di) {
 static inline int
 ptp_unpack_EOS_DI (PTPParams *params, const unsigned char* data, PTPCanonEOSDeviceInfo *di, unsigned int datalen)
 {
-	unsigned int totallen = 4;
+	uint32_t offset = 4;
 
 	memset (di,0, sizeof(*di));
-	if (datalen < 8) return 0;
 
-	/* uint32_t struct len - ignore */
-	di->EventsSupported_len = ptp_unpack_uint32_t_array(params, data,
-		totallen, datalen, &di->EventsSupported);
-	if (!di->EventsSupported) return 0;
-	totallen += di->EventsSupported_len*sizeof(uint32_t)+4;
-	if (totallen >= datalen) return 0;
+	ptp_unpack_uint32_t_array(params, data, &offset, datalen, &di->EventsSupported, &di->EventsSupported_len);
+	ptp_unpack_uint32_t_array(params, data, &offset, datalen, &di->DevicePropertiesSupported, &di->DevicePropertiesSupported_len);
+	ptp_unpack_uint32_t_array(params, data, &offset, datalen, &di->unk, &di->unk_len);
 
-	di->DevicePropertiesSupported_len = ptp_unpack_uint32_t_array(params, data,
-		totallen, datalen, &di->DevicePropertiesSupported);
-	if (!di->DevicePropertiesSupported) return 0;
-	totallen += di->DevicePropertiesSupported_len*sizeof(uint32_t)+4;
-	if (totallen >= datalen) return 0;
-
-	di->unk_len = ptp_unpack_uint32_t_array(params, data,
-		totallen, datalen, &di->unk);
-	if (!di->unk) return 0;
-	totallen += di->unk_len*sizeof(uint32_t)+4;
-	return 1;
+	return offset >= 16;
 }
 
 static inline void
@@ -552,33 +466,20 @@ ptp_free_EOS_DI (PTPCanonEOSDeviceInfo *di)
 
 /* ObjectHandles array pack/unpack */
 
-#define PTP_oh				 0
-
 static inline void
 ptp_unpack_OH (PTPParams *params, const unsigned char* data, PTPObjectHandles *oh, unsigned int len)
 {
-	if (len) {
-		oh->n = ptp_unpack_uint32_t_array(params, data, PTP_oh, len, &oh->Handler);
-	} else {
-		oh->n = 0;
-		oh->Handler = NULL;
-	}
+	uint32_t offset = 0;
+	ptp_unpack_uint32_t_array(params, data, &offset, len, &oh->Handler, &oh->n);
 }
 
 /* StoreIDs array pack/unpack */
 
-#define PTP_sids			 0
-
 static inline void
 ptp_unpack_SIDs (PTPParams *params, const unsigned char* data, PTPStorageIDs *sids, unsigned int len)
 {
-	sids->n = 0;
-	sids->Storage = NULL;
-
-	if (!data || !len)
-		return;
-
-	sids->n = ptp_unpack_uint32_t_array(params, data, PTP_sids, len, &sids->Storage);
+	uint32_t offset = 0;
+	ptp_unpack_uint32_t_array(params, data, &offset, len, &sids->Storage, &sids->n);
 }
 
 /* StorageInfo pack/unpack */
@@ -594,8 +495,6 @@ ptp_unpack_SIDs (PTPParams *params, const unsigned char* data, PTPStorageIDs *si
 static inline int
 ptp_unpack_SI (PTPParams *params, const unsigned char* data, PTPStorageInfo *si, unsigned int len)
 {
-	uint8_t storagedescriptionlen;
-
 	if (!data || len < 26) return 0;
 	si->StorageType=dtoh16a(&data[PTP_si_StorageType]);
 	si->FilesystemType=dtoh16a(&data[PTP_si_FilesystemType]);
@@ -604,21 +503,14 @@ ptp_unpack_SI (PTPParams *params, const unsigned char* data, PTPStorageInfo *si,
 	si->FreeSpaceInBytes=dtoh64a(&data[PTP_si_FreeSpaceInBytes]);
 	si->FreeSpaceInImages=dtoh32a(&data[PTP_si_FreeSpaceInImages]);
 
-	/* FIXME: check more lengths here */
-	if (!ptp_unpack_string(params, data,
-		PTP_si_StorageDescription,
-		len,
-		&storagedescriptionlen,
-		&si->StorageDescription)
-	)
-		return 0;
+	uint32_t offset = PTP_si_StorageDescription;
 
-	if (!ptp_unpack_string(params, data,
-		PTP_si_StorageDescription+storagedescriptionlen*2+1,
-		len,
-		&storagedescriptionlen,
-		&si->VolumeLabel)) {
-		ptp_debug(params, "could not unpack storage description");
+	if (!ptp_unpack_string(params, data, &offset, len, &si->StorageDescription)) {
+		ptp_debug(params, "could not unpack StorageDescription");
+		return 0;
+	}
+	if (!ptp_unpack_string(params, data, &offset, len, &si->VolumeLabel)) {
+		ptp_debug(params, "could not unpack VolumeLabel");
 		return 0;
 	}
 	return 1;
@@ -758,8 +650,6 @@ ptp_unpack_PTPTIME (const char *str) {
 static inline void
 ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, unsigned int len)
 {
-	uint8_t filenamelen;
-	uint8_t capturedatelen;
 	char *capture_date;
 
 	if (!data || len < PTP_oi_SequenceNumber)
@@ -792,19 +682,15 @@ ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, 
 	oi->AssociationDesc=dtoh32a(&data[PTP_oi_AssociationDesc]);
 	oi->SequenceNumber=dtoh32a(&data[PTP_oi_SequenceNumber]);
 
-	ptp_unpack_string(params, data, PTP_oi_filenamelen, len, &filenamelen, &oi->Filename);
-	ptp_unpack_string(params, data, PTP_oi_filenamelen+filenamelen*2+1, len, &capturedatelen, &capture_date);
-	/* subset of ISO 8601, without '.s' tenths of second and
-	 * time zone
-	 */
+	uint32_t offset = PTP_oi_filenamelen;
+	ptp_unpack_string(params, data, &offset, len, &oi->Filename);
+	ptp_unpack_string(params, data, &offset, len, &capture_date);
+	/* subset of ISO 8601, without '.s' tenths of second and time zone */
 	oi->CaptureDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
 
 	/* now the modification date ... */
-	ptp_unpack_string(params, data,
-		PTP_oi_filenamelen+filenamelen*2
-		+capturedatelen*2+2, len, &capturedatelen, &capture_date
-	);
+	ptp_unpack_string(params, data, &offset, len, &capture_date);
 	oi->ModificationDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
 }
@@ -873,15 +759,9 @@ ptp_unpack_DPV (
 	/* XXX: other int types are unimplemented */
 	/* XXX: other int arrays are unimplemented also */
 	case PTP_DTC_STR: {
-		uint8_t len;
 		/* XXX: max size */
-
-		if (*offset >= total+1)
+		if (!ptp_unpack_string(params, data, offset, total, &value->str))
 			return 0;
-
-		if (!ptp_unpack_string(params,data,*offset,total,&len,&value->str))
-			return 0;
-		*offset += len*2+1;
 		break;
 	}
 	default:
@@ -1191,7 +1071,6 @@ static inline int
 ptp_unpack_OPD (PTPParams *params, const unsigned char* data, PTPObjectPropDesc *opd, unsigned int opdlen)
 {
 	unsigned int offset=0, ret;
-	uint8_t	len;
 
 	memset (opd, 0, sizeof(*opd));
 
@@ -1254,14 +1133,10 @@ ptp_unpack_OPD (PTPParams *params, const unsigned char* data, PTPObjectPropDesc 
 		}
 		break;
 	case PTP_OPFF_DateTime:
-		if (!ptp_unpack_string(params, data, offset, opdlen, &len, &opd->FORM.DateTime.String))
-			opd->FORM.DateTime.String = NULL;
-		offset += 2*len+1; /* offset not used afterwards anymore */
+		ptp_unpack_string(params, data, &offset, opdlen, &opd->FORM.DateTime.String);
 		break;
 	case PTP_OPFF_RegularExpression:
-		if (!ptp_unpack_string(params, data, offset, opdlen, &len, &opd->FORM.RegularExpression.String))
-			opd->FORM.RegularExpression.String = NULL;
-		offset += 2*len+1; /* offset not used afterwards anymore */
+		ptp_unpack_string(params, data, &offset, opdlen, &opd->FORM.RegularExpression.String);
 		break;
 	case PTP_OPFF_FixedLengthArray:
 		if (offset + sizeof(uint16_t) > opdlen) goto outofmemory;
@@ -2494,7 +2369,6 @@ ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned
 					break;
 				case PTP_DTC_STR: {
 #if 0 /* 5D MII and 400D aktually store plain ASCII in their string properties */
-					uint8_t len = 0;
 					dpd->FactoryDefaultValue.str	= ptp_unpack_string(params, data, 0, &len);
 					dpd->CurrentValue.str		= ptp_unpack_string(params, data, 0, &len);
 #else
@@ -3122,45 +2996,42 @@ ptp_unpack_ptp11_manifest (
 	PTPObjectFilesystemInfo	**oifs
 ) {
 	uint64_t		numberoifs, i;
-	unsigned int		curoffset;
+	unsigned int		offset;
 	PTPObjectFilesystemInfo	*xoifs;
 
 	if (!data || datalen < 8)
 		return 0;
 	numberoifs = dtoh64ap(params,data);
-	curoffset = 8;
+	offset = 8;
 	xoifs = calloc(numberoifs, sizeof(PTPObjectFilesystemInfo));
 	if (!xoifs)
 		return 0;
 
 	for (i = 0; i < numberoifs; i++) {
-		uint8_t len,dlen;
 		char *modify_date;
 		PTPObjectFilesystemInfo *oif = xoifs+i;
 
-		if (curoffset + 34 + 2 > datalen)
+		if (offset + 34 + 2 > datalen)
 			goto tooshort;
 
-		oif->ObjectHandle		= dtoh32ap(params,data+curoffset);
-		oif->StorageID 			= dtoh32ap(params,data+curoffset+4);
-		oif->ObjectFormat 		= dtoh16ap(params,data+curoffset+8);
-		oif->ProtectionStatus 		= dtoh16ap(params,data+curoffset+10);
-		oif->ObjectCompressedSize64 	= dtoh64ap(params,data+curoffset+12);
-		oif->ParentObject 		= dtoh32ap(params,data+curoffset+20);
-		oif->AssociationType 		= dtoh16ap(params,data+curoffset+24);
-		oif->AssociationDesc 		= dtoh32ap(params,data+curoffset+26);
-		oif->SequenceNumber 		= dtoh32ap(params,data+curoffset+30);
-		if (!ptp_unpack_string(params, data, curoffset+34, datalen, &len, &oif->Filename))
-			goto tooshort;
-		if (curoffset+34+len*2+1 > datalen)
+		oif->ObjectHandle		= dtoh32a(data+offset);
+		oif->StorageID 			= dtoh32a(data+offset+4);
+		oif->ObjectFormat 		= dtoh16a(data+offset+8);
+		oif->ProtectionStatus 		= dtoh16a(data+offset+10);
+		oif->ObjectCompressedSize64 	= dtoh64a(data+offset+12);
+		oif->ParentObject 		= dtoh32a(data+offset+20);
+		oif->AssociationType 		= dtoh16a(data+offset+24);
+		oif->AssociationDesc 		= dtoh32a(data+offset+26);
+		oif->SequenceNumber 		= dtoh32a(data+offset+30);
+		offset += 34;
+		if (!ptp_unpack_string(params, data, &offset, datalen, &oif->Filename))
 			goto tooshort;
 
-		if (!ptp_unpack_string(params, data, curoffset+len*2+1+34, datalen, &dlen, &modify_date))
+		if (!ptp_unpack_string(params, data, &offset, datalen, &modify_date))
 			goto tooshort;
 
 		oif->ModificationDate 		= ptp_unpack_PTPTIME(modify_date);
 		free(modify_date);
-		curoffset += 34+len*2+dlen*2+2;
 	}
 	*numoifs = numberoifs;
 	*oifs = xoifs;
