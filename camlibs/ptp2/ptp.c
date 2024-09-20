@@ -2584,7 +2584,7 @@ ptp_nikon_getobjectsize (PTPParams* params, uint32_t handle, uint64_t *objectsiz
 		return PTP_RC_GeneralError;
 	}
 
-	*objectsize = dtoh64ap(params, data);
+	*objectsize = dtoh64a(data);
 	free (data);
 	return PTP_RC_OK;
 }
@@ -2771,7 +2771,7 @@ ptp_getdevicepropdesc (PTPParams* params, uint32_t propcode,
 	PTPContainer	ptp;
 	uint16_t	ret = PTP_RC_OK;
 	unsigned char	*data = NULL;
-	unsigned int	size, newoffset;
+	unsigned int	size, offset = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetDevicePropDesc, propcode);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
@@ -2806,7 +2806,7 @@ ptp_getdevicepropdesc (PTPParams* params, uint32_t propcode,
 		}
 #endif
 	} else {
-		if (!ptp_unpack_DPD(params, data, devicepropertydesc, size, &newoffset)) {
+		if (!ptp_unpack_DPD(params, data, devicepropertydesc, size, &offset)) {
 			ptp_debug(params,"failed to unpack DPD of propcode 0x%04x, likely corrupted?", propcode);
 			free (data);
 			return PTP_RC_InvalidDevicePropFormat;
@@ -3183,14 +3183,12 @@ ptp_canon_gettreesize (PTPParams* params,
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetTreeSize);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	*cnt = dtoh32a(data);
-	offset += 4;
+	*cnt = dtoh32o(data, offset);
 	*entries = calloc((*cnt), sizeof(PTPCanon_directtransfer_entry));
 	if (!*entries)
 		goto error;
 	for (i=0;i<*cnt;i++) {
-		(*entries)[i].oid = dtoh32a(data + offset);
-		offset += 4;
+		(*entries)[i].oid = dtoh32o(data, offset);
 		if (!ptp_unpack_string(params, data, &offset, size, &(*entries)[i].str))
 			break;
 	}
@@ -5172,7 +5170,7 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
-	unsigned int	size, pos, profn, n;
+	unsigned int	size, pos = 0, profn, n;
 	char		*buffer;
 
 	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetProfileAllData);
@@ -5181,33 +5179,31 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 	if (size < 2)
 		goto error;
 
-	params->wifi_profiles_version = data[0];
-	params->wifi_profiles_number = data[1];
+	params->wifi_profiles_version = dtoh8o(data, pos);
+	params->wifi_profiles_number  = dtoh8o(data, pos);
 	free(params->wifi_profiles);
 
 	params->wifi_profiles = calloc(params->wifi_profiles_number,sizeof(PTPNIKONWifiProfile));
 	if (!params->wifi_profiles)
 		goto error;
 
-	pos = 2;
 	profn = 0;
 	while (profn < params->wifi_profiles_number && pos < size) {
 		if (pos+6 >= size)
 			goto error;
-		params->wifi_profiles[profn].id = data[pos++];
-		params->wifi_profiles[profn].valid = data[pos++];
+		params->wifi_profiles[profn].id    = dtoh8o(data, pos);
+		params->wifi_profiles[profn].valid = dtoh8o(data, pos);
 
-		n = dtoh32a(&data[pos]);
-		pos += 4;
+		n = dtoh32o(data, pos);
 		if (pos+n+4 >= size)
 			goto error;
 		strncpy(params->wifi_profiles[profn].profile_name, (char*)&data[pos], n);
 		params->wifi_profiles[profn].profile_name[16] = '\0';
 		pos += n;
 
-		params->wifi_profiles[profn].display_order = data[pos++];
-		params->wifi_profiles[profn].device_type = data[pos++];
-		params->wifi_profiles[profn].icon_type = data[pos++];
+		params->wifi_profiles[profn].display_order = dtoh8o(data, pos);
+		params->wifi_profiles[profn].device_type   = dtoh8o(data, pos);
+		params->wifi_profiles[profn].icon_type     = dtoh8o(data, pos);
 
 		if (!ptp_unpack_string(params, data, &pos, size, &buffer))
 			goto error;
@@ -5223,11 +5219,10 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 		if (pos+5 >= size)
 			goto error;
 
-		n = dtoh32a(&data[pos]);
-		pos += 4;
+		n = dtoh32o(data, pos);
 		if (pos+n >= size)
 			goto error;
-		strncpy(params->wifi_profiles[profn].essid, (char*)&data[pos], n);
+		strncpy(params->wifi_profiles[profn].essid, (char*)data + pos, n);
 		params->wifi_profiles[profn].essid[32] = '\0';
 		pos += n;
 		pos += 1;
@@ -5916,9 +5911,8 @@ uint16_t
 ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numprops)
 {
 	PTPContainer	ptp;
-	unsigned char	*xdata;
 	unsigned char	*data = NULL;
-	unsigned int	nums, i, newoffset, xsize, size  = 0;
+	unsigned int	nums, i, offset = 0, size  = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_FUJI_GetDeviceInfo);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
@@ -5926,9 +5920,7 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
 	if (size < 8)
 		goto error;
 
-	nums = dtoh32a(data);
-	xdata = data + 4;
-	xsize = size - 4;
+	nums = dtoh32o(data, offset);
 
 	*props = calloc(nums, sizeof(uint16_t));
 	if (!*props)
@@ -5936,13 +5928,11 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
 	*numprops = nums;
 	for (i=0;i<nums;i++) {
 		PTPDevicePropDesc	dpd;
-		unsigned int		dsize = dtoh32a(xdata);
+		unsigned int		dsize = dtoh32o(data, offset);
 
-		if (!ptp_unpack_DPD(params, xdata+4, &dpd, dsize, &newoffset))
+		if (!ptp_unpack_DPD(params, data, &dpd, dsize, &offset))
 			break;
 		(*props)[i] = dpd.DevicePropertyCode;
-		xdata	+= 4+newoffset;
-		xsize	-= 4+newoffset;
 	}
 	free (data);
 	return PTP_RC_OK;
