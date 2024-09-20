@@ -63,14 +63,14 @@ cat >>${GP_GETTEXT_SETUP_MK} <<EOF
 	MAKEVARS_FILE="\$\$(test -f '$3/Makevars' || echo '\$(srcdir)/')$3/Makevars"; \\
 	MAKEVARS_DOMAIN="\$\$(\$(SED) -n 's/^DOMAIN \\{0,\\}= \\{0,\\}//p' "\$\$MAKEVARS_FILE")"; \\
 	MAKE_TIME_DOMAIN="\$($1)"; \\
-	if test "x\$\$MAKEVARS_DOMAIN" = "x\$($1)"; then \\
-	     if \$(AM_V_P); then printf "  %-7s %s\n" CHECK "Good: Matching gettext domain values (\$($1))"; fi; \\
+	if test "x\$\$MAKEVARS_DOMAIN" = "x\$\$MAKE_TIME_DOMAIN"; then \\
+	     if \$(AM_V_P); then printf "  %-8s %s\n" CHECK "Good: Matching gettext domain values (\$\${MAKE_TIME_DOMAIN})"; fi; \\
 	     true; \\
 	elif test "x\$\$USE_NLS" = xyes; then \\
-	     printf "  %-7s %s\n" CHECK "Error: Mismatching gettext domain values (\$($1) vs \$\${MAKEVARS_DOMAIN})"; \\
+	     printf "  %-8s %s\n" CHECK "Error: Mismatching gettext domain values (\$\${MAKE_TIME_DOMAIN}) vs \$\${MAKEVARS_DOMAIN})"; \\
 	     false; \\
 	else \\
-	     printf "  %-7s %s\n" CHECK "Warning: Mismatching gettext domain values (\$($1) vs \$\${MAKEVARS_DOMAIN})"; \\
+	     printf "  %-8s %s\n" CHECK "Warning: Mismatching gettext domain values (\$\${MAKE_TIME_DOMAIN}) vs \$\${MAKEVARS_DOMAIN})"; \\
 	     true; \\
 	fi
 EOF
