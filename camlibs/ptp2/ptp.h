@@ -4835,6 +4835,7 @@ const char* ptp_bytes2str	(const uint8_t *data, int data_size, const char *fmt);
 void ptp_debug_data		(PTPParams *params, const uint8_t *data, int size);
 
 
+const char* ptp_data_type_name(PTPParams* params, uint32_t dt);
 const char* ptp_get_property_description(PTPParams* params, uint32_t dpc);
 
 const char* ptp_get_opcode_name(PTPParams* params, uint16_t opcode);

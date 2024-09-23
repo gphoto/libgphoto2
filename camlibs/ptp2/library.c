@@ -7942,13 +7942,9 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		unsigned int dpc = pdi.DevicePropertiesSupported[i];
 		const char *propname = ptp_get_property_description (params, dpc);
 
-		if (propname) {
-			/* string registered for i18n in ptp.c. */
-			APPEND_TXT ("%s(0x%04x):", _(propname), dpc);
-		} else {
-			APPEND_TXT ("Property 0x%04x:", dpc);
-		}
 
+		/* string registered for i18n in ptp.c. */
+		APPEND_TXT ("%-25s (%04x): ", propname ? _(propname) : _("[Unknown Property]"), dpc);
 
 		/* Do not read the 0xd201 property (found on Creative Zen series).
 		 * It seems to cause hangs.
@@ -7970,11 +7966,11 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		ret = ptp_generic_getdevicepropdesc (params, dpc, &dpd);
 		if (ret == PTP_RC_OK) {
 			switch (dpd.GetSet) {
-			case PTP_DPGS_Get:    APPEND_TXT ("(%s) ", N_("read only")); break;
-			case PTP_DPGS_GetSet: APPEND_TXT ("(%s) ", N_("readwrite")); break;
-			default:              APPEND_TXT ("(%s) ", N_("Unknown"));
+			case PTP_DPGS_Get:    APPEND_TXT ("(%s ", "ro"); break;
+			case PTP_DPGS_GetSet: APPEND_TXT ("(%s ", "rw"); break;
+			default:              APPEND_TXT ("(%s ", "error");
 			}
-			APPEND_TXT ("(type=0x%x) ",dpd.DataType);
+			APPEND_TXT ("%s) ", ptp_data_type_name(params, dpd.DataType));
 			switch (dpd.FormFlag) {
 			case PTP_DPFF_None:	break;
 			case PTP_DPFF_Range: {

@@ -6178,6 +6178,40 @@ ptp_strerror(uint16_t ret, uint16_t vendor)
 }
 
 const char*
+ptp_data_type_name(PTPParams* params, uint32_t dt)
+{
+	switch (dt)
+	{
+	case PTP_DTC_UNDEF:    return "???";
+	case PTP_DTC_STR:      return "str";
+
+	case PTP_DTC_INT8:     return "i8 ";
+	case PTP_DTC_UINT8:    return "u8 ";
+	case PTP_DTC_INT16:    return "i16";
+	case PTP_DTC_UINT16:   return "u16";
+	case PTP_DTC_INT32:    return "i32";
+	case PTP_DTC_UINT32:   return "u32";
+	case PTP_DTC_INT64:    return "i64";
+	case PTP_DTC_UINT64:   return "u64";
+	case PTP_DTC_INT128:   return "i128";
+	case PTP_DTC_UINT128:  return "u128";
+
+	case PTP_DTC_AINT8:    return "[i8 ]";
+	case PTP_DTC_AUINT8:   return "[u8 ]";
+	case PTP_DTC_AINT16:   return "[i16]";
+	case PTP_DTC_AUINT16:  return "[u16]";
+	case PTP_DTC_AINT32:   return "[i32]";
+	case PTP_DTC_AUINT32:  return "[u32]";
+	case PTP_DTC_AINT64:   return "[i64]";
+	case PTP_DTC_AUINT64:  return "[u64]";
+	case PTP_DTC_AINT128:  return "[i128]";
+	case PTP_DTC_AUINT128: return "[u128]";
+
+	default:               return "unknown";
+	}
+}
+
+const char*
 ptp_get_property_description(PTPParams* params, uint32_t dpc)
 {
 	int i;
