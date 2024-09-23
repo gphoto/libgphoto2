@@ -2323,6 +2323,7 @@ ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned
 					XX(EOS_CardExtension)
 					XX(EOS_TempStatus)
 					XX(EOS_ShutterCounter)
+					XX(EOS_ShutterReleaseCounter)
 					XX(EOS_SerialNumber)
 					XX(EOS_DepthOfFieldPreview)
 					XX(EOS_EVFRecordStatus)
@@ -2374,7 +2375,6 @@ ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned
 				case PTP_DPC_CANON_EOS_StroboETTL2Metering:
 				case PTP_DPC_CANON_EOS_ColorTemperature:
 				case PTP_DPC_CANON_EOS_FixedMovie:
-				case PTP_DPC_CANON_EOS_AutoPowerOff:
 				case PTP_DPC_CANON_EOS_AloMode:
 				case PTP_DPC_CANON_EOS_LvViewTypeSelect:
 				case PTP_DPC_CANON_EOS_EVFColorTemp:
@@ -2433,6 +2433,7 @@ ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned
 				case PTP_DPC_CANON_EOS_CameraNickname:
 					dpd->DataType = PTP_DTC_STR;
 					break;
+				case PTP_DPC_CANON_EOS_AutoPowerOff:
 				case PTP_DPC_CANON_EOS_WhiteBalanceAdjustA:
 				case PTP_DPC_CANON_EOS_WhiteBalanceAdjustB:
 					dpd->DataType = PTP_DTC_INT32;
@@ -2481,7 +2482,7 @@ ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned
 						for (j=0;j<xsize/sizeof(uint32_t);j++)
 							ptp_debug (params, "       %2d: 0x%8x", j, dtoh32a(xdata+j*4));
 					break;
-				/* ImageFormat properties have to be ignored here, see special handling below */
+				/* Some properties have to be ignored here, see special handling below */
 				case PTP_DPC_CANON_EOS_ImageFormat:
 				case PTP_DPC_CANON_EOS_ImageFormatCF:
 				case PTP_DPC_CANON_EOS_ImageFormatSD:
@@ -2572,6 +2573,10 @@ ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned
 					dpd->CurrentValue.str		= strdup( (char*)dpd->FactoryDefaultValue.str );
 					ptp_debug (params,"           value of %x is %s", proptype, dpd->CurrentValue.str);
 					break;
+				/* case PTP_DPC_CANON_EOS_ShutterReleaseCounter:
+				 * There are 16 bytes sent by an R8, which look like 4 int numbers: 16, 1, 1000, 1000
+				 * But don't change after a shutter release, Maybe the name for this property is wrong?
+				 */
 				}
 			}
 			break;
