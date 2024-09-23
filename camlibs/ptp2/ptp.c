@@ -7726,7 +7726,8 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT
 	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_MTP
-	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_PANASONIC)
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_PANASONIC
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_CANON)
 		for (i=0; ptp_device_properties_MTP[i].txt!=NULL; i++)
 			if (ptp_device_properties_MTP[i].dpc==dpc)
 				return (ptp_device_properties_MTP[i].txt);
