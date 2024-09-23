@@ -844,30 +844,14 @@ ptp_unpack_DPV (
 		return 0;
 
 	switch (datatype) {
-	case PTP_DTC_INT8:
-		CTVAL(value->i8,dtoh8a);
-		break;
-	case PTP_DTC_UINT8:
-		CTVAL(value->u8,dtoh8a);
-		break;
-	case PTP_DTC_INT16:
-		CTVAL(value->i16,dtoh16a);
-		break;
-	case PTP_DTC_UINT16:
-		CTVAL(value->u16,dtoh16a);
-		break;
-	case PTP_DTC_INT32:
-		CTVAL(value->i32,dtoh32a);
-		break;
-	case PTP_DTC_UINT32:
-		CTVAL(value->u32,dtoh32a);
-		break;
-	case PTP_DTC_INT64:
-		CTVAL(value->i64,dtoh64a);
-		break;
-	case PTP_DTC_UINT64:
-		CTVAL(value->u64,dtoh64a);
-		break;
+	case PTP_DTC_INT8:   CTVAL(value->i8,dtoh8a); break;
+	case PTP_DTC_UINT8:  CTVAL(value->u8,dtoh8a); break;
+	case PTP_DTC_INT16:  CTVAL(value->i16,dtoh16a); break;
+	case PTP_DTC_UINT16: CTVAL(value->u16,dtoh16a); break;
+	case PTP_DTC_INT32:  CTVAL(value->i32,dtoh32a); break;
+	case PTP_DTC_UINT32: CTVAL(value->u32,dtoh32a); break;
+	case PTP_DTC_INT64:  CTVAL(value->i64,dtoh64a); break;
+	case PTP_DTC_UINT64: CTVAL(value->u64,dtoh64a); break;
 
 	case PTP_DTC_UINT128:
 		*offset += 16;
@@ -878,32 +862,14 @@ ptp_unpack_DPV (
 		/*fprintf(stderr,"unhandled unpack of int128n");*/
 		break;
 
-
-
-	case PTP_DTC_AINT8:
-		RARR(value,i8,dtoh8a);
-		break;
-	case PTP_DTC_AUINT8:
-		RARR(value,u8,dtoh8a);
-		break;
-	case PTP_DTC_AUINT16:
-		RARR(value,u16,dtoh16a);
-		break;
-	case PTP_DTC_AINT16:
-		RARR(value,i16,dtoh16a);
-		break;
-	case PTP_DTC_AUINT32:
-		RARR(value,u32,dtoh32a);
-		break;
-	case PTP_DTC_AINT32:
-		RARR(value,i32,dtoh32a);
-		break;
-	case PTP_DTC_AUINT64:
-		RARR(value,u64,dtoh64a);
-		break;
-	case PTP_DTC_AINT64:
-		RARR(value,i64,dtoh64a);
-		break;
+	case PTP_DTC_AINT8:   RARR(value,i8,dtoh8a); break;
+	case PTP_DTC_AUINT8:  RARR(value,u8,dtoh8a); break;
+	case PTP_DTC_AUINT16: RARR(value,u16,dtoh16a); break;
+	case PTP_DTC_AINT16:  RARR(value,i16,dtoh16a); break;
+	case PTP_DTC_AUINT32: RARR(value,u32,dtoh32a); break;
+	case PTP_DTC_AINT32:  RARR(value,i32,dtoh32a); break;
+	case PTP_DTC_AUINT64: RARR(value,u64,dtoh64a); break;
+	case PTP_DTC_AINT64:  RARR(value,i64,dtoh64a); break;
 	/* XXX: other int types are unimplemented */
 	/* XXX: other int arrays are unimplemented also */
 	case PTP_DTC_STR: {

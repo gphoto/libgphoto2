@@ -4628,27 +4628,15 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 		/* debug output to see what changes */
 		if (i != params->nrofdeviceproperties) {
 			switch (dpd.DataType) {
-			case PTP_DTC_INT8:
 #define CHECK_CHANGED(type) \
 				if (params->deviceproperties[i].desc.CurrentValue.type != dpd.CurrentValue.type) \
 					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %s(%04x): value %d -> %d", ptp_get_property_description (params, propcode), propcode, params->deviceproperties[i].desc.CurrentValue.type, dpd.CurrentValue.type);
-				CHECK_CHANGED(i8);
-				break;
-			case PTP_DTC_UINT8:
-				CHECK_CHANGED(u8);
-				break;
-			case PTP_DTC_UINT16:
-				CHECK_CHANGED(u16);
-				break;
-			case PTP_DTC_INT16:
-				CHECK_CHANGED(i16);
-				break;
-			case PTP_DTC_INT32:
-				CHECK_CHANGED(i32);
-				break;
-			case PTP_DTC_UINT32:
-				CHECK_CHANGED(u32);
-				break;
+			case PTP_DTC_INT8:   CHECK_CHANGED(i8); break;
+			case PTP_DTC_UINT8:  CHECK_CHANGED(u8); break;
+			case PTP_DTC_UINT16: CHECK_CHANGED(u16); break;
+			case PTP_DTC_INT16:  CHECK_CHANGED(i16); break;
+			case PTP_DTC_INT32:  CHECK_CHANGED(i32); break;
+			case PTP_DTC_UINT32: CHECK_CHANGED(u32); break;
 			default:
 				break;
 			}
@@ -7776,28 +7764,20 @@ _value_to_num(PTPPropertyValue *data, uint16_t dt) {
 		return 0;
 	} else {
 		switch (dt) {
-		case PTP_DTC_UNDEF:
-			return 0;
-		case PTP_DTC_INT8:
-			return data->i8;
-		case PTP_DTC_UINT8:
-			return data->u8;
-		case PTP_DTC_INT16:
-			return data->i16;
-		case PTP_DTC_UINT16:
-			return data->u16;
-		case PTP_DTC_INT32:
-			return data->i32;
-		case PTP_DTC_UINT32:
-			return data->u32;
+		case PTP_DTC_UNDEF:  return 0;
+		case PTP_DTC_INT8:   return data->i8;
+		case PTP_DTC_UINT8:  return data->u8;
+		case PTP_DTC_INT16:  return data->i16;
+		case PTP_DTC_UINT16: return data->u16;
+		case PTP_DTC_INT32:  return data->i32;
+		case PTP_DTC_UINT32: return data->u32;
 	/*
 		PTP_DTC_INT64
 		PTP_DTC_UINT64
 		PTP_DTC_INT128
 		PTP_DTC_UINT128
 	*/
-		default:
-			return 0;
+		default:             return 0;
 		}
 	}
 
