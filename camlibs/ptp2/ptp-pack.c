@@ -2416,7 +2416,7 @@ ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned
 				case PTP_DPC_CANON_EOS_QuickReviewTime:
 				case PTP_DPC_CANON_EOS_EVFMode:
 				case PTP_DPC_CANON_EOS_EVFRecordStatus:
-				case PTP_DPC_CANON_EOS_HighISOSettingNoiseReduction:
+				case PTP_DPC_CANON_EOS_HighISONoiseReduction:
 					dpd->DataType = PTP_DTC_UINT16;
 					break;
 				case PTP_DPC_CANON_EOS_PictureStyle:
