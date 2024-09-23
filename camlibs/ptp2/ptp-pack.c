@@ -2568,7 +2568,7 @@ ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned
 					dpd->DataType = PTP_DTC_STR;
 					free (dpd->FactoryDefaultValue.str);
 					free (dpd->CurrentValue.str);
-					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_FocusInfoEx( params, &xdata, size );
+					dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_FocusInfoEx( params, &xdata, xsize );
 					dpd->CurrentValue.str		= strdup( (char*)dpd->FactoryDefaultValue.str );
 					ptp_debug (params,"           value of %x is %s", proptype, dpd->CurrentValue.str);
 					break;
