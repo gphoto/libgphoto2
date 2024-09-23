@@ -8021,7 +8021,8 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.CurrentValue, dpd.DataType);
 			}
 		} else {
-			APPEND_TXT ("): %s",_("PTP error %04x on query"), ret);
+			APPEND_TXT (" -- ---): ");
+			APPEND_TXT (_("PTP error %04x on query"), ret);
 		}
 		APPEND_TXT ("\n");
 		ptp_free_devicepropdesc (&dpd);
