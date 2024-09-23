@@ -7966,33 +7966,22 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			propname += 4;
 
 		/* string registered for i18n in ptp.c. */
-		APPEND_TXT ("%-25s (%04x): ", propname ? _(propname) : N_("[Unknown Property]"), dpc);
+		APPEND_TXT ("%-25s (%04x", propname ? _(propname) : N_("[Unknown Property]"), dpc);
 
 		/* Do not read the 0xd201 property (found on Creative Zen series).
 		 * It seems to cause hangs.
 		 */
 		if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT) {
 			if (dpc == 0xd201) {
-				APPEND_TXT (_(" not read out.\n"));
+				APPEND_TXT ("): %s", _("not read out\n"));
 				continue;
 			}
 		}
-#if 0 /* check is handled by the generic getter now */
-		if (!ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
-			APPEND_TXT (_("cannot be queried.\n"));
-			continue;
-		}
-#endif
 
 		memset (&dpd, 0, sizeof (dpd));
 		ret = ptp_generic_getdevicepropdesc (params, dpc, &dpd);
 		if (ret == PTP_RC_OK) {
-			switch (dpd.GetSet) {
-			case PTP_DPGS_Get:    APPEND_TXT ("(%s ", "ro"); break;
-			case PTP_DPGS_GetSet: APPEND_TXT ("(%s ", "rw"); break;
-			default:              APPEND_TXT ("(%s ", "error");
-			}
-			APPEND_TXT ("%s) ", ptp_data_type_name(params, dpd.DataType));
+			APPEND_TXT (" %s %s): ", dpd.GetSet ? "rw" : "ro", ptp_data_type_name(params, dpd.DataType));
 			switch (dpd.FormFlag) {
 			case PTP_DPFF_None:	break;
 			case PTP_DPFF_Range: {
@@ -8032,7 +8021,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.CurrentValue, dpd.DataType);
 			}
 		} else {
-			APPEND_TXT (_(" error %x on query."), ret);
+			APPEND_TXT ("): %s",_("PTP error %04x on query"), ret);
 		}
 		APPEND_TXT ("\n");
 		ptp_free_devicepropdesc (&dpd);
