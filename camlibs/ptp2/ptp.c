@@ -4847,6 +4847,27 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 		ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
 	}
 
+	if (!ptp_is_vendor_extension_prop(propcode))
+		goto generic;
+
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RequestDevicePropValue)
+	) {
+		unsigned j;
+		for (j=0;j<params->nrofcanon_props;j++)
+			if (params->canon_props[j].proptype == propcode)
+				break;
+		if (j == params->nrofcanon_props) {
+			ptp_debug (params, "Canon EOS property %04x not found", propcode);
+			if ((propcode & 0xFF00) == 0xD100 || (propcode & 0xFF00) == 0xD200)
+				return PTP_RC_DevicePropNotSupported;
+			else
+				goto generic;
+		}
+		duplicate_DevicePropDesc(&params->canon_props[j].dpd, &params->deviceproperties[i].desc);
+		goto done;
+	}
+
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_SDIO_GetAllExtDevicePropInfo)
 	) {
@@ -4882,7 +4903,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 		goto done;
 	}
 
-
+generic:
 	if (ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
 		CHECK_PTP_RC(ptp_getdevicepropdesc (params, propcode, &params->deviceproperties[i].desc));
 		goto done;

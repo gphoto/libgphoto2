@@ -4834,6 +4834,9 @@ void ptp_error			(PTPParams *params, const char *format, ...)
 const char* ptp_bytes2str	(const uint8_t *data, int data_size, const char *fmt);
 void ptp_debug_data		(PTPParams *params, const uint8_t *data, int size);
 
+static inline int ptp_is_vendor_extension_prop(uint32_t propcode) {
+	return (propcode & PTP_DPC_EXTENSION_MASK) == PTP_DPC_EXTENSION;
+}
 
 const char* ptp_data_type_name(PTPParams* params, uint32_t dt);
 const char* ptp_get_property_description(PTPParams* params, uint32_t dpc);
