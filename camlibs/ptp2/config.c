@@ -497,30 +497,28 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 
 	GP_LOG_D ("prepare_capture");
 	switch (params->deviceinfo.VendorExtensionID) {
-	case PTP_VENDOR_FUJI:
-		{
-			PTPPropertyValue propval;
+	case PTP_VENDOR_FUJI: {
+		PTPPropertyValue propval;
 
-			/* without the firmware update ... not an error... */
-			if (!have_prop (camera, PTP_VENDOR_FUJI, PTP_DPC_FUJI_PriorityMode))
-				return GP_OK;
-
-			/* timelapse does:
-			 * d38c -> 1	(PC Mode)
-			 * d207 -> 2	(USB control)
-			 */
-
-			propval.u16 = 0x0001;
-			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, 0xd38c, &propval, PTP_DTC_UINT16));
-
-			if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
-				propval.u16 = 0x0002;
-				LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
-			}
-
+		/* without the firmware update ... not an error... */
+		if (!have_prop (camera, PTP_VENDOR_FUJI, PTP_DPC_FUJI_PriorityMode))
 			return GP_OK;
+
+		/* timelapse does:
+			* d38c -> 1	(PC Mode)
+			* d207 -> 2	(USB control)
+			*/
+
+		propval.u16 = 0x0001;
+		LOG_ON_PTP_E (ptp_setdevicepropvalue (params, 0xd38c, &propval, PTP_DTC_UINT16));
+
+		if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
+			propval.u16 = 0x0002;
+			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
 		}
-		break;
+
+		return GP_OK;
+	}
 	case PTP_VENDOR_CANON:
 		if (ptp_operation_issupported(params, PTP_OC_CANON_InitiateReleaseControl))
 			return camera_prepare_canon_powershot_capture(camera,context);
@@ -624,24 +622,22 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 		gp_context_error(context,
 		_("Sorry, your Canon camera does not support Canon capture"));
 		return GP_ERROR_NOT_SUPPORTED;
-	case PTP_VENDOR_FUJI:
-		{
-			PTPPropertyValue propval;
-			PTPParams *params = &camera->pl->params;
+	case PTP_VENDOR_FUJI: {
+		PTPPropertyValue propval;
+		PTPParams *params = &camera->pl->params;
 
-			if (params->inliveview) {
-				C_PTP_REP (ptp_terminateopencapture (params, params->opencapture_transid));
-				params->inliveview = 0;
-			}
-
-			if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
-				propval.u16 = 0x0001;
-				C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
-			}
-
-			return GP_OK;
+		if (params->inliveview) {
+			C_PTP_REP (ptp_terminateopencapture (params, params->opencapture_transid));
+			params->inliveview = 0;
 		}
-		break;
+
+		if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
+			propval.u16 = 0x0001;
+			C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+		}
+
+		return GP_OK;
+	}
 	default:
 		/* generic capture does not need unpreparation */
 		return GP_OK;
@@ -1105,24 +1101,12 @@ _get_INT(CONFIG_GET_ARGS) {
 	float	rvalue = 0;
 
 	switch (dpd->DataType) {
-	case PTP_DTC_UINT32:
-		sprintf (value, "%u", dpd->CurrentValue.u32 ); rvalue = dpd->CurrentValue.u32;
-		break;
-	case PTP_DTC_INT32:
-		sprintf (value, "%d", dpd->CurrentValue.i32 ); rvalue = dpd->CurrentValue.i32;
-		break;
-	case PTP_DTC_UINT16:
-		sprintf (value, "%u", dpd->CurrentValue.u16 ); rvalue = dpd->CurrentValue.u16;
-		break;
-	case PTP_DTC_INT16:
-		sprintf (value, "%d", dpd->CurrentValue.i16 ); rvalue = dpd->CurrentValue.i16;
-		break;
-	case PTP_DTC_UINT8:
-		sprintf (value, "%u", dpd->CurrentValue.u8 ); rvalue = dpd->CurrentValue.u8;
-		break;
-	case PTP_DTC_INT8:
-		sprintf (value, "%d", dpd->CurrentValue.i8 ); rvalue = dpd->CurrentValue.i8;
-		break;
+	case PTP_DTC_UINT32: sprintf (value, "%u", dpd->CurrentValue.u32 ); rvalue = dpd->CurrentValue.u32; break;
+	case PTP_DTC_INT32:  sprintf (value, "%d", dpd->CurrentValue.i32 ); rvalue = dpd->CurrentValue.i32; break;
+	case PTP_DTC_UINT16: sprintf (value, "%u", dpd->CurrentValue.u16 ); rvalue = dpd->CurrentValue.u16; break;
+	case PTP_DTC_INT16:  sprintf (value, "%d", dpd->CurrentValue.i16 ); rvalue = dpd->CurrentValue.i16; break;
+	case PTP_DTC_UINT8:  sprintf (value, "%u", dpd->CurrentValue.u8  ); rvalue = dpd->CurrentValue.u8;  break;
+	case PTP_DTC_INT8:   sprintf (value, "%d", dpd->CurrentValue.i8  ); rvalue = dpd->CurrentValue.i8;  break;
 	default:
 		sprintf (value,_("unexpected datatype %i"),dpd->DataType);
 		return GP_ERROR;
@@ -1214,24 +1198,12 @@ _put_INT(CONFIG_PUT_ARGS) {
 			return GP_ERROR;
 		}
 		switch (dpd->DataType) {
-		case PTP_DTC_UINT32:
-			propval->u32 = u;
-			break;
-		case PTP_DTC_INT32:
-			propval->i32 = i;
-			break;
-		case PTP_DTC_UINT16:
-			propval->u16 = u;
-			break;
-		case PTP_DTC_INT16:
-			propval->i16 = i;
-			break;
-		case PTP_DTC_UINT8:
-			propval->u8 = u;
-			break;
-		case PTP_DTC_INT8:
-			propval->i8 = i;
-			break;
+		case PTP_DTC_UINT32: propval->u32 = u; break;
+		case PTP_DTC_INT32:  propval->i32 = i; break;
+		case PTP_DTC_UINT16: propval->u16 = u; break;
+		case PTP_DTC_INT16:  propval->i16 = i; break;
+		case PTP_DTC_UINT8:  propval->u8  = u; break;
+		case PTP_DTC_INT8:   propval->i8  = i; break;
 		}
 	}
 	return GP_OK;
@@ -1889,15 +1861,9 @@ _put_Nikon_UWBBias(CONFIG_PUT_ARGS)
 
 	CR (gp_widget_get_value(widget, &f));
 	switch (dpd->DataType) {
-	case PTP_DTC_UINT16:
-		propval->u16 = (unsigned short)f;
-		break;
-	case PTP_DTC_UINT8:
-		propval->u8 = (unsigned char)f;
-		break;
-	case PTP_DTC_INT8:
-		propval->i8 = (char)f;
-		break;
+	case PTP_DTC_UINT16: propval->u16 = (unsigned short)f; break;
+	case PTP_DTC_UINT8:  propval->u8  = (unsigned char)f;  break;
+	case PTP_DTC_INT8:   propval->i8  = (char)f;           break;
 	default:
 		return GP_ERROR;
 	}

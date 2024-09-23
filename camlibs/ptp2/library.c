@@ -743,15 +743,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			for (i=0;i<xsize;i++) {
 				GP_LOG_D ("sony code: %x", xprops[i]);
 				switch (xprops[i] & 0x7000) {
-				case 0x1000:
-					di->OperationsSupported[(k++)+di->OperationsSupported_len] = xprops[i];
-					break;
-				case 0x4000:
-					di->EventsSupported[(l++)+di->EventsSupported_len] = xprops[i];
-					break;
-				case 0x5000:
-					di->DevicePropertiesSupported[(j++)+di->DevicePropertiesSupported_len] = xprops[i];
-					break;
+				case 0x1000: di->OperationsSupported      [(k++)+di->OperationsSupported_len]       = xprops[i]; break;
+				case 0x4000: di->EventsSupported          [(l++)+di->EventsSupported_len]           = xprops[i]; break;
+				case 0x5000: di->DevicePropertiesSupported[(j++)+di->DevicePropertiesSupported_len] = xprops[i]; break;
 				default:
 					break;
 				}
@@ -796,15 +790,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			for (i=0;i<xsize;i++) {
 				GP_LOG_D ("sony code: %x", xprops[i]);
 				switch (xprops[i] & 0x7000) {
-				case 0x1000:
-					di->OperationsSupported[(k++)+di->OperationsSupported_len] = xprops[i];
-					break;
-				case 0x4000:
-					di->EventsSupported[(l++)+di->EventsSupported_len] = xprops[i];
-					break;
-				case 0x5000:
-					di->DevicePropertiesSupported[(j++)+di->DevicePropertiesSupported_len] = xprops[i];
-					break;
+				case 0x1000: di->OperationsSupported      [(k++)+di->OperationsSupported_len]       = xprops[i]; break;
+				case 0x4000: di->EventsSupported          [(l++)+di->EventsSupported_len]           = xprops[i]; break;
+				case 0x5000: di->DevicePropertiesSupported[(j++)+di->DevicePropertiesSupported_len] = xprops[i]; break;
 				default:
 					break;
 				}
@@ -6064,9 +6052,8 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 							gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
 							ret = GP_ERROR;
 						}
-					}
-					if (	(entry.type == PTP_CANON_EOS_CHANGES_TYPE_PROPERTY) &&
-						(entry.u.propid == PTP_DPC_CANON_EOS_FocusInfoEx)
+					} else if ((entry.type == PTP_CANON_EOS_CHANGES_TYPE_PROPERTY) &&
+					           (entry.u.propid == PTP_DPC_CANON_EOS_FocusInfoEx)
 					) {
 						if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
 							GP_LOG_D("focusinfo prop content: %s", dpd.CurrentValue.str);
@@ -6079,11 +6066,8 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 				/* We found focus information, so half way pressing has finished! */
 				if (foundfocusinfo)
 					break;
-				/* for manual focus, at least wait until we get events */
-				if (manualfocus && foundevents)
-					break;
-				/* when doing manual focus, wait at most 0.1 seconds */
-				if (manualfocus && (time_since (focus_start) >= 100))
+				/* for manual focus, wait until we received an event or 0.1s passed */
+				if (manualfocus && (foundevents || time_since (focus_start) >= 100))
 					break;
 			} while (waiting_for_timeout (&back_off_wait, focus_start, 2*1000)); /* wait 2 seconds for focus */
 
@@ -7547,30 +7531,20 @@ snprintf_ptp_property (char *txt, int spaceleft, PTPPropertyValue *data, uint16_
 #undef SPACE_LEFT
 	} else {
 		switch (dt) {
-		case PTP_DTC_UNDEF:
-			return snprintf (txt, spaceleft, "Undefined");
-		case PTP_DTC_INT8:
-			return snprintf (txt, spaceleft, "%d", data->i8);
-		case PTP_DTC_UINT8:
-			return snprintf (txt, spaceleft, "%u", data->u8);
-		case PTP_DTC_INT16:
-			return snprintf (txt, spaceleft, "%d", data->i16);
-		case PTP_DTC_UINT16:
-			return snprintf (txt, spaceleft, "%u", data->u16);
-		case PTP_DTC_INT32:
-			return snprintf (txt, spaceleft, "%d", data->i32);
-		case PTP_DTC_UINT32:
-			return snprintf (txt, spaceleft, "%u", data->u32);
-		case PTP_DTC_INT64:
-			return snprintf (txt, spaceleft, "%lu", data->u64);
-		case PTP_DTC_UINT64:
-			return snprintf (txt, spaceleft, "%ld", data->i64);
+		case PTP_DTC_UNDEF:  return snprintf (txt, spaceleft, "Undefined");
+		case PTP_DTC_INT8:   return snprintf (txt, spaceleft, "%d", data->i8);
+		case PTP_DTC_UINT8:  return snprintf (txt, spaceleft, "%u", data->u8);
+		case PTP_DTC_INT16:  return snprintf (txt, spaceleft, "%d", data->i16);
+		case PTP_DTC_UINT16: return snprintf (txt, spaceleft, "%u", data->u16);
+		case PTP_DTC_INT32:  return snprintf (txt, spaceleft, "%d", data->i32);
+		case PTP_DTC_UINT32: return snprintf (txt, spaceleft, "%u", data->u32);
+		case PTP_DTC_INT64:  return snprintf (txt, spaceleft, "%lu", data->u64);
+		case PTP_DTC_UINT64: return snprintf (txt, spaceleft, "%ld", data->i64);
 	/*
 		PTP_DTC_INT128
 		PTP_DTC_UINT128
 	*/
-		default:
-			return snprintf (txt, spaceleft, "Unknown %x", dt);
+		default:             return snprintf (txt, spaceleft, "Unknown %x", dt);
 		}
 	}
 	return 0;
@@ -7755,12 +7729,9 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 				if ((1<<i) & propval.u32) {
 					APPEND_TXT ("\t");
 					switch (i) {
-					case 0: APPEND_TXT (_("Video"));
-						break;
-					case 1: APPEND_TXT (_("Audio"));
-						break;
-					default: APPEND_TXT ("%d", i);
-						break;
+					case 0:  APPEND_TXT (_("Video")); break;
+					case 1:  APPEND_TXT (_("Audio")); break;
+					default: APPEND_TXT ("%d", i);    break;
 					}
 					ret = ptp_getstreaminfo (params, i, &streaminfo);
 					if (ret == PTP_RC_OK) {
@@ -8373,35 +8344,16 @@ ptp_mtp_render_metadata (
 			gp_file_append (file, ">", 1);
 
 			switch (xpl->datatype) {
-			default:sprintf (text, "Unknown type %d", xpl->datatype);
-				break;
-			case PTP_DTC_STR:
-				snprintf (text, sizeof(text), "%s", xpl->propval.str?xpl->propval.str:"");
-				break;
-			case PTP_DTC_INT64:
-				sprintf (text, "%ld", xpl->propval.i64);
-				break;
-			case PTP_DTC_INT32:
-				sprintf (text, "%d", xpl->propval.i32);
-				break;
-			case PTP_DTC_INT16:
-				sprintf (text, "%d", xpl->propval.i16);
-				break;
-			case PTP_DTC_INT8:
-				sprintf (text, "%d", xpl->propval.i8);
-				break;
-			case PTP_DTC_UINT64:
-				sprintf (text, "%lu", xpl->propval.u64);
-				break;
-			case PTP_DTC_UINT32:
-				sprintf (text, "%u", xpl->propval.u32);
-				break;
-			case PTP_DTC_UINT16:
-				sprintf (text, "%u", xpl->propval.u16);
-				break;
-			case PTP_DTC_UINT8:
-				sprintf (text, "%u", xpl->propval.u8);
-				break;
+			case PTP_DTC_STR:   snprintf (text, sizeof(text), "%s", xpl->propval.str?xpl->propval.str:""); break;
+			case PTP_DTC_INT64:  sprintf (text, "%ld", xpl->propval.i64); break;
+			case PTP_DTC_INT32:  sprintf (text, "%d", xpl->propval.i32); break;
+			case PTP_DTC_INT16:  sprintf (text, "%d", xpl->propval.i16); break;
+			case PTP_DTC_INT8:   sprintf (text, "%d", xpl->propval.i8); break;
+			case PTP_DTC_UINT64: sprintf (text, "%lu", xpl->propval.u64); break;
+			case PTP_DTC_UINT32: sprintf (text, "%u", xpl->propval.u32); break;
+			case PTP_DTC_UINT16: sprintf (text, "%u", xpl->propval.u16); break;
+			case PTP_DTC_UINT8:  sprintf (text, "%u", xpl->propval.u8); break;
+			default:             sprintf (text, "Unknown type %d", xpl->datatype); break;
 			}
 			gp_file_append (file, text, strlen(text));
 			gp_file_append (file, "</", 2);
@@ -8438,35 +8390,16 @@ ptp_mtp_render_metadata (
 				sprintf (text, "failure to retrieve %x of oid %x, ret %x", props[j], object_id, ret);
 			} else {
 				switch (opd.DataType) {
-				default:sprintf (text, "Unknown type %d", opd.DataType);
-					break;
-				case PTP_DTC_STR:
-					snprintf (text, sizeof(text), "%s", pv.str?pv.str:"");
-					break;
-				case PTP_DTC_INT64:
-					sprintf (text, "%ld", pv.i64);
-					break;
-				case PTP_DTC_INT32:
-					sprintf (text, "%d", pv.i32);
-					break;
-				case PTP_DTC_INT16:
-					sprintf (text, "%d", pv.i16);
-					break;
-				case PTP_DTC_INT8:
-					sprintf (text, "%d", pv.i8);
-					break;
-				case PTP_DTC_UINT64:
-					sprintf (text, "%lu", pv.u64);
-					break;
-				case PTP_DTC_UINT32:
-					sprintf (text, "%u", pv.u32);
-					break;
-				case PTP_DTC_UINT16:
-					sprintf (text, "%u", pv.u16);
-					break;
-				case PTP_DTC_UINT8:
-					sprintf (text, "%u", pv.u8);
-					break;
+				case PTP_DTC_STR:   snprintf (text, sizeof(text), "%s", pv.str?pv.str:""); break;
+				case PTP_DTC_INT64:  sprintf (text, "%ld", pv.i64); break;
+				case PTP_DTC_INT32:  sprintf (text, "%d", pv.i32); break;
+				case PTP_DTC_INT16:  sprintf (text, "%d", pv.i16); break;
+				case PTP_DTC_INT8:   sprintf (text, "%d", pv.i8); break;
+				case PTP_DTC_UINT64: sprintf (text, "%lu", pv.u64); break;
+				case PTP_DTC_UINT32: sprintf (text, "%u", pv.u32); break;
+				case PTP_DTC_UINT16: sprintf (text, "%u", pv.u16); break;
+				case PTP_DTC_UINT8:  sprintf (text, "%u", pv.u8); break;
+				default:             sprintf (text, "Unknown type %d", opd.DataType); break;
 				}
 			}
 			gp_file_append (file, text, strlen(text));
@@ -8555,30 +8488,17 @@ ptp_mtp_parse_metadata (
 			continue;
 		}
 		switch (opd.DataType) {
-		default:GP_LOG_E ("mtp parser: Unknown datatype %d, content %s", opd.DataType, content);
+		case PTP_DTC_STR:    pv.str = content; break;
+		case PTP_DTC_INT32:  sscanf (content, "%d", &pv.i32); break;
+		case PTP_DTC_INT16:  sscanf (content, "%hd", &pv.i16); break;
+		case PTP_DTC_INT8:   sscanf (content, "%hhd", &pv.i8); break;
+		case PTP_DTC_UINT32: sscanf (content, "%u", &pv.u32); break;
+		case PTP_DTC_UINT16: sscanf (content, "%hu", &pv.u16); break;
+		case PTP_DTC_UINT8:  sscanf (content, "%hhu", &pv.u8); break;
+		default:
+			GP_LOG_E ("mtp parser: Unknown datatype %d, content %s", opd.DataType, content);
 			free (content); content = NULL;
 			continue;
-			break;
-		case PTP_DTC_STR:
-			pv.str = content;
-			break;
-		case PTP_DTC_INT32:
-			sscanf (content, "%d", &pv.i32);
-			break;
-		case PTP_DTC_INT16:
-			sscanf (content, "%hd", &pv.i16);
-			break;
-		case PTP_DTC_INT8:
-			sscanf (content, "%hhd", &pv.i8);
-			break;
-		case PTP_DTC_UINT32:
-			sscanf (content, "%u", &pv.u32);
-			break;
-		case PTP_DTC_UINT16:
-			sscanf (content, "%hu", &pv.u16);
-			break;
-		case PTP_DTC_UINT8:
-			sscanf (content, "%hhu", &pv.u8);
 			break;
 		}
 		ret = ptp_mtp_setobjectpropvalue (params, object_id, props[j], &pv, opd.DataType);
@@ -9617,21 +9537,11 @@ storage_info_func (CameraFilesystem *fs,
 		}
 		sif->fields |= GP_STORAGEINFO_STORAGETYPE;
 		switch (si.StorageType) {
-		case PTP_ST_Undefined:
-			sif->type = GP_STORAGEINFO_ST_UNKNOWN;
-			break;
-		case PTP_ST_FixedROM:
-			sif->type = GP_STORAGEINFO_ST_FIXED_ROM;
-			break;
-		case PTP_ST_FixedRAM:
-			sif->type = GP_STORAGEINFO_ST_FIXED_RAM;
-			break;
-		case PTP_ST_RemovableRAM:
-			sif->type = GP_STORAGEINFO_ST_REMOVABLE_RAM;
-			break;
-		case PTP_ST_RemovableROM:
-			sif->type = GP_STORAGEINFO_ST_REMOVABLE_ROM;
-			break;
+		case PTP_ST_Undefined:    sif->type = GP_STORAGEINFO_ST_UNKNOWN; break;
+		case PTP_ST_FixedROM:     sif->type = GP_STORAGEINFO_ST_FIXED_ROM; break;
+		case PTP_ST_FixedRAM:     sif->type = GP_STORAGEINFO_ST_FIXED_RAM; break;
+		case PTP_ST_RemovableRAM: sif->type = GP_STORAGEINFO_ST_REMOVABLE_RAM; break;
+		case PTP_ST_RemovableROM: sif->type = GP_STORAGEINFO_ST_REMOVABLE_ROM; break;
 		default:
 			GP_LOG_D ("unknown storagetype 0x%x", si.StorageType);
 			sif->type = GP_STORAGEINFO_ST_UNKNOWN;
@@ -9639,15 +9549,9 @@ storage_info_func (CameraFilesystem *fs,
 		}
 		sif->fields |= GP_STORAGEINFO_ACCESS;
 		switch (si.AccessCapability) {
-		case PTP_AC_ReadWrite:
-			sif->access = GP_STORAGEINFO_AC_READWRITE;
-			break;
-		case PTP_AC_ReadOnly:
-			sif->access = GP_STORAGEINFO_AC_READONLY;
-			break;
-		case PTP_AC_ReadOnly_with_Object_Deletion:
-			sif->access = GP_STORAGEINFO_AC_READONLY_WITH_DELETE;
-			break;
+		case PTP_AC_ReadWrite:                     sif->access = GP_STORAGEINFO_AC_READWRITE; break;
+		case PTP_AC_ReadOnly:                      sif->access = GP_STORAGEINFO_AC_READONLY; break;
+		case PTP_AC_ReadOnly_with_Object_Deletion: sif->access = GP_STORAGEINFO_AC_READONLY_WITH_DELETE; break;
 		default:
 			GP_LOG_D ("unknown accesstype 0x%x", si.AccessCapability);
 			sif->access = GP_STORAGEINFO_AC_READWRITE;
@@ -9656,18 +9560,10 @@ storage_info_func (CameraFilesystem *fs,
 		sif->fields |= GP_STORAGEINFO_FILESYSTEMTYPE;
 		switch (si.FilesystemType) {
 		default:
-		case PTP_FST_Undefined:
-			sif->fstype = GP_STORAGEINFO_FST_UNDEFINED;
-			break;
-		case PTP_FST_GenericFlat:
-			sif->fstype = GP_STORAGEINFO_FST_GENERICFLAT;
-			break;
-		case PTP_FST_GenericHierarchical:
-			sif->fstype = GP_STORAGEINFO_FST_GENERICHIERARCHICAL;
-			break;
-		case PTP_FST_DCF:
-			sif->fstype = GP_STORAGEINFO_FST_DCF;
-			break;
+		case PTP_FST_Undefined:           sif->fstype = GP_STORAGEINFO_FST_UNDEFINED; break;
+		case PTP_FST_GenericFlat:         sif->fstype = GP_STORAGEINFO_FST_GENERICFLAT; break;
+		case PTP_FST_GenericHierarchical: sif->fstype = GP_STORAGEINFO_FST_GENERICHIERARCHICAL; break;
+		case PTP_FST_DCF:                 sif->fstype = GP_STORAGEINFO_FST_DCF; break;
 		}
 		if (si.MaxCapability != 0xffffffff) {
 			sif->fields |= GP_STORAGEINFO_MAXCAPACITY;
