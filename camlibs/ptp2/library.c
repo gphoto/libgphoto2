@@ -382,8 +382,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 	/* Canon EOS */
 	if (	di->VendorExtensionID == PTP_VENDOR_CANON &&
-		ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx &&
-		params->eos_captureenabled)
+		ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx) &&
+		params->eos_captureenabled
 	) {
 		PTPCanonEOSDeviceInfo x;
 
