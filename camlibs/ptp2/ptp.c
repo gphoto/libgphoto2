@@ -4827,6 +4827,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 {
 	unsigned int	i;
 	time_t		now;
+	time(&now);
 
 	for (i=0;i<params->nrofdeviceproperties;i++)
 		if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
@@ -4838,7 +4839,6 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	}
 
 	if (params->deviceproperties[i].desc.DataType != PTP_DTC_UNDEF) {
-		time(&now);
 		if (params->deviceproperties[i].timestamp + params->cachetime > now) {
 			duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
 			return PTP_RC_OK;
@@ -4859,10 +4859,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 			ptp_debug (params, "alpha property 0x%04x not found?\n", propcode);
 			return PTP_RC_GeneralError;
 		}
-		time(&now);
-		params->deviceproperties[i].timestamp = now;
-		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
-		return PTP_RC_OK;
+		goto done;
 	}
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_QX_GetAllDevicePropData)
@@ -4876,33 +4873,27 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 			ptp_debug (params, "qx property 0x%04x not found?\n", propcode);
 			return PTP_RC_GeneralError;
 		}
-		time(&now);
-		params->deviceproperties[i].timestamp = now;
-		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
-		return PTP_RC_OK;
+		goto done;
 	}
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_GetDevicePropdesc)
 	) {
 		CHECK_PTP_RC(ptp_sony_getdevicepropdesc (params, propcode, &params->deviceproperties[i].desc));
-
-		time(&now);
-		params->deviceproperties[i].timestamp = now;
-		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
-		return PTP_RC_OK;
+		goto done;
 	}
 
 
 	if (ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
 		CHECK_PTP_RC(ptp_getdevicepropdesc (params, propcode, &params->deviceproperties[i].desc));
-
-		time(&now);
-		params->deviceproperties[i].timestamp = now;
-		duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
-		return PTP_RC_OK;
+		goto done;
 	}
 
 	return PTP_RC_OperationNotSupported;
+
+done:
+	params->deviceproperties[i].timestamp = now;
+	duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
+	return PTP_RC_OK;
 }
 
 /**
