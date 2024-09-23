@@ -11114,7 +11114,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Aspect Ratio"),                   "aspectratio",              PTP_DPC_CANON_EOS_MultiAspect,          PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_Canon_EOS_AspectRatio,         _put_Canon_EOS_AspectRatio },
 	{ N_("AF Method"),                      "afmethod",                 PTP_DPC_CANON_EOS_LvAfSystem,           PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_Canon_EOS_AFMethod,            _put_Canon_EOS_AFMethod },
 	{ N_("Storage Device"),                 "storageid",                PTP_DPC_CANON_EOS_CurrentStorage,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_Canon_EOS_StorageID  ,         _put_Canon_EOS_StorageID },
-	{ N_("High ISO Noise Reduction"),       "highisonr",                PTP_DPC_CANON_EOS_HighISOSettingNoiseReduction, PTP_VENDOR_CANON, PTP_DTC_UINT16, _get_Canon_EOS_HighIsoNr,     _put_Canon_EOS_HighIsoNr },
+	{ N_("High ISO Noise Reduction"),       "highisonr",                PTP_DPC_CANON_EOS_HighISONoiseReduction,PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_HighIsoNr,           _put_Canon_EOS_HighIsoNr },
 	{ N_("HDR Mode"),                       "hdrmode",                  PTP_DPC_NIKON_HDRMode,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("HDR High Dynamic"),               "hdrhighdynamic",           PTP_DPC_NIKON_HDRHighDynamic,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDRHighDynamic,          _put_Nikon_HDRHighDynamic },
 	{ N_("HDR Smoothing"),                  "hdrsmoothing",             PTP_DPC_NIKON_HDRSmoothing,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDRSmoothing,            _put_Nikon_HDRSmoothing },

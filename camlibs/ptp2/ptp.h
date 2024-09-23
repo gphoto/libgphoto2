@@ -2081,7 +2081,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_ImageFormatExtHD	0xD123	/* file setting exthd */
 #define PTP_DPC_CANON_EOS_RefocusState		0xD124
 #define PTP_DPC_CANON_EOS_CameraNickname	0xD125
-#define PTP_DPC_CANON_EOS_StroboSettingExpCompositionControl	0xD126
+#define PTP_DPC_CANON_EOS_StroboExpCompositionControl	0xD126
 #define PTP_DPC_CANON_EOS_ConnectStatus		0xD127
 #define PTP_DPC_CANON_EOS_LensBarrelStatus	0xD128
 #define PTP_DPC_CANON_EOS_SilentShutterSetting	0xD129
@@ -2151,7 +2151,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_NetworkCommunicationMode	0xD175
 #define PTP_DPC_CANON_EOS_CanonLogGamma			0xD176
 #define PTP_DPC_CANON_EOS_SmartphoneShowImageConfig	0xD177
-#define PTP_DPC_CANON_EOS_HighISOSettingNoiseReduction	0xD178
+#define PTP_DPC_CANON_EOS_HighISONoiseReduction	0xD178
 #define PTP_DPC_CANON_EOS_MovieServoAF		0xD179
 #define PTP_DPC_CANON_EOS_ContinuousAFValid	0xD17A
 #define PTP_DPC_CANON_EOS_Attenuator		0xD17B
@@ -2232,7 +2232,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_CANON_EOS_StroboETTL2Metering	0xD1C8
 #define PTP_DPC_CANON_EOS_ContinousAFMode	0xD1C9
 #define PTP_DPC_CANON_EOS_MovieParam2		0xD1CA
-#define PTP_DPC_CANON_EOS_StroboSettingExpComposition		0xD1CB
+#define PTP_DPC_CANON_EOS_StroboExpComposition	0xD1CB
 #define PTP_DPC_CANON_EOS_MovieParam3		0xD1CC
 #define PTP_DPC_CANON_EOS_MovieParam4		0xD1CD
 #define PTP_DPC_CANON_EOS_LVMedicalRotate	0xD1CF
