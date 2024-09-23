@@ -380,6 +380,25 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		di->VendorExtensionID = PTP_VENDOR_GP_OLYMPUS_OMD;
 	}
 
+	/* Canon EOS */
+	if (	di->VendorExtensionID == PTP_VENDOR_CANON &&
+		ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetDeviceInfoEx &&
+		params->eos_captureenabled)
+	) {
+		PTPCanonEOSDeviceInfo x;
+
+		if (PTP_RC_OK == LOG_ON_PTP_E (ptp_canon_eos_getdeviceinfo (params, &x))) {
+			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,
+				(di->DevicePropertiesSupported_len + x.DevicePropertiesSupported_len) * sizeof(di->DevicePropertiesSupported[0])));
+			for (unsigned i=0;i<x.DevicePropertiesSupported_len;i++)
+				di->DevicePropertiesSupported[di->DevicePropertiesSupported_len + i] = x.DevicePropertiesSupported[i];
+			di->DevicePropertiesSupported_len += x.DevicePropertiesSupported_len;
+			ptp_free_EOS_DI (&x);
+		}
+
+		LOG_ON_PTP_E (ptp_check_eos_events(params));
+	}
+
 	if (di->VendorExtensionID == PTP_VENDOR_FUJI) {
 		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 72)));
 		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+0] = PTP_DPC_ExposureTime;
@@ -7942,9 +7961,12 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		unsigned int dpc = pdi.DevicePropertiesSupported[i];
 		const char *propname = ptp_get_property_description (params, dpc);
 
+		/* drop the "EOS_" prefix */
+		if (propname && strncmp(propname, "EOS_", 4) == 0)
+			propname += 4;
 
 		/* string registered for i18n in ptp.c. */
-		APPEND_TXT ("%-25s (%04x): ", propname ? _(propname) : _("[Unknown Property]"), dpc);
+		APPEND_TXT ("%-25s (%04x): ", propname ? _(propname) : N_("[Unknown Property]"), dpc);
 
 		/* Do not read the 0xd201 property (found on Creative Zen series).
 		 * It seems to cause hangs.
