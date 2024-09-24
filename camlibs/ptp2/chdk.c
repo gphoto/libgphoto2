@@ -1256,8 +1256,7 @@ static void yuv_live_to_ppm (unsigned char *p_yuv,
 ) {
 	const unsigned char  *p_row = p_yuv;
 	const unsigned char  *p;
-	unsigned int	      row, x;
-	unsigned int	      row_inc;
+	int		      row, x, row_inc;
 	int		      pshift, xshift, skip;
 	char		      ppm_header[32];
 	uint8_t		      rgb[6];
