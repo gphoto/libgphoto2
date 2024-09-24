@@ -36,7 +36,6 @@
 
 #include "ptp.h"
 #include "ptp-private.h"
-#include "ptp-pack.c"
 #include "olympus-wrap.h"
 
 #include <gphoto2/gphoto2-library.h>

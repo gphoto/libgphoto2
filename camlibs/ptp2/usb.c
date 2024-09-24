@@ -64,10 +64,6 @@
 /* 100 is not enough for various cameras types. 150 seems to work better */
 #define PTP2_FAST_TIMEOUT       150
 
-/* Pack / unpack functions */
-
-#include "ptp-pack.c"
-
 /* send / receive functions */
 
 uint16_t
