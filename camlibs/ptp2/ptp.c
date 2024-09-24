@@ -2117,7 +2117,6 @@ ptp_free_params (PTPParams *params)
 	free (params->storageids.Storage);
 	free (params->events);
 	for (i=0;i<params->nrofcanon_props;i++) {
-		free (params->canon_props[i].data);
 		ptp_free_devicepropdesc (&params->canon_props[i].dpd);
 	}
 	free (params->canon_props);
