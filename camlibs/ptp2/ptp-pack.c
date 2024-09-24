@@ -1266,7 +1266,7 @@ ptp_unpack_OPL (PTPParams *params, const unsigned char* data, MTPProperties **pp
 #define PTP_ec_Param3		20
 
 static inline void
-ptp_unpack_EC (PTPParams *params, const unsigned char* data, PTPContainer *ec, unsigned int len)
+ptp_unpack_canon_event (PTPParams *params, const unsigned char* data, PTPContainer *ec, unsigned int len)
 {
 	unsigned int	length;
 	int	type;
@@ -1728,7 +1728,7 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint16_t proptype)
 	} while (0)
 
 static inline int
-ptp_unpack_CANON_changes (PTPParams *params, const unsigned char* data, unsigned int datasize, PTPCanon_changes_entry **pce)
+ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned int datasize, PTPCanon_changes_entry **pce)
 {
 	int	i = 0, entries = 0;
 	const unsigned char *curdata = data;
