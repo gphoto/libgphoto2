@@ -3237,7 +3237,7 @@ ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 	*isevent=0;
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (data && size) { /* check if we had a successful call with data */
-		ptp_unpack_EC(params, data, event, size);
+		ptp_unpack_canon_event(params, data, event, size);
 		*isevent=1;
 		free(data);
 	}
@@ -3877,7 +3877,7 @@ ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int
 	*nrofentries = 0;
 	*entries = NULL;
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	*nrofentries = ptp_unpack_CANON_changes(params,data,size,entries);
+	*nrofentries = ptp_unpack_EOS_events(params,data,size,entries);
 	free (data);
 	return PTP_RC_OK;
 }
