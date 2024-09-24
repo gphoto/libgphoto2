@@ -74,14 +74,10 @@
 
 #include "ptp.h"
 #include "ptp-private.h"
+#include "ptp-bugs.h"
 
 #define PTPIP_VERSION_MAJOR 0x0001
 #define PTPIP_VERSION_MINOR 0x0000
-
-#include "ptp.h"
-#include "ptp-bugs.h"
-
-#include "ptp-pack.c"
 
 #define fujiptpip_len		0
 #define fujiptpip_type		4	/* not always present */

@@ -42,6 +42,35 @@ extern "C" {
 #define PTP_DL_BE			0xF0
 #define	PTP_DL_LE			0x0F
 
+#define htod8a(a, x)   *(uint8_t*)(a) = x
+#define dtoh8a(x)      (*(uint8_t*)(x))
+
+/* PTP over USB / IP is specified to use little-endian byte order */
+#define INSTANCIATE_BYTE_ORDER_FUNCTIONS(N) \
+	static inline uint##N##_t htod##N    (uint##N##_t v)             { return htole##N(v);    } \
+	static inline void        htod##N##a (uint8_t *a, uint##N##_t v) { htole##N##a(a, v);     } \
+	static inline uint##N##_t dtoh##N    (uint##N##_t v)             { return le##N##toh(v);  } \
+	static inline uint##N##_t dtoh##N##a (const uint8_t *a)          { return le##N##atoh(a); }
+
+INSTANCIATE_BYTE_ORDER_FUNCTIONS(16)
+INSTANCIATE_BYTE_ORDER_FUNCTIONS(32)
+INSTANCIATE_BYTE_ORDER_FUNCTIONS(64)
+
+#undef INSTANCIATE_BYTE_ORDER_FUNCTIONS
+
+static inline uint32_t _post_inc(uint32_t* o, int n)
+{
+	uint32_t res = *o;
+	*o += n;
+	return res;
+}
+
+#define dtoh8o( a, o)  dtoh8a ((a) + _post_inc(&o, sizeof(uint8_t )))
+#define dtoh16o(a, o)  dtoh16a((a) + _post_inc(&o, sizeof(uint16_t)))
+#define dtoh32o(a, o)  dtoh32a((a) + _post_inc(&o, sizeof(uint32_t)))
+#define dtoh64o(a, o)  dtoh64a((a) + _post_inc(&o, sizeof(uint64_t)))
+
+
 /* USB interface class */
 #ifndef USB_CLASS_PTP
 #define USB_CLASS_PTP			6
@@ -4367,6 +4396,7 @@ uint16_t ptp_canon_getobjectinfo (PTPParams* params, uint32_t store,
 				PTPCANONFolderEntry** entries,
 				uint32_t* entnum);
 uint16_t ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di);
+void ptp_canon_eos_free_deviceinfo (PTPCanonEOSDeviceInfo *di);
 /**
  * ptp_canon_eos_setuilock:
  *
@@ -4817,6 +4847,7 @@ void ptp_free_params		(PTPParams *params);
 void ptp_free_objectpropdesc	(PTPObjectPropDesc*);
 void ptp_free_devicepropdesc	(PTPDevicePropDesc*);
 void ptp_free_devicepropvalue	(uint16_t, PTPPropertyValue*);
+void ptp_free_deviceinfo	(PTPDeviceInfo *);
 void ptp_free_objectinfo	(PTPObjectInfo *oi);
 void ptp_free_object		(PTPObject *oi);
 

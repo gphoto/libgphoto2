@@ -45,7 +45,6 @@
 #include "ptp.h"
 #include "ptp-bugs.h"
 #include "ptp-private.h"
-#include "ptp-pack.c"
 #include "olympus-wrap.h"
 
 #ifdef HAVE_LIBWS232
@@ -311,7 +310,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 
 		print_debug_deviceinfo (params, &newdi);
-		ptp_free_DI (di);
+		ptp_free_deviceinfo (di);
 		memcpy (di, &newdi, sizeof(newdi));
 		return GP_OK;
 	}
@@ -393,7 +392,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			for (unsigned i=0;i<x.DevicePropertiesSupported_len;i++)
 				di->DevicePropertiesSupported[di->DevicePropertiesSupported_len + i] = x.DevicePropertiesSupported[i];
 			di->DevicePropertiesSupported_len += x.DevicePropertiesSupported_len;
-			ptp_free_EOS_DI (&x);
+			ptp_canon_eos_free_deviceinfo (&x);
 		}
 
 		LOG_ON_PTP_E (ptp_check_eos_events(params));
@@ -7998,7 +7997,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		APPEND_TXT ("\n");
 		ptp_free_devicepropdesc (&dpd);
 	}
-	ptp_free_DI (&pdi);
+	ptp_free_deviceinfo (&pdi);
 	return (GP_OK);
 #undef SPACE_LEFT
 #undef APPEND_TXT

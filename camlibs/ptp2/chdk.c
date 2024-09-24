@@ -41,7 +41,6 @@
 #include "ptp.h"
 #include "ptp-bugs.h"
 #include "ptp-private.h"
-#include "ptp-pack.c"
 
 /* CHDK support */
 

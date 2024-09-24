@@ -44,7 +44,6 @@
 #include "ptp.h"
 #include "ptp-bugs.h"
 #include "ptp-private.h"
-#include "ptp-pack.c"
 
 #ifdef __GNUC__
 # define __unused__ __attribute__((unused))
@@ -424,7 +423,7 @@ skip:
 			GP_LOG_D ("deviceprop: %04x", x.DevicePropertiesSupported[i]);
 		for (i=0;i<x.unk_len;i++)
 			GP_LOG_D ("unk: %04x", x.unk[i]);
-		ptp_free_EOS_DI (&x);
+		ptp_canon_eos_free_deviceinfo (&x);
 	}
 
 	/* The new EOS occasionally returned an empty event set ... likely because we are too fast. try again some times. */
@@ -438,7 +437,7 @@ skip:
 
 	CR (camera_canon_eos_update_capture_target( camera, context, -1 ));
 
-	ptp_free_DI (&params->deviceinfo);
+	ptp_free_deviceinfo (&params->deviceinfo);
 	C_PTP (ptp_getdeviceinfo(params, &params->deviceinfo));
 	CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
 	C_PTP (ptp_canon_eos_getstorageids(params, &sids));

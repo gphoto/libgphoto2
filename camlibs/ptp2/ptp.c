@@ -565,6 +565,15 @@ ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 	return ret;
 }
 
+void ptp_canon_eos_free_deviceinfo (PTPCanonEOSDeviceInfo *di)
+{
+	if (!di) return;
+	free (di->EventsSupported);
+	free (di->DevicePropertiesSupported);
+	free (di->unk);
+	memset(di, 0, sizeof(*di));
+}
+
 uint16_t
 ptp_getstreaminfo (PTPParams *params, uint32_t streamid, PTPStreamInfo *si)
 {
@@ -2118,7 +2127,7 @@ ptp_free_params (PTPParams *params)
 		ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
 	free (params->deviceproperties);
 
-	ptp_free_DI (&params->deviceinfo);
+	ptp_free_deviceinfo (&params->deviceinfo);
 }
 
 /**
@@ -6012,6 +6021,23 @@ ptp_property_issupported(PTPParams* params, uint16_t property)
 		if (params->deviceinfo.DevicePropertiesSupported[i]==property)
 			return 1;
 	return 0;
+}
+
+void
+ptp_free_deviceinfo (PTPDeviceInfo *di)
+{
+	if (!di) return;
+	free (di->SerialNumber);
+	free (di->DeviceVersion);
+	free (di->Model);
+	free (di->Manufacturer);
+	free (di->ImageFormats);
+	free (di->CaptureFormats);
+	free (di->VendorExtensionDesc);
+	free (di->OperationsSupported);
+	free (di->EventsSupported);
+	free (di->DevicePropertiesSupported);
+	memset(di, 0, sizeof(*di));
 }
 
 void
