@@ -3832,29 +3832,6 @@ ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event)
 }
 
 /**
- * ptp_have_event:
- *
- * Check if one specific event has appeared in the queue, without draining it.
- *
- * params:	PTPParams*	in: params
- * 		code		in: event code
- *
- * Return values: 1 if removed, 0 if not.
- */
-int
-ptp_have_event(PTPParams *params, uint16_t code)
-{
-	unsigned int i;
-
-	if (!params->nrofevents)
-		return 0;
-	for (i=0;i<params->nrofevents;i++)
-		if (params->events[i].Code == code)
-			return 1;
-	return 0;
-}
-
-/**
  * ptp_canon_eos_getevent:
  *
  * This retrieves configuration status/updates/changes
