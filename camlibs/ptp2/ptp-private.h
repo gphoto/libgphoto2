@@ -142,7 +142,7 @@ have_eos_prop(PTPParams *params, uint16_t vendor, uint16_t prop) {
 	if ((params->deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) || (vendor != PTP_VENDOR_CANON))
 		return 0;
 	for (i=0;i<params->nrofcanon_props;i++)
-		if (params->canon_props[i].proptype == prop)
+		if (params->canon_props[i].dpd.DevicePropertyCode == prop)
 			return 1;
 	return 0;
 }

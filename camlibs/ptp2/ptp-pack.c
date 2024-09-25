@@ -1695,24 +1695,27 @@ ptp_pack_EOS_CustomFuncEx (PTPParams* params, unsigned char* data, char* str)
 #define PTP_ece_OAN_OFC		0x0c
 #define PTP_ece_OAN_Size	0x14
 
-static PTPDevicePropDesc*
-_lookup_or_allocate_canon_prop(PTPParams *params, uint16_t proptype)
+static inline PTPDevicePropDesc*
+ptp_find_eos_devicepropdesc(PTPParams *params, uint32_t dpc)
 {
-	unsigned int j;
+	for (unsigned j=0; j < params->nrofcanon_props; j++)
+		if (params->canon_props[j].dpd.DevicePropertyCode == dpc)
+			return &params->canon_props[j].dpd;
+	return NULL;
+}
 
-	for (j=0;j<params->nrofcanon_props;j++)
-		if (params->canon_props[j].proptype == proptype)
-			break;
-	if (j<params->nrofcanon_props)
-		return &params->canon_props[j].dpd;
+static PTPDevicePropDesc*
+_lookup_or_allocate_canon_prop(PTPParams *params, uint32_t dpc)
+{
+	PTPDevicePropDesc *dpd = ptp_find_eos_devicepropdesc(params, dpc);
 
-	if (j)
-		params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
-	else
-		params->canon_props = malloc(sizeof(params->canon_props[0]));
-	params->canon_props[j].proptype = proptype;
+	if (dpd)
+		return dpd;
+
+	unsigned j = params->nrofcanon_props;
+	params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
 	memset (&params->canon_props[j].dpd,0,sizeof(params->canon_props[j].dpd));
-	params->canon_props[j].dpd.DevicePropertyCode = proptype;
+	params->canon_props[j].dpd.DevicePropertyCode = dpc;
 	params->canon_props[j].dpd.GetSet = 1;
 	params->canon_props[j].dpd.FormFlag = PTP_DPFF_None;
 	params->nrofcanon_props = j+1;
@@ -1872,15 +1875,11 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			const unsigned char	*xdata = &curdata[PTP_ece_Prop_Desc_Data];
 			unsigned int	xsize = size - PTP_ece_Prop_Desc_Data;
 			unsigned int	j;
-			PTPDevicePropDesc	*dpd;
-
-			for (j=0;j<params->nrofcanon_props;j++)
-				if (params->canon_props[j].proptype == proptype)
-					break;
+			PTPDevicePropDesc	*dpd = ptp_find_eos_devicepropdesc(params, proptype);
 
 			ptp_debug (params, "event %3d: EOS prop %04x options changed, type %d, count %2d (%s) %s",
 			           i, proptype, propxtype, propxcnt, ptp_get_property_description (params, proptype),
-			           j==params->nrofcanon_props ? "(unknown)" : "");
+			           dpd ? "" : "(unknown)");
 			/* 1 - uint16 ?
 			 * 3 - uint16
 			 * 7 - string?
@@ -1890,10 +1889,8 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				break;
 			}
 
-			if (j==params->nrofcanon_props || propxcnt == 0 || propxcnt >= 2<<16) /* buggy or exploit */
+			if (!dpd || propxcnt == 0 || propxcnt >= 2<<16) /* buggy or exploit */
 				break;
-
-			dpd = &params->canon_props[j].dpd;
 
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = propxcnt;
@@ -1953,25 +1950,11 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			uint32_t	proptype = dtoh32a(&curdata[PTP_ece_Prop_Subtype]);
 			const unsigned char	*xdata = &curdata[PTP_ece_Prop_Val_Data];
 			unsigned int	xsize = size - PTP_ece_Prop_Val_Data;
-			PTPDevicePropDesc	*dpd;
 
 			ptp_debug (params, "event %3d: EOS prop %04x value changed, size %2d (%s)",
 						i, proptype, xsize, ptp_get_property_description(params, proptype));
-			for (j=0;j<params->nrofcanon_props;j++)
-				if (params->canon_props[j].proptype == proptype)
-					break;
-			if (j == params->nrofcanon_props) {
-				if (j)
-					params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
-				else
-					params->canon_props = malloc(sizeof(params->canon_props[0]));
-				params->canon_props[j].proptype = proptype;
-				memset (&params->canon_props[j].dpd,0,sizeof(params->canon_props[j].dpd));
-				params->canon_props[j].dpd.GetSet = 1;
-				params->canon_props[j].dpd.FormFlag = PTP_DPFF_None;
-				params->nrofcanon_props = j+1;
-			}
-			dpd = &params->canon_props[j].dpd;
+
+			PTPDevicePropDesc *dpd = _lookup_or_allocate_canon_prop(params, proptype);
 
 			ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 			ce[i].u.propid = proptype;

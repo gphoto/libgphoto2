@@ -3931,26 +3931,12 @@ uint16_t
 ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 	PTPDevicePropDesc *dpd)
 {
-	unsigned int i;
+	PTPDevicePropDesc *cached_dpd = ptp_find_eos_devicepropdesc(params, propcode);
 
-	for (i=0;i<params->nrofcanon_props;i++)
-		if (params->canon_props[i].proptype == propcode)
-			break;
-	if (params->nrofcanon_props == i)
+	if (!cached_dpd)
 		return PTP_RC_Undefined;
-	memcpy (dpd, &params->canon_props[i].dpd, sizeof (*dpd));
-	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
-		/* need to duplicate the Enumeration alloc */
-		dpd->FORM.Enum.SupportedValue = calloc (dpd->FORM.Enum.NumberOfValues, sizeof (PTPPropertyValue));
-		memcpy (dpd->FORM.Enum.SupportedValue,
-			params->canon_props[i].dpd.FORM.Enum.SupportedValue,
-			sizeof (PTPPropertyValue)*dpd->FORM.Enum.NumberOfValues
-		);
-	}
-	if (dpd->DataType == PTP_DTC_STR) {
-		dpd->FactoryDefaultValue.str = strdup( params->canon_props[i].dpd.FactoryDefaultValue.str );
-		dpd->CurrentValue.str = strdup( params->canon_props[i].dpd.CurrentValue.str );
-	}
+
+	duplicate_DevicePropDesc(cached_dpd, dpd);
 
 	return PTP_RC_OK;
 }
@@ -4107,15 +4093,13 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 	PTPContainer	ptp;
 	uint16_t	ret;
 	unsigned char	*data = NULL;
-	unsigned int	i, size;
+	unsigned int	size;
+
+	PTPDevicePropDesc *dpd = ptp_find_eos_devicepropdesc(params, propcode);
+	if (!dpd)
+		return PTP_RC_Undefined;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_SetDevicePropValueEx);
-
-	for (i=0;i<params->nrofcanon_props;i++)
-		if (params->canon_props[i].proptype == propcode)
-			break;
-	if (params->nrofcanon_props == i)
-		return PTP_RC_Undefined;
 
 	switch (propcode) {
 	case PTP_DPC_CANON_EOS_ImageFormat:
@@ -4137,15 +4121,12 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 		ptp_pack_EOS_CustomFuncEx( params, data + 8, value->str );
 		break;
 	default:
-		if (datatype != PTP_DTC_STR) {
-			data = calloc(3,sizeof(uint32_t));
-			if (!data) return PTP_RC_GeneralError;
+		if (datatype != PTP_DTC_STR)
 			size = sizeof(uint32_t)*3;
-		} else {
+		else
 			size = strlen(value->str) + 1 + 8;
-			data = calloc(size,sizeof(char));
-			if (!data) return PTP_RC_GeneralError;
-		}
+		data = calloc(size,sizeof(char));
+		if (!data) return PTP_RC_GeneralError;
 		switch (datatype) {
 		case PTP_DTC_INT8:
 		case PTP_DTC_UINT8:
@@ -4181,30 +4162,30 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 		case PTP_DPC_CANON_EOS_ImageFormatSD:
 		case PTP_DPC_CANON_EOS_ImageFormatExtHD:
 			/* special handling of ImageFormat properties */
-			params->canon_props[i].dpd.CurrentValue.u16 = value->u16;
+			dpd->CurrentValue.u16 = value->u16;
 			break;
 		case PTP_DPC_CANON_EOS_CustomFuncEx:
 			/* special handling of CustomFuncEx properties */
-			free(params->canon_props[i].dpd.CurrentValue.str);
-			params->canon_props[i].dpd.CurrentValue.str = strdup( value->str );
+			free(dpd->CurrentValue.str);
+			dpd->CurrentValue.str = strdup( value->str );
 			break;
 		default:
 			switch (datatype) {
 			case PTP_DTC_INT8:
 			case PTP_DTC_UINT8:
-				params->canon_props[i].dpd.CurrentValue.u8 = value->u8;
+				dpd->CurrentValue.u8 = value->u8;
 				break;
 			case PTP_DTC_UINT16:
 			case PTP_DTC_INT16:
-				params->canon_props[i].dpd.CurrentValue.u16 = value->u16;
+				dpd->CurrentValue.u16 = value->u16;
 				break;
 			case PTP_DTC_INT32:
 			case PTP_DTC_UINT32:
-				params->canon_props[i].dpd.CurrentValue.u32 = value->u32;
+				dpd->CurrentValue.u32 = value->u32;
 				break;
 			case PTP_DTC_STR:
-				free (params->canon_props[i].dpd.CurrentValue.str);
-				params->canon_props[i].dpd.CurrentValue.str = strdup(value->str);
+				free (dpd->CurrentValue.str);
+				dpd->CurrentValue.str = strdup(value->str);
 				break;
 			}
 		}
@@ -4844,18 +4825,15 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RequestDevicePropValue)
 	) {
-		unsigned j;
-		for (j=0;j<params->nrofcanon_props;j++)
-			if (params->canon_props[j].proptype == propcode)
-				break;
-		if (j == params->nrofcanon_props) {
+		PTPDevicePropDesc *eos_dpd = ptp_find_eos_devicepropdesc(params, propcode);
+		if (!eos_dpd) {
 			ptp_debug (params, "Canon EOS property %04x not found", propcode);
 			if ((propcode & 0xFF00) == 0xD100 || (propcode & 0xFF00) == 0xD200)
 				return PTP_RC_DevicePropNotSupported;
 			else
 				goto generic;
 		}
-		duplicate_DevicePropDesc(&params->canon_props[j].dpd, &params->deviceproperties[i].desc);
+		duplicate_DevicePropDesc(eos_dpd, &params->deviceproperties[i].desc);
 		goto done;
 	}
 
