@@ -3788,7 +3788,6 @@ typedef struct _PTPObject PTPObject;
 struct _PTPDeviceProperty {
 	time_t			timestamp;
 	PTPDevicePropDesc	desc;
-	PTPPropertyValue	value;
 };
 typedef struct _PTPDeviceProperty PTPDeviceProperty;
 
