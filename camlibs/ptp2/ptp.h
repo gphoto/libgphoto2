@@ -4139,8 +4139,8 @@ uint16_t ptp_getstream (PTPParams* params, unsigned char **data, unsigned int *s
 uint16_t ptp_check_event (PTPParams *params);
 uint16_t ptp_check_event_queue (PTPParams *params);
 uint16_t ptp_wait_event (PTPParams *params);
-uint16_t ptp_add_event (PTPParams *params, PTPContainer *evt);
-uint16_t ptp_add_events (PTPParams *params, PTPContainer *evt, unsigned int nrevents);
+uint16_t ptp_add_event (PTPParams *params, PTPContainer *event);
+uint16_t ptp_add_events (PTPParams *params, PTPContainer *event, unsigned int count);
 uint16_t ptp_add_event_queue (PTPContainer **events, unsigned int *nrevents, PTPContainer *evt);
 int ptp_get_one_event (PTPParams *params, PTPContainer *evt);
 int ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event);

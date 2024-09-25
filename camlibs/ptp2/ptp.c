@@ -3257,27 +3257,22 @@ ptp_add_event_queue (PTPContainer **events, unsigned int *nrevents, PTPContainer
 	(*nrevents)++;
 	return PTP_RC_OK;
 }
-uint16_t
-ptp_add_event (PTPParams *params, PTPContainer *evt)
-{
-	return ptp_add_event_queue (&params->events, &params->nrofevents, evt);
-/*
-	params->events = realloc(params->events, sizeof(PTPContainer)*(params->nrofevents+1));
-	memcpy (&params->events[params->nrofevents],evt,1*sizeof(PTPContainer));
-	params->nrofevents += 1;
 
-	return PTP_RC_OK;
-*/
+uint16_t
+ptp_add_event (PTPParams *params, PTPContainer *event)
+{
+	return ptp_add_events (params, event, 1);
 }
 
 uint16_t
-ptp_add_events (PTPParams *params, PTPContainer *evt, unsigned int nrevents)
+ptp_add_events (PTPParams *params, PTPContainer *events, unsigned int count)
 {
-	unsigned int i;
+	params->events = realloc(params->events, sizeof(PTPContainer)*(count+params->nrofevents));
+	if (!params->events)
+		return PTP_RC_GeneralError;
 
-	for (i=0;i<nrevents;i++) {
-		CHECK_PTP_RC (ptp_add_event_queue (&params->events, &params->nrofevents, &evt[i]));
-	}
+	memcpy (&params->events[params->nrofevents], events, count*sizeof(PTPContainer));
+	params->nrofevents += count;
 	return PTP_RC_OK;
 }
 
