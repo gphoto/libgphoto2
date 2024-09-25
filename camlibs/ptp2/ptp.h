@@ -1870,9 +1870,6 @@ struct _PTPCanon_changes_entry {
 typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
 
 typedef struct _PTPCanon_Property {
-	uint32_t		proptype;
-
-	/* fill out for queries */
 	PTPDevicePropDesc	dpd;
 } PTPCanon_Property;
 
