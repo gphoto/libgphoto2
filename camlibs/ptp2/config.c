@@ -848,22 +848,22 @@ _put_Generic##bits##Table(CONFIG_PUT_ARGS, struct deviceproptable##bits * tbl, i
 			if (dpd->FormFlag & PTP_DPFF_Enumeration) { \
 				for (j = 0; j<dpd->FORM.Enum.NumberOfValues; j++) { \
 					if (bits##val == dpd->FORM.Enum.SupportedValue[j].bits) { \
-						GP_LOG_D ("FOUND right value for %s in the enumeration at val %d", value, bits##val); \
+						GP_LOG_D ("FOUND right value for %s in the enumeration at val %04x", value, bits##val); \
 						propval->bits = bits##val; \
 						return GP_OK; \
 					} \
 				} \
-				GP_LOG_D ("did not find the right value for %s in the enumeration at val %d... continuing", value, bits##val); \
+				GP_LOG_D ("did not find the right value for %s in the enumeration at val %04x... continuing", value, bits##val); \
 				/* continue looking, but with this value as fallback */ \
 			} else { \
-				GP_LOG_D ("not an enumeration ... return %s as %d", value, bits##val); \
+				GP_LOG_D ("not an enumeration ... return %s as %04x", value, bits##val); \
 				propval->bits = bits##val; \
 				return GP_OK; \
 			} \
 		} \
 	} \
 	if (foundvalue) { \
-		GP_LOG_D ("Using fallback, not found in enum... return %s as %d", value, bits##val); \
+		GP_LOG_D ("Using fallback, not found in enum... return %s as %04x", value, bits##val); \
 		propval->bits = bits##val; \
 		return GP_OK; \
 	} \
@@ -871,7 +871,7 @@ _put_Generic##bits##Table(CONFIG_PUT_ARGS, struct deviceproptable##bits * tbl, i
 		GP_LOG_E ("failed to find value %s in list", value); \
 		return GP_ERROR; \
 	} \
-	GP_LOG_D ("Using fallback, not found in enum... return %s as %d", value, bits##val); \
+	GP_LOG_D ("Using fallback, not found in enum... return %s as %04x", value, bits##val); \
 	propval->bits = intval; \
 	return GP_OK; \
 }
