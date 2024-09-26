@@ -6475,7 +6475,7 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		{PTP_DPC_CANON_EOS_MirrorLockupState,"EOS_MirrorLockupState"},
 		{PTP_DPC_CANON_EOS_FlashChargingState,"EOS_FlashChargingState"},
 		{PTP_DPC_CANON_EOS_AloMode,"EOS_AloMode"},
-		{PTP_DPC_CANON_EOS_FixedMovie, "EOS_Fixed_Movie_Switch"},
+		{PTP_DPC_CANON_EOS_FixedMovie, "EOS_FixedMovie"},
 		{PTP_DPC_CANON_EOS_OneShotRawOn,"EOS_OneShotRawOn"},
 		{PTP_DPC_CANON_EOS_ErrorForDisplay,"EOS_ErrorForDisplay"},
 		{PTP_DPC_CANON_EOS_AEModeMovie,"EOS_AEModeMovie"},
@@ -6526,6 +6526,10 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		{PTP_DPC_CANON_EOS_ShutterType,"EOS_ShutterType"},
 		{PTP_DPC_CANON_EOS_WFTBatteryPower,"EOS_WFTBatteryPower"},
 		{PTP_DPC_CANON_EOS_BatteryInfoEx,"EOS_BatteryInfoEx"},
+		/* add a select few MTP codes here, that EOS cameras have shown to use as well*/
+		{PTP_DPC_MTP_DeviceFriendlyName,N_("Friendly Device Name")},     /* D402 */
+		{PTP_DPC_MTP_SessionInitiatorInfo,N_("Session Initiator Info")}, /* D406 */
+		{PTP_DPC_MTP_PerceivedDeviceType,N_("Perceived Device Type")},   /* D407 */
 		{0,NULL}
 	};
 
@@ -7648,8 +7652,7 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT
 	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_MTP
-	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_PANASONIC
-	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_CANON)
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_PANASONIC)
 		for (i=0; ptp_device_properties_MTP[i].txt!=NULL; i++)
 			if (ptp_device_properties_MTP[i].dpc==dpc)
 				return (ptp_device_properties_MTP[i].txt);
@@ -7678,11 +7681,11 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		for (i=0; ptp_device_properties_SONY[i].txt!=NULL; i++)
 			if (ptp_device_properties_SONY[i].dpc==dpc)
 				return (ptp_device_properties_SONY[i].txt);
+
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_PARROT)
 		for (i=0; ptp_device_properties_PARROT[i].txt!=NULL; i++)
 			if (ptp_device_properties_PARROT[i].dpc==dpc)
 				return (ptp_device_properties_PARROT[i].txt);
-
 
 	return NULL;
 }
