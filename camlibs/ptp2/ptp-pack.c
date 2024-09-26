@@ -1407,37 +1407,48 @@ static inline uint16_t
 ptp_unpack_EOS_ImageFormat (PTPParams* params, const unsigned char** data )
 {
 	/*
-	  EOS ImageFormat entries (of at least the 5DM2 and the 400D) look like this:
-		uint32: number of entries / generated files (1 or 2)
-		uint32: size of this entry in bytes (most likely always 0x10)
-		uint32: image type (1 == JPG, 6 == RAW)
-		uint32: image size (0 == Large, 1 == Medium, 2 == Small, 0xe == S1, 0xf == S2, 0x10 == S3)
-		uint32: image compression (2 == Standard/JPG, 3 == Fine/JPG, 4 == Lossles/RAW)
-	  If the number of entries is 2 the last 4 uint32 repeat.
+	  EOS ImageFormat entries look are a sequence of u32 values:
+		0: number of entries / generated files (1 or 2)
+		1: size of this entry in bytes (most likely always 0x10 = 4 x u32)
+		2: image type:
+			 1 == JPG
+			 6 == RAW
+		3: image size:
+			 0 == L
+			 1 == M
+			 2 == S
+			 5 == M1      (e.g. 5Ds)
+			 6 == M2
+			 e == S1      (e.g. 5Dm3)
+			 f == S2
+			10 == S3
+		4: image compression:
+			 0 == user:      JPG       (e.g. 1DX, R5m2)
+			 1 == ???:       JPG       (e.g. 1DXm2, 1DXm3)
+			 2 == coarse:    JPG       (all)
+			 3 == fine:      JPG/cRAW  (all)
+			 4 == lossless:  RAW       (all)
 
-	  example:
-		0: 0x       1
-		1: 0x      10
-		2: 0x       6
-		3: 0x       1
-		4: 0x       4
+	  If the number of entries is 2 the values 1-4 repeat
+
+	  example (cRAW + coarse S1 JPEG): 2 10 6 0 3 10 1 e 2
 
 	  The idea is to simply 'condense' these values to just one uint16 to be able to conveniently
-	  use the available enumeration facilities (look-up table). The image size and compression
-	  values used to fully describe the image format, but at least since EOS M50 (with cRAW)
-	  it is no longer true - we need to store RAW flag (8).
-	  Hence we generate a uint16 with the four nibles set as follows:
+	  use the available enumeration facilities (look-up table).
+	  Hence we generate a u16 value with the four nibles set as follows:
 
-	  entry 1 size | entry 1 compression & RAW flag | entry 2 size | entry 2 compression & RAW flag.
+	  entry 1 size | entry 1 type + compression | entry 2 size | entry 2 type + compression.
 
-	  The above example would result in the value 0x1400.
+	  * The S3 value (0xf) would overflow the nible, hence we decrease all S1,S2,S3 values by 1.
+	  * The to encode the type RAW, we set the 4th bit in the compression nible to 1 (|= 8).
+	  * To distinguish an "empty" second entry from the "custom L JPEG", we set it to 0xff.
 
-	  The EOS 5D Mark III (and possibly other high-end EOS as well) added the extra fancy S1, S2
-	  and S3 JPEG options. S1 replaces the old Small. -1 the S1/S2/S3 to prevent the 0x10 overflow.
-	  */
+	  The above example would result in the value 0x0bd2.
+	*/
 
-	const unsigned char* d = *data;
-	uint32_t n = dtoh32a( d );
+	const uint8_t* d = *data;
+	uint32_t offset = 0;
+	uint32_t n = dtoh32o (d, offset);
 	uint32_t l, t1, s1, c1, t2 = 0, s2 = 0, c2 = 0;
 
 	if (n != 1 && n !=2) {
@@ -1445,28 +1456,28 @@ ptp_unpack_EOS_ImageFormat (PTPParams* params, const unsigned char** data )
 		return 0;
 	}
 
-	l = dtoh32a( d+=4 );
+	l = dtoh32o (d, offset);
 	if (l != 0x10) {
 		ptp_debug (params, "parsing EOS ImageFormat property failed (l != 0x10: 0x%x)", l);
 		return 0;
 	}
 
-	t1 = dtoh32a( d+=4 );
-	s1 = dtoh32a( d+=4 );
-	c1 = dtoh32a( d+=4 );
+	t1 = dtoh32o (d, offset);
+	s1 = dtoh32o (d, offset);
+	c1 = dtoh32o (d, offset);
 
 	if (n == 2) {
-		l = dtoh32a( d+=4 );
+		l = dtoh32o (d, offset);
 		if (l != 0x10) {
 			ptp_debug (params, "parsing EOS ImageFormat property failed (l != 0x10: 0x%x)", l);
 			return 0;
 		}
-		t2 = dtoh32a( d+=4 );
-		s2 = dtoh32a( d+=4 );
-		c2 = dtoh32a( d+=4 );
+		t2 = dtoh32o (d, offset);
+		s2 = dtoh32o (d, offset);
+		c2 = dtoh32o (d, offset);
 	}
 
-	*data = (unsigned char*) d+4;
+	*data += offset;
 
 	/* deal with S1/S2/S3 JPEG sizes, see above. */
 	if( s1 >= 0xe )
@@ -1478,31 +1489,35 @@ ptp_unpack_EOS_ImageFormat (PTPParams* params, const unsigned char** data )
 	c1 |= (t1 == 6) ? 8 : 0;
 	c2 |= (t2 == 6) ? 8 : 0;
 
+	if (s2 == 0 && c2 == 0)
+		s2 = c2 = 0xF;
+
 	return ((s1 & 0xF) << 12) | ((c1 & 0xF) << 8) | ((s2 & 0xF) << 4) | ((c2 & 0xF) << 0);
 }
 
 static inline uint32_t
 ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value)
 {
-	uint32_t n = (value & 0xFF) ? 2 : 1;
+	uint32_t n = (value & 0xFF) == 0xFF ? 1 : 2;
 	uint32_t s = 4 + 0x10 * n;
 
 	if( !data )
 		return s;
 
-#define PACK_5DM3_SMALL_JPEG_SIZE( X ) (X) >= 0xd ? (X)+1 : (X)
+#define PACK_EOS_S123_JPEG_SIZE( X ) (X) >= 0xd ? (X)+1 : (X)
 
 	htod32a(data+=0, n);
+
 	htod32a(data+=4, 0x10);
-	htod32a(data+=4, (((value >> 8) & 0xF) >> 3) ? 6 : 1);
-	htod32a(data+=4, PACK_5DM3_SMALL_JPEG_SIZE((value >> 12) & 0xF));
-	htod32a(data+=4, ((value >> 8) & 0xF) & ~8);
+	htod32a(data+=4, value & 0x0800 ? 6 : 1);
+	htod32a(data+=4, PACK_EOS_S123_JPEG_SIZE((value >> 12) & 0xF));
+	htod32a(data+=4, (value >> 8) & 0x7);
 
 	if (n==2) {
 		htod32a(data+=4, 0x10);
-		htod32a(data+=4, (((value >> 0) & 0xF) >> 3) ? 6 : 1);
-		htod32a(data+=4, PACK_5DM3_SMALL_JPEG_SIZE((value >> 4) & 0xF));
-		htod32a(data+=4, ((value >> 0) & 0xF) & ~8);
+		htod32a(data+=4, value & 0x08 ? 6 : 1);
+		htod32a(data+=4, PACK_EOS_S123_JPEG_SIZE((value >> 4) & 0xF));
+		htod32a(data+=4, (value >> 0) & 0x7);
 	}
 
 #undef PACK_5DM3_SMALL_JPEG_SIZE
