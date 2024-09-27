@@ -8,7 +8,7 @@ AM_CPPFLAGS += -I$(top_srcdir) -I$(top_builddir)  -I$(top_srcdir)/libgphoto2_por
 
 print_camera_list_SOURCES = print-camera-list.c
 print_camera_list_LDADD = \
-	$(top_builddir)/libgphoto2/libgphoto2.la \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(libgphoto2_la) \
+	$(libgphoto2_port_la) \
 	$(LIBLTDL) \
 	$(LIBEXIF_LIBS)
