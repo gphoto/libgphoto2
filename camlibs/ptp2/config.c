@@ -2766,6 +2766,112 @@ static struct deviceproptableu16 canon_eos_image_format[] = {
 };
 GENERIC16TABLE(Canon_EOS_ImageFormat,canon_eos_image_format)
 
+static struct deviceproptableu8 canon_eos_single_ImageFormats[] = {
+	{ N_("RAW"),  0x0c, 0 },
+	{ N_("mRAW"), 0x1c, 0 },
+	{ N_("sRAW"), 0x2c, 0 },
+	{ N_("cRAW"), 0x0b, 0 },
+
+	{ N_("L"),    0x03, 0 },
+	{ N_("M"),    0x13, 0 },
+	{ N_("S"),    0x23, 0 },
+	{ N_("cL"),   0x02, 0 },
+	{ N_("cM"),   0x12, 0 },
+	{ N_("cS"),   0x22, 0 },
+	/* e.g. 5Dm3 */
+	{ N_("S1"),   0xd3, 0 },
+	{ N_("S2"),   0xe3, 0 },
+	{ N_("S3"),   0xf3, 0 },
+	{ N_("cS1"),  0xd2, 0 },
+	{ N_("cS2"),  0xe2, 0 },
+	{ N_("cS3"),  0xf2, 0 },
+	/* e.g. 5Ds */
+	{ N_("M1"),   0x53, 0 },
+	{ N_("M2"),   0x63, 0 },
+	{ N_("cM1"),  0x52, 0 },
+	{ N_("cM2"),  0x62, 0 },
+	/* user/custom compression, e.g. 1DXm2 */
+	{ N_("L"),    0x01, 0 },
+	{ N_("M1"),   0x51, 0 },
+	{ N_("M2"),   0x61, 0 },
+	{ N_("S"),    0x21, 0 },
+	/* user/custom compression, e.g. R5m2 */
+	{ N_("L"),    0x00, 0 },
+	{ N_("M"),    0x10, 0 },
+	{ N_("S1"),   0xe0, 0 },
+	{ N_("S2"),   0xd0, 0 },
+};
+
+static const char*
+_single_EOS_ImageFormat_name(uint8_t val)
+{
+	for (unsigned i = 0; i < ARRAYSIZE(canon_eos_single_ImageFormats); ++i)
+		if (canon_eos_single_ImageFormats[i].value == val)
+			return canon_eos_single_ImageFormats[i].label;
+	static char buf[5];
+	sprintf (buf, "0x%02x", val);
+	return buf;
+}
+
+static int
+_get_Canon_EOS_ImageFormat2(CONFIG_GET_ARGS)
+{
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	for (unsigned i = 0; i < dpd->FORM.Enum.NumberOfValues; i++) {
+		uint16_t val =  dpd->FORM.Enum.SupportedValue[i].u16;
+		uint8_t val1 = (val >> 8) & 0xFF;
+		uint8_t val2 = (val >> 0) & 0xFF;
+
+		const char* name1 = _single_EOS_ImageFormat_name(val1);
+		const char* name2 = _single_EOS_ImageFormat_name(val2);
+
+		char buf[12] = { 0 };
+		strcpy (buf, name1);
+		if (val2 != 0xFF)
+			sprintf (buf + strlen(buf), " + %s", name2);
+
+		gp_widget_add_choice (*widget, buf);
+
+		if (val == dpd->CurrentValue.u16)
+			gp_widget_set_value (*widget, buf);
+	}
+
+	return GP_OK;
+}
+
+static uint8_t
+_single_EOS_ImageFormat_value(const char *name, size_t n, PTPDevicePropDesc *dpd)
+{
+	for (unsigned i = 0; i < ARRAYSIZE(canon_eos_single_ImageFormats); ++i)
+		if (strncmp (canon_eos_single_ImageFormats[i].label, name, n) == 0)
+			for (unsigned j = 0; j < dpd->FORM.Enum.NumberOfValues; ++j)
+				if (dpd->FORM.Enum.SupportedValue[j].u16 >> 8 == canon_eos_single_ImageFormats[i].value)
+					return canon_eos_single_ImageFormats[i].value;
+	return 0xFF;
+}
+
+static int
+_put_Canon_EOS_ImageFormat2(CONFIG_PUT_ARGS) {
+	const char*	label;
+	gp_widget_get_value(widget, &label);
+
+	const char *sep = strstr(label, " + ");
+	size_t n = sep ? (size_t)(sep - label) : strlen(label);
+
+	uint8_t val1 = _single_EOS_ImageFormat_value(label, n, dpd);
+	uint8_t val2 = sep ? _single_EOS_ImageFormat_value(sep + 3, -1, dpd) : 0xFF;
+	if (val1 == 0xFF) {
+		GP_LOG_E("could not find '%s' in list of supported image formats", label);
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	propval->u16 = val1 << 8 | val2;
+	GP_LOG_D("FOUND right value for %s in the enumeration at val %04x", label, propval->u16);
+
+	return GP_OK;
+}
+
 static struct deviceproptableu16 canon_eos_aeb[] = {
 	{ N_("off"),		0x0000, 0 },
 	{ "+/- 1/3",		0x0003, 0 },
@@ -10941,6 +11047,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_CANON_EOS_ImageFormat,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
 	{ N_("Image Format SD"),        "imageformatsd",        PTP_DPC_CANON_EOS_ImageFormatSD,        PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
 	{ N_("Image Format CF"),        "imageformatcf",        PTP_DPC_CANON_EOS_ImageFormatCF,        PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
+	{ N_("Image Format 2"),         "imageformat2",         PTP_DPC_CANON_EOS_ImageFormat,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat2,    _put_Canon_EOS_ImageFormat2 },
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_FUJI_Quality,                   PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_ImageFormat,          _put_Fuji_ImageFormat },
 	{ N_("Image Format"),           "imageformat",          0,                                      PTP_VENDOR_PANASONIC,PTP_DTC_UINT16, _get_Panasonic_ImageFormat,    _put_Panasonic_ImageFormat },
 	{ N_("Image Format Ext HD"),    "imageformatexthd",     PTP_DPC_CANON_EOS_ImageFormatExtHD,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
