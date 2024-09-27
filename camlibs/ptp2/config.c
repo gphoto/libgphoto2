@@ -5098,7 +5098,7 @@ _get_SigmaFP_Aperture(CONFIG_GET_ARGS) {
 	 * byte[last]	checksum
 	 */
 
-	if (!(xdata[1] & (1<<1))) {
+	if ((xsize < 2) || (!(xdata[1] & (1<<1)))) {
 		free (xdata);
 		return GP_ERROR;
 	}
@@ -5244,7 +5244,7 @@ _get_SigmaFP_ShutterSpeed(CONFIG_GET_ARGS) {
 	 * byte[last]	checksum
 	 */
 
-	if (!(xdata[1] & (1<<0))) {
+	if ((xsize < 2) || (!(xdata[1] & (1<<0)))) {
 		free (xdata);
 		return GP_ERROR;
 	}
