@@ -2263,32 +2263,21 @@ static unsigned int olcsizes[0x15][13] = {
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x4 */
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x5 */
 	{0,0,0,0,0, 0,0,0,0,0, 0,0,0 },	/* 0x6 */
-	{2,6,5,4,4, 6,7,4,6,5, 5,8,1 },	/* 0x7 */	/* CONFIRMED: EOS 100D, 5D Mark 3 */
-	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */	/* CONFIRMED: EOS M10, PowerShot SX720HS: only report 0x1, 0x2, 0x4 and 0x8 masks, separately */
+	{2,6,5,4,4, 6,7,4,6,5, 5,8,1 },	/* 0x7 */	/* CONFIRMED: 100D, 5Dm3, 650D, 6D */
+	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x8 */	/* CONFIRMED: 70D, M10, PowerShot SX720HS: only report 0x1, 0x2, 0x4 and 0x8 masks, separately */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0x9 */	/* guessed */
 	{2,6,5,4,4, 6,7,4,6,7, 7,8,1 },	/* 0xa */	/* guessed */
-	{2,6,5,4,4, 6,8,4,6,5, 5,9,1 }, /* 0xb */	/* CONFIRMED: EOS 750D, 5Ds */
+	{2,6,5,4,4, 6,8,4,6,5, 5,9,1 }, /* 0xb */	/* CONFIRMED: 750D, 5Ds */
 	{2,6,5,4,4, 6,8,4,6,5, 5,9,1 },	/* 0xc */	/* guessed */
 	{2,6,5,4,4, 6,8,4,6,5, 5,9,1 },	/* 0xd */	/* guessed */
 	{2,6,5,4,4, 6,8,4,6,5, 5,9,1 },	/* 0xe */	/* guessed */
-	{2,7,6,4,4, 6,8,4,6,5, 5,9,1 },	/* 0xf */	/* guessed */
+	{2,7,6,4,4, 6,8,4,6,5, 5,9,1 },	/* 0xf */	/* CONFIRMED: 200D */
 	{2,7,6,4,4, 6,8,4,6,5, 5,9,1 },	/* 0x10 */	/* guessed */
-	{2,7,6,6,4, 6,8,4,6,5, 5,9,8 },	/* 0x11 */	/* CONFIRMED: EOS R */
-	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x12 */	/* CONFIRMED: EOS M6 Mark II */
-	{2,7,9,7,4, 6,8,5,7,5, 5,9,8 },	/* 0x13 */	/* CONFIRMED: EOS R5 C info from user Ingmar */
-	{2,9,9,7,4, 6,8,5,7,5, 5,9,8 },	/* 0x14 */	/* CONFIRMED: EOS R8, R10. confirmed by trace from Marc Wetli */
+	{2,7,6,6,4, 6,8,4,6,5, 5,9,8 },	/* 0x11 */	/* CONFIRMED: R */
+	{2,7,9,6,4, 6,8,5,7,5, 5,9,8 },	/* 0x12 */	/* CONFIRMED: M6m2 */
+	{2,7,9,7,4, 6,8,5,7,5, 5,9,8 },	/* 0x13 */	/* CONFIRMED: R5, R5 C, M50m2 */
+	{2,9,9,7,4, 6,8,5,7,5, 5,9,8 },	/* 0x14 */	/* CONFIRMED: R8, R10, R5m2 */
 };
-		/* one more information record handed to us */
-		/* Versions seen: (d199)
-		 * 100D, 5d Mark 3, 650D, 6D: 	7 (original reference)
-		 * M10, 70D:		8
-		 * 5Dsr, 750D:		b
-		 * 200D: 		f
-		 * EOS R:		0x11
-		 * EOS M6 Mark2 	0x12
-		 * EOS R5, R5 C, M50m2:	0x13
-		 * EOS R10:		0x14
-		 */
 		/* still unclear what OLC stands for */
 		case PTP_EC_CANON_EOS_OLCInfoChanged: {
 			uint32_t		len, curoff;
@@ -2433,7 +2422,8 @@ static unsigned int olcsizes[0x15][13] = {
 						0.942222  4 bytes: 04 02 06 2f
 						0.942969  4 bytes: 04 01 06 2f
 					   This suggests that the very last bit indicates the readiness to process commands
-					   and the second byte may be related to accessing storage.
+					   and the second byte may be related to accessing storage. The latter might be true
+					   the former does not hold true when repeating captures.
 					*/
 				case 0x0020:
 					/* mask 0x0020: 6 bytes, 00 00 00 00 00 00 observed.
