@@ -5990,11 +5990,14 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	else
 		CR( camera_canon_eos_update_capture_target(camera, context, -1));
 
-	/* Get the initial bulk set of event data, otherwise
-	 * capture might return busy. */
+	/* Get all pending event data from the camera, otherwise capture might return busy. */
 	ptp_check_eos_events (params);
-	while (ptp_get_one_eos_event (params, &entry))
-		GP_LOG_D("discarding event type %d", entry.type);
+
+	/* Discard all collected events before starting the next capture. */
+	GP_LOG_D("discarding %d EOS events", params->nrofbacklogentries);
+	free (params->backlogentries);
+	params->backlogentries = NULL;
+	params->nrofbacklogentries = 0;
 
 	if (params->eos_camerastatus == 1)
 		return GP_ERROR_CAMERA_BUSY;
