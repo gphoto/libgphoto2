@@ -3902,6 +3902,7 @@ struct _PTPParams {
 	/* PTP: Nikon specifics */
 	int			controlmode;
 	int			event90c7works;
+	int			cmd9207_1arg;
 	int			deletesdramfails;
 
 	/* PTP: Sony specific */
