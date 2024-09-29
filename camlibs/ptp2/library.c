@@ -4220,13 +4220,21 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 		loops = 100;
 		do {
-			ret = ptp_nikon_capture2 (params, af, sdram);
-			if (ret == PTP_RC_ParameterNotSupported) {	/* Nikon D3x */
+			if (!params->cmd9207_1arg) {
+				ret = ptp_nikon_capture2 (params, af, sdram);
+				if (ret == PTP_RC_ParameterNotSupported) {	/* Nikon D3x */
+					params->cmd9207_1arg = 1;
+					ret = ptp_nikon_capture2_1 (params);
+				}
+			} else {
 				ret = ptp_nikon_capture2_1 (params);
 			}
 			/* Nikon 1 ... if af is 0, it reports PTP_RC_NIKON_InvalidStatus */
 			if (!af && ((ret == PTP_RC_NIKON_InvalidStatus))) {
-				ret = ptp_nikon_capture2 (params, 1, sdram);
+				if (params->cmd9207_1arg)
+					ret = ptp_nikon_capture2_1 (params);
+				else
+					ret = ptp_nikon_capture2 (params, 1, sdram);
 				if (ret == PTP_RC_OK)
 					break;
 			}
@@ -6241,16 +6249,24 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 
 		tries = 200;
 		do {
-			ret = ptp_nikon_capture2 (params, af, sdram);
-			if (ret == PTP_RC_OK)
-				break;
-			if (ret == PTP_RC_ParameterNotSupported) {	/* Nikon D3x */
+			if (params->cmd9207_1arg) {
 				ret = ptp_nikon_capture2_1 (params);
+			} else {
+				ret = ptp_nikon_capture2 (params, af, sdram);
+				if (ret == PTP_RC_OK)
+					break;
+				if (ret == PTP_RC_ParameterNotSupported) {	/* Nikon D3x */
+					ret = ptp_nikon_capture2_1 (params);
+					params->cmd9207_1arg = 1;
+				}
 			}
 
 			/* Nikon 1 ... if af is 0, it reports PTP_RC_NIKON_InvalidStatus */
 			if (!af && ((ret == PTP_RC_NIKON_InvalidStatus))) {
-				ret = ptp_nikon_capture2 (params, 1, sdram);
+				if (params->cmd9207_1arg)
+					ret = ptp_nikon_capture2 (params, 1, sdram);
+				else
+					ret = ptp_nikon_capture2_1 (params);
 				if (ret == PTP_RC_OK)
 					break;
 			}
