@@ -4804,6 +4804,8 @@ uint16_t ptp_olympus_omd_move_focus (PTPParams* params, uint32_t direction, uint
 static inline int
 has_sony_mode_300(PTPParams *params) {
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY) return 0;
+	if (!params->deviceinfo.Model) return 0;
+
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7SM3")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")) return 1;
