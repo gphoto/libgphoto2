@@ -3214,12 +3214,9 @@ camera_exit (Camera *camera, GPContext *context)
 			/* Disable EOS capture now, also end viewfinder mode. */
 			if (params->eos_captureenabled) {
 				if (camera->pl->checkevents) {
-					PTPCanon_changes_entry entry;
-
 					if ((exit_result = ptp_check_eos_events (params)) != PTP_RC_OK)
 						goto exitfailed;
-					while (ptp_get_one_eos_event (params, &entry))
-						GP_LOG_D ("missed EOS ptp type %d", entry.type);
+					GP_LOG_D ("missed %d EOS events", params->nrofbacklogentries);
 					camera->pl->checkevents = 0;
 				}
 				if (params->inliveview && ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder))
