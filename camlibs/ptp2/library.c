@@ -2857,6 +2857,8 @@ static struct {
 	{"GoPro:HERO7 Black",			0x2672, 0x0047, 0},
 	/* https://sourceforge.net/p/libmtp/bugs/1858/ */
 	{"GoPro:HERO8 Black",			0x2672, 0x0049, 0},
+	/* https://github.com/libmtp/libmtp/issues/225 */
+	{"GoPro:Max",				0x2672, 0x004b, 0},
 	{"GoPro:HERO9 Black",			0x2672, 0x004D, 0},
 	/* https://github.com/libmtp/libmtp/issues/103 */
 	{"GoPro:HERO10 Black",			0x2672, 0x0056, 0},
