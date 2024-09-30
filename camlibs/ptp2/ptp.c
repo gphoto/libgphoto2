@@ -200,9 +200,9 @@ ptp_debug_data(PTPParams *params, const uint8_t* data, int size)
 	for (int k = 0; k < size; k += 16) {
 		zero_lines = (size - k > 16 && memcmp(data + k, zeros, 16) == 0) ? zero_lines + 1 : 0;
 		if (zero_lines < 2)
-			ptp_debug (params, "    0x%03x: %s", k, ptp_bytes2str(data + k, MIN(16, size - k), NULL));
+			ptp_debug (params, "         0x%03x: %s", k, ptp_bytes2str(data + k, MIN(16, size - k), NULL));
 		else if (zero_lines == 2)
-			ptp_debug (params, "    [...]: %s", ""); //ptp_bytes2str(zeros, 16, "%02x "));
+			ptp_debug (params, "         [...]: %s", ""); //ptp_bytes2str(zeros, 16, "%02x "));
 	}
 }
 
