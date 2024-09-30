@@ -1775,16 +1775,17 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 		if (type == PTP_EC_CANON_EOS_OLCInfoChanged) {
 			unsigned int j;
 
-			entries++;
 			if (size >= 12+2) {
 				for (j=0;j<31;j++)
 					if (dtoh16a(curdata+12) & (1<<j))
 						entries++;
+				entries--;  /* account for the entries++ at the end of the outer loop */
 			}
 		}
 		curdata += size;
 		entries++;
 	}
+
 	ce = calloc (entries + 1, sizeof(PTPCanon_changes_entry));
 	if (!ce) return 0;
 
@@ -2319,7 +2320,7 @@ static unsigned int olcsizes[0x15][13] = {
 			}
 			curoff = 8+4+4;
 
-			for (j = 0; j <= 12 ; j++) {
+			for (j = 0; j <= 12; j++) {
 				unsigned int curmask = 1 << j;
 				unsigned int cursize = MIN(olcsizes[olcver][j], size - curoff);
 				if (curoff > size)
@@ -2336,7 +2337,6 @@ static unsigned int olcsizes[0x15][13] = {
 				case CANON_EOS_OLC_BUTTON: {
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 					PTP_CANON_SET_INFO(ce[i], "Button %x",  dtoh16a(curdata+curoff));
-					i++;
 					break;
 				}
 				case CANON_EOS_OLC_SHUTTERSPEED: {
@@ -2357,7 +2357,6 @@ static unsigned int olcsizes[0x15][13] = {
 
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 					ce[i].u.propid = proptype;
-					i++;
 					break;
 				}
 				case CANON_EOS_OLC_APERTURE: {
@@ -2378,7 +2377,6 @@ static unsigned int olcsizes[0x15][13] = {
 
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 					ce[i].u.propid = proptype;
-					i++;
 					break;
 				}
 				case CANON_EOS_OLC_ISO: {
@@ -2391,7 +2389,6 @@ static unsigned int olcsizes[0x15][13] = {
 
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_PROPERTY;
 					ce[i].u.propid = proptype;
-					i++;
 					break;
 				}
 				case 0x0040: {
@@ -2405,7 +2402,6 @@ static unsigned int olcsizes[0x15][13] = {
 						value/10, abs(value)%10,
 						ptp_bytes2str(curdata + curoff + 3, olcsizes[olcver][j] - 3, "%02x ")
 					);
-					i++;
 					break;
 				}
 				case 0x0010:
@@ -2450,11 +2446,12 @@ static unsigned int olcsizes[0x15][13] = {
 					ce[i].type = PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN;
 					PTP_CANON_SET_INFO(ce[i], "OLCInfo event 0x%04x, %d bytes: %s", curmask, olcsizes[olcver][j],
 						ptp_bytes2str(curdata + curoff, olcsizes[olcver][j], "%02x "));
-					i++;
 					break;
 				}
 				curoff += olcsizes[olcver][j];
+				i++;
 			}
+			i--; /* account for the i++ at the end of the outer loop */
 			break;
 		}
 		case PTP_EC_CANON_EOS_CameraStatusChanged:
@@ -2528,10 +2525,15 @@ static unsigned int olcsizes[0x15][13] = {
 		}
 		curdata += size;
 		i++;
-		if (i >= entries) {
-			ptp_debug (params, "BAD: i %d, entries %d", i, entries);
+		if (i > entries && datasize - (curdata - data) > 8) {
+			ptp_debug (params, "BAD: ran out of allocated slots (%d) for EOS events, %ld bytes left to parse", entries, datasize - (curdata - data));
+			break;
 		}
 	}
+
+	if (i != entries)
+		ptp_debug (params, "BAD: mismatch between allocated (%d) and parsed (%d) event entries", entries, i);
+
 	if (!i) {
 		free (ce);
 		ce = NULL;
