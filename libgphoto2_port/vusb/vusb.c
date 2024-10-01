@@ -144,7 +144,7 @@ gp_port_vusb_close (GPPort *port)
 static int
 gp_port_vusb_write (GPPort *port, const char *bytes, int size)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(%d)", size);
 
 	C_PARAMS (port && port->pl && port->pl->vcamera);
 	return port->pl->vcamera->write(port->pl->vcamera, 0x02, (unsigned char*)bytes, size);
@@ -153,7 +153,7 @@ gp_port_vusb_write (GPPort *port, const char *bytes, int size)
 static int
 gp_port_vusb_read(GPPort *port, char *bytes, int size)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(%d)", size);
 	return port->pl->vcamera->read(port->pl->vcamera, 0x81, (unsigned char*)bytes, size);
 }
 
@@ -184,7 +184,7 @@ gp_port_vusb_reset(GPPort *port)
 static int
 gp_port_vusb_check_int (GPPort *port, char *bytes, int size, int timeout)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(bytes=%d, timeout=%d)", size, timeout);
 	C_PARAMS (port && port->pl && timeout >= 0);
 
 	return port->pl->vcamera->readint(port->pl->vcamera, (unsigned char*)bytes, size, timeout);
@@ -202,7 +202,7 @@ gp_port_vusb_clear_halt_lib(GPPort *port, int ep)
 {
 	unsigned char internal_ep;
 
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(ep=%d)", ep);
 	C_PARAMS (port && port->pl);
 
 	switch (ep) {
@@ -231,7 +231,7 @@ static int
 gp_port_vusb_msg_interface_write_lib(GPPort *port, int request,
 	int value, int index, char *bytes, int size)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(request=%d, value=%d, index=%d, size=%d)", request, value, index, size);
 	return GP_OK;
 }
 
@@ -252,7 +252,7 @@ static int
 gp_port_vusb_msg_class_write_lib(GPPort *port, int request,
 	int value, int index, char *bytes, int size)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(request=%d, value=%d, index=%d, size=%d)", request, value, index, size);
 	return GP_OK;
 }
 
@@ -262,7 +262,7 @@ static int
 gp_port_vusb_msg_class_read_lib(GPPort *port, int request,
 	int value, int index, char *bytes, int size)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(request=%d, value=%d, index=%d, size=%d)", request, value, index, size);
 	return GP_OK;	/* or bytes */
 }
 
@@ -271,7 +271,7 @@ static int
 gp_port_vusb_msg_write_lib(GPPort *port, int request, int value, int index,
 	char *bytes, int size)
 {
-	gp_log(GP_LOG_DEBUG,__FUNCTION__,"()");
+	gp_log(GP_LOG_DEBUG,__FUNCTION__,"(request=%d, value=%d, index=%d, size=%d)", request, value, index, size);
 	return GP_OK;
 }
 
