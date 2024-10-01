@@ -11951,7 +11951,9 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 		X(PTP_DTC_UINT64,u64,"%ld")
 #undef X
 		case PTP_DTC_STR:
-			gp_widget_set_value (widget, dpd.CurrentValue.str);
+			/* only set string if we have a string based widget */
+			if ((type == GP_WIDGET_TEXT) || (type == GP_WIDGET_MENU) || (type == GP_WIDGET_RADIO))
+				gp_widget_set_value (widget, dpd.CurrentValue.str);
 			break;
 		default:
 			break;
