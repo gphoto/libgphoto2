@@ -4831,7 +4831,7 @@ ptp_operation_issupported(PTPParams* params, uint16_t operation)
 
 	/* The R5m2 fails to send a PTP response packet after the data packet of the GetDeviceInfoEx.
 	 * This seems to be firmware bug present in version 1.0.0 and 1.0.1. See #1028. */
-	if (operation == PTP_OC_CANON_EOS_GetDeviceInfoEx && !strcmp(params->deviceinfo.Model,"Canon EOS R5m2"))
+	if (operation == PTP_OC_CANON_EOS_GetDeviceInfoEx && params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"Canon EOS R5m2"))
 		return 0;
 
 	for (;i<params->deviceinfo.OperationsSupported_len;i++) {
