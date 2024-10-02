@@ -538,6 +538,7 @@ GP_CAMLIB([largan],[outdated])dnl
 GP_CAMLIB([lg_gsm],[outdated])dnl
 AM_COND_IF([HAVE_LIBCURL], [dnl
 AM_COND_IF([HAVE_LIBXML2], [dnl
+dnl TODO: Make this conditional on availability of (Winsock ws2_32 or Unix sockets)
 GP_CAMLIB([lumix])dnl
 ])
 ])

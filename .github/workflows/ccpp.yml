@@ -18,7 +18,7 @@ env:
     SLEEP=no
 
 jobs:
-  build:
+  ix-build:
 
     runs-on: ${{ matrix.os }}
 
@@ -58,7 +58,7 @@ jobs:
 
       - name: 'Install build requirements (Linux)'
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
+        run: sudo apt-get install -y autopoint gettext pkgconf libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
 
       - name: 'Install build requirements (macOS)'
         if: runner.os == 'macOS'
@@ -90,11 +90,17 @@ jobs:
         if: runner.os != 'macOS'
         run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" DISTCHECK_CONFIGURE_FLAGS="${COMMON_CONFIGURE_FLAGS}" distcheck
 
+      - name: 'dist tarball content'
+        run: for tarball in *.tar.*; do tar tf "$tarball" | sort; break; done
+
       - name: 'make install'
         run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" install
 
       - name: 'make installcheck'
         run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" installcheck
+
+      - name: 'Show installed PC files'
+        run: find $PWD/__prefix -type f -name '*.pc' -exec printf '======== %s ========\n' {} \; -exec cat {} \;
 
       - name: 'find ldd replacement (MacOS)'
         if: runner.os == 'macOS'
@@ -109,7 +115,144 @@ jobs:
           set -x
           exec 2>&1
           abs_top_builddir="$PWD"
+          pkg-config --version
+          pkg-config --help
+          pkg-config --about ||:
+          pkg-config --path libexif ||:
+          pkg-config --path libgphoto2 ||:
+          export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
+          pkg-config --path libexif ||:
+          pkg-config --path libgphoto2 ||:
+          export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig:"
+          pkg-config --path libexif ||:
+          pkg-config --path libgphoto2 ||:
           export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig"
+          pkg-config --path libexif ||:
+          pkg-config --path libgphoto2 ||:
+          export LD_LIBRARY_PATH="${abs_top_builddir}/__prefix/lib"
+          cd examples/ambs-lgp2-frontend
+          autoreconf -vis
+          ./configure --prefix="$PWD/__pref"
+          make
+          ${LDD-false} ambs-lgp2-frontend
+          ./ambs-lgp2-frontend
+          make install
+          ${LDD-false} __pref/bin/ambs-lgp2-frontend
+          __pref/bin/ambs-lgp2-frontend
+
+  msys2-build:
+    needs: ix-build
+
+    runs-on: ${{ matrix.os }}
+
+    name: '${{ matrix.os }} ${{ matrix.sys }}'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        # FIXME: mingw32 cannot find WSAStartup() in -lws2_32
+        sys: [mingw64, ucrt64, clang64]
+
+    defaults:
+      run:
+        shell: 'msys2 {0}'
+
+    steps:
+      - name: 'git config core.autocrlf (Windows)'
+        run: git config --global core.autocrlf input
+        shell: bash
+
+      - uses: actions/checkout@v3
+
+      - name: 'Set MINGW_ARCH (Windows)'
+        shell: bash
+        run: echo MINGW_ARCH="${{ matrix.sys }}" >> $GITHUB_ENV
+
+      # See https://github.com/msys2/setup-msys2
+      - name: 'Set up MSYS2 and install build requirements (Windows)'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.sys }}
+          update: true
+          install: >-
+            git
+          pacboy:
+            autotools:p
+            cc:p
+            curl:p
+            libexif:p
+            libgd:p
+            libiconv:p
+            libjpeg:p
+            libltdl:p
+            libsystre:p
+            libusb:p
+            libxml2:p
+
+      - name: 'Determine number of cores to build on (Windows)'
+        run: echo NPROC="${NUMBER_OF_PROCESSORS}" >> $GITHUB_ENV
+
+      # Setting MAKE interferes with Makefile{,.in,.am} using $(MAKE) internally
+      - name: 'Prepare concurrent make'
+        run: if test "x$NPROC" = x; then echo ci_MAKE="make" >> $GITHUB_ENV; echo "NPROC must be set"; exit 1; else echo ci_MAKE="make -j${NPROC} -l${NPROC}" >> $GITHUB_ENV; fi
+
+      - name: 'Work around broken C++ test cases (Windows)'
+        run: echo CXX="no" >> $GITHUB_ENV
+
+      - name: 'OS specific build flags'
+        run: >-
+          echo OS_SPECIFIC_CPPFLAGS="" >> $GITHUB_ENV
+
+      - name: 'autoreconf'
+        run: autoreconf -i -f
+
+      - name: 'configure'
+        run: ./configure ${COMMON_CONFIGURE_FLAGS} --prefix=$PWD/__prefix
+
+      - name: 'make'
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}"
+
+      - name: 'make check'
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" check
+
+      - name: 'make distcheck'
+        if: false
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" DISTCHECK_CONFIGURE_FLAGS="${COMMON_CONFIGURE_FLAGS}" distcheck
+
+      - name: 'dist tarball content'
+        if: false
+        run: for tarball in *.tar.*; do tar tf "$tarball" | sort; break; done
+
+      - name: 'make install'
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" install
+
+      - name: 'make installcheck'
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" installcheck
+
+      - name: 'Show installed PC files'
+        run: find $PWD/__prefix -type f -name '*.pc' -exec printf '======== %s ========\n' {} \; -exec cat {} \;
+
+      - name: 'Build and run example libgphoto2 frontend (ambs-lgp2-frontend)'
+        if: false # FIXME: We this build should work.
+        run: |
+          set -x
+          exec 2>&1
+          abs_top_builddir="$PWD"
+          pkg-config --version
+          pkg-config --help
+          pkg-config --about ||:
+          pkg-config --path libexif ||:
+          pkg-config --path libgphoto2 ||:
+          export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
+          pkg-config --path libexif ||:
+          pkg-config --path libgphoto2 ||:
+          export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig:"
+          pkg-config --path libexif ||:
+          pkg-config --path libgphoto2 ||:
+          export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig"
+          pkg-config --path libexif ||:
+          pkg-config --path libgphoto2 ||:
           export LD_LIBRARY_PATH="${abs_top_builddir}/__prefix/lib"
           cd examples/ambs-lgp2-frontend
           autoreconf -vis
