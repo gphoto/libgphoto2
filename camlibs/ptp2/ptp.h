@@ -358,7 +358,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_RequestTranscodeCancel	0x9079 /* 1 arg: oid? */
 
 #define PTP_OC_CANON_SetRemoteShootingMode	0x9086
+#define PTP_OC_CANON_GetDebugLog		0x9087
 #define PTP_OC_CANON_SetModeDialDisable		0x9088
+#define PTP_OC_CANON_Clear_CCAPI_UsageCount	0x9089
+#define PTP_OC_CANON_SetMetaProperty		0x908A
 
 /* 9101: no args, 8 byte data (01 00 00 00 00 00 00 00), no resp data. */
 #define PTP_OC_CANON_EOS_GetStorageIDs		0x9101
@@ -510,6 +513,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetLvPcFlavoreditParam	0x915D /* 1 arg */
 #define PTP_OC_CANON_EOS_RequestSensorCleaning	0x915E /* 1 arg? */
 #define PTP_OC_CANON_EOS_AfCancel		0x9160
+#define PTP_OC_CANON_EOS_SetManipulationToggleImageSide	0x9166
+#define PTP_OC_CANON_EOS_GetLensSerialNumHistory	0x9167
 #define PTP_OC_CANON_EOS_SetImageRecoveryDataEx	0x916B
 #define PTP_OC_CANON_EOS_GetImageRecoveryListEx	0x916C
 #define PTP_OC_CANON_EOS_CompleteAutoSendImages	0x916D
@@ -524,6 +529,9 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_NotifySaveComplete	0x9177
 #define PTP_OC_CANON_EOS_GetTranscodedBlock	0x9178
 #define PTP_OC_CANON_EOS_TransferCompleteTranscodedBlock	0x9179
+#define PTP_OC_CANON_EOS_SetRemoteErrLogMode	0x917B
+#define PTP_OC_CANON_EOS_GetRemoteErrLogMode	0x917C
+#define PTP_OC_CANON_EOS_GetDebugLogEx	0x917D
 #define PTP_OC_CANON_EOS_NotifyEstimateNumberofImport		0x9182 /* 1 arg: importnumber */
 #define PTP_OC_CANON_EOS_NotifyNumberofImported	0x9183 /* 1 arg: importnumber */
 #define PTP_OC_CANON_EOS_NotifySizeOfPartialDataTransfer	0x9184 /* 4 args: filesizelow, filesizehigh, downloadsizelow, downloadsizehigh */
@@ -536,6 +544,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_GetObjectURL		0x91AB
 #define PTP_OC_CANON_EOS_SetCAssistMode		0x91AC
 #define PTP_OC_CANON_EOS_GetCAssistPresetThumb	0x91AD
+#define PTP_OC_CANON_EOS_SendWifiSetting	0x91B1
+#define PTP_OC_CANON_EOS_SendWifiDetailSetting	0x91B2
 #define PTP_OC_CANON_EOS_SetFELock		0x91B9
 #define PTP_OC_CANON_EOS_DeleteWFTSettingNumber	0x91BA
 #define PTP_OC_CANON_EOS_SetDefaultCameraSetting		0x91BE
@@ -549,6 +559,15 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_SetAdapterBatteryReport		0x91FD /* https://research.checkpoint.com/say-cheese-ransomware-ing-a-dslr-camera/ */
 #define PTP_OC_CANON_EOS_FAPIMessageTX		0x91FE
 #define PTP_OC_CANON_EOS_FAPIMessageRX		0x91FF
+
+#define PTP_OC_CANON_EOS_EdgeFocusPosition	0x9200
+#define PTP_OC_CANON_EOS_DriveFocusToEdge	0x9201
+#define PTP_OC_CANON_EOS_DriveFocus		0x9202
+
+#define PTP_OC_CANON_EOS_DV_Get_WavInfo			0x9401
+#define PTP_OC_CANON_EOS_DV_Overwrite_Contents_XML	0x9402
+#define PTP_OC_CANON_EOS_DV_Get_Template_XML		0x9403
+
 
 /* A1E8 ... also seen? is an error code? */
 
@@ -1294,6 +1313,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_EC_CANON_EOS_RequestAutoSendImages		0xc1b1
 #define PTP_EC_CANON_EOS_RequestTranscodedBlockTransfer	0xc1b2
 #define PTP_EC_CANON_EOS_RequestCAssistImage		0xc1b4
+#define PTP_EC_CANON_EOS_HiFreqFlickerlessAutodetectResult		0xc1b5
+#define PTP_EC_CANON_EOS_ObjectAddedEx64LFN		0xc1b6
+#define PTP_EC_CANON_EOS_ObjectInfoChangedEx64LFN	0xc1b7
+#define PTP_EC_CANON_EOS_RequestObjectTransfer64LFN	0xc1b8
 #define PTP_EC_CANON_EOS_RequestObjectTransferFTP	0xc1f1
 
 /* Nikon extension Event Codes */

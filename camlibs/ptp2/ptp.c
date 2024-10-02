@@ -8943,6 +8943,22 @@ ptp_opcode_trans_t ptp_opcode_canon_trans[] = {
 	{PTP_OC_CANON_EOS_SetCAssistMode,"EOS_SetCAssistMode"},
 	{PTP_OC_CANON_EOS_GetCAssistPresetThumb,"EOS_GetCAssistPresetThumb"},
 	{PTP_OC_CANON_EOS_DeleteWFTSettingNumber,"EOS_DeleteWFTSettingNumber"},
+	{PTP_OC_CANON_GetDebugLog,"CANON_GetDebugLog"},
+	{PTP_OC_CANON_Clear_CCAPI_UsageCount,"CANON_Clear_CCAPI_UsageCount"},
+	{PTP_OC_CANON_SetMetaProperty,"CANON_SetMetaProperty"},
+	{PTP_OC_CANON_EOS_SetManipulationToggleImageSide,"CANON_EOS_SetManipulationToggleImageSide"},
+	{PTP_OC_CANON_EOS_GetLensSerialNumHistory,"CANON_EOS_GetLensSerialNumHistory"},
+	{PTP_OC_CANON_EOS_SetRemoteErrLogMode,"CANON_EOS_SetRemoteErrLogMode"},
+	{PTP_OC_CANON_EOS_GetRemoteErrLogMode,"CANON_EOS_GetRemoteErrLogMode"},
+	{PTP_OC_CANON_EOS_GetDebugLogEx,"CANON_EOS_GetDebugLogEx"},
+	{PTP_OC_CANON_EOS_SendWifiSetting,"CANON_EOS_SendWifiSetting"},
+	{PTP_OC_CANON_EOS_SendWifiDetailSetting,"CANON_EOS_SendWifiDetailSetting"},
+	{PTP_OC_CANON_EOS_EdgeFocusPosition,"CANON_EOS_EdgeFocusPosition"},
+	{PTP_OC_CANON_EOS_DriveFocusToEdge,"CANON_EOS_DriveFocusToEdge"},
+	{PTP_OC_CANON_EOS_DriveFocus,"CANON_EOS_DriveFocus"},
+	{PTP_OC_CANON_EOS_DV_Get_WavInfo,"CANON_EOS_DV_Get_WavInfo"},
+	{PTP_OC_CANON_EOS_DV_Overwrite_Contents_XML,"CANON_EOS_DV_Overwrite_Contents_XML"},
+	{PTP_OC_CANON_EOS_DV_Get_Template_XML,"CANON_EOS_DV_Get_Template_XML"},
 };
 
 ptp_opcode_trans_t ptp_opcode_sony_trans[] = {
