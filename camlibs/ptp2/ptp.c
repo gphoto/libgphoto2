@@ -2130,7 +2130,7 @@ ptp_free_params (PTPParams *params)
 		ptp_free_devicepropdesc (&params->canon_props[i].dpd);
 	}
 	free (params->canon_props);
-	free (params->backlogentries);
+	free (params->eos_events);
 
 	for (i=0;i<params->nrofdeviceproperties;i++)
 		ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
@@ -3829,17 +3829,17 @@ ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event)
  *
  **/
 uint16_t
-ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries)
+ptp_canon_eos_getevent (PTPParams* params, PTPCanonEOSEvent **eos_events, int *nrofeos_events)
 {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int 	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetEvent);
-	*nrofentries = 0;
-	*entries = NULL;
+	*nrofeos_events = 0;
+	*eos_events = NULL;
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	*nrofentries = ptp_unpack_EOS_events(params,data,size,entries);
+	*nrofeos_events = ptp_unpack_EOS_events(params, data, size, eos_events);
 	free (data);
 	return PTP_RC_OK;
 }
@@ -3847,43 +3847,42 @@ ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int
 uint16_t
 ptp_check_eos_events (PTPParams *params)
 {
-	PTPCanon_changes_entry	*entries = NULL, *nentries;
-	int			nrofentries = 0;
+	PTPCanonEOSEvent	*events = NULL;
+	int			nrofevents = 0;
 
 	while (1) { /* call it repeatedly until the camera does not report any */
-		CHECK_PTP_RC(ptp_canon_eos_getevent (params, &entries, &nrofentries));
-		if (!nrofentries)
+		CHECK_PTP_RC(ptp_canon_eos_getevent (params, &events, &nrofevents));
+		if (!nrofevents)
 			return PTP_RC_OK;
 
-		if (params->nrofbacklogentries) {
-			nentries = realloc(params->backlogentries,sizeof(entries[0])*(params->nrofbacklogentries+nrofentries));
-			if (!nentries)
+		if (params->nrofeos_events) {
+			params->eos_events = realloc(params->eos_events,sizeof(events[0])*(params->nrofeos_events+nrofevents));
+			if (!params->eos_events)
 				return PTP_RC_GeneralError;
-			params->backlogentries = nentries;
-			memcpy (nentries+params->nrofbacklogentries, entries, nrofentries*sizeof(entries[0]));
-			params->nrofbacklogentries += nrofentries;
-			free (entries);
+			memcpy (params->eos_events+params->nrofeos_events, events, nrofevents*sizeof(events[0]));
+			params->nrofeos_events += nrofevents;
+			free (events);
 		} else {
-			params->backlogentries = entries;
-			params->nrofbacklogentries = nrofentries;
+			params->eos_events = events;
+			params->nrofeos_events = nrofevents;
 		}
 	}
 	return PTP_RC_OK;
 }
 
 int
-ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry)
+ptp_get_one_eos_event (PTPParams *params, PTPCanonEOSEvent *eos_event)
 {
-	if (!params->nrofbacklogentries)
+	if (!params->nrofeos_events)
 		return 0;
-	memcpy (entry, params->backlogentries, sizeof(*entry));
-	if (params->nrofbacklogentries > 1) {
-		memmove (params->backlogentries,params->backlogentries+1,sizeof(*entry)*(params->nrofbacklogentries-1));
-		params->nrofbacklogentries--;
+	memcpy (eos_event, params->eos_events, sizeof(*eos_event));
+	if (params->nrofeos_events > 1) {
+		memmove (params->eos_events, params->eos_events+1, sizeof(*eos_event)*(params->nrofeos_events-1));
+		params->nrofeos_events--;
 	} else {
-		free (params->backlogentries);
-		params->backlogentries = NULL;
-		params->nrofbacklogentries = 0;
+		free (params->eos_events);
+		params->eos_events = NULL;
+		params->nrofeos_events = 0;
 	}
 	return 1;
 }

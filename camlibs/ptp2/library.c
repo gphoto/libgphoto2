@@ -3216,7 +3216,7 @@ camera_exit (Camera *camera, GPContext *context)
 				if (camera->pl->checkevents) {
 					if ((exit_result = ptp_check_eos_events (params)) != PTP_RC_OK)
 						goto exitfailed;
-					GP_LOG_D ("missed %d EOS events", params->nrofbacklogentries);
+					GP_LOG_D ("missed %d EOS events", params->nrofeos_events);
 					camera->pl->checkevents = 0;
 				}
 				if (params->inliveview && ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder))
@@ -4443,7 +4443,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	int			ret;
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
-	PTPCanon_changes_entry	entry;
+	PTPCanonEOSEvent	event;
 	CameraFile		*file = NULL;
 	CameraFileInfo		info;
 	PTPObjectInfo		oi;
@@ -4467,45 +4467,45 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	do {
 		C_PTP_REP_MSG (ptp_check_eos_events (params),
 			       _("Canon EOS Get Changes failed"));
-		while (ptp_get_one_eos_event (params, &entry)) {
+		while (ptp_get_one_eos_event (params, &event)) {
 			/* if we got at least one event from the last event polling, we reset our back_off_wait counter */
 			back_off_wait = 0;
-			GP_LOG_D ("entry type %04x", entry.type);
-			switch (entry.type) {
-			case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
-				GP_LOG_D ("entry unknown: %s", entry.u.info);
+			GP_LOG_D ("event type %04x", event.type);
+			switch (event.type) {
+			case PTP_EOSEvent_Unknown:
+				GP_LOG_D ("event unknown: %s", event.u.info);
 				continue; /* in loop ... do not poll while draining the queue */
-			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
-				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-				newobject = entry.u.object.oid;
-				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
+			case PTP_EOSEvent_ObjectTransfer:
+				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)event.u.object.oid, event.u.object.oi.Filename);
+				newobject = event.u.object.oid;
+				memcpy (&oi, &event.u.object.oi, sizeof(oi));
 				break;
-			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED:
-				GP_LOG_D ("Found removed object. OID 0x%x", (unsigned int)entry.u.object.oid);
-				ptp_remove_object_from_cache(params, entry.u.object.oid);
+			case PTP_EOSEvent_ObjectRemoved:
+				GP_LOG_D ("Found removed object. OID 0x%x", (unsigned int)event.u.object.oid);
+				ptp_remove_object_from_cache(params, event.u.object.oid);
 				gp_filesystem_reset (camera->fs);
 				break;
-			case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO: {
+			case PTP_EOSEvent_ObjectAdded: {
 				int res;
 
 				/* just add it to the filesystem, and return in CameraPath */
-				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-				/* We have some form of objectinfo in entry.u.object.oi already, but we let the
+				GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)event.u.object.oid, event.u.object.oi.Filename);
+				/* We have some form of objectinfo in event.u.object.oi already, but we let the
 				 * code refetch it via regular GetObjectInfo */
 
-				res = add_object_to_fs_and_path (camera, entry.u.object.oid, path, context);
+				res = add_object_to_fs_and_path (camera, event.u.object.oid, path, context);
 				if (res < GP_OK)
 					break;
-				memcpy (&oi, &entry.u.object.oi, sizeof(oi));
+				memcpy (&oi, &event.u.object.oi, sizeof(oi));
 
-				if  (entry.u.object.oi.ObjectFormat == PTP_OFC_Association)
+				if  (event.u.object.oi.ObjectFormat == PTP_OFC_Association)
 					continue;
 				gp_filesystem_append (camera->fs, path->folder, path->name, context);
-				newobject = entry.u.object.oid;
+				newobject = event.u.object.oid;
 				break;/* for RAW+JPG mode capture, we just return the first image for now, and
 				       * let wait_for_event get the rest. */
 			default:
-				GP_LOG_D("unhandled eos change: %d", entry.type);
+				GP_LOG_D("unhandled eos change: %d", event.type);
 				break;
 			}
 			}
@@ -5986,7 +5986,7 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 {
 	PTPParams		*params = &camera->pl->params;
 	int			ret;
-	PTPCanon_changes_entry	entry;
+	PTPCanonEOSEvent	event;
 	int			back_off_wait = 0;
 	uint32_t		result;
 	struct timeval		focus_start;
@@ -6003,10 +6003,10 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	ptp_check_eos_events (params);
 
 	/* Discard all collected events before starting the next capture. */
-	GP_LOG_D("discarding %d EOS events", params->nrofbacklogentries);
-	free (params->backlogentries);
-	params->backlogentries = NULL;
-	params->nrofbacklogentries = 0;
+	GP_LOG_D("discarding %d EOS events", params->nrofeos_events);
+	free (params->eos_events);
+	params->eos_events = NULL;
+	params->nrofeos_events = 0;
 
 	if (params->eos_camerastatus == 1)
 		return GP_ERROR_CAMERA_BUSY;
@@ -6053,18 +6053,18 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 				int foundevents = 0;
 
 				C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
-				while (ptp_get_one_eos_event (params, &entry)) {
+				while (ptp_get_one_eos_event (params, &event)) {
 					foundevents = 1;
-					GP_LOG_D("focusing - read event type %d", entry.type);
-					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO) {
-						GP_LOG_D("focusinfo content: %s", entry.u.info);
+					GP_LOG_D("focusing - read event type %d", event.type);
+					if (event.type == PTP_EOSEvent_FocusInfo) {
+						GP_LOG_D("focusinfo content: %s", event.u.info);
 						foundfocusinfo = 1;
-						if (strstr(entry.u.info,"0000200")) {
+						if (strstr(event.u.info,"0000200")) {
 							gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
 							ret = GP_ERROR;
 						}
-					} else if ((entry.type == PTP_CANON_EOS_CHANGES_TYPE_PROPERTY) &&
-					           (entry.u.propid == PTP_DPC_CANON_EOS_FocusInfoEx)
+					} else if ((event.type == PTP_EOSEvent_PropertyChanged) &&
+					           (event.u.propid == PTP_DPC_CANON_EOS_FocusInfoEx)
 					) {
 						if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
 							GP_LOG_D("focusinfo prop content: %s", dpd.CurrentValue.str);
@@ -6117,9 +6117,9 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 			/* check if the capture was successful (the result is reported as a set of OLCInfoChanged events) */
 			do {
 				ptp_check_eos_events (params);
-				while (ptp_get_one_eos_event (params, &entry)) {
-					GP_LOG_D ("entry type %04x", entry.type);
-					if (entry.type == PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN && sscanf (entry.u.info, "Button %d", &button) == 1) {
+				while (ptp_get_one_eos_event (params, &event)) {
+					GP_LOG_D ("event type %04x", event.type);
+					if (event.type == PTP_EOSEvent_Unknown && sscanf (event.u.info, "Button %d", &button) == 1) {
 						GP_LOG_D ("Button %d", button);
 						switch (button) {
 							/* Indicates a successful Half-Press(?) on M2, where it
@@ -6619,22 +6619,22 @@ camera_wait_for_event (Camera *camera, int timeout,
 		if (!params->eos_captureenabled)
 			camera_prepare_capture (camera, context);
 		do {
-			PTPCanon_changes_entry	entry;
+			PTPCanonEOSEvent event;
 
 			CR (camera_keep_device_on (camera));
 
-			if (params->nrofbacklogentries == 0)
+			if (params->nrofeos_events == 0)
 				C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
 
-			while (ptp_get_one_eos_event (params, &entry)) {
+			while (ptp_get_one_eos_event (params, &event)) {
 				back_off_wait = 0;
-				GP_LOG_D ("entry type %04x", entry.type);
-				switch (entry.type) {
-				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER:
-					GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-					free (entry.u.object.oi.Filename);
+				GP_LOG_D ("event type %04x", event.type);
+				switch (event.type) {
+				case PTP_EOSEvent_ObjectTransfer:
+					GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)event.u.object.oid, event.u.object.oi.Filename);
+					free (event.u.object.oi.Filename);
 
-					newobject = entry.u.object.oid;
+					newobject = event.u.object.oid;
 
 					C_MEM (path = malloc(sizeof(CameraFilePath)));
 					path->name[0]='\0';
@@ -6642,11 +6642,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 					ret = gp_file_new(&file);
 					if (ret!=GP_OK) return ret;
 					sprintf (path->name, "capt%04d.", params->capcnt++);
-					if ((entry.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) || (entry.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW3)) {
+					if ((event.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW) || (event.u.object.oi.ObjectFormat == PTP_OFC_CANON_CRW3)) {
 						strcat(path->name, "cr2");
 						gp_file_set_mime_type (file, GP_MIME_CRW);
 						mime = GP_MIME_CRW;
-					} else if (entry.u.object.oi.ObjectFormat == PTP_OFC_CANON_CR3) {
+					} else if (event.u.object.oi.ObjectFormat == PTP_OFC_CANON_CR3) {
 						strcat(path->name, "cr3");
 						gp_file_set_mime_type (file, GP_MIME_CR3);
 						mime = GP_MIME_CR3;
@@ -6657,15 +6657,15 @@ camera_wait_for_event (Camera *camera, int timeout,
 					}
 					gp_file_set_mtime (file, time(NULL));
 
-					GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)entry.u.object.oi.ObjectCompressedSize);
+					GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)event.u.object.oi.ObjectCompressedSize);
 
 #define BLOBSIZE 1*1024*1024
 					/* Trying to read this in 1 block might be the cause of crashes of newer EOS */
 					{
 						uint32_t	offset = 0;
 
-						while (offset < entry.u.object.oi.ObjectCompressedSize) {
-							uint32_t	xsize = entry.u.object.oi.ObjectCompressedSize - offset;
+						while (offset < event.u.object.oi.ObjectCompressedSize) {
+							uint32_t	xsize = event.u.object.oi.ObjectCompressedSize - offset;
 							unsigned char	*yimage = NULL;
 
 							if (xsize > BLOBSIZE)
@@ -6677,12 +6677,12 @@ camera_wait_for_event (Camera *camera, int timeout,
 						}
 					}
 					/*old C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));*/
-					/* C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, entry.u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));*/
+					/* C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, event.u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));*/
 #undef BLOBSIZE
 					C_PTP_REP (ptp_canon_eos_transfercomplete (params, newobject));
 
 /*
-					ret = gp_file_set_data_and_size(file, (char*)ximage, entry.u.object.oi.ObjectCompressedSize);
+					ret = gp_file_set_data_and_size(file, (char*)ximage, event.u.object.oi.ObjectCompressedSize);
 					if (ret != GP_OK) {
 						gp_file_free (file);
 						return ret;
@@ -6703,7 +6703,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* We also get the fs info for free, so just set it */
 					info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
 					strcpy (info.file.type, mime);
-					info.file.size		= entry.u.object.oi.ObjectCompressedSize;
+					info.file.size		= event.u.object.oi.ObjectCompressedSize;
 					info.file.mtime		= time(NULL);
 
 					gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
@@ -6712,11 +6712,11 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* We have now handed over the file, disclaim responsibility by unref. */
 					gp_file_unref (file);
 					return GP_OK;
-				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTCONTENT_CHANGE: {
+				case PTP_EOSEvent_ObjectContentChanged: {
 					PTPObject *ob;
 
-					GP_LOG_D ("Found object content changed! OID 0x%x", (unsigned int)entry.u.object.oid);
-					newobject = entry.u.object.oid;
+					GP_LOG_D ("Found object content changed! OID 0x%x", (unsigned int)event.u.object.oid);
+					newobject = event.u.object.oid;
 					/* It might have gone away in the meantime */
 					if (PTP_RC_OK != ptp_object_want(params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob))
 						break;
@@ -6736,31 +6736,31 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventdata = path;
 					return GP_OK;
 					}
-				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO:
-				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO_CHANGE: {
+				case PTP_EOSEvent_ObjectAdded:
+				case PTP_EOSEvent_ObjectInfoChanged: {
 					PTPObject	*ob;
 
 					/* just add it to the filesystem, and return in CameraPath */
-					GP_LOG_D ("Found new objectinfo! OID 0x%x, name %s", (unsigned int)entry.u.object.oid, entry.u.object.oi.Filename);
-					if (	(entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO_CHANGE) &&
-						(PTP_RC_OK != ptp_object_find (params, entry.u.object.oid, &ob))
+					GP_LOG_D ("Found new objectinfo! OID 0x%x, name %s", (unsigned int)event.u.object.oid, event.u.object.oi.Filename);
+					if (	(event.type == PTP_EOSEvent_ObjectInfoChanged) &&
+						(PTP_RC_OK != ptp_object_find (params, event.u.object.oid, &ob))
 					) {
 						GP_LOG_D ("not found in cache, assuming deleted already.");
 						break;
 					}
-					newobject = entry.u.object.oid;
+					newobject = event.u.object.oid;
 					C_MEM (path = malloc(sizeof(CameraFilePath)));
 					ret = add_object_to_fs_and_path (camera, newobject, path, context);
-					free (entry.u.object.oi.Filename);
+					free (event.u.object.oi.Filename);
 					if (ret != GP_OK) {
 						free (path);
 						return ret;
 					}
-					if (entry.u.object.oi.ObjectFormat == PTP_OFC_Association) {	/* not sure if we would get folder changed */
+					if (event.u.object.oi.ObjectFormat == PTP_OFC_Association) {	/* not sure if we would get folder changed */
 						*eventtype = GP_EVENT_FOLDER_ADDED;
 						gp_filesystem_reset (camera->fs);
 					} else {
-						*eventtype = (entry.type == PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO) ? GP_EVENT_FILE_ADDED : GP_EVENT_FILE_CHANGED;
+						*eventtype = (event.type == PTP_EOSEvent_ObjectAdded) ? GP_EVENT_FILE_ADDED : GP_EVENT_FILE_CHANGED;
 						if (*eventtype == GP_EVENT_FILE_CHANGED) {
 							ob->flags &= ~PTPOBJECT_OBJECTINFO_LOADED;
 							C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
@@ -6770,12 +6770,12 @@ camera_wait_for_event (Camera *camera, int timeout,
 					*eventdata = path;
 					return GP_OK;
 				}
-				case PTP_CANON_EOS_CHANGES_TYPE_PROPERTY: {
+				case PTP_EOSEvent_PropertyChanged: {
 					char			*name, *content;
 					PTPDevicePropDesc	dpd;
 
 					*eventtype = GP_EVENT_UNKNOWN;
-					if (PTP_DPC_CANON_EOS_FocusInfoEx == entry.u.propid) {
+					if (PTP_DPC_CANON_EOS_FocusInfoEx == event.u.propid) {
 						if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
 							*eventdata = aprintf("FocusInfo %s", dpd.CurrentValue.str);
 							ptp_free_devicepropdesc (&dpd);
@@ -6783,55 +6783,55 @@ camera_wait_for_event (Camera *camera, int timeout,
 						}
 					}
 					/* cached devprop should have been flushed I think... */
-					C_PTP_REP (ptp_canon_eos_getdevicepropdesc (params, entry.u.propid, &dpd));
+					C_PTP_REP (ptp_canon_eos_getdevicepropdesc (params, event.u.propid, &dpd));
 
-					dpd.DevicePropertyCode = entry.u.propid;
+					dpd.DevicePropertyCode = event.u.propid;
 					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
 					if (ret == GP_OK) {
-						*eventdata = aprintf("PTP Property %04x changed, \"%s\" to \"%s\"", entry.u.propid, name, content?content:"");
+						*eventdata = aprintf("PTP Property %04x changed, \"%s\" to \"%s\"", event.u.propid, name, content?content:"");
 						free (name);
 						free (content);
 					} else {
-						*eventdata = aprintf("PTP Property %04x changed", entry.u.propid);
+						*eventdata = aprintf("PTP Property %04x changed", event.u.propid);
 					}
 					ptp_free_devicepropdesc (&dpd);
 					return GP_OK;
 				}
-				case PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS:
+				case PTP_EOSEvent_CameraStatus:
 					/* if we do capture stuff, camerastatus will turn to 0 when done */
-					if (entry.u.status == 0) {
+					if (event.u.status == 0) {
 						*eventtype = GP_EVENT_CAPTURE_COMPLETE;
 						*eventdata = NULL;
 					} else {
 						*eventtype = GP_EVENT_UNKNOWN;
-						*eventdata = aprintf("Camera Status %d", entry.u.status);
+						*eventdata = aprintf("Camera Status %d", event.u.status);
 					}
 					return GP_OK;
-				case PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO:
+				case PTP_EOSEvent_FocusInfo:
 					*eventtype = GP_EVENT_UNKNOWN;
-					*eventdata = aprintf("Focus Info %s", entry.u.info);
+					*eventdata = aprintf("Focus Info %s", event.u.info);
 					return GP_OK;
-				case PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK:
+				case PTP_EOSEvent_FocusMask:
 					*eventtype = GP_EVENT_UNKNOWN;
-					*eventdata = aprintf("Focus Mask %s", entry.u.info);
+					*eventdata = aprintf("Focus Mask %s", event.u.info);
 					return GP_OK;
-				case PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN:
+				case PTP_EOSEvent_Unknown:
 					/* only return if interesting stuff happened */
-					if (entry.u.info[0] != 0) {
+					if (event.u.info[0] != 0) {
 						*eventtype = GP_EVENT_UNKNOWN;
-						C_MEM(*eventdata = strdup(entry.u.info));
+						C_MEM(*eventdata = strdup(event.u.info));
 						return GP_OK;
 					}
 					/* continue otherwise */
 					break;
-				case PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED:
-					ptp_remove_object_from_cache(params, entry.u.object.oid);
+				case PTP_EOSEvent_ObjectRemoved:
+					ptp_remove_object_from_cache(params, event.u.object.oid);
 					gp_filesystem_reset (camera->fs);
 					*eventtype = GP_EVENT_UNKNOWN;
 					*eventdata = aprintf("ObjectRemoved");
 					return GP_OK;
 				default:
-					GP_LOG_D ("Unhandled EOS event 0x%04x", entry.type);
+					GP_LOG_D ("Unhandled EOS event 0x%04x", event.type);
 					break;
 				}
 			}
