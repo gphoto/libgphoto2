@@ -2403,6 +2403,17 @@ static unsigned int olcsizes[0x15][13] = {
 					);
 					break;
 				}
+				case 0x0100: /* Focus Info */
+					/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and
+					 *                       00 00 00 00 01 00 (on focus) observed */
+					e[i].type = PTP_EOSEvent_FocusInfo;
+					PTP_CANON_SET_INFO(e[i], "%s", ptp_bytes2str(curdata + curoff, olcsizes[olcver][j], "%02x"));
+					break;
+				case 0x0200: /* Focus Mask */
+					/* mask 0x0200: 7 bytes, 00 00 00 00 00 00 00 observed */
+					e[i].type = PTP_EOSEvent_FocusMask;
+					PTP_CANON_SET_INFO(e[i], "%s", ptp_bytes2str(curdata + curoff, olcsizes[olcver][j], "%02x"));
+					break;
 				case 0x0010:
 					/* mask 0x0010: 4 bytes, 04 00 00 00 observed */
 					/* a full trigger capture cycle on the 5Ds with storing to card looks like this
@@ -2427,11 +2438,6 @@ static unsigned int olcsizes[0x15][13] = {
 					 * stand for the number of seconds remaining until the shot */
 				case 0x0080:
 					/* mask 0x0080: 4 bytes, 00 00 00 00 observed */
-				case 0x0100:
-					/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and
-					 *                       00 00 00 00 01 00 (on focus) observed */
-				case 0x0200:
-					/* mask 0x0200: 7 bytes, 00 00 00 00 00 00 00 observed */
 				case 0x0400:
 					/* mask 0x0400: 7 bytes, 00 00 00 00 00 00 00 observed */
 				case 0x0800:
