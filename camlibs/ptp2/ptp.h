@@ -1863,17 +1863,17 @@ struct _PTPNIKONWifiProfile {
 
 typedef struct _PTPNIKONWifiProfile PTPNIKONWifiProfile;
 
-enum _PTPCanon_changes_types {
-	PTP_CANON_EOS_CHANGES_TYPE_UNKNOWN,
-	PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO,
-	PTP_CANON_EOS_CHANGES_TYPE_OBJECTTRANSFER,
-	PTP_CANON_EOS_CHANGES_TYPE_PROPERTY,
-	PTP_CANON_EOS_CHANGES_TYPE_CAMERASTATUS,
-	PTP_CANON_EOS_CHANGES_TYPE_FOCUSINFO,
-	PTP_CANON_EOS_CHANGES_TYPE_FOCUSMASK,
-	PTP_CANON_EOS_CHANGES_TYPE_OBJECTREMOVED,
-	PTP_CANON_EOS_CHANGES_TYPE_OBJECTINFO_CHANGE,
-	PTP_CANON_EOS_CHANGES_TYPE_OBJECTCONTENT_CHANGE
+enum _PTPCanonEOSEventType {
+	PTP_EOSEvent_Unknown,
+	PTP_EOSEvent_PropertyChanged,
+	PTP_EOSEvent_CameraStatus,
+	PTP_EOSEvent_FocusInfo,
+	PTP_EOSEvent_FocusMask,
+	PTP_EOSEvent_ObjectTransfer,
+	PTP_EOSEvent_ObjectAdded,
+	PTP_EOSEvent_ObjectRemoved,
+	PTP_EOSEvent_ObjectInfoChanged,
+	PTP_EOSEvent_ObjectContentChanged
 };
 
 struct _PTPCanon_New_Object {
@@ -1881,8 +1881,8 @@ struct _PTPCanon_New_Object {
 	PTPObjectInfo	oi;
 };
 
-struct _PTPCanon_changes_entry {
-	enum _PTPCanon_changes_types	type;
+struct _PTPCanonEOSEvent {
+	enum _PTPCanonEOSEventType	type;
 	union {
 		struct _PTPCanon_New_Object	object;	/* TYPE_OBJECTINFO */
 		char				info[84]; /* 84 is minimum sizeof(object) and sufficient for current use cases */
@@ -1890,7 +1890,7 @@ struct _PTPCanon_changes_entry {
 		int				status;
 	} u;
 };
-typedef struct _PTPCanon_changes_entry PTPCanon_changes_entry;
+typedef struct _PTPCanonEOSEvent PTPCanonEOSEvent;
 
 typedef struct _PTPCanon_Property {
 	PTPDevicePropDesc	dpd;
@@ -3917,8 +3917,8 @@ struct _PTPParams {
 	int			uilocked;
 
 	/* PTP: Canon EOS event queue */
-	PTPCanon_changes_entry	*backlogentries;
-	unsigned int		nrofbacklogentries;
+	PTPCanonEOSEvent	*eos_events;
+	unsigned int		nrofeos_events;
 	int			eos_captureenabled;
 	int			eos_camerastatus;
 
@@ -4169,7 +4169,7 @@ uint16_t ptp_add_event_queue (PTPContainer **events, unsigned int *nrevents, PTP
 int ptp_get_one_event (PTPParams *params, PTPContainer *evt);
 int ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event);
 uint16_t ptp_check_eos_events (PTPParams *params);
-int ptp_get_one_eos_event (PTPParams *params, PTPCanon_changes_entry *entry);
+int ptp_get_one_eos_event (PTPParams *params, PTPCanonEOSEvent *eos_event);
 
 
 /* Microsoft MTP extensions */
@@ -4388,17 +4388,13 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
  * Return values: Some PTP_RC_* code.
  *
  **/
-#define CANON_EOS_OLC_BUTTON 		0x0001
-#define CANON_EOS_OLC_SHUTTERSPEED 	0x0002
-#define CANON_EOS_OLC_APERTURE 		0x0004
-#define CANON_EOS_OLC_ISO 		0x0008
 
 #define ptp_canon_eos_setrequestolcinfogroup(params,igmask)	ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetRequestOLCInfoGroup,1,igmask)
 #define ptp_canon_eos_requestdevicepropvalue(params,prop)	ptp_generic_no_data(params,PTP_OC_CANON_EOS_RequestDevicePropValue,1,prop)
 #define ptp_canon_eos_setrequestrollingpitchinglevel(params,onoff)	ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel,1,onoff)
 uint16_t ptp_canon_eos_getremotemode (PTPParams*, uint32_t *);
 uint16_t ptp_canon_eos_capture (PTPParams* params, uint32_t *result);
-uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanon_changes_entry **entries, int *nrofentries);
+uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanonEOSEvent **events, int *nrofevents);
 uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle,
 				uint32_t offset, uint32_t size,
 				uint32_t pos, unsigned char** block,
