@@ -1559,8 +1559,10 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint3
 	uint32_t maxlen;
 	char	*str, *p;
 
-	if ((size >= datasize) || (size < 20))
+	if ((size > datasize) || (size < 20)) {
+		ptp_error(params, "FocusInfoEx has invalid size (%d) vs datasize (%d)", size, datasize);
 		return strdup("bad size 1");
+	}
 	/* If data is zero-filled, then it is just a placeholder, so nothing
 	   useful, but also not an error */
 	if (!focus_points_in_struct || !focus_points_in_use) {
