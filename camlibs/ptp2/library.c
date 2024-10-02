@@ -4470,7 +4470,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		while (ptp_get_one_eos_event (params, &event)) {
 			/* if we got at least one event from the last event polling, we reset our back_off_wait counter */
 			back_off_wait = 0;
-			GP_LOG_D ("event type %04x", event.type);
+			GP_LOG_D ("processing event '%s'", ptp_get_eos_event_name(params, event.type));
 			switch (event.type) {
 			case PTP_EOSEvent_Unknown:
 				GP_LOG_D ("event unknown: %s", event.u.info);
@@ -6054,8 +6054,8 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 
 				C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
 				while (ptp_get_one_eos_event (params, &event)) {
+					GP_LOG_D ("while focussing, processing event '%s'", ptp_get_eos_event_name(params, event.type));
 					foundevents = 1;
-					GP_LOG_D("focusing - read event type %d", event.type);
 					if (event.type == PTP_EOSEvent_FocusInfo) {
 						GP_LOG_D("focusinfo content: %s", event.u.info);
 						foundfocusinfo = 1;
@@ -6118,7 +6118,7 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 			do {
 				ptp_check_eos_events (params);
 				while (ptp_get_one_eos_event (params, &event)) {
-					GP_LOG_D ("event type %04x", event.type);
+					GP_LOG_D ("processing event '%s'", ptp_get_eos_event_name(params, event.type));
 					if (event.type == PTP_EOSEvent_Unknown && sscanf (event.u.info, "Button %d", &button) == 1) {
 						GP_LOG_D ("Button %d", button);
 						switch (button) {
@@ -6627,8 +6627,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 				C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
 
 			while (ptp_get_one_eos_event (params, &event)) {
+				GP_LOG_D ("processing event '%s'", ptp_get_eos_event_name(params, event.type));
 				back_off_wait = 0;
-				GP_LOG_D ("event type %04x", event.type);
 				switch (event.type) {
 				case PTP_EOSEvent_ObjectTransfer:
 					GP_LOG_D ("Found new object! OID 0x%x, name %s", (unsigned int)event.u.object.oid, event.u.object.oi.Filename);

@@ -4894,6 +4894,7 @@ const char* ptp_get_property_description(PTPParams* params, uint32_t dpc);
 
 const char* ptp_get_opcode_name(PTPParams* params, uint16_t opcode);
 const char* ptp_get_event_code_name(PTPParams* params, uint16_t event_code);
+const char* ptp_get_eos_event_name(PTPParams *params, enum _PTPCanonEOSEventType type);
 
 int
 ptp_render_property_value(PTPParams* params, uint16_t dpc,

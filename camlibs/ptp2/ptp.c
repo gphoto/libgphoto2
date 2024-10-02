@@ -9232,6 +9232,26 @@ ptp_get_event_code_name(PTPParams* params, uint16_t event_code)
 	return "Unknown Event";
 }
 
+const char*
+ptp_get_eos_event_name(PTPParams *params, enum _PTPCanonEOSEventType type)
+{
+	switch (type)
+	{
+	case PTP_EOSEvent_Unknown: return "Unknown";
+	case PTP_EOSEvent_PropertyChanged: return "PropertyChanged";
+	case PTP_EOSEvent_CameraStatus: return "CameraStatus";
+	case PTP_EOSEvent_FocusInfo: return "FocusInfo";
+	case PTP_EOSEvent_FocusMask: return "FocusMask";
+	case PTP_EOSEvent_ObjectTransfer: return "ObjectTransfer";
+	case PTP_EOSEvent_ObjectAdded: return "ObjectAdded";
+	case PTP_EOSEvent_ObjectRemoved: return "ObjectRemoved";
+	case PTP_EOSEvent_ObjectInfoChanged: return "ObjectInfoChanged";
+	case PTP_EOSEvent_ObjectContentChanged: return "ObjectContentChanged";
+	default:
+		ptp_error (params, "Unknown PTPCanonEOSEventType: bug in libgphoto2");
+		return "InvalidEOSEventType";
+	}
+}
 
 struct {
 	uint16_t id;
