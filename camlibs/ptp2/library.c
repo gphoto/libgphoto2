@@ -5989,7 +5989,6 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	PTPCanonEOSEvent	event;
 	int			back_off_wait = 0;
 	uint32_t		result;
-	struct timeval		focus_start;
 	PTPDevicePropDesc	dpd;
 
 	GP_LOG_D ("camera_trigger_canon_eos_capture");
@@ -6034,63 +6033,66 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 		if (!is_canon_eos_m (params)) {
 			/* Regular EOS */
 			uint16_t	res;
-			int 		manualfocus = 0, foundfocusinfo = 0;
+			int 		manual_focus = 0, in_focus = 0;
 
 			/* are we in manual focus mode ... value would be 3 */
 			if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusMode, &dpd)) {
 				if ((dpd.DataType == PTP_DTC_UINT32) && (dpd.CurrentValue.u32 == 3)) {
-					manualfocus = 1;
+					manual_focus = 1;
 					/* will do 1 pass through the focusing loop for good measure */
 					GP_LOG_D("detected manual focus. skipping focus detection logic");
 				}
 			}
 			ret = GP_OK;
-			/* half press now - initiate focusing and wait for result */
+			/* half press now - initiate focusing (second param = 1 -> disabled AF) and wait for result */
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 1, 0), _("Canon EOS Half-Press failed"));
 
-			focus_start = time_now();
+			/* at this point, the focusing is complete and either succeded or failed. This has been verified with
+			 * a 5Dm2, 5Ds and R8. The RemoteReleaseOn call may take e.g. up to 8s on a 5Dm2 with a slow lens. */
+			struct timeval get_events_start = time_now();
 			do {
-				int foundevents = 0;
+				int received_events = 0;
 
 				C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
 				while (ptp_get_one_eos_event (params, &event)) {
 					GP_LOG_D ("while focussing, processing event '%s'", ptp_get_eos_event_name(params, event.type));
-					foundevents = 1;
+					received_events = 1;
 					if (event.type == PTP_EOSEvent_FocusInfo) {
-						GP_LOG_D("focusinfo content: %s", event.u.info);
-						foundfocusinfo = 1;
-						if (strstr(event.u.info,"0000200")) {
-							gp_context_error (context, _("Canon EOS Capture failed to release: Perhaps no focus?"));
+						GP_LOG_D("FocusInfo content: %s", event.u.info);
+						if (strstr(event.u.info, "000000000101")) /* see OLCInfoChanged unpacking */
+							in_focus = 1;
+						else if (strstr(event.u.info, "000000000200") || strstr(event.u.info, "000000000000")) {
+							gp_context_error (context, _("Canon EOS Auto-Focus failed, could not capture."));
 							ret = GP_ERROR;
 						}
 					} else if ((event.type == PTP_EOSEvent_PropertyChanged) &&
 					           (event.u.propid == PTP_DPC_CANON_EOS_FocusInfoEx)
 					) {
 						if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
-							GP_LOG_D("focusinfo prop content: %s", dpd.CurrentValue.str);
-							if (!strstr(dpd.CurrentValue.str,"select={}")) /* select={} means "no focus yet" */
-								foundfocusinfo = 1;
+							GP_LOG_D("EOS_FocusInfoEx prop content: %s", dpd.CurrentValue.str);
+							if (strcmp(dpd.CurrentValue.str, "{}")) /* "{}" means "no focus points found" */
+								in_focus = 1;
 							ptp_free_devicepropdesc (&dpd);
 						}
 					}
 				}
 				/* We found focus information, so half way pressing has finished! */
-				if (foundfocusinfo)
+				if (in_focus)
 					break;
 				/* for manual focus, wait until we received an event or 0.1s passed */
-				if (manualfocus && (foundevents || time_since (focus_start) >= 100))
+				if (manual_focus && (received_events || time_since (get_events_start) >= 100))
 					break;
-			} while (waiting_for_timeout (&back_off_wait, focus_start, 2*1000)); /* wait 2 seconds for focus */
+			} while (waiting_for_timeout (&back_off_wait, get_events_start, 500)); /* wait up to 500ms for focus events */
 
-			if (!foundfocusinfo && !manualfocus) {
-				GP_LOG_E("no focus info?\n");
+			if (!in_focus && !manual_focus) {
+				GP_LOG_E("Auto-Focus failed\n");
 			}
 			if (ret != GP_OK) {
 				C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 1), _("Canon EOS Half-Release failed"));
 				return ret;
 			}
-			/* full press now */
 
+			/* full press now */
 			res = LOG_ON_PTP_E (ptp_canon_eos_remotereleaseon (params, 2, 0));
 			if (res != PTP_RC_OK) {
 				/* if the Full Press failed, try to roll back the release and do not exit Half-Pressed. */
@@ -6113,7 +6115,8 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 			int button = 0, eos_m_focus_done = 0;
 
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseon (params, 3, 0), _("Canon EOS M Full-Press failed"));
-			focus_start = time_now();
+
+			struct timeval focus_start = time_now(); /* This might be a misnomer, see EOS case above. */
 			/* check if the capture was successful (the result is reported as a set of OLCInfoChanged events) */
 			do {
 				ptp_check_eos_events (params);
@@ -6775,9 +6778,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 					PTPDevicePropDesc	dpd;
 
 					*eventtype = GP_EVENT_UNKNOWN;
-					if (PTP_DPC_CANON_EOS_FocusInfoEx == event.u.propid) {
+					if (event.u.propid == PTP_DPC_CANON_EOS_FocusInfoEx) {
 						if (PTP_RC_OK == ptp_canon_eos_getdevicepropdesc (params, PTP_DPC_CANON_EOS_FocusInfoEx, &dpd)) {
-							*eventdata = aprintf("FocusInfo %s", dpd.CurrentValue.str);
+							*eventdata = aprintf("Focus Points %s", dpd.CurrentValue.str);
 							ptp_free_devicepropdesc (&dpd);
 							return GP_OK;
 						}

@@ -1520,17 +1520,17 @@ ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value
 		htod32a(data+=4, (value >> 0) & 0x7);
 	}
 
-#undef PACK_5DM3_SMALL_JPEG_SIZE
+#undef PACK_EOS_S123_JPEG_SIZE
 
 	return s;
 }
 
-/* 00: 32 bit size
- * 04: 16 bit subsize
- * 08: 16 bit version (?)
- * 0c: 16 bit focus_points_in_struct
- * 10: 16 bit focus_points_in_use
- * 14: variable arrays:
+/* 32 bit size
+ * 16 bit subsize
+ * 16 bit version (?)
+ * 16 bit focus_points_in_struct
+ * 16 bit focus_points_in_use
+ * variable arrays:
  * 	16 bit sizex, 16 bit sizey
  * 	16 bit othersizex, 16 bit othersizey
  * 	16 bit array height[focus_points_in_struct]
@@ -1538,13 +1538,13 @@ ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value
  * 	16 bit array offsetheight[focus_points_in_struct] middle is 0
  * 	16 bit array offsetwidth[focus_points_in_struct] middle is ?
  * bitfield of selected focus points, starting with 0 [size focus_points_in_struct in bits]
- * unknown stuff , likely which are active
+ * unknown stuff, likely which are active
  * 16 bit 0xffff
  *
  * size=NxN,size2=NxN,points={NxNxNxN,NxNxNxN,...},selected={0,1,2}
  */
 static inline char*
-ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint32_t datasize )
+ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint32_t datasize)
 {
 	uint32_t size 			= dtoh32a( *data );
 	uint32_t halfsize		= dtoh16a( (*data) + 4);
@@ -1569,11 +1569,6 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint3
 		ptp_debug(params, "skipped FocusInfoEx data (zero filled)");
 		return strdup("no focus points returned by camera");
 	}
-
-	/* every focuspoint gets 4 (16 bit number possible "-" sign and a x) and a ,*/
-	/* initial things around lets say 100 chars at most.
-	 * FIXME: check selected when we decode it
-	 */
 	if (size < focus_points_in_struct*8) {
 		ptp_error(params, "focus_points_in_struct %d is too large vs size %d", focus_points_in_struct, size);
 		return strdup("bad size 2");
@@ -1582,54 +1577,48 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint3
 		ptp_error(params, "focus_points_in_use %d is larger than focus_points_in_struct %d", focus_points_in_use, focus_points_in_struct);
 		return strdup("bad size 3");
 	}
-
-	maxlen = focus_points_in_use*32 + 100 + (size - focus_points_in_struct*8)*2;
 	if (halfsize != size-4) {
-		ptp_error(params, "halfsize %d is not expected %d", halfsize, size-4);
-		return strdup("bad size 4");
+		ptp_debug(params, "halfsize %d is not expected %d", halfsize, size-4);
 	}
+
 	if (20 + focus_points_in_struct*8 + (focus_points_in_struct+7)/8 > size) {
 		ptp_error(params, "size %d is too large for fp in struct %d", focus_points_in_struct*8 + 20 + (focus_points_in_struct+7)/8, size);
 		return strdup("bad size 5");
 	}
-#if 0
-	ptp_debug(params,"d1d3 content:");
-	for (i=0;i<size;i+=2)
-		ptp_debug(params,"%d: %02x %02x", i, (*data)[i], (*data)[i+1]);
-#endif
-	ptp_debug(params,"    version of d1d3 is %d with %d focus points in struct and %d in use",
-	          version, focus_points_in_struct, focus_points_in_use);
 
+	ptp_debug(params,"                prop d1d3 version is %d with %d focus points in struct and %d in use, size=%ux%u, size2=%ux%u",
+	          version, focus_points_in_struct, focus_points_in_use, sizeX, sizeY, size2X, size2Y);
+#if 0
+	ptp_debug_data(params, *data, datasize);
+#endif
+
+	/* every selected focus_point gets an entry like "{N,N,N,N}," where N can be 5 chars long */
+	maxlen = 1 + focus_points_in_use * 26 + 2;
 	str = (char*)malloc( maxlen );
 	if (!str)
 		return NULL;
 	p = str;
 
-	p += sprintf(p,"eosversion=%u,size=%ux%u,size2=%ux%u,points={", version, sizeX, sizeY, size2X, size2Y);
+	/* output only the selected AF-points, so no AF means you get an empty list: "{}" */
+	p += sprintf(p,"{");
 	for (i=0;i<focus_points_in_use;i++) {
+		if (((1<<(i%8)) & (*data)[focus_points_in_struct*8+20+i/8]) == 0)
+			continue;
 		int16_t x = dtoh16a((*data) + focus_points_in_struct*4 + 20 + 2*i);
 		int16_t y = dtoh16a((*data) + focus_points_in_struct*6 + 20 + 2*i);
 		int16_t w = dtoh16a((*data) + focus_points_in_struct*2 + 20 + 2*i);
 		int16_t h = dtoh16a((*data) + focus_points_in_struct*0 + 20 + 2*i);
 
-		p += sprintf(p,"{%d,%d,%d,%d}",x,y,w,h);
-
-		if (i<focus_points_in_use-1)
-			p += sprintf(p,",");
-	}
-	p += sprintf(p,"},select={");
-	for (i=0;i<focus_points_in_use;i++) {
-		if ((1<<(i%8)) & ((*data)[focus_points_in_struct*8+20+i/8]))
-			p+=sprintf(p,"%u,", i);
-	}
-
-	p += sprintf(p,"},unknown={");
-	for (i=focus_points_in_struct*8+(focus_points_in_struct+7)/8+20;i<size;i++) {
-		if ((p-str) > maxlen - 4)
+		int n = snprintf(p, maxlen - (p - str), "{%d,%d,%d,%d},", x, y, w, h);
+		if (n < 0 || n > maxlen - (p - str)) {
+			ptp_error(params, "snprintf buffer overflow in %s", __func__);
 			break;
-		p+=sprintf(p,"%02x", (*data)[i]);
+		}
+		p += n;
 	}
-	p += sprintf(p,"}");
+	if (p[-1] == ',')
+		p--;
+	p += sprintf(p, "}");
 	return str;
 }
 
@@ -2408,6 +2397,16 @@ static unsigned int olcsizes[0x15][13] = {
 				case 0x0100: /* Focus Info */
 					/* mask 0x0100: 6 bytes, 00 00 00 00 00 00 (before focus) and
 					 *                       00 00 00 00 01 00 (on focus) observed */
+					/* a full trigger capture cycle on the 5Ds with enabled and acting auto-focus looks like this
+						0.098949  6 bytes: 00 00 00 00 00 00 (first GetEvent)
+						0.705762  6 bytes: 00 00 00 00 00 01 (first GetEvent after half-press-on, together with FocusInfoEx == {})
+						0.758275  6 bytes: 00 00 00 00 01 01 (second GetEvent after half-press-on, together with FocusInfoEx == {...})
+						0.962160  6 bytes: 00 00 00 00 01 00 (couple GetEvents later, together with 3x FocusInfoEx == {} and next line)
+						0.962300  6 bytes: 00 00 00 00 00 00
+					   On AF-failure, the 5Ds sequence is 0-1, 2-2, 2-0, 0-0.
+					   The R8 looks similar except another 00 byte is appended and on sucess it jumps directly from 1-1 to 0-0.
+					   On an AF-failure, it jumps from 0-1 to 0-0. The R5m2 has seen to fail with 0-1, 2-1, 2-0, 0-0.
+					*/
 					e[i].type = PTP_EOSEvent_FocusInfo;
 					PTP_CANON_SET_INFO(e[i], "%s", ptp_bytes2str(curdata + curoff, olcsizes[olcver][j], "%02x"));
 					break;
