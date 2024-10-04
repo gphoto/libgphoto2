@@ -1,9 +1,6 @@
 # -*- Makefile-automake -*-
 
-#EXTRA_DIST              += %reldir%/ChangeLog
-
-
-EXTRA_LTLIBRARIES       += quicktake1x0.la
+EXTRA_LTLIBRARIES            += quicktake1x0.la
 
 quicktake1x0_la_SOURCES       =
 quicktake1x0_la_SOURCES      += %reldir%/quicktake1x0.c

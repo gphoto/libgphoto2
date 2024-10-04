@@ -1,9 +1,9 @@
 # -*- Makefile-automake -*-
 
-EXTRA_DIST                     += %reldir%/ChangeLog
+EXTRA_DIST             += %reldir%/ChangeLog
 
-EXTRA_DIST                     += %reldir%/README.largan-lmini
-camlibdoc_DATA                 += %reldir%/README.largan-lmini
+EXTRA_DIST             += %reldir%/README.largan-lmini
+camlibdoc_DATA         += %reldir%/README.largan-lmini
 
 
 EXTRA_LTLIBRARIES      += largan.la
