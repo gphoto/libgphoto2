@@ -330,7 +330,7 @@ struct _PTPDevicePropDesc {
 	uint16_t                DevicePropertyCode;
 	uint16_t                DataType;
 	uint8_t                 GetSet;
-	PTPPropertyValue        FactoryDefaultValue;
+	PTPPropertyValue        DefaultValue;
 	PTPPropertyValue        CurrentValue;
 	uint8_t                 FormFlag;
 	union {
@@ -358,7 +358,7 @@ ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
 {
 	uint16_t i;
 
-	ptp_free_devicepropvalue (dpd->DataType, &dpd->FactoryDefaultValue);
+	ptp_free_devicepropvalue (dpd->DataType, &dpd->DefaultValue);
 	ptp_free_devicepropvalue (dpd->DataType, &dpd->CurrentValue);
 	switch (dpd->FormFlag) {
 	case /* PTP_DPFF_Range */ 0x01:
@@ -1317,7 +1317,7 @@ ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp) {
 	x += put_16bit_le (data+x, desc.DevicePropertyCode);
 	x += put_16bit_le (data+x, desc.DataType);
 	x += put_8bit_le  (data+x, desc.GetSet);
-	x += put_propval  (data+x, desc.DataType, &desc.FactoryDefaultValue);
+	x += put_propval  (data+x, desc.DataType, &desc.DefaultValue);
 	x += put_propval  (data+x, desc.DataType, &desc.CurrentValue);
 	x += put_8bit_le  (data+x, desc.FormFlag);
 	switch (desc.FormFlag) {
@@ -1566,7 +1566,7 @@ ptp_battery_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->DevicePropertyCode	= 0x5001;
 	desc->DataType			= 2;	/* uint8 */
 	desc->GetSet			= 0;	/* Get only */
-	desc->FactoryDefaultValue.u8	= 50;
+	desc->DefaultValue.u8		= 50;
 	desc->CurrentValue.u8		= 50;
 	desc->FormFlag			= 0x01; /* range */
 	desc->FORM.Range.MinimumValue.u8= 0;
@@ -1588,7 +1588,7 @@ ptp_imagesize_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->DevicePropertyCode		= 0x5003;
 	desc->DataType				= 0xffff;	/* STR */
 	desc->GetSet				= 0;		/* Get only */
-	desc->FactoryDefaultValue.str		= strdup("640x480");
+	desc->DefaultValue.str		= strdup("640x480");
 	desc->CurrentValue.str			= strdup("640x480");
 	desc->FormFlag				= 0x02; /* enum */
 	desc->FORM.Enum.NumberOfValues 		= 3;
@@ -1614,7 +1614,7 @@ ptp_shutterspeed_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->DataType				= 0x0006;	/* UINT32 */
 	desc->GetSet				= 1;		/* Get/Set */
 	if (!cam->shutterspeed) cam->shutterspeed = 100; /* 1/100 * 10000 */
-	desc->FactoryDefaultValue.u32		= cam->shutterspeed;
+	desc->DefaultValue.u32			= cam->shutterspeed;
 	desc->CurrentValue.u32			= cam->shutterspeed;
 	desc->FormFlag				= 0x02; /* enum */
 	desc->FORM.Enum.NumberOfValues 		= 9;
@@ -1654,7 +1654,7 @@ ptp_fnumber_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->DataType				= 0x0004;	/* UINT16 */
 	desc->GetSet				= 1;		/* Get/Set */
 	if (!cam->fnumber) cam->fnumber = 280; /* 2.8 * 100 */
-	desc->FactoryDefaultValue.u16		= cam->fnumber;
+	desc->DefaultValue.u16			= cam->fnumber;
 	desc->CurrentValue.u16			= cam->fnumber;
 	desc->FormFlag				= 0x02; /* enum */
 	desc->FORM.Enum.NumberOfValues 		= 18;
@@ -1703,7 +1703,7 @@ ptp_exposurebias_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->DataType				= 0x0003;	/* INT16 */
 	desc->GetSet				= 1;		/* Get/Set */
 	if (!cam->exposurebias) cam->exposurebias = 0; /* 0.0 */
-	desc->FactoryDefaultValue.i16		= cam->exposurebias;
+	desc->DefaultValue.i16			= cam->exposurebias;
 	desc->CurrentValue.i16			= cam->exposurebias;
 	desc->FormFlag				= 0x02; /* enum */
 	desc->FORM.Enum.NumberOfValues 		= 13;
@@ -1752,8 +1752,8 @@ ptp_datetime_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->GetSet			= 1;		/* get only */
 	time(&xtime);
 	tm = gmtime(&xtime);
-	desc->FactoryDefaultValue.str	= aprintf("%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
-	desc->CurrentValue.str		= strdup (desc->FactoryDefaultValue.str);
+	desc->DefaultValue.str		= aprintf("%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
+	desc->CurrentValue.str		= strdup (desc->DefaultValue.str);
 	desc->FormFlag			= 0; /* no form */
 	/*ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5011, 0xffffffff);*/
 	return 1;

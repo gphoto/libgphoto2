@@ -817,9 +817,9 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr next, PTPDevicePropDesc *dpd)
 			dpd->GetSet = attr;
 			continue;
 		}
-		if (!strcmp((char*)next->name,"default")) {	/* propdesc.FactoryDefaultValue */
+		if (!strcmp((char*)next->name,"default")) {	/* propdesc.DefaultValue */
 			ptp_debug( params, "default value");
-			parse_9301_value (params, (char*)xmlNodeGetContent (next), type, &dpd->FactoryDefaultValue);
+			parse_9301_value (params, (char*)xmlNodeGetContent (next), type, &dpd->DefaultValue);
 			continue;
 		}
 		if (!strcmp((char*)next->name,"value")) {	/* propdesc.CurrentValue */
@@ -2047,7 +2047,7 @@ ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
 {
 	uint16_t i;
 
-	ptp_free_devicepropvalue (dpd->DataType, &dpd->FactoryDefaultValue);
+	ptp_free_devicepropvalue (dpd->DataType, &dpd->DefaultValue);
 	ptp_free_devicepropvalue (dpd->DataType, &dpd->CurrentValue);
 	switch (dpd->FormFlag) {
 	case PTP_DPFF_Range:
@@ -2072,7 +2072,7 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
 {
 	uint16_t i;
 
-	ptp_free_devicepropvalue (opd->DataType, &opd->FactoryDefaultValue);
+	ptp_free_devicepropvalue (opd->DataType, &opd->DefaultValue);
 	switch (opd->FormFlag) {
 	case PTP_OPFF_None:
 		break;

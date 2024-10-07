@@ -798,9 +798,9 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd)
 			dpd->GetSet = attr;
 			continue;
 		}
-		if (!strcmp((char*)next->name,"default")) {	/* propdesc.FactoryDefaultValue */
+		if (!strcmp((char*)next->name,"default")) {	/* propdesc.DefaultValue */
 			ptp_debug( params, "default value");
-			parse_9301_value (params, (char*)xmlNodeGetContent (next), type, &dpd->FactoryDefaultValue);
+			parse_9301_value (params, (char*)xmlNodeGetContent (next), type, &dpd->DefaultValue);
 			continue;
 		}
 		if (!strcmp((char*)next->name,"value")) {	/* propdesc.CurrentValue */
