@@ -334,7 +334,7 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 		if (ct_val.u32 == PTP_CANON_EOS_CAPTUREDEST_HD) {
 			uint16_t	ret;
 #if 0
-			int		uilocked = params->uilocked;
+			int		eos_uilocked = params->eos_uilocked;
 
 			/* if we want to download the image from the device, we need to tell the camera
 			 * that we have enough space left. */
@@ -342,12 +342,12 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 			ret = ptp_canon_eos_pchddcapacity(params, 0x7fffffff, 0x00001000, 0x00000001);
 			 */
 
-			if (!uilocked)
+			if (!eos_uilocked)
 				LOG_ON_PTP_E (ptp_canon_eos_setuilock (params));
 #endif
 			ret = ptp_canon_eos_pchddcapacity(params, 0x0fffffff, 0x00001000, 0x00000001);
 #if 0
-			if (!uilocked)
+			if (!eos_uilocked)
 				LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
 #endif
 			/* not so bad if its just busy, would also fail later. */
@@ -584,9 +584,9 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	CR (camera_canon_eos_update_capture_target(camera, context, 1));
 
 	if (ptp_operation_issupported(&camera->pl->params, PTP_OC_CANON_EOS_ResetUILock)) {
-		if (params->uilocked) {
+		if (params->eos_uilocked) {
 			LOG_ON_PTP_E (ptp_canon_eos_resetuilock (params));
-			params->uilocked = 0;
+			params->eos_uilocked = 0;
 		}
 	}
 
@@ -10053,13 +10053,13 @@ _put_Canon_EOS_UILock(CONFIG_PUT_ARGS)
 	CR (gp_widget_get_value(widget, &val));
 
 	if (val) {
-		if (!params->uilocked)
+		if (!params->eos_uilocked)
 			C_PTP_REP (ptp_canon_eos_setuilock (params));
-		params->uilocked = 1;
+		params->eos_uilocked = 1;
 	} else {
-		if (params->uilocked)
+		if (params->eos_uilocked)
 			C_PTP_REP (ptp_canon_eos_resetuilock (params));
-		params->uilocked = 0;
+		params->eos_uilocked = 0;
 	}
 	return GP_OK;
 }
