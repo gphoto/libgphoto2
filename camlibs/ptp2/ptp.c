@@ -578,8 +578,8 @@ ptp_canon_eos_getdeviceinfo (PTPParams* params, PTPCanonEOSDeviceInfo*di)
 void ptp_canon_eos_free_deviceinfo (PTPCanonEOSDeviceInfo *di)
 {
 	if (!di) return;
-	free (di->EventsSupported);
-	free (di->DevicePropertiesSupported);
+	free (di->Events);
+	free (di->DeviceProps);
 	free (di->unk);
 	memset(di, 0, sizeof(*di));
 }
@@ -671,8 +671,8 @@ parse_9301_cmd_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		cnt++;
 		next = xmlNextElementSibling (next);
 	}
-	di->OperationsSupported_len = cnt;
-	di->OperationsSupported = calloc (cnt,sizeof(di->OperationsSupported[0]));
+	di->Operations_len = cnt;
+	di->Operations = calloc (cnt,sizeof(di->Operations[0]));
 	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
@@ -680,7 +680,7 @@ parse_9301_cmd_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 
 		sscanf((char*)next->name, "c%04x", &p);
 		ptp_debug( params, "cmd %s / 0x%04x", next->name, p);
-		di->OperationsSupported[cnt++] = p;
+		di->Operations[cnt++] = p;
 		next = xmlNextElementSibling (next);
 	}
 	return PTP_RC_OK;
@@ -888,8 +888,8 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		next = xmlNextElementSibling (next);
 	}
 
-	di->DevicePropertiesSupported_len = cnt;
-	di->DevicePropertiesSupported = calloc (cnt,sizeof(di->DevicePropertiesSupported[0]));
+	di->DeviceProps_len = cnt;
+	di->DeviceProps = calloc (cnt,sizeof(di->DeviceProps[0]));
 	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
@@ -900,7 +900,7 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		ptp_debug( params, "prop %s / 0x%04x", next->name, p);
 		parse_9301_propdesc (params, xmlFirstElementChild (next), &dpd);
 		dpd.DevicePropCode = p;
-		di->DevicePropertiesSupported[cnt++] = p;
+		di->DeviceProps[cnt++] = p;
 
 		/* add to cache of device propdesc */
 		for (i=0;i<params->nrofdeviceproperties;i++)
@@ -935,8 +935,8 @@ parse_9301_event_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		cnt++;
 		next = xmlNextElementSibling (next);
 	}
-	di->EventsSupported_len = cnt;
-	di->EventsSupported = calloc (cnt,sizeof(di->EventsSupported[0]));
+	di->Events_len = cnt;
+	di->Events = calloc (cnt,sizeof(di->Events[0]));
 	cnt = 0;
 	next = xmlFirstElementChild (node);
 	while (next) {
@@ -944,7 +944,7 @@ parse_9301_event_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 
 		sscanf((char*)next->name, "e%04x", &p);
 		ptp_debug( params, "event %s / 0x%04x", next->name, p);
-		di->EventsSupported[cnt++] = p;
+		di->Events[cnt++] = p;
 		next = xmlNextElementSibling (next);
 	}
 	return PTP_RC_OK;
@@ -5942,8 +5942,8 @@ ptp_event_issupported(PTPParams* params, uint16_t event)
 {
 	unsigned int i=0;
 
-	for (;i<params->deviceinfo.EventsSupported_len;i++) {
-		if (params->deviceinfo.EventsSupported[i]==event)
+	for (;i<params->deviceinfo.Events_len;i++) {
+		if (params->deviceinfo.Events[i]==event)
 			return 1;
 	}
 	return 0;
@@ -5955,8 +5955,8 @@ ptp_property_issupported(PTPParams* params, uint16_t property)
 {
 	unsigned int i;
 
-	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++)
-		if (params->deviceinfo.DevicePropertiesSupported[i]==property)
+	for (i=0;i<params->deviceinfo.DeviceProps_len;i++)
+		if (params->deviceinfo.DeviceProps[i]==property)
 			return 1;
 	return 0;
 }
@@ -5972,9 +5972,9 @@ ptp_free_deviceinfo (PTPDeviceInfo *di)
 	free (di->ImageFormats);
 	free (di->CaptureFormats);
 	free (di->VendorExtensionDesc);
-	free (di->OperationsSupported);
-	free (di->EventsSupported);
-	free (di->DevicePropertiesSupported);
+	free (di->Operations);
+	free (di->Events);
+	free (di->DeviceProps);
 	memset(di, 0, sizeof(*di));
 }
 

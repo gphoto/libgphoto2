@@ -270,7 +270,7 @@ ptp_unpack_uint16_t_array(PTPParams *params, const uint8_t* data, uint32_t *offs
 #define PTP_di_VendorExtensionVersion	 6
 #define PTP_di_VendorExtensionDesc	 8
 #define PTP_di_FunctionalMode		 8
-#define PTP_di_OperationsSupported	10
+#define PTP_di_Operations	10
 
 static inline int
 ptp_unpack_DI (PTPParams *params, const unsigned char* data, PTPDeviceInfo *di, unsigned int datalen)
@@ -292,16 +292,16 @@ ptp_unpack_DI (PTPParams *params, const unsigned char* data, PTPDeviceInfo *di, 
 		return 0;
 	}
 	di->FunctionalMode = dtoh16o(data, offset);
-	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->OperationsSupported, &di->OperationsSupported_len)) {
-		ptp_debug (params, "failed to unpack OperationsSupported array");
+	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->Operations, &di->Operations_len)) {
+		ptp_debug (params, "failed to unpack Operations array");
 		return 0;
 	}
-	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->EventsSupported, &di->EventsSupported_len)) {
-		ptp_debug (params, "failed to unpack EventsSupported array");
+	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->Events, &di->Events_len)) {
+		ptp_debug (params, "failed to unpack Events array");
 		return 0;
 	}
-	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->DevicePropertiesSupported, &di->DevicePropertiesSupported_len)) {
-		ptp_debug (params, "failed to unpack DevicePropertiesSupported array");
+	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->DeviceProps, &di->DeviceProps_len)) {
+		ptp_debug (params, "failed to unpack DeviceProps array");
 		return 0;
 	}
 	if (!ptp_unpack_uint16_t_array(params, data, &offset, datalen, &di->CaptureFormats, &di->CaptureFormats_len)) {
@@ -337,8 +337,8 @@ ptp_unpack_EOS_DI (PTPParams *params, const unsigned char* data, PTPCanonEOSDevi
 
 	memset (di,0, sizeof(*di));
 
-	ptp_unpack_uint32_t_array(params, data, &offset, datalen, &di->EventsSupported, &di->EventsSupported_len);
-	ptp_unpack_uint32_t_array(params, data, &offset, datalen, &di->DevicePropertiesSupported, &di->DevicePropertiesSupported_len);
+	ptp_unpack_uint32_t_array(params, data, &offset, datalen, &di->Events, &di->Events_len);
+	ptp_unpack_uint32_t_array(params, data, &offset, datalen, &di->DeviceProps, &di->DeviceProps_len);
 	ptp_unpack_uint32_t_array(params, data, &offset, datalen, &di->unk, &di->unk_len);
 
 	return offset >= 16;

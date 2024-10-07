@@ -1198,8 +1198,8 @@ is_outer_operation (PTPParams* params, uint16_t opcode) {
 
 	/* Do nothing here, either do stuff in senddata, getdata or getresp,
 	 * which will get the PTPContainer req too. */
-	for (i=0;i<params->outer_deviceinfo.OperationsSupported_len;i++)
-		if (params->outer_deviceinfo.OperationsSupported[i]==opcode)
+	for (i=0;i<params->outer_deviceinfo.Operations_len;i++)
+		if (params->outer_deviceinfo.Operations[i]==opcode)
 			return TRUE;
 	GP_LOG_D ("is_outer_operation %04x - is WRAPPED", opcode);
 	return FALSE;

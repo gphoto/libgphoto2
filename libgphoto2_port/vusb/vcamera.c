@@ -611,7 +611,7 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 			opcodes[i+ptp_functions[0].nroffunctions] = ptp_functions[vendor].functions[i].code;
 	}
 
-	x += put_16bit_le_array(data+x,opcodes,cnt);	/* OperationsSupported */
+	x += put_16bit_le_array(data+x,opcodes,cnt);	/* Operations */
 	free (opcodes);
 
 	events[0] = 0x4002;
@@ -619,12 +619,12 @@ ptp_deviceinfo_write(vcamera *cam, ptpcontainer *ptp) {
 	events[2] = 0x4006;
 	events[3] = 0x400a;
 	events[4] = 0x400d;
-	x += put_16bit_le_array(data+x,events,sizeof(events)/sizeof(events[0]));	/* EventsSupported */
+	x += put_16bit_le_array(data+x,events,sizeof(events)/sizeof(events[0]));	/* Events */
 
 	devprops = malloc(sizeof(ptp_properties)/sizeof(ptp_properties[0])*sizeof(uint16_t));
 	for (i=0;i<sizeof(ptp_properties)/sizeof(ptp_properties[0]);i++)
 		devprops[i] = ptp_properties[i].code;
-	x += put_16bit_le_array(data+x,devprops,sizeof(ptp_properties)/sizeof(ptp_properties[0]));/* DevicePropertiesSupported */
+	x += put_16bit_le_array(data+x,devprops,sizeof(ptp_properties)/sizeof(ptp_properties[0]));/* DeviceProps */
 	free (devprops);
 
 	imageformats[0] = 0x3801;
