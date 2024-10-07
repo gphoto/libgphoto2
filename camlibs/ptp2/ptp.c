@@ -899,12 +899,12 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		sscanf((char*)next->name, "p%04x", &p);
 		ptp_debug( params, "prop %s / 0x%04x", next->name, p);
 		parse_9301_propdesc (params, xmlFirstElementChild (next), &dpd);
-		dpd.DevicePropertyCode = p;
+		dpd.DevicePropCode = p;
 		di->DevicePropertiesSupported[cnt++] = p;
 
 		/* add to cache of device propdesc */
 		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropertyCode == p)
+			if (params->deviceproperties[i].desc.DevicePropCode == p)
 				break;
 		if (i == params->nrofdeviceproperties) {
 			params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
@@ -3598,7 +3598,7 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 
 		/* mark the property for a forced refresh on the next query */
 		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropertyCode == event->Param1) {
+			if (params->deviceproperties[i].desc.DevicePropCode == event->Param1) {
 				params->deviceproperties[i].timestamp = 0;
 				break;
 			}
@@ -4564,10 +4564,10 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 		if (!ptp_unpack_Sony_DPD (params, dpddata, &dpd, size, &readlen))
 			break;
 
-		propcode = dpd.DevicePropertyCode;
+		propcode = dpd.DevicePropCode;
 
 		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
+			if (params->deviceproperties[i].desc.DevicePropCode == propcode)
 				break;
 
 		/* debug output to see what changes */
@@ -4597,7 +4597,7 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 		params->deviceproperties[i].desc = dpd;
 		params->deviceproperties[i].timestamp = now;
 #if 0
-		ptp_debug (params, "dpd.DevicePropertyCode %04x, readlen %d, getset %d", dpd.DevicePropertyCode, readlen, dpd.GetSet);
+		ptp_debug (params, "dpd.DevicePropCode %04x, readlen %d, getset %d", dpd.DevicePropCode, readlen, dpd.GetSet);
 		switch (dpd.DataType) {
 		case PTP_DTC_INT8:
 			ptp_debug (params, "value %d/%x", dpd.CurrentValue.i8, dpd.CurrentValue.i8);
@@ -4763,7 +4763,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	time(&now);
 
 	for (i=0;i<params->nrofdeviceproperties;i++)
-		if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
+		if (params->deviceproperties[i].desc.DevicePropCode == propcode)
 			break;
 	if (i == params->nrofdeviceproperties) {
 		params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
@@ -4804,7 +4804,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 		CHECK_PTP_RC(ptp_sony_getalldevicepropdesc (params));
 
 		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
+			if (params->deviceproperties[i].desc.DevicePropCode == propcode)
 				break;
 		if (i == params->nrofdeviceproperties) {
 			ptp_debug (params, "alpha property 0x%04x not found?\n", propcode);
@@ -4818,7 +4818,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 		CHECK_PTP_RC(ptp_sony_qx_getalldevicepropdesc (params));
 
 		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
+			if (params->deviceproperties[i].desc.DevicePropCode == propcode)
 				break;
 		if (i == params->nrofdeviceproperties) {
 			ptp_debug (params, "qx property 0x%04x not found?\n", propcode);
@@ -4868,7 +4868,7 @@ ptp_generic_setdevicepropvalue (PTPParams* params, uint32_t propcode,
 
 	/* reset the cache entry */
 	for (i=0;i<params->nrofdeviceproperties;i++)
-		if (params->deviceproperties[i].desc.DevicePropertyCode == propcode)
+		if (params->deviceproperties[i].desc.DevicePropCode == propcode)
 			break;
 	if (i != params->nrofdeviceproperties)
 		params->deviceproperties[i].timestamp = 0;
@@ -5879,7 +5879,7 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
 
 		if (!ptp_unpack_DPD(params, data, &dpd, dsize, &offset))
 			break;
-		(*props)[i] = dpd.DevicePropertyCode;
+		(*props)[i] = dpd.DevicePropCode;
 	}
 	free (data);
 	return PTP_RC_OK;
@@ -5921,7 +5921,7 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 
 				/* reset the property cache entry for refetch ... */
 				for (j=0;j<params->nrofdeviceproperties;j++)
-					if (params->deviceproperties[j].desc.DevicePropertyCode == param)
+					if (params->deviceproperties[j].desc.DevicePropCode == param)
 						break;
 				if (j != params->nrofdeviceproperties) {
 					params->deviceproperties[j].timestamp = 0;

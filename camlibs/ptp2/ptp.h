@@ -1742,7 +1742,7 @@ typedef struct _PTPPropDescStringForm PTPPropDescStringForm;
 
 struct _PTPDevicePropDesc {
 	/* while this is 16 bit in the standard, Nikon for some weird reason started using 0x0001Dxxx */
-	uint32_t		DevicePropertyCode;
+	uint32_t		DevicePropCode;
 	uint16_t		DataType;
 	uint8_t			GetSet;
 	PTPPropValue	DefaultValue;
