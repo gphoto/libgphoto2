@@ -175,11 +175,11 @@ return false,'already in play'\n\
 
 static int
 camera_prepare_canon_powershot_capture(Camera *camera, GPContext *context) {
-	uint16_t		ret;
-	PTPContainer		event;
-	PTPPropertyValue	propval;
-	PTPParams		*params = &camera->pl->params;
-	int 			found, oldtimeout;
+	uint16_t	ret;
+	PTPContainer	event;
+	PTPPropValue	propval;
+	PTPParams	*params = &camera->pl->params;
+	int 		found, oldtimeout;
 
 	if (ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
 		GP_LOG_D ("Canon capture mode is already set up.");
@@ -285,7 +285,7 @@ int
 camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int value) {
 	PTPParams		*params = &camera->pl->params;
 	char			buf[200];
-	PTPPropertyValue	ct_val;
+	PTPPropValue		ct_val;
 	PTPDevicePropDesc	dpd;
 	int			cardval = -1;
 
@@ -472,7 +472,7 @@ skip:
 		(strcmp(params->deviceinfo.Model,"Canon EOS M50m2") != 0)
 	) {
 		/* This code is needed on EOS m3 at least. might not be needed on others ... mess :/ */
-		PTPPropertyValue    ct_val;
+		PTPPropValue ct_val;
 
 		GP_LOG_D ("EOS M detected");
 
@@ -497,7 +497,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 	GP_LOG_D ("prepare_capture");
 	switch (params->deviceinfo.VendorExtensionID) {
 	case PTP_VENDOR_FUJI: {
-		PTPPropertyValue propval;
+		PTPPropValue propval;
 
 		/* without the firmware update ... not an error... */
 		if (!have_prop (camera, PTP_VENDOR_FUJI, PTP_DPC_FUJI_PriorityMode))
@@ -574,7 +574,7 @@ camera_unprepare_canon_eos_capture(Camera *camera, GPContext *context) {
 		CR (ptp_canon_eos_afcancel(params));
 
 	if (is_canon_eos_m (params)) {
-		PTPPropertyValue    ct_val;
+		PTPPropValue ct_val;
 
 		ct_val.u32 = 0x0000;
 		C_PTP (ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_EVFOutputDevice, &ct_val, PTP_DTC_UINT32));
@@ -622,7 +622,7 @@ camera_unprepare_capture (Camera *camera, GPContext *context)
 		_("Sorry, your Canon camera does not support Canon capture"));
 		return GP_ERROR_NOT_SUPPORTED;
 	case PTP_VENDOR_FUJI: {
-		PTPPropertyValue propval;
+		PTPPropValue propval;
 		PTPParams *params = &camera->pl->params;
 
 		if (params->inliveview) {
@@ -669,7 +669,7 @@ struct submenu;
 #define CONFIG_GET_ARGS Camera *camera, CameraWidget **widget, struct submenu* menu, PTPDevicePropDesc *dpd
 #define CONFIG_GET_NAMES camera, widget, menu, dpd
 typedef int (*get_func)(CONFIG_GET_ARGS);
-#define CONFIG_PUT_ARGS Camera *camera, CameraWidget *widget, PTPPropertyValue *propval, PTPDevicePropDesc *dpd, int *alreadyset
+#define CONFIG_PUT_ARGS Camera *camera, CameraWidget *widget, PTPPropValue *propval, PTPDevicePropDesc *dpd, int *alreadyset
 #define CONFIG_PUT_NAMES camera, widget, propval, dpd, alreadyset
 typedef int (*put_func)(CONFIG_PUT_ARGS);
 
@@ -1021,9 +1021,9 @@ _put_AUINT8_as_CHAR_ARRAY(CONFIG_PUT_ARGS) {
 	unsigned int i;
 
 	CR (gp_widget_get_value(widget, &value));
-	memset(propval,0,sizeof(PTPPropertyValue));
+	memset(propval,0,sizeof(PTPPropValue));
 	/* add \0 ? */
-	C_MEM (propval->a.v = calloc((strlen(value)+1),sizeof(PTPPropertyValue)));
+	C_MEM (propval->a.v = calloc((strlen(value)+1),sizeof(PTPPropValue)));
 	propval->a.count = strlen(value)+1;
 	for (i=0;i<strlen(value)+1;i++)
 		propval->a.v[i].u8 = value[i];
@@ -1274,7 +1274,7 @@ static int										\
 _put_sony_value_##bits (PTPParams*params, uint16_t prop, inttype value,int useenumorder) {	\
 	GPContext 		*context = ((PTPData *) params->data)->context;		\
 	PTPDevicePropDesc	dpd;							\
-	PTPPropertyValue	propval;						\
+	PTPPropValue		propval;						\
 	inttype			origval;						\
 	time_t			start,end;						\
 	int			tries = 100;	/* 100 steps allowed towards the new value */	\
@@ -3040,12 +3040,12 @@ _get_Fuji_AFDrive(CONFIG_GET_ARGS) {
 static int
 _put_Fuji_AFDrive(CONFIG_PUT_ARGS)
 {
-	PTPParams		*params = &(camera->pl->params);
-	GPContext		*context = ((PTPData *) params->data)->context;
-	PTPPropertyValue	pval;
-	uint16_t		af_start_code;
-	uint16_t		af_stop_code;
-	int			ret = GP_OK;
+	PTPParams	*params = &(camera->pl->params);
+	GPContext	*context = ((PTPData *) params->data)->context;
+	PTPPropValue	pval;
+	uint16_t	af_start_code;
+	uint16_t	af_stop_code;
+	int		ret = GP_OK;
 
 	/* get the focus mode */
 	C_PTP_REP (ptp_getdevicepropvalue (params, PTP_DPC_FocusMode, &pval, PTP_DTC_UINT16));
@@ -3113,9 +3113,9 @@ _get_Fuji_AFDriveManual(CONFIG_GET_ARGS) {
 static int
 _put_Fuji_AFDriveManual(CONFIG_PUT_ARGS)
 {
-	PTPParams               *params = &(camera->pl->params);
-	GPContext               *context = ((PTPData *) params->data)->context;
-	PTPPropertyValue        pval;
+	PTPParams     *params = &(camera->pl->params);
+	GPContext     *context = ((PTPData *) params->data)->context;
+	PTPPropValue  pval;
 	int ret;
 
 	/* Focusing first ... */
@@ -3165,7 +3165,7 @@ static int
 _put_Fuji_FocusPoint(CONFIG_PUT_ARGS) {
 	PTPParams *params = &(camera->pl->params);
 	GPContext *context = ((PTPData *) params->data)->context;
-	PTPPropertyValue pval;
+	PTPPropValue pval;
 
 	CR (gp_widget_get_value(widget, &pval.str));
 	C_PTP_REP(ptp_setdevicepropvalue(params, PTP_DPC_FUJI_FocusArea4, &pval, PTP_DTC_STR));
@@ -3188,10 +3188,10 @@ _get_Fuji_Bulb(CONFIG_GET_ARGS) {
 static int
 _put_Fuji_Bulb(CONFIG_PUT_ARGS)
 {
-	PTPParams		*params = &(camera->pl->params);
-	int			val;
-	GPContext		*context = ((PTPData *) params->data)->context;
-	PTPPropertyValue	pval;
+	PTPParams	*params = &(camera->pl->params);
+	int		val;
+	GPContext	*context = ((PTPData *) params->data)->context;
+	PTPPropValue	pval;
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
@@ -5447,15 +5447,15 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 
 static int
 _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
-	int			x,y,a,b,direction,position_current,position_new;
-	const char		*val;
-	float 			old,new,current;
-	PTPPropertyValue	value;
-	uint32_t		new32, origval;
-	PTPParams		*params = &(camera->pl->params);
-	GPContext 		*context = ((PTPData *) params->data)->context;
-	time_t			start,end;
-	unsigned int		i;
+	int		x,y,a,b,direction,position_current,position_new;
+	const char	*val;
+	float 		old,new,current;
+	PTPPropValue	value;
+	uint32_t	new32, origval;
+	PTPParams	*params = &(camera->pl->params);
+	GPContext 	*context = ((PTPData *) params->data)->context;
+	time_t		start,end;
+	unsigned int	i;
 
 	CR (gp_widget_get_value (widget, &val));
 
@@ -8350,10 +8350,10 @@ _get_Canon_EOS_ViewFinder(CONFIG_GET_ARGS) {
 
 static int
 _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
-	int			val;
-	uint16_t		res;
-	PTPParams		*params = &(camera->pl->params);
-	PTPPropertyValue	xval;
+	int		val;
+	uint16_t	res;
+	PTPParams	*params = &(camera->pl->params);
+	PTPPropValue	xval;
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
@@ -8437,9 +8437,9 @@ _put_Panasonic_ViewFinder(CONFIG_PUT_ARGS) {
 
 static int
 _get_Nikon_ViewFinder(CONFIG_GET_ARGS) {
-	int			val;
-	PTPPropertyValue	value;
-	PTPParams		*params = &(camera->pl->params);
+	int		val;
+	PTPPropValue	value;
+	PTPParams	*params = &(camera->pl->params);
 
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
@@ -8463,7 +8463,7 @@ _put_Nikon_ViewFinder(CONFIG_PUT_ARGS) {
 
 	CR (gp_widget_get_value (widget, &val));
 	if (val) {
-		PTPPropertyValue	value;
+		PTPPropValue	value;
 
 		if (LOG_ON_PTP_E (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewStatus, &value, PTP_DTC_UINT8)) != PTP_RC_OK)
 			value.u8 = 0;
@@ -8663,7 +8663,7 @@ _put_Sony_Movie(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	int val;
-	PTPPropertyValue	value;
+	PTPPropValue value;
 	GPContext *context = ((PTPData *) params->data)->context;
 
 	CR (gp_widget_get_value(widget, &val));
@@ -8691,7 +8691,7 @@ _put_Sony_QX_Movie(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	int val;
-	PTPPropertyValue	value;
+	PTPPropValue value;
 	GPContext *context = ((PTPData *) params->data)->context;
 
 	CR (gp_widget_get_value(widget, &val));
@@ -8706,9 +8706,9 @@ _put_Sony_QX_Movie(CONFIG_PUT_ARGS)
 
 static int
 _get_Nikon_MovieProhibitCondition(CONFIG_GET_ARGS) {
-	char 			buf[2000];
-	PTPPropertyValue	value;
-	PTPParams 		*params = &(camera->pl->params);
+	char 		buf[2000];
+	PTPPropValue	value;
+	PTPParams 	*params = &(camera->pl->params);
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
@@ -8746,9 +8746,9 @@ _get_Nikon_MovieProhibitCondition(CONFIG_GET_ARGS) {
 
 static int
 _get_Nikon_LiveViewProhibitCondition(CONFIG_GET_ARGS) {
-	char 			buf[2000];
-	PTPPropertyValue	value;
-	PTPParams 		*params = &(camera->pl->params);
+	char 		buf[2000];
+	PTPPropValue	value;
+	PTPParams 	*params = &(camera->pl->params);
 
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
@@ -8806,7 +8806,7 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 	PTPParams *params = &(camera->pl->params);
 	int val, ret;
 	GPContext *context = ((PTPData *) params->data)->context;
-	PTPPropertyValue	value;
+	PTPPropValue value;
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
@@ -8919,7 +8919,7 @@ _put_Nikon_Bulb(CONFIG_PUT_ARGS)
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
-		PTPPropertyValue propval2;
+		PTPPropValue propval2;
 		char buf[20];
 
 		C_PTP (ptp_nikon_changecameramode (params, 1));
@@ -8994,7 +8994,7 @@ _put_Sony_Autofocus(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	int val;
-	PTPPropertyValue xpropval;
+	PTPPropValue xpropval;
 
 	CR (gp_widget_get_value(widget, &val));
 	xpropval.u16 = val ? 2 : 1;
@@ -9021,7 +9021,7 @@ _put_Sony_ManualFocus(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	float val;
-	PTPPropertyValue xpropval;
+	PTPPropValue xpropval;
 
 	CR (gp_widget_get_value(widget, &val));
 
@@ -9070,7 +9070,7 @@ _put_Sony_Capture(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	int val;
-	PTPPropertyValue xpropval;
+	PTPPropValue xpropval;
 
 	CR (gp_widget_get_value(widget, &val));
 	xpropval.u16 = val ? 2 : 1;
@@ -9096,7 +9096,7 @@ _put_Sony_Bulb(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	int val;
-	PTPPropertyValue xpropval;
+	PTPPropValue xpropval;
 
 	CR (gp_widget_get_value(widget, &val));
 	if (val) {
@@ -9132,7 +9132,7 @@ _put_Sony_FocusMagnifyProp(CONFIG_PUT_ARGS)
 {
 	PTPParams *params = &(camera->pl->params);
 	int val;
-	PTPPropertyValue xpropval;
+	PTPPropValue xpropval;
 
 	CR (gp_widget_get_value(widget, &val));
 	xpropval.u16 = val ? 2 : 1;
@@ -12000,14 +12000,14 @@ camera_get_single_config (Camera *camera, const char *confname, CameraWidget **w
 static int
 _set_config (Camera *camera, const char *confname, CameraWidget *window, GPContext *context)
 {
-	CameraWidget		*section, *widget = window, *subwindow;
-	uint16_t		ret_ptp;
-	unsigned int		menuno, submenuno;
-	int			ret;
-	PTPParams		*params = &camera->pl->params;
-	PTPPropertyValue	propval;
-	unsigned int		i;
-	CameraAbilities		ab;
+	CameraWidget	*section, *widget = window, *subwindow;
+	uint16_t	ret_ptp;
+	unsigned int	menuno, submenuno;
+	int		ret;
+	PTPParams	*params = &camera->pl->params;
+	PTPPropValue	propval;
+	unsigned int	i;
+	CameraAbilities	ab;
 	enum {
 		MODE_SET, MODE_SINGLE_SET
 	} mode = MODE_SET;
