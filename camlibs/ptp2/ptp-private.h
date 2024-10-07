@@ -115,8 +115,6 @@ inline static int log_on_ptp_error_helper( int _r, const char* _func, const char
 	}\
 } while (0)
 
-#define ARRAYSIZE(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))
-
 static inline int
 is_canon_eos_m(PTPParams *params) {
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) return 0;

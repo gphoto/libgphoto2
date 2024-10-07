@@ -70,6 +70,7 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 #define dtoh32o(a, o)  dtoh32a((a) + _post_inc(&o, sizeof(uint32_t)))
 #define dtoh64o(a, o)  dtoh64a((a) + _post_inc(&o, sizeof(uint64_t)))
 
+#define ARRAYSIZE(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))
 
 /* USB interface class */
 #ifndef USB_CLASS_PTP

@@ -2285,9 +2285,9 @@ static unsigned int olcsizes[0x15][13] = {
 				ptp_debug (params, "%s OLC version is 0, skipping (might get set later)", prefix);
 				break;
 			}
-			if (olcver >= sizeof(olcsizes)/sizeof(olcsizes[0])) {
+			if (olcver >= ARRAYSIZE(olcsizes)) {
 				ptp_debug (params, "%s OLC version is 0x%02x, assuming latest known", prefix, olcver);
-				olcver = sizeof(olcsizes)/sizeof(olcsizes[0])-1;
+				olcver = ARRAYSIZE(olcsizes)-1;
 			}
 
 			mask = size >= 14 ? dtoh16a(curdata+8+4) : 0;

@@ -8515,7 +8515,7 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 	unsigned int i;
 
 	if (!(ofc & 0x8000)) {
-		for (i=0;i<sizeof(ptp_ofc_trans)/sizeof(ptp_ofc_trans[0]);i++)
+		for (i=0;i<ARRAYSIZE(ptp_ofc_trans);i++)
 			if (ofc == ptp_ofc_trans[i].ofc)
 				return snprintf(txt, spaceleft, "%s", _(ptp_ofc_trans[i].format));
 	} else {
@@ -8554,7 +8554,7 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 			break;
 		case PTP_VENDOR_MICROSOFT:
 		case PTP_VENDOR_MTP:
-			for (i=0;i<sizeof(ptp_ofc_mtp_trans)/sizeof(ptp_ofc_mtp_trans[0]);i++)
+			for (i=0;i<ARRAYSIZE(ptp_ofc_mtp_trans);i++)
 				if (ofc == ptp_ofc_mtp_trans[i].ofc)
 					return snprintf(txt, spaceleft, "%s", _(ptp_ofc_mtp_trans[i].format));
 			break;
@@ -9099,7 +9099,7 @@ ptp_get_opcode_name(PTPParams* params, uint16_t opcode)
 #define RETURN_NAME_FROM_TABLE(TABLE, OPCODE) \
 { \
 	unsigned int i; \
-	for (i=0; i<sizeof(TABLE)/sizeof(TABLE[0]); i++) \
+	for (i=0; i<ARRAYSIZE(TABLE); i++) \
 		if (OPCODE == TABLE[i].opcode) \
 			return _(TABLE[i].name); \
 	return _("Unknown PTP_OC"); \
@@ -9226,7 +9226,7 @@ ptp_get_event_code_name(PTPParams* params, uint16_t event_code)
 	unsigned int	i;
 	uint16_t	vendor = params->deviceinfo.VendorExtensionID;
 
-	for (i=0; i<sizeof(ptp_event_codes)/sizeof(ptp_event_codes[0]); i++)
+	for (i=0; i<ARRAYSIZE(ptp_event_codes); i++)
 		if ((ptp_event_codes[i].code == event_code) && ((ptp_event_codes[i].vendor == 0) || (ptp_event_codes[i].vendor == vendor)))
 			return ptp_event_codes[i].name;
 	return "Unknown Event";
@@ -9431,7 +9431,7 @@ int
 ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt)
 {
 	unsigned int i;
-	for (i=0;i<sizeof(ptp_opc_trans)/sizeof(ptp_opc_trans[0]);i++)
+	for (i=0;i<ARRAYSIZE(ptp_opc_trans);i++)
 		if (propid == ptp_opc_trans[i].id)
 			return snprintf(txt, spaceleft, "%s", ptp_opc_trans[i].name);
 	return snprintf (txt, spaceleft,"unknown(%04x)", propid);

@@ -3055,7 +3055,7 @@ camera_abilities (CameraAbilitiesList *list)
 	unsigned int i;
 	CameraAbilities a;
 
-	for (i = 0; i < sizeof(models)/sizeof(models[0]); i++) {
+	for (i = 0; i < ARRAYSIZE(models); i++) {
 		memset(&a, 0, sizeof(a));
 		strcpy (a.model, models[i].model);
 		a.status		= GP_DRIVER_STATUS_PRODUCTION;
@@ -3116,7 +3116,7 @@ camera_abilities (CameraAbilitiesList *list)
 		}
 		CR (gp_abilities_list_append (list, a));
 	}
-	for (i = 0; i < sizeof(mtp_models)/sizeof(mtp_models[0]); i++) {
+	for (i = 0; i < ARRAYSIZE(mtp_models); i++) {
 		memset(&a, 0, sizeof(a));
 		sprintf (a.model, "%s:%s", mtp_models[i].vendor, mtp_models[i].model);
 		a.status		= GP_DRIVER_STATUS_PRODUCTION;
@@ -3167,7 +3167,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.device_type       = GP_DEVICE_AUDIO_PLAYER;
 	CR (gp_abilities_list_append (list, a));
 
-	for (i = 0; i < sizeof(ptpip_models)/sizeof(ptpip_models[0]); i++) {
+	for (i = 0; i < ARRAYSIZE(ptpip_models); i++) {
 		memset(&a, 0, sizeof(a));
 		strcpy(a.model, ptpip_models[i].model);
 		a.status 		= GP_DRIVER_STATUS_TESTING;
@@ -8345,11 +8345,11 @@ ptp_mtp_render_metadata (
 		for (j=0;j<ob->nrofmtpprops;j++) {
 			MTPProperties		*xpl = &mprops[j];
 
-			for (i=0;i<sizeof(uninteresting_props)/sizeof(uninteresting_props[0]);i++)
+			for (i=0;i<ARRAYSIZE(uninteresting_props);i++)
 				if (uninteresting_props[i] == xpl->property)
 					break;
 			/* Is uninteresting. */
-			if (i != sizeof(uninteresting_props)/sizeof(uninteresting_props[0]))
+			if (i != ARRAYSIZE(uninteresting_props))
 				continue;
 
 			for(i=0;i<propcnt;i++) {
@@ -8393,7 +8393,7 @@ ptp_mtp_render_metadata (
 
 		if (!props[j]) continue; /* handle above */
 
-		for (i=sizeof(uninteresting_props)/sizeof(uninteresting_props[0]);i--;)
+		for (i=ARRAYSIZE(uninteresting_props);i--;)
 			if (uninteresting_props[i] == props[j])
 				break;
 		if (i != -1) /* Is uninteresting. */
@@ -8478,7 +8478,7 @@ ptp_mtp_parse_metadata (
 		int 			i;
 		PTPPropValue		pv;
 
-		for (i=sizeof(readonly_props)/sizeof(readonly_props[0]);i--;)
+		for (i=ARRAYSIZE(readonly_props);i--;)
 			if (readonly_props[i] == props[j])
 				break;
 		if (i != -1) /* Is read/only */
@@ -9712,7 +9712,7 @@ camera_init (Camera *camera, GPContext *context)
 	}
 #endif
 
-	for (i = 0; i<sizeof(models)/sizeof(models[0]); i++) {
+	for (i = 0; i<ARRAYSIZE(models); i++) {
 		if ((a.usb_vendor == models[i].usb_vendor) &&
 		    (a.usb_product == models[i].usb_product)) {
 			params->device_flags = models[i].device_flags;
@@ -9723,7 +9723,7 @@ camera_init (Camera *camera, GPContext *context)
 		params->device_flags |= DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST;
 	}
 	/* map the libmtp flags to ours. Currently its just 1 flag. */
-	for (i = 0; i<sizeof(mtp_models)/sizeof(mtp_models[0]); i++) {
+	for (i = 0; i<ARRAYSIZE(mtp_models); i++) {
 		if ((a.usb_vendor == mtp_models[i].usb_vendor) &&
 		    (a.usb_product == mtp_models[i].usb_product)) {
 			params->device_flags = mtp_models[i].flags;

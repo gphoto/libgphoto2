@@ -992,7 +992,7 @@ chdk_get_onoff(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 	if (GP_OK != gp_setting_get("ptp2","chdk", buf))
 		strcpy(buf,"off");
-	for (i=0;i<sizeof (chdkonoff)/sizeof (chdkonoff[i]);i++) {
+	for (i=0;i<ARRAYSIZE(chdkonoff);i++) {
 		gp_widget_add_choice (*widget, _(chdkonoff[i].label));
 		if (!strcmp (buf,chdkonoff[i].name))
 			gp_widget_set_value (*widget, _(chdkonoff[i].label));
@@ -1006,7 +1006,7 @@ chdk_put_onoff(CONFIG_PUT_ARGS) {
 	char		*val;
 
 	CR (gp_widget_get_value(widget, &val));
-	for (i=0;i<sizeof(chdkonoff)/sizeof(chdkonoff[i]);i++) {
+	for (i=0;i<ARRAYSIZE(chdkonoff);i++) {
 		if (!strcmp( val, _(chdkonoff[i].label))) {
 			gp_setting_set("ptp2","chdk",chdkonoff[i].name);
 			break;
