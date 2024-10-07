@@ -837,11 +837,11 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd)
 			char *s = (char*)xmlNodeGetContent (next);
 			dpd->FormFlag = PTP_DPFF_Range;
 			ptp_debug( params, "range");
-			parse_9301_value (params, s, type, &dpd->FORM.Range.MinimumValue); /* should turn ' ' into \0? */
+			parse_9301_value (params, s, type, &dpd->FORM.Range.MinValue); /* should turn ' ' into \0? */
 			s = strchr(s,' ');
 			if (!s) continue;
 			s++;
-			parse_9301_value (params, s, type, &dpd->FORM.Range.MaximumValue); /* should turn ' ' into \0? */
+			parse_9301_value (params, s, type, &dpd->FORM.Range.MaxValue); /* should turn ' ' into \0? */
 			s = strchr(s,' ');
 			if (!s) continue;
 			s++;

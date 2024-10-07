@@ -774,8 +774,8 @@ _get_Generic##bits##Table(CONFIG_GET_ARGS, struct deviceproptable##bits * tbl, i
 	} \
 	if (dpd->FormFlag & PTP_DPFF_Range) { \
 		type r;	\
-		for (	r = dpd->FORM.Range.MinimumValue.bits; \
-			r<=dpd->FORM.Range.MaximumValue.bits; \
+		for (	r = dpd->FORM.Range.MinValue.bits; \
+			r<=dpd->FORM.Range.MaxValue.bits; \
 			r+= dpd->FORM.Range.StepSize.bits \
 		) { \
 			isset = FALSE; \
@@ -1041,7 +1041,7 @@ _get_Range_INT8(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name ( *widget, menu->name);
 	CurrentValue = (float) dpd->CurrentValue.i8;
-	gp_widget_set_range ( *widget, (float) dpd->FORM.Range.MinimumValue.i8, (float) dpd->FORM.Range.MaximumValue.i8, (float) dpd->FORM.Range.StepSize.i8);
+	gp_widget_set_range ( *widget, (float) dpd->FORM.Range.MinValue.i8, (float) dpd->FORM.Range.MaxValue.i8, (float) dpd->FORM.Range.StepSize.i8);
 	gp_widget_set_value ( *widget, &CurrentValue);
 	return (GP_OK);
 }
@@ -1067,7 +1067,7 @@ _get_Range_UINT8(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name ( *widget, menu->name);
 	CurrentValue = (float) dpd->CurrentValue.u8;
-	gp_widget_set_range ( *widget, (float) dpd->FORM.Range.MinimumValue.u8, (float) dpd->FORM.Range.MaximumValue.u8, (float) dpd->FORM.Range.StepSize.u8);
+	gp_widget_set_range ( *widget, (float) dpd->FORM.Range.MinValue.u8, (float) dpd->FORM.Range.MaxValue.u8, (float) dpd->FORM.Range.StepSize.u8);
 	gp_widget_set_value ( *widget, &CurrentValue);
 	return (GP_OK);
 }
@@ -1145,7 +1145,7 @@ _get_INT(CONFIG_GET_ARGS) {
 	if (dpd->FormFlag == PTP_DPFF_Range) {
 		float b = 0, t = 0, s = 0;
 
-#define X(type,u) case type: b = (float)dpd->FORM.Range.MinimumValue.u; t = (float)dpd->FORM.Range.MaximumValue.u; s = (float)dpd->FORM.Range.StepSize.u; break;
+#define X(type,u) case type: b = (float)dpd->FORM.Range.MinValue.u; t = (float)dpd->FORM.Range.MaxValue.u; s = (float)dpd->FORM.Range.StepSize.u; break;
 		switch (dpd->DataType) {
 		X(PTP_DTC_UINT32,u32)
 		X(PTP_DTC_INT32,i32)
@@ -1708,8 +1708,8 @@ _get_Canon_ZoomRange(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 	f = (float)dpd->CurrentValue.u16;
-	b = (float)dpd->FORM.Range.MinimumValue.u16;
-	t = (float)dpd->FORM.Range.MaximumValue.u16;
+	b = (float)dpd->FORM.Range.MinValue.u16;
+	t = (float)dpd->FORM.Range.MaxValue.u16;
 	s = (float)dpd->FORM.Range.StepSize.u16;
 	gp_widget_set_range (*widget, b, t, s);
 	gp_widget_set_value (*widget, &f);
@@ -1768,8 +1768,8 @@ _get_Sony_Zoom(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 	f = (float)dpd->CurrentValue.u32 / 1000000;
-	b = (float)dpd->FORM.Range.MinimumValue.u32 / 1000000;
-	t = (float)dpd->FORM.Range.MaximumValue.u32 / 1000000;
+	b = (float)dpd->FORM.Range.MinValue.u32 / 1000000;
+	t = (float)dpd->FORM.Range.MaxValue.u32 / 1000000;
 	s = 1;
 	gp_widget_set_range (*widget, b, t, s);
 	gp_widget_set_value (*widget, &f);
@@ -1799,8 +1799,8 @@ _get_Nikon_WBBias(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 	f = (float)dpd->CurrentValue.i8;
-	b = (float)dpd->FORM.Range.MinimumValue.i8;
-	t = (float)dpd->FORM.Range.MaximumValue.i8;
+	b = (float)dpd->FORM.Range.MinValue.i8;
+	t = (float)dpd->FORM.Range.MaxValue.i8;
 	s = (float)dpd->FORM.Range.StepSize.i8;
 	gp_widget_set_range (*widget, b, t, s);
 	gp_widget_set_value (*widget, &f);
@@ -1829,20 +1829,20 @@ _get_Nikon_UWBBias(CONFIG_GET_ARGS) {
 	switch (dpd->DataType) {
 	case PTP_DTC_UINT16:
 		f = (float)dpd->CurrentValue.u16;
-		b = (float)dpd->FORM.Range.MinimumValue.u16;
-		t = (float)dpd->FORM.Range.MaximumValue.u16;
+		b = (float)dpd->FORM.Range.MinValue.u16;
+		t = (float)dpd->FORM.Range.MaxValue.u16;
 		s = (float)dpd->FORM.Range.StepSize.u16;
 		break;
 	case PTP_DTC_UINT8:
 		f = (float)dpd->CurrentValue.u8;
-		b = (float)dpd->FORM.Range.MinimumValue.u8;
-		t = (float)dpd->FORM.Range.MaximumValue.u8;
+		b = (float)dpd->FORM.Range.MinValue.u8;
+		t = (float)dpd->FORM.Range.MaxValue.u8;
 		s = (float)dpd->FORM.Range.StepSize.u8;
 		break;
 	case PTP_DTC_INT8:
 		f = (float)dpd->CurrentValue.i8;
-		b = (float)dpd->FORM.Range.MinimumValue.i8;
-		t = (float)dpd->FORM.Range.MaximumValue.i8;
+		b = (float)dpd->FORM.Range.MinValue.i8;
+		t = (float)dpd->FORM.Range.MaxValue.i8;
 		s = (float)dpd->FORM.Range.StepSize.i8;
 		break;
 	default:
@@ -1892,7 +1892,7 @@ _get_Nikon_WBBiasPreset(CONFIG_GET_ARGS) {
 		return (GP_ERROR);
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
-	for (i = dpd->FORM.Range.MinimumValue.u8; i < dpd->FORM.Range.MaximumValue.u8; i++) {
+	for (i = dpd->FORM.Range.MinValue.u8; i < dpd->FORM.Range.MaxValue.u8; i++) {
 		sprintf (buf, "%d", i);
 		gp_widget_add_choice (*widget, buf);
 		if (i == dpd->CurrentValue.u8)
@@ -1922,8 +1922,8 @@ _get_Nikon_HueAdjustment(CONFIG_GET_ARGS) {
 		gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 		gp_widget_set_name (*widget,menu->name);
 		f = (float)dpd->CurrentValue.i8;
-		b = (float)dpd->FORM.Range.MinimumValue.i8;
-		t = (float)dpd->FORM.Range.MaximumValue.i8;
+		b = (float)dpd->FORM.Range.MinValue.i8;
+		t = (float)dpd->FORM.Range.MaxValue.i8;
 		s = (float)dpd->FORM.Range.StepSize.i8;
 		gp_widget_set_range (*widget, b, t, s);
 		gp_widget_set_value (*widget, &f);
@@ -3466,12 +3466,12 @@ _get_Milliseconds(CONFIG_GET_ARGS) {
 		unsigned int s;
 
 		if (dpd->DataType == PTP_DTC_UINT32) {
-			min = dpd->FORM.Range.MinimumValue.u32;
-			max = dpd->FORM.Range.MaximumValue.u32;
+			min = dpd->FORM.Range.MinValue.u32;
+			max = dpd->FORM.Range.MaxValue.u32;
 			s = dpd->FORM.Range.StepSize.u32;
 		} else {
-			min = dpd->FORM.Range.MinimumValue.u16;
-			max = dpd->FORM.Range.MaximumValue.u16;
+			min = dpd->FORM.Range.MinValue.u16;
+			max = dpd->FORM.Range.MaxValue.u16;
 			s = dpd->FORM.Range.StepSize.u16;
 		}
 		for (i=min; i<=max; i+=s) {
@@ -3540,8 +3540,8 @@ _get_FNumber(CONFIG_GET_ARGS) {
 		gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 		gp_widget_set_name (*widget, menu->name);
 		gp_widget_set_range (*widget,
-				dpd->FORM.Range.MinimumValue.u16/100.0,
-				dpd->FORM.Range.MaximumValue.u16/100.0,
+				dpd->FORM.Range.MinValue.u16/100.0,
+				dpd->FORM.Range.MaxValue.u16/100.0,
 				dpd->FORM.Range.StepSize.u16/100.0
 				);
 		value_float = dpd->CurrentValue.u16/100.0;
@@ -3800,8 +3800,8 @@ _get_Video_Framerate(CONFIG_GET_ARGS) {
 	if (dpd->FormFlag == PTP_DPFF_Range) {
 		float b, t, s;
 
-		b = (1.0*dpd->FORM.Range.MinimumValue.u32) / 1000000.0;
-		t = (1.0*dpd->FORM.Range.MaximumValue.u32) / 1000000.0;
+		b = (1.0*dpd->FORM.Range.MinValue.u32) / 1000000.0;
+		t = (1.0*dpd->FORM.Range.MaxValue.u32) / 1000000.0;
 		s = (1.0*dpd->FORM.Range.StepSize.u32) / 1000000.0;
 		gp_widget_set_range (*widget, b, t, s);
 	}
@@ -3844,12 +3844,12 @@ _get_Sharpness(CONFIG_GET_ARGS) {
 		int s;
 
 		if (dpd->DataType == PTP_DTC_UINT8) {
-			min = dpd->FORM.Range.MinimumValue.u8;
-			max = dpd->FORM.Range.MaximumValue.u8;
+			min = dpd->FORM.Range.MinValue.u8;
+			max = dpd->FORM.Range.MaxValue.u8;
 			s = dpd->FORM.Range.StepSize.u8;
 		} else {
-			min = dpd->FORM.Range.MinimumValue.i8;
-			max = dpd->FORM.Range.MaximumValue.i8;
+			min = dpd->FORM.Range.MinValue.i8;
+			max = dpd->FORM.Range.MaxValue.i8;
 			s = dpd->FORM.Range.StepSize.i8;
 		}
 		if (!s) {
@@ -3956,12 +3956,12 @@ _put_Sharpness(CONFIG_PUT_ARGS) {
 		int s;
 
 		if (dpd->DataType == PTP_DTC_UINT8) {
-			min = dpd->FORM.Range.MinimumValue.u8;
-			max = dpd->FORM.Range.MaximumValue.u8;
+			min = dpd->FORM.Range.MinValue.u8;
+			max = dpd->FORM.Range.MaxValue.u8;
 			s = dpd->FORM.Range.StepSize.u8;
 		} else {
-			min = dpd->FORM.Range.MinimumValue.i8;
-			max = dpd->FORM.Range.MaximumValue.i8;
+			min = dpd->FORM.Range.MinValue.i8;
+			max = dpd->FORM.Range.MaxValue.i8;
 			s = dpd->FORM.Range.StepSize.i8;
 		}
 		for (i=min; i<=max; i+=s) {
@@ -4620,8 +4620,8 @@ _get_FocalLength(CONFIG_GET_ARGS) {
 		step = 1.0;
 	}
 	if (dpd->FormFlag & PTP_DPFF_Range) {
-		start = dpd->FORM.Range.MinimumValue.u32/100.0;
-		end = dpd->FORM.Range.MaximumValue.u32/100.0;
+		start = dpd->FORM.Range.MinValue.u32/100.0;
+		end = dpd->FORM.Range.MaxValue.u32/100.0;
 		step = dpd->FORM.Range.StepSize.u32/100.0;
 	}
 	gp_widget_set_range (*widget, start, end, step);
@@ -4750,8 +4750,8 @@ _get_FocusDistance(CONFIG_GET_ARGS) {
 		gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 		gp_widget_set_name (*widget, menu->name);
 
-		start = dpd->FORM.Range.MinimumValue.u16/100.0;
-		end = dpd->FORM.Range.MaximumValue.u16/100.0;
+		start = dpd->FORM.Range.MinValue.u16/100.0;
+		end = dpd->FORM.Range.MaxValue.u16/100.0;
 		step = dpd->FORM.Range.StepSize.u16/100.0;
 		gp_widget_set_range (*widget, start, end, step);
 		value_float = dpd->CurrentValue.u16/100.0;
@@ -5697,8 +5697,8 @@ _get_Nikon_FlashExposureCompensation(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	gp_widget_set_range (*widget,
-		dpd->FORM.Range.MinimumValue.i8/6.0,
-		dpd->FORM.Range.MaximumValue.i8/6.0,
+		dpd->FORM.Range.MinValue.i8/6.0,
+		dpd->FORM.Range.MaxValue.i8/6.0,
 		dpd->FORM.Range.StepSize.i8/6.0
 	);
 	value_float = dpd->CurrentValue.i8/6.0;
@@ -5726,8 +5726,8 @@ _get_Nikon_LowLight(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 	gp_widget_set_range (*widget,
-		dpd->FORM.Range.MinimumValue.u8,
-		dpd->FORM.Range.MaximumValue.u8,
+		dpd->FORM.Range.MinValue.u8,
+		dpd->FORM.Range.MaxValue.u8,
 		dpd->FORM.Range.StepSize.u8
 	);
 	value_float = dpd->CurrentValue.u8;
@@ -7426,8 +7426,8 @@ _get_BatteryLevel(CONFIG_GET_ARGS) {
 	}
 	if (dpd->FormFlag == PTP_DPFF_Range) {
 		gp_widget_set_name (*widget, menu->name);
-		start = dpd->FORM.Range.MinimumValue.u8;
-		end = dpd->FORM.Range.MaximumValue.u8;
+		start = dpd->FORM.Range.MinValue.u8;
+		end = dpd->FORM.Range.MaxValue.u8;
 		value_float = dpd->CurrentValue.u8;
 		if (0 == end - start + 1) {
 			/* avoid division by 0 */
@@ -7453,12 +7453,12 @@ _get_SONY_BatteryLevel(CONFIG_GET_ARGS) {
 
 	if (dpd->FormFlag == PTP_DPFF_Range) {
 		gp_widget_set_name (*widget, menu->name);
-		start = dpd->FORM.Range.MinimumValue.i8;
-		if (dpd->FORM.Range.MinimumValue.i8 == -1)
+		start = dpd->FORM.Range.MinValue.i8;
+		if (dpd->FORM.Range.MinValue.i8 == -1)
 			start = 0; /* -1 might be special for unknown? */
 		else
-			start = dpd->FORM.Range.MinimumValue.i8;
-		end = dpd->FORM.Range.MaximumValue.i8;
+			start = dpd->FORM.Range.MinValue.i8;
+		end = dpd->FORM.Range.MaxValue.i8;
 		value_float = dpd->CurrentValue.i8;
 		if (0 == end - start + 1) {
 			/* avoid division by 0 */
@@ -11842,7 +11842,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 			/* simple ranges might just be enumerations */
 #define X(dtc,val) 							\
 			case dtc: 					\
-				if (	((dpd.FORM.Range.MaximumValue.val - dpd.FORM.Range.MinimumValue.val) < 128) &&	\
+				if (	((dpd.FORM.Range.MaxValue.val - dpd.FORM.Range.MinValue.val) < 128) &&	\
 					(dpd.FORM.Range.StepSize.val == 1)) {						\
 					type = GP_WIDGET_MENU;								\
 				} \
@@ -11875,10 +11875,10 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 #define X(dtc,val,vartype,format) 										\
 			case dtc: 								\
 				if (type == GP_WIDGET_RANGE) {					\
-					gp_widget_set_range ( widget, (float) dpd.FORM.Range.MinimumValue.val, (float) dpd.FORM.Range.MaximumValue.val, (float) dpd.FORM.Range.StepSize.val);\
+					gp_widget_set_range ( widget, (float) dpd.FORM.Range.MinValue.val, (float) dpd.FORM.Range.MaxValue.val, (float) dpd.FORM.Range.StepSize.val);\
 				} else {							\
 					vartype k;							\
-					for (k=dpd.FORM.Range.MinimumValue.val;k<=dpd.FORM.Range.MaximumValue.val;k+=dpd.FORM.Range.StepSize.val) { \
+					for (k=dpd.FORM.Range.MinValue.val;k<=dpd.FORM.Range.MaxValue.val;k+=dpd.FORM.Range.StepSize.val) { \
 						sprintf (buf, #format, k); 			\
 						gp_widget_add_choice (widget, buf);		\
 						if (dpd.FORM.Range.StepSize.val == 0) break;	\

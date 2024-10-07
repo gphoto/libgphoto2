@@ -856,11 +856,11 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr next, PTPDevicePropDesc *dpd)
 			char *s = (char*)xmlNodeGetContent (next);
 			dpd->FormFlag = PTP_DPFF_Range;
 			ptp_debug( params, "range");
-			parse_9301_value (params, s, type, &dpd->FORM.Range.MinimumValue); /* should turn ' ' into \0? */
+			parse_9301_value (params, s, type, &dpd->FORM.Range.MinValue); /* should turn ' ' into \0? */
 			s = strchr(s,' ');
 			if (!s) continue;
 			s++;
-			parse_9301_value (params, s, type, &dpd->FORM.Range.MaximumValue); /* should turn ' ' into \0? */
+			parse_9301_value (params, s, type, &dpd->FORM.Range.MaxValue); /* should turn ' ' into \0? */
 			s = strchr(s,' ');
 			if (!s) continue;
 			s++;
@@ -2051,8 +2051,8 @@ ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
 	ptp_free_devicepropvalue (dpd->DataType, &dpd->CurrentValue);
 	switch (dpd->FormFlag) {
 	case PTP_DPFF_Range:
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MinimumValue);
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MaximumValue);
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MinValue);
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MaxValue);
 		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.StepSize);
 		break;
 	case PTP_DPFF_Enumeration:
@@ -2077,8 +2077,8 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
 	case PTP_OPFF_None:
 		break;
 	case PTP_OPFF_Range:
-		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MinimumValue);
-		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MaximumValue);
+		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MinValue);
+		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MaxValue);
 		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.StepSize);
 		break;
 	case PTP_OPFF_Enumeration:
