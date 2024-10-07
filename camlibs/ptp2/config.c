@@ -64,8 +64,8 @@ have_prop(Camera *camera, uint16_t vendor, uint32_t prop) {
 	if (	((prop & 0x7000) == 0x5000) ||
 		(NIKON_1(&camera->pl->params) && ((prop & 0xf000) == 0xf000))
 	) { /* properties */
-		for (i=0; i<camera->pl->params.deviceinfo.DevicePropertiesSupported_len; i++) {
-			if (prop != camera->pl->params.deviceinfo.DevicePropertiesSupported[i])
+		for (i=0; i<camera->pl->params.deviceinfo.DeviceProps_len; i++) {
+			if (prop != camera->pl->params.deviceinfo.DeviceProps[i])
 				continue;
 			if ((prop & 0xf000) == 0x5000) { /* generic property */
 				if (!vendor || (camera->pl->params.deviceinfo.VendorExtensionID==vendor))
@@ -76,9 +76,9 @@ have_prop(Camera *camera, uint16_t vendor, uint32_t prop) {
 		}
 	}
 	if ((prop & 0x7000) == 0x1000) { /* commands */
-		for (i=0; i<camera->pl->params.deviceinfo.OperationsSupported_len; i++) {
+		for (i=0; i<camera->pl->params.deviceinfo.Operations_len; i++) {
 
-			if (prop != camera->pl->params.deviceinfo.OperationsSupported[i])
+			if (prop != camera->pl->params.deviceinfo.Operations[i])
 				continue;
 			if ((prop & 0xf000) == 0x1000) /* generic property */
 				return 1;
@@ -417,10 +417,10 @@ skip:
 		unsigned int i;
 
 		C_PTP (ptp_canon_eos_getdeviceinfo (params, &x));
-		for (i=0;i<x.EventsSupported_len;i++)
-			GP_LOG_D ("event: %04x", x.EventsSupported[i]);
-		for (i=0;i<x.DevicePropertiesSupported_len;i++)
-			GP_LOG_D ("deviceprop: %04x", x.DevicePropertiesSupported[i]);
+		for (i=0;i<x.Events_len;i++)
+			GP_LOG_D ("event: %04x", x.Events[i]);
+		for (i=0;i<x.DeviceProps_len;i++)
+			GP_LOG_D ("deviceprop: %04x", x.DeviceProps[i]);
 		for (i=0;i<x.unk_len;i++)
 			GP_LOG_D ("unk: %04x", x.unk[i]);
 		ptp_canon_eos_free_deviceinfo (&x);
@@ -8860,8 +8860,8 @@ _put_Nikon_Movie(CONFIG_PUT_ARGS)
 
 		C_PTP_REP (ptp_nikon_stopmovie (params));
 
-		for (i=0;i<params->deviceinfo.EventsSupported_len;i++)
-			if (params->deviceinfo.EventsSupported[i] == PTP_EC_Nikon_MovieRecordComplete) {
+		for (i=0;i<params->deviceinfo.Events_len;i++)
+			if (params->deviceinfo.Events[i] == PTP_EC_Nikon_MovieRecordComplete) {
 				havec108 = 1;
 				break;
 			}
@@ -11785,7 +11785,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 		}
 	}
 
-	if (!params->deviceinfo.DevicePropertiesSupported_len) {
+	if (!params->deviceinfo.DeviceProps_len) {
 		free (setprops);
 		return GP_OK;
 	}
@@ -11797,8 +11797,8 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 		gp_widget_append (window, section);
 	}
 
-	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
-		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
+	for (i=0;i<params->deviceinfo.DeviceProps_len;i++) {
+		uint16_t		propid = params->deviceinfo.DeviceProps[i];
 		char			buf[21], *label;
 		PTPDevicePropDesc	dpd;
 		CameraWidgetType	type;
@@ -12180,14 +12180,14 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				return ret;
 		}
 	}
-	if (!params->deviceinfo.DevicePropertiesSupported_len)
+	if (!params->deviceinfo.DeviceProps_len)
 		return GP_OK;
 
 	if (mode == MODE_SET)
 		CR (gp_widget_get_child_by_label (subwindow, _("Other PTP Device Properties"), &section));
 	/* Generic property setter */
-	for (i=0;i<params->deviceinfo.DevicePropertiesSupported_len;i++) {
-		uint16_t		propid = params->deviceinfo.DevicePropertiesSupported[i];
+	for (i=0;i<params->deviceinfo.DeviceProps_len;i++) {
+		uint16_t		propid = params->deviceinfo.DeviceProps[i];
 		CameraWidgetType	type;
 		char			buf[20], *label, *xval;
 		PTPDevicePropDesc	dpd;

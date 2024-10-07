@@ -1422,12 +1422,12 @@ struct _PTPDeviceInfo {
 	uint16_t VendorExtensionVersion;
 	char	*VendorExtensionDesc;
 	uint16_t FunctionalMode;
-	uint32_t OperationsSupported_len;
-	uint16_t *OperationsSupported;
-	uint32_t EventsSupported_len;
-	uint16_t *EventsSupported;
-	uint32_t DevicePropertiesSupported_len;
-	uint16_t *DevicePropertiesSupported;
+	uint32_t Operations_len;
+	uint16_t *Operations;
+	uint32_t Events_len;
+	uint16_t *Events;
+	uint32_t DeviceProps_len;
+	uint16_t *DeviceProps;
 	uint32_t CaptureFormats_len;
 	uint16_t *CaptureFormats;
 	uint32_t ImageFormats_len;
@@ -1899,11 +1899,11 @@ typedef struct _PTPCanon_Property {
 
 typedef struct _PTPCanonEOSDeviceInfo {
 	/* length */
-	uint32_t EventsSupported_len;
-	uint32_t *EventsSupported;
+	uint32_t Events_len;
+	uint32_t *Events;
 
-	uint32_t DevicePropertiesSupported_len;
-	uint32_t *DevicePropertiesSupported;
+	uint32_t DeviceProps_len;
+	uint32_t *DeviceProps;
 
 	uint32_t unk_len;
 	uint32_t *unk;
@@ -4854,8 +4854,8 @@ ptp_operation_issupported(PTPParams* params, uint16_t operation)
 	if (operation == PTP_OC_CANON_EOS_GetDeviceInfoEx && params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"Canon EOS R5m2"))
 		return 0;
 
-	for (;i<params->deviceinfo.OperationsSupported_len;i++) {
-		if (params->deviceinfo.OperationsSupported[i]==operation)
+	for (;i<params->deviceinfo.Operations_len;i++) {
+		if (params->deviceinfo.Operations[i]==operation)
 			return 1;
 	}
 	return 0;

@@ -169,15 +169,15 @@ print_debug_deviceinfo (PTPParams *params, PTPDeviceInfo *di)
 	GP_LOG_D ("Functional Mode: 0x%04x",di->FunctionalMode);
 	GP_LOG_D ("PTP Standard Version: %d",di->StandardVersion);
 	GP_LOG_D ("Supported operations:");
-	for (i=0; i<di->OperationsSupported_len; i++)
-		GP_LOG_D ("  0x%04x (%s)", di->OperationsSupported[i], ptp_get_opcode_name (params, di->OperationsSupported[i]));
+	for (i=0; i<di->Operations_len; i++)
+		GP_LOG_D ("  0x%04x (%s)", di->Operations[i], ptp_get_opcode_name (params, di->Operations[i]));
 	GP_LOG_D ("Events Supported:");
-	for (i=0; i<di->EventsSupported_len; i++)
-		GP_LOG_D ("  0x%04x (%s)", di->EventsSupported[i], ptp_get_event_code_name (params, di->EventsSupported[i]));
+	for (i=0; i<di->Events_len; i++)
+		GP_LOG_D ("  0x%04x (%s)", di->Events[i], ptp_get_event_code_name (params, di->Events[i]));
 	GP_LOG_D ("Device Properties Supported:");
-	for (i=0; i<di->DevicePropertiesSupported_len; i++) {
-		const char *ptpname = ptp_get_property_description (params, di->DevicePropertiesSupported[i]);
-		GP_LOG_D ("  0x%04x (%s)", di->DevicePropertiesSupported[i], ptpname ? ptpname : "Unknown DPC code");
+	for (i=0; i<di->DeviceProps_len; i++) {
+		const char *ptpname = ptp_get_property_description (params, di->DeviceProps[i]);
+		GP_LOG_D ("  0x%04x (%s)", di->DeviceProps[i], ptpname ? ptpname : "Unknown DPC code");
 	}
 }
 
@@ -217,17 +217,17 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_product == 0x2382)
 	) {
-		C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 9)));
-		di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_PANASONIC_GetProperty;
-		di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_PANASONIC_SetProperty;
-		di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_PANASONIC_ListProperty;
-		di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_PANASONIC_InitiateCapture;
-		di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_PANASONIC_Liveview;
-		di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_PANASONIC_LiveviewImage;
-		di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_PANASONIC_MovieRecControl;
-		di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_PANASONIC_GetLiveViewParameters;
-		di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_PANASONIC_SetLiveViewParameters;
-		di->OperationsSupported_len += 9;
+		C_MEM (di->Operations = realloc(di->Operations,sizeof(di->Operations[0])*(di->Operations_len + 9)));
+		di->Operations[di->Operations_len+0] = PTP_OC_PANASONIC_GetProperty;
+		di->Operations[di->Operations_len+1]  = PTP_OC_PANASONIC_SetProperty;
+		di->Operations[di->Operations_len+2]  = PTP_OC_PANASONIC_ListProperty;
+		di->Operations[di->Operations_len+3]  = PTP_OC_PANASONIC_InitiateCapture;
+		di->Operations[di->Operations_len+4]  = PTP_OC_PANASONIC_Liveview;
+		di->Operations[di->Operations_len+5]  = PTP_OC_PANASONIC_LiveviewImage;
+		di->Operations[di->Operations_len+6]  = PTP_OC_PANASONIC_MovieRecControl;
+		di->Operations[di->Operations_len+7]  = PTP_OC_PANASONIC_GetLiveViewParameters;
+		di->Operations[di->Operations_len+8]  = PTP_OC_PANASONIC_SetLiveViewParameters;
+		di->Operations_len += 9;
 	}
 
 	/* Panasonic hack */
@@ -297,9 +297,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			newdi.x[i+outerdi->x##_len] = ndi.x[i];					\
 		newdi.x##_len = ndi.x##_len + outerdi->x##_len;
 
-		DI_MERGE(OperationsSupported);
-		DI_MERGE(EventsSupported);
-		DI_MERGE(DevicePropertiesSupported);
+		DI_MERGE(Operations);
+		DI_MERGE(Events);
+		DI_MERGE(DeviceProps);
 		DI_MERGE(CaptureFormats);
 		DI_MERGE(ImageFormats);
 
@@ -387,11 +387,11 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		PTPCanonEOSDeviceInfo x;
 
 		if (PTP_RC_OK == LOG_ON_PTP_E (ptp_canon_eos_getdeviceinfo (params, &x))) {
-			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,
-				(di->DevicePropertiesSupported_len + x.DevicePropertiesSupported_len) * sizeof(di->DevicePropertiesSupported[0])));
-			for (unsigned i=0;i<x.DevicePropertiesSupported_len;i++)
-				di->DevicePropertiesSupported[di->DevicePropertiesSupported_len + i] = x.DevicePropertiesSupported[i];
-			di->DevicePropertiesSupported_len += x.DevicePropertiesSupported_len;
+			C_MEM (di->DeviceProps = realloc(di->DeviceProps,
+				(di->DeviceProps_len + x.DeviceProps_len) * sizeof(di->DeviceProps[0])));
+			for (unsigned i=0;i<x.DeviceProps_len;i++)
+				di->DeviceProps[di->DeviceProps_len + i] = x.DeviceProps[i];
+			di->DeviceProps_len += x.DeviceProps_len;
 			ptp_canon_eos_free_deviceinfo (&x);
 		}
 
@@ -399,91 +399,91 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	}
 
 	if (di->VendorExtensionID == PTP_VENDOR_FUJI) {
-		C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + 72)));
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+0] = PTP_DPC_ExposureTime;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+1] = PTP_DPC_FNumber;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+2] = 0xd38c;	/* PC Mode */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+3] = 0xd171;	/* Focus control */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+4] = 0xd21c;	/* Needed for X-T2? */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+5] = 0xd347;	/* Focus Position */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+6] = PTP_DPC_FUJI_LensZoomPos;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+7] = 0xd242;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+8] = PTP_DPC_FUJI_LiveViewImageSize; /* xt3 confirmed */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+9] = 0xd168; /* video out on/off (unconfirmed) */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+10] = PTP_DPC_FUJI_LiveViewImageQuality; /* xt3 confirmed */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+11] = PTP_DPC_FUJI_ForceMode; /* on xt3 set by webcam app to 1 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+12] = 0xd16e; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+13] = 0xd372; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+14] = 0xd020; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+15] = 0xd022; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+16] = 0xd023; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+17] = 0xd024; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+18] = 0xd025; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+19] = 0xd026; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+20] = 0xd027; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+21] = 0xd029; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+22] = 0xd16f; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+23] = 0xd02f; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+24] = 0xd395; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+25] = 0xd320; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+26] = 0xd321; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+27] = 0xd322; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+28] = 0xd323; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+29] = 0xd346; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+30] = 0xd34a; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+31] = 0xd34b; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+32] = 0xd34d; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+33] = 0xd351; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+34] = 0xd35e; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+35] = 0xd173; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+36] = 0xd365; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+37] = 0xd366; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+38] = 0xd374; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+39] = 0xd310; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+40] = 0xd359; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+41] = 0xd375; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+42] = 0xd376; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+43] = 0xd36e; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+44] = 0xd33f; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+45] = 0xd364; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+46] = 0xd34e; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+47] = 0xd02e; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+48] = 0xd36d; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+49] = 0xd38a; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+50] = 0xd36a; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+51] = 0xd36b; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+52] = 0xd36f; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+53] = 0xd370; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+54] = 0xd222; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+55] = 0xd223; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+56] = 0xd38c; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+57] = 0xd38d; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+58] = 0xd38e; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+59] = 0xd17b; /* seen on xt3 */
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+60] = PTP_DPC_ExposureBiasCompensation;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+61] = 0xd028;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+62] = 0xd02a;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+63] = 0xd02b;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+64] = 0xd02d;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+65] = 0xd156;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+66] = 0xd16b;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+67] = 0xd176;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+68] = 0xd17b;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+69] = 0xd17f;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+70] = 0xd208;
-		di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+71] = 0xd21c;
+		C_MEM (di->DeviceProps = realloc(di->DeviceProps,sizeof(di->DeviceProps[0])*(di->DeviceProps_len + 72)));
+		di->DeviceProps[di->DeviceProps_len+0] = PTP_DPC_ExposureTime;
+		di->DeviceProps[di->DeviceProps_len+1] = PTP_DPC_FNumber;
+		di->DeviceProps[di->DeviceProps_len+2] = 0xd38c;	/* PC Mode */
+		di->DeviceProps[di->DeviceProps_len+3] = 0xd171;	/* Focus control */
+		di->DeviceProps[di->DeviceProps_len+4] = 0xd21c;	/* Needed for X-T2? */
+		di->DeviceProps[di->DeviceProps_len+5] = 0xd347;	/* Focus Position */
+		di->DeviceProps[di->DeviceProps_len+6] = PTP_DPC_FUJI_LensZoomPos;
+		di->DeviceProps[di->DeviceProps_len+7] = 0xd242;
+		di->DeviceProps[di->DeviceProps_len+8] = PTP_DPC_FUJI_LiveViewImageSize; /* xt3 confirmed */
+		di->DeviceProps[di->DeviceProps_len+9] = 0xd168; /* video out on/off (unconfirmed) */
+		di->DeviceProps[di->DeviceProps_len+10] = PTP_DPC_FUJI_LiveViewImageQuality; /* xt3 confirmed */
+		di->DeviceProps[di->DeviceProps_len+11] = PTP_DPC_FUJI_ForceMode; /* on xt3 set by webcam app to 1 */
+		di->DeviceProps[di->DeviceProps_len+12] = 0xd16e; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+13] = 0xd372; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+14] = 0xd020; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+15] = 0xd022; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+16] = 0xd023; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+17] = 0xd024; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+18] = 0xd025; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+19] = 0xd026; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+20] = 0xd027; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+21] = 0xd029; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+22] = 0xd16f; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+23] = 0xd02f; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+24] = 0xd395; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+25] = 0xd320; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+26] = 0xd321; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+27] = 0xd322; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+28] = 0xd323; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+29] = 0xd346; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+30] = 0xd34a; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+31] = 0xd34b; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+32] = 0xd34d; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+33] = 0xd351; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+34] = 0xd35e; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+35] = 0xd173; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+36] = 0xd365; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+37] = 0xd366; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+38] = 0xd374; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+39] = 0xd310; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+40] = 0xd359; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+41] = 0xd375; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+42] = 0xd376; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+43] = 0xd36e; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+44] = 0xd33f; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+45] = 0xd364; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+46] = 0xd34e; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+47] = 0xd02e; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+48] = 0xd36d; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+49] = 0xd38a; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+50] = 0xd36a; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+51] = 0xd36b; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+52] = 0xd36f; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+53] = 0xd370; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+54] = 0xd222; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+55] = 0xd223; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+56] = 0xd38c; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+57] = 0xd38d; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+58] = 0xd38e; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+59] = 0xd17b; /* seen on xt3 */
+		di->DeviceProps[di->DeviceProps_len+60] = PTP_DPC_ExposureBiasCompensation;
+		di->DeviceProps[di->DeviceProps_len+61] = 0xd028;
+		di->DeviceProps[di->DeviceProps_len+62] = 0xd02a;
+		di->DeviceProps[di->DeviceProps_len+63] = 0xd02b;
+		di->DeviceProps[di->DeviceProps_len+64] = 0xd02d;
+		di->DeviceProps[di->DeviceProps_len+65] = 0xd156;
+		di->DeviceProps[di->DeviceProps_len+66] = 0xd16b;
+		di->DeviceProps[di->DeviceProps_len+67] = 0xd176;
+		di->DeviceProps[di->DeviceProps_len+68] = 0xd17b;
+		di->DeviceProps[di->DeviceProps_len+69] = 0xd17f;
+		di->DeviceProps[di->DeviceProps_len+70] = 0xd208;
+		di->DeviceProps[di->DeviceProps_len+71] = 0xd21c;
 
-		di->DevicePropertiesSupported_len += 72;
+		di->DeviceProps_len += 72;
 
 		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_FUJI_GetDeviceInfo)) {
 			uint16_t	*props;
 			unsigned int	numprops;
 
 			C_PTP (ptp_fuji_getdeviceinfo (params, &props, &numprops));
-			free (di->DevicePropertiesSupported);
+			free (di->DeviceProps);
 
-			di->DevicePropertiesSupported		= props;
-			di->DevicePropertiesSupported_len	= numprops;
+			di->DeviceProps		= props;
+			di->DeviceProps_len	= numprops;
 		}
 
 	}
@@ -507,7 +507,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				GP_LOG_E ("if camera is Nikon 1 series, camera should probably have flag NIKON_1 set. report that to the libgphoto2 project");
 				camera->pl->params.device_flags |= PTP_NIKON_1;
 			}
-			C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 3)));
+			C_MEM (di->Operations = realloc(di->Operations,sizeof(di->Operations[0])*(di->Operations_len + 3)));
 			/* Nikon J5 does not advertise the PTP_OC_NIKON_InitiateCaptureRecInMedia cmd ... gnh */
 			/* logic: If we have one 0x920x command, we will probably have 0x9207 too. and getvendorpropcodes ... */
 
@@ -523,13 +523,13 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			if (	!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia) &&
 				 ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_StartLiveView)
 			) {
-				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
-				di->OperationsSupported_len++;
+				di->Operations[di->Operations_len+0] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
+				di->Operations_len++;
 			}
 
 			if (ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
-				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
-				di->OperationsSupported_len++;
+				di->Operations[di->Operations_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
+				di->Operations_len++;
 			}
 
 			/* V1 and J1 are a less reliable then the newer 1 versions, no changecamera mode, no getevent, no initiatecapturerecinsdram */
@@ -541,42 +541,42 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				/* V1: see https://github.com/gphoto/libgphoto2/issues/569 */
 				/* J1: see https://github.com/gphoto/libgphoto2/issues/716 */
 				/* S1: see https://github.com/gphoto/libgphoto2/issues/845 */
-				for (i=0;i<di->OperationsSupported_len;i++) {
-					if (di->OperationsSupported[i] == PTP_OC_NIKON_GetEvent) {
+				for (i=0;i<di->Operations_len;i++) {
+					if (di->Operations[i] == PTP_OC_NIKON_GetEvent) {
 						GP_LOG_D("On Nikon S1/J1/V1: disable NIKON_GetEvent as its unreliable");
-						di->OperationsSupported[i] = PTP_OC_GetDeviceInfo; /* overwrite */
+						di->Operations[i] = PTP_OC_GetDeviceInfo; /* overwrite */
 					}
-					if (di->OperationsSupported[i] == PTP_OC_NIKON_InitiateCaptureRecInSdram) {
+					if (di->Operations[i] == PTP_OC_NIKON_InitiateCaptureRecInSdram) {
 						GP_LOG_D("On Nikon S1/J1/V1: disable NIKON_InitiateCaptureRecInSdram as its unreliable");
-						di->OperationsSupported[i] = PTP_OC_InitiateCapture; /* overwrite */
+						di->Operations[i] = PTP_OC_InitiateCapture; /* overwrite */
 					}
 					if (!strcmp(params->deviceinfo.Model,"S1") &&
-						(di->OperationsSupported[i] == PTP_OC_NIKON_InitiateCaptureRecInMedia))
+						(di->Operations[i] == PTP_OC_NIKON_InitiateCaptureRecInMedia))
 					{
 						GP_LOG_D("On Nikon S1: disable NIKON_InitiateCaptureRecInMedia as its unreliable");
-						di->OperationsSupported[i] = PTP_OC_InitiateCapture; /* overwrite */
+						di->Operations[i] = PTP_OC_InitiateCapture; /* overwrite */
 					}
 				}
 			} else {
-				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_ChangeCameraMode;
-				di->OperationsSupported_len++;
+				di->Operations[di->Operations_len+0] = PTP_OC_NIKON_ChangeCameraMode;
+				di->Operations_len++;
 			}
 		}
 		if (params->deviceinfo.Model && !strcmp(params->deviceinfo.Model,"COOLPIX A")) {
 			/* The A also hides some commands from us ... */
 			if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
-				C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 10)));
-				di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
-				di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_GetEvent;
-				di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_AfDrive;
-				di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_ChangeCameraMode;
-				di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_DeviceReady;
-				di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_StartLiveView;
-				di->OperationsSupported[di->OperationsSupported_len+6] = PTP_OC_NIKON_EndLiveView;
-				di->OperationsSupported[di->OperationsSupported_len+7] = PTP_OC_NIKON_GetLiveViewImg;
-				di->OperationsSupported[di->OperationsSupported_len+8] = PTP_OC_NIKON_ChangeAfArea;
-				di->OperationsSupported[di->OperationsSupported_len+9] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
-				di->OperationsSupported_len += 10;
+				C_MEM (di->Operations = realloc(di->Operations,sizeof(di->Operations[0])*(di->Operations_len + 10)));
+				di->Operations[di->Operations_len+0] = PTP_OC_NIKON_GetVendorPropCodes;
+				di->Operations[di->Operations_len+1]  = PTP_OC_NIKON_GetEvent;
+				di->Operations[di->Operations_len+2]  = PTP_OC_NIKON_AfDrive;
+				di->Operations[di->Operations_len+3]  = PTP_OC_NIKON_ChangeCameraMode;
+				di->Operations[di->Operations_len+4]  = PTP_OC_NIKON_DeviceReady;
+				di->Operations[di->Operations_len+5]  = PTP_OC_NIKON_StartLiveView;
+				di->Operations[di->Operations_len+6] = PTP_OC_NIKON_EndLiveView;
+				di->Operations[di->Operations_len+7] = PTP_OC_NIKON_GetLiveViewImg;
+				di->Operations[di->Operations_len+8] = PTP_OC_NIKON_ChangeAfArea;
+				di->Operations[di->Operations_len+9] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
+				di->Operations_len += 10;
 			}
 		}
 		if (params->deviceinfo.Model && (sscanf(params->deviceinfo.Model,"D%d", &nikond)))
@@ -587,67 +587,67 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				 * https://github.com/gphoto/libgphoto2/issues/140
 				 */
 				if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
-					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 6)));
-					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_AfDrive;
-					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_DeviceReady;
-					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_GetPreviewImg;
-					di->OperationsSupported[di->OperationsSupported_len+3] = PTP_OC_NIKON_MfDrive;
-					di->OperationsSupported[di->OperationsSupported_len+4] = PTP_OC_NIKON_ChangeAfArea;
-					di->OperationsSupported[di->OperationsSupported_len+5] = PTP_OC_NIKON_AfDriveCancel;
-					di->OperationsSupported_len += 6;
+					C_MEM (di->Operations = realloc(di->Operations,sizeof(di->Operations[0])*(di->Operations_len + 6)));
+					di->Operations[di->Operations_len+0]  = PTP_OC_NIKON_AfDrive;
+					di->Operations[di->Operations_len+1]  = PTP_OC_NIKON_DeviceReady;
+					di->Operations[di->Operations_len+2]  = PTP_OC_NIKON_GetPreviewImg;
+					di->Operations[di->Operations_len+3] = PTP_OC_NIKON_MfDrive;
+					di->Operations[di->Operations_len+4] = PTP_OC_NIKON_ChangeAfArea;
+					di->Operations[di->Operations_len+5] = PTP_OC_NIKON_AfDriveCancel;
+					di->Operations_len += 6;
 				}
 			}
 			if ((nikond >= 3200) && (nikond < 3299)) {
 				GP_LOG_D("The D3200 hides commands from us ... adding some D7100 ones");
 				if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
 					/* see https://github.com/gphoto/gphoto2/issues/331 and https://github.com/gphoto/gphoto2/issues/332 */
-					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 14)));
-					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_GetEvent;
-					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_InitiateCaptureRecInSdram;
-					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_AfDrive;
-					di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_ChangeCameraMode;
-					di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_DeviceReady;
-					di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_AfCaptureSDRAM;
-					di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_NIKON_DelImageSDRAM;
+					C_MEM (di->Operations = realloc(di->Operations,sizeof(di->Operations[0])*(di->Operations_len + 14)));
+					di->Operations[di->Operations_len+0]  = PTP_OC_NIKON_GetEvent;
+					di->Operations[di->Operations_len+1]  = PTP_OC_NIKON_InitiateCaptureRecInSdram;
+					di->Operations[di->Operations_len+2]  = PTP_OC_NIKON_AfDrive;
+					di->Operations[di->Operations_len+3]  = PTP_OC_NIKON_ChangeCameraMode;
+					di->Operations[di->Operations_len+4]  = PTP_OC_NIKON_DeviceReady;
+					di->Operations[di->Operations_len+5]  = PTP_OC_NIKON_AfCaptureSDRAM;
+					di->Operations[di->Operations_len+6]  = PTP_OC_NIKON_DelImageSDRAM;
 
-					di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_NIKON_GetPreviewImg;
-					di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_NIKON_StartLiveView;
-					di->OperationsSupported[di->OperationsSupported_len+9]  = PTP_OC_NIKON_EndLiveView;
-					di->OperationsSupported[di->OperationsSupported_len+10] = PTP_OC_NIKON_GetLiveViewImg;	/* confirmed works */
-					di->OperationsSupported[di->OperationsSupported_len+11] = PTP_OC_NIKON_ChangeAfArea;
-					di->OperationsSupported[di->OperationsSupported_len+12] = PTP_OC_NIKON_InitiateCaptureRecInMedia;	/* works to some degree */
-					di->OperationsSupported[di->OperationsSupported_len+13] = PTP_OC_NIKON_AfDriveCancel;
+					di->Operations[di->Operations_len+7]  = PTP_OC_NIKON_GetPreviewImg;
+					di->Operations[di->Operations_len+8]  = PTP_OC_NIKON_StartLiveView;
+					di->Operations[di->Operations_len+9]  = PTP_OC_NIKON_EndLiveView;
+					di->Operations[di->Operations_len+10] = PTP_OC_NIKON_GetLiveViewImg;	/* confirmed works */
+					di->Operations[di->Operations_len+11] = PTP_OC_NIKON_ChangeAfArea;
+					di->Operations[di->Operations_len+12] = PTP_OC_NIKON_InitiateCaptureRecInMedia;	/* works to some degree */
+					di->Operations[di->Operations_len+13] = PTP_OC_NIKON_AfDriveCancel;
 					/* probably more */
-					di->OperationsSupported_len += 14;
+					di->Operations_len += 14;
 
 				}
 			}
 			if ((nikond >= 3300) && (nikond < 3999)) {
 				GP_LOG_D("The D3xxx series hides commands from us ... adding all D7100 ones");
 				if (!ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorPropCodes)) {
-					C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 19)));
-					di->OperationsSupported[di->OperationsSupported_len+0]  = PTP_OC_NIKON_GetVendorPropCodes;
-					di->OperationsSupported[di->OperationsSupported_len+1]  = PTP_OC_NIKON_GetEvent;
-					di->OperationsSupported[di->OperationsSupported_len+2]  = PTP_OC_NIKON_InitiateCaptureRecInSdram;
-					di->OperationsSupported[di->OperationsSupported_len+3]  = PTP_OC_NIKON_AfDrive;
-					di->OperationsSupported[di->OperationsSupported_len+4]  = PTP_OC_NIKON_ChangeCameraMode;
-					di->OperationsSupported[di->OperationsSupported_len+5]  = PTP_OC_NIKON_DeviceReady;
-					di->OperationsSupported[di->OperationsSupported_len+6]  = PTP_OC_NIKON_AfCaptureSDRAM;
-					di->OperationsSupported[di->OperationsSupported_len+7]  = PTP_OC_NIKON_DelImageSDRAM;
+					C_MEM (di->Operations = realloc(di->Operations,sizeof(di->Operations[0])*(di->Operations_len + 19)));
+					di->Operations[di->Operations_len+0]  = PTP_OC_NIKON_GetVendorPropCodes;
+					di->Operations[di->Operations_len+1]  = PTP_OC_NIKON_GetEvent;
+					di->Operations[di->Operations_len+2]  = PTP_OC_NIKON_InitiateCaptureRecInSdram;
+					di->Operations[di->Operations_len+3]  = PTP_OC_NIKON_AfDrive;
+					di->Operations[di->Operations_len+4]  = PTP_OC_NIKON_ChangeCameraMode;
+					di->Operations[di->Operations_len+5]  = PTP_OC_NIKON_DeviceReady;
+					di->Operations[di->Operations_len+6]  = PTP_OC_NIKON_AfCaptureSDRAM;
+					di->Operations[di->Operations_len+7]  = PTP_OC_NIKON_DelImageSDRAM;
 
-					di->OperationsSupported[di->OperationsSupported_len+8]  = PTP_OC_NIKON_GetPreviewImg;
-					di->OperationsSupported[di->OperationsSupported_len+9]  = PTP_OC_NIKON_StartLiveView;
-					di->OperationsSupported[di->OperationsSupported_len+10] = PTP_OC_NIKON_EndLiveView;
-					di->OperationsSupported[di->OperationsSupported_len+11] = PTP_OC_NIKON_GetLiveViewImg;
-					di->OperationsSupported[di->OperationsSupported_len+12] = PTP_OC_NIKON_MfDrive;
-					di->OperationsSupported[di->OperationsSupported_len+13] = PTP_OC_NIKON_ChangeAfArea;
-					di->OperationsSupported[di->OperationsSupported_len+14] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
-					di->OperationsSupported[di->OperationsSupported_len+15] = PTP_OC_NIKON_AfDriveCancel;
-					di->OperationsSupported[di->OperationsSupported_len+16] = PTP_OC_NIKON_StartMovieRecInCard;
-					di->OperationsSupported[di->OperationsSupported_len+17] = PTP_OC_NIKON_EndMovieRec;
-					di->OperationsSupported[di->OperationsSupported_len+18] = PTP_OC_NIKON_TerminateCapture;
+					di->Operations[di->Operations_len+8]  = PTP_OC_NIKON_GetPreviewImg;
+					di->Operations[di->Operations_len+9]  = PTP_OC_NIKON_StartLiveView;
+					di->Operations[di->Operations_len+10] = PTP_OC_NIKON_EndLiveView;
+					di->Operations[di->Operations_len+11] = PTP_OC_NIKON_GetLiveViewImg;
+					di->Operations[di->Operations_len+12] = PTP_OC_NIKON_MfDrive;
+					di->Operations[di->Operations_len+13] = PTP_OC_NIKON_ChangeAfArea;
+					di->Operations[di->Operations_len+14] = PTP_OC_NIKON_InitiateCaptureRecInMedia;
+					di->Operations[di->Operations_len+15] = PTP_OC_NIKON_AfDriveCancel;
+					di->Operations[di->Operations_len+16] = PTP_OC_NIKON_StartMovieRecInCard;
+					di->Operations[di->Operations_len+17] = PTP_OC_NIKON_EndMovieRec;
+					di->Operations[di->Operations_len+18] = PTP_OC_NIKON_TerminateCapture;
 					/* probably more */
-					di->OperationsSupported_len += 19;
+					di->Operations_len += 19;
 
 				}
 			}
@@ -658,45 +658,45 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			unsigned int	xsize;
 
 			if (PTP_RC_OK == LOG_ON_PTP_E (ptp_nikon_get_vendorpropcodes (&camera->pl->params, &xprops, &xsize))) {
-				di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + xsize));
-				if (!di->DevicePropertiesSupported) {
+				di->DeviceProps = realloc(di->DeviceProps,sizeof(di->DeviceProps[0])*(di->DeviceProps_len + xsize));
+				if (!di->DeviceProps) {
 					free (xprops);
-					C_MEM (di->DevicePropertiesSupported);
+					C_MEM (di->DeviceProps);
 				}
 				for (i=0;i<xsize;i++)
-					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = xprops[i];
-				di->DevicePropertiesSupported_len += xsize;
+					di->DeviceProps[i+di->DeviceProps_len] = xprops[i];
+				di->DeviceProps_len += xsize;
 				free (xprops);
 			}
 		}
 
 		/* For nikon 1 j5, they have blanked this space */
 		if (camera->pl->params.device_flags & PTP_NIKON_1) {
-			for (i=0;i<di->DevicePropertiesSupported_len;i++)
-				if ((di->DevicePropertiesSupported[i] & 0xf000) == 0xf000)
+			for (i=0;i<di->DeviceProps_len;i++)
+				if ((di->DeviceProps[i] & 0xf000) == 0xf000)
 					break;
 			/* The J5 so far goes up to 0xf01c */
 #define NIKON_1_ADDITIONAL_DEVPROPS 29
-			if (i==di->DevicePropertiesSupported_len) {
-				C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + NIKON_1_ADDITIONAL_DEVPROPS+3)));
+			if (i==di->DeviceProps_len) {
+				C_MEM (di->DeviceProps = realloc(di->DeviceProps,sizeof(di->DeviceProps[0])*(di->DeviceProps_len + NIKON_1_ADDITIONAL_DEVPROPS+3)));
 				for (i=0;i<NIKON_1_ADDITIONAL_DEVPROPS;i++)
-					di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = 0xf000 | i;
+					di->DeviceProps[i+di->DeviceProps_len] = 0xf000 | i;
 
 				/* is returned by the J5, but readonly */
-				di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+NIKON_1_ADDITIONAL_DEVPROPS] = PTP_DPC_NIKON_ExposureTime;	// OKAY in J5
-				di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+NIKON_1_ADDITIONAL_DEVPROPS+1] = PTP_DPC_NIKON_LiveViewProhibitCondition;	// hack
-				di->DevicePropertiesSupported[di->DevicePropertiesSupported_len+NIKON_1_ADDITIONAL_DEVPROPS+2] = PTP_DPC_NIKON_LiveViewStatus;	// hack
+				di->DeviceProps[di->DeviceProps_len+NIKON_1_ADDITIONAL_DEVPROPS] = PTP_DPC_NIKON_ExposureTime;	// OKAY in J5
+				di->DeviceProps[di->DeviceProps_len+NIKON_1_ADDITIONAL_DEVPROPS+1] = PTP_DPC_NIKON_LiveViewProhibitCondition;	// hack
+				di->DeviceProps[di->DeviceProps_len+NIKON_1_ADDITIONAL_DEVPROPS+2] = PTP_DPC_NIKON_LiveViewStatus;	// hack
 
-				di->DevicePropertiesSupported_len += NIKON_1_ADDITIONAL_DEVPROPS + 3;
+				di->DeviceProps_len += NIKON_1_ADDITIONAL_DEVPROPS + 3;
 			}
 		}
 
 #if 0
 		if (!ptp_operation_issupported(&camera->pl->params, 0x9207)) {
-			C_MEM (di->OperationsSupported = realloc(di->OperationsSupported,sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + 2)));
-			di->OperationsSupported[di->OperationsSupported_len+0] = PTP_OC_NIKON_InitiateCaptureRecInSdram;
-			di->OperationsSupported[di->OperationsSupported_len+1] = PTP_OC_NIKON_AfCaptureSDRAM;
-			di->OperationsSupported_len+=2;
+			C_MEM (di->Operations = realloc(di->Operations,sizeof(di->Operations[0])*(di->Operations_len + 2)));
+			di->Operations[di->Operations_len+0] = PTP_OC_NIKON_InitiateCaptureRecInSdram;
+			di->Operations[di->Operations_len+1] = PTP_OC_NIKON_AfCaptureSDRAM;
+			di->Operations_len+=2;
 		}
 #endif
 	}
@@ -735,23 +735,23 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 					break;
 				}
 			}
-			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + propcodes)));
-			C_MEM (di->OperationsSupported       = realloc(di->OperationsSupported,      sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + opcodes)));
-			C_MEM (di->EventsSupported           = realloc(di->EventsSupported,          sizeof(di->EventsSupported[0])*(di->EventsSupported_len + events)));
+			C_MEM (di->DeviceProps = realloc(di->DeviceProps, sizeof(di->DeviceProps[0])*(di->DeviceProps_len + propcodes)));
+			C_MEM (di->Operations  = realloc(di->Operations,  sizeof(di->Operations[0])*(di->Operations_len + opcodes)));
+			C_MEM (di->Events      = realloc(di->Events,      sizeof(di->Events[0])*(di->Events_len + events)));
 			j = 0; k = 0; l = 0;
 			for (i=0;i<xsize;i++) {
 				GP_LOG_D ("sony code: %x", xprops[i]);
 				switch (xprops[i] & 0x7000) {
-				case 0x1000: di->OperationsSupported      [(k++)+di->OperationsSupported_len]       = xprops[i]; break;
-				case 0x4000: di->EventsSupported          [(l++)+di->EventsSupported_len]           = xprops[i]; break;
-				case 0x5000: di->DevicePropertiesSupported[(j++)+di->DevicePropertiesSupported_len] = xprops[i]; break;
+				case 0x1000: di->Operations [(k++)+di->Operations_len]  = xprops[i]; break;
+				case 0x4000: di->Events     [(l++)+di->Events_len]      = xprops[i]; break;
+				case 0x5000: di->DeviceProps[(j++)+di->DeviceProps_len] = xprops[i]; break;
 				default:
 					break;
 				}
 			}
-			di->DevicePropertiesSupported_len += propcodes;
-			di->EventsSupported_len += events;
-			di->OperationsSupported_len += opcodes;
+			di->DeviceProps_len += propcodes;
+			di->Events_len += events;
+			di->Operations_len += opcodes;
 			free (xprops);
 			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 3, 0, 0));
 
@@ -782,23 +782,23 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 					break;
 				}
 			}
-			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + propcodes)));
-			C_MEM (di->OperationsSupported       = realloc(di->OperationsSupported,      sizeof(di->OperationsSupported[0])*(di->OperationsSupported_len + opcodes)));
-			C_MEM (di->EventsSupported           = realloc(di->EventsSupported,          sizeof(di->EventsSupported[0])*(di->EventsSupported_len + events)));
+			C_MEM (di->DeviceProps = realloc(di->DeviceProps, sizeof(di->DeviceProps[0])*(di->DeviceProps_len + propcodes)));
+			C_MEM (di->Operations  = realloc(di->Operations,  sizeof(di->Operations[0])*(di->Operations_len + opcodes)));
+			C_MEM (di->Events      = realloc(di->Events,      sizeof(di->Events[0])*(di->Events_len + events)));
 			j = 0; k = 0; l = 0;
 			for (i=0;i<xsize;i++) {
 				GP_LOG_D ("sony code: %x", xprops[i]);
 				switch (xprops[i] & 0x7000) {
-				case 0x1000: di->OperationsSupported      [(k++)+di->OperationsSupported_len]       = xprops[i]; break;
-				case 0x4000: di->EventsSupported          [(l++)+di->EventsSupported_len]           = xprops[i]; break;
-				case 0x5000: di->DevicePropertiesSupported[(j++)+di->DevicePropertiesSupported_len] = xprops[i]; break;
+				case 0x1000: di->Operations [(k++)+di->Operations_len]  = xprops[i]; break;
+				case 0x4000: di->Events     [(l++)+di->Events_len]      = xprops[i]; break;
+				case 0x5000: di->DeviceProps[(j++)+di->DeviceProps_len] = xprops[i]; break;
 				default:
 					break;
 				}
 			}
-			di->DevicePropertiesSupported_len += propcodes;
-			di->EventsSupported_len += events;
-			di->OperationsSupported_len += opcodes;
+			di->DeviceProps_len += propcodes;
+			di->Events_len += events;
+			di->Operations_len += opcodes;
 			free (xprops);
 			C_PTP (ptp_sony_qx_connect (&camera->pl->params, 3, 0xda01, 0xda01));
 
@@ -812,10 +812,10 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			int i;
 
 			C_PTP (ptp_canon_eos_getdeviceinfo (&camera->pl->params, &eosdi));
-			C_MEM (di->DevicePropertiesSupported = realloc(di->DevicePropertiesSupported,sizeof(di->DevicePropertiesSupported[0])*(di->DevicePropertiesSupported_len + eosdi.DevicePropertiesSupported_len)));
-			for (i=0;i<eosdi.DevicePropertiesSupported_len;i++)
-				di->DevicePropertiesSupported[i+di->DevicePropertiesSupported_len] = eosdi.DevicePropertiesSupported[i];
-			di->DevicePropertiesSupported_len += eosdi.DevicePropertiesSupported_len;
+			C_MEM (di->DeviceProps = realloc(di->DeviceProps,sizeof(di->DeviceProps[0])*(di->DeviceProps_len + eosdi.DeviceProps_len)));
+			for (i=0;i<eosdi.DeviceProps_len;i++)
+				di->DeviceProps[i+di->DeviceProps_len] = eosdi.DeviceProps[i];
+			di->DeviceProps_len += eosdi.DeviceProps_len;
 		}
 	}
 #endif
@@ -7949,9 +7949,9 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	 */
 	C_PTP_REP (ptp_getdeviceinfo (params, &pdi));
 	CR (fixup_cached_deviceinfo (camera, &pdi));
-	for (i=0;i<pdi.DevicePropertiesSupported_len;i++) {
+	for (i=0;i<pdi.DeviceProps_len;i++) {
 		PTPDevicePropDesc dpd;
-		unsigned int dpc = pdi.DevicePropertiesSupported[i];
+		unsigned int dpc = pdi.DeviceProps[i];
 		const char *propname = ptp_get_property_description (params, dpc);
 
 		/* drop the "EOS_" prefix */
