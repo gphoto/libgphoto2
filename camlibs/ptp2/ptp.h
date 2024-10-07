@@ -3804,8 +3804,8 @@ struct _PTPObject {
 
 	PTPObjectInfo	oi;
 	uint32_t	canon_flags;
-	MTPProperties	*mtpprops;
-	unsigned int	nrofmtpprops;
+	MTPProperties	*mtp_props;
+	unsigned int	mtp_props_len;
 };
 typedef struct _PTPObject PTPObject;
 
@@ -3824,8 +3824,8 @@ typedef struct _MTPPropertyDesc MTPPropertyDesc;
 
 struct _MTPObjectFormat {
 	uint16_t	ofc;
-	unsigned int	nrofpds;
 	MTPPropertyDesc	*pds;
+	unsigned int	pds_len;
 };
 typedef struct _MTPObjectFormat MTPObjectFormat;
 
@@ -3881,18 +3881,18 @@ struct _PTPParams {
 	int		split_header_data;
 	int		ocs64; /* 64bit objectsize */
 
-	int		nrofobjectformats;
 	MTPObjectFormat	*objectformats;
+	unsigned int	objectformats_len;
 
 	/* PTP: internal structures used by ptp driver */
 	PTPObject	*objects;
-	unsigned int	nrofobjects;
+	unsigned int	objects_len;
 
 	PTPDeviceInfo	deviceinfo;
 
 	/* PTP: the current event queue */
 	PTPContainer	*events;
-	unsigned int	nrofevents;
+	unsigned int	events_len;
 
 	/* Capture count for SDRAM capture style images */
 	unsigned int		capcnt;
@@ -3908,19 +3908,19 @@ struct _PTPParams {
 	int			storagechanged;
 
 	/* PTP: Device Property Caching */
-	PTPDeviceProperty	*deviceproperties;
-	unsigned int		nrofdeviceproperties;
+	PTPDeviceProperty	*dpd_cache;
+	unsigned int		dpd_cache_len;
 
 	/* PTP: Canon specific flags list */
 	PTPCanon_Property	*canon_props;
-	unsigned int		nrofcanon_props;
+	unsigned int		canon_props_len;
 	int			canon_viewfinder_on;
 	int			canon_event_mode;
 	int			uilocked;
 
 	/* PTP: Canon EOS event queue */
 	PTPCanonEOSEvent	*eos_events;
-	unsigned int		nrofeos_events;
+	unsigned int		eos_events_len;
 	int			eos_captureenabled;
 	int			eos_camerastatus;
 
@@ -4396,7 +4396,7 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
 #define ptp_canon_eos_setrequestrollingpitchinglevel(params,onoff)	ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel,1,onoff)
 uint16_t ptp_canon_eos_getremotemode (PTPParams*, uint32_t *);
 uint16_t ptp_canon_eos_capture (PTPParams* params, uint32_t *result);
-uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanonEOSEvent **events, int *nrofevents);
+uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanonEOSEvent **events, int *events_len);
 uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle,
 				uint32_t offset, uint32_t size,
 				uint32_t pos, unsigned char** block,
