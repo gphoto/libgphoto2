@@ -687,7 +687,7 @@ parse_9301_cmd_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 }
 
 static int
-parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPPropertyValue *propval)
+parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPPropValue *propval)
 {
 	switch (type) {
 	case 6: { /*UINT32*/
@@ -841,7 +841,7 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr next, PTPDevicePropDesc *dpd)
 				n++;
 			} while (s);
 			dpd->FORM.Enum.NumberOfValues = n;
-			dpd->FORM.Enum.SupportedValue = calloc (n , sizeof(PTPPropertyValue));
+			dpd->FORM.Enum.SupportedValue = calloc (n , sizeof(PTPPropValue));
 			s = (char*)xmlNodeGetContent (next);
 			i = 0;
 			do {
@@ -1370,7 +1370,7 @@ uint16_t
 ptp_olympus_init_pc_mode (PTPParams* params)
 {
 	uint16_t		ret;
-	PTPPropertyValue	propval;
+	PTPPropValue	propval;
 	PTPContainer		event;
 	int			i;
 
@@ -2019,7 +2019,7 @@ ptp_opensession (PTPParams* params, uint32_t session)
 }
 
 void
-ptp_free_devicepropvalue(uint16_t dt, PTPPropertyValue* dpd)
+ptp_free_devicepropvalue(uint16_t dt, PTPPropValue* dpd)
 {
 	switch (dt) {
 	case PTP_DTC_INT8:	case PTP_DTC_UINT8:
@@ -2837,7 +2837,7 @@ ptp_getdevicepropdesc (PTPParams* params, uint32_t propcode,
 
 uint16_t
 ptp_getdevicepropvalue (PTPParams* params, uint32_t propcode,
-			PTPPropertyValue* value, uint16_t datatype)
+			PTPPropValue* value, uint16_t datatype)
 {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
@@ -2855,7 +2855,7 @@ ptp_getdevicepropvalue (PTPParams* params, uint32_t propcode,
 
 uint16_t
 ptp_setdevicepropvalue (PTPParams* params, uint32_t propcode,
-			PTPPropertyValue *value, uint16_t datatype)
+			PTPPropValue *value, uint16_t datatype)
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -4049,7 +4049,7 @@ ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsi
 
 uint16_t
 ptp_canon_eos_setdevicepropvalue (PTPParams* params,
-	uint16_t propcode, PTPPropertyValue *value, uint16_t datatype
+	uint16_t propcode, PTPPropValue *value, uint16_t datatype
 ) {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -4641,7 +4641,7 @@ ptp_sony_qx_getalldevicepropdesc (PTPParams* params) {
 
 uint16_t
 ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
-			PTPPropertyValue *value, uint16_t datatype)
+			PTPPropValue *value, uint16_t datatype)
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -4657,7 +4657,7 @@ ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
 
 uint16_t
 ptp_sony_qx_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
-			PTPPropertyValue *value, uint16_t datatype)
+			PTPPropValue *value, uint16_t datatype)
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -4673,7 +4673,7 @@ ptp_sony_qx_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
 
 uint16_t
 ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
-			PTPPropertyValue *value, uint16_t datatype)
+			PTPPropValue *value, uint16_t datatype)
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -4689,7 +4689,7 @@ ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
 
 uint16_t
 ptp_sony_qx_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
-			PTPPropertyValue *value, uint16_t datatype)
+			PTPPropValue *value, uint16_t datatype)
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -4862,7 +4862,7 @@ done:
  **/
 uint16_t
 ptp_generic_setdevicepropvalue (PTPParams* params, uint32_t propcode,
-	PTPPropertyValue *value, uint16_t datatype)
+	PTPPropValue *value, uint16_t datatype)
 {
 	unsigned int i;
 
@@ -5368,7 +5368,7 @@ ptp_mtp_getobjectpropdesc (
 uint16_t
 ptp_mtp_getobjectpropvalue (
 	PTPParams* params, uint32_t oid, uint16_t opc,
-	PTPPropertyValue *value, uint16_t datatype
+	PTPPropValue *value, uint16_t datatype
 ) {
 	PTPContainer	ptp;
 	uint16_t	ret = PTP_RC_OK;
@@ -5400,7 +5400,7 @@ ptp_mtp_getobjectpropvalue (
 uint16_t
 ptp_mtp_setobjectpropvalue (
 	PTPParams* params, uint32_t oid, uint16_t opc,
-	PTPPropertyValue *value, uint16_t datatype
+	PTPPropValue *value, uint16_t datatype
 ) {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -7700,7 +7700,7 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 }
 
 static int64_t
-_value_to_num(PTPPropertyValue *data, uint16_t dt) {
+_value_to_num(PTPPropValue *data, uint16_t dt) {
 	if (dt == PTP_DTC_STR) {
 		if (!data->str)
 			return 0;

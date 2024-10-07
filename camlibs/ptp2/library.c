@@ -235,7 +235,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		(camera->port->type == GP_PORT_USB) &&
 		(a.usb_vendor == 0x04da)
 	) {
-		PTPPropertyValue propval;
+		PTPPropValue propval;
 		/* Panasonic changes its device info if the MTP Initiator
 		 * is set, and e.g. adds DeleteObject.
 		 * (found in Windows USB traces) */
@@ -716,7 +716,7 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			uint16_t  	*xprops;
 			unsigned int	xsize = 0;
 			unsigned int	tries = 20;
-			PTPPropertyValue propval;
+			PTPPropValue propval;
 
 			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 1, 0, 0));
 			C_PTP (ptp_sony_sdioconnect (&camera->pl->params, 2, 0, 0));
@@ -3259,7 +3259,7 @@ camera_exit (Camera *camera, GPContext *context)
 			CR (camera_unprepare_capture (camera, context));
 			break;
 		case PTP_VENDOR_GP_OLYMPUS_OMD: {
-			PTPPropertyValue propval;
+			PTPPropValue propval;
 
 			propval.u16 = 0;
 			CR (ptp_setdevicepropvalue (params, 0xD052, &propval, PTP_DTC_UINT16));
@@ -3447,11 +3447,11 @@ save_jpeg_in_data_to_preview(const unsigned char *data, unsigned long size, Came
 
 static int
 camera_capture_stream_preview (Camera *camera, CameraFile *file, GPContext *context) {
-	PTPParams		*params = &camera->pl->params;
-	PTPPropertyValue	propval;
-	PTPStreamInfo		sinfo;
-	unsigned char		*data;
-	unsigned int		size;
+	PTPParams	*params = &camera->pl->params;
+	PTPPropValue	propval;
+	PTPStreamInfo	sinfo;
+	unsigned char	*data;
+	unsigned int	size;
 
 	C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_EnabledStreams, &propval, PTP_DTC_UINT32));
 	if (!(propval.u32 & 1)) {	/* video enabled already ? */
@@ -3545,7 +3545,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		}
 		/* Canon EOS DSLR preview mode */
 		if (ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetViewFinderData)) {
-			PTPPropertyValue	val;
+			PTPPropValue	val;
 			/* FIXME: this might cause a focusing pass and take seconds. 20 was not
 			 * enough (would be 0.2 seconds, too short for the mirror up operation.). */
 			/* The EOS 100D takes 1.2 seconds */
@@ -3678,8 +3678,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 		gp_context_error (context, _("Sorry, your Canon camera does not support Canon Viewfinder mode"));
 		return GP_ERROR_NOT_SUPPORTED;
 	case PTP_VENDOR_NIKON: {
-		PTPPropertyValue	value;
-		int 			tries, firstimage = 0;
+		PTPPropValue	value;
+		int 		tries, firstimage = 0;
 
 		if (!ptp_operation_issupported(params, PTP_OC_NIKON_StartLiveView)) {
 			gp_context_error (context, _("Sorry, your Nikon camera does not support LiveView mode"));
@@ -3707,7 +3707,7 @@ enable_liveview:
 				LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_NIKON_RecordingMedia, &value, PTP_DTC_UINT8));
 
 			if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_NIKON_LiveViewProhibitCondition)) {
-				PTPPropertyValue	cond;
+				PTPPropValue	cond;
 
 				C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_NIKON_LiveViewProhibitCondition, &cond, PTP_DTC_UINT32));
 
@@ -3960,9 +3960,9 @@ ignoreerror:
 		return GP_OK;
 	}
 	case PTP_VENDOR_GP_OLYMPUS_OMD: {
-		unsigned char		*ximage = NULL;
-		PTPPropertyValue	value;
-		int			tries = 25;
+		unsigned char	*ximage = NULL;
+		PTPPropValue	value;
+		int		tries = 25;
 
 		ret = ptp_getdevicepropvalue (params, PTP_DPC_OLYMPUS_LiveViewModeOM, &value, PTP_DTC_UINT32);
 		if (ret != PTP_RC_OK)
@@ -4026,7 +4026,7 @@ ignoreerror:
 	if (	ptp_operation_issupported(params,PTP_OC_GetStreamInfo) &&
 		ptp_property_issupported(params, PTP_DPC_SupportedStreams)
 	)  {
-		PTPPropertyValue propval;
+		PTPPropValue propval;
 
 		C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_SupportedStreams, &propval, PTP_DTC_UINT32));
 		if (propval.u32 & 1) /* camera does Video streams */
@@ -4137,7 +4137,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	PTPObjectInfo		oi;
 	PTPParams		*params = &camera->pl->params;
 	PTPDevicePropDesc	propdesc;
-	PTPPropertyValue	propval;
+	PTPPropValue		propval;
 	int			i, ret, burstnumber = 1, done, tries;
 	uint32_t		newobject;
 	int			back_off_wait = 0;
@@ -4693,15 +4693,15 @@ static int
 camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 		GPContext *context)
 {
-	PTPObjectInfo		oi;
-	int			found, ret, timeout, sawcapturecomplete = 0, viewfinderwason = 0;
-	PTPParams		*params = &camera->pl->params;
-	uint32_t		newobject = 0x0;
-	PTPPropertyValue	propval;
-	PTPContainer		event;
-	char 			buf[1024];
-	int			xmode = CANON_TRANSFER_CARD;
-	struct timeval		event_start;
+	PTPObjectInfo	oi;
+	int		found, ret, timeout, sawcapturecomplete = 0, viewfinderwason = 0;
+	PTPParams	*params = &camera->pl->params;
+	uint32_t	newobject = 0x0;
+	PTPPropValue	propval;
+	PTPContainer	event;
+	char 		buf[1024];
+	int		xmode = CANON_TRANSFER_CARD;
+	struct timeval	event_start;
 
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_InitiateCaptureInMemory)) {
 		gp_context_error (context, _("Sorry, your Canon camera does not support Canon Capture initiation"));
@@ -4901,7 +4901,7 @@ static int
 camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
 {
 	PTPParams	*params = &camera->pl->params;
-	PTPPropertyValue propval;
+	PTPPropValue	propval;
 	PTPContainer	event;
 	PTPObjectInfo	oi;
 	uint32_t	newobject = 0;
@@ -5080,7 +5080,7 @@ static int
 camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
 {
 	PTPParams	*params = &camera->pl->params;
-	PTPPropertyValue propval;
+	PTPPropValue	propval;
 	PTPObjectInfo	oi;
 	uint32_t	newobject = 0;
 	struct timeval	event_start;
@@ -5241,7 +5241,7 @@ static int
 camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
 {
 	PTPParams		*params = &camera->pl->params;
-	PTPPropertyValue	propval;
+	PTPPropValue		propval;
 	PTPObjectHandles	handles, beforehandles;
 	int			gotone;
 	uint32_t		newobject = 0, newobject2 = 0;
@@ -5566,8 +5566,8 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 	PTPContainer	event;
 	uint32_t	newobject = 0;
 	struct timeval	event_start;
-	int	     	back_off_wait = 0;
-	PTPPropertyValue propval;
+	int		back_off_wait = 0;
+	PTPPropValue	propval;
 
 	// clear out old events
 	//C_PTP_REP (ptp_check_event (params));
@@ -6235,7 +6235,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		/* If in liveview mode, we have to run non-af capture */
 		int inliveview = 0;
 		int tries;
-		PTPPropertyValue propval;
+		PTPPropValue propval;
 
 		C_PTP_REP (ptp_check_event (params));
 		C_PTP_REP (nikon_wait_busy (params, 100, 2000)); /* lets wait 2 seconds */
@@ -6295,7 +6295,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	) {
 		/* If in liveview mode, we have to run non-af capture */
 		int inliveview = 0;
-		PTPPropertyValue propval;
+		PTPPropValue propval;
 
 		C_PTP_REP (ptp_check_event (params));
 		C_PTP_REP (nikon_wait_busy (params, 20, 2000));
@@ -6333,7 +6333,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	) {
 		uint16_t xmode;
 		/*int viewfinderwason = 0;*/
-		PTPPropertyValue propval;
+		PTPPropValue propval;
 
 		if (!ptp_property_issupported(params, PTP_DPC_CANON_FlashMode)) {
 			/* did not call --set-config capture=on, do it for user */
@@ -6405,7 +6405,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_SDIO_ControlDevice)
 	) {
-		PTPPropertyValue	propval;
+		PTPPropValue		propval;
 		struct timeval		event_start;
 		PTPContainer		event;
 		PTPDevicePropDesc	dpd;
@@ -6470,7 +6470,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_QX_SetControlDeviceB)
 	) {
-		PTPPropertyValue	propval;
+		PTPPropValue		propval;
 		struct timeval		event_start;
 		PTPContainer		event;
 		PTPDevicePropDesc	dpd;
@@ -6514,7 +6514,7 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
 		ptp_operation_issupported(params, PTP_OC_InitiateCapture)
 	) {
-		PTPPropertyValue	propval;
+		PTPPropValue propval;
 
 		/* focus */
 		propval.u16 = 0x0200;
@@ -7167,7 +7167,7 @@ sonyout:
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
 		ptp_property_issupported(params, PTP_DPC_FUJI_CurrentState)
 	) {
-		PTPPropertyValue propval;
+		PTPPropValue propval;
 
 		/* reenable event wait mode */
 		if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
@@ -7529,7 +7529,7 @@ static int ptp_max(int a, int b) {
 }
 
 static int
-snprintf_ptp_property (char *txt, int spaceleft, PTPPropertyValue *data, uint16_t dt)
+snprintf_ptp_property (char *txt, int spaceleft, PTPPropValue *data, uint16_t dt)
 {
 	if (dt == PTP_DTC_STR)
 		return snprintf (txt, spaceleft, "'%s'", data->str);
@@ -7738,7 +7738,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	if (	ptp_operation_issupported(params,PTP_OC_GetStreamInfo) &&
 		ptp_property_issupported(params, PTP_DPC_SupportedStreams)
 	)  {
-		PTPPropertyValue propval;
+		PTPPropValue propval;
 
 		ret = ptp_getdevicepropvalue (params, PTP_DPC_SupportedStreams, &propval, PTP_DTC_UINT32);
 		if (ret == PTP_RC_OK) {
@@ -8406,7 +8406,7 @@ ptp_mtp_render_metadata (
 
 		ret = LOG_ON_PTP_E (ptp_mtp_getobjectpropdesc (params, props[j], ofc, &opd));
 		if (ret == PTP_RC_OK) {
-			PTPPropertyValue	pv;
+			PTPPropValue	pv;
 			ret = ptp_mtp_getobjectpropvalue (params, object_id, props[j], &pv, opd.DataType);
 			if (ret != PTP_RC_OK) {
 				sprintf (text, "failure to retrieve %x of oid %x, ret %x", props[j], object_id, ret);
@@ -8476,7 +8476,7 @@ ptp_mtp_parse_metadata (
 		char			*begin, *end, *content;
 		PTPObjectPropDesc	opd;
 		int 			i;
-		PTPPropertyValue	pv;
+		PTPPropValue		pv;
 
 		for (i=sizeof(readonly_props)/sizeof(readonly_props[0]);i--;)
 			if (readonly_props[i] == props[j])
@@ -9909,9 +9909,9 @@ camera_init (Camera *camera, GPContext *context)
 #if 1
 	/* Special fuji wlan init code */
 	if ((camera->port->type == GP_PORT_PTPIP)  && strstr(a.model,"Fuji")) {
-		PTPPropertyValue	propval;
-		GPPortInfo		info;
-		char 			*xpath;
+		PTPPropValue	propval;
+		GPPortInfo	info;
+		char 		*xpath;
 
 		ret = gp_port_get_info (camera->port, &info);
 		if (ret != GP_OK) {
@@ -10152,7 +10152,7 @@ camera_init (Camera *camera, GPContext *context)
 			ptp_getstorageinfo(params, params->storageids.Storage[0], &storageinfo);
 		}
 
-		PTPPropertyValue	propval;
+		PTPPropValue	propval;
 		if (!strncmp(params->deviceinfo.Model,"E-M5",4)) {
 			ptp_olympus_init_pc_mode(params);
 		}

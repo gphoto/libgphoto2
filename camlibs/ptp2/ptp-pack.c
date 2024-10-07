@@ -604,7 +604,7 @@ ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, 
 static inline unsigned int
 ptp_unpack_DPV (
 	PTPParams *params, const unsigned char* data, unsigned int *offset, unsigned int total,
-	PTPPropertyValue* value, uint16_t datatype
+	PTPPropValue* value, uint16_t datatype
 ) {
 	if (*offset >= total)	/* we are at the end or over the end of the buffer */
 		return 0;
@@ -864,7 +864,7 @@ outofmemory:
 }
 
 static inline void
-duplicate_PropertyValue (const PTPPropertyValue *src, PTPPropertyValue *dst, uint16_t type) {
+duplicate_PropertyValue (const PTPPropValue *src, PTPPropValue *dst, uint16_t type) {
 	if (type == PTP_DTC_STR) {
 		if (src->str)
 			dst->str = strdup(src->str);
@@ -1020,7 +1020,7 @@ outofmemory:
 }
 
 static inline uint32_t
-ptp_pack_DPV (PTPParams *params, PTPPropertyValue* value, unsigned char** dpvptr, uint16_t datatype)
+ptp_pack_DPV (PTPParams *params, PTPPropValue* value, unsigned char** dpvptr, uint16_t datatype)
 {
 	unsigned char* dpv=NULL;
 	uint32_t size=0;
@@ -1901,7 +1901,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			dpd->FormFlag = PTP_DPFF_Enumeration;
 			dpd->FORM.Enum.NumberOfValues = dpd_count;
 			free (dpd->FORM.Enum.SupportedValue);
-			dpd->FORM.Enum.SupportedValue = calloc (dpd_count, sizeof (PTPPropertyValue));
+			dpd->FORM.Enum.SupportedValue = calloc (dpd_count, sizeof (PTPPropValue));
 
 			switch (dpc) {
 			case PTP_DPC_CANON_EOS_ImageFormat:

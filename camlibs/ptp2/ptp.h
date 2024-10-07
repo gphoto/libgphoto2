@@ -1682,9 +1682,10 @@ typedef struct _PTPObjectFilesystemInfo PTPObjectFilesystemInfo;
 #define PTP_AC_ReadOnly				0x0001
 #define PTP_AC_ReadOnly_with_Object_Deletion	0x0002
 
-/* Property Describing Dataset, Range Form */
-
-union _PTPPropertyValue {
+/* Dataset containing the value of a (device or object) property.
+ * There is no direct equivalent of this in the PTP specification.
+ * The variable sized untyped data block containing a value is called DTS in the spec. */
+union _PTPPropValue {
 	char		*str;	/* common string, malloced */
 	uint8_t		u8;
 	int8_t		i8;
@@ -1697,25 +1698,25 @@ union _PTPPropertyValue {
 	/* XXXX: 128 bit signed and unsigned missing */
 	struct array {
 		uint32_t	count;
-		union _PTPPropertyValue	*v;	/* malloced, count elements */
+		union _PTPPropValue	*v;	/* malloced, count elements */
 	} a;
 };
 
-typedef union _PTPPropertyValue PTPPropertyValue;
+typedef union _PTPPropValue PTPPropValue;
 
 /* Metadata lists for MTP operations */
 struct _MTPProperties {
-	uint16_t 	 	property;
-	uint16_t 	 	datatype;
-	uint32_t 	 	ObjectHandle;
-	PTPPropertyValue 	propval;
+	uint16_t 	 property;
+	uint16_t 	 datatype;
+	uint32_t 	 ObjectHandle;
+	PTPPropValue propval;
 };
 typedef struct _MTPProperties MTPProperties;
 
 struct _PTPPropDescRangeForm {
-	PTPPropertyValue 	MinValue;
-	PTPPropertyValue 	MaxValue;
-	PTPPropertyValue 	StepSize;
+	PTPPropValue MinValue;
+	PTPPropValue MaxValue;
+	PTPPropValue StepSize;
 };
 typedef struct _PTPPropDescRangeForm PTPPropDescRangeForm;
 
@@ -1723,7 +1724,7 @@ typedef struct _PTPPropDescRangeForm PTPPropDescRangeForm;
 
 struct _PTPPropDescEnumForm {
 	uint16_t		NumberOfValues;
-	PTPPropertyValue	*SupportedValue;	/* malloced */
+	PTPPropValue	*SupportedValue;	/* malloced */
 };
 typedef struct _PTPPropDescEnumForm PTPPropDescEnumForm;
 
@@ -1744,8 +1745,8 @@ struct _PTPDevicePropDesc {
 	uint32_t		DevicePropertyCode;
 	uint16_t		DataType;
 	uint8_t			GetSet;
-	PTPPropertyValue	DefaultValue;
-	PTPPropertyValue	CurrentValue;
+	PTPPropValue	DefaultValue;
+	PTPPropValue	CurrentValue;
 	uint8_t			FormFlag;
 	union	{
 		PTPPropDescEnumForm	Enum;
@@ -1760,7 +1761,7 @@ struct _PTPObjectPropDesc {
 	uint16_t		ObjectPropertyCode;
 	uint16_t		DataType;
 	uint8_t			GetSet;
-	PTPPropertyValue	DefaultValue;
+	PTPPropValue	DefaultValue;
 	uint32_t		GroupCode;
 	uint8_t			FormFlag;
 	union	{
@@ -4148,11 +4149,11 @@ uint16_t ptp_getdevicepropdesc	(PTPParams* params, uint32_t propcode,
 uint16_t ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode,
 				PTPDevicePropDesc *dpd);
 uint16_t ptp_getdevicepropvalue	(PTPParams* params, uint32_t propcode,
-				PTPPropertyValue* value, uint16_t datatype);
+				PTPPropValue* value, uint16_t datatype);
 uint16_t ptp_setdevicepropvalue (PTPParams* params, uint32_t propcode,
-				PTPPropertyValue* value, uint16_t datatype);
+				PTPPropValue* value, uint16_t datatype);
 uint16_t ptp_generic_setdevicepropvalue (PTPParams* params, uint32_t propcode,
-				PTPPropertyValue* value, uint16_t datatype);
+				PTPPropValue* value, uint16_t datatype);
 uint16_t ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
 				uint32_t objectformatcode, uint32_t associationOH,
 				uint64_t *numoifs, PTPObjectFilesystemInfo **oifs);
@@ -4176,9 +4177,9 @@ int ptp_get_one_eos_event (PTPParams *params, PTPCanonEOSEvent *eos_event);
 uint16_t ptp_mtp_getobjectpropdesc (PTPParams* params, uint16_t opc, uint16_t ofc,
 				PTPObjectPropDesc *objectpropertydesc);
 uint16_t ptp_mtp_getobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc,
-				PTPPropertyValue *value, uint16_t datatype);
+				PTPPropValue *value, uint16_t datatype);
 uint16_t ptp_mtp_setobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc,
-				PTPPropertyValue *value, uint16_t datatype);
+				PTPPropValue *value, uint16_t datatype);
 uint16_t ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohArray, uint32_t* arraylen);
 uint16_t ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArray, uint32_t arraylen);
 uint16_t ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t formats, uint32_t properties, uint32_t propertygroups, uint32_t level, MTPProperties **props, int *nrofprops);
@@ -4503,7 +4504,7 @@ uint16_t ptp_canon_eos_905f (PTPParams* params, uint32_t);
 uint16_t ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 				PTPDevicePropDesc *devicepropertydesc);
 uint16_t ptp_canon_eos_setdevicepropvalue (PTPParams* params, uint16_t propcode,
-				PTPPropertyValue* value, uint16_t datatype);
+				PTPPropValue* value, uint16_t datatype);
 uint16_t ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
 uint16_t ptp_nikon_curve_download (PTPParams* params,
 				unsigned char **data, unsigned int *size);
@@ -4524,13 +4525,13 @@ uint16_t ptp_sony_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 uint16_t ptp_sony_getalldevicepropdesc (PTPParams* params);
 uint16_t ptp_sony_qx_getalldevicepropdesc (PTPParams* params);
 uint16_t ptp_sony_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
-				PTPPropertyValue* value, uint16_t datatype);
+				PTPPropValue* value, uint16_t datatype);
 uint16_t ptp_sony_qx_setdevicecontrolvaluea (PTPParams* params, uint16_t propcode,
-				PTPPropertyValue* value, uint16_t datatype);
+				PTPPropValue* value, uint16_t datatype);
 uint16_t ptp_sony_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
-				PTPPropertyValue* value, uint16_t datatype);
+				PTPPropValue* value, uint16_t datatype);
 uint16_t ptp_sony_qx_setdevicecontrolvalueb (PTPParams* params, uint16_t propcode,
-				PTPPropertyValue* value, uint16_t datatype);
+				PTPPropValue* value, uint16_t datatype);
 uint16_t ptp_sony_9280 (PTPParams* params, uint32_t additional, uint32_t data1, uint32_t data2, uint32_t data3, uint32_t data4, uint8_t x, uint8_t y);
 uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
 /**
@@ -4866,7 +4867,7 @@ int ptp_property_issupported	(PTPParams* params, uint16_t property);
 void ptp_free_params		(PTPParams *params);
 void ptp_free_objectpropdesc	(PTPObjectPropDesc*);
 void ptp_free_devicepropdesc	(PTPDevicePropDesc*);
-void ptp_free_devicepropvalue	(uint16_t, PTPPropertyValue*);
+void ptp_free_devicepropvalue	(uint16_t, PTPPropValue*);
 void ptp_free_deviceinfo	(PTPDeviceInfo *);
 void ptp_free_objectinfo	(PTPObjectInfo *oi);
 void ptp_free_object		(PTPObject *oi);

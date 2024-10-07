@@ -671,7 +671,7 @@ xnext:
 
 #if 0
 static int
-parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPPropertyValue *propval) {
+parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPPropValue *propval) {
 	switch (type) {
 	case 6: { /*UINT32*/
 		unsigned int x;
@@ -822,7 +822,7 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd)
 				n++;
 			} while (s);
 			dpd->FORM.Enum.NumberOfValues = n;
-			dpd->FORM.Enum.SupportedValue = calloc (n , sizeof(PTPPropertyValue));
+			dpd->FORM.Enum.SupportedValue = calloc (n , sizeof(PTPPropValue));
 			s = (char*)xmlNodeGetContent (next);
 			i = 0;
 			do {
@@ -858,8 +858,8 @@ parse_9301_propdesc (PTPParams *params, xmlNodePtr node, PTPDevicePropDesc *dpd)
 
 static int
 parse_1015_tree (xmlNodePtr node, uint16_t type) {
-	PTPPropertyValue	propval;
-	xmlNodePtr		next;
+	PTPPropValue	propval;
+	xmlNodePtr	next;
 
 	next = xmlFirstElementChild (node);
 	return parse_value ((char*)xmlNodeGetContent (next), type, &propval);
