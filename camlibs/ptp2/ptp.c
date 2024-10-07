@@ -3370,7 +3370,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				else
 					params->objects[params->nrofobjects].oi.ProtectionStatus = PTP_PS_NoProtection;
 				params->objects[params->nrofobjects].canon_flags = tmp[i].Flags;
-				params->objects[params->nrofobjects].oi.ObjectCompressedSize = tmp[i].ObjectSize;
+				params->objects[params->nrofobjects].oi.ObjectSize = tmp[i].ObjectSize;
 				params->objects[params->nrofobjects].oi.CaptureDate = tmp[i].Time;
 				params->objects[params->nrofobjects].oi.ModificationDate = tmp[i].Time;
 				params->objects[params->nrofobjects].flags |= PTPOBJECT_OBJECTINFO_LOADED;
@@ -3492,7 +3492,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 			ob->oi.StorageID 		= oifs[i].StorageID;
 			ob->oi.ObjectFormat 		= oifs[i].ObjectFormat;
 			ob->oi.ProtectionStatus 	= oifs[i].ProtectionStatus;
-			ob->oi.ObjectCompressedSize	= oifs[i].ObjectCompressedSize64;
+			ob->oi.ObjectSize		= oifs[i].ObjectSize64;
 			ob->oi.ParentObject		= oifs[i].ParentObject;
 
 			/* bad iOS, returns StorageID instead of 0x0 */
@@ -9674,13 +9674,13 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 
 		/* Detect if the file is larger than 4GB ... indicator is size 0xffffffff ...
 		 * In that case explicitly request the MTP object proplist to get the right size */
-		if (ob->oi.ObjectCompressedSize == 0xffffffffUL) {
+		if (ob->oi.ObjectSize == 0xffffffffUL) {
 			uint64_t	newsize;
 			if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON)	&&
 				ptp_operation_issupported(params,PTP_OC_NIKON_GetObjectSize)	&&
 				(PTP_RC_OK == ptp_nikon_getobjectsize(params, handle, &newsize))
 			) {
-				ob->oi.ObjectCompressedSize = newsize;
+				ob->oi.ObjectSize = newsize;
 				goto read64bit;
 			}
 			/* more methods like e.g. for Canon */
@@ -9764,9 +9764,9 @@ read64bit:		;
 					break;
 				case PTP_OPC_ObjectSize:
 					if (prop->datatype == PTP_DTC_UINT64) {
-						ob->oi.ObjectCompressedSize = prop->propval.u64;
+						ob->oi.ObjectSize = prop->propval.u64;
 					} else if (prop->datatype == PTP_DTC_UINT32) {
-						ob->oi.ObjectCompressedSize = prop->propval.u32;
+						ob->oi.ObjectSize = prop->propval.u32;
 					}
 					break;
 				case PTP_OPC_AssociationType:
@@ -9829,10 +9829,10 @@ read64bit:		;
 			case PTP_OPC_ObjectSize:
 				switch (xpl->datatype) {
 				case PTP_DTC_UINT32:
-					oinfo.ObjectCompressedSize = xpl->propval.u32;
+					oinfo.ObjectSize = xpl->propval.u32;
 					break;
 				case PTP_DTC_UINT64:
-					oinfo.ObjectCompressedSize = xpl->propval.u64;
+					oinfo.ObjectSize = xpl->propval.u64;
 					break;
 				default:
 					ptp_debug (params, "ptp2/mtpfast: objectsize has type 0x%x???", xpl->datatype);

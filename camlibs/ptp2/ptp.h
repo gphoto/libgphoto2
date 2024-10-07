@@ -1494,9 +1494,9 @@ struct _PTPObjectInfo {
 	 * but we keep the general object size here
 	 * that also arrives via other methods and so
 	 * use 64bit */
-	uint64_t ObjectCompressedSize;
+	uint64_t ObjectSize;
 	uint16_t ThumbFormat;
-	uint32_t ThumbCompressedSize;
+	uint32_t ThumbSize;
 	uint32_t ThumbPixWidth;
 	uint32_t ThumbPixHeight;
 	uint32_t ImagePixWidth;
@@ -1518,7 +1518,7 @@ struct _PTPObjectFilesystemInfo {
 	uint32_t StorageID;
 	uint16_t ObjectFormat;
 	uint16_t ProtectionStatus;
-	uint64_t ObjectCompressedSize64;
+	uint64_t ObjectSize64;
 	uint32_t ParentObject;
 	uint16_t AssociationType;
 	uint32_t AssociationDesc;

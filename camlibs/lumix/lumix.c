@@ -1510,7 +1510,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	/*
 	info.file.width         = oi->ImagePixWidth;
 	info.file.height        = oi->ImagePixHeight;
-	info.file.size          = oi->ObjectCompressedSize;
+	info.file.size          = oi->ObjectSize;
 	info.file.mtime         = time(NULL);
 
 	info.preview.fields = GP_FILE_INFO_TYPE |
@@ -1519,7 +1519,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, oi->ThumbFormat);
 	info.preview.width      = oi->ThumbPixWidth;
 	info.preview.height     = oi->ThumbPixHeight;
-	info.preview.size       = oi->ThumbCompressedSize;
+	info.preview.size       = oi->ThumbSize;
 	*/
 
 	GP_LOG_D ("setting fileinfo in fs");

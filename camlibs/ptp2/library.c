@@ -3390,7 +3390,7 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, CameraFilePath *path
 	strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, ob->oi.ObjectFormat);
 	info.file.width		= ob->oi.ImagePixWidth;
 	info.file.height	= ob->oi.ImagePixHeight;
-	info.file.size		= ob->oi.ObjectCompressedSize;
+	info.file.size		= ob->oi.ObjectSize;
 	info.file.mtime		= time(NULL);
 
 	info.preview.fields = GP_FILE_INFO_TYPE |
@@ -3399,7 +3399,7 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, CameraFilePath *path
 	strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
 	info.preview.width	= ob->oi.ThumbPixWidth;
 	info.preview.height	= ob->oi.ThumbPixHeight;
-	info.preview.size	= ob->oi.ThumbCompressedSize;
+	info.preview.size	= ob->oi.ThumbSize;
 	GP_LOG_D ("setting fileinfo in fs");
 	return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 }
@@ -4070,7 +4070,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	C_PTP_REP (ptp_getobject(params, newobject, &ximage));
 
 	GP_LOG_D ("setting size");
-	ret = gp_file_set_data_and_size(file, (char*)ximage, oi->ObjectCompressedSize);
+	ret = gp_file_set_data_and_size(file, (char*)ximage, oi->ObjectSize);
 	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
@@ -4099,7 +4099,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, oi->ObjectFormat);
 	info.file.width		= oi->ImagePixWidth;
 	info.file.height	= oi->ImagePixHeight;
-	info.file.size		= oi->ObjectCompressedSize;
+	info.file.size		= oi->ObjectSize;
 	info.file.mtime		= time(NULL);
 
 	info.preview.fields = GP_FILE_INFO_TYPE |
@@ -4108,7 +4108,7 @@ add_objectid_and_upload (Camera *camera, CameraFilePath *path, GPContext *contex
 	strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, oi->ThumbFormat);
 	info.preview.width	= oi->ThumbPixWidth;
 	info.preview.height	= oi->ThumbPixHeight;
-	info.preview.size	= oi->ThumbCompressedSize;
+	info.preview.size	= oi->ThumbSize;
 	GP_LOG_D ("setting fileinfo in fs");
 	return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 }
@@ -4545,7 +4545,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	}
 	gp_file_set_mtime (file, time(NULL));
 
-	GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
+	GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectSize);
 
 #define BLOBSIZE 1*1024*1024
 	/* the EOS R does not like 5MB, but likes 1MB */
@@ -4553,8 +4553,8 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	{
 		uint32_t	offset = 0;
 
-		while (offset < oi.ObjectCompressedSize) {
-			uint32_t	xsize = oi.ObjectCompressedSize - offset;
+		while (offset < oi.ObjectSize) {
+			uint32_t	xsize = oi.ObjectSize - offset;
 			unsigned char	*ximage = NULL;
 
 			if (xsize > BLOBSIZE)
@@ -4565,14 +4565,14 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			offset += xsize;
 		}
 	}
-	/*old C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));*/
+	/*old C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectSize, &ximage));*/
 #undef BLOBSIZE
 
 
 	C_PTP_REP (ptp_canon_eos_transfercomplete (params, newobject));
 /*
 	old:
-	ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+	ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectSize);
 	if (ret != GP_OK) {
 		gp_file_free (file);
 		return ret;
@@ -4592,7 +4592,7 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	/* We also get the fs info for free, so just set it */
 	info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
 	strcpy (info.file.type, mime);
-	info.file.size		= oi.ObjectCompressedSize;
+	info.file.size		= oi.ObjectSize;
 	info.file.mtime		= time(NULL);
 
 	gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
@@ -5698,7 +5698,7 @@ camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath 
 	strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, ob->oi.ThumbFormat);
 	info.preview.width	= ob->oi.ThumbPixWidth;
 	info.preview.height	= ob->oi.ThumbPixHeight;
-	info.preview.size	= ob->oi.ThumbCompressedSize;
+	info.preview.size	= ob->oi.ThumbSize;
 	GP_LOG_D ("setting fileinfo in fs");
 	return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 #endif
@@ -6660,15 +6660,15 @@ camera_wait_for_event (Camera *camera, int timeout,
 					}
 					gp_file_set_mtime (file, time(NULL));
 
-					GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)event.u.object.oi.ObjectCompressedSize);
+					GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)event.u.object.oi.ObjectSize);
 
 #define BLOBSIZE 1*1024*1024
 					/* Trying to read this in 1 block might be the cause of crashes of newer EOS */
 					{
 						uint32_t	offset = 0;
 
-						while (offset < event.u.object.oi.ObjectCompressedSize) {
-							uint32_t	xsize = event.u.object.oi.ObjectCompressedSize - offset;
+						while (offset < event.u.object.oi.ObjectSize) {
+							uint32_t	xsize = event.u.object.oi.ObjectSize - offset;
 							unsigned char	*yimage = NULL;
 
 							if (xsize > BLOBSIZE)
@@ -6679,13 +6679,13 @@ camera_wait_for_event (Camera *camera, int timeout,
 							offset += xsize;
 						}
 					}
-					/*old C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectCompressedSize, &ximage));*/
-					/* C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, event.u.object.oi.ObjectCompressedSize, (unsigned char**)&ximage));*/
+					/*old C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, oi.ObjectSize, &ximage));*/
+					/* C_PTP_REP (ptp_canon_eos_getpartialobject (params, newobject, 0, event.u.object.oi.ObjectSize, (unsigned char**)&ximage));*/
 #undef BLOBSIZE
 					C_PTP_REP (ptp_canon_eos_transfercomplete (params, newobject));
 
 /*
-					ret = gp_file_set_data_and_size(file, (char*)ximage, event.u.object.oi.ObjectCompressedSize);
+					ret = gp_file_set_data_and_size(file, (char*)ximage, event.u.object.oi.ObjectSize);
 					if (ret != GP_OK) {
 						gp_file_free (file);
 						return ret;
@@ -6706,7 +6706,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* We also get the fs info for free, so just set it */
 					info.file.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
 					strcpy (info.file.type, mime);
-					info.file.size		= event.u.object.oi.ObjectCompressedSize;
+					info.file.size		= event.u.object.oi.ObjectSize;
 					info.file.mtime		= time(NULL);
 
 					gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
@@ -6996,9 +6996,9 @@ downloadnow:
 					}
 					gp_file_set_mtime (file, time(NULL));
 
-					GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
+					GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectSize);
 					C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
-					ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+					ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectSize);
 					if (ret != GP_OK) {
 						ptp_free_objectinfo (&oi);
 						gp_file_free (file);
@@ -7084,9 +7084,9 @@ downloadnow:
 				}
 				gp_file_set_mtime (file, time(NULL));
 
-				GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
+				GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectSize);
 				C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
-				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectSize);
 				if (ret != GP_OK) {
 					gp_file_free (file);
 					ptp_free_devicepropdesc (&dpd);
@@ -7116,7 +7116,7 @@ downloadnow:
 				strcpy_mime (info.file.type, params->deviceinfo.VendorExtensionID, oi.ObjectFormat);
 				info.file.width		= oi.ImagePixWidth;
 				info.file.height	= oi.ImagePixHeight;
-				info.file.size		= oi.ObjectCompressedSize;
+				info.file.size		= oi.ObjectSize;
 				info.file.mtime		= time(NULL);
 
 				info.preview.fields = GP_FILE_INFO_TYPE |
@@ -7125,7 +7125,7 @@ downloadnow:
 				strcpy_mime (info.preview.type, params->deviceinfo.VendorExtensionID, oi.ThumbFormat);
 				info.preview.width	= oi.ThumbPixWidth;
 				info.preview.height	= oi.ThumbPixHeight;
-				info.preview.size	= oi.ThumbCompressedSize;
+				info.preview.size	= oi.ThumbSize;
 				GP_LOG_D ("setting fileinfo in fs");
 				gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 
@@ -7251,9 +7251,9 @@ sonyout:
 				}
 				gp_file_set_mtime (file, time(NULL));
 
-				GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectCompressedSize);
+				GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectSize);
 				C_PTP_REP (ptp_getobject (params, newobject, (unsigned char**)&ximage));
-				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectCompressedSize);
+				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectSize);
 				if (ret != GP_OK) {
 					ptp_free_objectinfo (&oi);
 					gp_file_free (file);
@@ -8626,7 +8626,7 @@ mtp_put_playlist(
 		if (!t) break;
 		s = t+1;
 	}
-	oi->ObjectCompressedSize = 1;
+	oi->ObjectSize = 1;
 	oi->ObjectFormat = PTP_OFC_MTP_AbstractAudioVideoPlaylist;
 	C_PTP_MSG (ptp_sendobjectinfo(&camera->pl->params, &storage, &oi->ParentObject, &playlistid, oi),
 		   "failed sendobjectinfo of playlist.");
@@ -8778,7 +8778,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		    (ob->oi.ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist))
 			return (GP_ERROR_NOT_SUPPORTED);
 
-		obj_size = ob->oi.ObjectCompressedSize;
+		obj_size = ob->oi.ObjectSize;
 		if (!obj_size)
 			return GP_ERROR_NOT_SUPPORTED;
 
@@ -8893,7 +8893,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (!ptp_operation_issupported(params, PTP_OC_GetPartialObject))
 			return (GP_ERROR_NOT_SUPPORTED);
 		/* Device may hang is a partial read is attempted beyond the file */
-		if (ob->oi.ObjectCompressedSize < 10)
+		if (ob->oi.ObjectSize < 10)
 			return (GP_ERROR_NOT_SUPPORTED);
 
 		/* We only support JPEG / EXIF format ... others might hang. */
@@ -8932,7 +8932,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 		/* If thumb size is 0, and the ofc is not an image type (0x38xx or 0xb8xx)
 		 * then there is no thumbnail at all... */
-		size=ob->oi.ThumbCompressedSize;
+		size=ob->oi.ThumbSize;
 		if((size==0) && (
 			((ob->oi.ObjectFormat & 0x7800) != 0x3800) &&
 			((ob->oi.ObjectFormat != PTP_OFC_CANON_CRW)) &&
@@ -8985,7 +8985,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		    (ob->oi.ObjectFormat == PTP_OFC_MTP_AbstractAudioVideoPlaylist))
 			return mtp_get_playlist (camera, file, oid, context);
 
-		size=ob->oi.ObjectCompressedSize;
+		size=ob->oi.ObjectSize;
 #define BLOBSIZE 1*1024*1024
 		if (size > 0xffffffffUL) {	/* larger than 4GB */
 			if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) &&
@@ -9202,7 +9202,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	 * PTP_OC_EK_SendFileObject.
 	 */
 	gp_file_get_data_and_size (file, NULL, &intsize);
-	oi.ObjectCompressedSize = intsize;
+	oi.ObjectSize = intsize;
 	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_EASTMAN_KODAK) &&
 		(ptp_operation_issupported(params, PTP_OC_EK_SendFileObject)))
 	{
@@ -9393,7 +9393,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR;
 
 	info->file.fields = GP_FILE_INFO_SIZE|GP_FILE_INFO_TYPE|GP_FILE_INFO_MTIME;
-	info->file.size   = ob->oi.ObjectCompressedSize;
+	info->file.size   = ob->oi.ObjectSize;
 
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
 		info->file.fields |= GP_FILE_INFO_STATUS;
@@ -9439,8 +9439,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (strlen(info->preview.type)) {
 			info->preview.fields |= GP_FILE_INFO_TYPE;
 		}
-		if (ob->oi.ThumbCompressedSize) {
-			info->preview.size   = ob->oi.ThumbCompressedSize;
+		if (ob->oi.ThumbSize) {
+			info->preview.size   = ob->oi.ThumbSize;
 			info->preview.fields |= GP_FILE_INFO_SIZE;
 		}
 		if (ob->oi.ThumbPixWidth) {
@@ -9616,9 +9616,9 @@ debug_objectinfo(PTPParams *params, uint32_t oid, PTPObjectInfo *oi) {
 	GP_LOG_D ("  StorageID: 0x%08x", oi->StorageID);
 	GP_LOG_D ("  ObjectFormat: 0x%04x", oi->ObjectFormat);
 	GP_LOG_D ("  ProtectionStatus: 0x%04x", oi->ProtectionStatus);
-	GP_LOG_D ("  ObjectCompressedSize: %ld", (unsigned long)oi->ObjectCompressedSize);
+	GP_LOG_D ("  ObjectSize: %ld", (unsigned long)oi->ObjectSize);
 	GP_LOG_D ("  ThumbFormat: 0x%04x", oi->ThumbFormat);
-	GP_LOG_D ("  ThumbCompressedSize: %d", oi->ThumbCompressedSize);
+	GP_LOG_D ("  ThumbSize: %d", oi->ThumbSize);
 	GP_LOG_D ("  ThumbPixWidth: %d", oi->ThumbPixWidth);
 	GP_LOG_D ("  ThumbPixHeight: %d", oi->ThumbPixHeight);
 	GP_LOG_D ("  ImagePixWidth: %d", oi->ImagePixWidth);
@@ -9890,10 +9890,10 @@ camera_init (Camera *camera, GPContext *context)
 		handle = 0;
 
 		memset (&oi, 0, sizeof (oi));
-		oi.ObjectFormat		= PTP_OFC_Script;
-		oi.StorageID 		= 0x80000001;
-		oi.Filename 		= "XDISCVRY.X3C";
-		oi.ObjectCompressedSize	= 0;
+		oi.ObjectFormat = PTP_OFC_Script;
+		oi.StorageID    = 0x80000001;
+		oi.Filename     = "XDISCVRY.X3C";
+		oi.ObjectSize   = 0;
 		C_PTP_REP (ptp_sendobjectinfo (params, &storagehandle, &parenthandle, &handle, &oi));
 
 		GP_LOG_D ("olympus getcameraid\n");
