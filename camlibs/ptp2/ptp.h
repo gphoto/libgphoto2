@@ -3922,13 +3922,13 @@ struct _PTPParams {
 	unsigned int		canon_props_len;
 	int			canon_viewfinder_on;
 	int			canon_event_mode;
-	int			uilocked;
 
 	/* PTP: Canon EOS event queue */
 	PTPCanonEOSEvent	*eos_events;
 	unsigned int		eos_events_len;
 	int			eos_captureenabled;
 	int			eos_camerastatus;
+	int			eos_uilocked;
 
 	/* PTP: Nikon specifics */
 	int			controlmode;
