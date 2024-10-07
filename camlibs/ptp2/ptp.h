@@ -1744,7 +1744,7 @@ struct _PTPDevicePropDesc {
 	uint32_t		DevicePropertyCode;
 	uint16_t		DataType;
 	uint8_t			GetSet;
-	PTPPropertyValue	FactoryDefaultValue;
+	PTPPropertyValue	DefaultValue;
 	PTPPropertyValue	CurrentValue;
 	uint8_t			FormFlag;
 	union	{
@@ -1760,7 +1760,7 @@ struct _PTPObjectPropDesc {
 	uint16_t		ObjectPropertyCode;
 	uint16_t		DataType;
 	uint8_t			GetSet;
-	PTPPropertyValue	FactoryDefaultValue;
+	PTPPropertyValue	DefaultValue;
 	uint32_t		GroupCode;
 	uint8_t			FormFlag;
 	union	{

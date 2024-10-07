@@ -654,7 +654,7 @@ ptp_unpack_DPV (
 #define PTP_dpd_DevicePropertyCode	0
 #define PTP_dpd_DataType		2
 #define PTP_dpd_GetSet			4
-#define PTP_dpd_FactoryDefaultValue	5
+#define PTP_dpd_DefaultValue		5
 
 static inline int
 ptp_unpack_DPD (PTPParams *params, const unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, uint32_t *offset)
@@ -669,8 +669,8 @@ ptp_unpack_DPD (PTPParams *params, const unsigned char* data, PTPDevicePropDesc 
 	dpd->GetSet             = dtoh8a (data + PTP_dpd_GetSet);
 	dpd->FormFlag=PTP_DPFF_None;
 
-	*offset = PTP_dpd_FactoryDefaultValue;
-	ret = ptp_unpack_DPV (params, data, offset, dpdlen, &dpd->FactoryDefaultValue, dpd->DataType);
+	*offset = PTP_dpd_DefaultValue;
+	ret = ptp_unpack_DPV (params, data, offset, dpdlen, &dpd->DefaultValue, dpd->DataType);
 	if (!ret) goto outofmemory;
 	if ((dpd->DataType == PTP_DTC_STR) && (*offset == dpdlen))
 		return 1;
@@ -737,7 +737,7 @@ outofmemory:
 #define PTP_dpd_Sony_DataType			2
 #define PTP_dpd_Sony_GetSet		4
 #define PTP_dpd_Sony_IsEnabled			5
-#define PTP_dpd_Sony_FactoryDefaultValue	6
+#define PTP_dpd_Sony_DefaultValue		6
 	/* PTP_dpd_SonyCurrentValue 		6 + sizeof(DataType) */
 
 static inline int
@@ -746,7 +746,7 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 	unsigned int ret;
 	unsigned int isenabled;
 
-	if (!data || dpdlen < PTP_dpd_Sony_FactoryDefaultValue)
+	if (!data || dpdlen < PTP_dpd_Sony_DefaultValue)
 		return 0;
 
 	memset (dpd, 0, sizeof(*dpd));
@@ -770,8 +770,8 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 
 	dpd->FormFlag=PTP_DPFF_None;
 
-	*poffset = PTP_dpd_Sony_FactoryDefaultValue;
-	ret = ptp_unpack_DPV (params, data, poffset, dpdlen, &dpd->FactoryDefaultValue, dpd->DataType);
+	*poffset = PTP_dpd_Sony_DefaultValue;
+	ret = ptp_unpack_DPV (params, data, poffset, dpdlen, &dpd->DefaultValue, dpd->DataType);
 	if (!ret) goto outofmemory;
 	if ((dpd->DataType == PTP_DTC_STR) && (*poffset == dpdlen))
 		return 1;
@@ -783,7 +783,7 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 	   values). In both cases Form Flag should be set to 0x00 and FORM is
 	   not present. */
 
-	if (*poffset==PTP_dpd_Sony_FactoryDefaultValue)
+	if (*poffset==PTP_dpd_Sony_DefaultValue)
 		return 1;
 
 	dpd->FormFlag = dtoh8o(data, *poffset);
@@ -908,7 +908,7 @@ duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 	dst->DataType		= src->DataType;
 	dst->GetSet		= src->GetSet;
 
-	duplicate_PropertyValue (&src->FactoryDefaultValue, &dst->FactoryDefaultValue, src->DataType);
+	duplicate_PropertyValue (&src->DefaultValue, &dst->DefaultValue, src->DataType);
 	duplicate_PropertyValue (&src->CurrentValue, &dst->CurrentValue, src->DataType);
 
 	dst->FormFlag		= src->FormFlag;
@@ -932,7 +932,7 @@ duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 #define PTP_opd_ObjectPropertyCode	0
 #define PTP_opd_DataType		2
 #define PTP_opd_GetSet			4
-#define PTP_opd_FactoryDefaultValue	5
+#define PTP_opd_DefaultValue		5
 
 static inline int
 ptp_unpack_OPD (PTPParams *params, const unsigned char* data, PTPObjectPropDesc *opd, unsigned int opdlen)
@@ -948,8 +948,8 @@ ptp_unpack_OPD (PTPParams *params, const unsigned char* data, PTPObjectPropDesc 
 	opd->DataType           = dtoh16a(data + PTP_opd_DataType);
 	opd->GetSet             = dtoh8a (data + PTP_opd_GetSet);
 
-	offset = PTP_opd_FactoryDefaultValue;
-	ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->FactoryDefaultValue, opd->DataType);
+	offset = PTP_opd_DefaultValue;
+	ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->DefaultValue, opd->DataType);
 	if (!ret) goto outofmemory;
 
 	if (offset + sizeof(uint32_t) > opdlen) goto outofmemory;
@@ -2160,45 +2160,45 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			}
 			switch (dpd->DataType) {
 			case PTP_DTC_INT32:
-				dpd->FactoryDefaultValue.i32	= dtoh32a(xdata);
-				dpd->CurrentValue.i32		= dtoh32a(xdata);
+				dpd->DefaultValue.i32 = dtoh32a(xdata);
+				dpd->CurrentValue.i32 = dtoh32a(xdata);
 				ptp_debug (params, INDENT "prop %x value == %d (i32)", dpc, dpd->CurrentValue.i32);
 				break;
 			case PTP_DTC_UINT32:
-				dpd->FactoryDefaultValue.u32	= dtoh32a(xdata);
-				dpd->CurrentValue.u32		= dtoh32a(xdata);
+				dpd->DefaultValue.u32 = dtoh32a(xdata);
+				dpd->CurrentValue.u32 = dtoh32a(xdata);
 				ptp_debug (params, INDENT "prop %x value == 0x%08x (u32)", dpc, dpd->CurrentValue.u32);
 				break;
 			case PTP_DTC_INT16:
-				dpd->FactoryDefaultValue.i16	= dtoh16a(xdata);
-				dpd->CurrentValue.i16		= dtoh16a(xdata);
+				dpd->DefaultValue.i16 = dtoh16a(xdata);
+				dpd->CurrentValue.i16 = dtoh16a(xdata);
 				ptp_debug (params, INDENT "prop %x value == %d (i16)", dpc, dpd->CurrentValue.i16);
 				break;
 			case PTP_DTC_UINT16:
-				dpd->FactoryDefaultValue.u16	= dtoh16a(xdata);
-				dpd->CurrentValue.u16		= dtoh16a(xdata);
+				dpd->DefaultValue.u16 = dtoh16a(xdata);
+				dpd->CurrentValue.u16 = dtoh16a(xdata);
 				ptp_debug (params, INDENT "prop %x value == 0x%04x (u16)", dpc, dpd->CurrentValue.u16);
 				break;
 			case PTP_DTC_UINT8:
-				dpd->FactoryDefaultValue.u8	= dtoh8a(xdata);
-				dpd->CurrentValue.u8		= dtoh8a(xdata);
+				dpd->DefaultValue.u8  = dtoh8a(xdata);
+				dpd->CurrentValue.u8  = dtoh8a(xdata);
 				ptp_debug (params, INDENT "prop %x value == 0x%02x (u8)", dpc, dpd->CurrentValue.u8);
 				break;
 			case PTP_DTC_INT8:
-				dpd->FactoryDefaultValue.i8	= dtoh8a(xdata);
-				dpd->CurrentValue.i8		= dtoh8a(xdata);
+				dpd->DefaultValue.i8  = dtoh8a(xdata);
+				dpd->CurrentValue.i8  = dtoh8a(xdata);
 				ptp_debug (params, INDENT "prop %x value == %d (i8)", dpc, dpd->CurrentValue.i8);
 				break;
 			case PTP_DTC_STR: {
 #if 0 /* 5D MII and 400D aktually store plain ASCII in their string properties */
-				dpd->FactoryDefaultValue.str	= ptp_unpack_string(params, data, 0, &len);
+				dpd->DefaultValue.str	= ptp_unpack_string(params, data, 0, &len);
 				dpd->CurrentValue.str		= ptp_unpack_string(params, data, 0, &len);
 #else
-				free (dpd->FactoryDefaultValue.str);
-				dpd->FactoryDefaultValue.str	= strdup( (char*)xdata );
+				free (dpd->DefaultValue.str);
+				dpd->DefaultValue.str = strdup( (char*)xdata );
 
 				free (dpd->CurrentValue.str);
-				dpd->CurrentValue.str		= strdup( (char*)xdata );
+				dpd->CurrentValue.str = strdup( (char*)xdata );
 #endif
 				ptp_debug (params, INDENT "prop %x value == '%s' (str)", dpc, dpd->CurrentValue.str);
 				break;
@@ -2215,24 +2215,24 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			case PTP_DPC_CANON_EOS_ImageFormatSD:
 			case PTP_DPC_CANON_EOS_ImageFormatExtHD:
 				dpd->DataType = PTP_DTC_UINT16;
-				dpd->FactoryDefaultValue.u16	= ptp_unpack_EOS_ImageFormat( params, &xdata );
-				dpd->CurrentValue.u16		= dpd->FactoryDefaultValue.u16;
+				dpd->DefaultValue.u16 = ptp_unpack_EOS_ImageFormat( params, &xdata );
+				dpd->CurrentValue.u16 = dpd->DefaultValue.u16;
 				ptp_debug (params, INDENT "prop %x value == 0x%04x (u16)", dpc, dpd->CurrentValue.u16);
 				break;
 			case PTP_DPC_CANON_EOS_CustomFuncEx:
 				dpd->DataType = PTP_DTC_STR;
-				free (dpd->FactoryDefaultValue.str);
+				free (dpd->DefaultValue.str);
 				free (dpd->CurrentValue.str);
-				dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_CustomFuncEx( params, &xdata );
-				dpd->CurrentValue.str		= strdup( (char*)dpd->FactoryDefaultValue.str );
+				dpd->DefaultValue.str = ptp_unpack_EOS_CustomFuncEx( params, &xdata );
+				dpd->CurrentValue.str = strdup( (char*)dpd->DefaultValue.str );
 				ptp_debug (params, INDENT "prop %x value == %s", dpc, dpd->CurrentValue.str);
 				break;
 			case PTP_DPC_CANON_EOS_FocusInfoEx:
 				dpd->DataType = PTP_DTC_STR;
-				free (dpd->FactoryDefaultValue.str);
+				free (dpd->DefaultValue.str);
 				free (dpd->CurrentValue.str);
-				dpd->FactoryDefaultValue.str	= ptp_unpack_EOS_FocusInfoEx( params, &xdata, xsize );
-				dpd->CurrentValue.str		= strdup( (char*)dpd->FactoryDefaultValue.str );
+				dpd->DefaultValue.str = ptp_unpack_EOS_FocusInfoEx( params, &xdata, xsize );
+				dpd->CurrentValue.str = strdup( (char*)dpd->DefaultValue.str );
 				ptp_debug (params, INDENT "prop %x value == %s", dpc, dpd->CurrentValue.str);
 				break;
 			/* case PTP_DPC_CANON_EOS_ShutterReleaseCounter:

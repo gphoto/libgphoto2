@@ -4949,10 +4949,10 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
 	GP_LOG_D ("PTP_DPC_CompressionSetting dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
-	GP_LOG_D ("PTP_DPC_CompressionSetting dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
+	GP_LOG_D ("PTP_DPC_CompressionSetting dpd.DefaultValue.u8 = %x", dpd.DefaultValue.u8);
 
 	if (dpd.CurrentValue.u8 == 0)
-		dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
+		dpd.CurrentValue.u8 = dpd.DefaultValue.u8;
 	if (dpd.CurrentValue.u8 == 0x13) {
 		GP_LOG_D ("expecting raw+jpeg capture");
 	}
@@ -5102,10 +5102,10 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
 	GP_LOG_D ("dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
-	GP_LOG_D ("dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
+	GP_LOG_D ("dpd.DefaultValue.u8 = %x", dpd.DefaultValue.u8);
 
 	if (dpd.CurrentValue.u8 == 0)
-		dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
+		dpd.CurrentValue.u8 = dpd.DefaultValue.u8;
 	if (dpd.CurrentValue.u8 == 0x13) {
 		GP_LOG_D ("expecting raw+jpeg capture");
 	}
@@ -5475,10 +5475,10 @@ camera_panasonic_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 	//C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
 	//GP_LOG_D ("dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
-	//GP_LOG_D ("dpd.FactoryDefaultValue.u8 = %x", dpd.FactoryDefaultValue.u8);
+	//GP_LOG_D ("dpd.DefaultValue.u8 = %x", dpd.DefaultValue.u8);
 
 	//if (dpd.CurrentValue.u8 == 0)
-	//	dpd.CurrentValue.u8 = dpd.FactoryDefaultValue.u8;
+	//	dpd.CurrentValue.u8 = dpd.DefaultValue.u8;
 	//if (dpd.CurrentValue.u8 == 0x13) {
 	//	GP_LOG_D ("expecting raw+jpeg capture");
 	//}
