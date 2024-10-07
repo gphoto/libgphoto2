@@ -1135,10 +1135,10 @@ ptp_pack_DPV (PTPParams *params, PTPPropValue* value, unsigned char** dpvptr, ui
 
 #define MAX_MTP_PROPS 127
 static inline uint32_t
-ptp_pack_OPL (PTPParams *params, MTPProperties *props, int nrofprops, unsigned char** opldataptr)
+ptp_pack_OPL (PTPParams *params, MTPObjectProp *props, int nrofprops, unsigned char** opldataptr)
 {
 	unsigned char* opldata;
-	MTPProperties *propitr;
+	MTPObjectProp *propitr;
 	unsigned char *packedprops[MAX_MTP_PROPS];
 	uint32_t packedpropslens[MAX_MTP_PROPS];
 	uint32_t packedobjecthandles[MAX_MTP_PROPS];
@@ -1156,13 +1156,13 @@ ptp_pack_OPL (PTPParams *params, MTPProperties *props, int nrofprops, unsigned c
 		packedobjecthandles[noitems]=propitr->ObjectHandle;
 		totalsize += sizeof(uint32_t); /* Object ID */
 		/* Metadata type */
-		packedpropsids[noitems]=propitr->property;
+		packedpropsids[noitems]=propitr->PropCode;
 		totalsize += sizeof(uint16_t);
 		/* Data type */
-		packedpropstypes[noitems]= propitr->datatype;
+		packedpropstypes[noitems]= propitr->DataType;
 		totalsize += sizeof(uint16_t);
 		/* Add each property to be sent. */
-		packedpropslens[noitems] = ptp_pack_DPV (params, &propitr->propval, &packedprops[noitems], propitr->datatype);
+		packedpropslens[noitems] = ptp_pack_DPV (params, &propitr->Value, &packedprops[noitems], propitr->DataType);
 		totalsize += packedpropslens[noitems];
 		noitems ++;
 		propitr ++;
@@ -1194,17 +1194,17 @@ ptp_pack_OPL (PTPParams *params, MTPProperties *props, int nrofprops, unsigned c
 
 static int
 _compare_func(const void* x, const void *y) {
-	const MTPProperties *px = x;
-	const MTPProperties *py = y;
+	const MTPObjectProp *px = x;
+	const MTPObjectProp *py = y;
 
 	return px->ObjectHandle - py->ObjectHandle;
 }
 
 static inline int
-ptp_unpack_OPL (PTPParams *params, const unsigned char* data, MTPProperties **pprops, unsigned int len)
+ptp_unpack_OPL (PTPParams *params, const unsigned char* data, MTPObjectProp **pprops, unsigned int len)
 {
 	uint32_t prop_count;
-	MTPProperties *props = NULL;
+	MTPObjectProp *props = NULL;
 	unsigned int offset = 0, i;
 
 	if (len < sizeof(uint32_t)) {
@@ -1217,37 +1217,37 @@ ptp_unpack_OPL (PTPParams *params, const unsigned char* data, MTPProperties **pp
 	if (prop_count == 0)
 		return 0;
 
-	if (prop_count >= INT_MAX/sizeof(MTPProperties)) {
+	if (prop_count >= INT_MAX/sizeof(MTPObjectProp)) {
 		ptp_debug (params ,"prop_count %d is too large", prop_count);
 		return 0;
 	}
 	ptp_debug (params ,"Unpacking MTP OPL, size %d (prop_count %d)", len, prop_count);
 
-	props = calloc(prop_count , sizeof(MTPProperties));
+	props = calloc(prop_count , sizeof(MTPObjectProp));
 	if (!props) return 0;
 	for (i = 0; i < prop_count; i++) {
 		if (len <= offset + 4 + 2 + 2) {
 			ptp_debug (params ,"short MTP Object Property List at property %d (of %d)", i, prop_count);
 			ptp_debug (params ,"device probably needs DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST_ALL");
 			ptp_debug (params ,"or even DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST");
-			qsort (props, i, sizeof(MTPProperties),_compare_func);
+			qsort (props, i, sizeof(MTPObjectProp),_compare_func);
 			*pprops = props;
 			return i;
 		}
 
 
 		props[i].ObjectHandle = dtoh32o(data, offset);
-		props[i].property     = dtoh16o(data, offset);
-		props[i].datatype     = dtoh16o(data, offset);
+		props[i].PropCode     = dtoh16o(data, offset);
+		props[i].DataType     = dtoh16o(data, offset);
 
-		if (!ptp_unpack_DPV(params, data, &offset, len, &props[i].propval, props[i].datatype)) {
+		if (!ptp_unpack_DPV(params, data, &offset, len, &props[i].Value, props[i].DataType)) {
 			ptp_debug (params ,"unpacking DPV of property %d encountered insufficient buffer. attack?", i);
-			qsort (props, i, sizeof(MTPProperties),_compare_func);
+			qsort (props, i, sizeof(MTPObjectProp),_compare_func);
 			*pprops = props;
 			return i;
 		}
 	}
-	qsort (props, prop_count, sizeof(MTPProperties),_compare_func);
+	qsort (props, prop_count, sizeof(MTPObjectProp),_compare_func);
 	*pprops = props;
 	return prop_count;
 }

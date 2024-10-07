@@ -5446,7 +5446,7 @@ ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArr
 }
 
 uint16_t
-ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t formats, uint32_t properties, uint32_t propertygroups, uint32_t level, MTPProperties **props, int *nrofprops)
+ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t formats, uint32_t properties, uint32_t propertygroups, uint32_t level, MTPObjectProp **props, int *nrofprops)
 {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
@@ -5460,7 +5460,7 @@ ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t 
 }
 
 uint16_t
-ptp_mtp_getobjectproplist_level (PTPParams* params, uint32_t handle, uint32_t level, MTPProperties **props, int *nrofprops)
+ptp_mtp_getobjectproplist_level (PTPParams* params, uint32_t handle, uint32_t level, MTPObjectProp **props, int *nrofprops)
 {
 	return ptp_mtp_getobjectproplist_generic (params, handle,
 		0x00000000U,  /* 0x00000000U should be "all formats" */
@@ -5474,20 +5474,20 @@ ptp_mtp_getobjectproplist_level (PTPParams* params, uint32_t handle, uint32_t le
 
 
 uint16_t
-ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
+ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPObjectProp **props, int *nrofprops)
 {
 	return ptp_mtp_getobjectproplist_level(params, handle, 0xFFFFFFFFU, props, nrofprops);
 }
 
 uint16_t
-ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops)
+ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPObjectProp **props, int *nrofprops)
 {
 	return ptp_mtp_getobjectproplist_level(params, handle, 0, props, nrofprops);
 }
 
 uint16_t
 ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
-			    uint16_t objecttype, uint64_t objectsize, MTPProperties *props, int nrofprops)
+			    uint16_t objecttype, uint64_t objectsize, MTPObjectProp *props, int nrofprops)
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -5510,7 +5510,7 @@ ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parent
 }
 
 uint16_t
-ptp_mtp_setobjectproplist (PTPParams* params, MTPProperties *props, int nrofprops)
+ptp_mtp_setobjectproplist (PTPParams* params, MTPObjectProp *props, int nrofprops)
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -9440,20 +9440,20 @@ ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt)
 /*
  * Allocate and default-initialize a few object properties.
  */
-MTPProperties *
-ptp_get_new_object_prop_entry(MTPProperties **props, int *nrofprops)
+MTPObjectProp *
+ptp_get_new_object_prop_entry(MTPObjectProp **props, int *nrofprops)
 {
-	MTPProperties *newprops;
-	MTPProperties *prop;
+	MTPObjectProp *newprops;
+	MTPObjectProp *prop;
 
-	newprops = realloc(*props,sizeof(MTPProperties)*(*nrofprops+1));
+	newprops = realloc(*props,sizeof(MTPObjectProp)*(*nrofprops+1));
 	if (newprops == NULL)
 		return NULL;
 	prop = &newprops[*nrofprops];
-	prop->property = PTP_OPC_StorageID; /* Should be "unknown" */
-	prop->datatype = PTP_DTC_UNDEF;
+	prop->PropCode = PTP_OPC_StorageID; /* Should be "unknown" */
+	prop->DataType = PTP_DTC_UNDEF;
 	prop->ObjectHandle = 0x00000000U;
-	prop->propval.str = NULL;
+	prop->Value.str = NULL;
 
 	(*props) = newprops;
 	(*nrofprops)++;
@@ -9461,26 +9461,26 @@ ptp_get_new_object_prop_entry(MTPProperties **props, int *nrofprops)
 }
 
 void
-ptp_destroy_object_prop(MTPProperties *prop)
+ptp_destroy_object_prop(MTPObjectProp *prop)
 {
 	if (!prop)
 		return;
 
-	if (prop->datatype == PTP_DTC_STR && prop->propval.str != NULL)
-		free(prop->propval.str);
-	else if ((prop->datatype == PTP_DTC_AINT8 || prop->datatype == PTP_DTC_AINT16 ||
-		  prop->datatype == PTP_DTC_AINT32 || prop->datatype == PTP_DTC_AINT64 || prop->datatype == PTP_DTC_AINT128 ||
-		  prop->datatype == PTP_DTC_AUINT8 || prop->datatype == PTP_DTC_AUINT16 ||
-		  prop->datatype == PTP_DTC_AUINT32 || prop->datatype == PTP_DTC_AUINT64 || prop->datatype ==  PTP_DTC_AUINT128)
-		&& prop->propval.a.v != NULL)
-	free(prop->propval.a.v);
+	if (prop->DataType == PTP_DTC_STR && prop->Value.str != NULL)
+		free(prop->Value.str);
+	else if ((prop->DataType == PTP_DTC_AINT8 || prop->DataType == PTP_DTC_AINT16 ||
+		  prop->DataType == PTP_DTC_AINT32 || prop->DataType == PTP_DTC_AINT64 || prop->DataType == PTP_DTC_AINT128 ||
+		  prop->DataType == PTP_DTC_AUINT8 || prop->DataType == PTP_DTC_AUINT16 ||
+		  prop->DataType == PTP_DTC_AUINT32 || prop->DataType == PTP_DTC_AUINT64 || prop->DataType ==  PTP_DTC_AUINT128)
+		&& prop->Value.a.v != NULL)
+	free(prop->Value.a.v);
 }
 
 void
-ptp_destroy_object_prop_list(MTPProperties *props, int nrofprops)
+ptp_destroy_object_prop_list(MTPObjectProp *props, int nrofprops)
 {
 	int i;
-	MTPProperties *prop = props;
+	MTPObjectProp *prop = props;
 
 	for (i=0;i<nrofprops;i++,prop++)
 		ptp_destroy_object_prop(prop);
@@ -9491,11 +9491,11 @@ ptp_destroy_object_prop_list(MTPProperties *props, int nrofprops)
  * Find a certain object property in the cache, i.e. a certain metadata
  * item for a certain object handle.
  */
-MTPProperties *
+MTPObjectProp *
 ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id)
 {
 	unsigned int	i;
-	MTPProperties	*prop;
+	MTPObjectProp	*prop;
 	PTPObject	*ob;
 	uint16_t	ret;
 
@@ -9504,7 +9504,7 @@ ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t
 		return NULL;
 	prop = ob->mtp_props;
 	for (i=0;i<ob->mtp_props_len;i++) {
-		if (attribute_id == prop->property)
+		if (attribute_id == prop->PropCode)
 			return prop;
 		prop++;
 	}
@@ -9723,7 +9723,7 @@ read64bit:		;
 		(!(ob->flags & PTPOBJECT_MTPPROPLIST_LOADED))
 	) {
 		int		nrofprops = 0;
-		MTPProperties 	*props = NULL;
+		MTPObjectProp 	*props = NULL;
 
 		if (params->device_flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST) {
 			want &= ~PTPOBJECT_MTPPROPLIST_LOADED;
@@ -9746,62 +9746,62 @@ read64bit:		;
 		/* Override the ObjectInfo data with data from properties */
 		if (params->device_flags & DEVICE_FLAG_PROPLIST_OVERRIDES_OI) {
 			unsigned int i;
-			MTPProperties *prop = ob->mtp_props;
+			MTPObjectProp *prop = ob->mtp_props;
 
 			for (i=0;i<ob->mtp_props_len;i++,prop++) {
 				/* in case we got all subtree objects */
 				if (prop->ObjectHandle != handle) continue;
 
-				switch (prop->property) {
+				switch (prop->PropCode) {
 				case PTP_OPC_StorageID:
-					ob->oi.StorageID = prop->propval.u32;
+					ob->oi.StorageID = prop->Value.u32;
 					break;
 				case PTP_OPC_ObjectFormat:
-					ob->oi.ObjectFormat = prop->propval.u16;
+					ob->oi.ObjectFormat = prop->Value.u16;
 					break;
 				case PTP_OPC_ProtectionStatus:
-					ob->oi.ProtectionStatus = prop->propval.u16;
+					ob->oi.ProtectionStatus = prop->Value.u16;
 					break;
 				case PTP_OPC_ObjectSize:
-					if (prop->datatype == PTP_DTC_UINT64) {
-						ob->oi.ObjectSize = prop->propval.u64;
-					} else if (prop->datatype == PTP_DTC_UINT32) {
-						ob->oi.ObjectSize = prop->propval.u32;
+					if (prop->DataType == PTP_DTC_UINT64) {
+						ob->oi.ObjectSize = prop->Value.u64;
+					} else if (prop->DataType == PTP_DTC_UINT32) {
+						ob->oi.ObjectSize = prop->Value.u32;
 					}
 					break;
 				case PTP_OPC_AssociationType:
-					ob->oi.AssociationType = prop->propval.u16;
+					ob->oi.AssociationType = prop->Value.u16;
 					break;
 				case PTP_OPC_AssociationDesc:
-					ob->oi.AssociationDesc = prop->propval.u32;
+					ob->oi.AssociationDesc = prop->Value.u32;
 					break;
 				case PTP_OPC_ObjectFileName:
-					if (prop->propval.str) {
+					if (prop->Value.str) {
 						free(ob->oi.Filename);
-						ob->oi.Filename = strdup(prop->propval.str);
+						ob->oi.Filename = strdup(prop->Value.str);
 					}
 					break;
 				case PTP_OPC_DateCreated:
-					ob->oi.CaptureDate = ptp_unpack_PTPTIME(prop->propval.str);
+					ob->oi.CaptureDate = ptp_unpack_PTPTIME(prop->Value.str);
 					break;
 				case PTP_OPC_DateModified:
-					ob->oi.ModificationDate = ptp_unpack_PTPTIME(prop->propval.str);
+					ob->oi.ModificationDate = ptp_unpack_PTPTIME(prop->Value.str);
 					break;
 				case PTP_OPC_Keywords:
-					if (prop->propval.str) {
+					if (prop->Value.str) {
 						free(ob->oi.Keywords);
-						ob->oi.Keywords = strdup(prop->propval.str);
+						ob->oi.Keywords = strdup(prop->Value.str);
 					}
 					break;
 				case PTP_OPC_ParentObject:
-					ob->oi.ParentObject = prop->propval.u32;
+					ob->oi.ParentObject = prop->Value.u32;
 					break;
 				}
 			}
 		}
 
 #if 0
-		MTPProperties 	*xpl;
+		MTPObjectProp 	*xpl;
 		int j;
 		PTPObjectInfo	oinfo;
 
@@ -9809,84 +9809,84 @@ read64bit:		;
 		/* hmm, not necessary ... only if we would use it */
 		for (j=0;j<nrofprops;j++) {
 			xpl = &props[j];
-			switch (xpl->property) {
+			switch (xpl->PropCode) {
 			case PTP_OPC_ParentObject:
-				if (xpl->datatype != PTP_DTC_UINT32) {
-					ptp_debug (params, "ptp2/mtpfast: parentobject has type 0x%x???", xpl->datatype);
+				if (xpl->DataType != PTP_DTC_UINT32) {
+					ptp_debug (params, "ptp2/mtpfast: parentobject has type 0x%x???", xpl->DataType);
 					break;
 				}
-				oinfo.ParentObject = xpl->propval.u32;
-				ptp_debug (params, "ptp2/mtpfast: parent 0x%x", xpl->propval.u32);
+				oinfo.ParentObject = xpl->Value.u32;
+				ptp_debug (params, "ptp2/mtpfast: parent 0x%x", xpl->Value.u32);
 				break;
 			case PTP_OPC_ObjectFormat:
-				if (xpl->datatype != PTP_DTC_UINT16) {
-					ptp_debug (params, "ptp2/mtpfast: objectformat has type 0x%x???", xpl->datatype);
+				if (xpl->DataType != PTP_DTC_UINT16) {
+					ptp_debug (params, "ptp2/mtpfast: objectformat has type 0x%x???", xpl->DataType);
 					break;
 				}
-				oinfo.ObjectFormat = xpl->propval.u16;
-				ptp_debug (params, "ptp2/mtpfast: ofc 0x%x", xpl->propval.u16);
+				oinfo.ObjectFormat = xpl->Value.u16;
+				ptp_debug (params, "ptp2/mtpfast: ofc 0x%x", xpl->Value.u16);
 				break;
 			case PTP_OPC_ObjectSize:
-				switch (xpl->datatype) {
+				switch (xpl->DataType) {
 				case PTP_DTC_UINT32:
-					oinfo.ObjectSize = xpl->propval.u32;
+					oinfo.ObjectSize = xpl->Value.u32;
 					break;
 				case PTP_DTC_UINT64:
-					oinfo.ObjectSize = xpl->propval.u64;
+					oinfo.ObjectSize = xpl->Value.u64;
 					break;
 				default:
-					ptp_debug (params, "ptp2/mtpfast: objectsize has type 0x%x???", xpl->datatype);
+					ptp_debug (params, "ptp2/mtpfast: objectsize has type 0x%x???", xpl->DataType);
 					break;
 				}
-				ptp_debug (params, "ptp2/mtpfast: objectsize %u", xpl->propval.u32);
+				ptp_debug (params, "ptp2/mtpfast: objectsize %u", xpl->Value.u32);
 				break;
 			case PTP_OPC_StorageID:
-				if (xpl->datatype != PTP_DTC_UINT32) {
-					ptp_debug (params, "ptp2/mtpfast: storageid has type 0x%x???", xpl->datatype);
+				if (xpl->DataType != PTP_DTC_UINT32) {
+					ptp_debug (params, "ptp2/mtpfast: storageid has type 0x%x???", xpl->DataType);
 					break;
 				}
-				oinfo.StorageID = xpl->propval.u32;
-				ptp_debug (params, "ptp2/mtpfast: storageid 0x%x", xpl->propval.u32);
+				oinfo.StorageID = xpl->Value.u32;
+				ptp_debug (params, "ptp2/mtpfast: storageid 0x%x", xpl->Value.u32);
 				break;
 			case PTP_OPC_ProtectionStatus:/*UINT16*/
-				if (xpl->datatype != PTP_DTC_UINT16) {
-					ptp_debug (params, "ptp2/mtpfast: protectionstatus has type 0x%x???", xpl->datatype);
+				if (xpl->DataType != PTP_DTC_UINT16) {
+					ptp_debug (params, "ptp2/mtpfast: protectionstatus has type 0x%x???", xpl->DataType);
 					break;
 				}
-				oinfo.ProtectionStatus = xpl->propval.u16;
-				ptp_debug (params, "ptp2/mtpfast: protection 0x%x", xpl->propval.u16);
+				oinfo.ProtectionStatus = xpl->Value.u16;
+				ptp_debug (params, "ptp2/mtpfast: protection 0x%x", xpl->Value.u16);
 				break;
 			case PTP_OPC_ObjectFileName:
-				if (xpl->datatype != PTP_DTC_STR) {
-					ptp_debug (params, "ptp2/mtpfast: filename has type 0x%x???", xpl->datatype);
+				if (xpl->DataType != PTP_DTC_STR) {
+					ptp_debug (params, "ptp2/mtpfast: filename has type 0x%x???", xpl->DataType);
 					break;
 				}
-				if (xpl->propval.str) {
-					ptp_debug (params, "ptp2/mtpfast: filename %s", xpl->propval.str);
-					oinfo.Filename = strdup(xpl->propval.str);
+				if (xpl->Value.str) {
+					ptp_debug (params, "ptp2/mtpfast: filename %s", xpl->Value.str);
+					oinfo.Filename = strdup(xpl->Value.str);
 				} else {
 					oinfo.Filename = NULL;
 				}
 				break;
 			case PTP_OPC_DateCreated:
-				if (xpl->datatype != PTP_DTC_STR) {
-					ptp_debug (params, "ptp2/mtpfast: datecreated has type 0x%x???", xpl->datatype);
+				if (xpl->DataType != PTP_DTC_STR) {
+					ptp_debug (params, "ptp2/mtpfast: datecreated has type 0x%x???", xpl->DataType);
 					break;
 				}
-				ptp_debug (params, "ptp2/mtpfast: capturedate %s", xpl->propval.str);
-				oinfo.CaptureDate = ptp_unpack_PTPTIME (xpl->propval.str);
+				ptp_debug (params, "ptp2/mtpfast: capturedate %s", xpl->Value.str);
+				oinfo.CaptureDate = ptp_unpack_PTPTIME (xpl->Value.str);
 				break;
 			case PTP_OPC_DateModified:
-				if (xpl->datatype != PTP_DTC_STR) {
-					ptp_debug (params, "ptp2/mtpfast: datemodified has type 0x%x???", xpl->datatype);
+				if (xpl->DataType != PTP_DTC_STR) {
+					ptp_debug (params, "ptp2/mtpfast: datemodified has type 0x%x???", xpl->DataType);
 					break;
 				}
-				ptp_debug (params, "ptp2/mtpfast: moddate %s", xpl->propval.str);
-				oinfo.ModificationDate = ptp_unpack_PTPTIME (xpl->propval.str);
+				ptp_debug (params, "ptp2/mtpfast: moddate %s", xpl->Value.str);
+				oinfo.ModificationDate = ptp_unpack_PTPTIME (xpl->Value.str);
 				break;
 			default:
-				if ((xpl->property & 0xfff0) == 0xdc00)
-					ptp_debug (params, "ptp2/mtpfast:case %x type %x unhandled", xpl->property, xpl->datatype);
+				if ((xpl->PropCode & 0xfff0) == 0xdc00)
+					ptp_debug (params, "ptp2/mtpfast:case %x type %x unhandled", xpl->PropCode, xpl->DataType);
 				break;
 			}
 		}
