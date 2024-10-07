@@ -973,7 +973,7 @@ traverse_input_tree (PTPParams *params, xmlNodePtr node, PTPContainer *resp) {
 		if (!strcmp((char*)next->name,"param")) {
 			int x;
 			if (sscanf((char*)xmlNodeGetContent(next),"%x", &x)) {
-				if (curpar < sizeof(pars)/sizeof(pars[0]))
+				if (curpar < ARRAYSIZE(pars))
 					pars[curpar++] = x;
 				else
 					GP_LOG_E ("ignore superfluous argument %s/%x", (char*)xmlNodeGetContent(next), x);

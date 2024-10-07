@@ -886,14 +886,14 @@ GENERIC_TABLE(i8, int8_t,  PTP_DTC_INT8)
 static int						\
 _get_##name(CONFIG_GET_ARGS) {				\
 	return _get_Genericu16Table(CONFIG_GET_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }							\
 							\
 static int __unused__					\
 _put_##name(CONFIG_PUT_ARGS) {				\
 	return _put_Genericu16Table(CONFIG_PUT_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }
 
@@ -901,14 +901,14 @@ _put_##name(CONFIG_PUT_ARGS) {				\
 static int						\
 _get_##name(CONFIG_GET_ARGS) {				\
 	return _get_Genericu32Table(CONFIG_GET_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }							\
 							\
 static int __unused__					\
 _put_##name(CONFIG_PUT_ARGS) {				\
 	return _put_Genericu32Table(CONFIG_PUT_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }
 
@@ -916,14 +916,14 @@ _put_##name(CONFIG_PUT_ARGS) {				\
 static int						\
 _get_##name(CONFIG_GET_ARGS) {				\
 	return _get_Generici16Table(CONFIG_GET_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }							\
 							\
 static int __unused__					\
 _put_##name(CONFIG_PUT_ARGS) {				\
 	return _put_Generici16Table(CONFIG_PUT_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }
 
@@ -931,14 +931,14 @@ _put_##name(CONFIG_PUT_ARGS) {				\
 static int						\
 _get_##name(CONFIG_GET_ARGS) {				\
 	return _get_Genericu8Table(CONFIG_GET_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }							\
 							\
 static int __unused__					\
 _put_##name(CONFIG_PUT_ARGS) {				\
 	return _put_Genericu8Table(CONFIG_PUT_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }
 
@@ -946,14 +946,14 @@ _put_##name(CONFIG_PUT_ARGS) {				\
 static int						\
 _get_##name(CONFIG_GET_ARGS) {				\
 	return _get_Generici8Table(CONFIG_GET_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }							\
 							\
 static int __unused__					\
 _put_##name(CONFIG_PUT_ARGS) {				\
 	return _put_Generici8Table(CONFIG_PUT_NAMES,	\
-		tbl,sizeof(tbl)/sizeof(tbl[0])		\
+		tbl,ARRAYSIZE(tbl)		\
 	);						\
 }
 
@@ -3646,7 +3646,7 @@ _get_Sony_FNumber(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	for (i=0;i<sizeof(sony_fnumbers)/sizeof(sony_fnumbers[0]); i++) {
+	for (i=0;i<ARRAYSIZE(sony_fnumbers); i++) {
 		sprintf(buf,"f/%g",sony_fnumbers[i]/100.0);
 		gp_widget_add_choice (*widget,buf);
 		if (sony_fnumbers[i] == dpd->CurrentValue.u16) {
@@ -4482,7 +4482,7 @@ _get_Canon_CameraOrientation(CONFIG_GET_ARGS) {
 		return (GP_ERROR);
 	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	for (i=0;i<sizeof(canon_orientation)/sizeof(canon_orientation[0]);i++) {
+	for (i=0;i<ARRAYSIZE(canon_orientation);i++) {
 		if (canon_orientation[i].value != dpd->CurrentValue.u16)
 			continue;
 		gp_widget_set_value (*widget, canon_orientation[i].label);
@@ -5108,7 +5108,7 @@ _get_SigmaFP_Aperture(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	for (i=0;i<sizeof(sigma_apertures)/sizeof(sigma_apertures[0]);i++) {
+	for (i=0;i<ARRAYSIZE(sigma_apertures);i++) {
 		gp_widget_add_choice (*widget, _(sigma_apertures[i].val));
 		if (aperture == sigma_apertures[i].numval) {
 			gp_widget_set_value (*widget, _(sigma_apertures[i].val));
@@ -5133,7 +5133,7 @@ _put_SigmaFP_Aperture(CONFIG_PUT_ARGS) {
 	gp_widget_get_value (widget, &value_str);
 	memset(datagrp1,0,sizeof(datagrp1));
 
-	for (i=0;i<sizeof(sigma_apertures)/sizeof(sigma_apertures[0]);i++) {
+	for (i=0;i<ARRAYSIZE(sigma_apertures);i++) {
 		if (!strcmp(value_str,_(sigma_apertures[i].val))) {
 			aperture = sigma_apertures[i].numval;
 			valfound = 1;
@@ -5254,7 +5254,7 @@ _get_SigmaFP_ShutterSpeed(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	for (i=0;i<sizeof(sigma_shutterspeeds)/sizeof(sigma_shutterspeeds[0]);i++) {
+	for (i=0;i<ARRAYSIZE(sigma_shutterspeeds);i++) {
 		gp_widget_add_choice (*widget, _(sigma_shutterspeeds[i].val));
 		if (shutterspeed == sigma_shutterspeeds[i].numval) {
 			gp_widget_set_value (*widget, _(sigma_shutterspeeds[i].val));
@@ -5279,7 +5279,7 @@ _put_SigmaFP_ShutterSpeed(CONFIG_PUT_ARGS) {
 	gp_widget_get_value (widget, &value_str);
 	memset(datagrp1,0,sizeof(datagrp1));
 
-	for (i=0;i<sizeof(sigma_shutterspeeds)/sizeof(sigma_shutterspeeds[0]);i++) {
+	for (i=0;i<ARRAYSIZE(sigma_shutterspeeds);i++) {
 		if (!strcmp(value_str,_(sigma_shutterspeeds[i].val))) {
 			shutterspeed = sigma_shutterspeeds[i].numval;
 			valfound = 1;
@@ -5412,7 +5412,7 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 	} else {
 		unsigned int i;
 		/* use our static table */
-		for (i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
+		for (i=0;i<ARRAYSIZE(sony_shuttertable);i++) {
 			x = sony_shuttertable[i].dividend;
 			y = sony_shuttertable[i].divisor;
 			if (y == 1)
@@ -5500,9 +5500,9 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	}
 
 	if (direction == 1) {
-		position_new = sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0])-1;
+		position_new = ARRAYSIZE(sony_shuttertable)-1;
 
-		for (i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
+		for (i=0;i<ARRAYSIZE(sony_shuttertable);i++) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
 			position_new = i;
@@ -5512,7 +5512,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	} else {
 		position_new = 0;
 
-		for (i=sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0])-1;i--;) {
+		for (i=ARRAYSIZE(sony_shuttertable)-1;i--;) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
 			position_new = i;
@@ -5526,7 +5526,7 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 		if (old == new)
 			break;
 
-		for (i=0;i<sizeof(sony_shuttertable)/sizeof(sony_shuttertable[0]);i++) {
+		for (i=0;i<ARRAYSIZE(sony_shuttertable);i++) {
 			a = sony_shuttertable[i].dividend;
 			b = sony_shuttertable[i].divisor;
 			position_current = i;
@@ -9500,7 +9500,7 @@ _put_Panasonic_AFMode(CONFIG_PUT_ARGS)
 
 	CR (gp_widget_get_value(widget, &xval));
 
-	for (i=0;i<sizeof(panasonic_aftable)/sizeof(panasonic_aftable[0]);i++) {
+	for (i=0;i<ARRAYSIZE(panasonic_aftable);i++) {
 		if (!strcmp(panasonic_aftable[i].str, xval)) {
 			val = panasonic_aftable[i].val;
 			found = 1;
@@ -9531,7 +9531,7 @@ _get_Panasonic_AFMode(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	for (i = 0; i < listCount; i++) {
-		for (j=0;j<sizeof(panasonic_aftable)/sizeof(panasonic_aftable[0]);j++) {
+		for (j=0;j<ARRAYSIZE(panasonic_aftable);j++) {
 		sprintf(buf,"%d", list[i]);
 		if ((list[i] == currentVal) && (j == currentVal)) {
 			gp_widget_set_value (*widget, panasonic_aftable[j].str);
@@ -9540,7 +9540,7 @@ _get_Panasonic_AFMode(CONFIG_GET_ARGS) {
 		}
 		}
 	}
-	for (j=0;j<sizeof(panasonic_aftable)/sizeof(panasonic_aftable[0]);j++) {
+	for (j=0;j<ARRAYSIZE(panasonic_aftable);j++) {
 		gp_widget_add_choice (*widget, panasonic_aftable[j].str);
 	}
 	free(list);
@@ -9572,7 +9572,7 @@ _put_Panasonic_MFAdjust(CONFIG_PUT_ARGS)
 	uint32_t i;
 
 	CR (gp_widget_get_value(widget, &xval));
-	for (i=0;i<sizeof(panasonic_mftable)/sizeof(panasonic_mftable[0]);i++) {
+	for (i=0;i<ARRAYSIZE(panasonic_mftable);i++) {
 		if(!strcmp(panasonic_mftable[i].str, xval)) {
 		val = panasonic_mftable[i].val;
 		break;
@@ -9588,7 +9588,7 @@ _get_Panasonic_MFAdjust(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 
-	for (i=0;i<sizeof(panasonic_mftable)/sizeof(panasonic_mftable[0]);i++) {
+	for (i=0;i<ARRAYSIZE(panasonic_mftable);i++) {
 		gp_widget_add_choice (*widget, panasonic_mftable[i].str);
 	}
 	gp_widget_set_value (*widget, _("None"));
@@ -9625,12 +9625,12 @@ _get_Panasonic_ExpMode(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	for (j=0;j<sizeof(panasonic_rmodetable)/sizeof(panasonic_rmodetable[0]);j++) {
+	for (j=0;j<ARRAYSIZE(panasonic_rmodetable);j++) {
 		gp_widget_add_choice (*widget, panasonic_rmodetable[j].str);
 	}
 
 	for (i = 0; i < listCount; i++) {
-		for (j=0;j<sizeof(panasonic_rmodetable)/sizeof(panasonic_rmodetable[0]);j++) {
+		for (j=0;j<ARRAYSIZE(panasonic_rmodetable);j++) {
 			sprintf(buf,"%d", list[i]);
 			if ((list[i] == currentVal) && (j == currentVal)) {
 				gp_widget_set_value (*widget, panasonic_rmodetable[j].str);
@@ -9656,7 +9656,7 @@ _put_Panasonic_ExpMode(CONFIG_PUT_ARGS)
 	uint32_t i;
 
 	CR (gp_widget_get_value(widget, &xval));
-	for (i=0;i<sizeof(panasonic_rmodetable)/sizeof(panasonic_rmodetable[0]);i++) {
+	for (i=0;i<ARRAYSIZE(panasonic_rmodetable);i++) {
 		if(!strcmp(panasonic_rmodetable[i].str, xval)) {
 			val = panasonic_rmodetable[i].val;
 			break;
@@ -9695,7 +9695,7 @@ _get_Panasonic_Recording(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	for(i = 0; i < sizeof(panasonic_recordtable) / sizeof(panasonic_recordtable[0]); i++) {
+	for(i = 0; i < ARRAYSIZE(panasonic_recordtable); i++) {
 		if (currentVal == panasonic_recordtable[i].val) {
 			strcpy(buf, panasonic_recordtable[i].str);
 		}
@@ -9741,7 +9741,7 @@ _put_Panasonic_Whitebalance(CONFIG_PUT_ARGS)
 
 	if (sscanf(xval,_("Unknown 0x%04x"), &ival))
 		val = ival;
-	for (j=0;j<sizeof(panasonic_wbtable)/sizeof(panasonic_wbtable[0]);j++) {
+	for (j=0;j<ARRAYSIZE(panasonic_wbtable);j++) {
 		if (!strcmp(xval,_(panasonic_wbtable[j].str))) {
 			val = panasonic_wbtable[j].val;
 			break;
@@ -9772,7 +9772,7 @@ _get_Panasonic_Whitebalance(CONFIG_GET_ARGS) {
 
 	for (i = 0; i < listCount; i++) {
 		sprintf(buf,_("Unknown 0x%04x"), list[i]);
-		for (j=0;j<sizeof(panasonic_wbtable)/sizeof(panasonic_wbtable[0]);j++) {
+		for (j=0;j<ARRAYSIZE(panasonic_wbtable);j++) {
 			if (panasonic_wbtable[j].val == list[i]) {
 				strcpy(buf,_(panasonic_wbtable[j].str));
 				break;
@@ -10161,7 +10161,7 @@ _get_CaptureTarget(CONFIG_GET_ARGS) {
 	if (GP_OK != gp_setting_get("ptp2","capturetarget", buf))
 		strcpy(buf,"sdram");
 
-	for (i=0;i<sizeof (capturetargets)/sizeof (capturetargets[i]);i++) {
+	for (i=0;i<ARRAYSIZE(capturetargets);i++) {
 		gp_widget_add_choice (*widget, _(capturetargets[i].label));
 		if (!strcmp (buf,capturetargets[i].name))
 			gp_widget_set_value (*widget, _(capturetargets[i].label));
@@ -10178,7 +10178,7 @@ _put_CaptureTarget(CONFIG_PUT_ARGS) {
 	char		buf[1024];
 
 	CR (gp_widget_get_value(widget, &val));
-	for (i=0;i<sizeof(capturetargets)/sizeof(capturetargets[i]);i++) {
+	for (i=0;i<ARRAYSIZE(capturetargets);i++) {
 		if (!strcmp( val, _(capturetargets[i].label))) {
 			gp_setting_set("ptp2","capturetarget",capturetargets[i].name);
 			break;
@@ -10272,7 +10272,7 @@ _get_CHDK(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 	if (GP_OK != gp_setting_get("ptp2","chdk", buf))
 		strcpy(buf,"off");
-	for (i=0;i<sizeof (chdkonoff)/sizeof (chdkonoff[i]);i++) {
+	for (i=0;i<ARRAYSIZE(chdkonoff);i++) {
 		gp_widget_add_choice (*widget, _(chdkonoff[i].label));
 		if (!strcmp (buf,chdkonoff[i].name))
 			gp_widget_set_value (*widget, _(chdkonoff[i].label));
@@ -10286,7 +10286,7 @@ _put_CHDK(CONFIG_PUT_ARGS) {
 	char *val;
 
 	CR (gp_widget_get_value(widget, &val));
-	for (i=0;i<sizeof(chdkonoff)/sizeof(chdkonoff[i]);i++) {
+	for (i=0;i<ARRAYSIZE(chdkonoff);i++) {
 		if (!strcmp( val, _(chdkonoff[i].label))) {
 			gp_setting_set("ptp2","chdk",chdkonoff[i].name);
 			break;
@@ -10332,7 +10332,7 @@ _get_Autofocus(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 	if (GP_OK != gp_setting_get("ptp2","autofocus", buf))
 		strcpy(buf,"on");
-	for (i=0;i<sizeof (afonoff)/sizeof (afonoff[i]);i++) {
+	for (i=0;i<ARRAYSIZE(afonoff);i++) {
 		gp_widget_add_choice (*widget, _(afonoff[i].label));
 		if (!strcmp (buf,afonoff[i].name))
 			gp_widget_set_value (*widget, _(afonoff[i].label));
@@ -10346,7 +10346,7 @@ _put_Autofocus(CONFIG_PUT_ARGS) {
 	char *val;
 
 	CR (gp_widget_get_value(widget, &val));
-	for (i=0;i<sizeof(afonoff)/sizeof(afonoff[i]);i++) {
+	for (i=0;i<ARRAYSIZE(afonoff);i++) {
 		if (!strcmp( val, _(afonoff[i].label))) {
 			gp_setting_set("ptp2","autofocus",afonoff[i].name);
 			break;
@@ -11589,7 +11589,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 		*outwidget = window;
 	}
 
-	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
+	for (menuno = 0; menuno < ARRAYSIZE(menus) ; menuno++ ) {
 		if (!menus[menuno].submenus) { /* Custom menu */
 			if (mode == MODE_GET) {
 				struct menu *cur = menus+menuno;
@@ -12031,7 +12031,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 
 	if (mode == MODE_SET)
 		CR (gp_widget_get_child_by_label (window, _("Camera and Driver Configuration"), &subwindow));
-	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
+	for (menuno = 0; menuno < ARRAYSIZE(menus) ; menuno++ ) {
 		if (mode == MODE_SET) {
 			ret = gp_widget_get_child_by_label (subwindow, _(menus[menuno].label), &section);
 			if (ret != GP_OK)
@@ -12307,7 +12307,7 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 	memset (&ab, 0, sizeof(ab));
 	gp_camera_get_abilities (camera, &ab);
 
-	for (menuno = 0; menuno < sizeof(menus)/sizeof(menus[0]) ; menuno++ ) {
+	for (menuno = 0; menuno < ARRAYSIZE(menus) ; menuno++ ) {
 		if (!menus[menuno].submenus) { /* Custom menu ... not exposed to by-property method */
 			continue;
 		}
