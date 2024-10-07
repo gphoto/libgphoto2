@@ -1713,8 +1713,8 @@ struct _MTPProperties {
 typedef struct _MTPProperties MTPProperties;
 
 struct _PTPPropDescRangeForm {
-	PTPPropertyValue 	MinimumValue;
-	PTPPropertyValue 	MaximumValue;
+	PTPPropertyValue 	MinValue;
+	PTPPropertyValue 	MaxValue;
 	PTPPropertyValue 	StepSize;
 };
 typedef struct _PTPPropDescRangeForm PTPPropDescRangeForm;

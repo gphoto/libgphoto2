@@ -690,9 +690,9 @@ ptp_unpack_DPD (PTPParams *params, const unsigned char* data, PTPDevicePropDesc 
 
 	switch (dpd->FormFlag) {
 	case PTP_DPFF_Range:
-		ret = ptp_unpack_DPV (params, data, offset, dpdlen, &dpd->FORM.Range.MinimumValue, dpd->DataType);
+		ret = ptp_unpack_DPV (params, data, offset, dpdlen, &dpd->FORM.Range.MinValue, dpd->DataType);
 		if (!ret) goto outofmemory;
-		ret = ptp_unpack_DPV (params, data, offset, dpdlen, &dpd->FORM.Range.MaximumValue, dpd->DataType);
+		ret = ptp_unpack_DPV (params, data, offset, dpdlen, &dpd->FORM.Range.MaxValue, dpd->DataType);
 		if (!ret) goto outofmemory;
 		ret = ptp_unpack_DPV (params, data, offset, dpdlen, &dpd->FORM.Range.StepSize, dpd->DataType);
 		if (!ret) goto outofmemory;
@@ -791,9 +791,9 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 
 	switch (dpd->FormFlag) {
 	case PTP_DPFF_Range:
-		ret = ptp_unpack_DPV (params, data, poffset, dpdlen, &dpd->FORM.Range.MinimumValue, dpd->DataType);
+		ret = ptp_unpack_DPV (params, data, poffset, dpdlen, &dpd->FORM.Range.MinValue, dpd->DataType);
 		if (!ret) goto outofmemory;
-		ret = ptp_unpack_DPV (params, data, poffset, dpdlen, &dpd->FORM.Range.MaximumValue, dpd->DataType);
+		ret = ptp_unpack_DPV (params, data, poffset, dpdlen, &dpd->FORM.Range.MaxValue, dpd->DataType);
 		if (!ret) goto outofmemory;
 		ret = ptp_unpack_DPV (params, data, poffset, dpdlen, &dpd->FORM.Range.StepSize, dpd->DataType);
 		if (!ret) goto outofmemory;
@@ -914,8 +914,8 @@ duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 	dst->FormFlag		= src->FormFlag;
 	switch (src->FormFlag) {
 	case PTP_DPFF_Range:
-		duplicate_PropertyValue (&src->FORM.Range.MinimumValue, &dst->FORM.Range.MinimumValue, src->DataType);
-		duplicate_PropertyValue (&src->FORM.Range.MaximumValue, &dst->FORM.Range.MaximumValue, src->DataType);
+		duplicate_PropertyValue (&src->FORM.Range.MinValue, &dst->FORM.Range.MinValue, src->DataType);
+		duplicate_PropertyValue (&src->FORM.Range.MaxValue, &dst->FORM.Range.MaxValue, src->DataType);
 		duplicate_PropertyValue (&src->FORM.Range.StepSize,     &dst->FORM.Range.StepSize,     src->DataType);
 		break;
 	case PTP_DPFF_Enumeration:
@@ -960,9 +960,9 @@ ptp_unpack_OPD (PTPParams *params, const unsigned char* data, PTPObjectPropDesc 
 
 	switch (opd->FormFlag) {
 	case PTP_OPFF_Range:
-		ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->FORM.Range.MinimumValue, opd->DataType);
+		ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->FORM.Range.MinValue, opd->DataType);
 		if (!ret) goto outofmemory;
-		ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->FORM.Range.MaximumValue, opd->DataType);
+		ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->FORM.Range.MaxValue, opd->DataType);
 		if (!ret) goto outofmemory;
 		ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->FORM.Range.StepSize, opd->DataType);
 		if (!ret) goto outofmemory;

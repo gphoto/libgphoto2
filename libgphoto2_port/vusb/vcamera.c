@@ -310,8 +310,8 @@ typedef union _PTPPropertyValue {
 } PTPPropertyValue;
 
 struct _PTPPropDescRangeForm {
-	PTPPropertyValue        MinimumValue;
-	PTPPropertyValue        MaximumValue;
+	PTPPropertyValue        MinValue;
+	PTPPropertyValue        MaxValue;
 	PTPPropertyValue        StepSize;
 };
 typedef struct _PTPPropDescRangeForm PTPPropDescRangeForm;
@@ -362,8 +362,8 @@ ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
 	ptp_free_devicepropvalue (dpd->DataType, &dpd->CurrentValue);
 	switch (dpd->FormFlag) {
 	case /* PTP_DPFF_Range */ 0x01:
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MinimumValue);
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MaximumValue);
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MinValue);
+		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MaxValue);
 		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.StepSize);
 		break;
 	case /* PTP_DPFF_Enumeration */ 0x02:
@@ -1323,8 +1323,8 @@ ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp) {
 	switch (desc.FormFlag) {
 	case 0:	break;
 	case 1:	/* range */
-		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.MinimumValue);
-		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.MaximumValue);
+		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.MinValue);
+		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.MaxValue);
 		x += put_propval (data+x, desc.DataType, &desc.FORM.Range.StepSize);
 		break;
 	case 2:	/* ENUM */
@@ -1569,8 +1569,8 @@ ptp_battery_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->DefaultValue.u8		= 50;
 	desc->CurrentValue.u8		= 50;
 	desc->FormFlag			= 0x01; /* range */
-	desc->FORM.Range.MinimumValue.u8= 0;
-	desc->FORM.Range.MaximumValue.u8= 100;
+	desc->FORM.Range.MinValue.u8	= 0;
+	desc->FORM.Range.MaxValue.u8	= 100;
 	desc->FORM.Range.StepSize.u8	= 1;
 	ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5001, 0xffffffff);
 	return 1;
@@ -1588,7 +1588,7 @@ ptp_imagesize_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	desc->DevicePropertyCode		= 0x5003;
 	desc->DataType				= 0xffff;	/* STR */
 	desc->GetSet				= 0;		/* Get only */
-	desc->DefaultValue.str		= strdup("640x480");
+	desc->DefaultValue.str			= strdup("640x480");
 	desc->CurrentValue.str			= strdup("640x480");
 	desc->FormFlag				= 0x02; /* enum */
 	desc->FORM.Enum.NumberOfValues 		= 3;

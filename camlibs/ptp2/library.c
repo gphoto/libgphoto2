@@ -7979,9 +7979,9 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			case PTP_DPFF_None:	break;
 			case PTP_DPFF_Range: {
 				APPEND_TXT ("Range [");
-				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.MinimumValue, dpd.DataType);
+				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.MinValue, dpd.DataType);
 				APPEND_TXT (" - ");
-				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.MaximumValue, dpd.DataType);
+				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.MaxValue, dpd.DataType);
 				APPEND_TXT (", step ");
 				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.StepSize, dpd.DataType);
 				APPEND_TXT ("] value: ");
