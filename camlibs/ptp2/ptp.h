@@ -3822,12 +3822,15 @@ struct _MTPPropertyDesc {
 };
 typedef struct _MTPPropertyDesc MTPPropertyDesc;
 
+#if 0
+/* currently unused */
 struct _MTPObjectFormat {
 	uint16_t	ofc;
 	MTPPropertyDesc	*pds;
 	unsigned int	pds_len;
 };
 typedef struct _MTPObjectFormat MTPObjectFormat;
+#endif
 
 struct _PanasonicLiveViewSize {
 	uint16_t	width;
@@ -3881,8 +3884,11 @@ struct _PTPParams {
 	int		split_header_data;
 	int		ocs64; /* 64bit objectsize */
 
+#if 0
+	/* currently unused */
 	MTPObjectFormat	*objectformats;
 	unsigned int	objectformats_len;
+#endif
 
 	/* PTP: internal structures used by ptp driver */
 	PTPObject	*objects;
