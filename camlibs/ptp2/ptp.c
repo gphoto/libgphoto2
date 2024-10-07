@@ -903,20 +903,20 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		di->DeviceProps[cnt++] = p;
 
 		/* add to cache of device propdesc */
-		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropCode == p)
+		for (i=0;i<params->dpd_cache_len;i++)
+			if (params->dpd_cache[i].desc.DevicePropCode == p)
 				break;
-		if (i == params->nrofdeviceproperties) {
-			params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
-			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
-			params->nrofdeviceproperties++;
+		if (i == params->dpd_cache_len) {
+			params->dpd_cache = realloc(params->dpd_cache,(i+1)*sizeof(params->dpd_cache[0]));
+			memset(&params->dpd_cache[i],0,sizeof(params->dpd_cache[0]));
+			params->dpd_cache_len++;
 		} else {
-			ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
+			ptp_free_devicepropdesc (&params->dpd_cache[i].desc);
 		}
 		/* FIXME: free old entry */
 		/* we are not using dpd, so copy it directly to the cache */
-		time( &params->deviceproperties[i].timestamp);
-		params->deviceproperties[i].desc = dpd;
+		time( &params->dpd_cache[i].timestamp);
+		params->dpd_cache[i].desc = dpd;
 
 		next = xmlNextElementSibling (next);
 	}
@@ -2121,20 +2121,20 @@ ptp_free_params (PTPParams *params)
 
 	free (params->cameraname);
 	free (params->wifi_profiles);
-	for (i=0;i<params->nrofobjects;i++)
+	for (i=0;i<params->objects_len;i++)
 		ptp_free_object (&params->objects[i]);
 	free (params->objects);
 	free (params->storageids.Storage);
 	free (params->events);
-	for (i=0;i<params->nrofcanon_props;i++) {
+	for (i=0;i<params->canon_props_len;i++) {
 		ptp_free_devicepropdesc (&params->canon_props[i].dpd);
 	}
 	free (params->canon_props);
 	free (params->eos_events);
 
-	for (i=0;i<params->nrofdeviceproperties;i++)
-		ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
-	free (params->deviceproperties);
+	for (i=0;i<params->dpd_cache_len;i++)
+		ptp_free_devicepropdesc (&params->dpd_cache[i].desc);
+	free (params->dpd_cache);
 
 	ptp_free_deviceinfo (&params->deviceinfo);
 }
@@ -3277,12 +3277,12 @@ ptp_add_event (PTPParams *params, PTPContainer *event)
 uint16_t
 ptp_add_events (PTPParams *params, PTPContainer *events, unsigned int count)
 {
-	params->events = realloc(params->events, sizeof(PTPContainer)*(count+params->nrofevents));
+	params->events = realloc(params->events, sizeof(PTPContainer)*(count+params->events_len));
 	if (!params->events)
 		return PTP_RC_GeneralError;
 
-	memcpy (&params->events[params->nrofevents], events, count*sizeof(PTPContainer));
-	params->nrofevents += count;
+	memcpy (&params->events[params->events_len], events, count*sizeof(PTPContainer));
+	params->events_len += count;
 	return PTP_RC_OK;
 }
 
@@ -3335,55 +3335,55 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 			PTPObject	*newobs;
 
 			ob = NULL;
-			for (j=0;j<params->nrofobjects;j++) {
-				if (params->objects[(last+j)%params->nrofobjects].oid == tmp[i].ObjectHandle)  {
-					ob = &params->objects[(last+j)%params->nrofobjects];
+			for (j=0;j<params->objects_len;j++) {
+				if (params->objects[(last+j)%params->objects_len].oid == tmp[i].ObjectHandle)  {
+					ob = &params->objects[(last+j)%params->objects_len];
 					break;
 				}
 			}
-			if (j == params->nrofobjects) {
-				ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->nrofobjects,j);
-				newobs = realloc (params->objects,sizeof(PTPObject)*(params->nrofobjects+1));
+			if (j == params->objects_len) {
+				ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects_len,j);
+				newobs = realloc (params->objects,sizeof(PTPObject)*(params->objects_len+1));
 				if (!newobs) {
 					free (tmp);
 					free (storageids.Storage);
 					return PTP_RC_GeneralError;
 				}
 				params->objects = newobs;
-				memset (&params->objects[params->nrofobjects],0,sizeof(params->objects[params->nrofobjects]));
-				params->objects[params->nrofobjects].oid   = tmp[i].ObjectHandle;
-				params->objects[params->nrofobjects].flags = 0;
+				memset (&params->objects[params->objects_len],0,sizeof(params->objects[params->objects_len]));
+				params->objects[params->objects_len].oid   = tmp[i].ObjectHandle;
+				params->objects[params->objects_len].flags = 0;
 
-				params->objects[params->nrofobjects].oi.StorageID = storageids.Storage[k];
-				params->objects[params->nrofobjects].flags |= PTPOBJECT_STORAGEID_LOADED;
+				params->objects[params->objects_len].oi.StorageID = storageids.Storage[k];
+				params->objects[params->objects_len].flags |= PTPOBJECT_STORAGEID_LOADED;
 				if (handle == 0xffffffff)
-					params->objects[params->nrofobjects].oi.ParentObject = 0;
+					params->objects[params->objects_len].oi.ParentObject = 0;
 				else
-					params->objects[params->nrofobjects].oi.ParentObject = handle;
-				params->objects[params->nrofobjects].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
-				params->objects[params->nrofobjects].oi.Filename = strdup(tmp[i].Filename);
-				params->objects[params->nrofobjects].oi.ObjectFormat = tmp[i].ObjectFormatCode;
+					params->objects[params->objects_len].oi.ParentObject = handle;
+				params->objects[params->objects_len].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
+				params->objects[params->objects_len].oi.Filename = strdup(tmp[i].Filename);
+				params->objects[params->objects_len].oi.ObjectFormat = tmp[i].ObjectFormatCode;
 
 				ptp_debug (params, "   flags %x", tmp[i].Flags);
 				if (tmp[i].Flags & 0x1)
-					params->objects[params->nrofobjects].oi.ProtectionStatus = PTP_PS_ReadOnly;
+					params->objects[params->objects_len].oi.ProtectionStatus = PTP_PS_ReadOnly;
 				else
-					params->objects[params->nrofobjects].oi.ProtectionStatus = PTP_PS_NoProtection;
-				params->objects[params->nrofobjects].canon_flags = tmp[i].Flags;
-				params->objects[params->nrofobjects].oi.ObjectSize = tmp[i].ObjectSize;
-				params->objects[params->nrofobjects].oi.CaptureDate = tmp[i].Time;
-				params->objects[params->nrofobjects].oi.ModificationDate = tmp[i].Time;
-				params->objects[params->nrofobjects].flags |= PTPOBJECT_OBJECTINFO_LOADED;
+					params->objects[params->objects_len].oi.ProtectionStatus = PTP_PS_NoProtection;
+				params->objects[params->objects_len].canon_flags = tmp[i].Flags;
+				params->objects[params->objects_len].oi.ObjectSize = tmp[i].ObjectSize;
+				params->objects[params->objects_len].oi.CaptureDate = tmp[i].Time;
+				params->objects[params->objects_len].oi.ModificationDate = tmp[i].Time;
+				params->objects[params->objects_len].flags |= PTPOBJECT_OBJECTINFO_LOADED;
 
-				/*debug_objectinfo(params, tmp[i].ObjectHandle, &params->objects[params->nrofobjects].oi);*/
-				last = params->nrofobjects;
-				params->nrofobjects++;
+				/*debug_objectinfo(params, tmp[i].ObjectHandle, &params->objects[params->objects_len].oi);*/
+				last = params->objects_len;
+				params->objects_len++;
 				changed = 1;
 			} else {
-				ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->nrofobjects,j);
-				ob = &params->objects[(last+j)%params->nrofobjects];
+				ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects_len,j);
+				ob = &params->objects[(last+j)%params->objects_len];
 				/* for speeding up search */
-				last = (last+j)%params->nrofobjects;
+				last = (last+j)%params->objects_len;
 				if (handle != PTP_HANDLER_SPECIAL) {
 					ob->oi.ParentObject = handle;
 					ob->flags |= PTPOBJECT_PARENTOBJECT_LOADED;
@@ -3419,7 +3419,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 	ptp_debug (params, "(storage=0x%08x, handle=0x%08x)", storage, handle);
 	/* handle=0 is only not read when there is no object in the list yet
 	 * and we do the initial read. */
-	if (!handle && params->nrofobjects)
+	if (!handle && params->objects_len)
 		return PTP_RC_OK;
 	/* but we can override this to read 0 object of storages */
 	if (handle == PTP_HANDLER_SPECIAL)
@@ -3462,31 +3462,31 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 			unsigned int	j;
 
 			ob = NULL;
-			for (j=0;j<params->nrofobjects;j++) {
-				if (params->objects[(last+j)%params->nrofobjects].oid == oifs[i].ObjectHandle)  {
-					ob = &params->objects[(last+j)%params->nrofobjects];
+			for (j=0;j<params->objects_len;j++) {
+				if (params->objects[(last+j)%params->objects_len].oid == oifs[i].ObjectHandle)  {
+					ob = &params->objects[(last+j)%params->objects_len];
 					break;
 				}
 			}
-			if (j == params->nrofobjects) {
-				ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->nrofobjects,j);
-				newobs = realloc (params->objects,sizeof(PTPObject)*(params->nrofobjects+1));
+			if (j == params->objects_len) {
+				ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->objects_len,j);
+				newobs = realloc (params->objects,sizeof(PTPObject)*(params->objects_len+1));
 				if (!newobs) {
 					free (oifs);
 					return PTP_RC_GeneralError;
 				}
 				params->objects = newobs;
-				memset (&params->objects[params->nrofobjects],0,sizeof(params->objects[params->nrofobjects]));
-				params->objects[params->nrofobjects].oid = oifs[i].ObjectHandle;
-				params->objects[params->nrofobjects].flags = 0;
-				ob = &params->objects[params->nrofobjects];
-				params->nrofobjects++;
+				memset (&params->objects[params->objects_len],0,sizeof(params->objects[params->objects_len]));
+				params->objects[params->objects_len].oid = oifs[i].ObjectHandle;
+				params->objects[params->objects_len].flags = 0;
+				ob = &params->objects[params->objects_len];
+				params->objects_len++;
 				changed = 1;
 			} else {
-				ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->nrofobjects,j);
-				ob = &params->objects[(last+j)%params->nrofobjects];
+				ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->objects_len,j);
+				ob = &params->objects[(last+j)%params->objects_len];
 				/* for speeding up search */
-				last = (last+j)%params->nrofobjects;
+				last = (last+j)%params->objects_len;
 			}
 
 			ob->oi.StorageID 		= oifs[i].StorageID;
@@ -3536,42 +3536,42 @@ fallback:
 		unsigned int	j;
 
 		ob = NULL;
-		for (j=0;j<params->nrofobjects;j++) {
-			if (params->objects[(last+j)%params->nrofobjects].oid == handles.Handler[i])  {
-				ob = &params->objects[(last+j)%params->nrofobjects];
+		for (j=0;j<params->objects_len;j++) {
+			if (params->objects[(last+j)%params->objects_len].oid == handles.Handler[i])  {
+				ob = &params->objects[(last+j)%params->objects_len];
 				break;
 			}
 		}
-		if (j == params->nrofobjects) {
-			ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->nrofobjects,j);
-			newobs = realloc (params->objects,sizeof(PTPObject)*(params->nrofobjects+1));
+		if (j == params->objects_len) {
+			ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->objects_len,j);
+			newobs = realloc (params->objects,sizeof(PTPObject)*(params->objects_len+1));
 			if (!newobs) return PTP_RC_GeneralError;
 			params->objects = newobs;
-			memset (&params->objects[params->nrofobjects],0,sizeof(params->objects[params->nrofobjects]));
-			params->objects[params->nrofobjects].oid = handles.Handler[i];
-			params->objects[params->nrofobjects].flags = 0;
+			memset (&params->objects[params->objects_len],0,sizeof(params->objects[params->objects_len]));
+			params->objects[params->objects_len].oid = handles.Handler[i];
+			params->objects[params->objects_len].flags = 0;
 			/* root directory list files might return all files, so avoid tagging it */
 			if (handle != PTP_HANDLER_SPECIAL && handle) {
 				ptp_debug (params, "  parenthandle 0x%08x", handle);
 				if (handles.Handler[i] == handle) { /* EOS bug where oid == parent(oid) */
-					params->objects[params->nrofobjects].oi.ParentObject = 0;
+					params->objects[params->objects_len].oi.ParentObject = 0;
 				} else {
-					params->objects[params->nrofobjects].oi.ParentObject = handle;
+					params->objects[params->objects_len].oi.ParentObject = handle;
 				}
-				params->objects[params->nrofobjects].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
+				params->objects[params->objects_len].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
 			}
 			if (storage != PTP_HANDLER_SPECIAL) {
 				ptp_debug (params, "  storage 0x%08x", storage);
-				params->objects[params->nrofobjects].oi.StorageID = storage;
-				params->objects[params->nrofobjects].flags |= PTPOBJECT_STORAGEID_LOADED;
+				params->objects[params->objects_len].oi.StorageID = storage;
+				params->objects[params->objects_len].flags |= PTPOBJECT_STORAGEID_LOADED;
 			}
-			params->nrofobjects++;
+			params->objects_len++;
 			changed = 1;
 		} else {
-			ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->nrofobjects,j);
-			ob = &params->objects[(last+j)%params->nrofobjects];
+			ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->objects_len,j);
+			ob = &params->objects[(last+j)%params->objects_len];
 			/* for speeding up search */
-			last = (last+j)%params->nrofobjects;
+			last = (last+j)%params->objects_len;
 			if (handle != PTP_HANDLER_SPECIAL) {
 				ob->oi.ParentObject = handle;
 				ob->flags |= PTPOBJECT_PARENTOBJECT_LOADED;
@@ -3597,9 +3597,9 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 		unsigned int i;
 
 		/* mark the property for a forced refresh on the next query */
-		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropCode == event->Param1) {
-				params->deviceproperties[i].timestamp = 0;
+		for (i=0;i<params->dpd_cache_len;i++)
+			if (params->dpd_cache[i].desc.DevicePropCode == event->Param1) {
+				params->dpd_cache[i].timestamp = 0;
 				break;
 			}
 		break;
@@ -3618,11 +3618,11 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 
 		/* free object storage as it might be associated with the storage ids */
 		/* FIXME: enhance and just delete the ones from the storage */
-		for (i=0;i<params->nrofobjects;i++)
+		for (i=0;i<params->objects_len;i++)
 			ptp_free_object (&params->objects[i]);
 		free (params->objects);
 		params->objects 		= NULL;
-		params->nrofobjects 		= 0;
+		params->objects_len 		= 0;
 
 		params->storagechanged		= 1;
 		/* mirror what we do in camera_init, fetch root directory entries. */
@@ -3769,13 +3769,13 @@ ptp_wait_event (PTPParams *params)
 int
 ptp_get_one_event(PTPParams *params, PTPContainer *event)
 {
-	if (!params->nrofevents)
+	if (!params->events_len)
 		return 0;
 	memcpy (event, params->events, sizeof(PTPContainer));
-	memmove (params->events, params->events+1, sizeof(PTPContainer)*(params->nrofevents-1));
+	memmove (params->events, params->events+1, sizeof(PTPContainer)*(params->events_len-1));
 	/* do not realloc on shrink. */
-	params->nrofevents--;
-	if (!params->nrofevents) {
+	params->events_len--;
+	if (!params->events_len) {
 		free (params->events);
 		params->events = NULL;
 	}
@@ -3798,15 +3798,15 @@ ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event)
 {
 	unsigned int i;
 
-	if (!params->nrofevents)
+	if (!params->events_len)
 		return 0;
-	for (i=0;i<params->nrofevents;i++) {
+	for (i=0;i<params->events_len;i++) {
 		if (params->events[i].Code == code) {
 			memcpy (event, params->events+i, sizeof(PTPContainer));
-			memmove (params->events+i, params->events+i+1, sizeof(PTPContainer)*(params->nrofevents-i-1));
+			memmove (params->events+i, params->events+i+1, sizeof(PTPContainer)*(params->events_len-i-1));
 			/* do not realloc on shrink. */
-			params->nrofevents--;
-			if (!params->nrofevents) {
+			params->events_len--;
+			if (!params->events_len) {
 				free (params->events);
 				params->events = NULL;
 			}
@@ -3829,17 +3829,17 @@ ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event)
  *
  **/
 uint16_t
-ptp_canon_eos_getevent (PTPParams* params, PTPCanonEOSEvent **eos_events, int *nrofeos_events)
+ptp_canon_eos_getevent (PTPParams* params, PTPCanonEOSEvent **eos_events, int *eos_events_len)
 {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int 	size;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetEvent);
-	*nrofeos_events = 0;
+	*eos_events_len = 0;
 	*eos_events = NULL;
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	*nrofeos_events = ptp_unpack_EOS_events(params, data, size, eos_events);
+	*eos_events_len = ptp_unpack_EOS_events(params, data, size, eos_events);
 	free (data);
 	return PTP_RC_OK;
 }
@@ -3848,23 +3848,23 @@ uint16_t
 ptp_check_eos_events (PTPParams *params)
 {
 	PTPCanonEOSEvent	*events = NULL;
-	int			nrofevents = 0;
+	int			events_len = 0;
 
 	while (1) { /* call it repeatedly until the camera does not report any */
-		CHECK_PTP_RC(ptp_canon_eos_getevent (params, &events, &nrofevents));
-		if (!nrofevents)
+		CHECK_PTP_RC(ptp_canon_eos_getevent (params, &events, &events_len));
+		if (!events_len)
 			return PTP_RC_OK;
 
-		if (params->nrofeos_events) {
-			params->eos_events = realloc(params->eos_events,sizeof(events[0])*(params->nrofeos_events+nrofevents));
+		if (params->eos_events_len) {
+			params->eos_events = realloc(params->eos_events,sizeof(events[0])*(params->eos_events_len+events_len));
 			if (!params->eos_events)
 				return PTP_RC_GeneralError;
-			memcpy (params->eos_events+params->nrofeos_events, events, nrofevents*sizeof(events[0]));
-			params->nrofeos_events += nrofevents;
+			memcpy (params->eos_events+params->eos_events_len, events, events_len*sizeof(events[0]));
+			params->eos_events_len += events_len;
 			free (events);
 		} else {
 			params->eos_events = events;
-			params->nrofeos_events = nrofevents;
+			params->eos_events_len = events_len;
 		}
 	}
 	return PTP_RC_OK;
@@ -3873,16 +3873,16 @@ ptp_check_eos_events (PTPParams *params)
 int
 ptp_get_one_eos_event (PTPParams *params, PTPCanonEOSEvent *eos_event)
 {
-	if (!params->nrofeos_events)
+	if (!params->eos_events_len)
 		return 0;
 	memcpy (eos_event, params->eos_events, sizeof(*eos_event));
-	if (params->nrofeos_events > 1) {
-		memmove (params->eos_events, params->eos_events+1, sizeof(*eos_event)*(params->nrofeos_events-1));
-		params->nrofeos_events--;
+	if (params->eos_events_len > 1) {
+		memmove (params->eos_events, params->eos_events+1, sizeof(*eos_event)*(params->eos_events_len-1));
+		params->eos_events_len--;
 	} else {
 		free (params->eos_events);
 		params->eos_events = NULL;
-		params->nrofeos_events = 0;
+		params->eos_events_len = 0;
 	}
 	return 1;
 }
@@ -4566,16 +4566,16 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 
 		propcode = dpd.DevicePropCode;
 
-		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropCode == propcode)
+		for (i=0;i<params->dpd_cache_len;i++)
+			if (params->dpd_cache[i].desc.DevicePropCode == propcode)
 				break;
 
 		/* debug output to see what changes */
-		if (i != params->nrofdeviceproperties) {
+		if (i != params->dpd_cache_len) {
 			switch (dpd.DataType) {
 #define CHECK_CHANGED(type) \
-				if (params->deviceproperties[i].desc.CurrentValue.type != dpd.CurrentValue.type) \
-					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %s(%04x): value %d -> %d", ptp_get_property_description (params, propcode), propcode, params->deviceproperties[i].desc.CurrentValue.type, dpd.CurrentValue.type);
+				if (params->dpd_cache[i].desc.CurrentValue.type != dpd.CurrentValue.type) \
+					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %s(%04x): value %d -> %d", ptp_get_property_description (params, propcode), propcode, params->dpd_cache[i].desc.CurrentValue.type, dpd.CurrentValue.type);
 			case PTP_DTC_INT8:   CHECK_CHANGED(i8); break;
 			case PTP_DTC_UINT8:  CHECK_CHANGED(u8); break;
 			case PTP_DTC_UINT16: CHECK_CHANGED(u16); break;
@@ -4587,15 +4587,15 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 			}
 		}
 
-		if (i == params->nrofdeviceproperties) {
-			params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
-			memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
-			params->nrofdeviceproperties++;
+		if (i == params->dpd_cache_len) {
+			params->dpd_cache = realloc(params->dpd_cache,(i+1)*sizeof(params->dpd_cache[0]));
+			memset(&params->dpd_cache[i],0,sizeof(params->dpd_cache[0]));
+			params->dpd_cache_len++;
 		} else {
-			ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
+			ptp_free_devicepropdesc (&params->dpd_cache[i].desc);
 		}
-		params->deviceproperties[i].desc = dpd;
-		params->deviceproperties[i].timestamp = now;
+		params->dpd_cache[i].desc = dpd;
+		params->dpd_cache[i].timestamp = now;
 #if 0
 		ptp_debug (params, "dpd.DevicePropCode %04x, readlen %d, getset %d", dpd.DevicePropCode, readlen, dpd.GetSet);
 		switch (dpd.DataType) {
@@ -4762,22 +4762,22 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	time_t		now;
 	time(&now);
 
-	for (i=0;i<params->nrofdeviceproperties;i++)
-		if (params->deviceproperties[i].desc.DevicePropCode == propcode)
+	for (i=0;i<params->dpd_cache_len;i++)
+		if (params->dpd_cache[i].desc.DevicePropCode == propcode)
 			break;
-	if (i == params->nrofdeviceproperties) {
-		params->deviceproperties = realloc(params->deviceproperties,(i+1)*sizeof(params->deviceproperties[0]));
-		memset(&params->deviceproperties[i],0,sizeof(params->deviceproperties[0]));
-		params->nrofdeviceproperties++;
+	if (i == params->dpd_cache_len) {
+		params->dpd_cache = realloc(params->dpd_cache,(i+1)*sizeof(params->dpd_cache[0]));
+		memset(&params->dpd_cache[i],0,sizeof(params->dpd_cache[0]));
+		params->dpd_cache_len++;
 	}
 
-	if (params->deviceproperties[i].desc.DataType != PTP_DTC_UNDEF) {
-		if (params->deviceproperties[i].timestamp + params->cachetime > now) {
-			duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
+	if (params->dpd_cache[i].desc.DataType != PTP_DTC_UNDEF) {
+		if (params->dpd_cache[i].timestamp + params->cachetime > now) {
+			duplicate_DevicePropDesc(&params->dpd_cache[i].desc, dpd);
 			return PTP_RC_OK;
 		}
 		/* free cached entry as we will refetch it. */
-		ptp_free_devicepropdesc (&params->deviceproperties[i].desc);
+		ptp_free_devicepropdesc (&params->dpd_cache[i].desc);
 	}
 
 	if (!ptp_is_vendor_extension_prop(propcode))
@@ -4794,7 +4794,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 			else
 				goto generic;
 		}
-		duplicate_DevicePropDesc(eos_dpd, &params->deviceproperties[i].desc);
+		duplicate_DevicePropDesc(eos_dpd, &params->dpd_cache[i].desc);
 		goto done;
 	}
 
@@ -4803,10 +4803,10 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	) {
 		CHECK_PTP_RC(ptp_sony_getalldevicepropdesc (params));
 
-		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropCode == propcode)
+		for (i=0;i<params->dpd_cache_len;i++)
+			if (params->dpd_cache[i].desc.DevicePropCode == propcode)
 				break;
-		if (i == params->nrofdeviceproperties) {
+		if (i == params->dpd_cache_len) {
 			ptp_debug (params, "alpha property 0x%04x not found?\n", propcode);
 			return PTP_RC_GeneralError;
 		}
@@ -4817,10 +4817,10 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	) {
 		CHECK_PTP_RC(ptp_sony_qx_getalldevicepropdesc (params));
 
-		for (i=0;i<params->nrofdeviceproperties;i++)
-			if (params->deviceproperties[i].desc.DevicePropCode == propcode)
+		for (i=0;i<params->dpd_cache_len;i++)
+			if (params->dpd_cache[i].desc.DevicePropCode == propcode)
 				break;
-		if (i == params->nrofdeviceproperties) {
+		if (i == params->dpd_cache_len) {
 			ptp_debug (params, "qx property 0x%04x not found?\n", propcode);
 			return PTP_RC_GeneralError;
 		}
@@ -4829,21 +4829,21 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_GetDevicePropdesc)
 	) {
-		CHECK_PTP_RC(ptp_sony_getdevicepropdesc (params, propcode, &params->deviceproperties[i].desc));
+		CHECK_PTP_RC(ptp_sony_getdevicepropdesc (params, propcode, &params->dpd_cache[i].desc));
 		goto done;
 	}
 
 generic:
 	if (ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
-		CHECK_PTP_RC(ptp_getdevicepropdesc (params, propcode, &params->deviceproperties[i].desc));
+		CHECK_PTP_RC(ptp_getdevicepropdesc (params, propcode, &params->dpd_cache[i].desc));
 		goto done;
 	}
 
 	return PTP_RC_OperationNotSupported;
 
 done:
-	params->deviceproperties[i].timestamp = now;
-	duplicate_DevicePropDesc(&params->deviceproperties[i].desc, dpd);
+	params->dpd_cache[i].timestamp = now;
+	duplicate_DevicePropDesc(&params->dpd_cache[i].desc, dpd);
 	return PTP_RC_OK;
 }
 
@@ -4867,11 +4867,11 @@ ptp_generic_setdevicepropvalue (PTPParams* params, uint32_t propcode,
 	unsigned int i;
 
 	/* reset the cache entry */
-	for (i=0;i<params->nrofdeviceproperties;i++)
-		if (params->deviceproperties[i].desc.DevicePropCode == propcode)
+	for (i=0;i<params->dpd_cache_len;i++)
+		if (params->dpd_cache[i].desc.DevicePropCode == propcode)
 			break;
-	if (i != params->nrofdeviceproperties)
-		params->deviceproperties[i].timestamp = 0;
+	if (i != params->dpd_cache_len)
+		params->dpd_cache[i].timestamp = 0;
 
 	/* FIXME: change the cache? hmm */
 	/* this works for some methods, but not for all */
@@ -5920,11 +5920,11 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 				ptp_debug(params, "param: %02x, value: %d ", param, value);
 
 				/* reset the property cache entry for refetch ... */
-				for (j=0;j<params->nrofdeviceproperties;j++)
-					if (params->deviceproperties[j].desc.DevicePropCode == param)
+				for (j=0;j<params->dpd_cache_len;j++)
+					if (params->dpd_cache[j].desc.DevicePropCode == param)
 						break;
-				if (j != params->nrofdeviceproperties) {
-					params->deviceproperties[j].timestamp = 0;
+				if (j != params->dpd_cache_len) {
+					params->dpd_cache[j].timestamp = 0;
 				}
 			}
 		}
@@ -5993,8 +5993,8 @@ ptp_free_object (PTPObject *ob)
 	if (!ob) return;
 
 	ptp_free_objectinfo (&ob->oi);
-	for (i=0;i<ob->nrofmtpprops;i++)
-		ptp_destroy_object_prop(&ob->mtpprops[i]);
+	for (i=0;i<ob->mtp_props_len;i++)
+		ptp_destroy_object_prop(&ob->mtp_props[i]);
 	ob->flags = 0;
 }
 
@@ -9502,8 +9502,8 @@ ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t
 	ret = ptp_object_find (params, handle, &ob);
 	if (ret != PTP_RC_OK)
 		return NULL;
-	prop = ob->mtpprops;
-	for (i=0;i<ob->nrofmtpprops;i++) {
+	prop = ob->mtp_props;
+	for (i=0;i<ob->mtp_props_len;i++) {
 		if (attribute_id == prop->property)
 			return prop;
 		prop++;
@@ -9522,11 +9522,11 @@ ptp_remove_object_from_cache(PTPParams *params, uint32_t handle)
 	/* remove object from object info cache */
 	ptp_free_object (ob);
 
-	if (i < params->nrofobjects-1)
-		memmove (ob,ob+1,(params->nrofobjects-1-i)*sizeof(PTPObject));
-	params->nrofobjects--;
+	if (i < params->objects_len-1)
+		memmove (ob,ob+1,(params->objects_len-1-i)*sizeof(PTPObject));
+	params->objects_len--;
 	/* We use less memory than before so this shouldn't fail */
-	params->objects = realloc(params->objects, sizeof(PTPObject)*params->nrofobjects);
+	params->objects = realloc(params->objects, sizeof(PTPObject)*params->objects_len);
 	return PTP_RC_OK;
 }
 
@@ -9546,7 +9546,7 @@ static int _cmp_ob (const void *a, const void *b)
 void
 ptp_objects_sort (PTPParams *params)
 {
-	qsort (params->objects, params->nrofobjects, sizeof(PTPObject), _cmp_ob);
+	qsort (params->objects, params->objects_len, sizeof(PTPObject), _cmp_ob);
 }
 
 /* Binary search in objects. Needs "objects" to be a sorted by objectid list!  */
@@ -9556,7 +9556,7 @@ ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob)
 	PTPObject	tmpob;
 
 	tmpob.oid = handle;
-	*retob = bsearch (&tmpob, params->objects, params->nrofobjects, sizeof(tmpob), _cmp_ob);
+	*retob = bsearch (&tmpob, params->objects, params->objects_len, sizeof(tmpob), _cmp_ob);
 	if (!*retob)
 		return PTP_RC_GeneralError;
 	return PTP_RC_OK;
@@ -9572,16 +9572,16 @@ ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob
 
 	if (!handle) return PTP_RC_GeneralError;
 	*retob = NULL;
-	if (!params->nrofobjects) {
+	if (!params->objects_len) {
 		params->objects = calloc(1,sizeof(PTPObject));
-		params->nrofobjects = 1;
+		params->objects_len = 1;
 		params->objects[0].oid = handle;
 		*retob = &params->objects[0];
 		return PTP_RC_OK;
 	}
 	begin = 0;
-	end = params->nrofobjects-1;
-	/*ptp_debug (params, "searching %08x, total=%d", handle, params->nrofobjects);*/
+	end = params->objects_len-1;
+	/*ptp_debug (params, "searching %08x, total=%d", handle, params->objects_len);*/
 	while (1) {
 		cursor = (end-begin)/2+begin;
 		/*ptp_debug (params, "ob %d: %08x [%d-%d]", cursor, params->objects[cursor].oid, begin, end);*/
@@ -9607,21 +9607,21 @@ ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob
 	if ((begin == 0) && (handle < params->objects[0].oid)) {
 		insertat=begin;
 	} else {
-		if ((end == params->nrofobjects-1) && (handle > params->objects[end].oid))
+		if ((end == params->objects_len-1) && (handle > params->objects[end].oid))
 			insertat=end+1;
 		else
 			insertat=begin+1;
 	}
 	/*ptp_debug (params, "inserting oid %x at [%x,%x], begin=%d, end=%d, insertat=%d\n", handle, params->objects[begin].oid, params->objects[end].oid, begin, end, insertat);*/
-	newobs = realloc (params->objects, sizeof(PTPObject)*(params->nrofobjects+1));
+	newobs = realloc (params->objects, sizeof(PTPObject)*(params->objects_len+1));
 	if (!newobs) return PTP_RC_GeneralError;
 	params->objects = newobs;
-	if (insertat<params->nrofobjects)
-		memmove (&params->objects[insertat+1],&params->objects[insertat],(params->nrofobjects-insertat)*sizeof(PTPObject));
+	if (insertat<params->objects_len)
+		memmove (&params->objects[insertat+1],&params->objects[insertat],(params->objects_len-insertat)*sizeof(PTPObject));
 	memset(&params->objects[insertat],0,sizeof(PTPObject));
 	params->objects[insertat].oid = handle;
 	*retob = &params->objects[insertat];
-	params->nrofobjects++;
+	params->objects_len++;
 	return PTP_RC_OK;
 }
 
@@ -9740,15 +9740,15 @@ read64bit:		;
 		ret = ptp_mtp_getobjectproplist_single (params, handle, &props, &nrofprops);
 		if (ret != PTP_RC_OK)
 			goto fallback;
-		ob->mtpprops = props;
-		ob->nrofmtpprops = nrofprops;
+		ob->mtp_props = props;
+		ob->mtp_props_len = nrofprops;
 
 		/* Override the ObjectInfo data with data from properties */
 		if (params->device_flags & DEVICE_FLAG_PROPLIST_OVERRIDES_OI) {
 			unsigned int i;
-			MTPProperties *prop = ob->mtpprops;
+			MTPProperties *prop = ob->mtp_props;
 
-			for (i=0;i<ob->nrofmtpprops;i++,prop++) {
+			for (i=0;i<ob->mtp_props_len;i++,prop++) {
 				/* in case we got all subtree objects */
 				if (prop->ObjectHandle != handle) continue;
 

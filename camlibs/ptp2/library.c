@@ -3216,7 +3216,7 @@ camera_exit (Camera *camera, GPContext *context)
 				if (camera->pl->checkevents) {
 					if ((exit_result = ptp_check_eos_events (params)) != PTP_RC_OK)
 						goto exitfailed;
-					GP_LOG_D ("missed %d EOS events", params->nrofeos_events);
+					GP_LOG_D ("missed %d EOS events", params->eos_events_len);
 					camera->pl->checkevents = 0;
 				}
 				if (params->inliveview && ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder))
@@ -6002,10 +6002,10 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	ptp_check_eos_events (params);
 
 	/* Discard all collected events before starting the next capture. */
-	GP_LOG_D("discarding %d EOS events", params->nrofeos_events);
+	GP_LOG_D("discarding %d EOS events", params->eos_events_len);
 	free (params->eos_events);
 	params->eos_events = NULL;
-	params->nrofeos_events = 0;
+	params->eos_events_len = 0;
 
 	if (params->eos_camerastatus == 1)
 		return GP_ERROR_CAMERA_BUSY;
@@ -6626,7 +6626,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 			CR (camera_keep_device_on (camera));
 
-			if (params->nrofeos_events == 0)
+			if (params->eos_events_len == 0)
 				C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
 
 			while (ptp_get_one_eos_event (params, &event)) {
@@ -8036,7 +8036,7 @@ find_child (PTPParams *params,const char *file,uint32_t storage,uint32_t handle,
 	if (ret != PTP_RC_OK)
 		return PTP_HANDLER_SPECIAL;
 
-	for (i = 0; i < params->nrofobjects; i++) {
+	for (i = 0; i < params->objects_len; i++) {
 		PTPObject	*ob = &params->objects[i];
 		uint32_t	oid = ob->oid;
 
@@ -8105,7 +8105,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	uint32_t parent, storage=0x0000000;
 	unsigned int i, hasgetstorageids;
 	SET_CONTEXT_P(params, context);
-	unsigned int	lastnrofobjects = params->nrofobjects, redoneonce = 0;
+	unsigned int	lastobjects_len = params->objects_len, redoneonce = 0;
 
 	GP_LOG_D ("file_list_func(%s)", folder);
 
@@ -8131,7 +8131,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
 
 retry:
-	for (i = 0; i < params->nrofobjects; i++) {
+	for (i = 0; i < params->objects_len; i++) {
 		PTPObject	*ob;
 		uint16_t	ret;
 		uint32_t	oid;
@@ -8185,12 +8185,12 @@ retry:
 	}
 
 	/* Did we change the object tree list during our traversal? if yes, redo the scan. */
-	if (params->nrofobjects != lastnrofobjects) {
+	if (params->objects_len != lastobjects_len) {
 		if (redoneonce++) {
 			GP_LOG_E("list changed again on second pass, returning anyway");
 			return GP_OK;
 		}
-		lastnrofobjects = params->nrofobjects;
+		lastobjects_len = params->objects_len;
 		gp_list_reset(list);
 		goto retry;
 	}
@@ -8204,7 +8204,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	PTPParams *params = &((Camera *)data)->pl->params;
 	unsigned int i, hasgetstorageids;
 	uint32_t handler,storage;
-	unsigned int redoneonce = 0, lastnrofobjects = params->nrofobjects;
+	unsigned int redoneonce = 0, lastobjects_len = params->objects_len;
 
 	SET_CONTEXT_P(params, context);
 	GP_LOG_D ("folder_list_func(%s)", folder);
@@ -8261,7 +8261,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	 */
 	hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
 retry:
-	for (i = 0; i < params->nrofobjects; i++) {
+	for (i = 0; i < params->objects_len; i++) {
 		PTPObject	*ob;
 		uint16_t	ret;
 		uint32_t	handle;
@@ -8294,12 +8294,12 @@ retry:
 		}
 		CR (gp_list_append (list, ob->oi.Filename, NULL));
 	}
-	if (lastnrofobjects != params->nrofobjects) {
+	if (lastobjects_len != params->objects_len) {
 		if (redoneonce++) {
 			GP_LOG_E("list changed again on second pass, returning anyway");
 			return GP_OK;
 		}
-		lastnrofobjects = params->nrofobjects;
+		lastobjects_len = params->objects_len;
 		gp_list_reset (list);
 		goto retry;
 	}
@@ -8336,13 +8336,13 @@ ptp_mtp_render_metadata (
 	 * retrieval. */
 	C_PTP (ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props));
 
-	mprops = ob->mtpprops;
+	mprops = ob->mtp_props;
 	if (mprops) { /* use the fast method, without device access since cached.*/
 		char		propname[256];
 		char		text[256];
 		unsigned int	i, n;
 
-		for (j=0;j<ob->nrofmtpprops;j++) {
+		for (j=0;j<ob->mtp_props_len;j++) {
 			MTPProperties		*xpl = &mprops[j];
 
 			for (i=0;i<ARRAYSIZE(uninteresting_props);i++)

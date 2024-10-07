@@ -1704,7 +1704,7 @@ ptp_pack_EOS_CustomFuncEx (PTPParams* params, unsigned char* data, char* str)
 static inline PTPDevicePropDesc*
 ptp_find_eos_devicepropdesc(PTPParams *params, uint32_t dpc)
 {
-	for (unsigned j=0; j < params->nrofcanon_props; j++)
+	for (unsigned j=0; j < params->canon_props_len; j++)
 		if (params->canon_props[j].dpd.DevicePropCode == dpc)
 			return &params->canon_props[j].dpd;
 	return NULL;
@@ -1718,13 +1718,13 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint32_t dpc)
 	if (dpd)
 		return dpd;
 
-	unsigned j = params->nrofcanon_props;
+	unsigned j = params->canon_props_len;
 	params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
 	memset (&params->canon_props[j].dpd,0,sizeof(params->canon_props[j].dpd));
 	params->canon_props[j].dpd.DevicePropCode = dpc;
 	params->canon_props[j].dpd.GetSet = 1;
 	params->canon_props[j].dpd.FormFlag = PTP_DPFF_None;
-	params->nrofcanon_props = j+1;
+	params->canon_props_len = j+1;
 	return &params->canon_props[j].dpd;
 }
 
