@@ -434,9 +434,9 @@ olympus_xml_transfer (PTPParams *params,
 			ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
 			if (ret != PTP_RC_OK)
 				return ret;
-			evxml = malloc (oi.ObjectCompressedSize + 1);
-			memcpy (evxml, resxml, oi.ObjectCompressedSize);
-			evxml[oi.ObjectCompressedSize] = 0x00;
+			evxml = malloc (oi.ObjectSize + 1);
+			memcpy (evxml, resxml, oi.ObjectSize);
+			evxml[oi.ObjectSize] = 0x00;
 
 			GP_LOG_D ("file content: %s", evxml);
 
@@ -455,7 +455,7 @@ olympus_xml_transfer (PTPParams *params,
 			oi.ObjectFormat		= PTP_OFC_Script;
 			oi.StorageID 		= 0x80000001;
 			oi.Filename 		= "HRSPONSE.X3C";
-			oi.ObjectCompressedSize	= strlen(evxml);
+			oi.ObjectSize		= strlen(evxml);
 			size = ptp_pack_OI(params, &oi, &oidata);
 			res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL);
 			if (res != PTP_RC_OK)
@@ -482,7 +482,7 @@ olympus_xml_transfer (PTPParams *params,
 		oi.ObjectFormat		= PTP_OFC_Script;
 		oi.StorageID 		= 0x80000001;
 		oi.Filename 		= "HREQUEST.X3C";
-		oi.ObjectCompressedSize	= strlen(cmdxml);
+		oi.ObjectSize		= strlen(cmdxml);
 
 /*
 "HRSPONSE.X3C" ... sent back to camera after receiving an event.
@@ -525,9 +525,9 @@ redo:
 		ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
 		if (ret != PTP_RC_OK)
 			return ret;
-		*inxml = malloc (oi.ObjectCompressedSize + 1);
-		memcpy (*inxml, resxml, oi.ObjectCompressedSize);
-		(*inxml)[oi.ObjectCompressedSize] = 0x00;
+		*inxml = malloc (oi.ObjectSize + 1);
+		memcpy (*inxml, resxml, oi.ObjectSize);
+		(*inxml)[oi.ObjectSize] = 0x00;
 
 		GP_LOG_D ("file content: %s", *inxml);
 		/* parse it */
@@ -1252,9 +1252,9 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 		ret = ptp_getobject (outerparams, newhandle, (unsigned char**)&resxml);
 		if (ret != PTP_RC_OK)
 			return ret;
-		evxml = malloc (oi.ObjectCompressedSize + 1);
-		memcpy (evxml, resxml, oi.ObjectCompressedSize);
-		evxml[oi.ObjectCompressedSize] = 0x00;
+		evxml = malloc (oi.ObjectSize + 1);
+		memcpy (evxml, resxml, oi.ObjectSize);
+		evxml[oi.ObjectSize] = 0x00;
 
 		GP_LOG_D ("file content: %s", evxml);
 
@@ -1276,7 +1276,7 @@ ums_wrap2_event_check (PTPParams* params, PTPContainer* req)
 		oi.ObjectFormat		= PTP_OFC_Script;
 		oi.StorageID 		= 0x80000001;
 		oi.Filename 		= "HRSPONSE.X3C";
-		oi.ObjectCompressedSize	= strlen(evxml);
+		oi.ObjectSize		= strlen(evxml);
 		size = ptp_pack_OI(params, &oi, &oidata);
 		res = ptp_transaction (outerparams, &ptp2, PTP_DP_SENDDATA, size, &oidata, NULL);
 		if (res != PTP_RC_OK)

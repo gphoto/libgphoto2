@@ -401,9 +401,9 @@ ptp_unpack_SI (PTPParams *params, const unsigned char* data, PTPStorageInfo *si,
 #define PTP_oi_StorageID		 0
 #define PTP_oi_ObjectFormat		 4
 #define PTP_oi_ProtectionStatus		 6
-#define PTP_oi_ObjectCompressedSize	 8
+#define PTP_oi_ObjectSize		 8
 #define PTP_oi_ThumbFormat		12
-#define PTP_oi_ThumbCompressedSize	14
+#define PTP_oi_ThumbSize		14
 #define PTP_oi_ThumbPixWidth		18
 #define PTP_oi_ThumbPixHeight		22
 #define PTP_oi_ImagePixWidth		26
@@ -437,11 +437,11 @@ ptp_pack_OI (PTPParams *params, PTPObjectInfo *oi, unsigned char** oidataptr)
 	htod32a(&oidata[PTP_oi_StorageID],oi->StorageID);
 	htod16a(&oidata[PTP_oi_ObjectFormat],oi->ObjectFormat);
 	htod16a(&oidata[PTP_oi_ProtectionStatus],oi->ProtectionStatus);
-	htod32a(&oidata[PTP_oi_ObjectCompressedSize],oi->ObjectCompressedSize);
+	htod32a(&oidata[PTP_oi_ObjectSize],oi->ObjectSize);
 	if (params->ocs64)
 		oidata += 4;
 	htod16a(&oidata[PTP_oi_ThumbFormat],oi->ThumbFormat);
-	htod32a(&oidata[PTP_oi_ThumbCompressedSize],oi->ThumbCompressedSize);
+	htod32a(&oidata[PTP_oi_ThumbSize],oi->ThumbSize);
 	htod32a(&oidata[PTP_oi_ThumbPixWidth],oi->ThumbPixWidth);
 	htod32a(&oidata[PTP_oi_ThumbPixHeight],oi->ThumbPixHeight);
 	htod32a(&oidata[PTP_oi_ImagePixWidth],oi->ImagePixWidth);
@@ -541,7 +541,7 @@ ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, 
 	oi->StorageID            = dtoh32a(data + PTP_oi_StorageID);
 	oi->ObjectFormat         = dtoh16a(data + PTP_oi_ObjectFormat);
 	oi->ProtectionStatus     = dtoh16a(data + PTP_oi_ProtectionStatus);
-	oi->ObjectCompressedSize = dtoh32a(data + PTP_oi_ObjectCompressedSize);
+	oi->ObjectSize           = dtoh32a(data + PTP_oi_ObjectSize);
 
 	/* Stupid Samsung Galaxy developers emit a 64bit objectcompressedsize */
 	if ((data[PTP_oi_filenamelen] == 0) && (data[PTP_oi_filenamelen+4] != 0)) {
@@ -551,7 +551,7 @@ ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, 
 		len -= 4;
 	}
 	oi->ThumbFormat         = dtoh16a(data + PTP_oi_ThumbFormat);
-	oi->ThumbCompressedSize = dtoh32a(data + PTP_oi_ThumbCompressedSize);
+	oi->ThumbSize           = dtoh32a(data + PTP_oi_ThumbSize);
 	oi->ThumbPixWidth       = dtoh32a(data + PTP_oi_ThumbPixWidth);
 	oi->ThumbPixHeight      = dtoh32a(data + PTP_oi_ThumbPixHeight);
 	oi->ImagePixWidth       = dtoh32a(data + PTP_oi_ImagePixWidth);
@@ -1349,9 +1349,9 @@ ObjectInfo for 'IMG_0199.JPG':
   StorageID: 0x00020001
   ObjectFormat: 0x3801
   ProtectionStatus: 0x0000
-  ObjectCompressedSize: 2217241
+  ObjectSize: 2217241
   ThumbFormat: 0x3808
-  ThumbCompressedSize: 5122
+  ThumbSize: 5122
   ThumbPixWidth: 160
   ThumbPixHeight: 120
   ImagePixWidth: 4000
@@ -1823,17 +1823,17 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				break;
 			}
 			e[i].type = ((ec == PTP_EC_CANON_EOS_ObjectAddedEx) ? PTP_EOSEvent_ObjectAdded : PTP_EOSEvent_ObjectInfoChanged);
-			e[i].u.object.oid                     = dtoh32a(curdata + PTP_cee_OA_ObjectID);
-			e[i].u.object.oi.StorageID            = dtoh32a(curdata + PTP_cee_OA_StorageID);
-			e[i].u.object.oi.ParentObject         = dtoh32a(curdata + PTP_cee_OA_Parent);
-			e[i].u.object.oi.ObjectFormat         = dtoh16a(curdata + PTP_cee_OA_OFC);
-			e[i].u.object.oi.ObjectCompressedSize = dtoh32a(curdata + PTP_cee_OA_Size);
-			e[i].u.object.oi.Filename             = strdup(((char*)curdata + PTP_cee_OA_Name));
+			e[i].u.object.oid              = dtoh32a(curdata + PTP_cee_OA_ObjectID);
+			e[i].u.object.oi.StorageID     = dtoh32a(curdata + PTP_cee_OA_StorageID);
+			e[i].u.object.oi.ParentObject  = dtoh32a(curdata + PTP_cee_OA_Parent);
+			e[i].u.object.oi.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA_OFC);
+			e[i].u.object.oi.ObjectSize    = dtoh32a(curdata + PTP_cee_OA_Size);
+			e[i].u.object.oi.Filename      = strdup(((char*)curdata + PTP_cee_OA_Name));
 
 			ptp_debug (params, "%s objectinfo %s oid %08x, parent %08x, ofc %04x, size %ld, filename %s",
 			           prefix, ec == PTP_EC_CANON_EOS_ObjectAddedEx ? "added" : "changed",
 			           e[i].u.object.oid, e[i].u.object.oi.ParentObject, e[i].u.object.oi.ObjectFormat,
-			           e[i].u.object.oi.ObjectCompressedSize, e[i].u.object.oi.Filename);
+			           e[i].u.object.oi.ObjectSize, e[i].u.object.oi.Filename);
 			break;
 		case PTP_EC_CANON_EOS_ObjectAddedEx64:	/* FIXME: review if the data used is correct */
 			if (size < PTP_cee_OA64_Name+1) {
@@ -1841,15 +1841,15 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				break;
 			}
 			e[i].type = PTP_EOSEvent_ObjectAdded;
-			e[i].u.object.oid                     = dtoh32a(curdata + PTP_cee_OA64_ObjectID);
-			e[i].u.object.oi.StorageID            = dtoh32a(curdata + PTP_cee_OA64_StorageID);
-			e[i].u.object.oi.ParentObject         = dtoh32a(curdata + PTP_cee_OA64_Parent);
-			e[i].u.object.oi.ObjectFormat         = dtoh16a(curdata + PTP_cee_OA64_OFC);
-			e[i].u.object.oi.ObjectCompressedSize = dtoh32a(curdata + PTP_cee_OA64_Size);	/* FIXME: might be 64bit now */
-			e[i].u.object.oi.Filename             = strdup(((char*)curdata + PTP_cee_OA64_Name));
+			e[i].u.object.oid              = dtoh32a(curdata + PTP_cee_OA64_ObjectID);
+			e[i].u.object.oi.StorageID     = dtoh32a(curdata + PTP_cee_OA64_StorageID);
+			e[i].u.object.oi.ParentObject  = dtoh32a(curdata + PTP_cee_OA64_Parent);
+			e[i].u.object.oi.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA64_OFC);
+			e[i].u.object.oi.ObjectSize    = dtoh32a(curdata + PTP_cee_OA64_Size);	/* FIXME: might be 64bit now */
+			e[i].u.object.oi.Filename      = strdup(((char*)curdata + PTP_cee_OA64_Name));
 			ptp_debug (params, "%s objectinfo added oid %08x, parent %08x, ofc %04x, size %ld, filename %s",
 			           prefix, e[i].u.object.oid, e[i].u.object.oi.ParentObject, e[i].u.object.oi.ObjectFormat,
-			           e[i].u.object.oi.ObjectCompressedSize, e[i].u.object.oi.Filename);
+			           e[i].u.object.oi.ObjectSize, e[i].u.object.oi.Filename);
 			break;
 		case PTP_EC_CANON_EOS_RequestObjectTransfer:
 		case PTP_EC_CANON_EOS_RequestObjectTransfer64:
@@ -1858,16 +1858,16 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				break;
 			}
 			e[i].type = PTP_EOSEvent_ObjectTransfer;
-			e[i].u.object.oid                     = dtoh32a(curdata + PTP_cee_OI_ObjectID);
-			e[i].u.object.oi.StorageID            = 0; /* use as marker */
-			e[i].u.object.oi.ObjectFormat         = dtoh16a(curdata + PTP_cee_OI_OFC);
-			e[i].u.object.oi.ParentObject         = 0; /* check, but use as marker */
-			e[i].u.object.oi.ObjectCompressedSize = dtoh32a(curdata + PTP_cee_OI_Size);
-			e[i].u.object.oi.Filename             = strdup(((char*)curdata + PTP_cee_OI_Name));
+			e[i].u.object.oid              = dtoh32a(curdata + PTP_cee_OI_ObjectID);
+			e[i].u.object.oi.StorageID     = 0; /* use as marker */
+			e[i].u.object.oi.ObjectFormat  = dtoh16a(curdata + PTP_cee_OI_OFC);
+			e[i].u.object.oi.ParentObject  = 0; /* check, but use as marker */
+			e[i].u.object.oi.ObjectSize    = dtoh32a(curdata + PTP_cee_OI_Size);
+			e[i].u.object.oi.Filename      = strdup(((char*)curdata + PTP_cee_OI_Name));
 
 			ptp_debug (params, "%s request object transfer oid %08x, ofc %04x, size %ld, filename %p",
 			           prefix, e[i].u.object.oid, e[i].u.object.oi.ObjectFormat,
-			           e[i].u.object.oi.ObjectCompressedSize, e[i].u.object.oi.Filename);
+			           e[i].u.object.oi.ObjectSize, e[i].u.object.oi.Filename);
 			break;
 		case PTP_EC_CANON_EOS_AvailListChanged: {	/* property desc */
 			if (size < PTP_cee_DPD_Data) {
@@ -2739,8 +2739,8 @@ ptp_unpack_canon_directory (
 		oi->ObjectFormat	= dtoh16a(cur + ptp_canon_dir_ofc);
 		oi->ParentObject	= dtoh32a(cur + ptp_canon_dir_parentid);
 		oi->Filename		= strdup((char*)(cur + ptp_canon_dir_name));
-		oi->ObjectCompressedSize= dtoh32a(cur + ptp_canon_dir_size);
-		oi->ThumbCompressedSize	= dtoh32a(cur + ptp_canon_dir_thumbsize);
+		oi->ObjectSize		= dtoh32a(cur + ptp_canon_dir_size);
+		oi->ThumbSize		= dtoh32a(cur + ptp_canon_dir_thumbsize);
 		oi->ImagePixWidth	= dtoh32a(cur + ptp_canon_dir_width);
 		oi->ImagePixHeight	= dtoh32a(cur + ptp_canon_dir_height);
 		oi->CaptureDate		= oi->ModificationDate = dtoh32a(cur + ptp_canon_dir_unixtime);
@@ -2839,15 +2839,15 @@ ptp_unpack_ptp11_manifest (
 		if (offset + 34 + 2 > datalen)
 			goto tooshort;
 
-		oif->ObjectHandle            = dtoh32o(data, offset);
-		oif->StorageID               = dtoh32o(data, offset);
-		oif->ObjectFormat            = dtoh16o(data, offset);
-		oif->ProtectionStatus        = dtoh16o(data, offset);
-		oif->ObjectCompressedSize64  = dtoh64o(data, offset);
-		oif->ParentObject            = dtoh32o(data, offset);
-		oif->AssociationType         = dtoh16o(data, offset);
-		oif->AssociationDesc         = dtoh32o(data, offset);
-		oif->SequenceNumber          = dtoh32o(data, offset);
+		oif->ObjectHandle      = dtoh32o(data, offset);
+		oif->StorageID         = dtoh32o(data, offset);
+		oif->ObjectFormat      = dtoh16o(data, offset);
+		oif->ProtectionStatus  = dtoh16o(data, offset);
+		oif->ObjectSize64      = dtoh64o(data, offset);
+		oif->ParentObject      = dtoh32o(data, offset);
+		oif->AssociationType   = dtoh16o(data, offset);
+		oif->AssociationDesc   = dtoh32o(data, offset);
+		oif->SequenceNumber    = dtoh32o(data, offset);
 
 		if (!ptp_unpack_string(params, data, &offset, datalen, &oif->Filename))
 			goto tooshort;

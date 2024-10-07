@@ -960,9 +960,9 @@ ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
 #endif
 	x += put_16bit_le (data+x, ofc);
 	x += put_16bit_le (data+x, 0); 			/* ProtectionStatus, no protection */
-	x += put_32bit_le (data+x, cur->stbuf.st_size); /* ObjectCompressedSize */
+	x += put_32bit_le (data+x, cur->stbuf.st_size); /* ObjectSize */
 	x += put_16bit_le (data+x, thumbofc); 		/* ThumbFormat */
-	x += put_32bit_le (data+x, thumbsize); 		/* ThumbCompressedSize */
+	x += put_32bit_le (data+x, thumbsize); 		/* ThumbSize */
 	x += put_32bit_le (data+x, thumbwidth); 	/* ThumbPixWidth */
 	x += put_32bit_le (data+x, thumbheight);	/* ThumbPixHeight */
 	x += put_32bit_le (data+x, imagewidth); 	/* ImagePixWidth */
