@@ -1758,7 +1758,7 @@ typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 /* Object Property Describing Dataset (DevicePropDesc) */
 
 struct _PTPObjectPropDesc {
-	uint16_t		ObjectPropertyCode;
+	uint16_t		ObjectPropCode;
 	uint16_t		DataType;
 	uint8_t			GetSet;
 	PTPPropValue	DefaultValue;
