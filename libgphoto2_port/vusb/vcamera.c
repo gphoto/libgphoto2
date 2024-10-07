@@ -327,7 +327,7 @@ typedef struct _PTPPropDescEnumForm PTPPropDescEnumForm;
 /* Device Property Describing Dataset (DevicePropDesc) */
 
 struct _PTPDevicePropDesc {
-	uint16_t        DevicePropertyCode;
+	uint16_t        DevicePropCode;
 	uint16_t        DataType;
 	uint8_t         GetSet;
 	PTPPropValue    DefaultValue;
@@ -1314,7 +1314,7 @@ ptp_getdevicepropdesc_write(vcamera *cam, ptpcontainer *ptp) {
 	data = malloc(2000);
 	ptp_properties[i].getdesc (cam, &desc);
 
-	x += put_16bit_le (data+x, desc.DevicePropertyCode);
+	x += put_16bit_le (data+x, desc.DevicePropCode);
 	x += put_16bit_le (data+x, desc.DataType);
 	x += put_8bit_le  (data+x, desc.GetSet);
 	x += put_propval  (data+x, desc.DataType, &desc.DefaultValue);
@@ -1563,7 +1563,7 @@ ptp_setdevicepropvalue_write_data(vcamera *cam, ptpcontainer *ptp, unsigned char
 /**************************  Properties *****************************************************/
 static int
 ptp_battery_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
-	desc->DevicePropertyCode	= 0x5001;
+	desc->DevicePropCode		= 0x5001;
 	desc->DataType			= 2;	/* uint8 */
 	desc->GetSet			= 0;	/* Get only */
 	desc->DefaultValue.u8		= 50;
@@ -1585,7 +1585,7 @@ ptp_battery_getvalue (vcamera* cam, PTPPropValue *val) {
 
 static int
 ptp_imagesize_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
-	desc->DevicePropertyCode		= 0x5003;
+	desc->DevicePropCode		= 0x5003;
 	desc->DataType				= 0xffff;	/* STR */
 	desc->GetSet				= 0;		/* Get only */
 	desc->DefaultValue.str			= strdup("640x480");
@@ -1610,7 +1610,7 @@ ptp_imagesize_getvalue (vcamera* cam, PTPPropValue *val) {
 
 static int
 ptp_shutterspeed_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
-	desc->DevicePropertyCode		= 0x500D;
+	desc->DevicePropCode		= 0x500D;
 	desc->DataType				= 0x0006;	/* UINT32 */
 	desc->GetSet				= 1;		/* Get/Set */
 	if (!cam->shutterspeed) cam->shutterspeed = 100; /* 1/100 * 10000 */
@@ -1650,7 +1650,7 @@ ptp_shutterspeed_setvalue (vcamera* cam, PTPPropValue *val) {
 
 static int
 ptp_fnumber_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
-	desc->DevicePropertyCode		= 0x5007;
+	desc->DevicePropCode		= 0x5007;
 	desc->DataType				= 0x0004;	/* UINT16 */
 	desc->GetSet				= 1;		/* Get/Set */
 	if (!cam->fnumber) cam->fnumber = 280; /* 2.8 * 100 */
@@ -1699,7 +1699,7 @@ ptp_fnumber_setvalue (vcamera* cam, PTPPropValue *val) {
 
 static int
 ptp_exposurebias_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
-	desc->DevicePropertyCode		= 0x5010;
+	desc->DevicePropCode			= 0x5010;
 	desc->DataType				= 0x0003;	/* INT16 */
 	desc->GetSet				= 1;		/* Get/Set */
 	if (!cam->exposurebias) cam->exposurebias = 0; /* 0.0 */
@@ -1747,14 +1747,14 @@ ptp_datetime_getdesc (vcamera* cam, PTPDevicePropDesc *desc) {
 	struct tm		*tm;
 	time_t			xtime;
 
-	desc->DevicePropertyCode	= 0x5011;
-	desc->DataType			= 0xffff;	/* string */
-	desc->GetSet			= 1;		/* get only */
+	desc->DevicePropCode	= 0x5011;
+	desc->DataType		= 0xffff;	/* string */
+	desc->GetSet		= 1;		/* get only */
 	time(&xtime);
 	tm = gmtime(&xtime);
-	desc->DefaultValue.str		= aprintf("%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
-	desc->CurrentValue.str		= strdup (desc->DefaultValue.str);
-	desc->FormFlag			= 0; /* no form */
+	desc->DefaultValue.str	= aprintf("%04d%02d%02dT%02d%02d%02d",tm->tm_year+1900,tm->tm_mon+1,tm->tm_mday,tm->tm_hour,tm->tm_min,tm->tm_sec);
+	desc->CurrentValue.str	= strdup (desc->DefaultValue.str);
+	desc->FormFlag		= 0; /* no form */
 	/*ptp_inject_interrupt (cam, 1000, 0x4006, 1, 0x5011, 0xffffffff);*/
 	return 1;
 }

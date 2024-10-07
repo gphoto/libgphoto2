@@ -651,10 +651,10 @@ ptp_unpack_DPV (
 }
 
 /* Device Property pack/unpack */
-#define PTP_dpd_DevicePropertyCode	0
-#define PTP_dpd_DataType		2
-#define PTP_dpd_GetSet			4
-#define PTP_dpd_DefaultValue		5
+#define PTP_dpd_DevicePropCode	0
+#define PTP_dpd_DataType	2
+#define PTP_dpd_GetSet		4
+#define PTP_dpd_DefaultValue	5
 
 static inline int
 ptp_unpack_DPD (PTPParams *params, const unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, uint32_t *offset)
@@ -664,10 +664,10 @@ ptp_unpack_DPD (PTPParams *params, const unsigned char* data, PTPDevicePropDesc 
 	memset (dpd, 0, sizeof(*dpd));
 	if (dpdlen <= 5)
 		return 0;
-	dpd->DevicePropertyCode = dtoh16a(data + PTP_dpd_DevicePropertyCode);
-	dpd->DataType           = dtoh16a(data + PTP_dpd_DataType);
-	dpd->GetSet             = dtoh8a (data + PTP_dpd_GetSet);
-	dpd->FormFlag=PTP_DPFF_None;
+	dpd->DevicePropCode = dtoh16a(data + PTP_dpd_DevicePropCode);
+	dpd->DataType       = dtoh16a(data + PTP_dpd_DataType);
+	dpd->GetSet         = dtoh8a (data + PTP_dpd_GetSet);
+	dpd->FormFlag       = PTP_DPFF_None;
 
 	*offset = PTP_dpd_DefaultValue;
 	ret = ptp_unpack_DPV (params, data, offset, dpdlen, &dpd->DefaultValue, dpd->DataType);
@@ -733,7 +733,7 @@ outofmemory:
 }
 
 /* Device Property pack/unpack */
-#define PTP_dpd_Sony_DevicePropertyCode		0
+#define PTP_dpd_Sony_DevicePropCode		0
 #define PTP_dpd_Sony_DataType			2
 #define PTP_dpd_Sony_GetSet		4
 #define PTP_dpd_Sony_IsEnabled			5
@@ -750,12 +750,12 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 		return 0;
 
 	memset (dpd, 0, sizeof(*dpd));
-	dpd->DevicePropertyCode = dtoh16a(data + PTP_dpd_Sony_DevicePropertyCode);
-	dpd->DataType           = dtoh16a(data + PTP_dpd_Sony_DataType);
-	dpd->GetSet             = dtoh8a (data + PTP_dpd_Sony_GetSet);
-	isenabled               = dtoh8a (data + PTP_dpd_Sony_IsEnabled);
+	dpd->DevicePropCode = dtoh16a(data + PTP_dpd_Sony_DevicePropCode);
+	dpd->DataType       = dtoh16a(data + PTP_dpd_Sony_DataType);
+	dpd->GetSet         = dtoh8a (data + PTP_dpd_Sony_GetSet);
+	isenabled           = dtoh8a (data + PTP_dpd_Sony_IsEnabled);
 
-	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, isEnabled %d getset %d", dpd->DevicePropertyCode, dpd->DataType, isenabled, dpd->GetSet);
+	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, isEnabled %d getset %d", dpd->DevicePropCode, dpd->DataType, isenabled, dpd->GetSet);
 
 	switch (isenabled) {
 	case 0: /* grayed out */
@@ -904,7 +904,7 @@ static inline void
 duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 	int i;
 
-	dst->DevicePropertyCode	= src->DevicePropertyCode;
+	dst->DevicePropCode	= src->DevicePropCode;
 	dst->DataType		= src->DataType;
 	dst->GetSet		= src->GetSet;
 
@@ -1705,7 +1705,7 @@ static inline PTPDevicePropDesc*
 ptp_find_eos_devicepropdesc(PTPParams *params, uint32_t dpc)
 {
 	for (unsigned j=0; j < params->nrofcanon_props; j++)
-		if (params->canon_props[j].dpd.DevicePropertyCode == dpc)
+		if (params->canon_props[j].dpd.DevicePropCode == dpc)
 			return &params->canon_props[j].dpd;
 	return NULL;
 }
@@ -1721,7 +1721,7 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint32_t dpc)
 	unsigned j = params->nrofcanon_props;
 	params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
 	memset (&params->canon_props[j].dpd,0,sizeof(params->canon_props[j].dpd));
-	params->canon_props[j].dpd.DevicePropertyCode = dpc;
+	params->canon_props[j].dpd.DevicePropCode = dpc;
 	params->canon_props[j].dpd.GetSet = 1;
 	params->canon_props[j].dpd.FormFlag = PTP_DPFF_None;
 	params->nrofcanon_props = j+1;
