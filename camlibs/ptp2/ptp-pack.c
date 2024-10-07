@@ -929,10 +929,10 @@ duplicate_DevicePropDesc(const PTPDevicePropDesc *src, PTPDevicePropDesc *dst) {
 	}
 }
 
-#define PTP_opd_ObjectPropertyCode	0
-#define PTP_opd_DataType		2
-#define PTP_opd_GetSet			4
-#define PTP_opd_DefaultValue		5
+#define PTP_opd_ObjectPropCode	0
+#define PTP_opd_DataType	2
+#define PTP_opd_GetSet		4
+#define PTP_opd_DefaultValue	5
 
 static inline int
 ptp_unpack_OPD (PTPParams *params, const unsigned char* data, PTPObjectPropDesc *opd, unsigned int opdlen)
@@ -944,9 +944,9 @@ ptp_unpack_OPD (PTPParams *params, const unsigned char* data, PTPObjectPropDesc 
 	if (opdlen < 5)
 		return 0;
 
-	opd->ObjectPropertyCode = dtoh16a(data + PTP_opd_ObjectPropertyCode);
-	opd->DataType           = dtoh16a(data + PTP_opd_DataType);
-	opd->GetSet             = dtoh8a (data + PTP_opd_GetSet);
+	opd->ObjectPropCode = dtoh16a(data + PTP_opd_ObjectPropCode);
+	opd->DataType       = dtoh16a(data + PTP_opd_DataType);
+	opd->GetSet         = dtoh8a (data + PTP_opd_GetSet);
 
 	offset = PTP_opd_DefaultValue;
 	ret = ptp_unpack_DPV (params, data, &offset, opdlen, &opd->DefaultValue, opd->DataType);
