@@ -1706,13 +1706,13 @@ union _PTPPropValue {
 typedef union _PTPPropValue PTPPropValue;
 
 /* Metadata lists for MTP operations */
-struct _MTPProperties {
-	uint16_t 	 property;
-	uint16_t 	 datatype;
+struct _MTPObjectProp {
+	uint16_t 	 PropCode;
+	uint16_t 	 DataType;
 	uint32_t 	 ObjectHandle;
-	PTPPropValue propval;
+	PTPPropValue Value;
 };
-typedef struct _MTPProperties MTPProperties;
+typedef struct _MTPObjectProp MTPObjectProp;
 
 struct _PTPPropDescRangeForm {
 	PTPPropValue MinValue;
@@ -3804,7 +3804,7 @@ struct _PTPObject {
 
 	PTPObjectInfo	oi;
 	uint32_t	canon_flags;
-	MTPProperties	*mtp_props;
+	MTPObjectProp	*mtp_props;
 	unsigned int	mtp_props_len;
 };
 typedef struct _PTPObject PTPObject;
@@ -4183,13 +4183,13 @@ uint16_t ptp_mtp_setobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t o
 				PTPPropValue *value, uint16_t datatype);
 uint16_t ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohArray, uint32_t* arraylen);
 uint16_t ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArray, uint32_t arraylen);
-uint16_t ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t formats, uint32_t properties, uint32_t propertygroups, uint32_t level, MTPProperties **props, int *nrofprops);
-uint16_t ptp_mtp_getobjectproplist_level (PTPParams* params, uint32_t handle, uint32_t level, MTPProperties **props, int *nrofprops);
-uint16_t ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops);
-uint16_t ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPProperties **props, int *nrofprops);
+uint16_t ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t formats, uint32_t properties, uint32_t propertygroups, uint32_t level, MTPObjectProp **props, int *nrofprops);
+uint16_t ptp_mtp_getobjectproplist_level (PTPParams* params, uint32_t handle, uint32_t level, MTPObjectProp **props, int *nrofprops);
+uint16_t ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPObjectProp **props, int *nrofprops);
+uint16_t ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPObjectProp **props, int *nrofprops);
 uint16_t ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
-				     uint16_t objecttype, uint64_t objectsize, MTPProperties *props, int nrofprops);
-uint16_t ptp_mtp_setobjectproplist (PTPParams* params, MTPProperties *props, int nrofprops);
+				     uint16_t objecttype, uint64_t objectsize, MTPObjectProp *props, int nrofprops);
+uint16_t ptp_mtp_setobjectproplist (PTPParams* params, MTPObjectProp *props, int nrofprops);
 
 /* Microsoft MTPZ (Zune) extensions */
 uint16_t ptp_mtpz_sendwmdrmpdapprequest (PTPParams*, unsigned char *, uint32_t);
@@ -4903,10 +4903,10 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 				PTPDevicePropDesc *dpd, unsigned int length, char *out);
 int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
 int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
-MTPProperties *ptp_get_new_object_prop_entry(MTPProperties **props, int *nrofprops);
-void ptp_destroy_object_prop(MTPProperties *prop);
-void ptp_destroy_object_prop_list(MTPProperties *props, int nrofprops);
-MTPProperties *ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id);
+MTPObjectProp *ptp_get_new_object_prop_entry(MTPObjectProp **props, int *nrofprops);
+void ptp_destroy_object_prop(MTPObjectProp *prop);
+void ptp_destroy_object_prop_list(MTPObjectProp *props, int nrofprops);
+MTPObjectProp *ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id);
 uint16_t ptp_remove_object_from_cache(PTPParams *params, uint32_t handle);
 uint16_t ptp_add_object_to_cache(PTPParams *params, uint32_t handle);
 uint16_t ptp_object_want (PTPParams *, uint32_t handle, unsigned int want, PTPObject**retob);

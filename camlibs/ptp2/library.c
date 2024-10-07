@@ -8327,7 +8327,7 @@ ptp_mtp_render_metadata (
 	uint16_t ret, *props = NULL;
 	uint32_t propcnt = 0;
 	unsigned int j;
-	MTPProperties	*mprops;
+	MTPObjectProp	*mprops;
 	PTPObject	*ob;
 
 	C_PTP (ptp_object_want (params, object_id, PTPOBJECT_MTPPROPLIST_LOADED, &ob));
@@ -8343,10 +8343,10 @@ ptp_mtp_render_metadata (
 		unsigned int	i, n;
 
 		for (j=0;j<ob->mtp_props_len;j++) {
-			MTPProperties		*xpl = &mprops[j];
+			MTPObjectProp		*xpl = &mprops[j];
 
 			for (i=0;i<ARRAYSIZE(uninteresting_props);i++)
-				if (uninteresting_props[i] == xpl->property)
+				if (uninteresting_props[i] == xpl->PropCode)
 					break;
 			/* Is uninteresting. */
 			if (i != ARRAYSIZE(uninteresting_props))
@@ -8354,28 +8354,28 @@ ptp_mtp_render_metadata (
 
 			for(i=0;i<propcnt;i++) {
 				/* Mark handled property as 0 */
-				if (props[i] == xpl->property) {
+				if (props[i] == xpl->PropCode) {
 					props[i]=0;
 					break;
 				}
 			}
 
-			n = ptp_render_mtp_propname(xpl->property, sizeof(propname), propname);
+			n = ptp_render_mtp_propname(xpl->PropCode, sizeof(propname), propname);
 			gp_file_append (file, "<", 1);
 			gp_file_append (file, propname, n);
 			gp_file_append (file, ">", 1);
 
-			switch (xpl->datatype) {
-			case PTP_DTC_STR:   snprintf (text, sizeof(text), "%s", xpl->propval.str?xpl->propval.str:""); break;
-			case PTP_DTC_INT64:  sprintf (text, "%ld", xpl->propval.i64); break;
-			case PTP_DTC_INT32:  sprintf (text, "%d", xpl->propval.i32); break;
-			case PTP_DTC_INT16:  sprintf (text, "%d", xpl->propval.i16); break;
-			case PTP_DTC_INT8:   sprintf (text, "%d", xpl->propval.i8); break;
-			case PTP_DTC_UINT64: sprintf (text, "%lu", xpl->propval.u64); break;
-			case PTP_DTC_UINT32: sprintf (text, "%u", xpl->propval.u32); break;
-			case PTP_DTC_UINT16: sprintf (text, "%u", xpl->propval.u16); break;
-			case PTP_DTC_UINT8:  sprintf (text, "%u", xpl->propval.u8); break;
-			default:             sprintf (text, "Unknown type %d", xpl->datatype); break;
+			switch (xpl->DataType) {
+			case PTP_DTC_STR:   snprintf (text, sizeof(text), "%s", xpl->Value.str?xpl->Value.str:""); break;
+			case PTP_DTC_INT64:  sprintf (text, "%ld", xpl->Value.i64); break;
+			case PTP_DTC_INT32:  sprintf (text, "%d", xpl->Value.i32); break;
+			case PTP_DTC_INT16:  sprintf (text, "%d", xpl->Value.i16); break;
+			case PTP_DTC_INT8:   sprintf (text, "%d", xpl->Value.i8); break;
+			case PTP_DTC_UINT64: sprintf (text, "%lu", xpl->Value.u64); break;
+			case PTP_DTC_UINT32: sprintf (text, "%u", xpl->Value.u32); break;
+			case PTP_DTC_UINT16: sprintf (text, "%u", xpl->Value.u16); break;
+			case PTP_DTC_UINT8:  sprintf (text, "%u", xpl->Value.u8); break;
+			default:             sprintf (text, "Unknown type %d", xpl->DataType); break;
 			}
 			gp_file_append (file, text, strlen(text));
 			gp_file_append (file, "</", 2);
@@ -8518,7 +8518,7 @@ ptp_mtp_parse_metadata (
 		case PTP_DTC_UINT16: sscanf (content, "%hu", &pv.u16); break;
 		case PTP_DTC_UINT8:  sscanf (content, "%hhu", &pv.u8); break;
 		default:
-			GP_LOG_E ("mtp parser: Unknown datatype %d, content %s", opd.DataType, content);
+			GP_LOG_E ("mtp parser: Unknown DataType %d, content %s", opd.DataType, content);
 			free (content); content = NULL;
 			continue;
 			break;
