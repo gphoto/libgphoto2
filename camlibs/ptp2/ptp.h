@@ -1488,6 +1488,12 @@ typedef struct _PTPObjectHandles PTPObjectHandles;
 /* PTP objectinfo structure (returned by GetObjectInfo) */
 
 struct _PTPObjectInfo {
+	/* The (Object) Handle member is not part of the "ObjectInfo dataset" in the specification
+	 * but added here to avoid having to carry it around by separate means throughout
+	 * the code base, as it is regularly required in combination with this struct.
+	 * While the spec always refers to this item as "ObjectHandle", the term "Handle" is only
+	 * used in this context, so we omit the "Object"-prefix for brevity. */
+	uint32_t Handle;
 	uint32_t StorageID;
 	uint16_t ObjectFormat;
 	uint16_t ProtectionStatus;
@@ -1878,18 +1884,13 @@ enum _PTPCanonEOSEventType {
 	PTP_EOSEvent_ObjectContentChanged
 };
 
-struct _PTPCanon_New_Object {
-	uint32_t	oid;
-	PTPObjectInfo	oi;
-};
-
 struct _PTPCanonEOSEvent {
 	enum _PTPCanonEOSEventType	type;
 	union {
-		struct _PTPCanon_New_Object	object;	/* TYPE_OBJECTINFO */
-		char				info[84]; /* 84 is minimum sizeof(object) and sufficient for current use cases */
-		uint16_t			propid;
-		int				status;
+		PTPObjectInfo object;	/* TYPE_OBJECTINFO */
+		char          info[84]; /* 84 is minimum sizeof(object) and sufficient for current use cases */
+		uint16_t      propid;
+		int           status;
 	} u;
 };
 typedef struct _PTPCanonEOSEvent PTPCanonEOSEvent;

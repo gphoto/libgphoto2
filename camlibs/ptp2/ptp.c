@@ -2370,6 +2370,7 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 	PTP_CNT_INIT(ptp, PTP_OC_GetObjectInfo, handle);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	ptp_unpack_OI(params, data, objectinfo, size);
+	objectinfo->Handle = handle;
 	free(data);
 	return PTP_RC_OK;
 }
@@ -3342,7 +3343,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				}
 			}
 			if (j == params->objects_len) {
-				ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects_len,j);
+				ptp_debug (params, "adding new object: handle 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects_len,j);
 				newobs = realloc (params->objects,sizeof(PTPObject)*(params->objects_len+1));
 				if (!newobs) {
 					free (tmp);
@@ -3351,15 +3352,13 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				}
 				params->objects = newobs;
 				memset (&params->objects[params->objects_len],0,sizeof(params->objects[params->objects_len]));
-				params->objects[params->objects_len].oid   = tmp[i].ObjectHandle;
+				params->objects[params->objects_len].oid = tmp[i].ObjectHandle;
+				params->objects[params->objects_len].oi.Handle = tmp[i].ObjectHandle;
 				params->objects[params->objects_len].flags = 0;
 
 				params->objects[params->objects_len].oi.StorageID = storageids.Storage[k];
 				params->objects[params->objects_len].flags |= PTPOBJECT_STORAGEID_LOADED;
-				if (handle == 0xffffffff)
-					params->objects[params->objects_len].oi.ParentObject = 0;
-				else
-					params->objects[params->objects_len].oi.ParentObject = handle;
+				params->objects[params->objects_len].oi.ParentObject = handle == 0xffffffff ? 0 : handle;
 				params->objects[params->objects_len].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
 				params->objects[params->objects_len].oi.Filename = strdup(tmp[i].Filename);
 				params->objects[params->objects_len].oi.ObjectFormat = tmp[i].ObjectFormatCode;
@@ -3375,12 +3374,12 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				params->objects[params->objects_len].oi.ModificationDate = tmp[i].Time;
 				params->objects[params->objects_len].flags |= PTPOBJECT_OBJECTINFO_LOADED;
 
-				/*debug_objectinfo(params, tmp[i].ObjectHandle, &params->objects[params->objects_len].oi);*/
+				/*log_objectinfo(params, tmp[i].ObjectHandle, &params->objects[params->objects_len].oi);*/
 				last = params->objects_len;
 				params->objects_len++;
 				changed = 1;
 			} else {
-				ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects_len,j);
+				ptp_debug (params, "adding old object: handle 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects_len,j);
 				ob = &params->objects[(last+j)%params->objects_len];
 				/* for speeding up search */
 				last = (last+j)%params->objects_len;
@@ -3443,7 +3442,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 			return PTP_RC_GeneralError;
 		if (ob->flags & PTPOBJECT_DIRECTORY_LOADED) return PTP_RC_OK;
 		ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
-		/*debug_objectinfo(params, handle, &ob->oi);*/
+		/*log_objectinfo(params, handle, &ob->oi);*/
 	}
 
 #if 0 /* apple devices report it, but the conrtent they have does not match the standard somehow. Needs further debugging */
@@ -3478,6 +3477,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 				params->objects = newobs;
 				memset (&params->objects[params->objects_len],0,sizeof(params->objects[params->objects_len]));
 				params->objects[params->objects_len].oid = oifs[i].ObjectHandle;
+				params->objects[params->objects_len].oi.Handle = oifs[i].ObjectHandle;
 				params->objects[params->objects_len].flags = 0;
 				ob = &params->objects[params->objects_len];
 				params->objects_len++;
@@ -3929,7 +3929,7 @@ ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1, unsigned char **da
 
 uint16_t
 ptp_canon_eos_getobjectinfoex (
-	PTPParams* params, uint32_t storageid, uint32_t oid, uint32_t unk,
+	PTPParams* params, uint32_t storageid, uint32_t handle, uint32_t unk,
 	PTPCANONFolderEntry **entries, unsigned int *nrofentries
 ) {
 	PTPContainer	ptp;
@@ -3938,7 +3938,7 @@ ptp_canon_eos_getobjectinfoex (
 
 	*entries = 0;
 
-	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetObjectInfoEx, storageid, oid, unk);
+	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetObjectInfoEx, storageid, handle, unk);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (!data) {
 		*nrofentries = 0;
@@ -9562,7 +9562,7 @@ ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob)
 	return PTP_RC_OK;
 }
 
-/* Binary search in objects + insert of not found. Needs "objects" to be a sorted by objectid list!  */
+/* Binary search in objects + insert if not found. Needs "objects" to be a sorted by oid!  */
 uint16_t
 ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob)
 {
@@ -9576,6 +9576,7 @@ ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob
 		params->objects = calloc(1,sizeof(PTPObject));
 		params->objects_len = 1;
 		params->objects[0].oid = handle;
+		params->objects[0].oi.Handle = handle;
 		*retob = &params->objects[0];
 		return PTP_RC_OK;
 	}
@@ -9620,6 +9621,7 @@ ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob
 		memmove (&params->objects[insertat+1],&params->objects[insertat],(params->objects_len-insertat)*sizeof(PTPObject));
 	memset(&params->objects[insertat],0,sizeof(PTPObject));
 	params->objects[insertat].oid = handle;
+	params->objects[insertat].oi.Handle = handle;
 	*retob = &params->objects[insertat];
 	params->objects_len++;
 	return PTP_RC_OK;
