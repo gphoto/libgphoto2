@@ -3057,6 +3057,8 @@ ptp_ek_sendfileobject_from_handler (PTPParams* params, PTPDataHandler*handler, u
  *
  *************************************************************************/
 
+#if 0
+/* Disabled / unused code */
 
 /**
  * ptp_canon_getpartialobjectinfo:
@@ -3217,6 +3219,7 @@ error:
 	free (data);
 	return PTP_RC_GeneralError;
 }
+#endif
 
 /**
  * ptp_canon_checkevent:
