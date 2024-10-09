@@ -151,7 +151,7 @@ struct _PTPUSBEventContainer {
 typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 
 struct _PTPCanon_directtransfer_entry {
-	uint32_t	oid;
+	uint32_t	handle;
 	char		*str;
 };
 typedef struct _PTPCanon_directtransfer_entry PTPCanon_directtransfer_entry;
@@ -353,10 +353,10 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_SetRootCertificateData	0x906E
 #define PTP_OC_CANON_DeleteRootCertificateData	0x906F
 #define PTP_OC_CANON_GetGpsMobilelinkObjectInfo	0x9075 /* 2 args: utcstart, utcend */
-#define PTP_OC_CANON_SendGpsTagInfo		0x9076 /* 1 arg: oid */
-#define PTP_OC_CANON_GetTranscodeApproxSize	0x9077 /* 1 arg: oid? */
-#define PTP_OC_CANON_RequestTranscodeStart	0x9078 /* 1 arg: oid? */
-#define PTP_OC_CANON_RequestTranscodeCancel	0x9079 /* 1 arg: oid? */
+#define PTP_OC_CANON_SendGpsTagInfo		0x9076 /* 1 arg: handle */
+#define PTP_OC_CANON_GetTranscodeApproxSize	0x9077 /* 1 arg: handle? */
+#define PTP_OC_CANON_RequestTranscodeStart	0x9078 /* 1 arg: handle? */
+#define PTP_OC_CANON_RequestTranscodeCancel	0x9079 /* 1 arg: handle? */
 
 #define PTP_OC_CANON_SetRemoteShootingMode	0x9086
 #define PTP_OC_CANON_GetDebugLog		0x9087
@@ -481,7 +481,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 			response args: 0x00000811, 0x00000001 */
 
 #define PTP_OC_CANON_EOS_GetCameraSupport	0x913F
-#define PTP_OC_CANON_EOS_SetRating		0x9140 /* 2 args, objectid, rating? */
+#define PTP_OC_CANON_EOS_SetRating		0x9140 /* 2 args, object handle, rating? */
 #define PTP_OC_CANON_EOS_RequestInnerDevelopStart	0x9141 /* 2 args: 1 type, 1 object? */
 #define PTP_OC_CANON_EOS_RequestInnerDevelopParamChange	0x9142
 #define PTP_OC_CANON_EOS_RequestInnerDevelopEnd		0x9143
@@ -521,11 +521,11 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_CANON_EOS_CompleteAutoSendImages	0x916D
 #define PTP_OC_CANON_EOS_NotifyAutoTransferStatus	0x916E
 #define PTP_OC_CANON_EOS_GetReducedObject	0x916F
-#define PTP_OC_CANON_EOS_GetObjectInfo64	0x9170	/* 1 arg: oid */
-#define PTP_OC_CANON_EOS_GetObject64		0x9171	/* 1 arg: oid */
-#define PTP_OC_CANON_EOS_GetPartialObject64	0x9172	/* args: oid, offset, maxbyte */
-#define PTP_OC_CANON_EOS_GetObjectInfoEx64	0x9173	/* 2 args: storageid, oid  ? */
-#define PTP_OC_CANON_EOS_GetPartialObjectEX64	0x9174	/* args: oid, offset 64bit, maxbyte */
+#define PTP_OC_CANON_EOS_GetObjectInfo64	0x9170	/* 1 arg: handle */
+#define PTP_OC_CANON_EOS_GetObject64		0x9171	/* 1 arg: handle */
+#define PTP_OC_CANON_EOS_GetPartialObject64	0x9172	/* args: handle, offset, maxbyte */
+#define PTP_OC_CANON_EOS_GetObjectInfoEx64	0x9173	/* 2 args: storageid, handle  ? */
+#define PTP_OC_CANON_EOS_GetPartialObjectEX64	0x9174	/* args: handle, offset 64bit, maxbyte */
 #define PTP_OC_CANON_EOS_CreateHandle64		0x9175
 #define PTP_OC_CANON_EOS_NotifySaveComplete	0x9177
 #define PTP_OC_CANON_EOS_GetTranscodedBlock	0x9178
@@ -1325,7 +1325,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 /* Nikon extension Event Codes */
 #define PTP_EC_Nikon_ObjectAddedInSDRAM		0xC101	/* e1: objecthandle */
 #define PTP_EC_Nikon_CaptureCompleteRecInSdram	0xC102	/* no args */
-/* Gets 1 parameter, objectid pointing to DPOF object */
+/* Gets 1 parameter, object handle pointing to DPOF object */
 #define PTP_EC_Nikon_AdvancedTransfer		0xC103
 #define PTP_EC_Nikon_PreviewImageAdded		0xC104
 #define PTP_EC_Nikon_MovieRecordInterrupted	0xC105	/* e1: errocode, e2: recordkind */
@@ -4128,7 +4128,7 @@ uint16_t ptp_sendobjectinfo	(PTPParams* params, uint32_t* store,
  * Return values: Some PTP_RC_* code.
  *
  */
-#define ptp_setobjectprotection(params,oid,newprot) ptp_generic_no_data(params,PTP_OC_SetObjectProtection,2,oid,newprot)
+#define ptp_setobjectprotection(params,handle,newprot) ptp_generic_no_data(params,PTP_OC_SetObjectProtection,2,handle,newprot)
 uint16_t ptp_sendobject		(PTPParams* params, unsigned char* object,
 				 uint64_t size);
 uint16_t ptp_sendobject_fromfd  (PTPParams* params, int fd, uint64_t size);
@@ -4184,9 +4184,9 @@ int ptp_get_one_eos_event (PTPParams *params, PTPCanonEOSEvent *eos_event);
 /* Microsoft MTP extensions */
 uint16_t ptp_mtp_getobjectpropdesc (PTPParams* params, uint16_t opc, uint16_t ofc,
 				PTPObjectPropDesc *objectpropertydesc);
-uint16_t ptp_mtp_getobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc,
+uint16_t ptp_mtp_getobjectpropvalue (PTPParams* params, uint32_t handle, uint16_t opc,
 				PTPPropValue *value, uint16_t datatype);
-uint16_t ptp_mtp_setobjectpropvalue (PTPParams* params, uint32_t oid, uint16_t opc,
+uint16_t ptp_mtp_setobjectpropvalue (PTPParams* params, uint32_t handle, uint16_t opc,
 				PTPPropValue *value, uint16_t datatype);
 uint16_t ptp_mtp_getobjectreferences (PTPParams* params, uint32_t handle, uint32_t** ohArray, uint32_t* arraylen);
 uint16_t ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArray, uint32_t arraylen);
@@ -4465,29 +4465,29 @@ void ptp_canon_eos_free_deviceinfo (PTPCanonEOSDeviceInfo *di);
 #define ptp_canon_eos_end_viewfinder(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_TerminateViewfinder,0)
 uint16_t ptp_canon_eos_get_viewfinder_image (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_canon_eos_get_viewfinder_image_handler (PTPParams* params, PTPDataHandler*);
-uint16_t ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* objectid);
+uint16_t ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* handle);
 uint16_t ptp_canon_get_directory (PTPParams* params, PTPObjectHandles *handles, PTPObjectInfo **oinfos, uint32_t **flags);
 /**
  * ptp_canon_setobjectarchive:
  *
  * params:      PTPParams*
- *              uint32_t        objectid
+ *              uint32_t        handle
  *              uint32_t        flags
  *
  * Return values: Some PTP_RC_* code.
  *
  **/
-#define ptp_canon_setobjectarchive(params,oid,flags) ptp_generic_no_data(params,PTP_OC_CANON_SetObjectArchive,2,oid,flags)
-#define ptp_canon_eos_setobjectattributes(params,oid,flags) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetObjectAttributes,2,oid,flags)
+#define ptp_canon_setobjectarchive(params,handle,flags) ptp_generic_no_data(params,PTP_OC_CANON_SetObjectArchive,2,handle,flags)
+#define ptp_canon_eos_setobjectattributes(params,handle,flags) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetObjectAttributes,2,handle,flags)
 uint16_t ptp_canon_get_customize_data (PTPParams* params, uint32_t themenr,
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_canon_getpairinginfo (PTPParams* params, uint32_t nr, unsigned char**, unsigned int*);
 
 uint16_t ptp_canon_eos_getstorageids (PTPParams* params, PTPStorageIDs* storageids);
 uint16_t ptp_canon_eos_getstorageinfo (PTPParams* params, uint32_t p1, unsigned char**, unsigned int*);
-uint16_t ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t oid, uint32_t off, uint32_t xsize, unsigned char**data);
-uint16_t ptp_canon_eos_getpartialobjectex (PTPParams* params, uint32_t oid, uint32_t off, uint32_t xsize, unsigned char**data);
-uint16_t ptp_canon_eos_getobjectinfoex (PTPParams* params, uint32_t storageid, uint32_t objectid, uint32_t unk,
+uint16_t ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t handle, uint32_t off, uint32_t xsize, unsigned char**data);
+uint16_t ptp_canon_eos_getpartialobjectex (PTPParams* params, uint32_t handle, uint32_t off, uint32_t xsize, unsigned char**data);
+uint16_t ptp_canon_eos_getobjectinfoex (PTPParams* params, uint32_t storageid, uint32_t handle, uint32_t unk,
 	PTPCANONFolderEntry **entries, unsigned int *nrofentries);
 uint16_t ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* data, unsigned int size);
 #define ptp_canon_eos_setremotemode(params,p1) ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetRemoteMode,1,p1)
@@ -4498,12 +4498,12 @@ uint16_t ptp_canon_eos_setdevicepropvalueex (PTPParams* params, unsigned char* d
  * This ends a direct object transfer from an EOS camera.
  *
  * params:      PTPParams*
- *              oid             Object ID
+ *              handle             ObjectHandle
  *
  * Return values: Some PTP_RC_* code.
  *
  */
-#define ptp_canon_eos_transfercomplete(params,oid) ptp_generic_no_data(params,PTP_OC_CANON_EOS_TransferComplete,1,oid)
+#define ptp_canon_eos_transfercomplete(params,handle) ptp_generic_no_data(params,PTP_OC_CANON_EOS_TransferComplete,1,handle)
 /* inHDD = %d, inLength =%d, inReset = %d */
 #define ptp_canon_eos_pchddcapacity(params,p1,p2,p3) ptp_generic_no_data(params,PTP_OC_CANON_EOS_PCHDDCapacity,3,p1,p2,p3)
 uint16_t ptp_canon_eos_bulbstart (PTPParams* params);
@@ -4761,12 +4761,12 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  * This command deletes the current SDRAM image
  *
  * params:      PTPParams*
- * uint32_t	oid
+ * uint32_t	handle
  *
  * Return values: Some PTP_RC_* code.
  *
  **/
-#define ptp_nikon_delete_sdram_image(params,oid) ptp_generic_no_data(params,PTP_OC_NIKON_DelImageSDRAM,1,oid)
+#define ptp_nikon_delete_sdram_image(params,handle) ptp_generic_no_data(params,PTP_OC_NIKON_DelImageSDRAM,1,handle)
 /**
  * ptp_nikon_start_liveview:
  *
