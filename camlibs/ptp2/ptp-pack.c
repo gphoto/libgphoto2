@@ -1365,14 +1365,14 @@ ObjectInfo for 'IMG_0199.JPG':
   CaptureDate: 0x4d985ff0
 
 0010  38 00 00 00  Size of this entry
-0014  72 0c 74 92  OID
+0014  72 0c 74 92  ObjectHandle
 0018  01 00 02 00  StorageID
 001c  01 38 00 00  OFC
 0020  00 00 00 00 ??
 0024  21 00 00 00  flags (4 bytes? 1 byte?)
 0028  19 d5 21 00  Size
 002c  00 00 74 92  ?
-0030  70 0c 74 92  OID
+0030  70 0c 74 92  ObjectHandle
 0034  49 4d 47 5f-30 31 39 39 2e 4a 50 47  IMG_0199.JPG
 0040  00 00 00 00
 0044  10 7c 98 4d Time
@@ -1676,20 +1676,20 @@ ptp_pack_EOS_CustomFuncEx (PTPParams* params, unsigned char* data, char* str)
 #define PTP_cee_DPD_Data	0x14
 
 /* for PTP_EC_CANON_EOS_RequestObjectTransfer */
-#define PTP_cee_OI_ObjectID	0x08
+#define PTP_cee_OI_Handle	0x08
 #define PTP_cee_OI_OFC		0x0c
 #define PTP_cee_OI_Size		0x14
 #define PTP_cee_OI_Name		0x1c
 
 /* for PTP_EC_CANON_EOS_ObjectAddedEx */
-#define PTP_cee_OA_ObjectID	0x08
+#define PTP_cee_OA_Handle	0x08
 #define PTP_cee_OA_StorageID	0x0c
 #define PTP_cee_OA_OFC		0x10
 #define PTP_cee_OA_Size		0x1c
 #define PTP_cee_OA_Parent	0x20
 #define PTP_cee_OA_Name		0x28
 
-#define PTP_cee_OA64_ObjectID	0x08	/* OK */
+#define PTP_cee_OA64_Handle	0x08	/* OK */
 #define PTP_cee_OA64_StorageID	0x0c	/* OK */
 #define PTP_cee_OA64_OFC	0x10	/* OK */
 #define PTP_cee_OA64_Size	0x1c	/* OK, might be 64 bit now? */
@@ -1809,12 +1809,12 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 		e[i].u.info[0] = 0;
 		switch (ec) {
 		case PTP_EC_CANON_EOS_ObjectContentChanged:
-			if (size < PTP_cee_OA_ObjectID+1) {
-				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, PTP_cee_OA_ObjectID+1);
+			if (size < PTP_cee_OA_Handle+1) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, PTP_cee_OA_Handle+1);
 				break;
 			}
 			e[i].type = PTP_EOSEvent_ObjectContentChanged;
-			e[i].u.object.oid = dtoh32a(curdata + PTP_cee_OA_ObjectID);
+			e[i].u.object.Handle = dtoh32a(curdata + PTP_cee_OA_Handle);
 			break;
 		case PTP_EC_CANON_EOS_ObjectInfoChangedEx:
 		case PTP_EC_CANON_EOS_ObjectAddedEx:
@@ -1823,17 +1823,17 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				break;
 			}
 			e[i].type = ((ec == PTP_EC_CANON_EOS_ObjectAddedEx) ? PTP_EOSEvent_ObjectAdded : PTP_EOSEvent_ObjectInfoChanged);
-			e[i].u.object.oid              = dtoh32a(curdata + PTP_cee_OA_ObjectID);
-			e[i].u.object.oi.StorageID     = dtoh32a(curdata + PTP_cee_OA_StorageID);
-			e[i].u.object.oi.ParentObject  = dtoh32a(curdata + PTP_cee_OA_Parent);
-			e[i].u.object.oi.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA_OFC);
-			e[i].u.object.oi.ObjectSize    = dtoh32a(curdata + PTP_cee_OA_Size);
-			e[i].u.object.oi.Filename      = strdup(((char*)curdata + PTP_cee_OA_Name));
+			e[i].u.object.Handle        = dtoh32a(curdata + PTP_cee_OA_Handle);
+			e[i].u.object.StorageID     = dtoh32a(curdata + PTP_cee_OA_StorageID);
+			e[i].u.object.ParentObject  = dtoh32a(curdata + PTP_cee_OA_Parent);
+			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA_OFC);
+			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OA_Size);
+			e[i].u.object.Filename      = strdup(((char*)curdata + PTP_cee_OA_Name));
 
 			ptp_debug (params, "%s objectinfo %s oid %08x, parent %08x, ofc %04x, size %ld, filename %s",
 			           prefix, ec == PTP_EC_CANON_EOS_ObjectAddedEx ? "added" : "changed",
-			           e[i].u.object.oid, e[i].u.object.oi.ParentObject, e[i].u.object.oi.ObjectFormat,
-			           e[i].u.object.oi.ObjectSize, e[i].u.object.oi.Filename);
+			           e[i].u.object.Handle, e[i].u.object.ParentObject, e[i].u.object.ObjectFormat,
+			           e[i].u.object.ObjectSize, e[i].u.object.Filename);
 			break;
 		case PTP_EC_CANON_EOS_ObjectAddedEx64:	/* FIXME: review if the data used is correct */
 			if (size < PTP_cee_OA64_Name+1) {
@@ -1841,15 +1841,15 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				break;
 			}
 			e[i].type = PTP_EOSEvent_ObjectAdded;
-			e[i].u.object.oid              = dtoh32a(curdata + PTP_cee_OA64_ObjectID);
-			e[i].u.object.oi.StorageID     = dtoh32a(curdata + PTP_cee_OA64_StorageID);
-			e[i].u.object.oi.ParentObject  = dtoh32a(curdata + PTP_cee_OA64_Parent);
-			e[i].u.object.oi.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA64_OFC);
-			e[i].u.object.oi.ObjectSize    = dtoh32a(curdata + PTP_cee_OA64_Size);	/* FIXME: might be 64bit now */
-			e[i].u.object.oi.Filename      = strdup(((char*)curdata + PTP_cee_OA64_Name));
+			e[i].u.object.Handle        = dtoh32a(curdata + PTP_cee_OA64_Handle);
+			e[i].u.object.StorageID     = dtoh32a(curdata + PTP_cee_OA64_StorageID);
+			e[i].u.object.ParentObject  = dtoh32a(curdata + PTP_cee_OA64_Parent);
+			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA64_OFC);
+			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OA64_Size);	/* FIXME: might be 64bit now */
+			e[i].u.object.Filename      = strdup(((char*)curdata + PTP_cee_OA64_Name));
 			ptp_debug (params, "%s objectinfo added oid %08x, parent %08x, ofc %04x, size %ld, filename %s",
-			           prefix, e[i].u.object.oid, e[i].u.object.oi.ParentObject, e[i].u.object.oi.ObjectFormat,
-			           e[i].u.object.oi.ObjectSize, e[i].u.object.oi.Filename);
+			           prefix, e[i].u.object.Handle, e[i].u.object.ParentObject, e[i].u.object.ObjectFormat,
+			           e[i].u.object.ObjectSize, e[i].u.object.Filename);
 			break;
 		case PTP_EC_CANON_EOS_RequestObjectTransfer:
 		case PTP_EC_CANON_EOS_RequestObjectTransfer64:
@@ -1858,16 +1858,16 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				break;
 			}
 			e[i].type = PTP_EOSEvent_ObjectTransfer;
-			e[i].u.object.oid              = dtoh32a(curdata + PTP_cee_OI_ObjectID);
-			e[i].u.object.oi.StorageID     = 0; /* use as marker */
-			e[i].u.object.oi.ObjectFormat  = dtoh16a(curdata + PTP_cee_OI_OFC);
-			e[i].u.object.oi.ParentObject  = 0; /* check, but use as marker */
-			e[i].u.object.oi.ObjectSize    = dtoh32a(curdata + PTP_cee_OI_Size);
-			e[i].u.object.oi.Filename      = strdup(((char*)curdata + PTP_cee_OI_Name));
+			e[i].u.object.Handle        = dtoh32a(curdata + PTP_cee_OI_Handle);
+			e[i].u.object.StorageID     = 0; /* use as marker */
+			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OI_OFC);
+			e[i].u.object.ParentObject  = 0; /* check, but use as marker */
+			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OI_Size);
+			e[i].u.object.Filename      = strdup(((char*)curdata + PTP_cee_OI_Name));
 
 			ptp_debug (params, "%s request object transfer oid %08x, ofc %04x, size %ld, filename %p",
-			           prefix, e[i].u.object.oid, e[i].u.object.oi.ObjectFormat,
-			           e[i].u.object.oi.ObjectSize, e[i].u.object.oi.Filename);
+			           prefix, e[i].u.object.Handle, e[i].u.object.ObjectFormat,
+			           e[i].u.object.ObjectSize, e[i].u.object.Filename);
 			break;
 		case PTP_EC_CANON_EOS_AvailListChanged: {	/* property desc */
 			if (size < PTP_cee_DPD_Data) {
@@ -2500,7 +2500,7 @@ static unsigned int olcsizes[0x15][13] = {
 			break;
 		case PTP_EC_CANON_EOS_ObjectRemoved:
 			e[i].type = PTP_EOSEvent_ObjectRemoved;
-			e[i].u.object.oid = dtoh32a(curdata+8);
+			e[i].u.object.Handle = dtoh32a(curdata+8);
 			ptp_debug (params, "%s object %08x removed", prefix, dtoh32a(curdata+8));
 			break;
 		default:
@@ -2735,6 +2735,7 @@ ptp_unpack_canon_directory (
 			continue;
 
 		handles->Handler[curob] = dtoh32a(cur + ptp_canon_dir_objectid);
+		oi->Handle			= dtoh32a(cur + ptp_canon_dir_objectid);
 		oi->StorageID		= 0xffffffff;
 		oi->ObjectFormat	= dtoh16a(cur + ptp_canon_dir_ofc);
 		oi->ParentObject	= dtoh32a(cur + ptp_canon_dir_parentid);
