@@ -6633,8 +6633,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					          eos_event.u.object.Handle, eos_event.u.object.Filename, eos_event.u.object.ObjectSize);
 					free (eos_event.u.object.Filename);
 
-					C_MEM (path = malloc(sizeof(CameraFilePath)));
-					path->name[0]='\0';
+					C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 					strcpy (path->folder,"/");
 					ret = gp_file_new(&file);
 					if (ret!=GP_OK) return ret;
@@ -6717,8 +6716,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 						break;
 					log_objectinfo(params, &ob->oi);
 
-					C_MEM (path = malloc(sizeof(CameraFilePath)));
-					path->name[sizeof(path->name)-1] = '\0';
+					C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 					strncpy  (path->name, ob->oi.Filename, sizeof (path->name)-1);
 
 					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
@@ -6742,9 +6740,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 						break;
 					}
 					/* just add it to the filesystem, and return in CameraPath */
-					C_MEM (path = malloc(sizeof(CameraFilePath)));
+					C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 					ret = add_object_to_fs_and_path (camera, eos_event.u.object.Handle, path, context);
-					free (eos_event.u.object.Filename);
 					if (ret != GP_OK) {
 						free (path);
 						return ret;
@@ -6873,7 +6870,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				case PTP_EC_CANON_ShutterButtonPressed0:
 				/*case PTP_EC_CANON_ShutterButtonPressed1: This seems to be sent without a press on S3 IS, likely some other event reason */
 				{
-					C_MEM (path = malloc(sizeof(CameraFilePath)));
+					C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 					ret = camera_canon_capture (camera, GP_CAPTURE_IMAGE, path, context);
 					if (ret != GP_OK) {
 						free (path);
@@ -6928,9 +6925,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					}
 					log_objectinfo(params, &ob->oi);
 
-					C_MEM (path = malloc(sizeof(CameraFilePath)));
-					path->name[0]='\0';
-					path->folder[0]='\0';
+					C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 
 					ofc = ob->oi.ObjectFormat;
 
@@ -6973,8 +6968,7 @@ downloadnow:
 					if (ret != PTP_RC_OK)
 						continue;
 					log_objectinfo(params, &oi);
-					C_MEM (path = malloc(sizeof(CameraFilePath)));
-					path->name[0]='\0';
+					C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 					strcpy (path->folder,"/");
 					ret = gp_file_new(&file);
 					if (ret!=GP_OK) return ret;
@@ -7056,8 +7050,7 @@ downloadnow:
 				if (ret != PTP_RC_OK)
 					goto sonyout;
 				log_objectinfo(params, &oi);
-				C_MEM (path = malloc(sizeof(CameraFilePath)));
-				path->name[0]='\0';
+				C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 				strcpy (path->folder,"/");
 				ret = gp_file_new(&file);
 				if (ret != GP_OK) {
@@ -7226,8 +7219,7 @@ sonyout:
 			C_PTP (ptp_getobjectinfo (params, 0xffffc001, &oi));
 			if (oi.ObjectFormat) {
 				log_objectinfo(params, &oi);
-				C_MEM (path = malloc(sizeof(CameraFilePath)));
-				path->name[0]='\0';
+				C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 				strcpy (path->folder,"/");
 				ret = gp_file_new(&file);
 				if (ret!=GP_OK)
@@ -7318,9 +7310,7 @@ sonyout:
 		}  while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
 downloadomdfile:
-		C_MEM (path = malloc(sizeof(CameraFilePath)));
-		path->name[0]='\0';
-		path->folder[0]='\0';
+		C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 
 		if (newobject != 0) {
 			CR (add_object_to_fs_and_path (camera, newobject, path, context));
@@ -7365,7 +7355,7 @@ handleregular:
 #if 0
 			PTPObjectInfo	oi;
 
-			C_MEM (path = malloc(sizeof(CameraFilePath)));
+			C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 			C_PTP (ptp_getobjectinfo (params, event.Param1, &oi));
 
 			sprintf (path->folder,"/");
@@ -7397,9 +7387,7 @@ handleregular:
 	case PTP_EC_ObjectAdded: {
 		PTPObject	*ob;
 
-		C_MEM (path = malloc(sizeof(CameraFilePath)));
-		path->name[0]='\0';
-		path->folder[0]='\0';
+		C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 
 		CR (add_object_to_fs_and_path (camera, event.Param1, path, context));
 
@@ -7465,9 +7453,7 @@ handleregular:
 		ob->flags &= ~PTPOBJECT_OBJECTINFO_LOADED;
 
 
-		C_MEM (path = malloc(sizeof(CameraFilePath)));
-		path->name[0]='\0';
-		path->folder[0]='\0';
+		C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 
 		CR (add_object_to_fs_and_path (camera, event.Param1, path, context));
 
