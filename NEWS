@@ -8,10 +8,13 @@ pentax:
 * sync with pktriggercord fixes
 
 ptp2:
-* sony: support newer sony property format
-* sony: fixed crash in movie option
-* fuji: configurations added, af drive manual, availableshots, graineffect, rawcompression
-* fuji: bugfixes
+* Big code and (canon eos) debug outout cleanups by Axel W
+* --summary output format changed to be more condensed
+* Canon EOS: imageformat output changed
+* Sony: support newer sony property format
+* Sony: fixed crash in movie option
+* Fuji: configurations added, af drive manual, availableshots, graineffect, rawcompression
+* Fuji: bugfixes
 * Added ids:
   - Canon EOS R100, R3, R8, R50
   - Sony Alpha A6100, ZV-E10, A6700
@@ -29,7 +32,6 @@ ports/serial:
 all:
 * IOLIBS and CAMLIBS now runtime configurable
 * Builds use silent rules by default now
-
 
 translations:
 * added georgian, friulian, polish, romanian, ukrainian, chinese
