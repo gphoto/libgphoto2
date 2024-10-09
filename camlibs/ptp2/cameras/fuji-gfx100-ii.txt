@@ -1,0 +1,3241 @@
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrive
+Label: Drive Fuji Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrivemanual
+Label: Drive Fuji Autofocus in manual
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/manualfocusdrive
+Label: Drive Fuji Manual focus
+Readonly: 0
+Type: RADIO
+Current: -30
+Choice: 0 -40
+Choice: 1 22177
+Choice: 2 528
+Choice: 3 528
+Choice: 4 54
+Choice: 5 3
+END
+/main/actions/focuspoint
+Label: Get Fuji focuspoint
+Readonly: 0
+Type: TEXT
+Current: 1,1,2
+END
+/main/actions/focuspoints
+Label: Fuji FocusPoint Grid dimensions
+Readonly: 0
+Type: RADIO
+Current: 117 Points (9x13)
+Choice: 0 117 Points (9x13)
+Choice: 1 425 Points (17x25)
+END
+/main/actions/zoompos
+Label: Fuji Zoom Position
+Readonly: 0
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 1
+Step: 0
+END
+/main/actions/movie
+Label: Movie Capture
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1728412560
+Printable: Tue Oct  8 20:36:00 2024
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/imagecomment
+Label: Image Comment
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/devicename
+Label: Device Name
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/copyright
+Label: Copyright
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/settings/cameraaction
+Label: Camera Action
+Readonly: 0
+Type: RADIO
+Current: Shoot
+Choice: 0 AF
+Choice: 1 Cancel AF
+Choice: 2 Shoot
+Choice: 3 Bulb On
+Choice: 4 Bulb Off
+Choice: 5 Unknown value 8000
+Choice: 6 Unknown value a000
+Choice: 7 Unknown value 0006
+Choice: 8 Unknown value 9000
+Choice: 9 Unknown value 0002
+Choice: 10 Unknown value 9100
+Choice: 11 Unknown value 0001
+Choice: 12 Unknown value 9300
+Choice: 13 Unknown value 0005
+Choice: 14 Unknown value 000e
+Choice: 15 Unknown value 9200
+Choice: 16 Unknown value 0040
+END
+/main/settings/prioritymode
+Label: Priority Mode
+Readonly: 0
+Type: RADIO
+Current: USB
+Choice: 0 Camera
+Choice: 1 USB
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: xxxxx
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 1
+Type: TEXT
+Current: FUJIFILM
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: GFX100 II
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 1
+Type: TEXT
+Current: 2.21
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 1
+Type: TEXT
+Current: fujifilm.co.jp: 1.0; 
+END
+/main/status/lensname
+Label: Lens Name
+Readonly: 1
+Type: TEXT
+Current: LR104A,GF110mmF2 R LM WR,XXXXXXXX
+END
+/main/status/shuttercounter
+Label: Shutter Counter
+Readonly: 0
+Type: TEXT
+Current: 0
+END
+/main/status/availableshots
+Label: Available Shots
+Readonly: 1
+Type: RANGE
+Current: 27
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/imgsettings/imageformat
+Label: Image Format
+Readonly: 0
+Type: RADIO
+Current: RAW
+Choice: 0 RAW
+Choice: 1 JPEG Fine
+Choice: 2 JPEG Normal
+Choice: 3 RAW + JPEG Fine
+Choice: 4 RAW + JPEG Normal
+Choice: 5 Unknown value 0006
+Choice: 6 Unknown value 0007
+END
+/main/imgsettings/filmsimulation
+Label: Film Simulation
+Readonly: 0
+Type: RADIO
+Current: ASTIA/Soft
+Choice: 0 PROVIA/Standard
+Choice: 1 Velvia/Vivid
+Choice: 2 ASTIA/Soft
+Choice: 3 PRO Neg.Hi
+Choice: 4 PRO Neg.Std
+Choice: 5 Black & White
+Choice: 6 Black & White+Ye Filter
+Choice: 7 Black & White+R Filter
+Choice: 8 Black & White+G Filter
+Choice: 9 Sepia
+Choice: 10 Classic Chrome
+Choice: 11 ACROS
+Choice: 12 Unknown value 0014
+Choice: 13 ACROS+Ye Filter
+Choice: 14 ACROS+R Filter,
+Choice: 15 ACROS+G Filter
+Choice: 16 ETERNA/Cinema
+Choice: 17 Classic Neg
+Choice: 18 ETERNA BLEACH BYPASS
+Choice: 19 Unknown value 0013
+END
+/main/imgsettings/imagesize
+Label: Image Size
+Readonly: 0
+Type: RADIO
+Current: 11648x8736
+Choice: 0 11648x8736
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: 80
+Choice: 0 40
+Choice: 1 80
+Choice: 2 100
+Choice: 3 125
+Choice: 4 160
+Choice: 5 200
+Choice: 6 250
+Choice: 7 320
+Choice: 8 400
+Choice: 9 500
+Choice: 10 640
+Choice: 11 800
+Choice: 12 1000
+Choice: 13 1250
+Choice: 14 1600
+Choice: 15 2000
+Choice: 16 2500
+Choice: 17 3200
+Choice: 18 4000
+Choice: 19 5000
+Choice: 20 6400
+Choice: 21 8000
+Choice: 22 10000
+Choice: 23 12800
+Choice: 24 25600
+Choice: 25 51200
+Choice: 26 102400
+Choice: 27 -1
+Choice: 28 -2
+Choice: 29 -3
+END
+/main/imgsettings/colortemperature
+Label: Color Temperature
+Readonly: 0
+Type: RADIO
+Current: 0
+END
+/main/imgsettings/whitebalance
+Label: WhiteBalance
+Readonly: 0
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Daylight
+Choice: 2 Tungsten
+Choice: 3 Unknown value 0008
+Choice: 4 Fluorescent Lamp 1
+Choice: 5 Fluorescent Lamp 2
+Choice: 6 Fluorescent Lamp 3
+Choice: 7 Shade
+Choice: 8 Choose Color Temperature
+Choice: 9 Preset Custom 1
+Choice: 10 Preset Custom 2
+Choice: 11 Preset Custom 3
+Choice: 12 Unknown value 8020
+Choice: 13 Unknown value 8021
+END
+/main/imgsettings/colorspace
+Label: Color Space
+Readonly: 0
+Type: RADIO
+Current: sRGB
+Choice: 0 sRGB
+Choice: 1 AdobeRGB
+END
+/main/imgsettings/graineffect
+Label: Grain Effect
+Readonly: 0
+Type: RADIO
+Current: Off Small
+Choice: 0 Unknown value 0001
+Choice: 1 Weak Small
+Choice: 2 Strong Small
+Choice: 3 Weak Large
+Choice: 4 Strong Large
+Choice: 5 Off Small
+END
+/main/capturesettings/exposurecompensation
+Label: Exposure Compensation
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 0
+END
+/main/capturesettings/f-number
+Label: F-Number
+Readonly: 0
+Type: RADIO
+Current: f/5
+Choice: 0 f/2
+Choice: 1 f/2.2
+Choice: 2 f/2.5
+Choice: 3 f/2.8
+Choice: 4 f/3.2
+Choice: 5 f/3.6
+Choice: 6 f/4
+Choice: 7 f/4.5
+Choice: 8 f/5
+Choice: 9 f/5.6
+Choice: 10 f/6.4
+Choice: 11 f/7.1
+Choice: 12 f/8
+Choice: 13 f/9
+Choice: 14 f/10
+Choice: 15 f/11
+Choice: 16 f/13
+Choice: 17 f/14
+Choice: 18 f/16
+Choice: 19 f/18
+Choice: 20 f/20
+Choice: 21 f/22
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 0
+Type: RADIO
+Current: Manual
+Choice: 0 Manual
+Choice: 1 Single-Servo AF
+Choice: 2 Continuous-Servo AF
+END
+/main/capturesettings/expprogram
+Label: Exposure Program
+Readonly: 0
+Type: RADIO
+Current: M
+Choice: 0 M
+Choice: 1 A
+Choice: 2 S
+Choice: 3 Action
+END
+/main/capturesettings/capturemode
+Label: Still Capture Mode
+Readonly: 0
+Type: RADIO
+Current: Self-timer
+Choice: 0 Self-timer
+END
+/main/capturesettings/focusmetermode
+Label: Focus Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Single-area AF
+Choice: 0 Single-area AF
+END
+/main/capturesettings/exposuremetermode
+Label: Exposure Metering Mode
+Readonly: 0
+Type: RADIO
+Current: Multi Spot
+Choice: 0 Average
+Choice: 1 Center Weighted
+Choice: 2 Multi Spot
+Choice: 3 Center Spot
+END
+/main/capturesettings/capturedelay
+Label: Capture Delay
+Readonly: 0
+Type: RADIO
+Current: 0.000s
+Choice: 0 10.000s
+Choice: 1 2.000s
+Choice: 2 0.000s
+END
+/main/capturesettings/shutterspeed
+Label: Shutter Speed
+Readonly: 0
+Type: RADIO
+Current: 1/100
+Choice: 0 1/4000
+Choice: 1 1/3200
+Choice: 2 1/2500
+Choice: 3 1/2000
+Choice: 4 1/1600
+Choice: 5 1/1250
+Choice: 6 1/1000
+Choice: 7 1/800
+Choice: 8 1/640
+Choice: 9 1/500
+Choice: 10 1/400
+Choice: 11 1/320
+Choice: 12 1/250
+Choice: 13 1/200
+Choice: 14 1/160
+Choice: 15 1/125
+Choice: 16 1/100
+Choice: 17 1/80
+Choice: 18 1/60
+Choice: 19 1/50
+Choice: 20 1/40
+Choice: 21 1/30
+Choice: 22 1/25
+Choice: 23 1/20
+Choice: 24 1/15
+Choice: 25 1/13
+Choice: 26 1/10
+Choice: 27 1/8
+Choice: 28 1/6
+Choice: 29 1/5
+Choice: 30 1/4
+Choice: 31 1/3
+Choice: 32 0.4s
+Choice: 33 1/2
+Choice: 34 0.6s
+Choice: 35 0.8s
+Choice: 36 1s
+Choice: 37 1.3s
+Choice: 38 1.6s
+Choice: 39 2s
+Choice: 40 2.5s
+Choice: 41 3s
+Choice: 42 4s
+Choice: 43 5s
+Choice: 44 6s
+Choice: 45 8s
+Choice: 46 10s
+Choice: 47 13s
+Choice: 48 15s
+Choice: 49 20s
+Choice: 50 25s
+Choice: 51 30s
+Choice: 52 40s
+Choice: 53 50s
+Choice: 54 60s
+Choice: 55 2m
+Choice: 56 4m
+Choice: 57 8m
+Choice: 58 15m
+Choice: 59 30m
+Choice: 60 60m
+Choice: 61 bulb
+END
+/main/capturesettings/liveviewsize
+Label: Live View Size
+Readonly: 0
+Type: RADIO
+Current: VGA
+Choice: 0 XGA
+Choice: 1 VGA
+Choice: 2 QVGA
+END
+/main/other/5003
+Label: Image Size
+Readonly: 0
+Type: MENU
+Current: 11648x8736
+Choice: 0 11648x8736
+END
+/main/other/5005
+Label: White Balance
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 4
+Choice: 2 6
+Choice: 3 8
+Choice: 4 32769
+Choice: 5 32770
+Choice: 6 32771
+Choice: 7 32774
+Choice: 8 32775
+Choice: 9 32776
+Choice: 10 32777
+Choice: 11 32778
+Choice: 12 32800
+Choice: 13 32801
+END
+/main/other/5007
+Label: F-Number
+Readonly: 0
+Type: MENU
+Current: 500
+Choice: 0 200
+Choice: 1 220
+Choice: 2 250
+Choice: 3 280
+Choice: 4 320
+Choice: 5 360
+Choice: 6 400
+Choice: 7 450
+Choice: 8 500
+Choice: 9 560
+Choice: 10 640
+Choice: 11 710
+Choice: 12 800
+Choice: 13 900
+Choice: 14 1000
+Choice: 15 1100
+Choice: 16 1300
+Choice: 17 1400
+Choice: 18 1600
+Choice: 19 1800
+Choice: 20 2000
+Choice: 21 2200
+END
+/main/other/500a
+Label: Focus Mode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 32769
+Choice: 2 32770
+END
+/main/other/500b
+Label: Exposure Metering Mode
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/500d
+Label: Exposure Time
+Readonly: 0
+Type: MENU
+Current: 9843
+Choice: 0 244
+Choice: 1 307
+Choice: 2 387
+Choice: 3 488
+Choice: 4 615
+Choice: 5 775
+Choice: 6 976
+Choice: 7 1230
+Choice: 8 1550
+Choice: 9 1953
+Choice: 10 2460
+Choice: 11 3100
+Choice: 12 3906
+Choice: 13 4921
+Choice: 14 6200
+Choice: 15 7812
+Choice: 16 9843
+Choice: 17 12401
+Choice: 18 15625
+Choice: 19 19686
+Choice: 20 24803
+Choice: 21 31250
+Choice: 22 39372
+Choice: 23 49606
+Choice: 24 62500
+Choice: 25 78745
+Choice: 26 99212
+Choice: 27 125000
+Choice: 28 157490
+Choice: 29 198425
+Choice: 30 250000
+Choice: 31 314980
+Choice: 32 396850
+Choice: 33 500000
+Choice: 34 629960
+Choice: 35 793700
+Choice: 36 1000000
+Choice: 37 1259921
+Choice: 38 1587401
+Choice: 39 2000000
+Choice: 40 2519842
+Choice: 41 3174802
+Choice: 42 4000000
+Choice: 43 5039684
+Choice: 44 6349604
+Choice: 45 8000000
+Choice: 46 10079368
+Choice: 47 12699208
+Choice: 48 16000000
+Choice: 49 20158736
+Choice: 50 25398416
+Choice: 51 32000000
+Choice: 52 40317473
+Choice: 53 50796833
+Choice: 54 64000000
+Choice: 55 64000030
+Choice: 56 64000060
+Choice: 57 64000090
+Choice: 58 64000120
+Choice: 59 64000150
+Choice: 60 64000180
+Choice: 61 -1
+END
+/main/other/500e
+Label: Exposure Program Mode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+Choice: 2 4
+Choice: 3 6
+END
+/main/other/500f
+Label: Exposure Index (film speed ISO)
+Readonly: 0
+Type: MENU
+Current: 80
+Choice: 0 40
+Choice: 1 80
+Choice: 2 100
+Choice: 3 125
+Choice: 4 160
+Choice: 5 200
+Choice: 6 250
+Choice: 7 320
+Choice: 8 400
+Choice: 9 500
+Choice: 10 640
+Choice: 11 800
+Choice: 12 1000
+Choice: 13 1250
+Choice: 14 1600
+Choice: 15 2000
+Choice: 16 2500
+Choice: 17 3200
+Choice: 18 4000
+Choice: 19 5000
+Choice: 20 6400
+Choice: 21 8000
+Choice: 22 10000
+Choice: 23 12800
+Choice: 24 25600
+Choice: 25 51200
+Choice: 26 102400
+Choice: 27 -1
+Choice: 28 -2
+Choice: 29 -3
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20241008T203600
+END
+/main/other/5012
+Label: Pre-Capture Delay
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 10000
+Choice: 1 2000
+Choice: 2 0
+END
+/main/other/5015
+Label: Sharpness
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -40
+Top: 40
+Step: 10
+END
+/main/other/501c
+Label: Focus Metering Mode
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 32769
+END
+/main/other/d001
+Label: Film Simulation
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+Choice: 12 20
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+END
+/main/other/d007
+Label: DRangeMode
+Readonly: 0
+Type: MENU
+Current: 100
+Choice: 0 65535
+Choice: 1 100
+END
+/main/other/d008
+Label: ColorMode
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -40
+Top: 40
+Step: 10
+END
+/main/other/d00a
+Label: ColorSpace
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d00b
+Label: WhitebalanceTune1
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+END
+/main/other/d00c
+Label: WhitebalanceTune2
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 -9
+Choice: 1 -8
+Choice: 2 -7
+Choice: 3 -6
+Choice: 4 -5
+Choice: 5 -4
+Choice: 6 -3
+Choice: 7 -2
+Choice: 8 -1
+Choice: 9 0
+Choice: 10 1
+Choice: 11 2
+Choice: 12 3
+Choice: 13 4
+Choice: 14 5
+Choice: 15 6
+Choice: 16 7
+Choice: 17 8
+Choice: 18 9
+END
+/main/other/d017
+Label: Color Temperature
+Readonly: 0
+Type: MENU
+Current: 0
+END
+/main/other/d018
+Label: Quality
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+END
+/main/other/d01b
+Label: ThroughImageZoom
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 4
+Choice: 3 5
+Choice: 4 6
+Choice: 5 11
+END
+/main/other/d01c
+Label: NoiseReduction
+Readonly: 0
+Type: MENU
+Current: 8192
+Choice: 0 0
+Choice: 1 4096
+Choice: 2 8192
+Choice: 3 12288
+Choice: 4 16384
+Choice: 5 20480
+Choice: 6 24576
+Choice: 7 28672
+Choice: 8 32768
+END
+/main/other/d020
+Label: FaceDetectionMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+END
+/main/other/d022
+Label: RawCompression
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d023
+Label: GrainEffect
+Readonly: 0
+Type: MENU
+Current: 6
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d024
+Label: SetEyeAFMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d025
+Label: FocusPoints
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 3
+Choice: 1 4
+END
+/main/other/d026
+Label: MFAssistMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+END
+/main/other/d027
+Label: InterlockAEAFArea
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d028
+Label: CommandDialMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d029
+Label: Shadowing
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d02a
+Label: ExposureIndex
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 32769
+END
+/main/other/d02b
+Label: MovieISO
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 32769
+END
+/main/other/d02d
+Label: PTP Property 0xd02d
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 32769
+END
+/main/other/d02e
+Label: WideDynamicRange
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+END
+/main/other/d030
+Label: PTP Property 0xd030
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d031
+Label: PTP Property 0xd031
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 10
+END
+/main/other/d032
+Label: PTP Property 0xd032
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 10
+END
+/main/other/d033
+Label: PTP Property 0xd033
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d034
+Label: PTP Property 0xd034
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d035
+Label: PTP Property 0xd035
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d036
+Label: PTP Property 0xd036
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d037
+Label: PTP Property 0xd037
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+END
+/main/other/d038
+Label: PTP Property 0xd038
+Readonly: 1
+Type: RANGE
+Current: 512
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d039
+Label: PTP Property 0xd039
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 65536
+Choice: 1 1
+Choice: 2 131072
+Choice: 3 2
+Choice: 4 524288
+Choice: 5 8
+Choice: 6 16
+Choice: 7 16777216
+Choice: 8 256
+Choice: 9 33554432
+Choice: 10 512
+Choice: 11 67108864
+Choice: 12 1024
+Choice: 13 134217728
+Choice: 14 2048
+Choice: 15 268435456
+Choice: 16 4096
+Choice: 17 196611
+Choice: 18 131075
+Choice: 19 3
+END
+/main/other/d040
+Label: PTP Property 0xd040
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d100
+Label: Comment
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d104
+Label: BlackImageTone
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 10
+END
+/main/other/d106
+Label: FrameGuideMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d10a
+Label: ShutterPriorityMode1
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d10b
+Label: ShutterPriorityMode2
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d112
+Label: AFIlluminator
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d136
+Label: FunctionLock
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d145
+Label: Password
+Readonly: 0
+Type: TEXT
+Current: 0000
+END
+/main/other/d153
+Label: FirmwareVersion
+Readonly: 1
+Type: TEXT
+Current: 545
+END
+/main/other/d154
+Label: ShotCount
+Readonly: 0
+Type: RANGE
+Current: 1363
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d155
+Label: ShutterExchangeCount
+Readonly: 1
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d156
+Label: PTP Property 0xd156
+Readonly: 1
+Type: TEXT
+Current: 280
+END
+/main/other/d157
+Label: WorldClock
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d158
+Label: TimeDifference1
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 -23
+Choice: 1 -22
+Choice: 2 -21
+Choice: 3 -20
+Choice: 4 -19
+Choice: 5 -18
+Choice: 6 -17
+Choice: 7 -16
+Choice: 8 -15
+Choice: 9 -14
+Choice: 10 -13
+Choice: 11 -12
+Choice: 12 -11
+Choice: 13 -10
+Choice: 14 -9
+Choice: 15 -8
+Choice: 16 -7
+Choice: 17 -6
+Choice: 18 -5
+Choice: 19 -4
+Choice: 20 -3
+Choice: 21 -2
+Choice: 22 -1
+Choice: 23 0
+Choice: 24 1
+Choice: 25 2
+Choice: 26 3
+Choice: 27 4
+Choice: 28 5
+Choice: 29 6
+Choice: 30 7
+Choice: 31 8
+Choice: 32 9
+Choice: 33 10
+Choice: 34 11
+Choice: 35 12
+Choice: 36 13
+Choice: 37 14
+Choice: 38 15
+Choice: 39 16
+Choice: 40 17
+Choice: 41 18
+Choice: 42 19
+Choice: 43 20
+Choice: 44 21
+Choice: 45 22
+Choice: 46 23
+END
+/main/other/d159
+Label: TimeDifference2
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+Choice: 1 15
+Choice: 2 30
+Choice: 3 45
+END
+/main/other/d15a
+Label: Language
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+Choice: 20 20
+Choice: 21 21
+Choice: 22 22
+Choice: 23 23
+Choice: 24 24
+Choice: 25 25
+Choice: 26 26
+Choice: 27 27
+Choice: 28 28
+Choice: 29 29
+Choice: 30 30
+Choice: 31 31
+Choice: 32 32
+Choice: 33 33
+Choice: 34 34
+END
+/main/other/d15b
+Label: FrameNumberSequence
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d16d
+Label: PTP Property 0xd16d
+Readonly: 0
+Type: RANGE
+Current: 928
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d16e
+Label: PTP Property 0xd16e
+Readonly: 1
+Type: RANGE
+Current: 5
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d16f
+Label: CropMode
+Readonly: 0
+Type: MENU
+Current: 32768
+Choice: 0 0
+Choice: 1 1
+Choice: 2 32769
+END
+/main/other/d170
+Label: LensZoomPos
+Readonly: 0
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 1
+Step: 0
+END
+/main/other/d171
+Label: FocusPosition
+Readonly: 0
+Type: MENU
+Current: -30
+Choice: 0 -40
+Choice: 1 22177
+Choice: 2 528
+Choice: 3 528
+Choice: 4 54
+Choice: 5 3
+END
+/main/other/d173
+Label: LiveViewImageQuality
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+END
+/main/other/d174
+Label: LiveViewImageSize
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d17b
+Label: PTP Property 0xd17b
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d17e
+Label: CropAreaFrameInfo
+Readonly: 1
+Type: TEXT
+Current: 
+END
+/main/other/d17f
+Label: ResetSetting
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 1
+Choice: 1 2
+Choice: 2 4
+Choice: 3 5
+Choice: 4 7
+Choice: 5 6
+END
+/main/other/d182
+Label: PTP Property 0xd182
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -1
+Top: 999
+Step: 1
+END
+/main/other/d188
+Label: PTP Property 0xd188
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d189
+Label: PTP Property 0xd189
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d18a
+Label: PTP Property 0xd18a
+Readonly: 0
+Type: MENU
+Current: 
+END
+/main/other/d18b
+Label: PTP Property 0xd18b
+Readonly: 0
+Type: TEXT
+Current: 512,512,4,1,
+END
+/main/other/d18c
+Label: PTP Property 0xd18c
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+END
+/main/other/d18d
+Label: PTP Property 0xd18d
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d1b0
+Label: PTP Property 0xd1b0
+Readonly: 0
+Type: TEXT
+Current: 0x00000000,0x00,
+END
+/main/other/d1b1
+Label: PTP Property 0xd1b1
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d1b2
+Label: PTP Property 0xd1b2
+Readonly: 0
+Type: MENU
+Current: 7
+Choice: 0 7
+END
+/main/other/d1b6
+Label: PTP Property 0xd1b6
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d1b7
+Label: PTP Property 0xd1b7
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d1bc
+Label: PTP Property 0xd1bc
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d1bd
+Label: PTP Property 0xd1bd
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d1be
+Label: PTP Property 0xd1be
+Readonly: 1
+Type: MENU
+Current: 2
+END
+/main/other/d1c1
+Label: PTP Property 0xd1c1
+Readonly: 1
+Type: TEXT
+Current: ,,
+END
+/main/other/d1c2
+Label: PTP Property 0xd1c2
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d1c3
+Label: PTP Property 0xd1c3
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d1c4
+Label: PTP Property 0xd1c4
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d1c6
+Label: PTP Property 0xd1c6
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d201
+Label: ReleaseMode
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 4
+END
+/main/other/d207
+Label: PriorityMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d208
+Label: PTP Property 0xd208
+Readonly: 0
+Type: MENU
+Current: 772
+Choice: 0 512
+Choice: 1 4
+Choice: 2 772
+Choice: 3 1280
+Choice: 4 12
+Choice: 5 32768
+Choice: 6 40960
+Choice: 7 6
+Choice: 8 36864
+Choice: 9 2
+Choice: 10 37120
+Choice: 11 1
+Choice: 12 37632
+Choice: 13 5
+Choice: 14 14
+Choice: 15 37376
+Choice: 16 64
+END
+/main/other/d209
+Label: AFStatus
+Readonly: 1
+Type: MENU
+Current: 4
+END
+/main/other/d20a
+Label: PTP Property 0xd20a
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d20b
+Label: DeviceName
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d20c
+Label: MediaRecord
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d20d
+Label: MediaCapacity
+Readonly: 1
+Type: TEXT
+Current: 0,16,681627648,9,0,16,497843200,9,0,0,0,0
+END
+/main/other/d20e
+Label: FreeSDRAMImages
+Readonly: 1
+Type: RANGE
+Current: 27
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d211
+Label: MediaStatus
+Readonly: 1
+Type: RANGE
+Current: 257
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d215
+Label: Copyright
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d216
+Label: Copyright2
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d21c
+Label: PTP Property 0xd21c
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 0
+END
+/main/other/d21d
+Label: PTP Property 0xd21d
+Readonly: 1
+Type: RANGE
+Current: 100
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d222
+Label: SensitivityFineTune1
+Readonly: 0
+Type: RANGE
+Current: 8192
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/d223
+Label: SensitivityFineTune2
+Readonly: 0
+Type: RANGE
+Current: 8192
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/d224
+Label: PTP Property 0xd224
+Readonly: 1
+Type: RANGE
+Current: 256
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d225
+Label: PTP Property 0xd225
+Readonly: 0
+Type: MENU
+Current: 1,2,
+Choice: 0 1,2,
+Choice: 1 2,2,
+END
+/main/other/d226
+Label: PTP Property 0xd226
+Readonly: 1
+Type: TEXT
+Current: 1024,1013,1024,0,0,0,
+END
+/main/other/d227
+Label: PTP Property 0xd227
+Readonly: 1
+Type: TEXT
+Current: ?0,
+END
+/main/other/d228
+Label: PTP Property 0xd228
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/d22e
+Label: PTP Property 0xd22e
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d230
+Label: ForceMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d231
+Label: PTP Property 0xd231
+Readonly: 0
+Type: MENU
+Current: 0
+END
+/main/other/d232
+Label: PTP Property 0xd232
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+END
+/main/other/d233
+Label: PTP Property 0xd233
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d234
+Label: PTP Property 0xd234
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d236
+Label: PTP Property 0xd236
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d237
+Label: PTP Property 0xd237
+Readonly: 0
+Type: TEXT
+Current: Ingmar Rieger
+END
+/main/other/d238
+Label: PTP Property 0xd238
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d23a
+Label: PTP Property 0xd23a
+Readonly: 0
+Type: RANGE
+Current: 755
+Bottom: 0
+Top: 755
+Step: 1
+END
+/main/other/d23b
+Label: PTP Property 0xd23b
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d23c
+Label: PTP Property 0xd23c
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 2
+Choice: 1 1
+END
+/main/other/d23e
+Label: PTP Property 0xd23e
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d23f
+Label: PTP Property 0xd23f
+Readonly: 1
+Type: RANGE
+Current: 771
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d260
+Label: PTP Property 0xd260
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+END
+/main/other/d261
+Label: PTP Property 0xd261
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+END
+/main/other/d262
+Label: PTP Property 0xd262
+Readonly: 0
+Type: RANGE
+Current: 257
+Bottom: 257
+Top: 1542
+Step: 1
+END
+/main/other/d297
+Label: PTP Property 0xd297
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 4
+Choice: 1 3
+Choice: 2 2
+Choice: 3 1
+END
+/main/other/d304
+Label: PTP Property 0xd304
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+Choice: 2 4
+Choice: 3 5
+Choice: 4 6
+Choice: 5 7
+END
+/main/other/d305
+Label: PTP Property 0xd305
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d306
+Label: PTP Property 0xd306
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 58316
+Step: 1
+END
+/main/other/d307
+Label: PTP Property 0xd307
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d310
+Label: TotalShotCount
+Readonly: 0
+Type: RANGE
+Current: 1363
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d320
+Label: HighLightTone
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -20
+Top: 40
+Step: 5
+END
+/main/other/d321
+Label: ShadowTone
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -20
+Top: 40
+Step: 5
+END
+/main/other/d322
+Label: LongExposureNR
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d323
+Label: FullTimeManualFocus
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d33f
+Label: ViewMode1
+Readonly: 0
+Type: MENU
+Current: 5
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d346
+Label: LensISSwitch
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+END
+/main/other/d347
+Label: Focus Point
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d34a
+Label: InstantAFMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d34b
+Label: PreAFMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+END
+/main/other/d34d
+Label: LMOMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d34e
+Label: LockButtonMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d351
+Label: ISMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d352
+Label: DateTimeDispFormat
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d359
+Label: ExposurePreview
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d35e
+Label: FocusCheckMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d35f
+Label: FocusScaleUnit
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d364
+Label: CustomAutoPowerOff
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 255
+Step: 1
+END
+/main/other/d365
+Label: FileNamePrefix1
+Readonly: 0
+Type: TEXT
+Current: DSCF
+END
+/main/other/d366
+Label: FileNamePrefix2
+Readonly: 0
+Type: TEXT
+Current: DSF
+END
+/main/other/d368
+Label: PTP Property 0xd368
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 255
+Step: 1
+END
+/main/other/d369
+Label: PTP Property 0xd369
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+END
+/main/other/d36a
+Label: BatteryInfo1
+Readonly: 1
+Type: RANGE
+Current: 12
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d36b
+Label: BatteryInfo2
+Readonly: 1
+Type: TEXT
+Current: 100,0,0
+END
+/main/other/d36d
+Label: LensNameAndSerial
+Readonly: 1
+Type: TEXT
+Current: LR104A,GF110mmF2 R LM WR,46C00292
+END
+/main/other/d36e
+Label: CustomDispInfo
+Readonly: 0
+Type: RANGE
+Current: 2.08876e+09
+Bottom: 0
+Top: 4.28658e+09
+Step: 1
+END
+/main/other/d36f
+Label: FunctionLockCategory1
+Readonly: 0
+Type: RANGE
+Current: 128
+Bottom: 0
+Top: 3.20341e+09
+Step: 1
+END
+/main/other/d370
+Label: FunctionLockCategory2
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 3.62414e+09
+Step: 1
+END
+/main/other/d372
+Label: FocusArea1
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d374
+Label: FocusArea3
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d375
+Label: FrameGuideGridInfo1
+Readonly: 0
+Type: TEXT
+Current: 0,0,0,0,850,0,0,0,0,850,0,0,0,0,
+END
+/main/other/d376
+Label: FrameGuideGridInfo2
+Readonly: 0
+Type: TEXT
+Current: 0,0,0,0,850,0,0,0,0,850,0,0,0,0,
+END
+/main/other/d381
+Label: PTP Property 0xd381
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+END
+/main/other/d38a
+Label: LensUnknownData
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d38b
+Label: PTP Property 0xd38b
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d38c
+Label: LensZoomPosCaps
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d38d
+Label: LensFNumberList
+Readonly: 1
+Type: TEXT
+Current: 200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200
+END
+/main/other/d38e
+Label: LensFocalLengthList
+Readonly: 1
+Type: TEXT
+Current: 11000,8700
+END
+/main/other/d395
+Label: FocusArea4
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/500d
+Label: Exposure Time
+Readonly: 0
+Type: MENU
+Current: 9843
+Choice: 0 244
+Choice: 1 307
+Choice: 2 387
+Choice: 3 488
+Choice: 4 615
+Choice: 5 775
+Choice: 6 976
+Choice: 7 1230
+Choice: 8 1550
+Choice: 9 1953
+Choice: 10 2460
+Choice: 11 3100
+Choice: 12 3906
+Choice: 13 4921
+Choice: 14 6200
+Choice: 15 7812
+Choice: 16 9843
+Choice: 17 12401
+Choice: 18 15625
+Choice: 19 19686
+Choice: 20 24803
+Choice: 21 31250
+Choice: 22 39372
+Choice: 23 49606
+Choice: 24 62500
+Choice: 25 78745
+Choice: 26 99212
+Choice: 27 125000
+Choice: 28 157490
+Choice: 29 198425
+Choice: 30 250000
+Choice: 31 314980
+Choice: 32 396850
+Choice: 33 500000
+Choice: 34 629960
+Choice: 35 793700
+Choice: 36 1000000
+Choice: 37 1259921
+Choice: 38 1587401
+Choice: 39 2000000
+Choice: 40 2519842
+Choice: 41 3174802
+Choice: 42 4000000
+Choice: 43 5039684
+Choice: 44 6349604
+Choice: 45 8000000
+Choice: 46 10079368
+Choice: 47 12699208
+Choice: 48 16000000
+Choice: 49 20158736
+Choice: 50 25398416
+Choice: 51 32000000
+Choice: 52 40317473
+Choice: 53 50796833
+Choice: 54 64000000
+Choice: 55 64000030
+Choice: 56 64000060
+Choice: 57 64000090
+Choice: 58 64000120
+Choice: 59 64000150
+Choice: 60 64000180
+Choice: 61 -1
+END
+/main/other/5007
+Label: F-Number
+Readonly: 0
+Type: MENU
+Current: 500
+Choice: 0 200
+Choice: 1 220
+Choice: 2 250
+Choice: 3 280
+Choice: 4 320
+Choice: 5 360
+Choice: 6 400
+Choice: 7 450
+Choice: 8 500
+Choice: 9 560
+Choice: 10 640
+Choice: 11 710
+Choice: 12 800
+Choice: 13 900
+Choice: 14 1000
+Choice: 15 1100
+Choice: 16 1300
+Choice: 17 1400
+Choice: 18 1600
+Choice: 19 1800
+Choice: 20 2000
+Choice: 21 2200
+END
+/main/other/d38c
+Label: LensZoomPosCaps
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d171
+Label: FocusPosition
+Readonly: 0
+Type: MENU
+Current: -30
+Choice: 0 -40
+Choice: 1 22177
+Choice: 2 528
+Choice: 3 528
+Choice: 4 54
+Choice: 5 3
+END
+/main/other/d21c
+Label: PTP Property 0xd21c
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 0
+END
+/main/other/d347
+Label: Focus Point
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d170
+Label: LensZoomPos
+Readonly: 0
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 1
+Step: 0
+END
+/main/other/d174
+Label: LiveViewImageSize
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d173
+Label: LiveViewImageQuality
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+END
+/main/other/d230
+Label: ForceMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d16e
+Label: PTP Property 0xd16e
+Readonly: 1
+Type: RANGE
+Current: 5
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d372
+Label: FocusArea1
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d020
+Label: FaceDetectionMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+END
+/main/other/d022
+Label: RawCompression
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d023
+Label: GrainEffect
+Readonly: 0
+Type: MENU
+Current: 6
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d024
+Label: SetEyeAFMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d025
+Label: FocusPoints
+Readonly: 0
+Type: MENU
+Current: 3
+Choice: 0 3
+Choice: 1 4
+END
+/main/other/d026
+Label: MFAssistMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+Choice: 7 8
+Choice: 8 9
+Choice: 9 10
+Choice: 10 11
+Choice: 11 12
+END
+/main/other/d027
+Label: InterlockAEAFArea
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d029
+Label: Shadowing
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d16f
+Label: CropMode
+Readonly: 0
+Type: MENU
+Current: 32768
+Choice: 0 0
+Choice: 1 1
+Choice: 2 32769
+END
+/main/other/d395
+Label: FocusArea4
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d320
+Label: HighLightTone
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -20
+Top: 40
+Step: 5
+END
+/main/other/d321
+Label: ShadowTone
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: -20
+Top: 40
+Step: 5
+END
+/main/other/d322
+Label: LongExposureNR
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d323
+Label: FullTimeManualFocus
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d346
+Label: LensISSwitch
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+END
+/main/other/d34a
+Label: InstantAFMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d34b
+Label: PreAFMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+END
+/main/other/d34d
+Label: LMOMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d351
+Label: ISMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d35e
+Label: FocusCheckMode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d173
+Label: LiveViewImageQuality
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 3
+END
+/main/other/d365
+Label: FileNamePrefix1
+Readonly: 0
+Type: TEXT
+Current: DSCF
+END
+/main/other/d366
+Label: FileNamePrefix2
+Readonly: 0
+Type: TEXT
+Current: DSF
+END
+/main/other/d374
+Label: FocusArea3
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d310
+Label: TotalShotCount
+Readonly: 0
+Type: RANGE
+Current: 1363
+Bottom: 0
+Top: 4.29497e+09
+Step: 1
+END
+/main/other/d359
+Label: ExposurePreview
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+END
+/main/other/d375
+Label: FrameGuideGridInfo1
+Readonly: 0
+Type: TEXT
+Current: 0,0,0,0,850,0,0,0,0,850,0,0,0,0,
+END
+/main/other/d376
+Label: FrameGuideGridInfo2
+Readonly: 0
+Type: TEXT
+Current: 0,0,0,0,850,0,0,0,0,850,0,0,0,0,
+END
+/main/other/d36e
+Label: CustomDispInfo
+Readonly: 0
+Type: RANGE
+Current: 2.08876e+09
+Bottom: 0
+Top: 4.28658e+09
+Step: 1
+END
+/main/other/d33f
+Label: ViewMode1
+Readonly: 0
+Type: MENU
+Current: 5
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+END
+/main/other/d364
+Label: CustomAutoPowerOff
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 255
+Step: 1
+END
+/main/other/d34e
+Label: LockButtonMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d02e
+Label: WideDynamicRange
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+END
+/main/other/d36d
+Label: LensNameAndSerial
+Readonly: 1
+Type: TEXT
+Current: LR104A,GF110mmF2 R LM WR,46C00292
+END
+/main/other/d38a
+Label: LensUnknownData
+Readonly: 1
+Type: MENU
+Current: 1
+END
+/main/other/d36a
+Label: BatteryInfo1
+Readonly: 1
+Type: RANGE
+Current: 12
+Bottom: 0
+Top: 0
+Step: 0
+END
+/main/other/d36b
+Label: BatteryInfo2
+Readonly: 1
+Type: TEXT
+Current: 100,0,0
+END
+/main/other/d36f
+Label: FunctionLockCategory1
+Readonly: 0
+Type: RANGE
+Current: 128
+Bottom: 0
+Top: 3.20341e+09
+Step: 1
+END
+/main/other/d370
+Label: FunctionLockCategory2
+Readonly: 0
+Type: RANGE
+Current: 0
+Bottom: 0
+Top: 3.62414e+09
+Step: 1
+END
+/main/other/d222
+Label: SensitivityFineTune1
+Readonly: 0
+Type: RANGE
+Current: 8192
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/d223
+Label: SensitivityFineTune2
+Readonly: 0
+Type: RANGE
+Current: 8192
+Bottom: 0
+Top: 65535
+Step: 1
+END
+/main/other/d38c
+Label: LensZoomPosCaps
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d38d
+Label: LensFNumberList
+Readonly: 1
+Type: TEXT
+Current: 200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200
+END
+/main/other/d38e
+Label: LensFocalLengthList
+Readonly: 1
+Type: TEXT
+Current: 11000,8700
+END
+/main/other/d17b
+Label: PTP Property 0xd17b
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/5010
+Label: Exposure Bias Compensation
+Readonly: 0
+Type: MENU
+Current: 0
+Choice: 0 0
+END
+/main/other/d028
+Label: CommandDialMode
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+Choice: 1 2
+END
+/main/other/d02a
+Label: ExposureIndex
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 32769
+END
+/main/other/d02b
+Label: MovieISO
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 32769
+END
+/main/other/d02d
+Label: PTP Property 0xd02d
+Readonly: 0
+Type: MENU
+Current: 32769
+Choice: 0 32769
+END
+/main/other/d156
+Label: PTP Property 0xd156
+Readonly: 1
+Type: TEXT
+Current: 280
+END
+/main/other/d17b
+Label: PTP Property 0xd17b
+Readonly: 0
+Type: MENU
+Current: 1
+Choice: 0 1
+END
+/main/other/d17f
+Label: ResetSetting
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 1
+Choice: 1 2
+Choice: 2 4
+Choice: 3 5
+Choice: 4 7
+Choice: 5 6
+END
+/main/other/d208
+Label: PTP Property 0xd208
+Readonly: 0
+Type: MENU
+Current: 772
+Choice: 0 512
+Choice: 1 4
+Choice: 2 772
+Choice: 3 1280
+Choice: 4 12
+Choice: 5 32768
+Choice: 6 40960
+Choice: 7 6
+Choice: 8 36864
+Choice: 9 2
+Choice: 10 37120
+Choice: 11 1
+Choice: 12 37632
+Choice: 13 5
+Choice: 14 14
+Choice: 15 37376
+Choice: 16 64
+END
+/main/other/d21c
+Label: PTP Property 0xd21c
+Readonly: 0
+Type: MENU
+Current: 4
+Choice: 0 0
+END
+Camera summary:
+Manufacturer: FUJIFILM
+Model: GFX100 II
+  Version: 2.21
+  Serial Number: XXXX
+Vendor Extension ID: 0xe (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: JPEG Unknown(3812) Defined Type RAF
+Display Formats: JPEG, Unknown(3812), Unknown(5000), Defined Type, RAF, TIFF
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+	StorageDescription: Still
+	VolumeLabel: 1XXXX
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+store_10000002:
+	StorageDescription: Live
+	VolumeLabel: 2XXXX
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 18446744073709551615 (17592186044415 MB)
+	Free Space (Bytes): 18446744073709551615 (17592186044415 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Image Size                (5003 rw str): Enumeration [
+	'11648x8736'
+	] value: '11648x8736'
+White Balance             (5005 rw u16): Enumeration [2,4,6,8,32769,32770,32771,32774,32775,32776,32777,32778,32800,32801] value: Automatic (2)
+F-Number                  (5007 rw u16): Enumeration [200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/5 (500)
+Focus Mode                (500a rw u16): Enumeration [1,32769,32770] value: Manual Focus (1)
+Exposure Metering Mode    (500b rw u16): Enumeration [1,2,3,4] value: Multi-spot (3)
+Exposure Time             (500d rw u32): Enumeration [244,307,387,488,615,775,976,1230,1550,1953,2460,3100,3906,4921,6200,7812,9843,12401,15625,19686,24803,31250,39372,49606,62500,78745,99212,125000,157490,198425,250000,314980,396850,500000,629960,793700,1000000,1259921,1587401,2000000,2519842,3174802,4000000,5039684,6349604,8000000,10079368,12699208,16000000,20158736,25398416,32000000,40317473,50796833,64000000,64000030,64000060,64000090,64000120,64000150,64000180,4294967295] value: 0.098 sec (9843)
+Exposure Program Mode     (500e rw u16): Enumeration [1,3,4,6] value: M (1)
+Exposure Index (film speed ISO) (500f rw i32): Enumeration [40,80,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,25600,51200,102400,-1,-2,-3] value: ISO 80 (80)
+Exposure Bias Compensation (5010 rw i16): Enumeration [0] value: 0.0 stops (0)
+Date & Time               (5011 rw str): '20241008T203500'
+Pre-Capture Delay         (5012 rw u16): Enumeration [10000,2000,0] value: 0.0s (0)
+Sharpness                 (5015 rw i16): Range [-40 - 40, step 10] value: 0
+Focus Metering Mode       (501c rw u16): Enumeration [32769] value: 32769
+Film Simulation           (d001 rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,20,13,14,15,16,17,18,19] value: 3
+DRangeMode                (d007 rw u16): Enumeration [65535,100] value: 100
+ColorMode                 (d008 rw i16): Range [-40 - 40, step 10] value: 0
+ColorSpace                (d00a rw u16): Enumeration [1,2] value: 1
+WhitebalanceTune1         (d00b rw i16): Range [-9 - 9, step 1] value: 0
+WhitebalanceTune2         (d00c rw i16): Range [-9 - 9, step 1] value: 0
+Color Temperature         (d017 rw u16): Enumeration [] value: 0
+Quality                   (d018 rw u16): Enumeration [1,2,3,4,5,6,7] value: 1
+ThroughImageZoom          (d01b rw u16): Enumeration [1,2,4,5,6,11] value: 1
+NoiseReduction            (d01c rw u16): Enumeration [0,4096,8192,12288,16384,20480,24576,28672,32768] value: 8192
+FaceDetectionMode         (d020 rw u16): Enumeration [2] value: 2
+RawCompression            (d022 rw u16): Enumeration [1,2,3] value: 2
+GrainEffect               (d023 rw u16): Enumeration [1,2,3,4,5] value: 6
+SetEyeAFMode              (d024 rw u16): Enumeration [1] value: 1
+FocusPoints               (d025 rw u16): Enumeration [3,4] value: 3
+MFAssistMode              (d026 rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12] value: 1
+InterlockAEAFArea         (d027 rw u16): Enumeration [1,2] value: 1
+CommandDialMode           (d028 rw u16): Enumeration [1,2] value: 1
+Shadowing                 (d029 rw u16): Enumeration [1,2,3] value: 1
+ExposureIndex             (d02a rw u16): Enumeration [32769] value: 32769
+MovieISO                  (d02b rw u16): Enumeration [32769] value: 32769
+[Unknown Property]        (d02d rw u16): Enumeration [32769] value: 32769
+WideDynamicRange          (d02e rw u16): Enumeration [0] value: 0
+[Unknown Property]        (d030 rw u16): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d031 rw i16): Range [0 - 0, step 10] value: 0
+[Unknown Property]        (d032 rw i16): Range [0 - 0, step 10] value: 0
+[Unknown Property]        (d033 ro u16): Enumeration [] value: 1
+[Unknown Property]        (d034 ro u16): Enumeration [] value: 1
+[Unknown Property]        (d035 ro u16): Enumeration [] value: 1
+[Unknown Property]        (d036 ro u16): Enumeration [] value: 1
+[Unknown Property]        (d037 rw u16): Enumeration [1,2,3,4,5,6,7] value: 1
+[Unknown Property]        (d038 ro u32): Range [0 - 0, step 0] value: 512
+[Unknown Property]        (d039 rw u32): Enumeration [65536,1,131072,2,524288,8,16,16777216,256,33554432,512,67108864,1024,134217728,2048,268435456,4096,196611,131075,3] value: 0
+[Unknown Property]        (d040 rw u32): Range [0 - 4294967295, step 1] value: 0
+Comment                   (d100 rw str): ''
+BlackImageTone            (d104 rw i16): Range [0 - 0, step 10] value: 0
+FrameGuideMode            (d106 rw u16): Enumeration [1,2,3] value: 1
+ShutterPriorityMode1      (d10a rw u16): Enumeration [1,2] value: 1
+ShutterPriorityMode2      (d10b rw u16): Enumeration [1,2] value: 2
+AFIlluminator             (d112 rw u16): Enumeration [1,2] value: 2
+FunctionLock              (d136 rw u16): Enumeration [1,2,3] value: 1
+Password                  (d145 rw str): '0000'
+FirmwareVersion           (d153 ro u16): 545
+ShotCount                 (d154 rw u32): Range [0 - 4294967295, step 1] value: 1363
+ShutterExchangeCount      (d155 ro u32): Range [0 - 0, step 0] value: 0
+[Unknown Property]        (d156 ro u16): 280
+WorldClock                (d157 rw u16): Enumeration [1,2] value: 1
+TimeDifference1           (d158 rw i16): Range [-23 - 23, step 1] value: 1
+TimeDifference2           (d159 rw u16): Enumeration [0,15,30,45] value: 0
+Language                  (d15a rw u16): Enumeration [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34] value: 1
+FrameNumberSequence       (d15b rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d16d rw u32): Range [0 - 4294967295, step 1] value: 928
+[Unknown Property]        (d16e ro u16): Range [0 - 0, step 0] value: 5
+CropMode                  (d16f rw u16): Enumeration [0,1,32769] value: 32768
+LensZoomPos               (d170 rw u16): Range [1 - 1, step 0] value: 1
+FocusPosition             (d171 rw i16): Enumeration [-40,22177,528,528,54,3] value: -30
+LiveViewImageQuality      (d173 rw u16): Enumeration [1,3] value: 1
+LiveViewImageSize         (d174 rw u16): Enumeration [1,2,3] value: 2
+[Unknown Property]        (d17b rw u16): Enumeration [1] value: 1
+CropAreaFrameInfo         (d17e ro str): ''
+ResetSetting              (d17f rw u16): Enumeration [1,2,4,5,7,6] value: 4
+[Unknown Property]        (d180 -- ---): PTP error 201b on query
+[Unknown Property]        (d181 -- ---): PTP error 2019 on query
+[Unknown Property]        (d182 rw i16): Range [-1 - 999, step 1] value: 0
+[Unknown Property]        (d188 rw u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d189 rw u16): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d18a rw str): Enumeration [
+	
+	] value: ''
+[Unknown Property]        (d18b rw str): '512,512,4,1,'
+[Unknown Property]        (d18c rw u16): Enumeration [1,2,3,4,5,6] value: 1
+[Unknown Property]        (d18d rw str): ''
+[Unknown Property]        (d1b0 rw str): '0x00000000,0x00,'
+[Unknown Property]        (d1b1 rw str): ''
+[Unknown Property]        (d1b2 rw u16): Enumeration [7] value: 7
+[Unknown Property]        (d1b4 -- ---): PTP error 201b on query
+[Unknown Property]        (d1b5 -- ---): PTP error 201b on query
+[Unknown Property]        (d1b6 rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d1b7 rw u16): Enumeration [1,2,3,4,5] value: 4
+[Unknown Property]        (d1bc rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d1bd rw u16): Enumeration [1] value: 1
+[Unknown Property]        (d1be ro u16): Enumeration [] value: 2
+[Unknown Property]        (d1c1 ro str): ',,'
+[Unknown Property]        (d1c2 rw str): Range ['1,1' - '13,9', step '2,2'] value: '5,3'
+[Unknown Property]        (d1c3 rw str): Range ['1,1' - '13,9', step '2,2'] value: '7,3'
+[Unknown Property]        (d1c4 rw str): Range ['1,1' - '13,9', step '2,2'] value: '7,1'
+[Unknown Property]        (d1c5 -- ---): PTP error 2002 on query
+[Unknown Property]        (d1c6 ro u16): Enumeration [] value: 1
+ReleaseMode               (d201 rw u16): Enumeration [4] value: 4
+PriorityMode              (d207 rw u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d208 rw u16): Enumeration [512,4,772,1280,12,32768,40960,6,36864,2,37120,1,37632,5,14,37376,64] value: 772
+AFStatus                  (d209 ro u16): Enumeration [] value: 4
+[Unknown Property]        (d20a ro u16): Enumeration [] value: 1
+DeviceName                (d20b rw str): ''
+MediaRecord               (d20c rw u16): Enumeration [1,2,3,4] value: 4
+MediaCapacity             (d20d ro str): '0,16,681627648,9,0,16,497843200,9,0,0,0,0'
+FreeSDRAMImages           (d20e ro u16): Range [0 - 0, step 0] value: 27
+MediaStatus               (d211 ro u16): Range [0 - 0, step 0] value: 257
+CurrentState              (d212 -- ---): PTP error 201b on query
+Copyright                 (d215 rw str): ''
+Copyright2                (d216 rw str): ''
+[Unknown Property]        (d21c rw u16): Enumeration [0] value: 4
+[Unknown Property]        (d21d ro u16): Range [0 - 0, step 0] value: 100
+SensitivityFineTune1      (d222 rw u16): Range [0 - 65535, step 1] value: 8192
+SensitivityFineTune2      (d223 rw u16): Range [0 - 65535, step 1] value: 8192
+[Unknown Property]        (d224 ro u16): Range [0 - 0, step 0] value: 256
+[Unknown Property]        (d225 rw str): Enumeration [
+	'1,2,',
+	'2,2,'
+	] value: '1,2,'
+[Unknown Property]        (d226 ro str): '1024,1013,1024,0,0,0,'
+[Unknown Property]        (d227 ro str): '?0,'
+[Unknown Property]        (d228 rw u16): Enumeration [1,2,3,4] value: 1
+CaptureRemaining          (d229 -- ---): PTP error 2002 on query
+MovieRemainingTime        (d22a -- ---): PTP error 2002 on query
+[Unknown Property]        (d22b -- ---): PTP error 2002 on query
+[Unknown Property]        (d22c -- ---): PTP error 2002 on query
+[Unknown Property]        (d22d -- ---): PTP error 2002 on query
+[Unknown Property]        (d22e ro u16): Enumeration [] value: 1
+[Unknown Property]        (d22f -- ---): PTP error 201b on query
+ForceMode                 (d230 rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d231 rw u16): Enumeration [] value: 0
+[Unknown Property]        (d232 rw u16): Enumeration [1,2,3,4,5,6] value: 1
+[Unknown Property]        (d233 rw str): Range ['0,0,0' - '0,0,0', step '0,0,0'] value: '2,0,1'
+[Unknown Property]        (d234 rw u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d235 -- ---): PTP error 201b on query
+[Unknown Property]        (d236 ro u16): Enumeration [] value: 1
+[Unknown Property]        (d237 rw str): 'Ingmar Rieger'
+[Unknown Property]        (d238 rw u16): Enumeration [1,2,3] value: 2
+[Unknown Property]        (d23a rw u32): Range [0 - 755, step 1] value: 755
+[Unknown Property]        (d23b rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d23c rw u16): Enumeration [2,1] value: 1
+[Unknown Property]        (d23e rw u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d23f ro u32): Range [0 - 0, step 0] value: 771
+ShutterSpeed2             (d240 -- ---): PTP error 2002 on query
+ImageAspectRatio          (d241 -- ---): PTP error 2002 on query
+BatteryLevel              (d242 -- ---): PTP error 2002 on query
+[Unknown Property]        (d243 -- ---): PTP error 2002 on query
+[Unknown Property]        (d244 -- ---): PTP error 2002 on query
+[Unknown Property]        (d245 -- ---): PTP error 2002 on query
+[Unknown Property]        (d246 -- ---): PTP error 2002 on query
+[Unknown Property]        (d247 -- ---): PTP error 2002 on query
+[Unknown Property]        (d248 -- ---): PTP error 2002 on query
+[Unknown Property]        (d249 -- ---): PTP error 2002 on query
+[Unknown Property]        (d24a -- ---): PTP error 2002 on query
+[Unknown Property]        (d24b -- ---): PTP error 2002 on query
+[Unknown Property]        (d24c -- ---): PTP error 2002 on query
+[Unknown Property]        (d24d -- ---): PTP error 2002 on query
+[Unknown Property]        (d24e -- ---): PTP error 2002 on query
+[Unknown Property]        (d24f -- ---): PTP error 2002 on query
+[Unknown Property]        (d250 -- ---): PTP error 2002 on query
+[Unknown Property]        (d251 -- ---): PTP error 2002 on query
+[Unknown Property]        (d252 -- ---): PTP error 2002 on query
+[Unknown Property]        (d253 -- ---): PTP error 2002 on query
+[Unknown Property]        (d254 -- ---): PTP error 2002 on query
+[Unknown Property]        (d255 -- ---): PTP error 2002 on query
+[Unknown Property]        (d256 -- ---): PTP error 2002 on query
+[Unknown Property]        (d257 -- ---): PTP error 2002 on query
+[Unknown Property]        (d258 -- ---): PTP error 2002 on query
+[Unknown Property]        (d259 -- ---): PTP error 2002 on query
+[Unknown Property]        (d25a -- ---): PTP error 2002 on query
+[Unknown Property]        (d25b -- ---): PTP error 2002 on query
+[Unknown Property]        (d25c -- ---): PTP error 2002 on query
+[Unknown Property]        (d25d -- ---): PTP error 2002 on query
+[Unknown Property]        (d25e -- ---): PTP error 2002 on query
+[Unknown Property]        (d260 rw u16): Enumeration [1,2,3,4,5,6] value: 1
+[Unknown Property]        (d261 rw u16): Enumeration [1,2,3,4,5,6] value: 1
+[Unknown Property]        (d262 rw u16): Range [257 - 1542, step 1] value: 257
+[Unknown Property]        (d263 -- ---): PTP error 2002 on query
+[Unknown Property]        (d264 -- ---): PTP error 2002 on query
+[Unknown Property]        (d265 -- ---): PTP error 2002 on query
+[Unknown Property]        (d266 -- ---): PTP error 2002 on query
+[Unknown Property]        (d267 -- ---): PTP error 2002 on query
+[Unknown Property]        (d268 -- ---): PTP error 2002 on query
+[Unknown Property]        (d269 -- ---): PTP error 2002 on query
+[Unknown Property]        (d26a -- ---): PTP error 2002 on query
+[Unknown Property]        (d26b -- ---): PTP error 2002 on query
+[Unknown Property]        (d26c -- ---): PTP error 2002 on query
+[Unknown Property]        (d26d -- ---): PTP error 2002 on query
+[Unknown Property]        (d26e -- ---): PTP error 2002 on query
+[Unknown Property]        (d26f -- ---): PTP error 2002 on query
+[Unknown Property]        (d270 -- ---): PTP error 2002 on query
+[Unknown Property]        (d271 -- ---): PTP error 2002 on query
+[Unknown Property]        (d272 -- ---): PTP error 2002 on query
+[Unknown Property]        (d273 -- ---): PTP error 2002 on query
+[Unknown Property]        (d274 -- ---): PTP error 2002 on query
+[Unknown Property]        (d275 -- ---): PTP error 2002 on query
+[Unknown Property]        (d276 -- ---): PTP error 2002 on query
+[Unknown Property]        (d277 -- ---): PTP error 2002 on query
+[Unknown Property]        (d278 -- ---): PTP error 2002 on query
+[Unknown Property]        (d279 -- ---): PTP error 2002 on query
+[Unknown Property]        (d27a -- ---): PTP error 2002 on query
+[Unknown Property]        (d27b -- ---): PTP error 2002 on query
+[Unknown Property]        (d27c -- ---): PTP error 2002 on query
+[Unknown Property]        (d27d -- ---): PTP error 2002 on query
+[Unknown Property]        (d27e -- ---): PTP error 2002 on query
+[Unknown Property]        (d27f -- ---): PTP error 2002 on query
+[Unknown Property]        (d280 -- ---): PTP error 2002 on query
+[Unknown Property]        (d281 -- ---): PTP error 2002 on query
+[Unknown Property]        (d282 -- ---): PTP error 2002 on query
+[Unknown Property]        (d283 -- ---): PTP error 2002 on query
+[Unknown Property]        (d284 -- ---): PTP error 2002 on query
+[Unknown Property]        (d285 -- ---): PTP error 2002 on query
+[Unknown Property]        (d286 -- ---): PTP error 2002 on query
+[Unknown Property]        (d287 -- ---): PTP error 2002 on query
+[Unknown Property]        (d288 -- ---): PTP error 2002 on query
+[Unknown Property]        (d289 -- ---): PTP error 2002 on query
+[Unknown Property]        (d28a -- ---): PTP error 2002 on query
+[Unknown Property]        (d28b -- ---): PTP error 2002 on query
+[Unknown Property]        (d28c -- ---): PTP error 2002 on query
+[Unknown Property]        (d28d -- ---): PTP error 2002 on query
+[Unknown Property]        (d28e -- ---): PTP error 2002 on query
+[Unknown Property]        (d28f -- ---): PTP error 2002 on query
+[Unknown Property]        (d290 -- ---): PTP error 2002 on query
+[Unknown Property]        (d291 -- ---): PTP error 2002 on query
+[Unknown Property]        (d292 -- ---): PTP error 2002 on query
+[Unknown Property]        (d293 -- ---): PTP error 2002 on query
+[Unknown Property]        (d294 -- ---): PTP error 2002 on query
+[Unknown Property]        (d297 rw u16): Enumeration [4,3,2,1] value: 1
+[Unknown Property]        (d298 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a0 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a1 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a2 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a3 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a4 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a5 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a6 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a7 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a8 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2a9 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2aa -- ---): PTP error 2002 on query
+[Unknown Property]        (d2ab -- ---): PTP error 2002 on query
+[Unknown Property]        (d2ac -- ---): PTP error 2002 on query
+[Unknown Property]        (d2b1 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2b2 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2b3 -- ---): PTP error 2002 on query
+[Unknown Property]        (d304 rw u16): Enumeration [1,3,4,5,6,7] value: 1
+[Unknown Property]        (d305 rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d306 rw u32): Range [0 - 58316, step 1] value: 0
+[Unknown Property]        (d307 rw u16): Enumeration [1,2] value: 1
+TotalShotCount            (d310 rw u32): Range [0 - 4294967295, step 1] value: 1363
+HighLightTone             (d320 rw i16): Range [-20 - 40, step 5] value: 0
+ShadowTone                (d321 rw i16): Range [-20 - 40, step 5] value: 0
+LongExposureNR            (d322 rw u16): Enumeration [1,2] value: 1
+FullTimeManualFocus       (d323 rw u16): Enumeration [1,2] value: 2
+ViewMode1                 (d33f rw u16): Enumeration [1,2,3,4,5] value: 5
+LensISSwitch              (d346 rw u16): Enumeration [2] value: 2
+Focus Point               (d347 rw str): Range ['-6,-4,1' - '6,4,6', step '1,1,1'] value: '1,1,2'
+InstantAFMode             (d34a rw u16): Enumeration [1,2] value: 1
+PreAFMode                 (d34b rw u16): Enumeration [2] value: 2
+LMOMode                   (d34d rw u16): Enumeration [1,2] value: 1
+LockButtonMode            (d34e rw u16): Enumeration [1,2] value: 1
+ISMode                    (d351 rw u16): Enumeration [1,2,3] value: 1
+DateTimeDispFormat        (d352 rw u16): Enumeration [1,2,3] value: 1
+ExposurePreview           (d359 rw u16): Enumeration [1,2,3] value: 1
+FocusCheckMode            (d35e rw u16): Enumeration [1,2] value: 2
+FocusScaleUnit            (d35f rw u16): Enumeration [1,2] value: 1
+CustomAutoPowerOff        (d364 rw u16): Range [0 - 255, step 1] value: 0
+FileNamePrefix1           (d365 rw str): 'DSCF'
+FileNamePrefix2           (d366 rw str): 'DSF'
+[Unknown Property]        (d368 rw u16): Range [0 - 255, step 1] value: 0
+[Unknown Property]        (d369 rw u16): Enumeration [1,3] value: 1
+BatteryInfo1              (d36a ro u32): Range [0 - 0, step 0] value: 12
+BatteryInfo2              (d36b ro str): '100,0,0'
+LensNameAndSerial         (d36d ro str): 'LR104A,GF110mmF2 R LM WR,XXXXXXXX'
+CustomDispInfo            (d36e rw u32): Range [0 - 4286578685, step 1] value: 2088763368
+FunctionLockCategory1     (d36f rw u32): Range [0 - 3203407871, step 1] value: 128
+FunctionLockCategory2     (d370 rw u32): Range [0 - 3624140669, step 1] value: 0
+FocusArea1                (d372 rw str): Range ['-6,-4,1' - '6,4,6', step '1,1,1'] value: '1,1,2'
+FocusArea3                (d374 rw str): Range ['-6,-4,1' - '6,4,6', step '1,1,1'] value: '1,1,2'
+FrameGuideGridInfo1       (d375 rw str): '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+FrameGuideGridInfo2       (d376 rw str): '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+[Unknown Property]        (d381 rw u16): Enumeration [1,2,3,4,5,6] value: 2
+LensUnknownData           (d38a ro u16): Enumeration [] value: 1
+[Unknown Property]        (d38b ro u16): Enumeration [] value: 1
+LensZoomPosCaps           (d38c rw u16): Range [1 - 1, step 1] value: 1
+LensFNumberList           (d38d ro str): '200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200'
+LensFocalLengthList       (d38e ro str): '11000,8700'
+FocusArea4                (d395 rw str): Range ['-6,-4,1' - '6,4,6', step '1,1,1'] value: '1,1,2'
+Exposure Time             (500d rw u32): Enumeration [244,307,387,488,615,775,976,1230,1550,1953,2460,3100,3906,4921,6200,7812,9843,12401,15625,19686,24803,31250,39372,49606,62500,78745,99212,125000,157490,198425,250000,314980,396850,500000,629960,793700,1000000,1259921,1587401,2000000,2519842,3174802,4000000,5039684,6349604,8000000,10079368,12699208,16000000,20158736,25398416,32000000,40317473,50796833,64000000,64000030,64000060,64000090,64000120,64000150,64000180,4294967295] value: 0.098 sec (9843)
+F-Number                  (5007 rw u16): Enumeration [200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/5 (500)
+LensZoomPosCaps           (d38c rw u16): Range [1 - 1, step 1] value: 1
+FocusPosition             (d171 rw i16): Enumeration [-40,22177,528,528,54,3] value: -30
+[Unknown Property]        (d21c rw u16): Enumeration [0] value: 4
+Focus Point               (d347 rw str): Range ['-6,-4,1' - '6,4,6', step '1,1,1'] value: '1,1,2'
+LensZoomPos               (d170 rw u16): Range [1 - 1, step 0] value: 1
+BatteryLevel              (d242 -- ---): PTP error 2002 on query
+LiveViewImageSize         (d174 rw u16): Enumeration [1,2,3] value: 2
+VideoOutOnOff             (d168 -- ---): PTP error 200a on query
+LiveViewImageQuality      (d173 rw u16): Enumeration [1,3] value: 1
+ForceMode                 (d230 rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d16e ro u16): Range [0 - 0, step 0] value: 5
+FocusArea1                (d372 rw str): Range ['-6,-4,1' - '6,4,6', step '1,1,1'] value: '1,1,2'
+FaceDetectionMode         (d020 rw u16): Enumeration [2] value: 2
+RawCompression            (d022 rw u16): Enumeration [1,2,3] value: 2
+GrainEffect               (d023 rw u16): Enumeration [1,2,3,4,5] value: 6
+SetEyeAFMode              (d024 rw u16): Enumeration [1] value: 1
+FocusPoints               (d025 rw u16): Enumeration [3,4] value: 3
+MFAssistMode              (d026 rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12] value: 1
+InterlockAEAFArea         (d027 rw u16): Enumeration [1,2] value: 1
+Shadowing                 (d029 rw u16): Enumeration [1,2,3] value: 1
+CropMode                  (d16f rw u16): Enumeration [0,1,32769] value: 32768
+TNumber                   (d02f -- ---): PTP error 200a on query
+FocusArea4                (d395 rw str): Range ['-6,-4,1' - '6,4,6', step '1,1,1'] value: '1,1,2'
+HighLightTone             (d320 rw i16): Range [-20 - 40, step 5] value: 0
+ShadowTone                (d321 rw i16): Range [-20 - 40, step 5] value: 0
+LongExposureNR            (d322 rw u16): Enumeration [1,2] value: 1
+FullTimeManualFocus       (d323 rw u16): Enumeration [1,2] value: 2
+LensISSwitch              (d346 rw u16): Enumeration [2] value: 2
+InstantAFMode             (d34a rw u16): Enumeration [1,2] value: 1
+PreAFMode                 (d34b rw u16): Enumeration [2] value: 2
+LMOMode                   (d34d rw u16): Enumeration [1,2] value: 1
+ISMode                    (d351 rw u16): Enumeration [1,2,3] value: 1
+FocusCheckMode            (d35e rw u16): Enumeration [1,2] value: 2
+LiveViewImageQuality      (d173 rw u16): Enumeration [1,3] value: 1
+FileNamePrefix1           (d365 rw str): 'DSCF'
+FileNamePrefix2           (d366 rw str): 'DSF'
+FocusArea3                (d374 rw str): Range ['-6,-4,1' - '6,4,6', step '1,1,1'] value: '1,1,2'
+TotalShotCount            (d310 rw u32): Range [0 - 4294967295, step 1] value: 1363
+ExposurePreview           (d359 rw u16): Enumeration [1,2,3] value: 1
+FrameGuideGridInfo1       (d375 rw str): '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+FrameGuideGridInfo2       (d376 rw str): '0,0,0,0,850,0,0,0,0,850,0,0,0,0,'
+CustomDispInfo            (d36e rw u32): Range [0 - 4286578685, step 1] value: 2088763368
+ViewMode1                 (d33f rw u16): Enumeration [1,2,3,4,5] value: 5
+CustomAutoPowerOff        (d364 rw u16): Range [0 - 255, step 1] value: 0
+LockButtonMode            (d34e rw u16): Enumeration [1,2] value: 1
+WideDynamicRange          (d02e rw u16): Enumeration [0] value: 0
+LensNameAndSerial         (d36d ro str): 'LR104A,GF110mmF2 R LM WR,46C00292'
+LensUnknownData           (d38a ro u16): Enumeration [] value: 1
+BatteryInfo1              (d36a ro u32): Range [0 - 0, step 0] value: 12
+BatteryInfo2              (d36b ro str): '100,0,0'
+FunctionLockCategory1     (d36f rw u32): Range [0 - 3203407871, step 1] value: 128
+FunctionLockCategory2     (d370 rw u32): Range [0 - 3624140669, step 1] value: 0
+SensitivityFineTune1      (d222 rw u16): Range [0 - 65535, step 1] value: 8192
+SensitivityFineTune2      (d223 rw u16): Range [0 - 65535, step 1] value: 8192
+LensZoomPosCaps           (d38c rw u16): Range [1 - 1, step 1] value: 1
+LensFNumberList           (d38d ro str): '200,220,250,280,320,360,400,450,500,560,640,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200'
+LensFocalLengthList       (d38e ro str): '11000,8700'
+[Unknown Property]        (d17b rw u16): Enumeration [1] value: 1
+Exposure Bias Compensation (5010 rw i16): Enumeration [0] value: 0.0 stops (0)
+CommandDialMode           (d028 rw u16): Enumeration [1,2] value: 1
+ExposureIndex             (d02a rw u16): Enumeration [32769] value: 32769
+MovieISO                  (d02b rw u16): Enumeration [32769] value: 32769
+[Unknown Property]        (d02d rw u16): Enumeration [32769] value: 32769
+[Unknown Property]        (d156 ro u16): 280
+[Unknown Property]        (d16b -- ---): PTP error 200a on query
+StandbyMode               (d176 -- ---): PTP error 200a on query
+[Unknown Property]        (d17b rw u16): Enumeration [1] value: 1
+ResetSetting              (d17f rw u16): Enumeration [1,2,4,5,7,6] value: 4
+[Unknown Property]        (d208 rw u16): Enumeration [512,4,772,1280,12,32768,40960,6,36864,2,37120,1,37632,5,14,37376,64] value: 772
+[Unknown Property]        (d21c rw u16): Enumeration [0] value: 4
+

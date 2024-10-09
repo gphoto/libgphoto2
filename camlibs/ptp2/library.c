@@ -2717,6 +2717,8 @@ static struct {
 	{"Fuji:Fujifilm X-H2",			0x04cb, 0x02f2, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/888 */
 	{"Fuji:Fujifilm X-T5",			0x04cb, 0x02fc, PTP_CAP|PTP_CAP_PREVIEW},
+	/* via email */
+	{"Fuji:Fujifilm GFX100 II",		0x04cb, 0x02fe, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/964 */
 	{"Fuji:Fujifilm X100VI",		0x04cb, 0x0305, 0},
 
