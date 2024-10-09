@@ -4482,11 +4482,13 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 				break;
 			case PTP_EOSEvent_ObjectRemoved:
 				GP_LOG_D ("object removed: handle 0x%x", event.u.object.Handle);
+				ptp_free_objectinfo(&event.u.object);
 				ptp_remove_object_from_cache(params, event.u.object.Handle);
 				gp_filesystem_reset (camera->fs);
 				break;
 			case PTP_EOSEvent_ObjectAdded: {
 				GP_LOG_D ("object added: handle 0x%x, name %s", event.u.object.Handle, event.u.object.Filename);
+				ptp_free_objectinfo(&event.u.object);
 				/* just add it to the filesystem, and return in CameraPath */
 
 				/* We have some form of objectinfo in event.u.object already, but we let the
@@ -6631,7 +6633,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				case PTP_EOSEvent_ObjectTransfer:
 					GP_LOG_D ("object transfer requested: handle 0x%x, name %s, size %lu",
 					          eos_event.u.object.Handle, eos_event.u.object.Filename, eos_event.u.object.ObjectSize);
-					free (eos_event.u.object.Filename);
+					ptp_free_objectinfo(&eos_event.u.object);
 
 					C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 					strcpy (path->folder,"/");
@@ -6710,6 +6712,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					return GP_OK;
 				case PTP_EOSEvent_ObjectContentChanged: {
 					GP_LOG_D ("object content changed: handle 0x%x", eos_event.u.object.Handle);
+					ptp_free_objectinfo(&eos_event.u.object);
 					/* It might have gone away in the meantime */
 					PTPObject *ob;
 					if (PTP_RC_OK != ptp_object_want(params, eos_event.u.object.Handle, PTPOBJECT_OBJECTINFO_LOADED, &ob))
@@ -6732,6 +6735,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				case PTP_EOSEvent_ObjectAdded:
 				case PTP_EOSEvent_ObjectInfoChanged: {
 					GP_LOG_D ("object added: handle 0x%x, name %s", eos_event.u.object.Handle, eos_event.u.object.Filename);
+					ptp_free_objectinfo(&eos_event.u.object);
 					PTPObject	*ob;
 					if (	(eos_event.type == PTP_EOSEvent_ObjectInfoChanged) &&
 						(PTP_RC_OK != ptp_object_find (params, eos_event.u.object.Handle, &ob))
