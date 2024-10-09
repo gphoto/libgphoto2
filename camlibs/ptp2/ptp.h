@@ -150,12 +150,6 @@ struct _PTPUSBEventContainer {
 };
 typedef struct _PTPUSBEventContainer PTPUSBEventContainer;
 
-struct _PTPCanon_directtransfer_entry {
-	uint32_t	handle;
-	char		*str;
-};
-typedef struct _PTPCanon_directtransfer_entry PTPCanon_directtransfer_entry;
-
 /* USB container types */
 
 #define PTP_USB_CONTAINER_UNDEFINED		0x0000
@@ -4222,13 +4216,25 @@ uint16_t ptp_ek_sendfileobject_from_handler	(PTPParams* params, PTPDataHandler*,
 				uint32_t size);
 
 /* Canon PTP extensions */
+#if 0
+/* Disabled / unused code */
+
+struct _PTPCanon_directtransfer_entry {
+	uint32_t	handle;
+	char		*str;
+};
+typedef struct _PTPCanon_directtransfer_entry PTPCanon_directtransfer_entry;
+
 #define ptp_canon_9012(params) ptp_generic_no_data(params,0x9012,0)
 uint16_t ptp_canon_gettreeinfo (PTPParams* params, uint32_t* out);
 uint16_t ptp_canon_gettreesize (PTPParams* params, PTPCanon_directtransfer_entry**, unsigned int*cnt);
 uint16_t ptp_canon_getpartialobjectinfo (PTPParams* params, uint32_t handle,
 				uint32_t p2, uint32_t* size, uint32_t* rp2);
-
 uint16_t ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac);
+uint16_t ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* handle);
+uint16_t ptp_canon_get_directory (PTPParams* params, PTPObjectHandles *handles, PTPObjectInfo **oinfos, uint32_t **flags);
+#endif
+
 /**
  * ptp_canon_startshootingmode:
  * params:      PTPParams*
@@ -4465,8 +4471,6 @@ void ptp_canon_eos_free_deviceinfo (PTPCanonEOSDeviceInfo *di);
 #define ptp_canon_eos_end_viewfinder(params) ptp_generic_no_data(params,PTP_OC_CANON_EOS_TerminateViewfinder,0)
 uint16_t ptp_canon_eos_get_viewfinder_image (PTPParams* params, unsigned char **data, unsigned int *size);
 uint16_t ptp_canon_eos_get_viewfinder_image_handler (PTPParams* params, PTPDataHandler*);
-uint16_t ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* handle);
-uint16_t ptp_canon_get_directory (PTPParams* params, PTPObjectHandles *handles, PTPObjectInfo **oinfos, uint32_t **flags);
 /**
  * ptp_canon_setobjectarchive:
  *

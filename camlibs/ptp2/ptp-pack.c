@@ -2677,6 +2677,9 @@ ptp_pack_EK_text(PTPParams *params, PTPEKTextParams *text, unsigned char **data)
 	return len;
 }
 
+#if 0
+/* Disabled / unused code */
+
 #define ptp_canon_dir_version	0x00
 #define ptp_canon_dir_ofc	0x02
 #define ptp_canon_dir_unk1	0x04
@@ -2813,6 +2816,7 @@ ptp_unpack_canon_directory (
 #undef ISOBJECT
 	return PTP_RC_OK;
 }
+#endif
 
 static inline int
 ptp_unpack_ptp11_manifest (
