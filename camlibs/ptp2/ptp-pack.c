@@ -1152,9 +1152,9 @@ ptp_pack_OPL (PTPParams *params, MTPObjectProp *props, int nrofprops, unsigned c
 	totalsize = sizeof(uint32_t); /* 4 bytes to store the number of elements */
 	propitr = props;
 	while (nrofprops-- && noitems < MAX_MTP_PROPS) {
-		/* Object Handle */
+		/* ObjectHandle */
 		packedobjecthandles[noitems]=propitr->ObjectHandle;
-		totalsize += sizeof(uint32_t); /* Object ID */
+		totalsize += sizeof(uint32_t);
 		/* Metadata type */
 		packedpropsids[noitems]=propitr->PropCode;
 		totalsize += sizeof(uint16_t);
@@ -1176,7 +1176,7 @@ ptp_pack_OPL (PTPParams *params, MTPObjectProp *props, int nrofprops, unsigned c
 
 	/* Copy into a nice packed list */
 	for (i = 0; i < noitems; i++) {
-		/* Object ID */
+		/* ObjectHandle */
 		htod32a(&opldata[bufp],packedobjecthandles[i]);
 		bufp += sizeof(uint32_t);
 		htod16a(&opldata[bufp],packedpropsids[i]);
@@ -1329,7 +1329,7 @@ ptp_unpack_Canon_FE (PTPParams *params, const unsigned char* data, PTPCANONFolde
 
 /*
     PTP Canon EOS Folder Entry unpack
-0: 00 00 08 a0     objectid
+0: 00 00 08 a0     object handle
 4: 01 00 02 00     storageid
 8: 01 30 00 00     ofc
 12: 01 00
@@ -1345,7 +1345,7 @@ ptp_unpack_Canon_FE (PTPParams *params, const unsigned char* data, PTPCANONFolde
 
 (normal PTP GetObjectInfo)
 ObjectInfo for 'IMG_0199.JPG':
-  Object ID: 0x92740c72
+  ObjectHandle: 0x92740c72
   StorageID: 0x00020001
   ObjectFormat: 0x3801
   ProtectionStatus: 0x0000
@@ -1830,7 +1830,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OA_Size);
 			e[i].u.object.Filename      = strdup(((char*)curdata + PTP_cee_OA_Name));
 
-			ptp_debug (params, "%s objectinfo %s oid %08x, parent %08x, ofc %04x, size %ld, filename %s",
+			ptp_debug (params, "%s objectinfo %s: handle %08x, parent %08x, ofc %04x, size %ld, filename %s",
 			           prefix, ec == PTP_EC_CANON_EOS_ObjectAddedEx ? "added" : "changed",
 			           e[i].u.object.Handle, e[i].u.object.ParentObject, e[i].u.object.ObjectFormat,
 			           e[i].u.object.ObjectSize, e[i].u.object.Filename);
@@ -1847,7 +1847,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA64_OFC);
 			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OA64_Size);	/* FIXME: might be 64bit now */
 			e[i].u.object.Filename      = strdup(((char*)curdata + PTP_cee_OA64_Name));
-			ptp_debug (params, "%s objectinfo added oid %08x, parent %08x, ofc %04x, size %ld, filename %s",
+			ptp_debug (params, "%s objectinfo added: handle %08x, parent %08x, ofc %04x, size %ld, filename %s",
 			           prefix, e[i].u.object.Handle, e[i].u.object.ParentObject, e[i].u.object.ObjectFormat,
 			           e[i].u.object.ObjectSize, e[i].u.object.Filename);
 			break;
@@ -1865,7 +1865,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OI_Size);
 			e[i].u.object.Filename      = strdup(((char*)curdata + PTP_cee_OI_Name));
 
-			ptp_debug (params, "%s request object transfer oid %08x, ofc %04x, size %ld, filename %p",
+			ptp_debug (params, "%s request object transfer: handle %08x, ofc %04x, size %ld, filename %s",
 			           prefix, e[i].u.object.Handle, e[i].u.object.ObjectFormat,
 			           e[i].u.object.ObjectSize, e[i].u.object.Filename);
 			break;

@@ -3207,7 +3207,7 @@ ptp_canon_gettreesize (PTPParams* params,
 	if (!*entries)
 		goto error;
 	for (i=0;i<*cnt;i++) {
-		(*entries)[i].oid = dtoh32o(data, offset);
+		(*entries)[i].handle = dtoh32o(data, offset);
 		if (!ptp_unpack_string(params, data, &offset, size, &(*entries)[i].str))
 			break;
 	}
@@ -3415,7 +3415,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 	PTPObject		*newobs;
 	PTPObjectHandles	handles;
 
-	ptp_debug (params, "(storage=0x%08x, handle=0x%08x)", storage, handle);
+	ptp_debug (params, "ptp_list_folder(storage=0x%08x, handle=0x%08x)", storage, handle);
 	/* handle=0 is only not read when there is no object in the list yet
 	 * and we do the initial read. */
 	if (!handle && params->objects_len)
@@ -3468,7 +3468,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 				}
 			}
 			if (j == params->objects_len) {
-				ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->objects_len,j);
+				ptp_debug (params, "adding new object: handle 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->objects_len,j);
 				newobs = realloc (params->objects,sizeof(PTPObject)*(params->objects_len+1));
 				if (!newobs) {
 					free (oifs);
@@ -3483,7 +3483,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 				params->objects_len++;
 				changed = 1;
 			} else {
-				ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->objects_len,j);
+				ptp_debug (params, "adding old object: handle 0x%08x (nrofobs=%d,j=%d)", oifs[i].ObjectHandle, params->objects_len,j);
 				ob = &params->objects[(last+j)%params->objects_len];
 				/* for speeding up search */
 				last = (last+j)%params->objects_len;
@@ -3543,17 +3543,18 @@ fallback:
 			}
 		}
 		if (j == params->objects_len) {
-			ptp_debug (params, "adding new objectid 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->objects_len,j);
+			ptp_debug (params, "adding new object: handle 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->objects_len,j);
 			newobs = realloc (params->objects,sizeof(PTPObject)*(params->objects_len+1));
 			if (!newobs) return PTP_RC_GeneralError;
 			params->objects = newobs;
 			memset (&params->objects[params->objects_len],0,sizeof(params->objects[params->objects_len]));
 			params->objects[params->objects_len].oid = handles.Handler[i];
+			params->objects[params->objects_len].oi.Handle = handles.Handler[i];
 			params->objects[params->objects_len].flags = 0;
 			/* root directory list files might return all files, so avoid tagging it */
 			if (handle != PTP_HANDLER_SPECIAL && handle) {
 				ptp_debug (params, "  parenthandle 0x%08x", handle);
-				if (handles.Handler[i] == handle) { /* EOS bug where oid == parent(oid) */
+				if (handles.Handler[i] == handle) { /* EOS bug where handle == parent(handle) */
 					params->objects[params->objects_len].oi.ParentObject = 0;
 				} else {
 					params->objects[params->objects_len].oi.ParentObject = handle;
@@ -3568,7 +3569,7 @@ fallback:
 			params->objects_len++;
 			changed = 1;
 		} else {
-			ptp_debug (params, "adding old objectid 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->objects_len,j);
+			ptp_debug (params, "adding old object: handle 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->objects_len,j);
 			ob = &params->objects[(last+j)%params->objects_len];
 			/* for speeding up search */
 			last = (last+j)%params->objects_len;
@@ -3989,12 +3990,12 @@ error:
 /**
  * ptp_canon_eos_getpartialobject:
  *
- * This retrieves a part of an PTP object which you specify as object id.
+ * This retrieves a part of an PTP object identified by the object handle.
  * The id originates from 0x9116 call.
  * After finishing it, we seem to need to call ptp_canon_eos_enddirecttransfer.
  *
  * params:	PTPParams*
- * 		oid		Object ID
+ * 		handle		ObjectHandle
  * 		offset		The offset where to start the data transfer
  *		xsize		Size in bytes of the transfer to do
  *		data		Pointer that receives the malloc()ed memory of the transfer.
@@ -4003,23 +4004,23 @@ error:
  *
  */
 uint16_t
-ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t oid, uint32_t offset, uint32_t xsize, unsigned char**data)
+ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t handle, uint32_t offset, uint32_t xsize, unsigned char**data)
 {
 	PTPContainer	ptp;
 
-	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetPartialObject, oid, offset, xsize);
+	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetPartialObject, handle, offset, xsize);
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, NULL);
 }
 
 /**
  * ptp_canon_eos_getpartialobjectex:
  *
- * This retrieves a part of an PTP object which you specify as object id.
+ * This retrieves a part of an PTP object identified by the object handle.
  * The id originates from 0x9116 call.
  * After finishing it, we seem to need to call ptp_canon_eos_enddirecttransfer.
  *
  * params:	PTPParams*
- * 		oid		Object ID
+ * 		handle		ObjectHandle
  * 		offset		The offset where to start the data transfer
  *		xsize		Size in bytes of the transfer to do
  *		data		Pointer that receives the malloc()ed memory of the transfer.
@@ -4028,13 +4029,13 @@ ptp_canon_eos_getpartialobject (PTPParams* params, uint32_t oid, uint32_t offset
  *
  */
 uint16_t
-ptp_canon_eos_getpartialobjectex (PTPParams* params, uint32_t oid, uint32_t offset, uint32_t xsize, unsigned char**data)
+ptp_canon_eos_getpartialobjectex (PTPParams* params, uint32_t handle, uint32_t offset, uint32_t xsize, unsigned char**data)
 {
 	PTPContainer	ptp;
 
 /* 5bf19091  00008001  00001000  00000000  */
-/* objectid  offset    size      ? 64bit part ? */
-	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetPartialObjectEx, oid, offset, xsize, 0);
+/* handle    offset    size      ? 64bit part ? */
+	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetPartialObjectEx, handle, offset, xsize, 0);
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, NULL);
 }
 
@@ -4321,11 +4322,11 @@ error:
  *      char* name - path name
  *
  * Return values: Some PTP_RC_* code.
- *      uint32_t *oid - PTP object id.
+ *      uint32_t *handle - PTP object handle.
  *
  **/
 uint16_t
-ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* objectid)
+ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* handle)
 {
 	PTPContainer	ptp;
 	uint16_t	ret;
@@ -4338,7 +4339,7 @@ ptp_canon_get_objecthandle_by_name (PTPParams* params, char* name, uint32_t* obj
 	ptp_pack_string (params, name, data, 0, &len);
 	ret=ptp_transaction (params, &ptp, PTP_DP_SENDDATA, (len+1)*2+1, &data, NULL);
 	free (data);
-	*objectid = ptp.Param1;
+	*handle = ptp.Param1;
 	return ret;
 }
 
@@ -5359,15 +5360,15 @@ ptp_mtp_getobjectpropdesc (
  * This command gets the object properties of an object handle.
  *
  * params:	PTPParams*
- *	uint32_t objectid	- object format code
- *	uint16_t opc		- object prop code
+ *	uint32_t handle	- object handle
+ *	uint16_t opc	- object prop code
  *
  * Return values: Some PTP_RC_* code.
  *
  **/
 uint16_t
 ptp_mtp_getobjectpropvalue (
-	PTPParams* params, uint32_t oid, uint16_t opc,
+	PTPParams* params, uint32_t handle, uint16_t opc,
 	PTPPropValue *value, uint16_t datatype
 ) {
 	PTPContainer	ptp;
@@ -5375,7 +5376,7 @@ ptp_mtp_getobjectpropvalue (
 	unsigned char	*data = NULL;
 	unsigned int	size, offset = 0;
 
-	PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjectPropValue, oid, opc);
+	PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjectPropValue, handle, opc);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (!ptp_unpack_DPV(params, data, &offset, size, value, datatype)) {
 		ptp_debug (params, "ptp_mtp_getobjectpropvalue: unpacking DPV failed");
@@ -5391,15 +5392,15 @@ ptp_mtp_getobjectpropvalue (
  * This command gets the object properties of an object handle.
  *
  * params:	PTPParams*
- *	uint32_t objectid	- object format code
- *	uint16_t opc		- object prop code
+ *	uint32_t handle	- object handle
+ *	uint16_t opc	- object prop code
  *
  * Return values: Some PTP_RC_* code.
  *
  **/
 uint16_t
 ptp_mtp_setobjectpropvalue (
-	PTPParams* params, uint32_t oid, uint16_t opc,
+	PTPParams* params, uint32_t handle, uint16_t opc,
 	PTPPropValue *value, uint16_t datatype
 ) {
 	PTPContainer	ptp;
@@ -5407,7 +5408,7 @@ ptp_mtp_setobjectpropvalue (
 	unsigned char	*data = NULL;
 	uint32_t	size;
 
-	PTP_CNT_INIT(ptp, PTP_OC_MTP_SetObjectPropValue, oid, opc);
+	PTP_CNT_INIT(ptp, PTP_OC_MTP_SetObjectPropValue, handle, opc);
 	size = ptp_pack_DPV(params, value, &data, datatype);
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
 	free(data);
@@ -9549,7 +9550,7 @@ ptp_objects_sort (PTPParams *params)
 	qsort (params->objects, params->objects_len, sizeof(PTPObject), _cmp_ob);
 }
 
-/* Binary search in objects. Needs "objects" to be a sorted by objectid list!  */
+/* Binary search in objects. Needs "objects" to be a sorted by oid!  */
 uint16_t
 ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob)
 {
@@ -9901,7 +9902,7 @@ fallback:	;
 	}
 	if ((ob->flags & want) == want)
 		return PTP_RC_OK;
-	ptp_debug (params, "ptp_object_want: oid 0x%08x, want flags %x, have only %x?", handle, want, ob->flags);
+	ptp_debug (params, "ptp_object_want: handle 0x%08x, want flags %x, have only %x?", handle, want, ob->flags);
 	return PTP_RC_GeneralError;
 }
 

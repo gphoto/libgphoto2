@@ -886,7 +886,7 @@ ptp_getobjectinfo_write(vcamera *cam, ptpcontainer *ptp) {
 		cur = cur->next;
 	}
 	if (!cur) {
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[0]);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object handle 0x%08x", ptp->params[0]);
 		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
 		return 1;
 	}
@@ -1012,7 +1012,7 @@ ptp_getobject_write(vcamera *cam, ptpcontainer *ptp) {
 		cur = cur->next;
 	}
 	if (!cur) {
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[0]);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object handle 0x%08x", ptp->params[0]);
 		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
 		return 1;
 	}
@@ -1046,7 +1046,7 @@ ptp_getthumb_write(vcamera *cam, ptpcontainer *ptp) {
 		cur = cur->next;
 	}
 	if (!cur) {
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[0]);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object handle 0x%08x", ptp->params[0]);
 		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
 		return 1;
 	}
@@ -1215,7 +1215,7 @@ ptp_deleteobject_write(vcamera *cam, ptpcontainer *ptp) {
 		cur = cur->next;
 	}
 	if (!cur) {
-		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object id 0x%08x", ptp->params[0]);
+		gp_log (GP_LOG_ERROR,__FUNCTION__, "invalid object handle 0x%08x", ptp->params[0]);
 		ptp_response(cam,PTP_RC_InvalidObjectHandle,0);
 		return 1;
 	}
