@@ -5475,9 +5475,9 @@ ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPObjectProp **p
 }
 
 uint16_t
-ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPObjectProp **props, int *nrofprops)
+ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPObjectProps *props)
 {
-	return ptp_mtp_getobjectproplist_level(params, handle, 0, props, nrofprops);
+	return ptp_mtp_getobjectproplist_level(params, handle, 0, &props->val, (int*)&props->len);
 }
 
 uint16_t
@@ -5984,12 +5984,11 @@ ptp_free_objectinfo (PTPObjectInfo *oi)
 void
 ptp_free_object (PTPObject *ob)
 {
-	unsigned int i;
 	if (!ob) return;
 
 	ptp_free_objectinfo (&ob->oi);
-	for (i=0;i<ob->mtp_props_len;i++)
-		ptp_destroy_object_prop(&ob->mtp_props[i]);
+	for_each (MTPObjectProp*, prop, ob->mtp_props)
+		ptp_destroy_object_prop(prop);
 	ob->flags = 0;
 }
 
@@ -9489,20 +9488,15 @@ ptp_destroy_object_prop_list(MTPObjectProp *props, int nrofprops)
 MTPObjectProp *
 ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id)
 {
-	unsigned int	i;
-	MTPObjectProp	*prop;
 	PTPObject	*ob;
 	uint16_t	ret;
 
 	ret = ptp_object_find (params, handle, &ob);
 	if (ret != PTP_RC_OK)
 		return NULL;
-	prop = ob->mtp_props;
-	for (i=0;i<ob->mtp_props_len;i++) {
+	for_each (MTPObjectProp*, prop, ob->mtp_props)
 		if (attribute_id == prop->PropCode)
 			return prop;
-		prop++;
-	}
 	return NULL;
 }
 
@@ -9719,9 +9713,6 @@ read64bit:		;
 	if (	(want & PTPOBJECT_MTPPROPLIST_LOADED) &&
 		(!(ob->flags & PTPOBJECT_MTPPROPLIST_LOADED))
 	) {
-		int		nrofprops = 0;
-		MTPObjectProp 	*props = NULL;
-
 		if (params->device_flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST) {
 			want &= ~PTPOBJECT_MTPPROPLIST_LOADED;
 			goto fallback;
@@ -9734,18 +9725,14 @@ read64bit:		;
 
 		ptp_debug (params, "ptp2/mtpfast: reading mtp proplist of %08x", handle);
 		/* We just want this one object, not all at once. */
-		ret = ptp_mtp_getobjectproplist_single (params, handle, &props, &nrofprops);
+		ret = ptp_mtp_getobjectproplist_single (params, handle, &ob->mtp_props);
 		if (ret != PTP_RC_OK)
 			goto fallback;
-		ob->mtp_props = props;
-		ob->mtp_props_len = nrofprops;
 
 		/* Override the ObjectInfo data with data from properties */
 		if (params->device_flags & DEVICE_FLAG_PROPLIST_OVERRIDES_OI) {
-			unsigned int i;
-			MTPObjectProp *prop = ob->mtp_props;
 
-			for (i=0;i<ob->mtp_props_len;i++,prop++) {
+			for_each (MTPObjectProp*, prop, ob->mtp_props) {
 				/* in case we got all subtree objects */
 				if (prop->ObjectHandle != handle) continue;
 

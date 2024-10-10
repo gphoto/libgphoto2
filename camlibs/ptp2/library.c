@@ -8302,7 +8302,6 @@ ptp_mtp_render_metadata (
 	uint16_t ret, *props = NULL;
 	uint32_t propcnt = 0;
 	unsigned int j;
-	MTPObjectProp	*mprops;
 	PTPObject	*ob;
 
 	C_PTP (ptp_object_want (params, handle, PTPOBJECT_MTPPROPLIST_LOADED, &ob));
@@ -8311,15 +8310,12 @@ ptp_mtp_render_metadata (
 	 * retrieval. */
 	C_PTP (ptp_mtp_getobjectpropssupported (params, ofc, &propcnt, &props));
 
-	mprops = ob->mtp_props;
-	if (mprops) { /* use the fast method, without device access since cached.*/
+	if (ob->mtp_props.len) { /* use the fast method, without device access since cached.*/
 		char		propname[256];
 		char		text[256];
 		unsigned int	i, n;
 
-		for (j=0;j<ob->mtp_props_len;j++) {
-			MTPObjectProp		*xpl = &mprops[j];
-
+		for_each (MTPObjectProp*, xpl, ob->mtp_props) {
 			for (i=0;i<ARRAYSIZE(uninteresting_props);i++)
 				if (uninteresting_props[i] == xpl->PropCode)
 					break;

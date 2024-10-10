@@ -3822,6 +3822,8 @@ typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args)
 #endif
 ;
 
+typedef ARRAY_OF(MTPObjectProp) MTPObjectProps;
+
 struct _PTPObject {
 	uint32_t	oid;
 	unsigned int	flags;
@@ -3834,8 +3836,7 @@ struct _PTPObject {
 
 	PTPObjectInfo	oi;
 	uint32_t	canon_flags;
-	MTPObjectProp	*mtp_props;
-	unsigned int	mtp_props_len;
+	MTPObjectProps mtp_props;
 };
 typedef struct _PTPObject PTPObject;
 
@@ -4222,7 +4223,7 @@ uint16_t ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32
 uint16_t ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t formats, uint32_t properties, uint32_t propertygroups, uint32_t level, MTPObjectProp **props, int *nrofprops);
 uint16_t ptp_mtp_getobjectproplist_level (PTPParams* params, uint32_t handle, uint32_t level, MTPObjectProp **props, int *nrofprops);
 uint16_t ptp_mtp_getobjectproplist (PTPParams* params, uint32_t handle, MTPObjectProp **props, int *nrofprops);
-uint16_t ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPObjectProp **props, int *nrofprops);
+uint16_t ptp_mtp_getobjectproplist_single (PTPParams* params, uint32_t handle, MTPObjectProps *props);
 uint16_t ptp_mtp_sendobjectproplist (PTPParams* params, uint32_t* store, uint32_t* parenthandle, uint32_t* handle,
 				     uint16_t objecttype, uint64_t objectsize, MTPObjectProp *props, int nrofprops);
 uint16_t ptp_mtp_setobjectproplist (PTPParams* params, MTPObjectProp *props, int nrofprops);
