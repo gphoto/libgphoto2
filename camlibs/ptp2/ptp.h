@@ -72,6 +72,49 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 
 #define ARRAYSIZE(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))
 
+/* The follow set of macros implements a generic array or list of TYPE.
+ * This is basically a TYPE* pointer and a length integer. This structure
+ * together with the typical use-cases repeats regularly throughout the
+ * codebase. It raises the level of abstraction and improves code
+ * readabilty. axxel is a c++ developer and misses his STL ;)
+ *
+ * A typical life-cycle lookes like this:
+ *
+ * typedef ARRAY_OF(PTPObject) PTPObjects;
+ * PTPObjects objects;
+ * array_append_value(&objects, some_value);
+ * for_each(PTPObject*, pobj, objects)
+ *     pobj->call_some_func();
+ * free_array(&objects);
+ */
+
+#define ARRAY_OF(TYPE) struct ArrayOf##TYPE \
+{ \
+	TYPE *val; \
+	uint32_t len; \
+}
+
+#define free_array(ARRAY) do { \
+	free ((ARRAY)->val); \
+	(ARRAY)->val = 0; \
+	(ARRAY)->len = 0; \
+} while (0)
+
+#define array_append_value(ARRAY, VAL) do { \
+	(ARRAY)->val = reallocarray((ARRAY)->val, (ARRAY)->len + 1, sizeof((ARRAY)->val[0])); \
+	(ARRAY)->val[(ARRAY)->len++] = VAL; \
+} while(0)
+
+#define for_each(TYPE, PTR, ARRAY) \
+	for (TYPE PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)
+
+/* TODO: with support for C23, we can improve the for_each macro by dropping the TYPE argument
+ *     #define for_each(PTR, ARRAY) for (typeof(ARRAY.val) PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)
+ */
+
+typedef ARRAY_OF(uint32_t) ArrayU32;
+
+
 /* USB interface class */
 #ifndef USB_CLASS_PTP
 #define USB_CLASS_PTP			6
@@ -1436,11 +1479,7 @@ typedef struct _PTPDeviceInfo PTPDeviceInfo;
 
 /* PTP storageIDs structute (returned by GetStorageIDs) */
 
-struct _PTPStorageIDs {
-	uint32_t n;
-	uint32_t *Storage;
-};
-typedef struct _PTPStorageIDs PTPStorageIDs;
+typedef ArrayU32 PTPStorageIDs;
 
 /* PTP StorageInfo structure (returned by GetStorageInfo) */
 struct _PTPStorageInfo {
@@ -1469,11 +1508,7 @@ typedef struct _PTPStreamInfo PTPStreamInfo;
 
 /* PTP objecthandles structure (returned by GetObjectHandles) */
 
-struct _PTPObjectHandles {
-	uint32_t n;
-	uint32_t *Handler;
-};
-typedef struct _PTPObjectHandles PTPObjectHandles;
+typedef ArrayU32 PTPObjectHandles;
 
 #define PTP_HANDLER_SPECIAL	0xffffffff
 #define PTP_HANDLER_ROOT	0x00000000

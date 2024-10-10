@@ -372,7 +372,6 @@ camera_canon_eos_update_capture_target(Camera *camera, GPContext *context, int v
 static int
 camera_prepare_canon_eos_capture(Camera *camera, GPContext *context) {
 	PTPParams	*params = &camera->pl->params;
-	PTPStorageIDs	sids;
 	int		tries;
 
 	GP_LOG_D ("preparing EOS capture...");
@@ -440,14 +439,17 @@ skip:
 	ptp_free_deviceinfo (&params->deviceinfo);
 	C_PTP (ptp_getdeviceinfo(params, &params->deviceinfo));
 	CR (fixup_cached_deviceinfo (camera, &params->deviceinfo));
+
+	/* TODO: the following block of code seems to have no effect, remove? */
+	PTPStorageIDs sids;
 	C_PTP (ptp_canon_eos_getstorageids(params, &sids));
-	if (sids.n >= 1) {
+	if (sids.len >= 1) {
 		unsigned char *sdata;
 		unsigned int slen;
-		C_PTP (ptp_canon_eos_getstorageinfo(params, sids.Storage[0], &sdata, &slen ));
+		C_PTP (ptp_canon_eos_getstorageinfo(params, sids.val[0], &sdata, &slen));
 		free (sdata);
 	}
-	free (sids.Storage);
+	free_array(&sids);
 
 	/* FIXME: 9114 call missing here! */
 
