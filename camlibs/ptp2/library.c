@@ -9120,7 +9120,6 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		if (is_mtp_capable (camera) &&
 		    ptp_operation_issupported(params,PTP_OC_MTP_GetObjectPropsSupported)
 		) {
-			uint32_t handle;
 			PTPObject	*ob;
 
 			/* compute storage ID value from folder patch */
