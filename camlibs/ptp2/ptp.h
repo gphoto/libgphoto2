@@ -101,7 +101,7 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 } while (0)
 
 #define array_append_value(ARRAY, VAL) do { \
-	(ARRAY)->val = reallocarray((ARRAY)->val, (ARRAY)->len + 1, sizeof((ARRAY)->val[0])); \
+	(ARRAY)->val = realloc((ARRAY)->val, ((ARRAY)->len + 1) * sizeof((ARRAY)->val[0])); \
 	(ARRAY)->val[(ARRAY)->len++] = VAL; \
 } while(0)
 
