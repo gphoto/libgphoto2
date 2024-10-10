@@ -58,7 +58,7 @@ jobs:
 
       - name: 'Install build requirements (Linux)'
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev
+        run: sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev libltdl-dev
 
       - name: 'Install build requirements (macOS)'
         if: runner.os == 'macOS'
