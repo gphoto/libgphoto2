@@ -2124,7 +2124,7 @@ ptp_free_params (PTPParams *params)
 	for (i=0;i<params->objects_len;i++)
 		ptp_free_object (&params->objects[i]);
 	free (params->objects);
-	free (params->storageids.Storage);
+	free_array (&params->storageids);
 	free (params->events);
 	for (i=0;i<params->canon_props_len;i++) {
 		ptp_free_devicepropdesc (&params->canon_props[i].dpd);
@@ -2156,7 +2156,7 @@ ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetStorageIDs);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_SIDs(params, data, storageids, size);
+	ptp_unpack_ArrayU32(params, data, size, storageids);
 	free(data);
 	return PTP_RC_OK;
 }
@@ -2212,13 +2212,13 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 	unsigned char	*data = NULL;
 	unsigned int	size;
 
-	objecthandles->Handler = NULL;
-	objecthandles->n = 0;
+	objecthandles->val = NULL;
+	objecthandles->len = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetObjectHandles, storage, objectformatcode, associationOH);
 	ret=ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size);
 	if (ret == PTP_RC_OK) {
-		ptp_unpack_OH(params, data, objecthandles, size);
+		ptp_unpack_ArrayU32(params, data, size, objecthandles);
 	} else {
 		if (	(storage == 0xffffffff) &&
 			(objectformatcode == 0) &&
@@ -2227,8 +2227,6 @@ ptp_getobjecthandles (PTPParams* params, uint32_t storage,
 			/* When we query all object handles on all stores and
 			 * get an error -> just handle it as "0 handles".
 			 */
-			objecthandles->Handler = NULL;
-			objecthandles->n = 0;
 			ret = PTP_RC_OK;
 		}
 	}
@@ -3125,8 +3123,8 @@ ptp_canon_get_mac_address (PTPParams* params, unsigned char **mac)
 uint16_t
 ptp_canon_get_directory (PTPParams* params,
 	PTPObjectHandles	*handles,
-	PTPObjectInfo		**oinfos,	/* size(handles->n) */
-	uint32_t		**flags		/* size(handles->n) */
+	PTPObjectInfo		**oinfos,	/* size(handles->len) */
+	uint32_t		**flags		/* size(handles->len) */
 ) {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
@@ -3294,11 +3292,11 @@ ptp_add_events (PTPParams *params, PTPContainer *events, unsigned int count)
 /* FIXME: incomplete ... needs storage mode retrieval support too (storage == 0xffffffff) */
 static uint16_t
 ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
-	unsigned int	k, i, j, last, changed;
+	unsigned int	i, j, last, changed;
 	PTPCANONFolderEntry *tmp = NULL;
 	unsigned int	nroftmp = 0;
 	uint16_t	ret;
-	PTPStorageIDs	storageids;
+	PTPStorageIDs	storageids = {0};
 	PTPObject	*ob;
 
 	if ((handle != 0xffffffff) && (handle != 0)) {
@@ -3314,24 +3312,22 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 		if (ret != PTP_RC_OK)
 			return ret;
 	} else {
-		storageids.n = 1;
-		storageids.Storage = malloc(sizeof(storageids.Storage[0]));
-		storageids.Storage[0] = storage;
+		array_append_value(&storageids, storage);
 	}
 	last = changed = 0;
 
-	for (k=0;k<storageids.n;k++) {
-		if ((storageids.Storage[k] & 0xffff) == 0) {
-			ptp_debug (params, "reading directory, storage 0x%08x skipped (invalid)", storageids.Storage[k]);
+	for_each (uint32_t*, psid, storageids) {
+		if ((*psid & 0xffff) == 0) {
+			ptp_debug (params, "reading directory, storage 0x%08x skipped (invalid)", *psid);
 			continue;
 		}
-		ptp_debug (params, "reading handle %08x directory of 0x%08x", storageids.Storage[k], handle);
+		ptp_debug (params, "reading handle %08x directory of 0x%08x", *psid, handle);
 		tmp = NULL;
 		ret = ptp_canon_eos_getobjectinfoex (
-			  params, storageids.Storage[k], handle ? handle : 0xffffffff, 0x100000, &tmp, &nroftmp);
+			  params, *psid, handle ? handle : 0xffffffff, 0x100000, &tmp, &nroftmp);
 		if (ret != PTP_RC_OK) {
 			ptp_error (params, "error 0x%04x", ret);
-			free (storageids.Storage);
+			free_array (&storageids);
 			return ret;
 		}
 		/* convert read entries into objectinfos */
@@ -3350,7 +3346,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				newobs = realloc (params->objects,sizeof(PTPObject)*(params->objects_len+1));
 				if (!newobs) {
 					free (tmp);
-					free (storageids.Storage);
+					free_array (&storageids);
 					return PTP_RC_GeneralError;
 				}
 				params->objects = newobs;
@@ -3359,7 +3355,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 				params->objects[params->objects_len].oi.Handle = tmp[i].ObjectHandle;
 				params->objects[params->objects_len].flags = 0;
 
-				params->objects[params->objects_len].oi.StorageID = storageids.Storage[k];
+				params->objects[params->objects_len].oi.StorageID = *psid;
 				params->objects[params->objects_len].flags |= PTPOBJECT_STORAGEID_LOADED;
 				params->objects[params->objects_len].oi.ParentObject = handle == 0xffffffff ? 0 : handle;
 				params->objects[params->objects_len].flags |= PTPOBJECT_PARENTOBJECT_LOADED;
@@ -3390,8 +3386,8 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 					ob->oi.ParentObject = handle;
 					ob->flags |= PTPOBJECT_PARENTOBJECT_LOADED;
 				}
-				if (storageids.Storage[k] != PTP_HANDLER_SPECIAL) {
-					ob->oi.StorageID = storageids.Storage[k];
+				if (*psid != PTP_HANDLER_SPECIAL) {
+					ob->oi.StorageID = *psid;
 					ob->flags |= PTPOBJECT_STORAGEID_LOADED;
 				}
 			}
@@ -3406,17 +3402,17 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 		if (ret == PTP_RC_OK)
 			ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
 	}
-	free (storageids.Storage);
+	free_array (&storageids);
 	return PTP_RC_OK;
 }
 
 uint16_t
 ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
-	unsigned int		i, changed, last;
+	unsigned int		changed, last;
 	uint16_t		ret;
 	uint32_t		xhandle = handle;
 	PTPObject		*newobs;
-	PTPObjectHandles	handles;
+	PTPObjectHandles	handles = {0};
 
 	ptp_debug (params, "ptp_list_folder(storage=0x%08x, handle=0x%08x)", storage, handle);
 	/* handle=0 is only not read when there is no object in the list yet
@@ -3534,30 +3530,30 @@ fallback:
 	if (ret != PTP_RC_OK)
 		return ret;
 	last = changed = 0;
-	for (i=0;i<handles.n;i++) {
+	for_each (uint32_t*, phandle, handles) {
 		PTPObject	*ob;
 		unsigned int	j;
 
 		ob = NULL;
 		for (j=0;j<params->objects_len;j++) {
-			if (params->objects[(last+j)%params->objects_len].oid == handles.Handler[i])  {
+			if (params->objects[(last+j)%params->objects_len].oid == *phandle)  {
 				ob = &params->objects[(last+j)%params->objects_len];
 				break;
 			}
 		}
 		if (j == params->objects_len) {
-			ptp_debug (params, "adding new object: handle 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->objects_len,j);
+			ptp_debug (params, "adding new object: handle 0x%08x (nrofobs=%d,j=%d)", *phandle, params->objects_len,j);
 			newobs = realloc (params->objects,sizeof(PTPObject)*(params->objects_len+1));
 			if (!newobs) return PTP_RC_GeneralError;
 			params->objects = newobs;
 			memset (&params->objects[params->objects_len],0,sizeof(params->objects[params->objects_len]));
-			params->objects[params->objects_len].oid = handles.Handler[i];
-			params->objects[params->objects_len].oi.Handle = handles.Handler[i];
+			params->objects[params->objects_len].oid = *phandle;
+			params->objects[params->objects_len].oi.Handle = *phandle;
 			params->objects[params->objects_len].flags = 0;
 			/* root directory list files might return all files, so avoid tagging it */
 			if (handle != PTP_HANDLER_SPECIAL && handle) {
 				ptp_debug (params, "  parenthandle 0x%08x", handle);
-				if (handles.Handler[i] == handle) { /* EOS bug where handle == parent(handle) */
+				if (*phandle == handle) { /* EOS bug where handle == parent(handle) */
 					params->objects[params->objects_len].oi.ParentObject = 0;
 				} else {
 					params->objects[params->objects_len].oi.ParentObject = handle;
@@ -3572,7 +3568,7 @@ fallback:
 			params->objects_len++;
 			changed = 1;
 		} else {
-			ptp_debug (params, "adding old object: handle 0x%08x (nrofobs=%d,j=%d)", handles.Handler[i], params->objects_len,j);
+			ptp_debug (params, "adding old object: handle 0x%08x (nrofobs=%d,j=%d)", *phandle, params->objects_len,j);
 			ob = &params->objects[(last+j)%params->objects_len];
 			/* for speeding up search */
 			last = (last+j)%params->objects_len;
@@ -3586,7 +3582,7 @@ fallback:
 			}
 		}
 	}
-	free (handles.Handler);
+	free_array (&handles);
 	if (changed) ptp_objects_sort (params);
 	return PTP_RC_OK;
 }
@@ -3615,9 +3611,7 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 		/* FIXME: if we just remove 1 out of many storages, we do not need to invalidate/reload the entire tree? */
 
 		/* refetch storage IDs and also invalidate whole object tree */
-		free (params->storageids.Storage);
-		params->storageids.Storage	= NULL;
-		params->storageids.n 		= 0;
+		free_array (&params->storageids);
 		ptp_getstorageids (params, &params->storageids);
 
 		/* free object storage as it might be associated with the storage ids */
@@ -3634,12 +3628,9 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 			ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
 
 		{
-			unsigned int k;
-
-			for (k=0;k<params->storageids.n;k++) {
-				if (!(params->storageids.Storage[k] & 0xffff)) continue;
-				if (params->storageids.Storage[k] == 0x80000001) continue;
-				ptp_list_folder (params, params->storageids.Storage[k], PTP_HANDLER_SPECIAL);
+			for_each (uint32_t*, psid, params->storageids) {
+				if ((*psid & 0xffff) && (*psid != 0x80000001))
+					ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
 			}
 		}
 
@@ -3916,7 +3907,7 @@ ptp_canon_eos_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_EOS_GetStorageIDs);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_SIDs(params, data, storageids, size);
+	ptp_unpack_ArrayU32(params, data, size, storageids);
 	free(data);
 	return PTP_RC_OK;
 }

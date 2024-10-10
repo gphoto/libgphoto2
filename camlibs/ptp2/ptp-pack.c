@@ -345,21 +345,13 @@ ptp_unpack_EOS_DI (PTPParams *params, const unsigned char* data, PTPCanonEOSDevi
 }
 
 /* ObjectHandles array pack/unpack */
-
-static inline void
-ptp_unpack_OH (PTPParams *params, const unsigned char* data, PTPObjectHandles *oh, unsigned int len)
-{
-	uint32_t offset = 0;
-	ptp_unpack_uint32_t_array(params, data, &offset, len, &oh->Handler, &oh->n);
-}
-
 /* StoreIDs array pack/unpack */
 
 static inline void
-ptp_unpack_SIDs (PTPParams *params, const unsigned char* data, PTPStorageIDs *sids, unsigned int len)
+ptp_unpack_ArrayU32 (PTPParams *params, const uint8_t* data, unsigned int data_size, ArrayU32 *array)
 {
 	uint32_t offset = 0;
-	ptp_unpack_uint32_t_array(params, data, &offset, len, &sids->Storage, &sids->n);
+	ptp_unpack_uint32_t_array(params, data, &offset, data_size, &array->val, &array->len);
 }
 
 /* StorageInfo pack/unpack */
@@ -2718,9 +2710,9 @@ ptp_unpack_canon_directory (
 #define ISOBJECT(ptr) (dtoh32a((ptr)+ptp_canon_dir_storageid) == 0xffffffff)
 	for (i=0;i<cnt;i++)
 		if (ISOBJECT(dir+i*0x4c)) nrofobs++;
-	handles->n = nrofobs;
-	handles->Handler = calloc(nrofobs,sizeof(handles->Handler[0]));
-	if (!handles->Handler) return PTP_RC_GeneralError;
+	handles->len = nrofobs;
+	handles->val = calloc(nrofobs,sizeof(handles->val[0]));
+	if (!handles->val) return PTP_RC_GeneralError;
 	*oinfos = calloc(nrofobs,sizeof((*oinfos)[0]));
 	if (!*oinfos) return PTP_RC_GeneralError;
 	*flags  = calloc(nrofobs,sizeof((*flags)[0]));
@@ -2737,7 +2729,7 @@ ptp_unpack_canon_directory (
 		if (!ISOBJECT(cur))
 			continue;
 
-		handles->Handler[curob] = dtoh32a(cur + ptp_canon_dir_objectid);
+		handles->val[curob] = dtoh32a(cur + ptp_canon_dir_objectid);
 		oi->Handle			= dtoh32a(cur + ptp_canon_dir_objectid);
 		oi->StorageID		= 0xffffffff;
 		oi->ObjectFormat	= dtoh16a(cur + ptp_canon_dir_ofc);
@@ -2759,7 +2751,7 @@ ptp_unpack_canon_directory (
 
 		if (ISOBJECT(cur))
 			continue;
-		for (j=0;j<handles->n;j++) if (nextchild == handles->Handler[j]) break;
+		for (j=0;j<handles->n;j++) if (nextchild == handles->val[j]) break;
 		if (j == handles->n) continue;
 		(*oinfos)[j].StorageID = dtoh32a(cur + ptp_canon_dir_storageid);
 	}
@@ -2775,7 +2767,7 @@ ptp_unpack_canon_directory (
 
 			if (!ISOBJECT(cur))
 				continue;
-			for (j=0;j<handles->n;j++) if (oid == handles->Handler[j]) break;
+			for (j=0;j<handles->n;j++) if (oid == handles->val[j]) break;
 			if (j == handles->n) {
 				/*fprintf(stderr,"did not find oid in lookup pass for current oid\n");*/
 				continue;
@@ -2783,7 +2775,7 @@ ptp_unpack_canon_directory (
 	 		storageid = (*oinfos)[j].StorageID;
 			if (storageid == 0xffffffff) continue;
 			if (nextoid != 0xffffffff) {
-				for (j=0;j<handles->n;j++) if (nextoid == handles->Handler[j]) break;
+				for (j=0;j<handles->n;j++) if (nextoid == handles->val[j]) break;
 				if (j == handles->n) {
 					/*fprintf(stderr,"did not find oid in lookup pass for next oid\n");*/
 					continue;
@@ -2794,7 +2786,7 @@ ptp_unpack_canon_directory (
 				}
 			}
 			if (nextchild != 0xffffffff) {
-				for (j=0;j<handles->n;j++) if (nextchild == handles->Handler[j]) break;
+				for (j=0;j<handles->n;j++) if (nextchild == handles->val[j]) break;
 				if (j == handles->n) {
 					/*fprintf(stderr,"did not find oid in lookup pass for next child\n");*/
 					continue;

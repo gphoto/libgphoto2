@@ -4722,21 +4722,20 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 			propval.u16 = xmode = CANON_TRANSFER_CARD;
 
 		if (xmode == CANON_TRANSFER_CARD) {
-			PTPStorageIDs storageids;
+			PTPStorageIDs storageids = {0};
 
 			ret = ptp_getstorageids(params, &storageids);
 			if (ret == PTP_RC_OK) {
-				unsigned int k, stgcnt = 0;
-				for (k=0;k<storageids.n;k++) {
-					if (!(storageids.Storage[k] & 0xffff)) continue;
-					if (storageids.Storage[k] == 0x80000001) continue;
-					stgcnt++;
+				unsigned int stgcnt = 0;
+				for_each (uint32_t*, psid, storageids) {
+					if ((*psid & 0xffff) && (*psid != 0x80000001))
+						stgcnt++;
 				}
 				if (!stgcnt) {
 					GP_LOG_D ("Assuming no CF card present - switching to MEMORY Transfer.");
 					propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 				}
-				free (storageids.Storage);
+				free_array (&storageids);
 			}
 		}
 		LOG_ON_PTP_E (ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16));
@@ -5240,13 +5239,13 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 {
 	PTPParams		*params = &camera->pl->params;
 	PTPPropValue		propval;
-	PTPObjectHandles	handles, beforehandles;
+	PTPObjectHandles	handles = {0}, beforehandles = {0};
 	int			gotone;
 	uint32_t		newobject = 0, newobject2 = 0;
 	PTPContainer		event, newevent;
 	struct timeval		event_start;
 	int			back_off_wait = 0;
-	unsigned int		i, waittime = 35*1000;
+	unsigned int		waittime = 35*1000;
 
 	GP_LOG_D ("camera_fuji_capture");
 
@@ -5388,7 +5387,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			}
 		}
 		if (gotone)  {
-			free (beforehandles.Handler);
+			free_array (&beforehandles);
 			return GP_OK;
 		}
 
@@ -5407,27 +5406,27 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		 * While this is a potential optimization, lets skip it for now.
 		 */
 		newobject = 0;
-		for (i=0;i<handles.n;i++) {
+		for_each (uint32_t*, phandle, handles) {
 			unsigned int 	j;
 			PTPObject	*ob;
 
 			/* look if we saw the objecthandle before capture */
-			for (j=0;j<beforehandles.n;j++)
-				if (beforehandles.Handler[j] == handles.Handler[i])
+			for (j=0;j<beforehandles.len;j++)
+				if (beforehandles.val[j] == *phandle)
 					break;
-			if (j != beforehandles.n)
+			if (j != beforehandles.len)
 				continue;
-			GP_LOG_D ("new object 0x%08x found", handles.Handler[i]);
+			GP_LOG_D ("new object 0x%08x found", *phandle);
 			gotone = 1;
 
-			ret = ptp_object_want (params, handles.Handler[i], PTPOBJECT_OBJECTINFO_LOADED, &ob);
+			ret = ptp_object_want (params, *phandle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 			if (ret != PTP_RC_OK) {
 				GP_LOG_E ("object added, but not found?");
 				continue;
 			}
 			/* A directory was added, like initial DCIM/100NIKON or so. */
 			if (ob->oi.ObjectFormat == PTP_OFC_Association) {
-				GP_LOG_D ("new object 0x%08x is a directory, continuing", handles.Handler[i]);
+				GP_LOG_D ("new object 0x%08x is a directory, continuing", *phandle);
 				continue;
 			}
 			if (newobject) {
@@ -5436,7 +5435,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				event.Param1 = newobject;
 				ptp_add_event (params, &event);
 			}
-			newobject = handles.Handler[i];
+			newobject = *phandle;
 			GP_LOG_D ("newobject 0x%08x, newobject2 0x%08x", newobject, newobject2);
 			/* we found a new file */
 			strcpy  (path->name,  ob->oi.Filename);
@@ -5449,14 +5448,14 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
 			/* we need to proceed to download all images, in cases of RAW+JPG capture */
 		}
-		free (handles.Handler);
+		free_array (&handles);
 
 		if (gotone)  {
-			free (beforehandles.Handler);
+			free_array (&beforehandles);
 			return GP_OK;
 		}
 	}  while (waiting_for_timeout (&back_off_wait, event_start, waittime));
-	free (beforehandles.Handler);
+	free_array (&beforehandles);
 	return GP_ERROR;
 }
 
@@ -5711,7 +5710,7 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path,
 	PTPParams		*params = &camera->pl->params;
 	uint32_t		newobject = 0x0;
 	int			done,tries;
-	PTPObjectHandles	beforehandles;
+	PTPObjectHandles	beforehandles = {0};
 	uint16_t		ptpres;
 
 	/* adjust if we ever do sound or movie capture */
@@ -5861,33 +5860,32 @@ fallback:
 	/* The Nikon way: Does not send AddObject event ... so try to detect it by checking what objects
 	 * were added. */
 	if ((params->deviceinfo.VendorExtensionID==PTP_VENDOR_NIKON) && NIKON_BROKEN_CAP(params)) {
-		PTPObjectHandles	handles;
+		PTPObjectHandles	handles = {0};
 
 		tries = 5;
 		GP_LOG_D ("PTPBUG_NIKON_BROKEN_CAPTURE bug workaround");
 		while (tries--) {
-			unsigned int i;
 			uint16_t ret = ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles);
 			if (ret != PTP_RC_OK)
 				break;
 
-			/* if (handles.n == params->handles.n)
+			/* if (handles.len == params->handles.len)
 			 *	continue;
 			 * While this is a potential optimization, lets skip it for now.
 			 */
 			newobject = 0;
-			for (i=0;i<handles.n;i++) {
+			for_each (uint32_t*, phandle, handles) {
 				unsigned int 	j;
 				PTPObject	*ob;
 
 				/* look if we saw the objecthandle before capture */
-				for (j=0;j<beforehandles.n;j++)
-					if (beforehandles.Handler[j] == handles.Handler[i])
+				for (j=0;j<beforehandles.len;j++)
+					if (beforehandles.val[j] == *phandle)
 						break;
-				if (j != beforehandles.n)
+				if (j != beforehandles.len)
 					continue;
 
-				ret = ptp_object_want (params, handles.Handler[i], PTPOBJECT_OBJECTINFO_LOADED, &ob);
+				ret = ptp_object_want (params, *phandle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 				if (ret != PTP_RC_OK) {
 					GP_LOG_E ("object added, but not found?");
 					continue;
@@ -5895,17 +5893,17 @@ fallback:
 				/* A directory was added, like initial DCIM/100NIKON or so. */
 				if (ob->oi.ObjectFormat == PTP_OFC_Association)
 					continue;
-				newobject = handles.Handler[i];
+				newobject = *phandle;
 				/* we found a new file */
 				break;
 			}
-			free (handles.Handler);
+			free_array (&handles);
 			if (newobject)
 				break;
 			C_PTP_REP (ptp_check_event (params));
 			sleep(1);
 		}
-		free (beforehandles.Handler);
+		free_array (&beforehandles);
 		if (!newobject)
 			GP_LOG_D ("PTPBUG_NIKON_BROKEN_CAPTURE no new file found after 5 seconds?!?");
 		goto out;
@@ -6349,22 +6347,21 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 				propval.u16 = xmode = CANON_TRANSFER_CARD;
 
 			if (xmode == CANON_TRANSFER_CARD) {
-				PTPStorageIDs storageids;
+				PTPStorageIDs storageids = {0};
 
 				ret = ptp_getstorageids(params, &storageids);
 				if (ret == PTP_RC_OK) {
-					unsigned int k, stgcnt = 0;
+					unsigned int stgcnt = 0;
 
-					for (k=0;k<storageids.n;k++) {
-						if (!(storageids.Storage[k] & 0xffff)) continue;
-						if (storageids.Storage[k] == 0x80000001) continue;
-						stgcnt++;
+					for_each (uint32_t*, psid, storageids) {
+						if ((*psid & 0xffff) && (*psid != 0x80000001))
+							stgcnt++;
 					}
 					if (!stgcnt) {
 						GP_LOG_D ("Assuming no CF card present - switching to MEMORY Transfer.");
 						propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 					}
-					free (storageids.Storage);
+					free_array (&storageids);
 				}
 			}
 			LOG_ON_PTP_E (ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16));
@@ -7166,31 +7163,30 @@ sonyout:
 		/* current strategy ... as the camera (currently) does not send us ObjectAdded events for some reason...
 		 * we just synthesize them for the generic PTP event handler code */
 		do {
-			PTPObjectHandles	handles;
-			unsigned int		i;
+			PTPObjectHandles	handles = {0};
 
 			if (ptp_get_one_event (params, &event))
 				goto handleregular;
 			C_PTP (ptp_getobjecthandles (params, PTP_HANDLER_SPECIAL, 0x000000, 0x000000, &handles));
-			for (i=0;i<handles.n;i++) {
+			for_each (uint32_t*, phandle, handles) {
 				PTPObject	*ob;
 				PTPObjectInfo	oi;
 
-				if (params->inliveview == 1 && handles.Handler[i] == 0x80000001) /* Ignore preview image object handle while liveview is active */
+				if (params->inliveview == 1 && *phandle == 0x80000001) /* Ignore preview image object handle while liveview is active */
 					continue;
-				if (PTP_RC_OK == ptp_object_find (params, handles.Handler[i], &ob)) /* already have it */
+				if (PTP_RC_OK == ptp_object_find (params, *phandle, &ob)) /* already have it */
 					continue;
 				/* might be a just deleted entry , seen in https://github.com/gphoto/gphoto2/issues/456 */
 				memset (&oi,0,sizeof(oi));
-				if (PTP_RC_DeviceBusy == ptp_getobjectinfo (params, handles.Handler[i], &oi))
+				if (PTP_RC_DeviceBusy == ptp_getobjectinfo (params, *phandle, &oi))
 					continue;
 				ptp_free_objectinfo (&oi);
 				event.Code = PTP_EC_ObjectAdded;
-				event.Param1 = handles.Handler[i];
-				free (handles.Handler);
+				event.Param1 = *phandle;
+				free_array (&handles);
 				goto handleregular;
 			}
-			free (handles.Handler);
+			free_array (&handles);
 			C_PTP_REP (ptp_check_event(params));
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 		*eventtype = GP_EVENT_TIMEOUT;
@@ -7858,17 +7854,17 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	) {
 		APPEND_TXT (_("\nStorage Devices Summary:\n"));
 
-		for (i=0; i<params->storageids.n; i++) {
+		for_each (uint32_t*, psid, params->storageids) {
 			char tmpname[20], *s;
 
 			PTPStorageInfo storageinfo;
 			/* invalid storage, storageinfo might fail on it (Nikon D300s e.g.) */
-			if ((params->storageids.Storage[i]&0x0000ffff)==0)
+			if ((*psid & 0x0000ffff) == 0)
 				continue;
 
-			APPEND_TXT ("store_%08x:\n",(unsigned int)params->storageids.Storage[i]);
+			APPEND_TXT ("store_%08x:\n",(unsigned int)*psid);
 
-			C_PTP_REP (ptp_getstorageinfo(params, params->storageids.Storage[i], &storageinfo));
+			C_PTP_REP (ptp_getstorageinfo(params, *psid, &storageinfo));
 			APPEND_TXT (_("\tStorageDescription: %s\n"),
 				storageinfo.StorageDescription?storageinfo.StorageDescription:_("None")
 			);
@@ -8196,17 +8192,14 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
 			char fname[PTP_MAXSTRLEN];
 
-			if (!params->storageids.n) {
+			if (!params->storageids.len) {
 				snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x",0x00010001);
 				CR (gp_list_append (list, fname, NULL));
 			}
-			for (i=0; i<params->storageids.n; i++) {
-
+			for_each (uint32_t*, psid, params->storageids) {
 				/* invalid storage, storageinfo might fail on it (Nikon D300s e.g.) */
-				if ((params->storageids.Storage[i]&0x0000ffff)==0) continue;
-				snprintf(fname, sizeof(fname),
-					STORAGE_FOLDER_PREFIX"%08x",
-					params->storageids.Storage[i]);
+				if ((*psid & 0x0000ffff) == 0) continue;
+				snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x", *psid);
 				CR (gp_list_append (list, fname, NULL));
 			}
 		} else {
@@ -9510,7 +9503,7 @@ storage_info_func (CameraFilesystem *fs,
 	Camera *camera 		= data;
 	PTPParams *params 	= &camera->pl->params;
 	PTPStorageInfo		si;
-	PTPStorageIDs		sids;
+	PTPStorageIDs		sids = {0};
 	unsigned int		i,n;
 	CameraStorageInformation*sif;
 
@@ -9520,16 +9513,16 @@ storage_info_func (CameraFilesystem *fs,
 	SET_CONTEXT_P(params, context);
 	C_PTP (ptp_getstorageids (params, &sids));
 	n = 0;
-	C_MEM (*sinfos = calloc (sids.n, sizeof (CameraStorageInformation)));
-	for (i = 0; i<sids.n; i++) {
+	C_MEM (*sinfos = calloc (sids.len, sizeof (CameraStorageInformation)));
+	for (i = 0; i<sids.len; i++) {
 		sif = (*sinfos)+n;
 
 		/* Invalid storage, storageinfo might cause hangs on it (Nikon D300s e.g.) */
-		if ((sids.Storage[i]&0x0000ffff)==0) continue;
+		if ((sids.val[i]&0x0000ffff)==0) continue;
 
-		C_PTP (ptp_getstorageinfo (params, sids.Storage[i], &si));
+		C_PTP (ptp_getstorageinfo (params, sids.val[i], &si));
 		sif->fields |= GP_STORAGEINFO_BASE;
-		sprintf (sif->basedir, "/"STORAGE_FOLDER_PREFIX"%08x", sids.Storage[i]);
+		sprintf (sif->basedir, "/"STORAGE_FOLDER_PREFIX"%08x", sids.val[i]);
 
 		if (si.VolumeLabel && strlen(si.VolumeLabel)) {
 			sif->fields |= GP_STORAGEINFO_LABEL;
@@ -9586,7 +9579,7 @@ storage_info_func (CameraFilesystem *fs,
 
 		n++;
 	}
-	free (sids.Storage);
+	free_array (&sids);
 	*nrofsinfos = n;
 	return (GP_OK);
 }
@@ -10052,7 +10045,7 @@ camera_init (Camera *camera, GPContext *context)
 	CR (gp_filesystem_set_funcs (camera->fs, &fsfuncs, camera));
 
 	/* initialize the storage ids in Params */
-	if ((!params->storageids.n) && (ptp_operation_issupported(params, PTP_OC_GetStorageIDs)))
+	if ((!params->storageids.len) && (ptp_operation_issupported(params, PTP_OC_GetStorageIDs)))
 		ptp_getstorageids(params, &params->storageids);
 
 	if (a.usb_vendor == 0x05ac) {	/* Apple iOS 10.2 hack */
@@ -10075,9 +10068,9 @@ camera_init (Camera *camera, GPContext *context)
 			/* 0xfeedface and 0x00000000 seem bad storageid values for iPhones */
 			/* The event handling code in ptp.c will refresh the storage list if
 			 * it sees the correct events */
-			if (params->storageids.n && (
-				(params->storageids.Storage[0] != 0xfeedface) &&
-				(params->storageids.Storage[0] != 0x00000000)
+			if (params->storageids.len && (
+				(params->storageids.val[0] != 0xfeedface) &&
+				(params->storageids.val[0] != 0x00000000)
 			))
 				break;
 			C_PTP_REP (ptp_wait_event (params));
@@ -10097,41 +10090,31 @@ camera_init (Camera *camera, GPContext *context)
 		ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
 
 	{
-		unsigned int k;
-
-		for (k=0;k<params->storageids.n;k++) {
-			if (!(params->storageids.Storage[k] & 0xffff)) continue;
-			if (params->storageids.Storage[k] == 0x80000001) continue;
-			ptp_list_folder (params, params->storageids.Storage[k], PTP_HANDLER_SPECIAL);
+		for_each (uint32_t*, psid, params->storageids) {
+			if ((*psid & 0xffff) && (*psid != 0x80000001))
+				ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
 		}
 	}
 	/* moved down here in case the filesystem needs to first be initialized as the Olympus app does */
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) {
-		unsigned int k;
 
 		GP_LOG_D ("Initializing Olympus ... ");
 		ptp_olympus_init_pc_mode(params);
 
 		/* try to refetch the storage ids, set before only has 0x00000001 */
-		if (params->storageids.n) {
-			free (params->storageids.Storage);
-			params->storageids.Storage = NULL;
-			params->storageids.n = 0;
-		}
-
+		free_array (&params->storageids);
 		C_PTP (ptp_getstorageids(params, &params->storageids));
 
 		/* refetch root */
-		for (k=0;k<params->storageids.n;k++) {
-			if (!(params->storageids.Storage[k] & 0xffff)) continue;
-			if (params->storageids.Storage[k] == 0x80000001) continue;
-			ptp_list_folder (params, params->storageids.Storage[k], PTP_HANDLER_SPECIAL);
+		for_each (uint32_t*, psid, params->storageids) {
+			if ((*psid & 0xffff) && (*psid != 0x80000001))
+				ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
 		}
 
 		/*
-		if(params->storageids.n > 0) { // Olympus app gets storage info for first item, so emulating here
+		if(params->storageids.len > 0) { // Olympus app gets storage info for first item, so emulating here
 			PTPStorageInfo storageinfo;
-			ptp_getstorageinfo(params, params->storageids.Storage[0], &storageinfo);
+			ptp_getstorageinfo(params, params->storageids.val[0], &storageinfo);
 		}
 
 		PTPPropValue	propval;
