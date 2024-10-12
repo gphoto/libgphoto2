@@ -689,68 +689,24 @@ parse_9301_cmd_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 static int
 parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPPropValue *propval)
 {
+#define CASE(DTC, FMT, BITS) \
+		case DTC: { \
+			if (sscanf(str, FMT, &propval->BITS) != 1) { \
+				ptp_debug( params, "could not parse " #BITS " %s", str); \
+				return PTP_RC_GeneralError; \
+			} \
+			ptp_debug( params, "\t%d", propval->BITS); \
+			break; \
+		}
+
 	switch (type) {
-	case 6: { /*UINT32*/
-		unsigned int x;
-		if (!sscanf(str,"%08x", &x)) {
-			ptp_debug( params, "could not parse uint32 %s", str);
-			return PTP_RC_GeneralError;
-		}
-		ptp_debug( params, "\t%d", x);
-		propval->u32 = x;
-		break;
-	}
-	case 5: { /*INT32*/
-		int x;
-		if (!sscanf(str,"%08x", &x)) {
-			ptp_debug( params, "could not parse int32 %s", str);
-			return PTP_RC_GeneralError;
-		}
-		ptp_debug( params, "\t%d", x);
-		propval->i32 = x;
-		break;
-	}
-	case 4: { /*UINT16*/
-		unsigned int x;
-		if (!sscanf(str,"%04x", &x)) {
-			ptp_debug( params, "could not parse uint16 %s", str);
-			return PTP_RC_GeneralError;
-		}
-		ptp_debug( params, "\t%d", x);
-		propval->u16 = x;
-		break;
-	}
-	case 3: { /*INT16*/
-		int x;
-		if (!sscanf(str,"%04x", &x)) {
-			ptp_debug( params, "could not parse int16 %s", str);
-			return PTP_RC_GeneralError;
-		}
-		ptp_debug( params, "\t%d", x);
-		propval->i16 = x;
-		break;
-	}
-	case 2: { /*UINT8*/
-		unsigned int x;
-		if (!sscanf(str,"%02x", &x)) {
-			ptp_debug( params, "could not parse uint8 %s", str);
-			return PTP_RC_GeneralError;
-		}
-		ptp_debug( params, "\t%d", x);
-		propval->u8 = x;
-		break;
-	}
-	case 1: { /*INT8*/
-		int x;
-		if (!sscanf(str,"%02x", &x)) {
-			ptp_debug( params, "could not parse int8 %s", str);
-			return PTP_RC_GeneralError;
-		}
-		ptp_debug( params, "\t%d", x);
-		propval->i8 = x;
-		break;
-	}
-	case 65535: { /* string */
+	CASE(PTP_DTC_UINT8, "%02hhx", u8)
+	CASE(PTP_DTC_INT8, "%02hhx", i8)
+	CASE(PTP_DTC_UINT16, "%04hx", u16)
+	CASE(PTP_DTC_INT16, "%04hx", i16)
+	CASE(PTP_DTC_UINT32, "%08x", u32)
+	CASE(PTP_DTC_INT32, "%08x", i32)
+	case PTP_DTC_STR: {
 		int len;
 
 		/* ascii ptp string, 1 byte length, little endian 16 bit chars */
@@ -774,14 +730,12 @@ parse_9301_value (PTPParams *params, const char *str, uint16_t type, PTPPropValu
 		ptp_debug( params, "string %s not parseable!", str);
 		return PTP_RC_GeneralError;
 	}
-	case 7: /*INT64*/
-	case 8: /*UINT64*/
-	case 9: /*INT128*/
-	case 10: /*UINT128*/
 	default:
 		ptp_debug( params, "unhandled data type %d!", type);
 		return PTP_RC_GeneralError;
 	}
+#undef CASE
+
 	return PTP_RC_OK;
 }
 
