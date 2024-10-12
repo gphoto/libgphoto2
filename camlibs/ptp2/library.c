@@ -133,7 +133,18 @@ translate_ptp_result (uint16_t result)
 	case PTP_ERROR_IO:
 	case PTP_ERROR_DATA_EXPECTED:
 	case PTP_ERROR_RESP_EXPECTED:		return GP_ERROR_IO;
-	default:				return GP_ERROR;
+	default: {
+		/* If result is actually a GP_ERROR code (see gphoto2-port-result.h), then we simply pass it through as is.
+		 * This works because those two value ranges have no overlap:
+		 *   - PTP errors are either 0x0..., 0x2.... or 0xA....
+		 *   - GP errors (as uint16_t) are 0xF...
+		 */
+		int int_res = (int16_t)result;
+		if (-99 <= int_res && int_res <= 0)
+			return int_res;
+		else
+			return GP_ERROR;
+	}
 	}
 }
 
