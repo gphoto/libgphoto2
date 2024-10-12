@@ -12115,7 +12115,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 								ret = translate_ptp_result (ret_ptp);
 							}
 						}
-						ptp_free_devicepropvalue (cursub->type, &propval);
+						ptp_free_propvalue (cursub->type, &propval);
 					}
 					ptp_free_devicepropdesc(&dpd);
 					if (ret != GP_OK) continue; /* see if we have another match */
@@ -12146,7 +12146,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 								ret = translate_ptp_result (ret_ptp);
 							}
 						}
-						ptp_free_devicepropvalue(cursub->type, &propval);
+						ptp_free_propvalue(cursub->type, &propval);
 					} else
 						gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d."), _(cursub->label), cursub->propid, ret);
 					ptp_free_devicepropdesc(&dpd);
@@ -12266,7 +12266,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					  _(label), propid, ret, _(ptp_strerror(ret, params->deviceinfo.VendorExtensionID)));
 			ret = GP_ERROR;
 		}
-		ptp_free_devicepropvalue (dpd.DataType, &propval);
+		ptp_free_propvalue (dpd.DataType, &propval);
 		ptp_free_devicepropdesc (&dpd);
 		if (mode == MODE_SINGLE_SET)
 			return GP_OK;
