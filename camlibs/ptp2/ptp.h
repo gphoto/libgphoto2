@@ -82,7 +82,7 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
  *
  * typedef ARRAY_OF(PTPObject) PTPObjects;
  * PTPObjects objects;
- * array_append_value(&objects, some_value);
+ * array_push_back(&objects, some_value);
  * for_each(PTPObject*, pobj, objects)
  *     pobj->call_some_func();
  * free_array(&objects);
@@ -100,9 +100,39 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 	(ARRAY)->len = 0; \
 } while (0)
 
-#define array_append_value(ARRAY, VAL) do { \
-	(ARRAY)->val = realloc((ARRAY)->val, ((ARRAY)->len + 1) * sizeof((ARRAY)->val[0])); \
+#define array_extend(ARRAY, LEN) do { \
+	(ARRAY)->val = realloc((ARRAY)->val, ((ARRAY)->len + (LEN)) * sizeof((ARRAY)->val[0])); \
+	if (!(ARRAY)->val) \
+		ptp_error(params, "PANIC: realloc failed"); \
+} while(0)
+
+#define array_push_back(ARRAY, VAL) do { \
+	array_extend(ARRAY, 1); \
 	(ARRAY)->val[(ARRAY)->len++] = VAL; \
+} while(0)
+
+#define array_append_copy(DST, SRC) do { \
+	array_extend(DST, (SRC)->len); \
+	memcpy((DST)->val + (DST)->len, (SRC)->val, (SRC)->len * sizeof((SRC)->val[0])); \
+	(DST)->len += (SRC)->len; \
+} while(0)
+
+#define array_append(DST, SRC) do { \
+	if ((DST)->len) { \
+		array_append_copy(DST, SRC); \
+		free_array (SRC); \
+	} else { \
+		free_array (DST); \
+		*(DST) = *(SRC); \
+	} \
+} while(0)
+
+#define array_pop_front(ARRAY, VAL) do { \
+	if ((ARRAY)->len == 0) \
+		break; \
+	*VAL = (ARRAY)->val[0]; \
+	memmove ((ARRAY)->val, (ARRAY)->val + 1, ((ARRAY)->len - 1) * sizeof((ARRAY)->val[0])); \
+	(ARRAY)->len--; \
 } while(0)
 
 #define for_each(TYPE, PTR, ARRAY) \
@@ -3823,6 +3853,7 @@ typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args)
 ;
 
 typedef ARRAY_OF(MTPObjectProp) MTPObjectProps;
+typedef ARRAY_OF(PTPCanonEOSEvent) PTPCanonEOSEvents;
 
 struct _PTPObject {
 	uint32_t	oid;
@@ -3955,8 +3986,7 @@ struct _PTPParams {
 	int			canon_event_mode;
 
 	/* PTP: Canon EOS event queue */
-	PTPCanonEOSEvent	*eos_events;
-	unsigned int		eos_events_len;
+	PTPCanonEOSEvents	eos_events;
 	int			eos_captureenabled;
 	int			eos_camerastatus;
 	int			eos_uilocked;
@@ -4445,7 +4475,7 @@ uint16_t ptp_canon_checkevent (PTPParams* params,
 #define ptp_canon_eos_setrequestrollingpitchinglevel(params,onoff)	ptp_generic_no_data(params,PTP_OC_CANON_EOS_SetRequestRollingPitchingLevel,1,onoff)
 uint16_t ptp_canon_eos_getremotemode (PTPParams*, uint32_t *);
 uint16_t ptp_canon_eos_capture (PTPParams* params, uint32_t *result);
-uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanonEOSEvent **events, int *events_len);
+uint16_t ptp_canon_eos_getevent (PTPParams* params, PTPCanonEOSEvents *events);
 uint16_t ptp_canon_getpartialobject (PTPParams* params, uint32_t handle,
 				uint32_t offset, uint32_t size,
 				uint32_t pos, unsigned char** block,
