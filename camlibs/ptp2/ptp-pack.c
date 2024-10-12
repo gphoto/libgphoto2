@@ -24,6 +24,8 @@
 
 /* currently this file is included into ptp.c */
 
+#include "ptp.h" /* included here to help vscode editor find the symbols */
+
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
 #endif
