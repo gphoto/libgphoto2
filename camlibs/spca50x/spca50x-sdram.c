@@ -441,8 +441,8 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 
 			/* jpeg starts here */
 			if ((data - mybuf) + frame_size > size) {
-				free (mybuf);
 				GP_DEBUG("BAD: accessing more than we read (%u vs total %d)", (unsigned int)((data-mybuf)+frame_size), size);
+				free (mybuf);
 				return GP_ERROR_CORRUPTED_DATA;
 			}
 			ret = create_jpeg_from_data (avi, data, qIndex, frame_width,
@@ -493,9 +493,9 @@ spca50x_get_avi (CameraPrivateLibrary * lib, uint8_t ** buf,
 	put_dword (start_of_file + 4, total_frame_size);
 
 	free (mybuf);
+	*len = avi - start_of_file;
 	start_of_file = realloc (start_of_file, avi - start_of_file);
 	*buf = start_of_file;
-	*len = avi - start_of_file;
 	return (GP_OK);
 }
 
