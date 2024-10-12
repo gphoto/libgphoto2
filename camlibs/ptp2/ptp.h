@@ -4949,7 +4949,7 @@ int ptp_property_issupported	(PTPParams* params, uint16_t property);
 void ptp_free_params		(PTPParams *params);
 void ptp_free_objectpropdesc	(PTPObjectPropDesc*);
 void ptp_free_devicepropdesc	(PTPDevicePropDesc*);
-void ptp_free_devicepropvalue	(uint16_t, PTPPropValue*);
+void ptp_free_propvalue		(uint16_t, PTPPropValue*);
 void ptp_free_deviceinfo	(PTPDeviceInfo *);
 void ptp_free_objectinfo	(PTPObjectInfo *oi);
 void ptp_free_object		(PTPObject *oi);
@@ -4985,8 +4985,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
 int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
 MTPObjectProp *ptp_get_new_object_prop_entry(MTPObjectProp **props, int *nrofprops);
-void ptp_destroy_object_prop(MTPObjectProp *prop);
-void ptp_destroy_object_prop_list(MTPObjectProp *props, int nrofprops);
+void ptp_free_object_prop(MTPObjectProp *prop);
 MTPObjectProp *ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id);
 uint16_t ptp_remove_object_from_cache(PTPParams *params, uint32_t handle);
 uint16_t ptp_add_object_to_cache(PTPParams *params, uint32_t handle);

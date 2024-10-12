@@ -2019,27 +2019,12 @@ ptp_opensession (PTPParams* params, uint32_t session)
 }
 
 void
-ptp_free_devicepropvalue(uint16_t dt, PTPPropValue* dpd)
+ptp_free_propvalue(uint16_t dt, PTPPropValue* prop)
 {
-	switch (dt) {
-	case PTP_DTC_INT8:	case PTP_DTC_UINT8:
-	case PTP_DTC_UINT16:	case PTP_DTC_INT16:
-	case PTP_DTC_UINT32:	case PTP_DTC_INT32:
-	case PTP_DTC_UINT64:	case PTP_DTC_INT64:
-	case PTP_DTC_UINT128:	case PTP_DTC_INT128:
-		/* Nothing to free */
-		break;
-	case PTP_DTC_AINT8:	case PTP_DTC_AUINT8:
-	case PTP_DTC_AUINT16:	case PTP_DTC_AINT16:
-	case PTP_DTC_AUINT32:	case PTP_DTC_AINT32:
-	case PTP_DTC_AUINT64:	case PTP_DTC_AINT64:
-	case PTP_DTC_AUINT128:	case PTP_DTC_AINT128:
-		free(dpd->a.v);
-		break;
-	case PTP_DTC_STR:
-		free(dpd->str);
-		break;
-	}
+	if (dt == PTP_DTC_STR)
+		free(prop->str);
+	else if ((dt & 0xFFF0) == PTP_DTC_ARRAY_MASK)
+		free(prop->a.v);
 }
 
 void
@@ -2047,18 +2032,18 @@ ptp_free_devicepropdesc(PTPDevicePropDesc* dpd)
 {
 	uint16_t i;
 
-	ptp_free_devicepropvalue (dpd->DataType, &dpd->DefaultValue);
-	ptp_free_devicepropvalue (dpd->DataType, &dpd->CurrentValue);
+	ptp_free_propvalue (dpd->DataType, &dpd->DefaultValue);
+	ptp_free_propvalue (dpd->DataType, &dpd->CurrentValue);
 	switch (dpd->FormFlag) {
 	case PTP_DPFF_Range:
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MinValue);
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.MaxValue);
-		ptp_free_devicepropvalue (dpd->DataType, &dpd->FORM.Range.StepSize);
+		ptp_free_propvalue (dpd->DataType, &dpd->FORM.Range.MinValue);
+		ptp_free_propvalue (dpd->DataType, &dpd->FORM.Range.MaxValue);
+		ptp_free_propvalue (dpd->DataType, &dpd->FORM.Range.StepSize);
 		break;
 	case PTP_DPFF_Enumeration:
 		if (dpd->FORM.Enum.SupportedValue) {
 			for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++)
-				ptp_free_devicepropvalue (dpd->DataType, dpd->FORM.Enum.SupportedValue+i);
+				ptp_free_propvalue (dpd->DataType, dpd->FORM.Enum.SupportedValue+i);
 			free (dpd->FORM.Enum.SupportedValue);
 		}
 	}
@@ -2072,19 +2057,19 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
 {
 	uint16_t i;
 
-	ptp_free_devicepropvalue (opd->DataType, &opd->DefaultValue);
+	ptp_free_propvalue (opd->DataType, &opd->DefaultValue);
 	switch (opd->FormFlag) {
 	case PTP_OPFF_None:
 		break;
 	case PTP_OPFF_Range:
-		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MinValue);
-		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.MaxValue);
-		ptp_free_devicepropvalue (opd->DataType, &opd->FORM.Range.StepSize);
+		ptp_free_propvalue (opd->DataType, &opd->FORM.Range.MinValue);
+		ptp_free_propvalue (opd->DataType, &opd->FORM.Range.MaxValue);
+		ptp_free_propvalue (opd->DataType, &opd->FORM.Range.StepSize);
 		break;
 	case PTP_OPFF_Enumeration:
 		if (opd->FORM.Enum.SupportedValue) {
 			for (i=0;i<opd->FORM.Enum.NumberOfValues;i++)
-				ptp_free_devicepropvalue (opd->DataType, opd->FORM.Enum.SupportedValue+i);
+				ptp_free_propvalue (opd->DataType, opd->FORM.Enum.SupportedValue+i);
 			free (opd->FORM.Enum.SupportedValue);
 		}
 		break;
@@ -5968,7 +5953,8 @@ ptp_free_object (PTPObject *ob)
 
 	ptp_free_objectinfo (&ob->oi);
 	for_each (MTPObjectProp*, prop, ob->mtp_props)
-		ptp_destroy_object_prop(prop);
+		ptp_free_object_prop(prop);
+	free_array (&ob->mtp_props);
 	ob->flags = 0;
 }
 
@@ -9435,30 +9421,9 @@ ptp_get_new_object_prop_entry(MTPObjectProp **props, int *nrofprops)
 }
 
 void
-ptp_destroy_object_prop(MTPObjectProp *prop)
+ptp_free_object_prop(MTPObjectProp *prop)
 {
-	if (!prop)
-		return;
-
-	if (prop->DataType == PTP_DTC_STR && prop->Value.str != NULL)
-		free(prop->Value.str);
-	else if ((prop->DataType == PTP_DTC_AINT8 || prop->DataType == PTP_DTC_AINT16 ||
-		  prop->DataType == PTP_DTC_AINT32 || prop->DataType == PTP_DTC_AINT64 || prop->DataType == PTP_DTC_AINT128 ||
-		  prop->DataType == PTP_DTC_AUINT8 || prop->DataType == PTP_DTC_AUINT16 ||
-		  prop->DataType == PTP_DTC_AUINT32 || prop->DataType == PTP_DTC_AUINT64 || prop->DataType ==  PTP_DTC_AUINT128)
-		&& prop->Value.a.v != NULL)
-	free(prop->Value.a.v);
-}
-
-void
-ptp_destroy_object_prop_list(MTPObjectProp *props, int nrofprops)
-{
-	int i;
-	MTPObjectProp *prop = props;
-
-	for (i=0;i<nrofprops;i++,prop++)
-		ptp_destroy_object_prop(prop);
-	free(props);
+	ptp_free_propvalue(prop->DataType, &prop->Value);
 }
 
 /*
