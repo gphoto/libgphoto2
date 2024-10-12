@@ -1822,6 +1822,7 @@ struct _PTPDevicePropDesc {
 		PTPPropDescEnumForm	Enum;
 		PTPPropDescRangeForm	Range;
 	} FORM;
+	time_t			timestamp; /* This member is used for the dpd_cache management and not part of the PTP spec. */
 };
 typedef struct _PTPDevicePropDesc PTPDevicePropDesc;
 
@@ -3875,13 +3876,6 @@ struct _PTPObject {
 };
 typedef struct _PTPObject PTPObject;
 
-/* The Device Property Cache */
-struct _PTPDeviceProperty {
-	time_t			timestamp;
-	PTPDevicePropDesc	desc;
-};
-typedef struct _PTPDeviceProperty PTPDeviceProperty;
-
 struct _MTPPropertyDesc {
 	uint16_t	opc;
 	PTPObjectPropDesc	opd;
@@ -3980,7 +3974,7 @@ struct _PTPParams {
 	int			storagechanged;
 
 	/* PTP: Device Property Caching */
-	PTPDeviceProperty	*dpd_cache;
+	PTPDevicePropDesc	*dpd_cache;
 	unsigned int		dpd_cache_len;
 
 	/* PTP: Canon specific flags list */
