@@ -1959,10 +1959,6 @@ struct _PTPCanonEOSEvent {
 };
 typedef struct _PTPCanonEOSEvent PTPCanonEOSEvent;
 
-typedef struct _PTPCanon_Property {
-	PTPDevicePropDesc	dpd;
-} PTPCanon_Property;
-
 typedef struct _PTPCanonEOSDeviceInfo {
 	/* length */
 	uint32_t Events_len;
@@ -3978,7 +3974,7 @@ struct _PTPParams {
 	unsigned int		dpd_cache_len;
 
 	/* PTP: Canon specific flags list */
-	PTPCanon_Property	*canon_props;
+	PTPDevicePropDesc	*canon_props;
 	unsigned int		canon_props_len;
 	int			canon_viewfinder_on;
 	int			canon_event_mode;
