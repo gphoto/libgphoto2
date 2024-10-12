@@ -1699,8 +1699,8 @@ static inline PTPDevicePropDesc*
 ptp_find_eos_devicepropdesc(PTPParams *params, uint32_t dpc)
 {
 	for (unsigned j=0; j < params->canon_props_len; j++)
-		if (params->canon_props[j].dpd.DevicePropCode == dpc)
-			return &params->canon_props[j].dpd;
+		if (params->canon_props[j].DevicePropCode == dpc)
+			return &params->canon_props[j];
 	return NULL;
 }
 
@@ -1714,12 +1714,12 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint32_t dpc)
 
 	unsigned j = params->canon_props_len;
 	params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
-	memset (&params->canon_props[j].dpd,0,sizeof(params->canon_props[j].dpd));
-	params->canon_props[j].dpd.DevicePropCode = dpc;
-	params->canon_props[j].dpd.GetSet = 1;
-	params->canon_props[j].dpd.FormFlag = PTP_DPFF_None;
+	memset (&params->canon_props[j],0,sizeof(params->canon_props[j]));
+	params->canon_props[j].DevicePropCode = dpc;
+	params->canon_props[j].GetSet = 1;
+	params->canon_props[j].FormFlag = PTP_DPFF_None;
 	params->canon_props_len = j+1;
-	return &params->canon_props[j].dpd;
+	return &params->canon_props[j];
 }
 
 #define PTP_CANON_SET_INFO( ENTRY, MSG, ...) \
