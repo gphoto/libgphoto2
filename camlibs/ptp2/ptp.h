@@ -31,6 +31,8 @@
 #include <iconv.h>
 #endif
 #include "libgphoto2/gphoto2-endian.h"
+#include <gphoto2/gphoto2-port-log.h>
+#include <gphoto2/gphoto2-port-result.h>
 #include "device-flags.h"
 
 #ifdef __cplusplus
@@ -102,8 +104,10 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 
 #define array_extend(ARRAY, LEN) do { \
 	(ARRAY)->val = realloc((ARRAY)->val, ((ARRAY)->len + (LEN)) * sizeof((ARRAY)->val[0])); \
-	if (!(ARRAY)->val) \
-		ptp_error(params, "PANIC: realloc failed"); \
+	if (!(ARRAY)->val) { \
+		GP_LOG_E ("Out of memory: 'realloc' of %ld bytes failed.", ((ARRAY)->len + (LEN)) * sizeof((ARRAY)->val[0])); \
+		return GP_ERROR_NO_MEMORY; \
+	} \
 } while(0)
 
 #define array_push_back(ARRAY, VAL) do { \
