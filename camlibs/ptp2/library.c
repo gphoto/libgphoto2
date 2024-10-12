@@ -3218,7 +3218,7 @@ camera_exit (Camera *camera, GPContext *context)
 				if (camera->pl->checkevents) {
 					if ((exit_result = ptp_check_eos_events (params)) != PTP_RC_OK)
 						goto exitfailed;
-					GP_LOG_D ("missed %d EOS events", params->eos_events_len);
+					GP_LOG_D ("missed %d EOS events", params->eos_events.len);
 					camera->pl->checkevents = 0;
 				}
 				if (params->inliveview && ptp_operation_issupported(params, PTP_OC_CANON_EOS_TerminateViewfinder))
@@ -5998,10 +5998,8 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	ptp_check_eos_events (params);
 
 	/* Discard all collected events before starting the next capture. */
-	GP_LOG_D("discarding %d EOS events", params->eos_events_len);
-	free (params->eos_events);
-	params->eos_events = NULL;
-	params->eos_events_len = 0;
+	GP_LOG_D("discarding %d EOS events", params->eos_events.len);
+	free_array (&params->eos_events);
 
 	if (params->eos_camerastatus == 1)
 		return GP_ERROR_CAMERA_BUSY;
@@ -6620,7 +6618,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 			CR (camera_keep_device_on (camera));
 
-			if (params->eos_events_len == 0)
+			if (params->eos_events.len == 0)
 				C_PTP_REP_MSG (ptp_check_eos_events (params), _("Canon EOS Get Changes failed"));
 
 			while (ptp_get_one_eos_event (params, &eos_event)) {

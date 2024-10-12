@@ -1729,7 +1729,7 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint32_t dpc)
 	} while (0)
 
 static inline int
-ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned int datasize, PTPCanonEOSEvent **events)
+ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned int datasize, PTPCanonEOSEvents *events)
 {
 	int	i = 0, event_count = 0;
 	const unsigned char *curdata = data;
@@ -2540,7 +2540,8 @@ static unsigned int olcsizes[0x15][13] = {
 		free (e);
 		e = NULL;
 	}
-	*events = e;
+	events->val = e;
+	events->len = i;
 	return i;
 	#undef INDENT
 }
