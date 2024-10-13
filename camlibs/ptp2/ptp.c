@@ -2044,6 +2044,28 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
 	}
 }
 
+void ptp_free_eos_event(PTPCanonEOSEvent *eos_event)
+{
+	/* TODO: this function only exists because of the heap allocated Filename and Keyword members of
+	 * of PTPObjectInfo. This function needs to be called on every ptp_get_one_eos_event() result.
+	 * There are still tons of potential memory leaks in all sorts of error paths. The only sane solution
+	 * to this is, to make the Filename property a statically sized string (and drop Keywords, which is
+	 * unused anyway).
+	 */
+	switch (eos_event->type)
+	{
+	case PTP_EOSEvent_ObjectAdded:
+	case PTP_EOSEvent_ObjectContentChanged:
+	case PTP_EOSEvent_ObjectInfoChanged:
+	case PTP_EOSEvent_ObjectRemoved:
+	case PTP_EOSEvent_ObjectTransfer:
+		ptp_free_objectinfo(&eos_event->u.object);
+		break;
+	default:
+		break;
+	}
+}
+
 
 /**
  * ptp_free_params:
@@ -2069,6 +2091,9 @@ ptp_free_params (PTPParams *params)
 		ptp_free_devicepropdesc (&params->canon_props[i]);
 	}
 	free (params->canon_props);
+
+	for_each (PTPCanonEOSEvent*, pevt, params->eos_events)
+		ptp_free_eos_event (pevt);
 	free_array (&params->eos_events);
 
 	for (i=0;i<params->dpd_cache_len;i++)

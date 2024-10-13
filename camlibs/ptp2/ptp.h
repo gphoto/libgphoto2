@@ -74,6 +74,11 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 
 #define ARRAYSIZE(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))
 
+#define move(dst, src) do { \
+	dst = src; \
+	memset(&(src), 0, sizeof(src)); \
+} while(0)
+
 /* The follow set of macros implements a generic array or list of TYPE.
  * This is basically a TYPE* pointer and a length integer. This structure
  * together with the typical use-cases repeats regularly throughout the
@@ -4943,6 +4948,7 @@ void ptp_free_propvalue		(uint16_t, PTPPropValue*);
 void ptp_free_deviceinfo	(PTPDeviceInfo *);
 void ptp_free_objectinfo	(PTPObjectInfo *oi);
 void ptp_free_object		(PTPObject *oi);
+void ptp_free_eos_event		(PTPCanonEOSEvent *);
 
 const char *ptp_strerror	(uint16_t ret, uint16_t vendor);
 void ptp_debug			(PTPParams *params, const char *format, ...)
