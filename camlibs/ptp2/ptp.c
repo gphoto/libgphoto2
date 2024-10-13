@@ -833,7 +833,6 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 {
 	xmlNodePtr	next;
 	int		cnt;
-	unsigned int	i;
 
 	cnt = 0;
 	next = xmlFirstElementChild (node);
@@ -858,19 +857,13 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 		di->DeviceProps[cnt++] = p;
 
 		/* add to cache of device propdesc */
-		for (i=0;i<params->dpd_cache_len;i++)
-			if (params->dpd_cache[i].DevicePropCode == p)
-				break;
-		if (i == params->dpd_cache_len) {
-			params->dpd_cache = realloc(params->dpd_cache,(i+1)*sizeof(params->dpd_cache[0]));
-			memset(&params->dpd_cache[i],0,sizeof(params->dpd_cache[0]));
-			params->dpd_cache_len++;
+		PTPDevicePropDesc* dpd_in_cache = ptp_find_dpd_in_cache(params, p);
+		if (!dpd_in_cache) {
+			array_push_back(&params->dpd_cache, dpd);
 		} else {
-			ptp_free_devicepropdesc (&params->dpd_cache[i]);
+			ptp_free_devicepropdesc (dpd_in_cache);
+			move(*dpd_in_cache, dpd);
 		}
-		/* FIXME: free old entry */
-		/* we are not using dpd, so copy it directly to the cache */
-		params->dpd_cache[i] = dpd;
 
 		next = xmlNextElementSibling (next);
 	}
@@ -2090,10 +2083,7 @@ ptp_free_params (PTPParams *params)
 
 	free_array_recusive (&params->canon_props, ptp_free_devicepropdesc);
 	free_array_recusive (&params->eos_events, ptp_free_eos_event);
-
-	for (i=0;i<params->dpd_cache_len;i++)
-		ptp_free_devicepropdesc (&params->dpd_cache[i]);
-	free (params->dpd_cache);
+	free_array_recusive (&params->dpd_cache, ptp_free_devicepropdesc);
 
 	ptp_free_deviceinfo (&params->deviceinfo);
 }
@@ -3553,14 +3543,10 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 	/* handle some PTP stack internal events */
 	switch (event->Code) {
 	case PTP_EC_DevicePropChanged: {
-		unsigned int i;
-
 		/* mark the property for a forced refresh on the next query */
-		for (i=0;i<params->dpd_cache_len;i++)
-			if (params->dpd_cache[i].DevicePropCode == event->Param1) {
-				params->dpd_cache[i].timestamp = 0;
-				break;
-			}
+		PTPDevicePropDesc* dpd_in_cache = ptp_find_dpd_in_cache(params, event->Param1);
+		if (dpd_in_cache)
+			dpd_in_cache->timestamp = 0;
 		break;
 	}
 	case PTP_EC_StoreAdded:
@@ -3768,6 +3754,15 @@ ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event)
 		}
 	}
 	return 0;
+}
+
+PTPDevicePropDesc*
+ptp_find_dpd_in_cache(PTPParams *params, uint32_t dpc)
+{
+	for_each (PTPDevicePropDesc*, pdpd, params->dpd_cache)
+		if (pdpd->DevicePropCode == dpc)
+			return pdpd;
+	return NULL;
 }
 
 /**
@@ -4492,24 +4487,19 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 	size -= 8;
 	time(&now);
 	while (size>0) {
-		unsigned int	i;
-		uint16_t	propcode;
-
 		if (!ptp_unpack_Sony_DPD (params, dpddata, &dpd, size, &readlen))
 			break;
 
-		propcode = dpd.DevicePropCode;
-
-		for (i=0;i<params->dpd_cache_len;i++)
-			if (params->dpd_cache[i].DevicePropCode == propcode)
-				break;
+		dpd.timestamp = now;
+		uint16_t dpc = dpd.DevicePropCode;
+		PTPDevicePropDesc* dpd_in_cache = ptp_find_dpd_in_cache(params, dpc);
 
 		/* debug output to see what changes */
-		if (i != params->dpd_cache_len) {
+		if (dpd_in_cache) {
 			switch (dpd.DataType) {
 #define CHECK_CHANGED(type) \
-				if (params->dpd_cache[i].CurrentValue.type != dpd.CurrentValue.type) \
-					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %s(%04x): value %d -> %d", ptp_get_property_description (params, propcode), propcode, params->dpd_cache[i].CurrentValue.type, dpd.CurrentValue.type);
+				if (dpd_in_cache->CurrentValue.type != dpd.CurrentValue.type) \
+					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %s(%04x): value %d -> %d", ptp_get_property_description (params, dpc), dpc, dpd_in_cache->CurrentValue.type, dpd.CurrentValue.type);
 			case PTP_DTC_INT8:   CHECK_CHANGED(i8); break;
 			case PTP_DTC_UINT8:  CHECK_CHANGED(u8); break;
 			case PTP_DTC_UINT16: CHECK_CHANGED(u16); break;
@@ -4521,15 +4511,12 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 			}
 		}
 
-		if (i == params->dpd_cache_len) {
-			params->dpd_cache = realloc(params->dpd_cache,(i+1)*sizeof(params->dpd_cache[0]));
-			memset(&params->dpd_cache[i],0,sizeof(params->dpd_cache[0]));
-			params->dpd_cache_len++;
+		if (!dpd_in_cache) {
+			array_push_back(&params->dpd_cache, dpd);
 		} else {
-			ptp_free_devicepropdesc (&params->dpd_cache[i]);
+			ptp_free_devicepropdesc (dpd_in_cache);
+			move(*dpd_in_cache, dpd);
 		}
-		params->dpd_cache[i] = dpd;
-		params->dpd_cache[i].timestamp = now;
 #if 0
 		ptp_debug (params, "dpd.DevicePropCode %04x, readlen %d, getset %d", dpd.DevicePropCode, readlen, dpd.GetSet);
 		switch (dpd.DataType) {
@@ -4692,25 +4679,22 @@ ptp_sony_9281 (PTPParams* params, uint32_t param1) {
 uint16_t
 ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePropDesc *dpd)
 {
-	unsigned int	i;
 	time_t		now = time(NULL);
 
-	for (i=0;i<params->dpd_cache_len;i++)
-		if (params->dpd_cache[i].DevicePropCode == propcode)
-			break;
-	if (i == params->dpd_cache_len) {
-		params->dpd_cache = realloc(params->dpd_cache,(i+1)*sizeof(params->dpd_cache[0]));
-		memset(&params->dpd_cache[i],0,sizeof(params->dpd_cache[0]));
-		params->dpd_cache_len++;
+	PTPDevicePropDesc* dpd_in_cache = ptp_find_dpd_in_cache(params, propcode);
+
+	if (!dpd_in_cache) {
+		array_extend(&params->dpd_cache, 1);
+		dpd_in_cache = &params->dpd_cache.val[params->dpd_cache.len - 1];
 	}
 
-	if (params->dpd_cache[i].DataType != PTP_DTC_UNDEF) {
-		if (params->dpd_cache[i].timestamp + params->cachetime > now) {
-			duplicate_DevicePropDesc(&params->dpd_cache[i], dpd);
+	if (dpd_in_cache->DataType != PTP_DTC_UNDEF) {
+		if (dpd_in_cache->timestamp + params->cachetime > now) {
+			duplicate_DevicePropDesc(dpd_in_cache, dpd);
 			return PTP_RC_OK;
 		}
 		/* free cached entry as we will refetch it. */
-		ptp_free_devicepropdesc (&params->dpd_cache[i]);
+		ptp_free_devicepropdesc (dpd_in_cache);
 	}
 
 	if (!ptp_is_vendor_extension_prop(propcode))
@@ -4727,7 +4711,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 			else
 				goto generic;
 		}
-		duplicate_DevicePropDesc(eos_dpd, &params->dpd_cache[i]);
+		duplicate_DevicePropDesc(eos_dpd, dpd_in_cache);
 		goto done;
 	}
 
@@ -4736,10 +4720,8 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	) {
 		CHECK_PTP_RC(ptp_sony_getalldevicepropdesc (params));
 
-		for (i=0;i<params->dpd_cache_len;i++)
-			if (params->dpd_cache[i].DevicePropCode == propcode)
-				break;
-		if (i == params->dpd_cache_len) {
+		dpd_in_cache = ptp_find_dpd_in_cache(params, propcode);
+		if (!dpd_in_cache) {
 			ptp_debug (params, "alpha property 0x%04x not found?\n", propcode);
 			return PTP_RC_GeneralError;
 		}
@@ -4750,10 +4732,8 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	) {
 		CHECK_PTP_RC(ptp_sony_qx_getalldevicepropdesc (params));
 
-		for (i=0;i<params->dpd_cache_len;i++)
-			if (params->dpd_cache[i].DevicePropCode == propcode)
-				break;
-		if (i == params->dpd_cache_len) {
+		dpd_in_cache = ptp_find_dpd_in_cache(params, propcode);
+		if (!dpd_in_cache) {
 			ptp_debug (params, "qx property 0x%04x not found?\n", propcode);
 			return PTP_RC_GeneralError;
 		}
@@ -4762,21 +4742,21 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_GetDevicePropdesc)
 	) {
-		CHECK_PTP_RC(ptp_sony_getdevicepropdesc (params, propcode, &params->dpd_cache[i]));
+		CHECK_PTP_RC(ptp_sony_getdevicepropdesc (params, propcode, dpd_in_cache));
 		goto done;
 	}
 
 generic:
 	if (ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
-		CHECK_PTP_RC(ptp_getdevicepropdesc (params, propcode, &params->dpd_cache[i]));
+		CHECK_PTP_RC(ptp_getdevicepropdesc (params, propcode, dpd_in_cache));
 		goto done;
 	}
 
 	return PTP_RC_OperationNotSupported;
 
 done:
-	params->dpd_cache[i].timestamp = now;
-	duplicate_DevicePropDesc(&params->dpd_cache[i], dpd);
+	dpd_in_cache->timestamp = now;
+	duplicate_DevicePropDesc(dpd_in_cache, dpd);
 	return PTP_RC_OK;
 }
 
@@ -4797,14 +4777,10 @@ uint16_t
 ptp_generic_setdevicepropvalue (PTPParams* params, uint32_t propcode,
 	PTPPropValue *value, uint16_t datatype)
 {
-	unsigned int i;
-
 	/* reset the cache entry */
-	for (i=0;i<params->dpd_cache_len;i++)
-		if (params->dpd_cache[i].DevicePropCode == propcode)
-			break;
-	if (i != params->dpd_cache_len)
-		params->dpd_cache[i].timestamp = 0;
+	PTPDevicePropDesc *dpd_in_cache = ptp_find_dpd_in_cache(params, propcode);
+	if (dpd_in_cache)
+		dpd_in_cache->timestamp = 0;
 
 	/* FIXME: change the cache? hmm */
 	/* this works for some methods, but not for all */
@@ -5845,20 +5821,15 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 
 			for(i = 0; i < *count; i++)
 			{
-				unsigned int j;
-
 				param = dtoh16a(&data[2 + 6 * i]);
 				value = dtoh32a(&data[2 + 6 * i + 2]);
 				(*events)[i] = param;
 				ptp_debug(params, "param: %02x, value: %d ", param, value);
 
 				/* reset the property cache entry for refetch ... */
-				for (j=0;j<params->dpd_cache_len;j++)
-					if (params->dpd_cache[j].DevicePropCode == param)
-						break;
-				if (j != params->dpd_cache_len) {
-					params->dpd_cache[j].timestamp = 0;
-				}
+				PTPDevicePropDesc *dpd_in_cache = ptp_find_dpd_in_cache(params, param);
+				if (dpd_in_cache)
+					dpd_in_cache->timestamp = 0;
 			}
 		}
 	}
