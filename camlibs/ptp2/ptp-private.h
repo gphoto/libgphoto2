@@ -141,8 +141,8 @@ have_eos_prop(PTPParams *params, uint16_t vendor, uint16_t prop) {
 	/* The special Canon EOS property set gets special treatment. */
 	if ((params->deviceinfo.VendorExtensionID != PTP_VENDOR_CANON) || (vendor != PTP_VENDOR_CANON))
 		return 0;
-	for (i=0;i<params->canon_props_len;i++)
-		if (params->canon_props[i].DevicePropCode == prop)
+	for (i=0;i<params->canon_props.len;i++)
+		if (params->canon_props.val[i].DevicePropCode == prop)
 			return 1;
 	return 0;
 }

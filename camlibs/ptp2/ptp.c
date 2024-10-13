@@ -2087,11 +2087,8 @@ ptp_free_params (PTPParams *params)
 	free (params->objects);
 	free_array (&params->storageids);
 	free (params->events);
-	for (i=0;i<params->canon_props_len;i++) {
-		ptp_free_devicepropdesc (&params->canon_props[i]);
-	}
-	free (params->canon_props);
 
+	free_array_recusive (&params->canon_props, ptp_free_devicepropdesc);
 	free_array_recusive (&params->eos_events, ptp_free_eos_event);
 
 	for (i=0;i<params->dpd_cache_len;i++)
