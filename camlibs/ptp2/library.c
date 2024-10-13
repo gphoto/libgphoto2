@@ -6009,9 +6009,7 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 
 	/* Discard all collected events before starting the next capture. */
 	GP_LOG_D("discarding %d EOS events", params->eos_events.len);
-	for_each (PTPCanonEOSEvent*, pevt, params->eos_events)
-		ptp_free_eos_event (pevt);
-	free_array (&params->eos_events);
+	free_array_recusive (&params->eos_events, ptp_free_eos_event);
 
 	if (params->eos_camerastatus == 1)
 		return GP_ERROR_CAMERA_BUSY;
