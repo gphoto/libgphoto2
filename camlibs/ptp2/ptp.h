@@ -92,7 +92,7 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
  * array_push_back(&objects, some_value);
  * for_each(PTPObject*, pobj, objects)
  *     pobj->call_some_func();
- * free_array(&objects);
+ * free_array_recursive(&objects, ptp_free_object);
  */
 
 #define ARRAY_OF(TYPE) struct ArrayOf##TYPE \
@@ -101,10 +101,19 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 	uint32_t len; \
 }
 
+#define for_each(TYPE, PTR, ARRAY) \
+	for (TYPE PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)
+
 #define free_array(ARRAY) do { \
 	free ((ARRAY)->val); \
 	(ARRAY)->val = 0; \
 	(ARRAY)->len = 0; \
+} while (0)
+
+#define free_array_recusive(ARRAY, DESTRUCTOR) do { \
+	for (uint32_t _i = 0; _i < (ARRAY)->len; ++_i) \
+		DESTRUCTOR (&(ARRAY)->val[_i]); \
+	free_array (ARRAY); \
 } while (0)
 
 #define array_extend(ARRAY, LEN) do { \
@@ -143,9 +152,6 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 	memmove ((ARRAY)->val, (ARRAY)->val + 1, ((ARRAY)->len - 1) * sizeof((ARRAY)->val[0])); \
 	(ARRAY)->len--; \
 } while(0)
-
-#define for_each(TYPE, PTR, ARRAY) \
-	for (TYPE PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)
 
 /* TODO: with support for C23, we can improve the for_each macro by dropping the TYPE argument
  *     #define for_each(PTR, ARRAY) for (typeof(ARRAY.val) PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)

@@ -2092,9 +2092,7 @@ ptp_free_params (PTPParams *params)
 	}
 	free (params->canon_props);
 
-	for_each (PTPCanonEOSEvent*, pevt, params->eos_events)
-		ptp_free_eos_event (pevt);
-	free_array (&params->eos_events);
+	free_array_recusive (&params->eos_events, ptp_free_eos_event);
 
 	for (i=0;i<params->dpd_cache_len;i++)
 		ptp_free_devicepropdesc (&params->dpd_cache[i]);
@@ -5930,9 +5928,7 @@ ptp_free_object (PTPObject *ob)
 	if (!ob) return;
 
 	ptp_free_objectinfo (&ob->oi);
-	for_each (MTPObjectProp*, prop, ob->mtp_props)
-		ptp_free_object_prop(prop);
-	free_array (&ob->mtp_props);
+	free_array_recusive (&ob->mtp_props, ptp_free_object_prop);
 	ob->flags = 0;
 }
 
