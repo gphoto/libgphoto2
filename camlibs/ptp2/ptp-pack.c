@@ -1698,10 +1698,18 @@ ptp_pack_EOS_CustomFuncEx (PTPParams* params, unsigned char* data, char* str)
 static inline PTPDevicePropDesc*
 ptp_find_eos_devicepropdesc(PTPParams *params, uint32_t dpc)
 {
-	for (unsigned j=0; j < params->canon_props_len; j++)
-		if (params->canon_props[j].DevicePropCode == dpc)
-			return &params->canon_props[j];
+	for_each (PTPDevicePropDesc*, pdpd, params->canon_props)
+		if (pdpd->DevicePropCode == dpc)
+			return pdpd;
 	return NULL;
+}
+
+/* this helper is required, since array_push_back contains a "return GP_ERROR_NO_MEMEORY" statement */
+static int
+_swallow_error_push_back_dpd(PTPDevicePropDescs *dpds, PTPDevicePropDesc new)
+{
+	array_push_back(dpds, new);
+	return 0;
 }
 
 static PTPDevicePropDesc*
@@ -1712,14 +1720,14 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint32_t dpc)
 	if (dpd)
 		return dpd;
 
-	unsigned j = params->canon_props_len;
-	params->canon_props = realloc(params->canon_props, sizeof(params->canon_props[0])*(j+1));
-	memset (&params->canon_props[j],0,sizeof(params->canon_props[j]));
-	params->canon_props[j].DevicePropCode = dpc;
-	params->canon_props[j].GetSet = 1;
-	params->canon_props[j].FormFlag = PTP_DPFF_None;
-	params->canon_props_len = j+1;
-	return &params->canon_props[j];
+	PTPDevicePropDesc new = {0};
+	new.DevicePropCode = dpc;
+	new.GetSet = 1;
+
+	if (_swallow_error_push_back_dpd(&params->canon_props, new))
+		return NULL;
+	else
+		return &params->canon_props.val[params->canon_props.len-1];
 }
 
 #define PTP_CANON_SET_INFO( ENTRY, MSG, ...) \
@@ -2331,8 +2339,7 @@ static unsigned int olcsizes[0x15][13] = {
 					 * EOS R also 7 bytes
 					 * 7 bytes: 01 01 a0 0c 00 0c 00
 					 */
-					uint16_t dpc = PTP_DPC_CANON_EOS_ShutterSpeed;
-					dpd = _lookup_or_allocate_canon_prop(params, dpc);
+					dpd = _lookup_or_allocate_canon_prop(params, PTP_DPC_CANON_EOS_ShutterSpeed);
 					if (olcver >= 0x14) {	/* taken from northofyou branch */
 						dpd->CurrentValue.u16 = curdata[curoff+7];
 					} else {
@@ -2340,7 +2347,7 @@ static unsigned int olcsizes[0x15][13] = {
 					}
 
 					e[i].type = PTP_EOSEvent_PropertyChanged;
-					e[i].u.propid = dpc;
+					e[i].u.propid = dpd->DevicePropCode;
 					break;
 				}
 				case 0x0004: { /* Aperture */
@@ -2351,8 +2358,7 @@ static unsigned int olcsizes[0x15][13] = {
 					 * EOS M6 Mark 2:
 					 * 9 bytes: 01 03 00 58 00 2d 00 30 00
 					 */
-					uint16_t dpc = PTP_DPC_CANON_EOS_Aperture;
-					dpd = _lookup_or_allocate_canon_prop(params, dpc);
+					dpd = _lookup_or_allocate_canon_prop(params, PTP_DPC_CANON_EOS_Aperture);
 					if (olcver >= 0x12) {
 						dpd->CurrentValue.u16 = curdata[curoff+7]; /* RP, R5, etc */
 					} else {
@@ -2360,19 +2366,18 @@ static unsigned int olcsizes[0x15][13] = {
 					}
 
 					e[i].type = PTP_EOSEvent_PropertyChanged;
-					e[i].u.propid = dpc;
+					e[i].u.propid = dpd->DevicePropCode;
 					break;
 				}
 				case 0x0008: { /* ISO */
 					/* 4 bytes: 01 01 00 78 */
 					/* EOS M6 Mark2: 01 01 00 6b 68 28 */
 					/* this seem to be the ISO record */
-					uint16_t dpc = PTP_DPC_CANON_EOS_ISOSpeed;
-					dpd = _lookup_or_allocate_canon_prop(params, dpc);
+					dpd = _lookup_or_allocate_canon_prop(params, PTP_DPC_CANON_EOS_ISOSpeed);
 					dpd->CurrentValue.u16 = curdata[curoff+3]; /* just use last byte */
 
 					e[i].type = PTP_EOSEvent_PropertyChanged;
-					e[i].u.propid = dpc;
+					e[i].u.propid = dpd->DevicePropCode;
 					break;
 				}
 				case 0x0040: { /* Exposure Indicator */

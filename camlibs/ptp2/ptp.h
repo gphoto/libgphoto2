@@ -122,6 +122,7 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 		GP_LOG_E ("Out of memory: 'realloc' of %ld bytes failed.", ((ARRAY)->len + (LEN)) * sizeof((ARRAY)->val[0])); \
 		return GP_ERROR_NO_MEMORY; \
 	} \
+	memset((ARRAY)->val + (ARRAY)->len, 0, LEN); \
 } while(0)
 
 #define array_push_back(ARRAY, VAL) do { \
@@ -3865,7 +3866,6 @@ typedef void (* PTPDebugFunc) (void *data, const char *format, va_list args)
 ;
 
 typedef ARRAY_OF(MTPObjectProp) MTPObjectProps;
-typedef ARRAY_OF(PTPCanonEOSEvent) PTPCanonEOSEvents;
 
 struct _PTPObject {
 	uint32_t	oid;
@@ -3912,6 +3912,9 @@ typedef struct _PanasonicLiveViewSize PanasonicLiveViewSize;
 #define PTP_DP_SENDDATA         0x0001  /* sending data */
 #define PTP_DP_GETDATA          0x0002  /* receiving data */
 #define PTP_DP_DATA_MASK        0x00ff  /* data phase mask */
+
+typedef ARRAY_OF(PTPCanonEOSEvent) PTPCanonEOSEvents;
+typedef ARRAY_OF(PTPDevicePropDesc) PTPDevicePropDescs;
 
 struct _PTPParams {
 	/* device flags */
@@ -3985,8 +3988,7 @@ struct _PTPParams {
 	unsigned int		dpd_cache_len;
 
 	/* PTP: Canon specific flags list */
-	PTPDevicePropDesc	*canon_props;
-	unsigned int		canon_props_len;
+	PTPDevicePropDescs	canon_props;
 	int			canon_viewfinder_on;
 	int			canon_event_mode;
 
