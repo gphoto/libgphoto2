@@ -1827,9 +1827,9 @@ struct _PTPDevicePropDesc {
 	uint32_t		DevicePropCode;
 	uint16_t		DataType;
 	uint8_t			GetSet;
+	uint8_t			FormFlag;
 	PTPPropValue	DefaultValue;
 	PTPPropValue	CurrentValue;
-	uint8_t			FormFlag;
 	union	{
 		PTPPropDescEnumForm	Enum;
 		PTPPropDescRangeForm	Range;
