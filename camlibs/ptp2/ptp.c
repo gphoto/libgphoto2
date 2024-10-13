@@ -2079,7 +2079,7 @@ ptp_free_params (PTPParams *params)
 		ptp_free_object (&params->objects[i]);
 	free (params->objects);
 	free_array (&params->storageids);
-	free (params->events);
+	free_array (&params->events);
 
 	free_array_recusive (&params->canon_props, ptp_free_devicepropdesc);
 	free_array_recusive (&params->eos_events, ptp_free_eos_event);
@@ -3206,34 +3206,9 @@ ptp_canon_checkevent (PTPParams* params, PTPContainer* event, int* isevent)
 }
 
 uint16_t
-ptp_add_event_queue (PTPContainer **events, unsigned int *nrevents, PTPContainer *evt)
-{
-	PTPContainer *levents;
-
-	levents = realloc(*events, sizeof(PTPContainer)*((*nrevents)+1));
-	if (!levents)
-		return PTP_RC_GeneralError;
-	*events = levents;
-	memcpy (&levents[*nrevents],evt,1*sizeof(PTPContainer));
-	(*nrevents)++;
-	return PTP_RC_OK;
-}
-
-uint16_t
 ptp_add_event (PTPParams *params, PTPContainer *event)
 {
-	return ptp_add_events (params, event, 1);
-}
-
-uint16_t
-ptp_add_events (PTPParams *params, PTPContainer *events, unsigned int count)
-{
-	params->events = realloc(params->events, sizeof(PTPContainer)*(count+params->events_len));
-	if (!params->events)
-		return PTP_RC_GeneralError;
-
-	memcpy (&params->events[params->events_len], events, count*sizeof(PTPContainer));
-	params->events_len += count;
+	array_push_back (&params->events, *event);
 	return PTP_RC_OK;
 }
 
@@ -3614,28 +3589,26 @@ ptp_check_event (PTPParams *params)
 	uint16_t	ret;
 
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_NIKON) {
-		unsigned int evtcnt = 0, i;
-		PTPContainer *xevent = NULL;
+		PTPEvents events = {0};
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_GetEventEx)) {
-			ret = ptp_nikon_check_eventex(params, &xevent, &evtcnt);
+			ret = ptp_nikon_check_eventex(params, &events.val, &events.len);
 		} else if (ptp_operation_issupported(params, PTP_OC_NIKON_GetEvent)) {
 			/* Method offered by Nikon DSLR, Nikon 1, and some older Nikon Coolpix P*
 			 * The Nikon Coolpix P2 however does not return anything. So if we never get
 			 * events from here, use the ptp "interrupt" method */
-			ret = ptp_nikon_check_event(params, &xevent, &evtcnt);
+			ret = ptp_nikon_check_event(params, &events.val, &events.len);
 		} else {
 			ret = PTP_RC_OperationNotSupported;
 		}
 		if (ret != PTP_RC_OperationNotSupported)
 			CHECK_PTP_RC(ret);
 
-		if (evtcnt) {
-			ptp_add_events(params, xevent, evtcnt);
-			for (i = 0; i < evtcnt; i++)
-				handle_event_internal (params, &xevent[i]);
+		if (events.len) {
+			for_each (PTPContainer*, pevt, events)
+				handle_event_internal (params, pevt);
+			array_append (&params->events, &events);
 			params->event90c7works = 1;
 		}
-		free (xevent);
 		if (params->event90c7works)
 			return PTP_RC_OK;
 		/* fall through to generic event handling */
@@ -3709,16 +3682,9 @@ ptp_wait_event (PTPParams *params)
 int
 ptp_get_one_event(PTPParams *params, PTPContainer *event)
 {
-	if (!params->events_len)
+	if (params->events.len == 0)
 		return 0;
-	memcpy (event, params->events, sizeof(PTPContainer));
-	memmove (params->events, params->events+1, sizeof(PTPContainer)*(params->events_len-1));
-	/* do not realloc on shrink. */
-	params->events_len--;
-	if (!params->events_len) {
-		free (params->events);
-		params->events = NULL;
-	}
+	array_pop_front(&params->events, event);
 	return 1;
 }
 
@@ -3736,20 +3702,10 @@ ptp_get_one_event(PTPParams *params, PTPContainer *event)
 int
 ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event)
 {
-	unsigned int i;
-
-	if (!params->events_len)
-		return 0;
-	for (i=0;i<params->events_len;i++) {
-		if (params->events[i].Code == code) {
-			memcpy (event, params->events+i, sizeof(PTPContainer));
-			memmove (params->events+i, params->events+i+1, sizeof(PTPContainer)*(params->events_len-i-1));
-			/* do not realloc on shrink. */
-			params->events_len--;
-			if (!params->events_len) {
-				free (params->events);
-				params->events = NULL;
-			}
+	for_each (PTPContainer*, pevt, params->events) {
+		if (pevt->Code == code) {
+			*event = *pevt;
+			array_remove(&params->events, pevt);
 			return 1;
 		}
 	}

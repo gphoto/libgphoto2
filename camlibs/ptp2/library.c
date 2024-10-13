@@ -4156,8 +4156,7 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 	int			back_off_wait = 0;
 	struct timeval		capture_start;
 	int			loops;
-	PTPContainer		*storedevents = NULL;
-	unsigned int		nrstoredevents = 0;
+	PTPEvents		stored_events = {0};
 	PTPContainer		event;
 
 
@@ -4218,13 +4217,19 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		C_PTP_REP_MSG (nikon_wait_busy(params,20,2000), _("Nikon enable liveview failed"));
 	}
 
+#ifdef SAVE_NIKON_EVENTS_BEFORE_CAPTURE_AND_REPLAY_AFTERWARDS
 	/* before we start real capture, move the current hw event queue to our local queue */
-	while (ptp_get_one_event(params, &event)) {
-		GP_LOG_D ("saving event queue before capture: event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
-		ptp_add_event_queue (&storedevents, &nrstoredevents, &event);
-	}
-	free(storedevents); storedevents = NULL;
-
+	GP_LOG_D ("saving event queue before capture: %d events", params->events.len);
+	move(stored_events, params->events);
+#else
+	/* TODO: The above code is what the original seems to have intended to do, but due the free() in this line:
+	 * https://github.com/gphoto/libgphoto2/commit/0aea074ab604203c4b0a1e27c7ba2fef9428ea1a#diff-fe994a8b889e76ddd91b43a62ba0ef1872f77e086f1a32fd6566b25dc8a8f2b3R4132
+	 * the following is what it effectively did (plus likely some out of bounds memcpy since nrstoredevents has not been set to 0).
+	 * Note this is also the behavor of the EOS event hadling before capturing.
+	 */
+	GP_LOG_D ("draining the event queue before capture: %d events", params->events.len);
+	free_array (&params->events);
+#endif
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
 		/* we assume for modern cameras this event method works to avoid longer waits */
@@ -4274,10 +4279,11 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 capturetriggered:
 	if (ret != PTP_RC_OK) {
+#ifdef SAVE_NIKON_EVENTS_BEFORE_CAPTURE_AND_REPLAY_AFTERWARDS
 		/* store back all the queued events back to the hw event queue before returning. */
 		/* we do not do this in all error edge cases currently, only the ones that can trigger often */
-		ptp_add_events (params, storedevents, nrstoredevents);
-		free(storedevents); storedevents = NULL;
+		array_append (&params->events, &stored_events);
+#endif
 		C_PTP_REP (ret);
 	}
 
@@ -4310,7 +4316,7 @@ capturetriggered:
 				/* if we got one object already, put it into the queue */
 				/* e.g. for NEF+RAW capture */
 				if (newobject != 0xffff0001) {
-					ptp_add_event_queue (&storedevents, &nrstoredevents, &event);
+					array_push_back(&stored_events, event);
 					done = 3;
 					break;
 				}
@@ -4341,7 +4347,7 @@ capturetriggered:
 				break;
 			default:
 				GP_LOG_D ("UNHANDLED event.Code is %x / param %lx, DEFER", event.Code, (unsigned long)event.Param1);
-				ptp_add_event_queue (&storedevents, &nrstoredevents, &event);
+				array_push_back (&stored_events, event);
 				break;
 			}
 		}
@@ -4358,8 +4364,7 @@ capturetriggered:
 	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 70*1000)); /* 70 seconds */
 
 	/* add all the queued events back to the event queue */
-	ptp_add_events (params, storedevents, nrstoredevents);
-	free(storedevents); storedevents = NULL;
+	array_append (&params->events, &stored_events);
 
 	/* Maximum image time is 30 seconds, but NR processing might take 25 seconds ... so wait longer.
 	 * see https://github.com/gphoto/libgphoto2/issues/94 */

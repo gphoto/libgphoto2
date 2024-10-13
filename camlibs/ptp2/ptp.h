@@ -146,12 +146,16 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 	} \
 } while(0)
 
-#define array_pop_front(ARRAY, VAL) do { \
-	if ((ARRAY)->len == 0) \
+#define array_remove(ARRAY, ITER) do { \
+	if (ITER < (ARRAY)->val || ITER >= (ARRAY)->val + (ARRAY)->len) \
 		break; \
-	*VAL = (ARRAY)->val[0]; \
-	memmove ((ARRAY)->val, (ARRAY)->val + 1, ((ARRAY)->len - 1) * sizeof((ARRAY)->val[0])); \
+	memmove (ITER, ITER + 1, ((ARRAY)->len - (ITER + 1 - (ARRAY)->val)) * sizeof((ARRAY)->val[0])); \
 	(ARRAY)->len--; \
+} while(0)
+
+#define array_pop_front(ARRAY, VAL) do { \
+	*VAL = (ARRAY)->val[0]; \
+	array_remove(ARRAY, (ARRAY)->val); \
 } while(0)
 
 /* TODO: with support for C23, we can improve the for_each macro by dropping the TYPE argument
@@ -3913,6 +3917,7 @@ typedef struct _PanasonicLiveViewSize PanasonicLiveViewSize;
 #define PTP_DP_GETDATA          0x0002  /* receiving data */
 #define PTP_DP_DATA_MASK        0x00ff  /* data phase mask */
 
+typedef ARRAY_OF(PTPContainer) PTPEvents;
 typedef ARRAY_OF(PTPCanonEOSEvent) PTPCanonEOSEvents;
 typedef ARRAY_OF(PTPDevicePropDesc) PTPDevicePropDescs;
 
@@ -3967,8 +3972,7 @@ struct _PTPParams {
 	PTPDeviceInfo	deviceinfo;
 
 	/* PTP: the current event queue */
-	PTPContainer	*events;
-	unsigned int	events_len;
+	PTPEvents	events;
 
 	/* Capture count for SDRAM capture style images */
 	unsigned int		capcnt;
@@ -4239,8 +4243,6 @@ uint16_t ptp_check_event (PTPParams *params);
 uint16_t ptp_check_event_queue (PTPParams *params);
 uint16_t ptp_wait_event (PTPParams *params);
 uint16_t ptp_add_event (PTPParams *params, PTPContainer *event);
-uint16_t ptp_add_events (PTPParams *params, PTPContainer *event, unsigned int count);
-uint16_t ptp_add_event_queue (PTPContainer **events, unsigned int *nrevents, PTPContainer *evt);
 int ptp_get_one_event (PTPParams *params, PTPContainer *evt);
 int ptp_get_one_event_by_type(PTPParams *params, uint16_t code, PTPContainer *event);
 uint16_t ptp_check_eos_events (PTPParams *params);
