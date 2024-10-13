@@ -127,7 +127,7 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 
 #define array_push_back(ARRAY, VAL) do { \
 	array_extend(ARRAY, 1); \
-	(ARRAY)->val[(ARRAY)->len++] = VAL; \
+	move((ARRAY)->val[(ARRAY)->len++], VAL); \
 } while(0)
 
 #define array_append_copy(DST, SRC) do { \
@@ -3984,8 +3984,7 @@ struct _PTPParams {
 	int			storagechanged;
 
 	/* PTP: Device Property Caching */
-	PTPDevicePropDesc	*dpd_cache;
-	unsigned int		dpd_cache_len;
+	PTPDevicePropDescs	dpd_cache;
 
 	/* PTP: Canon specific flags list */
 	PTPDevicePropDescs	canon_props;
@@ -4998,6 +4997,9 @@ void ptp_objects_sort (PTPParams *);
 uint16_t ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob);
 uint16_t ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob);
 uint16_t ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle);
+
+PTPDevicePropDesc* ptp_find_dpd_in_cache(PTPParams *params, uint32_t dpc);
+
 /* ptpip.c */
 void ptp_nikon_getptpipguid (unsigned char* guid);
 
