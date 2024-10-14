@@ -9464,7 +9464,6 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 {
 	uint16_t	ret;
 	PTPObject	*ob;
-	/*Camera 		*camera = ((PTPData *)params->data)->camera;*/
 
 	/* If GetObjectInfo is broken, force GetPropList */
 	if (params->device_flags & DEVICE_FLAG_PROPLIST_OVERRIDES_OI)
@@ -9495,7 +9494,8 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 			ptp_remove_object_from_cache(params, handle);
 			return ret;
 		}
-		if (!ob->oi.Filename) ob->oi.Filename=strdup("<none>");
+		if (!ob->oi.Filename)
+			ob->oi.Filename = strdup("<none>");
 		if (ob->flags & PTPOBJECT_PARENTOBJECT_LOADED) {
 			if (ob->oi.ParentObject != saveparent)
 				ptp_debug (params, "saved parent %08x is not the same as read via getobjectinfo %08x", ob->oi.ParentObject, saveparent);
@@ -9515,13 +9515,12 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 				(PTP_RC_OK == ptp_nikon_getobjectsize(params, handle, &newsize))
 			) {
 				ob->oi.ObjectSize = newsize;
-				goto read64bit;
+			} else {
+				/* more methods like e.g. for Canon */
+				/* if not try MTP method */
+				want |= PTPOBJECT_MTPPROPLIST_LOADED;
+				params->device_flags |= DEVICE_FLAG_PROPLIST_OVERRIDES_OI; /* FIXME: wild hack so below code works, needs review. */
 			}
-			/* more methods like e.g. for Canon */
-			/* if not try MTP method */
-			want |= PTPOBJECT_MTPPROPLIST_LOADED;
-			params->device_flags |= DEVICE_FLAG_PROPLIST_OVERRIDES_OI; /* FIXME: wild hack so below code works, needs review. */
-read64bit:		;
 		}
 
 		/* Apple iOS X does that for the root folder. */
@@ -9553,30 +9552,26 @@ read64bit:		;
 		ob->flags |= X;
 	}
 #undef X
-	if (	(want & PTPOBJECT_MTPPROPLIST_LOADED) &&
-		(!(ob->flags & PTPOBJECT_MTPPROPLIST_LOADED))
-	) {
-		if (params->device_flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST) {
-			want &= ~PTPOBJECT_MTPPROPLIST_LOADED;
-			goto fallback;
-		}
-		/* Microsoft/MTP has fast directory retrieval. */
-		if (!ptp_operation_issupported(params,PTP_OC_MTP_GetObjPropList)) {
-			want &= ~PTPOBJECT_MTPPROPLIST_LOADED;
-			goto fallback;
-		}
 
+	if ((params->device_flags & DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST) ||
+	    !ptp_operation_issupported(params, PTP_OC_MTP_GetObjPropList)
+	) {
+		want &= ~PTPOBJECT_MTPPROPLIST_LOADED;
+	}
+
+	if ((want & PTPOBJECT_MTPPROPLIST_LOADED) && (!(ob->flags & PTPOBJECT_MTPPROPLIST_LOADED))
+	) {
 		ptp_debug (params, "ptp2/mtpfast: reading mtp proplist of %08x", handle);
 		/* We just want this one object, not all at once. */
-		ret = ptp_mtp_getobjectproplist_single (params, handle, &ob->mtp_props);
-		if (ret != PTP_RC_OK)
-			goto fallback;
+		if (PTP_RC_OK == ptp_mtp_getobjectproplist_single (params, handle, &ob->mtp_props))
+			ob->flags |= PTPOBJECT_MTPPROPLIST_LOADED;
 
 		/* Override the ObjectInfo data with data from properties */
-		if (params->device_flags & DEVICE_FLAG_PROPLIST_OVERRIDES_OI) {
+		if ((ob->flags & PTPOBJECT_MTPPROPLIST_LOADED) && (params->device_flags & DEVICE_FLAG_PROPLIST_OVERRIDES_OI)) {
 
 			for_each (MTPObjectProp*, prop, ob->mtp_props) {
-				/* in case we got all subtree objects */
+				/* in case we got all subtree objects.
+				 * FIXME: we explicitly requested props for a single object, so this seems outdated. */
 				if (prop->ObjectHandle != handle) continue;
 
 				switch (prop->PropCode) {
@@ -9626,108 +9621,14 @@ read64bit:		;
 				}
 			}
 		}
-
-#if 0
-		MTPObjectProp 	*xpl;
-		int j;
-		PTPObjectInfo	oinfo;
-
-		memset (&oinfo,0,sizeof(oinfo));
-		/* hmm, not necessary ... only if we would use it */
-		for (j=0;j<nrofprops;j++) {
-			xpl = &props[j];
-			switch (xpl->PropCode) {
-			case PTP_OPC_ParentObject:
-				if (xpl->DataType != PTP_DTC_UINT32) {
-					ptp_debug (params, "ptp2/mtpfast: parentobject has type 0x%x???", xpl->DataType);
-					break;
-				}
-				oinfo.ParentObject = xpl->Value.u32;
-				ptp_debug (params, "ptp2/mtpfast: parent 0x%x", xpl->Value.u32);
-				break;
-			case PTP_OPC_ObjectFormat:
-				if (xpl->DataType != PTP_DTC_UINT16) {
-					ptp_debug (params, "ptp2/mtpfast: objectformat has type 0x%x???", xpl->DataType);
-					break;
-				}
-				oinfo.ObjectFormat = xpl->Value.u16;
-				ptp_debug (params, "ptp2/mtpfast: ofc 0x%x", xpl->Value.u16);
-				break;
-			case PTP_OPC_ObjectSize:
-				switch (xpl->DataType) {
-				case PTP_DTC_UINT32:
-					oinfo.ObjectSize = xpl->Value.u32;
-					break;
-				case PTP_DTC_UINT64:
-					oinfo.ObjectSize = xpl->Value.u64;
-					break;
-				default:
-					ptp_debug (params, "ptp2/mtpfast: objectsize has type 0x%x???", xpl->DataType);
-					break;
-				}
-				ptp_debug (params, "ptp2/mtpfast: objectsize %u", xpl->Value.u32);
-				break;
-			case PTP_OPC_StorageID:
-				if (xpl->DataType != PTP_DTC_UINT32) {
-					ptp_debug (params, "ptp2/mtpfast: storageid has type 0x%x???", xpl->DataType);
-					break;
-				}
-				oinfo.StorageID = xpl->Value.u32;
-				ptp_debug (params, "ptp2/mtpfast: storageid 0x%x", xpl->Value.u32);
-				break;
-			case PTP_OPC_ProtectionStatus:/*UINT16*/
-				if (xpl->DataType != PTP_DTC_UINT16) {
-					ptp_debug (params, "ptp2/mtpfast: protectionstatus has type 0x%x???", xpl->DataType);
-					break;
-				}
-				oinfo.ProtectionStatus = xpl->Value.u16;
-				ptp_debug (params, "ptp2/mtpfast: protection 0x%x", xpl->Value.u16);
-				break;
-			case PTP_OPC_ObjectFileName:
-				if (xpl->DataType != PTP_DTC_STR) {
-					ptp_debug (params, "ptp2/mtpfast: filename has type 0x%x???", xpl->DataType);
-					break;
-				}
-				if (xpl->Value.str) {
-					ptp_debug (params, "ptp2/mtpfast: filename %s", xpl->Value.str);
-					oinfo.Filename = strdup(xpl->Value.str);
-				} else {
-					oinfo.Filename = NULL;
-				}
-				break;
-			case PTP_OPC_DateCreated:
-				if (xpl->DataType != PTP_DTC_STR) {
-					ptp_debug (params, "ptp2/mtpfast: datecreated has type 0x%x???", xpl->DataType);
-					break;
-				}
-				ptp_debug (params, "ptp2/mtpfast: capturedate %s", xpl->Value.str);
-				oinfo.CaptureDate = ptp_unpack_PTPTIME (xpl->Value.str);
-				break;
-			case PTP_OPC_DateModified:
-				if (xpl->DataType != PTP_DTC_STR) {
-					ptp_debug (params, "ptp2/mtpfast: datemodified has type 0x%x???", xpl->DataType);
-					break;
-				}
-				ptp_debug (params, "ptp2/mtpfast: moddate %s", xpl->Value.str);
-				oinfo.ModificationDate = ptp_unpack_PTPTIME (xpl->Value.str);
-				break;
-			default:
-				if ((xpl->PropCode & 0xfff0) == 0xdc00)
-					ptp_debug (params, "ptp2/mtpfast:case %x type %x unhandled", xpl->PropCode, xpl->DataType);
-				break;
-			}
-		}
-		if (!oinfo.Filename)
-			/* i have one such file on my Creative */
-			oinfo.Filename = strdup("<null>");
-#endif
-		ob->flags |= PTPOBJECT_MTPPROPLIST_LOADED;
-fallback:	;
 	}
-	if ((ob->flags & want) == want)
-		return PTP_RC_OK;
-	ptp_debug (params, "ptp_object_want: handle 0x%08x, want flags %x, have only %x?", handle, want, ob->flags);
-	return PTP_RC_GeneralError;
+
+	if ((ob->flags & want) != want) {
+		ptp_debug (params, "ptp_object_want: handle 0x%08x, want flags %x, have only %x?", handle, want, ob->flags);
+		return PTP_RC_GeneralError;
+	}
+
+	return PTP_RC_OK;
 }
 
 
