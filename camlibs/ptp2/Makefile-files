@@ -32,6 +32,7 @@ ptp2_la_SOURCES      += %reldir%/olympus-wrap.h
 ptp2_la_SOURCES      += %reldir%/chdk.c
 ptp2_la_SOURCES      += %reldir%/fujiptpip.c
 ptp2_la_SOURCES      += %reldir%/ptpip-private.h
+ptp2_la_SOURCES      += %reldir%/array.h
 
 ptp2_la_CFLAGS        = $(camlib_cflags)
 ptp2_la_CPPFLAGS      = $(camlib_cppflags)
