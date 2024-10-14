@@ -33,6 +33,7 @@
 #include "libgphoto2/gphoto2-endian.h"
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-port-result.h>
+#include "array.h"
 #include "device-flags.h"
 
 #ifdef __cplusplus
@@ -72,103 +73,6 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 #define dtoh32o(a, o)  dtoh32a((a) + _post_inc(&o, sizeof(uint32_t)))
 #define dtoh64o(a, o)  dtoh64a((a) + _post_inc(&o, sizeof(uint64_t)))
 
-#define ARRAYSIZE(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))
-
-#define move(dst, src) do { \
-	dst = src; \
-	memset(&(src), 0, sizeof(src)); \
-} while(0)
-
-/* The follow set of macros implements a generic array or list of TYPE.
- * This is basically a TYPE* pointer and a length integer. This structure
- * together with the typical use-cases repeats regularly throughout the
- * codebase. It raises the level of abstraction and improves code
- * readabilty. axxel is a c++ developer and misses his STL ;)
- *
- * A typical life-cycle lookes like this:
- *
- * typedef ARRAY_OF(PTPObject) PTPObjects;
- * PTPObjects objects;
- * array_push_back(&objects, some_value);
- * PTPObject *o;
- * array_push_back_empty(&objects, &o);
- * o->some_prop = 1;
- * for_each(PTPObject*, pobj, objects)
- *     pobj->call_some_func();
- * free_array_recursive(&objects, ptp_free_object);
- */
-
-#define ARRAY_OF(TYPE) struct ArrayOf##TYPE \
-{ \
-	TYPE *val; \
-	uint32_t len; \
-}
-
-#define for_each(TYPE, PTR, ARRAY) \
-	for (TYPE PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)
-
-#define free_array(ARRAY) do { \
-	free ((ARRAY)->val); \
-	(ARRAY)->val = 0; \
-	(ARRAY)->len = 0; \
-} while (0)
-
-#define free_array_recusive(ARRAY, DESTRUCTOR) do { \
-	for (uint32_t _i = 0; _i < (ARRAY)->len; ++_i) \
-		DESTRUCTOR (&(ARRAY)->val[_i]); \
-	free_array (ARRAY); \
-} while (0)
-
-#define array_extend_capacity(ARRAY, LEN) do { \
-	(ARRAY)->val = realloc((ARRAY)->val, ((ARRAY)->len + (LEN)) * sizeof((ARRAY)->val[0])); \
-	if (!(ARRAY)->val) { \
-		GP_LOG_E ("Out of memory: 'realloc' of %ld bytes failed.", ((ARRAY)->len + (LEN)) * sizeof((ARRAY)->val[0])); \
-		return GP_ERROR_NO_MEMORY; \
-	} \
-	memset((ARRAY)->val + (ARRAY)->len, 0, LEN * sizeof((ARRAY)->val[0])); \
-} while(0)
-
-#define array_push_back_empty(ARRAY, PITER) do { \
-	array_extend_capacity(ARRAY, 1); \
-	*PITER = &(ARRAY)->val[(ARRAY)->len++]; \
-} while(0)
-
-#define array_push_back(ARRAY, VAL) do { \
-	array_extend_capacity(ARRAY, 1); \
-	move((ARRAY)->val[(ARRAY)->len++], VAL); \
-} while(0)
-
-#define array_append_copy(DST, SRC) do { \
-	array_extend_capacity(DST, (SRC)->len); \
-	memcpy((DST)->val + (DST)->len, (SRC)->val, (SRC)->len * sizeof((SRC)->val[0])); \
-	(DST)->len += (SRC)->len; \
-} while(0)
-
-#define array_append(DST, SRC) do { \
-	if ((DST)->len) { \
-		array_append_copy(DST, SRC); \
-		free_array (SRC); \
-	} else { \
-		free_array (DST); \
-		*(DST) = *(SRC); \
-	} \
-} while(0)
-
-#define array_remove(ARRAY, ITER) do { \
-	if (ITER < (ARRAY)->val || ITER >= (ARRAY)->val + (ARRAY)->len) \
-		break; \
-	memmove (ITER, ITER + 1, ((ARRAY)->len - (ITER + 1 - (ARRAY)->val)) * sizeof((ARRAY)->val[0])); \
-	(ARRAY)->len--; \
-} while(0)
-
-#define array_pop_front(ARRAY, VAL) do { \
-	*VAL = (ARRAY)->val[0]; \
-	array_remove(ARRAY, (ARRAY)->val); \
-} while(0)
-
-/* TODO: with support for C23, we can improve the for_each macro by dropping the TYPE argument
- *     #define for_each(PTR, ARRAY) for (typeof(ARRAY.val) PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)
- */
 
 typedef ARRAY_OF(uint32_t) ArrayU32;
 
