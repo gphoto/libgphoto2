@@ -3925,6 +3925,7 @@ typedef struct _PanasonicLiveViewSize PanasonicLiveViewSize;
 #define PTP_DP_GETDATA          0x0002  /* receiving data */
 #define PTP_DP_DATA_MASK        0x00ff  /* data phase mask */
 
+typedef ARRAY_OF(PTPObject) PTPObjects;
 typedef ARRAY_OF(PTPContainer) PTPEvents;
 typedef ARRAY_OF(PTPCanonEOSEvent) PTPCanonEOSEvents;
 typedef ARRAY_OF(PTPDevicePropDesc) PTPDevicePropDescs;
@@ -3974,8 +3975,7 @@ struct _PTPParams {
 #endif
 
 	/* PTP: internal structures used by ptp driver */
-	PTPObject	*objects;
-	unsigned int	objects_len;
+	PTPObjects	objects;
 
 	PTPDeviceInfo	deviceinfo;
 
