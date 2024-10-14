@@ -4640,8 +4640,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	PTPDevicePropDesc* dpd_in_cache = ptp_find_dpd_in_cache(params, propcode);
 
 	if (!dpd_in_cache) {
-		array_extend(&params->dpd_cache, 1);
-		dpd_in_cache = &params->dpd_cache.val[params->dpd_cache.len - 1];
+		array_push_back_empty(&params->dpd_cache, &dpd_in_cache);
 	}
 
 	if (dpd_in_cache->DataType != PTP_DTC_UNDEF) {

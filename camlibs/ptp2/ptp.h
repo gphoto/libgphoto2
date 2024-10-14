@@ -90,6 +90,9 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
  * typedef ARRAY_OF(PTPObject) PTPObjects;
  * PTPObjects objects;
  * array_push_back(&objects, some_value);
+ * PTPObject *o;
+ * array_push_back_empty(&objects, &o);
+ * o->some_prop = 1;
  * for_each(PTPObject*, pobj, objects)
  *     pobj->call_some_func();
  * free_array_recursive(&objects, ptp_free_object);
@@ -116,22 +119,27 @@ static inline uint32_t _post_inc(uint32_t* o, int n)
 	free_array (ARRAY); \
 } while (0)
 
-#define array_extend(ARRAY, LEN) do { \
+#define array_extend_capacity(ARRAY, LEN) do { \
 	(ARRAY)->val = realloc((ARRAY)->val, ((ARRAY)->len + (LEN)) * sizeof((ARRAY)->val[0])); \
 	if (!(ARRAY)->val) { \
 		GP_LOG_E ("Out of memory: 'realloc' of %ld bytes failed.", ((ARRAY)->len + (LEN)) * sizeof((ARRAY)->val[0])); \
 		return GP_ERROR_NO_MEMORY; \
 	} \
-	memset((ARRAY)->val + (ARRAY)->len, 0, LEN); \
+	memset((ARRAY)->val + (ARRAY)->len, 0, LEN * sizeof((ARRAY)->val[0])); \
+} while(0)
+
+#define array_push_back_empty(ARRAY, PITER) do { \
+	array_extend_capacity(ARRAY, 1); \
+	*PITER = &(ARRAY)->val[(ARRAY)->len++]; \
 } while(0)
 
 #define array_push_back(ARRAY, VAL) do { \
-	array_extend(ARRAY, 1); \
+	array_extend_capacity(ARRAY, 1); \
 	move((ARRAY)->val[(ARRAY)->len++], VAL); \
 } while(0)
 
 #define array_append_copy(DST, SRC) do { \
-	array_extend(DST, (SRC)->len); \
+	array_extend_capacity(DST, (SRC)->len); \
 	memcpy((DST)->val + (DST)->len, (SRC)->val, (SRC)->len * sizeof((SRC)->val[0])); \
 	(DST)->len += (SRC)->len; \
 } while(0)
