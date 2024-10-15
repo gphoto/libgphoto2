@@ -30,7 +30,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: 'Determine number of cores to build on (Linux)'
         if: runner.os == 'Linux'
