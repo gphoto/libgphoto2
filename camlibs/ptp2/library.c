@@ -6934,8 +6934,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					if (PTP_RC_OK == ptp_object_find(params, event.Param1, &ob))
 						continue;
 #endif
-					newobject = event.Param1;
-					ret = ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+					ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 					if (ret != PTP_RC_OK) {
 						*eventtype = GP_EVENT_UNKNOWN;
 						C_MEM (*eventdata = strdup ("object added not found (already deleted)"));
