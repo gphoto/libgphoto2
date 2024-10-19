@@ -57,7 +57,7 @@
  *     #define for_each(PTR, ARRAY) for (typeof(ARRAY.val) PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)
  */
 #define for_each(TYPE, PTR, ARRAY) \
-	for (TYPE PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)
+	for (TYPE PTR = ARRAY.val; PTR < ARRAY.val + ARRAY.len; ++PTR)
 
 #define free_array(ARRAY) do { \
 	free ((ARRAY)->val); \
