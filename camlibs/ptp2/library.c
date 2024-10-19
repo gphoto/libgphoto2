@@ -4537,9 +4537,9 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 		return GP_ERROR;
 	GP_LOG_D ("object has OFC 0x%x", oi.ObjectFormat);
 
-	if (oi.StorageID) /* all done above (TODO: the meaning of this comment / code is unclear) */
+	if (oi.StorageID)
 		return GP_OK;
-
+	/* Code below covers the SDRAM capture */
 	strcpy  (path->folder,"/");
 	sprintf (path->name, "capt%04d.", params->capcnt++);
 	CR (gp_file_new(&file));
@@ -6934,8 +6934,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 					if (PTP_RC_OK == ptp_object_find(params, event.Param1, &ob))
 						continue;
 #endif
-
-					ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
+					newobject = event.Param1;
+					ret = ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob);
 					if (ret != PTP_RC_OK) {
 						*eventtype = GP_EVENT_UNKNOWN;
 						C_MEM (*eventdata = strdup ("object added not found (already deleted)"));
@@ -6979,8 +6979,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 				}
 				case PTP_EC_Nikon_ObjectAddedInSDRAM: {
 					PTPObjectInfo	oi;
-					uint32_t newobject = event.Param1;
 downloadnow:
+					uint32_t newobject = event.Param1;
 					if (!newobject) newobject = 0xffff0001;
 					ret = ptp_getobjectinfo (params, newobject, &oi);
 					if (ret != PTP_RC_OK)
@@ -7252,7 +7252,6 @@ sonyout:
 				gp_file_set_mtime (file, time(NULL));
 
 				GP_LOG_D ("trying to get object size=0x%lx", (unsigned long)oi.ObjectSize);
-				/* TODO: @msmeissn the following line used to pass 0 as handle, which was a bug, right? */
 				C_PTP_REP (ptp_getobject (params, oi.Handle, (unsigned char**)&ximage));
 				ret = gp_file_set_data_and_size(file, (char*)ximage, oi.ObjectSize);
 				if (ret != GP_OK) {
