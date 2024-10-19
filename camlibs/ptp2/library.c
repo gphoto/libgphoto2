@@ -6978,8 +6978,9 @@ camera_wait_for_event (Camera *camera, int timeout,
 				}
 				case PTP_EC_Nikon_ObjectAddedInSDRAM: {
 					PTPObjectInfo	oi;
+					uint32_t newobject;
 downloadnow:
-					uint32_t newobject = event.Param1;
+					newobject = event.Param1;
 					if (!newobject) newobject = 0xffff0001;
 					ret = ptp_getobjectinfo (params, newobject, &oi);
 					if (ret != PTP_RC_OK)
