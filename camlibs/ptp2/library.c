@@ -3050,8 +3050,14 @@ ptp_error_func (void *data, const char *format, va_list args)
 static int
 is_mtp_capable(Camera *camera) {
 	PTPParams *params = &camera->pl->params;
-	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_MICROSOFT)
+	switch (params->deviceinfo.VendorExtensionID)
+	{
+	case PTP_VENDOR_CANON:
+	case PTP_VENDOR_MICROSOFT:
 		return 1;
+	default: break;
+	}
+
 	/* these are also lowercase. */
 	if (params->deviceinfo.Manufacturer && !strcmp(params->deviceinfo.Manufacturer,"motorola"))
 		return 1;
