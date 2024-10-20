@@ -3212,18 +3212,11 @@ ptp_add_event (PTPParams *params, PTPContainer *event)
  * ObjectInfos instead of just a list of handles that have to be queried the one by one.*/
 static uint16_t
 ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
-	unsigned int	i, j, last, changed;
+	unsigned int	i, last, changed;
 	PTPCANONFolderEntry *tmp = NULL;
 	unsigned int	nroftmp = 0;
 	uint16_t	ret;
 	PTPStorageIDs	storageids = {0};
-	PTPObject	*ob;
-
-	if ((handle != 0xffffffff) && (handle != 0)) {
-		ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-		if ((ret == PTP_RC_OK) && (ob->flags & PTPOBJECT_DIRECTORY_LOADED))
-			return PTP_RC_OK;
-	}
 
 	if (storage == 0xffffffff) {
 		if (handle != 0xffffffff)
@@ -3238,10 +3231,10 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 
 	for_each (uint32_t*, psid, storageids) {
 		if ((*psid & 0xffff) == 0) {
-			ptp_debug (params, "reading directory, storage 0x%08x skipped (invalid)", *psid);
+			ptp_debug (params, "list_folder_eos(storage=0x%08x, handle=0x%08x) skipped (invalid storate)", *psid, handle);
 			continue;
 		}
-		ptp_debug (params, "reading handle %08x directory of 0x%08x", *psid, handle);
+		ptp_debug (params, "list_folder_eos(storage=0x%08x, handle=0x%08x)", *psid, handle);
 		tmp = NULL;
 		ret = ptp_canon_eos_getobjectinfoex (
 			  params, *psid, handle ? handle : 0xffffffff, 0x100000, &tmp, &nroftmp);
@@ -3252,7 +3245,8 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 		}
 		/* convert read entries into objectinfos */
 		for (i=0;i<nroftmp;i++) {
-			ob = NULL;
+			PTPObject	*ob = NULL;
+			unsigned int	j;
 
 			/* TODO: the following is actually slow when adding new entries, as the complete list needs to be traversed.
 			 * Make better use of the fact that the list is sorted. */
@@ -3311,12 +3305,6 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 	if (changed)
 		ptp_objects_sort (params);
 
-	/* Do not cache ob, it might be reallocated and have a new address */
-	if (handle != 0xffffffff) {
-		ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-		if (ret == PTP_RC_OK)
-			ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
-	}
 	free_array (&storageids);
 	return PTP_RC_OK;
 }
@@ -3337,14 +3325,6 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 	if (handle == PTP_HANDLER_SPECIAL)
 		handle = 0;
 
-	/* Canon EOS Fast directory strategy */
-	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
-	    ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetObjectInfoEx)) {
-		ret = ptp_list_folder_eos (params, storage, handle);
-		if (ret == PTP_RC_OK)
-			return ret;
-	}
-
 	if (handle) { /* 0 is the virtual root */
 		PTPObject		*ob;
 		/* first check if object itself is loaded, and get its objectinfo. */
@@ -3357,6 +3337,14 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 			return PTP_RC_OK;
 		ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
 		/*log_objectinfo(params, handle, &ob->oi);*/
+	}
+
+	/* Canon EOS Fast directory strategy */
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	    ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetObjectInfoEx)) {
+		ret = ptp_list_folder_eos (params, storage, handle);
+		if (ret == PTP_RC_OK)
+			return ret;
 	}
 
 #if 0 /* apple devices report it, but the conrtent they have does not match the standard somehow. Needs further debugging */
