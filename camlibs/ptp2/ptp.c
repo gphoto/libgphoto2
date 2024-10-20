@@ -9312,7 +9312,7 @@ ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t
 	PTPObject	*ob;
 	uint16_t	ret;
 
-	ret = ptp_object_find (params, handle, &ob);
+	ret = ptp_find_object_in_cache (params, handle, &ob);
 	if (ret != PTP_RC_OK)
 		return NULL;
 	for_each (MTPObjectProp*, prop, ob->mtp_props)
@@ -9327,8 +9327,7 @@ ptp_remove_object_from_cache(PTPParams *params, uint32_t handle)
 {
 	PTPObject	*ob;
 
-	CHECK_PTP_RC(ptp_object_find (params, handle, &ob));
-	/* remove object from object info cache */
+	CHECK_PTP_RC(ptp_find_object_in_cache (params, handle, &ob));
 	ptp_free_object (ob);
 	array_remove(&params->objects, ob);
 
@@ -9356,7 +9355,7 @@ ptp_objects_sort (PTPParams *params)
 
 /* Binary search in objects. Needs "objects" to be a sorted by oid!  */
 uint16_t
-ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob)
+ptp_find_object_in_cache (PTPParams *params, uint32_t handle, PTPObject **retob)
 {
 	PTPObject	tmpob;
 
@@ -9369,7 +9368,7 @@ ptp_object_find (PTPParams *params, uint32_t handle, PTPObject **retob)
 
 /* Binary search in objects + insert if not found. Needs "objects" to be a sorted by oid!  */
 uint16_t
-ptp_object_find_or_insert (PTPParams *params, uint32_t handle, PTPObject **retob)
+ptp_find_or_insert_object_in_cache (PTPParams *params, uint32_t handle, PTPObject **retob)
 {
 	unsigned int 	begin, end, cursor;
 	unsigned int	insertat;
@@ -9442,7 +9441,7 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 		ptp_debug (params, "ptp_object_want: querying handle 0?\n");
 		return PTP_RC_GeneralError;
 	}
-	CHECK_PTP_RC(ptp_object_find_or_insert (params, handle, &ob));
+	CHECK_PTP_RC(ptp_find_or_insert_object_in_cache (params, handle, &ob));
 	*retob = ob;
 	/* Do we have all of it already? */
 	if ((ob->flags & want) == want)
@@ -9495,7 +9494,7 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 		if (ob->oi.ParentObject == ob->oi.StorageID) {
 			PTPObject *parentob;
 
-			if (ptp_object_find (params, ob->oi.ParentObject, &parentob) != PTP_RC_OK) {
+			if (ptp_find_object_in_cache (params, ob->oi.ParentObject, &parentob) != PTP_RC_OK) {
 				ptp_debug (params, "parent %08x of %s has same id as storage id. and no object found ... rewriting to 0.", ob->oi.ParentObject, ob->oi.Filename);
 				ob->oi.ParentObject = 0;
 			}
