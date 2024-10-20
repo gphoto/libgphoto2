@@ -747,11 +747,10 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 		CameraList	*xlist;
 		int ret;
 
-		ret = gp_list_new (&xlist);
-		if (ret != GP_OK) return ret;
+		CR (gp_list_new (&xlist));
 		ret = gp_filesystem_list_files (fs, folder, xlist, context);
 		gp_list_free (xlist);
-		if (ret != GP_OK) return ret;
+		CR (ret);
 	}
 	ret = internal_append (fs, f, filename, context);
 	if (ret == GP_ERROR_FILE_EXISTS) /* not an error here ... just in case we add files twice to the list */
@@ -1752,9 +1751,6 @@ gp_filesystem_read_file (CameraFilesystem *fs, const char *folder,
 			GPContext *context)
 {
 	int r;
-	const char	*xdata;
-	unsigned long	xsize;
-	CameraFile	*file;
 
 	C_PARAMS (fs && folder && filename && buf && size);
 	CC (context);
@@ -1769,7 +1765,13 @@ gp_filesystem_read_file (CameraFilesystem *fs, const char *folder,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	return r;
+
+#if 0
 	/* fallback code */
+	const char	*xdata;
+	unsigned long	xsize;
+	CameraFile	*file;
+
 	CR (gp_file_new (&file));
 	CR (gp_filesystem_get_file (fs, folder, filename, type,
 				    file, context));
@@ -1790,6 +1792,7 @@ gp_filesystem_read_file (CameraFilesystem *fs, const char *folder,
 	memcpy (buf, xdata+offset, *size);
 	gp_file_unref (file);
 	return GP_OK;
+#endif
 }
 /**
  * \brief Set all filesystem related function pointers

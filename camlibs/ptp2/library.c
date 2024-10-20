@@ -6965,16 +6965,12 @@ camera_wait_for_event (Camera *camera, int timeout,
 
 					if (ofc == PTP_OFC_Association) { /* new folder! */
 						*eventtype = GP_EVENT_FOLDER_ADDED;
-						*eventdata = path;
 						gp_filesystem_reset (camera->fs); /* FIXME: implement more lightweight folder add */
-						/* if this was the last current event ... stop and return the folder add */
-						return GP_OK;
 					} else {
 						*eventtype = GP_EVENT_FILE_ADDED;
-						*eventdata = path;
-						return GP_OK;
 					}
-					break;
+					*eventdata = path;
+					return GP_OK;
 				}
 				case PTP_EC_Nikon_ObjectAddedInSDRAM: {
 					PTPObjectInfo	oi;
@@ -7485,12 +7481,11 @@ handleregular:
 
 		if (ob->oi.ObjectFormat == PTP_OFC_Association) { /* new folder? would be weird here? */
 			*eventtype = GP_EVENT_FOLDER_ADDED;
-			*eventdata = path;
 		} else {
 			*eventtype = GP_EVENT_FILE_CHANGED;
-			*eventdata = path;
 			gp_filesystem_set_info_dirty (camera->fs, path->folder, path->name, context);
 		}
+		*eventdata = path;
 		break;
 	}
 	case PTP_EC_ObjectRemoved:
@@ -9487,16 +9482,12 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	oi.ProtectionStatus=PTP_PS_NoProtection;
 	oi.AssociationType=PTP_AT_GenericFolder;
 
-	if ((params->deviceinfo.VendorExtensionID==
-			PTP_VENDOR_EASTMAN_KODAK) &&
-		(ptp_operation_issupported(params,
-			PTP_OC_EK_SendFileObjectInfo)))
-	{
-		C_PTP_REP (ptp_ek_sendfileobjectinfo (params, &storage,
-			&parent, &handle, &oi));
+	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_EASTMAN_KODAK) &&
+		(ptp_operation_issupported(params, PTP_OC_EK_SendFileObjectInfo))
+	){
+		C_PTP_REP (ptp_ek_sendfileobjectinfo (params, &storage, &parent, &handle, &oi));
 	} else if (ptp_operation_issupported(params, PTP_OC_SendObjectInfo)) {
-		C_PTP_REP (ptp_sendobjectinfo (params, &storage,
-			&parent, &handle, &oi));
+		C_PTP_REP (ptp_sendobjectinfo (params, &storage, &parent, &handle, &oi));
 	} else {
 		GP_LOG_D ("The device does not support creating a folder.");
 		return GP_ERROR_NOT_SUPPORTED;
@@ -10100,12 +10091,11 @@ camera_init (Camera *camera, GPContext *context)
 	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY)
 		ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
 
-	{
-		for_each (uint32_t*, psid, params->storageids) {
-			if ((*psid & 0xffff) && (*psid != 0x80000001))
-				ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
-		}
+	for_each (uint32_t*, psid, params->storageids) {
+		if ((*psid & 0xffff) && (*psid != 0x80000001))
+			ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
 	}
+
 	/* moved down here in case the filesystem needs to first be initialized as the Olympus app does */
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) {
 
@@ -10145,6 +10135,9 @@ camera_init (Camera *camera, GPContext *context)
 		}
 		*/
 	}
+
 	SET_CONTEXT(camera, NULL);
+
+	GP_LOG_D("camera_init done\n");
 	return GP_OK;
 }
