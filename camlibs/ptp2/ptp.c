@@ -4620,9 +4620,6 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 		ptp_free_devicepropdesc (dpd_in_cache);
 	}
 
-	if (!ptp_is_vendor_extension_prop(propcode))
-		goto generic;
-
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 		ptp_operation_issupported(params, PTP_OC_CANON_EOS_RequestDevicePropValue)
 	) {
