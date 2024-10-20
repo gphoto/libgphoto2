@@ -6756,7 +6756,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					ptp_free_eos_event(&eos_event);
 					PTPObject	*ob;
 					if (	(eos_event.type == PTP_EOSEvent_ObjectInfoChanged) &&
-						(PTP_RC_OK != ptp_object_find (params, eos_event.u.object.Handle, &ob))
+						(PTP_RC_OK != ptp_find_object_in_cache (params, eos_event.u.object.Handle, &ob))
 					) {
 						GP_LOG_D ("not found in cache, assuming deleted already.");
 						break;
@@ -6937,7 +6937,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* if we have the object already loaded, no need to add it here */
 					/* but in dual mode capture at empty startup we can
 					 * encounter that the second image is not loaded */
-					if (PTP_RC_OK == ptp_object_find(params, event.Param1, &ob))
+					if (PTP_RC_OK == ptp_find_object_in_cache(params, event.Param1, &ob))
 						continue;
 #endif
 					ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
@@ -7193,7 +7193,7 @@ sonyout:
 
 				if (params->inliveview == 1 && *phandle == 0x80000001) /* Ignore preview image object handle while liveview is active */
 					continue;
-				if (PTP_RC_OK == ptp_object_find (params, *phandle, &ob)) /* already have it */
+				if (PTP_RC_OK == ptp_find_object_in_cache (params, *phandle, &ob)) /* already have it */
 					continue;
 				/* might be a just deleted entry , seen in https://github.com/gphoto/gphoto2/issues/456 */
 				memset (&oi,0,sizeof(oi));
