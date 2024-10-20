@@ -3410,7 +3410,7 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, CameraFilePath *path
 	info.file.width		= ob->oi.ImagePixWidth;
 	info.file.height	= ob->oi.ImagePixHeight;
 	info.file.size		= ob->oi.ObjectSize;
-	info.file.mtime		= time(NULL);
+	info.file.mtime		= ob->oi.ModificationDate;
 
 	info.preview.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
