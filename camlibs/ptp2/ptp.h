@@ -4901,9 +4901,12 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 				PTPDevicePropDesc *dpd, unsigned int length, char *out);
 int ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt);
 int ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt);
-MTPObjectProp *ptp_get_new_object_prop_entry(MTPObjectProp **props, int *nrofprops);
 void ptp_free_object_prop(MTPObjectProp *prop);
+#if 0
+MTPObjectProp *ptp_get_new_object_prop_entry(MTPObjectProp **props, int *nrofprops);
 MTPObjectProp *ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t const attribute_id);
+#endif
+
 uint16_t ptp_remove_object_from_cache(PTPParams *params, uint32_t handle);
 uint16_t ptp_add_object_to_cache(PTPParams *params, uint32_t handle);
 uint16_t ptp_object_want (PTPParams *, uint32_t handle, unsigned int want, PTPObject**retob);

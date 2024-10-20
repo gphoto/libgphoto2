@@ -3208,8 +3208,8 @@ ptp_add_event (PTPParams *params, PTPContainer *event)
 	return PTP_RC_OK;
 }
 
-/* CANON EOS fast directory mode */
-/* FIXME: incomplete ... needs storage mode retrieval support too (storage == 0xffffffff) */
+/* CANON EOS fast directory mode: uses ptp_canon_eos_getobjectinfoex to get list of
+ * ObjectInfos instead of just a list of handles that have to be queried the one by one.*/
 static uint16_t
 ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 	unsigned int	i, j, last, changed;
@@ -3253,6 +3253,9 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 		/* convert read entries into objectinfos */
 		for (i=0;i<nroftmp;i++) {
 			ob = NULL;
+
+			/* TODO: the following is actually slow when adding new entries, as the complete list needs to be traversed.
+			 * Make better use of the fact that the list is sorted. */
 			for (j=0; j<params->objects.len; j++) {
 				if (params->objects.val[(last+j) % params->objects.len].oid == tmp[i].ObjectHandle)  {
 					ob = &params->objects.val[(last+j) % params->objects.len];
@@ -3305,7 +3308,8 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 		}
 		free (tmp);
 	}
-	if (changed) ptp_objects_sort (params);
+	if (changed)
+		ptp_objects_sort (params);
 
 	/* Do not cache ob, it might be reallocated and have a new address */
 	if (handle != 0xffffffff) {
@@ -3349,7 +3353,8 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 			return ret;
 		if (ob->oi.ObjectFormat != PTP_OFC_Association)
 			return PTP_RC_GeneralError;
-		if (ob->flags & PTPOBJECT_DIRECTORY_LOADED) return PTP_RC_OK;
+		if (ob->flags & PTPOBJECT_DIRECTORY_LOADED)
+			return PTP_RC_OK;
 		ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
 		/*log_objectinfo(params, handle, &ob->oi);*/
 	}
@@ -3417,7 +3422,8 @@ fallback:
 #endif
 
 	ptp_debug (params, "Listing ... ");
-	if (handle == 0) xhandle = PTP_HANDLER_SPECIAL; /* 0 would mean all */
+	if (handle == 0)
+		xhandle = PTP_HANDLER_SPECIAL; /* 0 would mean all */
 	ret = ptp_getobjecthandles (params, storage, 0, xhandle, &handles);
 	if (ret == PTP_RC_ParameterNotSupported) {/* try without storage */
 		storage = PTP_HANDLER_SPECIAL;
@@ -3432,10 +3438,11 @@ fallback:
 		return ret;
 	last = changed = 0;
 	for_each (uint32_t*, phandle, handles) {
-		PTPObject	*ob;
+		PTPObject	*ob = NULL;
 		unsigned int	j;
 
-		ob = NULL;
+		/* TODO: the following actually slow when adding new entries, as the complete list needs to be traversed.
+		 * Make better use of the fact that the list is sorted. */
 		for (j=0;j<params->objects.len;j++) {
 			if (params->objects.val[(last+j) % params->objects.len].oid == *phandle)  {
 				ob = &params->objects.val[(last+j) % params->objects.len];
@@ -3481,7 +3488,8 @@ fallback:
 		}
 	}
 	free_array (&handles);
-	if (changed) ptp_objects_sort (params);
+	if (changed)
+		ptp_objects_sort (params);
 	return PTP_RC_OK;
 }
 
@@ -3515,11 +3523,9 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 		if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY)
 			ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
 
-		{
-			for_each (uint32_t*, psid, params->storageids) {
-				if ((*psid & 0xffff) && (*psid != 0x80000001))
-					ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
-			}
+		for_each (uint32_t*, psid, params->storageids) {
+			if ((*psid & 0xffff) && (*psid != 0x80000001))
+				ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
 		}
 
 		break;
@@ -3541,7 +3547,8 @@ ptp_check_event_queue (PTPParams *params)
 	ret = params->event_check_queue(params,&event);
 
 	if (ret == PTP_RC_OK) {
-		ptp_debug (params, "event: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X", event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
+		ptp_debug (params, "event: nparams=0x%X, code=0x%X, trans_id=0x%X, p1=0x%X, p2=0x%X, p3=0x%X",
+		           event.Nparam,event.Code,event.Transaction_ID, event.Param1, event.Param2, event.Param3);
 		ptp_add_event (params, &event);
 		handle_event_internal (params, &event);
 	}
@@ -4423,7 +4430,8 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 			switch (dpd.DataType) {
 #define CHECK_CHANGED(type) \
 				if (dpd_in_cache->CurrentValue.type != dpd.CurrentValue.type) \
-					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %s(%04x): value %d -> %d", ptp_get_property_description (params, dpc), dpc, dpd_in_cache->CurrentValue.type, dpd.CurrentValue.type);
+					ptp_debug (params, "ptp_sony_getalldevicepropdesc: %s(%04x): value %d -> %d", \
+					           ptp_get_property_description (params, dpc), dpc, dpd_in_cache->CurrentValue.type, dpd.CurrentValue.type);
 			case PTP_DTC_INT8:   CHECK_CHANGED(i8); break;
 			case PTP_DTC_UINT8:  CHECK_CHANGED(u8); break;
 			case PTP_DTC_UINT16: CHECK_CHANGED(u16); break;
@@ -5279,7 +5287,8 @@ ptp_mtp_setobjectreferences (PTPParams* params, uint32_t handle, uint32_t* ohArr
 }
 
 uint16_t
-ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t formats, uint32_t properties, uint32_t propertygroups, uint32_t level, MTPObjectProp **props, int *nrofprops)
+ptp_mtp_getobjectproplist_generic (PTPParams* params, uint32_t handle, uint32_t formats, uint32_t properties,
+	uint32_t propertygroups, uint32_t level, MTPObjectProp **props, int *nrofprops)
 {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
@@ -9263,6 +9272,13 @@ ptp_render_mtp_propname(uint16_t propid, int spaceleft, char *txt)
 	return snprintf (txt, spaceleft,"unknown(%04x)", propid);
 }
 
+void
+ptp_free_object_prop(MTPObjectProp *prop)
+{
+	ptp_free_propvalue(prop->DataType, &prop->Value);
+}
+
+#if 0
 /*
  * Allocate and default-initialize a few object properties.
  */
@@ -9286,12 +9302,6 @@ ptp_get_new_object_prop_entry(MTPObjectProp **props, int *nrofprops)
 	return prop;
 }
 
-void
-ptp_free_object_prop(MTPObjectProp *prop)
-{
-	ptp_free_propvalue(prop->DataType, &prop->Value);
-}
-
 /*
  * Find a certain object property in the cache, i.e. a certain metadata
  * item for a certain object handle.
@@ -9310,6 +9320,7 @@ ptp_find_object_prop_in_cache(PTPParams *params, uint32_t const handle, uint32_t
 			return prop;
 	return NULL;
 }
+#endif
 
 uint16_t
 ptp_remove_object_from_cache(PTPParams *params, uint32_t handle)
