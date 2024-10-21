@@ -760,9 +760,15 @@ gp_widget_get_range (CameraWidget *range, float *min, float *max,
 int
 gp_widget_add_choice (CameraWidget *widget, const char *choice)
 {
+	int i;
+
 	C_PARAMS (widget && choice);
 	C_PARAMS ((widget->type == GP_WIDGET_RADIO) ||
 		  (widget->type == GP_WIDGET_MENU));
+
+	for (i=0;i<widget->choice_count;i++)
+		if (!strcmp(widget->choice[i],choice))
+			return GP_OK;
 
 	C_MEM (widget->choice = realloc (widget->choice, sizeof(char*)*(widget->choice_count+1)));
 	C_MEM (widget->choice[widget->choice_count] = strdup(choice));
