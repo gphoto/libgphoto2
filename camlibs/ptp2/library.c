@@ -9190,11 +9190,6 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 		while (ptp_get_one_event (params, &event)) {
 			if (event.Code == PTP_EC_ObjectRemoved)
 				break;
-			if (event.Code == PTP_EC_ObjectAdded) {
-				PTPObject *ob;
-
-				ptp_object_want (params, event.Param1, 0, &ob);
-			}
 		}
 		/* FIXME: need to handle folder additions during capture-image-and-download */
 	}
