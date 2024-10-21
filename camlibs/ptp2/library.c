@@ -61,38 +61,7 @@ static int capture_timeout = USB_TIMEOUT_CAPTURE;
 #define	SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
 #define	SET_CONTEXT_P(p, ctx) ((PTPData *) p->data)->context = ctx
 
-/* below macro makes a copy of fn without leading character ('/'),
- * removes the '/' at the end if present, and calls folder_to_handle()
- * function proviging as the first argument the string after the second '/'.
- * for example if fn is '/store_00010001/DCIM/somefolder/', the macro will
- * call folder_to_handle() with 'DCIM/somefolder' as the very first argument.
- * it's used to omit storage pseudofolder and remove trailing '/'
- */
-
-#define find_folder_handle(params,fn,s,p)	{		\
-		{						\
-		int len=strlen(fn);				\
-		char *backfolder=malloc(len);			\
-		char *tmpfolder;				\
-		memcpy(backfolder,fn+1, len);			\
-		if (backfolder[len-2]=='/') backfolder[len-2]='\0';\
-		if ((tmpfolder=strchr(backfolder+1,'/'))==NULL) tmpfolder="/";\
-		p=folder_to_handle(params, tmpfolder+1,s,0,NULL);\
-		free(backfolder);				\
-		}						\
-}
-
-#define folder_to_storage(fn,s) {				\
-		if (!strncmp(fn,"/"STORAGE_FOLDER_PREFIX,strlen(STORAGE_FOLDER_PREFIX)+1))							\
-		{						\
-			if (strlen(fn)<strlen(STORAGE_FOLDER_PREFIX)+8+1) \
-				return (GP_ERROR);		\
-			s = strtoul(fn + strlen(STORAGE_FOLDER_PREFIX)+1, NULL, 16);								\
-		} else { 					\
-			gp_context_error (context, _("You need to specify a folder starting with /store_xxxxxxxxx/"));				\
-			return (GP_ERROR);			\
-		}						\
-}
+#define STORAGE_FOLDER_PREFIX		"store_"
 
 typedef int (*getfunc_t)(CameraFilesystem*, const char*, const char *, CameraFileType, CameraFile *, void *, GPContext *);
 typedef int (*putfunc_t)(CameraFilesystem*, const char*, CameraFile*, void*, GPContext*);
@@ -115,8 +84,6 @@ add_special_file (char *name, getfunc_t getfunc, putfunc_t putfunc) {
 	nrofspecial_files++;
 	return (GP_OK);
 }
-
-#define STORAGE_FOLDER_PREFIX		"store_"
 
 int
 translate_ptp_result (uint16_t result)
@@ -3360,49 +3327,54 @@ camera_about (Camera *camera, CameraText *text, GPContext *context)
 
 static void log_objectinfo(PTPParams *params, PTPObjectInfo *oi);
 
+static int
+append_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char *folder)
+{
+	PTPObject	*ob;
+	PTPParams 	*params = &camera->pl->params;
+
+	GP_LOG_D ("(%x,%x,%s)", storage, handle, folder);
+	if (handle == PTP_HANDLER_ROOT)
+		return GP_OK;
+
+	C_PTP (ptp_object_want (params, handle, PTPOBJECT_PARENTOBJECT_LOADED, &ob)); // refresh
+	CR (append_folder_from_handle (camera, storage, ob->oi.ParentObject, folder));
+	/* re-fetch invalidated ob cache pointer */
+	ptp_find_object_in_cache(params, handle, &ob);
+	strcat (folder, "/");
+	strcat (folder, ob->oi.Filename);
+	return GP_OK;
+}
+
+static int
+find_object_path (Camera *camera, PTPObject **ob, CameraFilePath *path)
+{
+	GP_LOG_D ("(storage=0x%08x, handle=0x%08x)", (*ob)->oi.StorageID, (*ob)->oi.Handle);
+
+	uint32_t handle = (*ob)->oi.Handle;
+	strcpy  (path->name,  (*ob)->oi.Filename);
+	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)(*ob)->oi.StorageID);
+	CR (append_folder_from_handle (camera, (*ob)->oi.StorageID, (*ob)->oi.ParentObject, path->folder));
+	/* re-fetch invalidated ob cache pointer */
+	CR (ptp_find_object_in_cache (&camera->pl->params, handle, ob));
+	return GP_OK;
+}
+
 /* Add new object to internal driver structures. issued when creating
  * folder, uploading objects, or captured images.
  */
-static int get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char *folder);
-static int
-add_object (Camera *camera, uint32_t handle, GPContext *context)
-{
-	PTPObject *ob;
-	PTPParams *params = &camera->pl->params;
-
-	C_PTP (ptp_object_want (params, handle, 0, &ob));
-	return GP_OK;
-}
 
 static int
 add_object_to_fs_and_path (Camera *camera, uint32_t handle, CameraFilePath *path, GPContext *context)
 {
 	PTPObject	*ob;
 	PTPParams	*params = &camera->pl->params;
-	CameraFileInfo	info;
 
 	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
 
-	strcpy  (path->name,  ob->oi.Filename);
-	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-
-	get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-	/* might invalidate ob, so refetch */
-	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-	/* delete last / or we get confused later. */
-	path->folder[ strlen(path->folder)-1 ] = '\0';
-
-	if (ob->oi.ObjectFormat == PTP_OFC_Association)
-		/* FIXME: gp_filesystem_reset */
-		return GP_OK;
-	/* The gp_filesystem_append function only appends files */
-	CR ( gp_filesystem_append (camera->fs, path->folder, path->name, context));
-
-	/* fetch ob pointer again, as gp_filesystem_append can change the object list */
-	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-
-	memset (&info, 0, sizeof (info));
+	/* extract what we need from ob as the cache pointer might get invalidated */
 	/* we also get the fs info for free, so just set it */
+	CameraFileInfo info = {0};
 	info.file.fields = GP_FILE_INFO_TYPE |
 			GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT |
 			GP_FILE_INFO_SIZE | GP_FILE_INFO_MTIME;
@@ -3419,6 +3391,17 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, CameraFilePath *path
 	info.preview.width	= ob->oi.ThumbPixWidth;
 	info.preview.height	= ob->oi.ThumbPixHeight;
 	info.preview.size	= ob->oi.ThumbSize;
+
+	int is_folder = ob->oi.ObjectFormat == PTP_OFC_Association;
+
+	CR (find_object_path (camera, &ob, path));
+
+	if (is_folder)
+		/* FIXME: gp_filesystem_reset */
+		return GP_OK;
+	/* The gp_filesystem_append function only appends files */
+	CR ( gp_filesystem_append (camera->fs, path->folder, path->name, context));
+
 	GP_LOG_D ("setting fileinfo in fs");
 	return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 }
@@ -4053,24 +4036,6 @@ ignoreerror:
 		/* fallthrough */
 	}
 	return GP_ERROR_NOT_SUPPORTED;
-}
-
-static int
-get_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, char *folder) {
-	PTPObject	*ob;
-	PTPParams 	*params = &camera->pl->params;
-
-	GP_LOG_D ("(%x,%x,%s)", storage, handle, folder);
-	if (handle == PTP_HANDLER_ROOT)
-		return GP_OK;
-
-	C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-	CR (get_folder_from_handle (camera, storage, ob->oi.ParentObject, folder));
-	/* now ob could be invalid, since we might have reallocated params->objects */
-	ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-	strcat (folder, ob->oi.Filename);
-	strcat (folder, "/");
-	return (GP_OK);
 }
 
 static int
@@ -5390,14 +5355,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 					newobject = event.Param1;
 					GP_LOG_D ("newobject 0x%08x", newobject);
 					/* we found a new file */
-					strcpy  (path->name,  ob->oi.Filename);
-					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-					/* above might invalidate "ob" pointer, so refetch it */
-					ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-
-					/* delete last / or we get confused later. */
-					path->folder[ strlen(path->folder)-1 ] = '\0';
+					CR (find_object_path (camera, &ob, path));
 					add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
 					/* we need to proceed to download all images, in cases of RAW+JPG capture */
 					gotone = 1;
@@ -5459,13 +5417,7 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 			newobject = *phandle;
 			GP_LOG_D ("newobject 0x%08x, newobject2 0x%08x", newobject, newobject2);
 			/* we found a new file */
-			strcpy  (path->name,  ob->oi.Filename);
-			sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-			get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-			/* above might invalidate "ob" pointer, so refetch it */
-			ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-			/* delete last / or we get confused later. */
-			path->folder[ strlen(path->folder)-1 ] = '\0';
+			CR (find_object_path (camera, &ob, path));
 			add_objectid_and_upload (camera, path, context, newobject, &ob->oi);
 			/* we need to proceed to download all images, in cases of RAW+JPG capture */
 		}
@@ -6648,7 +6600,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 				GP_LOG_D ("processing event '%s'", ptp_get_eos_event_name(params, eos_event.type));
 				back_off_wait = 0;
 				switch (eos_event.type) {
-				case PTP_EOSEvent_ObjectTransfer:
+				case PTP_EOSEvent_ObjectTransfer: {
 					GP_LOG_D ("object transfer requested: handle 0x%x, name %s, size %lu",
 					          eos_event.u.object.Handle, eos_event.u.object.Filename, eos_event.u.object.ObjectSize);
 					ptp_free_eos_event(&eos_event);
@@ -6728,6 +6680,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 					/* We have now handed over the file, disclaim responsibility by unref. */
 					gp_file_unref (file);
 					return GP_OK;
+				}
+				case PTP_EOSEvent_ObjectInfoChanged:
 				case PTP_EOSEvent_ObjectContentChanged: {
 					GP_LOG_D ("object content changed: handle 0x%x", eos_event.u.object.Handle);
 					ptp_free_eos_event(&eos_event);
@@ -6738,20 +6692,16 @@ camera_wait_for_event (Camera *camera, int timeout,
 					log_objectinfo(params, &ob->oi);
 
 					C_MEM (path = calloc(1, sizeof(CameraFilePath)));
-					strncpy  (path->name, ob->oi.Filename, sizeof (path->name)-1);
+					CR (find_object_path(camera, &ob, path));
 
-					sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx/",(unsigned long)ob->oi.StorageID);
-					get_folder_from_handle (camera, ob->oi.StorageID, ob->oi.ParentObject, path->folder);
-					/* ob might now be invalid! */
-					/* delete last / or we get confused later. */
-					path->folder[ strlen(path->folder)-1 ] = '\0';
+					if (eos_event.type == PTP_EOSEvent_ObjectInfoChanged)
+						gp_filesystem_set_info_dirty (camera->fs, path->folder, path->name, context);
 
 					*eventtype = GP_EVENT_FILE_CHANGED;
 					*eventdata = path;
 					return GP_OK;
-					}
-				case PTP_EOSEvent_ObjectAdded:
-				case PTP_EOSEvent_ObjectInfoChanged: {
+				}
+				case PTP_EOSEvent_ObjectAdded: {
 					GP_LOG_D ("object added: handle 0x%x, name %s", eos_event.u.object.Handle, eos_event.u.object.Filename);
 					ptp_free_eos_event(&eos_event);
 					PTPObject	*ob;
@@ -6772,12 +6722,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 						*eventtype = GP_EVENT_FOLDER_ADDED;
 						gp_filesystem_reset (camera->fs);
 					} else {
-						*eventtype = (eos_event.type == PTP_EOSEvent_ObjectAdded) ? GP_EVENT_FILE_ADDED : GP_EVENT_FILE_CHANGED;
-						if (*eventtype == GP_EVENT_FILE_CHANGED) {
-							ob->flags &= ~PTPOBJECT_OBJECTINFO_LOADED;
-							C_PTP_REP (ptp_object_want (params, eos_event.u.object.Handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-							gp_filesystem_set_info_dirty (camera->fs, path->folder, path->name, context);
-						}
+						*eventtype = GP_EVENT_FILE_ADDED;
 					}
 					*eventdata = path;
 					return GP_OK;
@@ -6941,11 +6886,8 @@ camera_wait_for_event (Camera *camera, int timeout,
 						continue;
 #endif
 					ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-					if (ret != PTP_RC_OK) {
-						*eventtype = GP_EVENT_UNKNOWN;
-						C_MEM (*eventdata = strdup ("object added not found (already deleted)"));
+					if (ret != PTP_RC_OK)
 						break;
-					}
 					log_objectinfo(params, &ob->oi);
 
 					C_MEM (path = calloc(1, sizeof(CameraFilePath)));
@@ -8022,9 +7964,12 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 }
 
 static uint32_t
-find_child (PTPParams *params,const char *file,uint32_t storage,uint32_t handle,PTPObject **retob)
+find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t handle, PTPObject **retob)
 {
-	uint16_t	ret;
+	uint16_t ret;
+
+	const char *slash = strchr (path, '/');
+	size_t filename_len = slash ? (size_t)(slash - path) : strlen(path);
 
 	ret = ptp_list_folder (params, storage, handle);
 	if (ret != PTP_RC_OK)
@@ -8050,7 +7995,7 @@ find_child (PTPParams *params,const char *file,uint32_t storage,uint32_t handle,
 				/* FIXME: should remove, but then we irritate our list */
 				continue;
 			}
-			if (!strcmp (ob->oi.Filename,file)) {
+			if (!strncmp (ob->oi.Filename, path, filename_len)) {
 				if (retob) *retob = ob;
 				return oid;
 			}
@@ -8063,30 +8008,46 @@ find_child (PTPParams *params,const char *file,uint32_t storage,uint32_t handle,
 static uint32_t
 folder_to_handle(PTPParams *params, const char *folder, uint32_t storage, uint32_t parent, PTPObject **retob)
 {
-	char 		*c;
-
 	if (retob) *retob = NULL;
-	if (!strlen(folder)) {
-		/* was initially read, no need to reread */
-		/* ptp_list_folder (params, storage, 0); */
-		return PTP_HANDLER_ROOT;
-	}
-	if (!strcmp(folder,"/")) {
+	if (!strlen(folder) || !strcmp(folder, "/")) {
 		/* was initially read, no need to reread */
 		/* ptp_list_folder (params, storage, 0); */
 		return PTP_HANDLER_ROOT;
 	}
 
-	c = strchr(folder,'/');
-	if (c != NULL) {
-		*c = 0;
-		parent = find_child (params, folder, storage, parent, retob);
-		if (parent == PTP_HANDLER_SPECIAL)
-			GP_LOG_D("not found???");
-		return folder_to_handle(params, c+1, storage, parent, retob);
-	} else  {
-		return find_child (params, folder, storage, parent, retob);
+	if (folder[0] == '/')
+		folder++;
+
+	parent = find_child (params, folder, storage, parent, retob);
+	if (parent == PTP_HANDLER_SPECIAL) {
+		GP_LOG_D("could not find (sub-)path '%s' below storage=%08x / handle=%08x", folder, storage, parent);
+		return parent;
 	}
+
+	const char *slash = strchr(folder, '/');
+	if (slash && slash[1] != 0)
+		return folder_to_handle(params, slash + 1, storage, parent, retob);
+	else
+		return parent;
+}
+
+static int
+find_storage_and_handle_from_path(PTPParams *params, const char *folder, uint32_t *storage_id, uint32_t *handle)
+{
+	/* Parse the storage prefix, e.g. "/store_xxxxxxxx"*/
+	if (strncmp(folder, "/"STORAGE_FOLDER_PREFIX, strlen("/"STORAGE_FOLDER_PREFIX)) ||
+	    strlen(folder) < strlen("/"STORAGE_FOLDER_PREFIX) + 8
+	) {
+		gp_context_error (((PTPData*)params->data)->context, _("You need to specify a folder starting with /store_xxxxxxxxx/"));
+		return GP_ERROR;
+	}
+
+	*storage_id = strtoul(folder + strlen("/"STORAGE_FOLDER_PREFIX), NULL, 16);
+	folder += strlen("/"STORAGE_FOLDER_PREFIX) + 8;
+
+	*handle = folder_to_handle(params, folder, *storage_id, 0, NULL);
+
+	return GP_OK;
 }
 
 static int
@@ -8112,11 +8073,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		return (GP_OK);
 	}
 
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-
-	/* Get (parent) folder handle omitting storage pseudofolder */
-	find_folder_handle(params,folder,storage,parent);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &parent));
 
 	C_PTP_REP (ptp_list_folder (params, storage, parent));
 	GP_LOG_D ("after list folder");
@@ -8235,11 +8192,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		return (GP_OK);
 	}
 
-	/* compute storage ID value from folder path */
-	folder_to_storage (folder,storage);
-
-	/* Get folder handle omitting storage pseudofolder */
-	find_folder_handle (params,folder,storage,handler);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &handler));
 
 	/* list this directory */
 	C_PTP_REP (ptp_list_folder (params, storage, handler));
@@ -8597,10 +8550,7 @@ mtp_put_playlist(
 		}
 		*filename = '\0';filename++;
 
-		/* compute storage ID value from folder patch */
-		folder_to_storage(fn,storage);
-		/* Get file number omitting storage pseudofolder */
-		find_folder_handle(params, fn, storage, handle);
+		CR (find_storage_and_handle_from_path(params, fn, &storage, &handle));
 		handle = find_child(params, filename, storage, handle, NULL);
 		if (handle != PTP_HANDLER_SPECIAL) {
 			C_MEM (oids = realloc(oids, sizeof(oids[0])*(nrofoids+1)));
@@ -8623,7 +8573,8 @@ mtp_put_playlist(
 	C_PTP (ptp_mtp_setobjectreferences (&camera->pl->params, playlistid, oids, nrofoids));
 	free (oids);
 	/* update internal structures */
-	return add_object(camera, playlistid, context);
+	C_PTP (ptp_add_object_to_cache(params, playlistid));
+	return GP_OK;
 }
 
 static int
@@ -8730,10 +8681,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-	/* Get file number omitting storage pseudofolder */
-	find_folder_handle(params, folder, storage, handle);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 	handle = find_child(params, filename, storage, handle, &ob);
 	if (handle == PTP_HANDLER_SPECIAL) {
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
@@ -8856,10 +8804,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
 	}
 
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-	/* Get file number omitting storage pseudofolder */
-	find_folder_handle(params, folder, storage, handle);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 	handle = find_child(params, filename, storage, handle, &ob);
 	if (handle == PTP_HANDLER_SPECIAL) {
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
@@ -9139,11 +9084,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		) {
 			PTPObject	*ob;
 
-			/* compute storage ID value from folder patch */
-			folder_to_storage(folder,storage);
-
-			/* Get file number omitting storage pseudofolder */
-			find_folder_handle(params, folder, storage, handle);
+			CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 			handle = find_child(params, filename, storage, handle, &ob);
 			if (handle == PTP_HANDLER_SPECIAL) {
 				gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
@@ -9155,11 +9096,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	C_PARAMS (type == GP_FILE_TYPE_NORMAL);
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-
-	/* get parent folder id omitting storage pseudofolder */
-	find_folder_handle(params,folder,storage,parent);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &parent));
 
 	/* if you desire to put file to root folder, you have to use
 	 * 0xffffffff instead of 0x00000000 (which means responder decide).
@@ -9216,7 +9153,8 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	/* update internal structures */
-	return add_object(camera, handle, context);
+	C_PTP (ptp_add_object_to_cache(params, handle));
+	return GP_OK;
 }
 
 static int
@@ -9253,11 +9191,8 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 
 	camera->pl->checkevents = TRUE;
 	C_PTP_REP (ptp_check_event (params));
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-	/* Get file number omitting storage pseudofolder */
 	uint32_t handle;
-	find_folder_handle(params, folder, storage, handle);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 	handle = find_child(params, filename, storage, handle, NULL);
 
 	/* in some cases we return errors ... just ignore them for now */
@@ -9300,11 +9235,8 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 		return GP_ERROR_NOT_SUPPORTED;
 	camera->pl->checkevents = TRUE;
 	C_PTP_REP (ptp_check_event (params));
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-	/* Get file number omitting storage pseudofolder */
 	uint32_t handle;
-	find_folder_handle(params, folder, storage, handle);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 	handle = find_child(params, foldername, storage, handle, NULL);
 	if (handle == PTP_HANDLER_SPECIAL)
 		return GP_ERROR;
@@ -9327,10 +9259,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	C_PARAMS (strcmp (folder, "/special"));
 
 	camera->pl->checkevents = TRUE;
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-	/* Get file number omitting storage pseudofolder */
-	find_folder_handle(params, folder, storage, handle);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 	handle = find_child(params, filename, storage, handle, &ob);
 	if (handle == PTP_HANDLER_SPECIAL)
 		return GP_ERROR;
@@ -9371,10 +9300,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	C_PARAMS (strcmp (folder, "/special"));
 
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-	/* Get file number omitting storage pseudofolder */
-	find_folder_handle(params, folder, storage, handle);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 	handle = find_child(params, filename, storage, handle, &ob);
 	if (handle == PTP_HANDLER_SPECIAL)
 		return GP_ERROR;
@@ -9468,10 +9394,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	camera->pl->checkevents = TRUE;
 
 	memset(&oi, 0, sizeof (PTPObjectInfo));
-	/* compute storage ID value from folder patch */
-	folder_to_storage(folder,storage);
-	/* get parent folder id omitting storage pseudofolder */
-	find_folder_handle(params,folder,storage,parent);
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &parent));
 
 	/* if you desire to make dir in 'root' folder, you have to use
 	 * 0xffffffff instead of 0x00000000 (which means responder decide).
@@ -9499,7 +9422,8 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 		return GP_ERROR_NOT_SUPPORTED;
 	}
 	/* update internal structures */
-	return add_object(camera, handle, context);
+	C_PTP (ptp_add_object_to_cache(params, handle));
+	return GP_OK;
 }
 
 static int
