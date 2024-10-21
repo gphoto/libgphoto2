@@ -966,7 +966,6 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 		CR (count = gp_list_count (list));
 		for (y = 0; y < count; y++) {
 			CR (gp_list_get_name (list, y, &name));
-			GP_LOG_D ("Added '%s'", name);
 			CR (internal_append (fs, f, name, context));
 		}
 		gp_list_reset (list);
@@ -976,8 +975,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 
 	file = f->files;
 	while (file) {
-		GP_LOG_D (
-			"Listed '%s'", file->name);
+		/* GP_LOG_D ("Listed '%s'", file->name); */
 		CR (gp_list_append (list, file->name, NULL));
 		file = file->next;
 	}
