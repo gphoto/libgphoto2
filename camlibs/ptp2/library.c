@@ -8508,7 +8508,7 @@ mtp_get_playlist_string(
 		contentlen += len+1;
 	}
 	if (!content)
-		C_MEM (content = malloc(1));
+		C_MEM (content = calloc(1, 1));
 	if (xcontent)
 		*xcontent = content;
 	else
