@@ -57,7 +57,12 @@
  *     #define for_each(PTR, ARRAY) for (typeof(ARRAY.val) PTR = ARRAY.val; PTR != ARRAY.val + ARRAY.len; ++PTR)
  */
 #define for_each(TYPE, PTR, ARRAY) \
-	for (TYPE PTR = ARRAY.val; PTR < ARRAY.val + ARRAY.len; ++PTR)
+	for (TYPE PTR = (ARRAY).val; PTR < (ARRAY).val + (ARRAY).len; ++PTR)
+
+#define array_init(ARRAY) do { \
+	(ARRAY)->val = 0; \
+	(ARRAY)->len = 0; \
+} while (0)
 
 #define free_array(ARRAY) do { \
 	free ((ARRAY)->val); \
@@ -87,7 +92,7 @@
 
 #define array_push_back(ARRAY, VAL) do { \
 	array_extend_capacity(ARRAY, 1); \
-	move((ARRAY)->val[(ARRAY)->len++], VAL); \
+	(ARRAY)->val[(ARRAY)->len++] = VAL; \
 } while(0)
 
 #define array_append_copy(DST, SRC) do { \
