@@ -8006,6 +8006,7 @@ find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t hand
 static uint32_t
 folder_to_handle(PTPParams *params, const char *folder, uint32_t storage, uint32_t parent, PTPObject **retob)
 {
+	GP_LOG_D("(folder='%s', storage=0x%08x, parent=0x%08x)", folder, storage, parent);
 	if (retob) *retob = NULL;
 	if (!strlen(folder) || !strcmp(folder, "/")) {
 		/* was initially read, no need to reread */
@@ -8016,17 +8017,17 @@ folder_to_handle(PTPParams *params, const char *folder, uint32_t storage, uint32
 	if (folder[0] == '/')
 		folder++;
 
-	parent = find_child (params, folder, storage, parent, retob);
-	if (parent == PTP_HANDLER_SPECIAL) {
+	uint32_t child = find_child (params, folder, storage, parent, retob);
+	if (child == PTP_HANDLER_SPECIAL) {
 		GP_LOG_D("could not find (sub-)path '%s' below storage=%08x / handle=%08x", folder, storage, parent);
-		return parent;
+		return child;
 	}
 
-	const char *slash = strchr(folder, '/');
-	if (slash && slash[1] != 0)
-		return folder_to_handle(params, slash + 1, storage, parent, retob);
+	folder = strchr(folder, '/');
+	if (folder && folder[1] != 0)
+		return folder_to_handle(params, folder + 1, storage, child, retob);
 	else
-		return parent;
+		return child;
 }
 
 static int
