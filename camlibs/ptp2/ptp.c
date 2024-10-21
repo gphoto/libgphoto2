@@ -858,12 +858,11 @@ parse_9301_prop_tree (PTPParams *params, xmlNodePtr node, PTPDeviceInfo *di)
 
 		/* add to cache of device propdesc */
 		PTPDevicePropDesc* dpd_in_cache = ptp_find_dpd_in_cache(params, p);
-		if (!dpd_in_cache) {
-			array_push_back(&params->dpd_cache, dpd);
-		} else {
+		if (!dpd_in_cache)
+			array_push_back_empty(&params->dpd_cache, &dpd_in_cache);
+		else
 			ptp_free_devicepropdesc (dpd_in_cache);
-			move(*dpd_in_cache, dpd);
-		}
+		move(*dpd_in_cache, dpd);
 
 		next = xmlNextElementSibling (next);
 	}
@@ -4431,12 +4430,11 @@ _ptp_sony_getalldevicepropdesc (PTPParams* params, uint16_t opcode)
 			}
 		}
 
-		if (!dpd_in_cache) {
-			array_push_back(&params->dpd_cache, dpd);
-		} else {
+		if (!dpd_in_cache)
+			array_push_back_empty(&params->dpd_cache, &dpd_in_cache);
+		else
 			ptp_free_devicepropdesc (dpd_in_cache);
-			move(*dpd_in_cache, dpd);
-		}
+		move(*dpd_in_cache, dpd);
 #if 0
 		ptp_debug (params, "dpd.DevicePropCode %04x, readlen %d, getset %d", dpd.DevicePropCode, readlen, dpd.GetSet);
 		switch (dpd.DataType) {
