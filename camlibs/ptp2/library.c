@@ -7349,7 +7349,7 @@ handleregular:
 
 		CR (add_object_to_fs_and_path (camera, event.Param1, path, context));
 
-		C_PTP_REP (ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+		C_PTP (ptp_find_object_in_cache (params, event.Param1, &ob));
 
 		if (ob->oi.ObjectFormat == PTP_OFC_Association) { /* new folder! */
 			*eventtype = GP_EVENT_FOLDER_ADDED;
@@ -7402,7 +7402,7 @@ handleregular:
 		uint32_t	oldstorage, oldparent;
 		char		*oldfn;
 
-		C_PTP_REP (ptp_object_want (params, event.Param1, 0, &ob));
+		C_PTP (ptp_find_object_in_cache (params, event.Param1, &ob));
 		/* objectinfo might not even be loaded yet, but this could be 0 / NULL ... but the compare will trigger */
 		oldparent = ob->oi.ParentObject;
 		oldstorage = ob->oi.StorageID;
@@ -7415,7 +7415,7 @@ handleregular:
 
 		CR (add_object_to_fs_and_path (camera, event.Param1, path, context));
 
-		C_PTP_REP (ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+		C_PTP (ptp_find_object_in_cache (params, event.Param1, &ob));
 
 		/* did the location or name of the file changed in the filesystem? Then we can only reset the fs and refetch the layout */
 		if (	(oldparent != ob->oi.ParentObject) &&
