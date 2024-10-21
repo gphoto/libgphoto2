@@ -66,23 +66,21 @@ static int capture_timeout = USB_TIMEOUT_CAPTURE;
 typedef int (*getfunc_t)(CameraFilesystem*, const char*, const char *, CameraFileType, CameraFile *, void *, GPContext *);
 typedef int (*putfunc_t)(CameraFilesystem*, const char*, CameraFile*, void*, GPContext*);
 
-struct special_file {
-	char		*name;
+typedef struct {
+	const char	*name;
 	getfunc_t	getfunc;
 	putfunc_t	putfunc;
-};
+} special_file;
 
-static unsigned int nrofspecial_files = 0;
-static struct special_file *special_files = NULL;
+static ARRAY_OF(special_file) special_files;
 
 static int
-add_special_file (char *name, getfunc_t getfunc, putfunc_t putfunc) {
-	C_MEM (special_files = realloc (special_files, sizeof(special_files[0])*(nrofspecial_files+1)));
-	C_MEM (special_files[nrofspecial_files].name = strdup(name));
-	special_files[nrofspecial_files].putfunc = putfunc;
-	special_files[nrofspecial_files].getfunc = getfunc;
-	nrofspecial_files++;
-	return (GP_OK);
+add_special_file (const char* name, getfunc_t getfunc, putfunc_t putfunc)
+{
+	/* name is a string constant that does not need to be duplicated or freed*/
+	special_file sf = {name, getfunc, putfunc};
+	array_push_back(&special_files, sf);
+	return GP_OK;
 }
 
 int
@@ -8068,8 +8066,8 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		return (GP_OK);
 
 	if (!strcmp(folder, "/special")) {
-		for (i=0; i<nrofspecial_files; i++)
-			CR (gp_list_append (list, special_files[i].name, NULL));
+		for_each (special_file*, psf, special_files)
+			CR (gp_list_append (list, psf->name, NULL));
 		return (GP_OK);
 	}
 
@@ -8182,7 +8180,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 			);
 			gp_list_append (list, fname, NULL);
 		}
-		if (nrofspecial_files)
+		if (special_files.len)
 			CR (gp_list_append (list, "special", NULL));
 		return (GP_OK);
 	}
@@ -8796,12 +8794,10 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 #endif
 
 	if (!strcmp (folder, "/special")) {
-		unsigned int i;
-
-		for (i=0;i<nrofspecial_files;i++)
-			if (!strcmp (special_files[i].name, filename))
-				return special_files[i].getfunc (fs, folder, filename, type, file, data, context);
-		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
+		for_each (special_file*, psf, special_files)
+			if (!strcmp (psf->name, filename))
+				return psf->getfunc (fs, folder, filename, type, file, data, context);
+		return GP_ERROR_BAD_PARAMETERS; /* file not found */
 	}
 
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
@@ -9070,12 +9066,10 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	GP_LOG_D ("folder=%s, filename=%s", folder, filename);
 
 	if (!strcmp (folder, "/special")) {
-		unsigned int i;
-
-		for (i=0;i<nrofspecial_files;i++)
-			if (!strcmp (special_files[i].name, filename))
-				return special_files[i].putfunc (fs, folder, file, data, context);
-		return (GP_ERROR_BAD_PARAMETERS); /* file not found */
+		for_each (special_file*, psf, special_files)
+			if (!strcmp (psf->name, filename))
+				return psf->putfunc (fs, folder, file, data, context);
+		return GP_ERROR_BAD_PARAMETERS; /* file not found */
 	}
 	memset(&oi, 0, sizeof (PTPObjectInfo));
 	if (type == GP_FILE_TYPE_METADATA) {
