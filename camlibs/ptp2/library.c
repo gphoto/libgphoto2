@@ -8474,39 +8474,26 @@ mtp_get_playlist_string(
 	Camera *camera, uint32_t handle, char **xcontent, int *xcontentlen
 ) {
 	PTPParams *params = &camera->pl->params;
-	uint32_t	numobjects = 0, *objects = NULL;
-	unsigned int	i, contentlen = 0;
+	ArrayU32	object_handles;
+	int		contentlen = 0;
 	char		*content = NULL;
 
-	C_PTP (ptp_mtp_getobjectreferences (params, handle, &objects, &numobjects));
+	C_PTP (ptp_mtp_getobjectreferences (params, handle, &object_handles.val, &object_handles.len));
 
-	for (i=0;i<numobjects;i++) {
-		char		buf[4096];
-		int		len;
-		PTPObject 	*ob;
+	for_each (uint32_t*, phandle, object_handles) {
+		PTPObject *ob;
+		C_PTP (ptp_object_want (params, *phandle, PTPOBJECT_OBJECTINFO_LOADED, &ob)); // add/refresh
 
-		memset(buf, 0, sizeof(buf));
-		len = 0;
-		handle = objects[i];
-		do {
-			C_PTP (ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob));
-			/* make space for new filename */
-			memmove (buf+strlen(ob->oi.Filename)+1, buf, len);
-			memcpy (buf+1, ob->oi.Filename, strlen (ob->oi.Filename));
-			buf[0] = '/';
-			handle = ob->oi.ParentObject;
-			len = strlen(buf);
-		} while (handle != 0);
-		memmove (buf+strlen("/store_00010001"), buf, len);
-		sprintf (buf,"/store_%08x",(unsigned int)ob->oi.StorageID);
-		buf[strlen(buf)]='/';
-		len = strlen(buf);
+		CameraFilePath path;
+		find_object_path(camera, &ob, &path);
 
-		C_MEM (content = realloc (content, contentlen+len+1+1));
-		strcpy (content+contentlen, buf);
-		strcpy (content+contentlen+len, "\n");
-		contentlen += len+1;
+		C_MEM (content = realloc (content, contentlen + strlen(path.folder) + 1 + strlen(path.name) + 1 + 1));
+		int len = sprintf("%s/%s\n", content + contentlen, path.folder, path.name);
+		if (len < 0)
+			return GP_ERROR;
+		contentlen += len;
 	}
+	free_array (&object_handles);
 	if (!content)
 		C_MEM (content = calloc(1, 1));
 	if (xcontent)
@@ -8514,7 +8501,6 @@ mtp_get_playlist_string(
 	else
 		free (content);
 	*xcontentlen = contentlen;
-	free (objects);
 	return (GP_OK);
 }
 
