@@ -4705,22 +4705,11 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		else
 			propval.u16 = xmode = CANON_TRANSFER_CARD;
 
-		if (xmode == CANON_TRANSFER_CARD) {
-			PTPStorageIDs storageids = {0};
-
-			ret = ptp_getstorageids(params, &storageids);
-			if (ret == PTP_RC_OK) {
-				unsigned int stgcnt = 0;
-				for_each (uint32_t*, psid, storageids) {
-					if ((*psid & 0xffff) && (*psid != 0x80000001))
-						stgcnt++;
-				}
-				if (!stgcnt) {
-					GP_LOG_D ("Assuming no CF card present - switching to MEMORY Transfer.");
-					propval.u16 = xmode = CANON_TRANSFER_MEMORY;
-				}
-				free_array (&storageids);
-			}
+		if ((xmode == CANON_TRANSFER_CARD) &&
+			(params->storageids.len == 0 || (params->storageids.len == 1 && params->storageids.val[0] == 0x80000001))
+		) {
+			GP_LOG_D ("Assuming no CF card present - switching to MEMORY Transfer.");
+			propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 		}
 		LOG_ON_PTP_E (ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16));
 	}
@@ -6317,23 +6306,11 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 			else
 				propval.u16 = xmode = CANON_TRANSFER_CARD;
 
-			if (xmode == CANON_TRANSFER_CARD) {
-				PTPStorageIDs storageids = {0};
-
-				ret = ptp_getstorageids(params, &storageids);
-				if (ret == PTP_RC_OK) {
-					unsigned int stgcnt = 0;
-
-					for_each (uint32_t*, psid, storageids) {
-						if ((*psid & 0xffff) && (*psid != 0x80000001))
-							stgcnt++;
-					}
-					if (!stgcnt) {
-						GP_LOG_D ("Assuming no CF card present - switching to MEMORY Transfer.");
-						propval.u16 = xmode = CANON_TRANSFER_MEMORY;
-					}
-					free_array (&storageids);
-				}
+			if ((xmode == CANON_TRANSFER_CARD) &&
+				(params->storageids.len == 0 || (params->storageids.len == 1 && params->storageids.val[0] == 0x80000001))
+			) {
+				GP_LOG_D ("Assuming no CF card present - switching to MEMORY Transfer.");
+				propval.u16 = xmode = CANON_TRANSFER_MEMORY;
 			}
 			LOG_ON_PTP_E (ptp_setdevicepropvalue(params, PTP_DPC_CANON_CaptureTransferMode, &propval, PTP_DTC_UINT16));
 		}
@@ -7813,11 +7790,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 
 		for_each (uint32_t*, psid, params->storageids) {
 			char tmpname[20], *s;
-
 			PTPStorageInfo storageinfo;
-			/* invalid storage, storageinfo might fail on it (Nikon D300s e.g.) */
-			if ((*psid & 0x0000ffff) == 0)
-				continue;
 
 			APPEND_TXT ("store_%08x:\n",(unsigned int)*psid);
 
@@ -8134,25 +8107,17 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (!strcmp(folder, "/")) {
 		/* use the cached storageids. they should be valid after camera_init */
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
-			char fname[PTP_MAXSTRLEN];
-
 			if (!params->storageids.len) {
-				snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x",0x00010001);
-				CR (gp_list_append (list, fname, NULL));
-			}
-			for_each (uint32_t*, psid, params->storageids) {
-				/* invalid storage, storageinfo might fail on it (Nikon D300s e.g.) */
-				if ((*psid & 0x0000ffff) == 0) continue;
-				snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x", *psid);
-				CR (gp_list_append (list, fname, NULL));
+				CR (gp_list_append (list, STORAGE_FOLDER_PREFIX"00010001", NULL));
+			} else {
+				char fname[PTP_MAXSTRLEN];
+				for_each (uint32_t*, psid, params->storageids) {
+					snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x", *psid);
+					CR (gp_list_append (list, fname, NULL));
+				}
 			}
 		} else {
-			char fname[PTP_MAXSTRLEN];
-			snprintf(fname, sizeof(fname),
-					STORAGE_FOLDER_PREFIX"%08x",
-					0xdeadbeef
-			);
-			gp_list_append (list, fname, NULL);
+			gp_list_append (list, STORAGE_FOLDER_PREFIX"deadbeef", NULL);
 		}
 		if (special_files.len)
 			CR (gp_list_append (list, "special", NULL));
@@ -9341,9 +9306,6 @@ storage_info_func (CameraFilesystem *fs,
 	C_MEM (*sinfos = calloc (sids.len, sizeof (CameraStorageInformation)));
 	for (i = 0; i<sids.len; i++) {
 		sif = (*sinfos)+n;
-
-		/* Invalid storage, storageinfo might cause hangs on it (Nikon D300s e.g.) */
-		if ((sids.val[i]&0x0000ffff)==0) continue;
 
 		C_PTP (ptp_getstorageinfo (params, sids.val[i], &si));
 		sif->fields |= GP_STORAGEINFO_BASE;
