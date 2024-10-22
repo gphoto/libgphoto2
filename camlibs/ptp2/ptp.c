@@ -2087,7 +2087,7 @@ ptp_free_params (PTPParams *params)
  * ptp_getststorageids:
  * params:	PTPParams*
  *
- * Gets array of StorageIDs and fills the storageids structure.
+ * Gets array of (valid) StorageIDs and fills the storageids structure.
  *
  * Return values: Some PTP_RC_* code.
  **/
@@ -2098,10 +2098,19 @@ ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 	unsigned char	*data = NULL;
 	unsigned int	size;
 
+	array_init(storageids);
+
 	PTP_CNT_INIT(ptp, PTP_OC_GetStorageIDs);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_ArrayU32(params, data, size, storageids);
+
+	PTPStorageIDs all_ids;
+	ptp_unpack_ArrayU32(params, data, size, &all_ids);
 	free(data);
+
+	for_each (uint32_t*, psid, all_ids)
+		if ((*psid & 0xffff) != 0) // filter out invalid storageIDs once instead of everywhere
+			array_push_back(storageids, *psid);
+
 	return PTP_RC_OK;
 }
 
@@ -3229,10 +3238,6 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle, PTPOb
 	last = changed = 0;
 
 	for_each (uint32_t*, psid, storageids) {
-		if ((*psid & 0xffff) == 0) {
-			ptp_debug (params, "list_folder_eos(storage=0x%08x, handle=0x%08x) skipped (invalid storage)", *psid, handle);
-			continue;
-		}
 		ptp_debug (params, "list_folder_eos(storage=0x%08x, handle=0x%08x)", *psid, handle);
 		tmp = NULL;
 		ret = ptp_canon_eos_getobjectinfoex (
