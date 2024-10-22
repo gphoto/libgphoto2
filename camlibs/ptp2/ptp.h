@@ -4913,7 +4913,7 @@ uint16_t ptp_object_want (PTPParams *, uint32_t handle, unsigned int want, PTPOb
 void ptp_objects_sort (PTPParams *);
 uint16_t ptp_find_object_in_cache (PTPParams *params, uint32_t handle, PTPObject **retob);
 uint16_t ptp_find_or_insert_object_in_cache (PTPParams *params, uint32_t handle, PTPObject **retob);
-uint16_t ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle);
+uint16_t ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle, PTPObjectHandles *children);
 
 PTPDevicePropDesc* ptp_find_dpd_in_cache(PTPParams *params, uint32_t dpc);
 

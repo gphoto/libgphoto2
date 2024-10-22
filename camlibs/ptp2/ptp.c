@@ -3210,7 +3210,7 @@ ptp_add_event (PTPParams *params, PTPContainer *event)
 /* CANON EOS fast directory mode: uses ptp_canon_eos_getobjectinfoex to get list of
  * ObjectInfos instead of just a list of handles that have to be queried the one by one.*/
 static uint16_t
-ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
+ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle, PTPObjectHandles *children) {
 	unsigned int	i, last, changed;
 	PTPCANONFolderEntry *tmp = NULL;
 	unsigned int	nroftmp = 0;
@@ -3230,7 +3230,7 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 
 	for_each (uint32_t*, psid, storageids) {
 		if ((*psid & 0xffff) == 0) {
-			ptp_debug (params, "list_folder_eos(storage=0x%08x, handle=0x%08x) skipped (invalid storate)", *psid, handle);
+			ptp_debug (params, "list_folder_eos(storage=0x%08x, handle=0x%08x) skipped (invalid storage)", *psid, handle);
 			continue;
 		}
 		ptp_debug (params, "list_folder_eos(storage=0x%08x, handle=0x%08x)", *psid, handle);
@@ -3242,10 +3242,17 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 			free_array (&storageids);
 			return ret;
 		}
+
+		if (children)
+			array_extend_capacity(children, nroftmp);
+
 		/* convert read entries into objectinfos */
 		for (i=0;i<nroftmp;i++) {
 			PTPObject	*ob = NULL;
 			unsigned int	j;
+
+			if (children)
+				children->val[children->len++] = tmp[i].ObjectHandle;
 
 			/* TODO: the following is actually slow when adding new entries, as the complete list needs to be traversed.
 			 * Make better use of the fact that the list is sorted. */
@@ -3309,18 +3316,18 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle) {
 }
 
 uint16_t
-ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
+ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle, PTPObjectHandles *children) {
 	unsigned int		changed, last;
 	uint16_t		ret;
 	uint32_t		xhandle = handle;
 	PTPObjectHandles	handles = {0};
 
 	ptp_debug (params, "ptp_list_folder(storage=0x%08x, handle=0x%08x)", storage, handle);
-	/* handle=0 is only not read when there is no object in the list yet
-	 * and we do the initial read. */
-	if (!handle && params->objects.len)
-		return PTP_RC_OK;
-	/* but we can override this to read 0 object of storages */
+
+	if (children)
+		array_init(children);
+
+	/* TODO: remove special handling of root folder by introducing a 'root' object */
 	if (handle == PTP_HANDLER_SPECIAL)
 		handle = 0;
 
@@ -3332,8 +3339,14 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 			return ret;
 		if (ob->oi.ObjectFormat != PTP_OFC_Association)
 			return PTP_RC_GeneralError;
-		if (ob->flags & PTPOBJECT_DIRECTORY_LOADED)
+		if (ob->flags & PTPOBJECT_DIRECTORY_LOADED) {
+			if (children) {
+				for_each (PTPObject*, pob, params->objects)
+					if (pob->oi.ParentObject == handle)
+						array_push_back(children, pob->oid);
+			}
 			return PTP_RC_OK;
+		}
 		ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
 		/*log_objectinfo(params, handle, &ob->oi);*/
 	}
@@ -3341,7 +3354,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 	/* Canon EOS Fast directory strategy */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	    ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetObjectInfoEx)) {
-		ret = ptp_list_folder_eos (params, storage, handle);
+		ret = ptp_list_folder_eos (params, storage, handle, children);
 		if (ret == PTP_RC_OK)
 			return ret;
 	}
@@ -3408,7 +3421,6 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle) {
 fallback:
 #endif
 
-	ptp_debug (params, "Listing ... ");
 	if (handle == 0)
 		xhandle = PTP_HANDLER_SPECIAL; /* 0 would mean all */
 	ret = ptp_getobjecthandles (params, storage, 0, xhandle, &handles);
@@ -3437,7 +3449,7 @@ fallback:
 			}
 		}
 		if (ob == NULL) {
-			ptp_debug (params, "adding new object: handle 0x%08x (nrofobs=%d,j=%d)", *phandle, params->objects.len,j);
+			ptp_debug (params, "adding new object: handle 0x%08x (nrofobs=%d,j=%d)", *phandle, params->objects.len, j);
 
 			array_push_back_empty (&params->objects, &ob);
 
@@ -3446,7 +3458,7 @@ fallback:
 			ob->flags = 0;
 			/* root directory list files might return all files, so avoid tagging it */
 			if (handle != PTP_HANDLER_SPECIAL && handle) {
-				ptp_debug (params, "  parenthandle 0x%08x", handle);
+				ptp_debug (params, "  parent 0x%08x", handle);
 				if (*phandle == handle) { /* EOS bug where handle == parent(handle) */
 					ob->oi.ParentObject = 0;
 				} else {
@@ -3461,7 +3473,7 @@ fallback:
 			}
 			changed = 1;
 		} else {
-			ptp_debug (params, "adding old object: handle 0x%08x (nrofobs=%d,j=%d)", *phandle, params->objects.len,j);
+			ptp_debug (params, "adding old object: handle 0x%08x (nrofobs=%d,j=%d)", *phandle, params->objects.len, j);
 			/* for speeding up search */
 			last = (last+j) % params->objects.len;
 			if (handle != PTP_HANDLER_SPECIAL) {
@@ -3474,9 +3486,12 @@ fallback:
 			}
 		}
 	}
-	free_array (&handles);
 	if (changed)
 		ptp_objects_sort (params);
+	if (children)
+		*children = handles;
+	else
+		free_array (&handles);
 	return PTP_RC_OK;
 }
 
@@ -3506,15 +3521,6 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 		free_array_recusive (&params->objects, ptp_free_object);
 
 		params->storagechanged		= 1;
-		/* mirror what we do in camera_init, fetch root directory entries. */
-		if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY)
-			ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
-
-		for_each (uint32_t*, psid, params->storageids) {
-			if ((*psid & 0xffff) && (*psid != 0x80000001))
-				ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
-		}
-
 		break;
 	}
 	default: /* check if we should handle it internally too */
