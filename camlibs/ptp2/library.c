@@ -7969,34 +7969,24 @@ find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t hand
 	const char *slash = strchr (path, '/');
 	size_t filename_len = slash ? (size_t)(slash - path) : strlen(path);
 
-	ret = ptp_list_folder (params, storage, handle);
+	PTPObjectHandles handles = {0};
+	ret = ptp_list_folder (params, storage, handle, &handles);
 	if (ret != PTP_RC_OK)
 		return PTP_HANDLER_SPECIAL;
 
-	for_each (PTPObject*, ob, params->objects) {
-		uint32_t	oid = ob->oid;
-
-		ret = PTP_RC_OK;
-		if ((ob->flags & (PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED)) != (PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED))
-			ret = ptp_object_want (params, oid, PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED, &ob);
-		if (ret != PTP_RC_OK) {
-			/* NOTE: the "i" array entry might now be invalid, as object_want can remove objects from the list */
-			GP_LOG_D("failed getting info of oid 0x%08x?", oid);
-			/* could happen if file gets removed between */
+	for_each (uint32_t*, poid, handles) {
+		PTPObject *ob;
+		if (PTP_RC_OK != ptp_object_want (params, *poid, PTPOBJECT_PARENTOBJECT_LOADED, &ob)) // refresh
+			continue; /* object might have been deleted but ObjectRemoved event not handled, yet */
+		if (ob->oi.ParentObject != handle)
 			continue;
-		}
-		if ((ob->oi.StorageID==storage) && (ob->oi.ParentObject==handle)) {
-			ret = ptp_object_want (params, oid, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-			if (ret != PTP_RC_OK) {
-				GP_LOG_D("failed getting info of oid 0x%08x?", oid);
-				/* could happen if file gets removed between */
-				/* FIXME: should remove, but then we irritate our list */
-				continue;
-			}
-			if (!strncmp (ob->oi.Filename, path, filename_len)) {
-				if (retob) *retob = ob;
-				return oid;
-			}
+
+		if (PTP_RC_OK != ptp_object_want (params, *poid, PTPOBJECT_OBJECTINFO_LOADED, &ob)) // refresh
+			continue; /* object might have been deleted but ObjectRemoved event not handled, yet */
+		if (!strncmp (ob->oi.Filename, path, filename_len)) {
+			if (retob)
+				*retob = ob;
+			return *poid;
 		}
 	}
 	/* else not found */
@@ -8008,11 +7998,8 @@ folder_to_handle(PTPParams *params, const char *folder, uint32_t storage, uint32
 {
 	GP_LOG_D("(folder='%s', storage=0x%08x, parent=0x%08x)", folder, storage, parent);
 	if (retob) *retob = NULL;
-	if (!strlen(folder) || !strcmp(folder, "/")) {
-		/* was initially read, no need to reread */
-		/* ptp_list_folder (params, storage, 0); */
+	if (!strlen(folder) || !strcmp(folder, "/"))
 		return PTP_HANDLER_ROOT;
-	}
 
 	if (folder[0] == '/')
 		folder++;
@@ -8050,16 +8037,75 @@ find_storage_and_handle_from_path(PTPParams *params, const char *folder, uint32_
 }
 
 static int
+generic_list_func (PTPParams *params, const char *folder, int is_directory, CameraList *list)
+{
+	/* Look for objects that are either files or directories.
+	 * Currently we specify *any* PTP association as directory.
+	 */
+
+	uint32_t storage, parent;
+
+	CR (find_storage_and_handle_from_path(params, folder, &storage, &parent));
+
+	/* list this directory */
+	PTPObjectHandles handles = {0};
+	C_PTP (ptp_list_folder (params, storage, parent, &handles));
+	GP_LOG_D ("ptp_list_folder(storage=0x%08x, handle=0x%08x) found %d object handles", storage, parent, handles.len);
+
+	for_each (uint32_t*, phandle, handles) {
+		PTPObject	*ob;
+		if (PTP_RC_OK != ptp_object_want (params, *phandle, PTPOBJECT_PARENTOBJECT_LOADED, &ob)) { // refresh
+			GP_LOG_D ("could not find object 0x%08x, possibly deleted on camera", *phandle);
+			continue; /* object might have been deleted but ObjectRemoved event not handled, yet */
+		}
+
+		/* If a filtered ptp_getobjecthandles in ptp_list_folder is not supported by the device,
+		 * we might end up having handles for all objects in 'handles', therefore we check the parent */
+		if ((ob->oi.ParentObject != parent))
+			continue;
+
+		if (!(ob->flags & PTPOBJECT_OBJECTINFO_LOADED))
+			if (PTP_RC_OK != ptp_object_want (params, *phandle, PTPOBJECT_OBJECTINFO_LOADED, &ob)) { // refresh
+				GP_LOG_D ("could not find object 0x%08x, possibly deleted on camera", *phandle);
+				continue; /* object might have been deleted but ObjectRemoved event not handled, yet */
+			}
+
+		/* only looking for directories or files */
+		if (is_directory != (ob->oi.ObjectFormat == PTP_OFC_Association))
+			continue;
+
+		if (!ob->oi.Filename)
+			continue;
+
+		/* GP_LOG_D ("adding 0x%08x to folder", ob->oid); */
+
+#if 0 /* TODO: Axel disabled this for its performance panalty and questionable value. */
+		/* HP Photosmart 850, the camera tends to duplicate filename in the list.
+		* Original patch by clement.rezvoy@gmail.com */
+		/* search backwards, likely gets hits faster. */
+		/* FIXME Marcus: This is also O(n^2) ... bad for large directories. */
+		if (GP_OK == gp_list_find_by_name(list, NULL, ob->oi.Filename)) {
+			GP_LOG_E (
+				"Duplicate entry '%s' in folder '%s'. Ignoring nth entry.\n",
+				ob->oi.Filename, folder);
+			continue;
+		}
+#endif
+		CR(gp_list_append (list, ob->oi.Filename, NULL));
+	}
+
+	GP_LOG_D ("returning list with %d %s entries", gp_list_count(list), is_directory ? "directory" : "file");
+
+	return GP_OK;
+}
+
+static int
 file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
-	Camera *camera = (Camera *)data;
-	PTPParams *params = &camera->pl->params;
-	uint32_t parent, storage=0x0000000;
-	unsigned int i, hasgetstorageids;
-	SET_CONTEXT_P(params, context);
-	unsigned int	lastobjects_len = params->objects.len, redoneonce = 0;
+	PTPParams *params = &((Camera *)data)->pl->params;
 
+	SET_CONTEXT_P(params, context);
 	GP_LOG_D ("file_list_func(%s)", folder);
 
 	/* There should be NO files in root folder */
@@ -8072,78 +8118,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		return (GP_OK);
 	}
 
-	CR (find_storage_and_handle_from_path(params, folder, &storage, &parent));
-
-	C_PTP_REP (ptp_list_folder (params, storage, parent));
-	GP_LOG_D ("after list folder");
-
-	hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
-
-retry:
-	for (i = 0; i < params->objects.len; i++) {
-		PTPObject	*ob;
-		uint16_t	ret;
-		uint32_t	handle;
-
-		/* not our parent -> next */
-		C_PTP_REP (ptp_object_want (params, params->objects.val[i].oid, PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_STORAGEID_LOADED, &ob));
-
-		/* DANGER DANGER: i is now invalid as objects might have been inserted in the list! */
-
-		if (ob->oi.ParentObject!=parent)
-			continue;
-
-		/* not on our storage devices -> next */
-		if ((hasgetstorageids && (ob->oi.StorageID != storage)))
-			continue;
-
-		handle = ob->oid; /* ob might change or even become invalid in the function below */
-		ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-		if (ret != PTP_RC_OK) {
-			/* we might raced another delete or ongoing addition, seen on a D810 */
-			if (ret == PTP_RC_InvalidObjectHandle) {
-				GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", handle);
-				/* remove it for now, we will readd it later if we see it again. */
-				ptp_remove_object_from_cache(params, handle);
-				continue;
-			}
-			C_PTP_REP (ret);
-		}
-		/* Is a directory -> next */
-		if (ob->oi.ObjectFormat == PTP_OFC_Association)
-			continue;
-
-		log_objectinfo(params, &ob->oi);
-
-		if (!ob->oi.Filename)
-			continue;
-
-		if (1) {
-		/* HP Photosmart 850, the camera tends to duplicate filename in the list.
-		* Original patch by clement.rezvoy@gmail.com */
-		/* search backwards, likely gets hits faster. */
-		/* FIXME Marcus: This is also O(n^2) ... bad for large directories. */
-		if (GP_OK == gp_list_find_by_name(list, NULL, ob->oi.Filename)) {
-			GP_LOG_E (
-				"Duplicate filename '%s' in folder '%s'. Ignoring nth entry.\n",
-				ob->oi.Filename, folder);
-			continue;
-		}
-		}
-		CR(gp_list_append (list, ob->oi.Filename, NULL));
-	}
-
-	/* Did we change the object tree list during our traversal? if yes, redo the scan. */
-	if (params->objects.len != lastobjects_len) {
-		if (redoneonce++) {
-			GP_LOG_E("list changed again on second pass, returning anyway");
-			return GP_OK;
-		}
-		lastobjects_len = params->objects.len;
-		gp_list_reset(list);
-		goto retry;
-	}
-	return GP_OK;
+	return generic_list_func(params, folder, FALSE, list);
 }
 
 static int
@@ -8151,12 +8126,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		void *data, GPContext *context)
 {
 	PTPParams *params = &((Camera *)data)->pl->params;
-	unsigned int i, hasgetstorageids;
-	uint32_t handler,storage;
-	unsigned int redoneonce = 0, lastobjects_len = params->objects.len;
 
 	SET_CONTEXT_P(params, context);
 	GP_LOG_D ("folder_list_func(%s)", folder);
+
 	/* add storage pseudofolders in root folder */
 	if (!strcmp(folder, "/")) {
 		/* use the cached storageids. they should be valid after camera_init */
@@ -8191,63 +8164,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		return (GP_OK);
 	}
 
-	CR (find_storage_and_handle_from_path(params, folder, &storage, &handler));
-
-	/* list this directory */
-	C_PTP_REP (ptp_list_folder (params, storage, handler));
-
-	GP_LOG_D ("after list folder (storage=0x%08x, handler=0x%08x)", storage, handler);
-
-	/* Look for objects we can present as directories.
-	 * Currently we specify *any* PTP association as directory.
-	 */
-	hasgetstorageids = ptp_operation_issupported(params,PTP_OC_GetStorageIDs);
-retry:
-	for (i = 0; i < params->objects.len; i++) {
-		PTPObject	*ob;
-		uint16_t	ret;
-		uint32_t	handle;
-
-		C_PTP_REP (ptp_object_want (params, params->objects.val[i].oid, PTPOBJECT_STORAGEID_LOADED|PTPOBJECT_PARENTOBJECT_LOADED, &ob));
-
-		/* DANGER DANGER: i is now invalid as objects might have been inserted in the list! */
-
-		if (ob->oi.ParentObject != handler)
-			continue;
-		if (hasgetstorageids && (ob->oi.StorageID != storage))
-			continue;
-
-		handle = ob->oid;
-		ret = ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-		if (ret != PTP_RC_OK) {
-			/* we might raced another delete or ongoing addition, seen on a D810 */
-			if (ret == PTP_RC_InvalidObjectHandle) {
-				GP_LOG_D ("Handle %08x was in list, but not/no longer found via getobjectinfo.\n", handle);
-				/* remove it for now, we will readd it later if we see it again. */
-				ptp_remove_object_from_cache(params, handle);
-				continue;
-			}
-			C_PTP_REP (ret);
-		}
-		if (ob->oi.ObjectFormat!=PTP_OFC_Association)
-			continue;
-		GP_LOG_D ("adding 0x%x / ob=%p to folder", ob->oid, ob);
-		if (GP_OK == gp_list_find_by_name(list, NULL, ob->oi.Filename)) {
-			GP_LOG_E ( "Duplicated foldername '%s' in folder '%s'. should not happen!\n", ob->oi.Filename, folder);
-			continue;
-		}
-		CR (gp_list_append (list, ob->oi.Filename, NULL));
-	}
-	if (lastobjects_len != params->objects.len) {
-		if (redoneonce++) {
-			GP_LOG_E("list changed again on second pass, returning anyway");
-			return GP_OK;
-		}
-		lastobjects_len = params->objects.len;
-		gp_list_reset (list);
-		goto retry;
-	}
-	return GP_OK;
+	return generic_list_func(params, folder, TRUE, list);
 }
 
 /* To avoid roundtrips for querying prop desc
@@ -9992,16 +9909,6 @@ camera_init (Camera *camera, GPContext *context)
 		gp_port_set_timeout (camera->port, timeout);
 	}
 
-	/* avoid doing this on the Sonys DSLRs in control mode, they hang. :( */
-
-	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY)
-		ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL);
-
-	for_each (uint32_t*, psid, params->storageids) {
-		if ((*psid & 0xffff) && (*psid != 0x80000001))
-			ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
-	}
-
 	/* moved down here in case the filesystem needs to first be initialized as the Olympus app does */
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) {
 
@@ -10011,12 +9918,6 @@ camera_init (Camera *camera, GPContext *context)
 		/* try to refetch the storage ids, set before only has 0x00000001 */
 		free_array (&params->storageids);
 		C_PTP (ptp_getstorageids(params, &params->storageids));
-
-		/* refetch root */
-		for_each (uint32_t*, psid, params->storageids) {
-			if ((*psid & 0xffff) && (*psid != 0x80000001))
-				ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL);
-		}
 
 		/*
 		if(params->storageids.len > 0) { // Olympus app gets storage info for first item, so emulating here
