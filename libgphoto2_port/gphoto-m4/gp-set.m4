@@ -150,7 +150,7 @@ AC_DEFUN_ONCE([_GP_SET_CHECK_INIT], [dnl
 AC_REQUIRE([_GP_SET_INIT])dnl
 gp_set_shfn_check ()
 {
-  if test -f "[$]1"; then :; else
+  if ! test -f "[$]1"; then
     AC_MSG_ERROR(["Error: set [$]1 has not been defined yet"])
   fi
 } # gp_set_shfn_check

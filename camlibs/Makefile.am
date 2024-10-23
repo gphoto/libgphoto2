@@ -197,7 +197,7 @@ all-mkf-camlibs: Makefile
 
 .PHONY: all-local
 all-local: all-cfg-camlibs all-mkf-camlibs
-	@if $(CMP) all-cfg-camlibs all-mkf-camlibs > /dev/null 2>&1; then :; else \
+	@if ! $(CMP) all-cfg-camlibs all-mkf-camlibs > /dev/null 2>&1; then \
 		echo "#"; \
 		for camlib in $$($(COMM) -23 all-cfg-camlibs all-mkf-camlibs); do \
 			echo "#   - '$${camlib}' camlib in 'configure.ac', but not in Makefiles."; \
