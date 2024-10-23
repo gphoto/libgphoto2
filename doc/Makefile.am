@@ -23,10 +23,19 @@ LOCAL_CLEAN =
 
 
 # FIXME: Depend on source files.
-DOXYGEN_STAMPS += $(HTML_APIDOC_DIR).stamp
-$(HTML_APIDOC_DIR).stamp: Doxyfile
-	$(AM_V_GEN)doxygen Doxyfile
-	@: > $@
+DOXYGEN_STAMPS += $(HTML_APIDOC_DIR).log
+$(HTML_APIDOC_DIR).log: Doxyfile
+	@if $(AM_V_P); then \
+	  echo "doxygen $<"; \
+	  doxygen $<; \
+	else \
+	  printf "  %-8s %s\n" DOXYGEN "$<"; \
+	  if ! doxygen $< > $@ 2>&1; then \
+	    cat $@; \
+	    rm -f $@; \
+	    exit 1; \
+	  fi; \
+	fi
 
 $(HTML_APIDOC_DIR).tar.gz: $(HTML_APIDOC_DIR).stamp
 	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_DIR) | GZIP=--best gzip -c) > $@
