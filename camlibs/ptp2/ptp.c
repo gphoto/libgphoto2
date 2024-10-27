@@ -4073,7 +4073,7 @@ ptp_canon_getviewfinderimage (PTPParams* params, unsigned char** image, uint32_t
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, image, &datasize));
 	if (ptp.Param1 > datasize) {
 		ptp_debug (params, "param1 is %d, but size is only %d", ptp.Param1, datasize);
-		free(image);
+		free(*image);
 		return PTP_RC_GeneralError;
 	}
 	*size=ptp.Param1;
