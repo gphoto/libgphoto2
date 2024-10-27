@@ -4067,9 +4067,15 @@ uint16_t
 ptp_canon_getviewfinderimage (PTPParams* params, unsigned char** image, uint32_t* size)
 {
 	PTPContainer	ptp;
+	unsigned int	datasize = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_CANON_GetViewfinderImage);
-	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, image, NULL));
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, image, &datasize));
+	if (ptp.Param1 > datasize) {
+		ptp_debug (params, "param1 is %d, but size is only %d", ptp.Param1, datasize);
+		free(image);
+		return PTP_RC_GeneralError;
+	}
 	*size=ptp.Param1;
 	return PTP_RC_OK;
 }
