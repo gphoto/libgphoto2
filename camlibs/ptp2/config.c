@@ -2687,87 +2687,6 @@ static struct deviceproptableu16 canon_isospeed[] = {
 };
 GENERIC16TABLE(Canon_ISO,canon_isospeed)
 
-/* see ptp-pack.c:ptp_unpack_EOS_ImageFormat */
-static struct deviceproptableu16 canon_eos_image_format[] = {
-	{ N_("RAW"),				0x0cff, 0 },
-	{ N_("mRAW"),				0x1cff, 0 },
-	{ N_("sRAW"),				0x2cff, 0 },
-	{ N_("cRAW"),				0x0bff, 0 },
-	{ N_("Large Fine JPEG"),		0x03ff, 0 },
-	{ N_("Large Normal JPEG"),		0x02ff, 0 },
-	{ N_("Medium Fine JPEG"),		0x13ff, 0 },
-	{ N_("Medium Normal JPEG"),		0x12ff, 0 },
-	{ N_("Small Fine JPEG"),		0x23ff, 0 },
-	{ N_("Small Normal JPEG"),		0x22ff, 0 },
-	{ N_("Small Fine JPEG"),		0xd3ff, 0 },
-	{ N_("Small Normal JPEG"),		0xd2ff, 0 },
-	{ N_("Smaller JPEG"),			0xe3ff, 0 },
-	{ N_("Tiny JPEG"),			0xf3ff, 0 },
-	{ N_("RAW + Large Fine JPEG"),		0x0c03, 0 },
-	{ N_("mRAW + Large Fine JPEG"),		0x1c03, 0 },
-	{ N_("sRAW + Large Fine JPEG"),		0x2c03, 0 },
-	{ N_("cRAW + Large Fine JPEG"),		0x0b03, 0 },
-	{ N_("RAW + Medium Fine JPEG"),		0x0c13, 0 },
-	{ N_("mRAW + Medium Fine JPEG"),	0x1c13, 0 },
-	{ N_("sRAW + Medium Fine JPEG"),	0x2c13, 0 },
-	{ N_("cRAW + Medium Fine JPEG"),	0x0b13, 0 },
-	{ N_("RAW + Small Fine JPEG"),		0x0c23, 0 },
-	{ N_("RAW + Small Fine JPEG"),		0x0cd3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("mRAW + Small Fine JPEG"),		0x1c23, 0 },
-	{ N_("mRAW + Small Fine JPEG"),		0x1cd3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("sRAW + Small Fine JPEG"),		0x2c23, 0 },
-	{ N_("sRAW + Small Fine JPEG"),		0x2cd3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("cRAW + Small Fine JPEG"),		0x0bd3, 0 },
-	{ N_("RAW + Large Normal JPEG"),	0x0c02, 0 },
-	{ N_("mRAW + Large Normal JPEG"),	0x1c02, 0 },
-	{ N_("sRAW + Large Normal JPEG"),	0x2c02, 0 },
-	{ N_("cRAW + Large Normal JPEG"),	0x0b02, 0 },
-	{ N_("RAW + Medium Normal JPEG"),	0x0c12, 0 },
-	{ N_("mRAW + Medium Normal JPEG"),	0x1c12, 0 },
-	{ N_("sRAW + Medium Normal JPEG"),	0x2c12, 0 },
-	{ N_("cRAW + Medium Normal JPEG"),	0x0b12, 0 },
-	{ N_("RAW + Small Normal JPEG"),	0x0c22, 0 },
-	{ N_("RAW + Small Normal JPEG"),	0x0cd2, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("mRAW + Small Normal JPEG"),	0x1c22, 0 },
-	{ N_("mRAW + Small Normal JPEG"),	0x1cd2, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("sRAW + Small Normal JPEG"),	0x2c22, 0 },
-	{ N_("sRAW + Small Normal JPEG"),	0x2cd2, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("cRAW + Small Normal JPEG"),	0x0bd2, 0 },
-	{ N_("RAW + Smaller JPEG"),		0x0ce3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("mRAW + Smaller JPEG"),		0x1ce3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("sRAW + Smaller JPEG"),		0x2ce3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("cRAW + Smaller JPEG"),		0x0be3, 0 }, /*Canon EOS M50*/
-	{ N_("RAW + Tiny JPEG"),		0x0cf3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("mRAW + Tiny JPEG"),		0x1cf3, 0 }, /*Canon EOS 5D Mark III*/
-	{ N_("sRAW + Tiny JPEG"),		0x2cf3, 0 }, /*Canon EOS 5D Mark III*/
-	/* There are more RAW + 'smallish' JPEG combinations for at least the 5DM3 possible.
-	   Axel was simply to lazy to exercise the combinatorial explosion. :-/ */
-	/* 1DX series 0 compression options */
-	{ N_("Small"),				0x21ff, 0 },
-	{ N_("Medium 1"),			0x51ff, 0 },
-	{ N_("Medium 2"),			0x61ff, 0 },
-	{ N_("Large"),				0x01ff, 0 },
-	{ N_("Small + RAW"),			0x0c21, 0 },
-	{ N_("Medium 1 + RAW"),			0x0c51, 0 },
-	{ N_("Medium 2 + RAW"),			0x0c61, 0 },
-	{ N_("Large + RAW"),			0x0c01, 0 },
-	{ N_("Small + cRAW"),			0x0b21, 0 },
-	{ N_("Medium 1 + cRAW"),		0x0b51, 0 },
-	{ N_("Medium 2 + cRAW"),		0x0b61, 0 },
-	{ N_("Large + cRAW"),			0x0b01, 0 },
-
-	/* 1DX mark ii */
-	{ N_("Large + mRAW"),			0x1c01, 0 },
-	{ N_("Medium 1 + mRAW"),		0x1c51, 0 },
-	{ N_("Medium 2 + mRAW"),		0x1c61, 0 },
-	{ N_("Small + mRAW"),			0x1c21, 0 },
-	{ N_("Large + sRAW"),			0x2c01, 0 },
-	{ N_("Medium 1 + sRAW"),		0x2c51, 0 },
-	{ N_("Medium 2 + sRAW"),		0x2c61, 0 },
-	{ N_("Small + sRAW"),			0x2c21, 0 },
-};
-GENERIC16TABLE(Canon_EOS_ImageFormat,canon_eos_image_format)
-
 static struct deviceproptableu8 canon_eos_single_ImageFormats[] = {
 	{ N_("RAW"),  0x0c, 0 },
 	{ N_("mRAW"), 0x1c, 0 },
@@ -2816,7 +2735,7 @@ _single_EOS_ImageFormat_name(uint8_t val)
 }
 
 static int
-_get_Canon_EOS_ImageFormat2(CONFIG_GET_ARGS)
+_get_Canon_EOS_ImageFormat(CONFIG_GET_ARGS)
 {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
@@ -2855,7 +2774,7 @@ _single_EOS_ImageFormat_value(const char *name, size_t n, PTPDevicePropDesc *dpd
 }
 
 static int
-_put_Canon_EOS_ImageFormat2(CONFIG_PUT_ARGS) {
+_put_Canon_EOS_ImageFormat(CONFIG_PUT_ARGS) {
 	const char*	label;
 	gp_widget_get_value(widget, &label);
 
@@ -11049,7 +10968,6 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_CANON_EOS_ImageFormat,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
 	{ N_("Image Format SD"),        "imageformatsd",        PTP_DPC_CANON_EOS_ImageFormatSD,        PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
 	{ N_("Image Format CF"),        "imageformatcf",        PTP_DPC_CANON_EOS_ImageFormatCF,        PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
-	{ N_("Image Format 2"),         "imageformat2",         PTP_DPC_CANON_EOS_ImageFormat,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat2,    _put_Canon_EOS_ImageFormat2 },
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_FUJI_Quality,                   PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_ImageFormat,          _put_Fuji_ImageFormat },
 	{ N_("Image Format"),           "imageformat",          0,                                      PTP_VENDOR_PANASONIC,PTP_DTC_UINT16, _get_Panasonic_ImageFormat,    _put_Panasonic_ImageFormat },
 	{ N_("Image Format Ext HD"),    "imageformatexthd",     PTP_DPC_CANON_EOS_ImageFormatExtHD,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
