@@ -320,7 +320,7 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
-		free (file->data);
+		if (file->data) free (file->data);
 		file->data = (unsigned char*)data;
 		file->size = size;
 		break;
