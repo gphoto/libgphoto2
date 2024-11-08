@@ -715,7 +715,7 @@ gp_file_clean (CameraFile *file)
 
 	switch (file->accesstype) {
 	case GP_FILE_ACCESSTYPE_MEMORY:
-		free (file->data);
+		if (file->data) free (file->data);
 		file->data = NULL;
 		file->size = 0;
 		break;
