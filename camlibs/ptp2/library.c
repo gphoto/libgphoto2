@@ -4879,6 +4879,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	struct timeval	event_start;
 	int		ret;
 
+	memset(&oi,0,sizeof(oi));
 	if (params->deviceinfo.Model && (
 		!strcmp(params->deviceinfo.Model, "ZV-E10")		||
 		!strcmp(params->deviceinfo.Model, "ZV-1")		||
@@ -5059,6 +5060,7 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 
 	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_QX_OperatingMode, &dpd));
 
+	memset(&oi,0,sizeof(oi));
 	while (dpd.CurrentValue.u8 != 2) {
 		propval.u8 = 2; /* 2 is Still Capture */
 		C_PTP (ptp_sony_qx_setdevicecontrolvaluea (params, PTP_DPC_SONY_QX_OperatingMode, &propval, PTP_DTC_UINT8));
