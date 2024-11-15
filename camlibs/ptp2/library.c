@@ -9027,6 +9027,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 			const char *filename, void *data, GPContext *context)
 {
 	Camera *camera = data;
+	uint32_t	ret;
 	uint32_t	storage;
 	PTPParams *params = &camera->pl->params;
 
@@ -9061,7 +9062,12 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	handle = find_child(params, filename, storage, handle, NULL);
 
 	/* in some cases we return errors ... just ignore them for now */
-	LOG_ON_PTP_E (ptp_deleteobject(params, handle, 0));
+	ret = ptp_deleteobject(params, handle, 0);
+	LOG_ON_PTP_E (ret);
+	if (ret != PTP_RC_OK) {
+		printf("Could not delete object.\n");
+		return GP_ERROR;
+	}
 
 	/* On some Canon firmwares, a DeleteObject causes a ObjectRemoved event
 	 * to be sent. At least on Digital IXUS II and PowerShot A85. But
