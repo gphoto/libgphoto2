@@ -1794,7 +1794,7 @@ static struct {
 	/* https://github.com/gphoto/gphoto2/issues/630 */
 	{"Nikon:Zf",                      0x04b0, 0x0453, PTP_CAP|PTP_CAP_PREVIEW},
 
-	/* via email, https://github.com/gphoto/libgphoto2/issues/1043  */
+	/* via email, https://github.com/gphoto/libgphoto2/issues/1043 */
 	{"Nikon:Z6 III",                  0x04b0, 0x0454, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* http://sourceforge.net/tracker/?func=detail&aid=3536904&group_id=8874&atid=108874 */
@@ -4186,19 +4186,9 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		C_PTP_REP_MSG (nikon_wait_busy(params,20,2000), _("Nikon enable liveview failed"));
 	}
 
-#ifdef SAVE_NIKON_EVENTS_BEFORE_CAPTURE_AND_REPLAY_AFTERWARDS
 	/* before we start real capture, move the current hw event queue to our local queue */
 	GP_LOG_D ("saving event queue before capture: %d events", params->events.len);
 	move(stored_events, params->events);
-#else
-	/* TODO: The above code is what the original seems to have intended to do, but due the free() in this line:
-	 * https://github.com/gphoto/libgphoto2/commit/0aea074ab604203c4b0a1e27c7ba2fef9428ea1a#diff-fe994a8b889e76ddd91b43a62ba0ef1872f77e086f1a32fd6566b25dc8a8f2b3R4132
-	 * the following is what it effectively did (plus likely some out of bounds memcpy since nrstoredevents has not been set to 0).
-	 * Note this is also the behavor of the EOS event hadling before capturing.
-	 */
-	GP_LOG_D ("draining the event queue before capture: %d events", params->events.len);
-	free_array (&params->events);
-#endif
 
 	if (ptp_operation_issupported(params, PTP_OC_NIKON_InitiateCaptureRecInMedia)) {
 		/* we assume for modern cameras this event method works to avoid longer waits */
@@ -4248,11 +4238,9 @@ camera_nikon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 
 capturetriggered:
 	if (ret != PTP_RC_OK) {
-#ifdef SAVE_NIKON_EVENTS_BEFORE_CAPTURE_AND_REPLAY_AFTERWARDS
 		/* store back all the queued events back to the hw event queue before returning. */
 		/* we do not do this in all error edge cases currently, only the ones that can trigger often */
 		array_append (&params->events, &stored_events);
-#endif
 		C_PTP_REP (ret);
 	}
 
@@ -6883,6 +6871,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 						strcpy (path->folder,"/");
 						/* TODO: @msmeissn the following goto will leak the `path` memory and
 						 * makes @axxel wonder what the above code is supposed to achieve.*/
+						GP_LOG_D("FIXME: memory leaking code path entered\n");
 						goto downloadnow;
 					}
 
