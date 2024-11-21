@@ -12321,7 +12321,10 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 				case GP_WIDGET_TEXT: {
 					char *val;
 					CR (gp_widget_get_value (widget, &val));
-					C_MEM (*content = strdup(val));
+					if (val != NULL)
+						C_MEM (*content = strdup(val));
+					else
+						C_MEM (*content = strdup("<null>"));
 					break;
 				}
 				case GP_WIDGET_RANGE: {
