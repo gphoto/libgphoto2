@@ -2737,6 +2737,8 @@ _single_EOS_ImageFormat_name(uint8_t val)
 static int
 _get_Canon_EOS_ImageFormat(CONFIG_GET_ARGS)
 {
+	int defaultset = 0;
+
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
@@ -2755,8 +2757,26 @@ _get_Canon_EOS_ImageFormat(CONFIG_GET_ARGS)
 
 		gp_widget_add_choice (*widget, buf);
 
-		if (val == dpd->CurrentValue.u16)
+		if (val == dpd->CurrentValue.u16) {
+			defaultset = 1;
 			gp_widget_set_value (*widget, buf);
+		}
+	}
+	if (!defaultset) {
+		uint16_t val = dpd->CurrentValue.u16;
+		uint8_t val1 = (val >> 8) & 0xFF;
+		uint8_t val2 = (val >> 0) & 0xFF;
+
+		const char* name1 = _single_EOS_ImageFormat_name(val1);
+		const char* name2 = _single_EOS_ImageFormat_name(val2);
+
+		char buf[12] = { 0 };
+		strcpy (buf, name1);
+		if (val2 != 0xFF)
+			sprintf (buf + strlen(buf), " + %s", name2);
+
+		gp_widget_add_choice (*widget, buf);
+		gp_widget_set_value (*widget, buf);
 	}
 
 	return GP_OK;
