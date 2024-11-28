@@ -511,7 +511,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			/* V1 and J1 are a less reliable then the newer 1 versions, no changecamera mode, no getevent, no initiatecapturerecinsdram */
 			if (	!strcmp(params->deviceinfo.Model,"V1") ||
 				!strcmp(params->deviceinfo.Model,"S1") ||
-				!strcmp(params->deviceinfo.Model,"J1")
+				!strcmp(params->deviceinfo.Model,"J1") ||
+				!strcmp(params->deviceinfo.Model,"J3") ||
+				!strcmp(params->deviceinfo.Model,"J4")
 			) {
 				/* on V1 and J1 even the 90c7 getevents does not work */
 				/* V1: see https://github.com/gphoto/libgphoto2/issues/569 */
@@ -526,7 +528,9 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 						GP_LOG_D("On Nikon S1/J1/V1: disable NIKON_InitiateCaptureRecInSdram as its unreliable");
 						di->Operations[i] = PTP_OC_InitiateCapture; /* overwrite */
 					}
-					if (!strcmp(params->deviceinfo.Model,"S1") &&
+					if ((	!strcmp(params->deviceinfo.Model,"S1") ||
+						!strcmp(params->deviceinfo.Model,"J3") ||
+						!strcmp(params->deviceinfo.Model,"J4")) &&
 						(di->Operations[i] == PTP_OC_NIKON_InitiateCaptureRecInMedia))
 					{
 						GP_LOG_D("On Nikon S1: disable NIKON_InitiateCaptureRecInMedia as its unreliable");
