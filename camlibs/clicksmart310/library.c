@@ -29,20 +29,7 @@
 #define JPEG_QCIF_FORMAT 0x22
 #define JPEG_CIF_FORMAT 0x21
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define N_(String) (String)
-#  endif
-#else
-#  define _(String) (String)
-#  define N_(String) (String)
-#  define ngettext(String1,String2,Count) ((Count==1)?String1:String2)
-#endif
+#include "libgphoto2/i18n.h"
 
 #include "clicksmart.h"
 #define GP_MODULE "clicksmart310"
