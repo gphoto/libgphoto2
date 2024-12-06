@@ -3921,6 +3921,7 @@ struct _PTPParams {
 
 	/* PTP: Sony specific */
 	struct timeval		starttime;
+	int			sony_mode_ver;
 
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;
