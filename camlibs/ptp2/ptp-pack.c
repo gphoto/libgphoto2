@@ -756,6 +756,10 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 		dpd->GetSet = 0;	/* just to be safe */
 		break;
 	case 1: /* enabled */
+		/* enable for sony mode 2 - GetSet is 0 for many settings e.g. iso that *are* settable */
+		if (params->sony_mode_ver==2) {
+			dpd->GetSet = 1;
+		} /* with sony mode 3 - GetSet is set correctly initially and doesn't need to be set here */
 		break;
 	case 2: /* display only */
 		dpd->GetSet = 0;	/* just to be safe */
@@ -821,7 +825,7 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 		uint16_t val = dtoh16a(data + *poffset);
 
 		/* check if we have a secondary list of items, this is for newer Sonys (2024) */
-		if (val < 0x200) {	/* actually would be 0x5XXX or 0xDxxx */
+		if (val < 0x200) {	/* if a secondary list is not provided, this will be the next property code - 0x5XXX or 0xDxxx */
 			if (dpd->FormFlag == PTP_DPFF_Enumeration) {
 				int i;
 
