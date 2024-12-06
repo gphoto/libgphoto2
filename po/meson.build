@@ -1,0 +1,1 @@
+i18n.gettext('libgphoto2-6', preset: 'glib')
