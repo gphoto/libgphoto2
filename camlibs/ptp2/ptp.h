@@ -3205,6 +3205,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_LiveViewSettingEffect  0xD231  /* (type=0x2) Enumeration [1,2] value: 1 */
 #define PTP_DPC_SONY_JpegQuality			0xD252
 #define PTP_DPC_SONY_CompressionSetting			0xD253
+#define PTP_DPC_SONY_FocusMagnifierSetting		0xD254 /* mode 3 */
 #define PTP_DPC_SONY_PriorityMode			0xD25A
 #define PTP_DPC_SONY_PcSaveImageSize			0xD268
 #define PTP_DPC_SONY_PcSaveImageFormat			0xD269
@@ -3223,6 +3224,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_RemoteKeyDown			0xD2CE
 #define PTP_DPC_SONY_RemoteKeyLeft			0xD2CF
 #define PTP_DPC_SONY_RemoteKeyRight			0xD2D0
+#define PTP_DPC_SONY_NearFar				0xD2D1
 #define PTP_DPC_SONY_AFMFHold				0xD2D2
 #define PTP_DPC_SONY_CancelPixelShiftShooting		0xD2D3
 #define PTP_DPC_SONY_PixelShiftShootingMode		0xD2D4
@@ -3231,10 +3233,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_FocusStepNear			0xD2D7
 #define PTP_DPC_SONY_FocusStepFar			0xD2D8
 #define PTP_DPC_SONY_AWBLButton				0xD2D9
-
-
-#define PTP_DPC_SONY_NearFar				0xD2D1
 #define PTP_DPC_SONY_AF_Area_Position			0xD2DC
+#define PTP_DPC_SONY_ZoomOperation			0xD2DD
+#define PTP_DPC_SONY_SaveZoomAndFocusPosition		0xD2E9
+#define PTP_DPC_SONY_LoadZoomAndFocusPosition		0xD2EA
 
 /* Sony QX properties */
 /* all for 96f8 Control Device */
@@ -4829,13 +4831,13 @@ has_sony_mode_300(PTPParams *params) {
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7SM3")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")) return 1;
-	// if (!strcmp(params->deviceinfo.Model, "ILCE-7C")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM5")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-9M2")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-1")) return 1;
 	/* https://github.com/gphoto/libgphoto2/issues/937#issuecomment-2014097435 */
-	//if (!strcmp(params->deviceinfo.Model, "ILCE-7M4")) return 1;
-	/*https://github.com/gphoto/libgphoto2/issues/937#issuecomment-2014097435 */
-	//if (!strcmp(params->deviceinfo.Model, "ILCE-7RM5")) return 1;
+	// TODO: likely the two cameras below are ok now, and can have mode 3 enabled, needs testing.
+	// if (!strcmp(params->deviceinfo.Model, "ILCE-7C")) return 1;
+	// if (!strcmp(params->deviceinfo.Model, "ILCE-7M4")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ZV-E1")) return 1;
 	// TODO add other mode 300 camera models
 	return 0;

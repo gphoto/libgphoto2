@@ -734,11 +734,21 @@ outofmemory:
 #define PTP_dpd_Sony_DefaultValue		6
 	/* PTP_dpd_SonyCurrentValue 		6 + sizeof(DataType) */
 
+static uint16_t sony_mode2_settable_props[] = {
+	PTP_DPC_FocusMode,
+	PTP_DPC_ExposureMeteringMode,
+};
+
+static uint16_t sony_mode2_settable_always_props[] = {
+	PTP_DPC_FlashMode,
+};
+
 static inline int
 ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDevicePropDesc *dpd, unsigned int dpdlen, unsigned int *poffset)
 {
 	unsigned int ret;
 	unsigned int isenabled;
+	unsigned int i;
 
 	if (!data || dpdlen < PTP_dpd_Sony_DefaultValue)
 		return 0;
@@ -751,19 +761,56 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 
 	ptp_debug (params, "prop 0x%04x, datatype 0x%04x, isEnabled %d getset %d", dpd->DevicePropCode, dpd->DataType, isenabled, dpd->GetSet);
 
-	switch (isenabled) {
-	case 0: /* grayed out */
-		dpd->GetSet = 0;	/* just to be safe */
-		break;
-	case 1: /* enabled */
-		/* enable for sony mode 2 - GetSet is 0 for many settings e.g. iso that *are* settable */
-		if (params->sony_mode_ver==2) {
-			dpd->GetSet = 1;
-		} /* with sony mode 3 - GetSet is set correctly initially and doesn't need to be set here */
-		break;
-	case 2: /* display only */
-		dpd->GetSet = 0;	/* just to be safe */
-		break;
+	if (params->sony_mode_ver==2) {
+		/* Old mode */
+		if (dpd->GetSet & 0x80) {
+			/* This is a control value and can be set */
+			/* 0x81 - button, 0x83 - lock, 0x82 - notch, 0x84 - variable */
+			dpd->GetSet = PTP_DPGS_GetSet;
+		}
+		switch (isenabled) {
+			case 0: /* grayed out */
+				dpd->GetSet = PTP_DPGS_Get;	/* just to be safe */
+				break;
+			case 1: /* enabled */
+				/* enable for sony mode 2 - GetSet is 0 for many settings e.g. iso that *are* settable */
+				dpd->GetSet = PTP_DPGS_GetSet;
+				break;
+			case 2: /* display only */
+			default:
+				/* Some settings in Sony mode 2 are marked as display only, but can be still be set */
+				for (i=0;i<ARRAYSIZE(sony_mode2_settable_props);i++) {
+					if (sony_mode2_settable_props[i] == dpd->DevicePropCode) {
+						dpd->GetSet = PTP_DPGS_GetSet;
+						break;
+					}
+				}
+				break;
+		}
+
+		if (dpd->GetSet == PTP_DPGS_Get) {
+			/* Some settings in Sony mode 2 are marked as disabled, but can be still be set */
+			for (i=0;i<ARRAYSIZE(sony_mode2_settable_always_props);i++) {
+				if (sony_mode2_settable_always_props[i] == dpd->DevicePropCode) {
+					dpd->GetSet = PTP_DPGS_GetSet;
+					break;
+				}
+			}
+		}
+	} else {
+		/* New mode */
+		switch (isenabled) {
+			case 0: /* grayed out */
+				dpd->GetSet = PTP_DPGS_Get;	/* just to be safe */
+				break;
+			case 1: /* enabled */
+				/* with sony mode 3 - GetSet is set correctly initially and doesn't need to be set here */
+				break;
+			case 2: /* display only */
+			default:
+				dpd->GetSet = PTP_DPGS_Get;	/* just to be safe */
+				break;
+		}
 	}
 
 	dpd->FormFlag=PTP_DPFF_None;
@@ -797,7 +844,6 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 		if (!ret) goto outofmemory;
 		break;
 	case PTP_DPFF_Enumeration: {
-		int i;
 #define N	dpd->FORM.Enum.NumberOfValues
 		N = dtoh16o(data, *poffset);
 		dpd->FORM.Enum.SupportedValue = calloc(N,sizeof(dpd->FORM.Enum.SupportedValue[0]));
@@ -827,8 +873,6 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 		/* check if we have a secondary list of items, this is for newer Sonys (2024) */
 		if (val < 0x200) {	/* if a secondary list is not provided, this will be the next property code - 0x5XXX or 0xDxxx */
 			if (dpd->FormFlag == PTP_DPFF_Enumeration) {
-				int i;
-
 				N = dtoh16o(data, *poffset);
 				dpd->FORM.Enum.SupportedValue = calloc(N,sizeof(dpd->FORM.Enum.SupportedValue[0]));
 				if (!dpd->FORM.Enum.SupportedValue)
