@@ -767,33 +767,35 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 			/* This is a control value and can be set */
 			/* 0x81 - button, 0x83 - lock, 0x82 - notch, 0x84 - variable */
 			dpd->GetSet = PTP_DPGS_GetSet;
-		}
-		switch (isenabled) {
-			case 0: /* grayed out */
-				dpd->GetSet = PTP_DPGS_Get;	/* just to be safe */
-				break;
-			case 1: /* enabled */
-				/* enable for sony mode 2 - GetSet is 0 for many settings e.g. iso that *are* settable */
-				dpd->GetSet = PTP_DPGS_GetSet;
-				break;
-			case 2: /* display only */
-			default:
-				/* Some settings in Sony mode 2 are marked as display only, but can be still be set */
-				for (i=0;i<ARRAYSIZE(sony_mode2_settable_props);i++) {
-					if (sony_mode2_settable_props[i] == dpd->DevicePropCode) {
+			/* isenabled is filled out for some properties and not others, assume all controls writable for now */
+		} else {
+			/* regular property  */
+			switch (isenabled) {
+				case 0: /* grayed out */
+					dpd->GetSet = PTP_DPGS_Get;	/* just to be safe */
+					break;
+				case 1: /* enabled */
+					/* enable for sony mode 2 - GetSet is 0 for many settings e.g. iso that *are* settable */
+					dpd->GetSet = PTP_DPGS_GetSet;
+					break;
+				case 2: /* display only */
+				default:
+					/* Some settings in Sony mode 2 are marked as display only, but can be still be set */
+					for (i=0;i<ARRAYSIZE(sony_mode2_settable_props);i++) {
+						if (sony_mode2_settable_props[i] == dpd->DevicePropCode) {
+							dpd->GetSet = PTP_DPGS_GetSet;
+							break;
+						}
+					}
+					break;
+			}
+			if (dpd->GetSet == PTP_DPGS_Get) {
+				/* Some settings in Sony mode 2 are marked as disabled, but can be still be set */
+				for (i=0;i<ARRAYSIZE(sony_mode2_settable_always_props);i++) {
+					if (sony_mode2_settable_always_props[i] == dpd->DevicePropCode) {
 						dpd->GetSet = PTP_DPGS_GetSet;
 						break;
 					}
-				}
-				break;
-		}
-
-		if (dpd->GetSet == PTP_DPGS_Get) {
-			/* Some settings in Sony mode 2 are marked as disabled, but can be still be set */
-			for (i=0;i<ARRAYSIZE(sony_mode2_settable_always_props);i++) {
-				if (sony_mode2_settable_always_props[i] == dpd->DevicePropCode) {
-					dpd->GetSet = PTP_DPGS_GetSet;
-					break;
 				}
 			}
 		}
