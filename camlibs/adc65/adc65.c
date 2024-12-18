@@ -6,6 +6,8 @@
  * <benjamin@psnw.com>
  * http://www.psnw.com/~smokeserpent/code/
  */
+#include "config.h"
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,20 +15,7 @@
 #include <gphoto2/gphoto2.h>
 #include <gphoto2/gphoto2-abilities-list.h>
 
-#ifdef ENABLE_NLS
-#  include <libintl.h>
-#  undef _
-#  define _(String) dgettext (PACKAGE, String)
-#  ifdef gettext_noop
-#    define N_(String) gettext_noop (String)
-#  else
-#    define _(String) (String)
-#    define N_(String) (String)
-#  endif
-#else
-#  define _(String) (String)
-#  define N_(String) (String)
-#endif
+#include "libgphoto2/i18n.h"
 
 #define GP_MODULE "adc65"
 

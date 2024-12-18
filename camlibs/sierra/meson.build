@@ -1,0 +1,20 @@
+shared_module(
+  'sierra',
+  'sierra.c',
+  'sierra.h',
+  'library.c',
+  'library.h',
+  'sierra-usbwrap.c',
+  'sierra-usbwrap.h',
+  'sierra-desc.h',
+  'sierra-desc.c',
+  'nikon-desc.c',
+  'olympus-desc.c',
+  'epson-desc.c',
+  dependencies: [
+    libgphoto2_dep,
+  ],
+  name_prefix: '',
+  install: true,
+  install_dir: camlibs_dir,
+)

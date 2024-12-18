@@ -1,0 +1,1 @@
+i18n.gettext('libgphoto2_port-12', preset: 'glib')
