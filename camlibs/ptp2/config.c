@@ -707,7 +707,7 @@ struct menu {
 
 /* Generic helper function for:
  *
- * ENUM xINTxx propertiess, with potential vendor specific variables. \
+ * ENUM xINTxx properties, with potential vendor specific variables. \
  */
 #define GENERIC_TABLE(bits,type,dpc) \
 struct deviceproptable##bits {		\
@@ -1545,6 +1545,163 @@ static struct deviceproptableu16 fuji_releasemode[] = {
 	{ N_("Mup Mirror up"),		5,	PTP_VENDOR_FUJI },
 };
 GENERIC16TABLE(Fuji_ReleaseMode,fuji_releasemode)
+
+static struct deviceproptableu32 sony3_capturemode[] = {
+	{ N_("Single Shot"),				0x00000001, 	0 },
+	{ N_("Continuous Shooting Hi"),			0x00010002, 	0 },
+	{ N_("Continuous Shooting Hi+"),		0x00018010, 	0 },
+	{ N_("Continuous Shooting Hi-Live"),		0x00018011, 	0 },
+	{ N_("Continuous Shooting Lo"),			0x00018012, 	0 },
+	{ N_("Continuous Shooting"),			0x00018013, 	0 },
+	{ N_("Continuous Shooting Speed Priority"),	0x00018014, 	0 },
+	{ N_("Continuous Shooting Mid"), 		0x00018015, 	0 },
+	{ N_("Continuous Shooting Mid-Live"),		0x00018016, 	0 },
+	{ N_("Continuous Shooting Lo-Live"),		0x00018017, 	0 },
+	{ N_("Timelapse"),				0x00020003, 	0 },
+	{ N_("Self Timer 5 Sec."),			0x00038003, 	0 },
+	{ N_("Self Timer 10 Sec."),			0x00038004, 	0 },
+	{ N_("Self Timer 2 Sec."),			0x00038005, 	0 },
+	{ N_("Continuous Bracket 0.3 EV 2 Img. +"),	0x0004C237,	0 },
+	{ N_("Continuous Bracket 0.3 EV 2 Img. -"),	0x0004C23F,	0 },
+	{ N_("Continuous Bracket 0.3 EV 3 Img."),	0x00048337,	0 },
+	{ N_("Continuous Bracket 0.3 EV 5 Img."),	0x00048537,	0 },
+	{ N_("Continuous Bracket 0.3 EV 7 Img."),	0x00048737,	0 },
+	{ N_("Continuous Bracket 0.3 EV 9 Img."),	0x00048937,	0 },
+	{ N_("Continuous Bracket 0.5 EV 2 Img. +"),	0x0004C257,	0 },
+	{ N_("Continuous Bracket 0.5 EV 2 Img. -"),	0x0004C25F,	0 },
+	{ N_("Continuous Bracket 0.5 EV 3 Img."),	0x00048357,	0 },
+	{ N_("Continuous Bracket 0.5 EV 5 Img."),	0x00048557,	0 },
+	{ N_("Continuous Bracket 0.5 EV 7 Img."),	0x00048757,	0 },
+	{ N_("Continuous Bracket 0.5 EV 9 Img."),	0x00048957,	0 },
+	{ N_("Continuous Bracket 0.7 EV 2 Img. +"),	0x0004C277,	0 },
+	{ N_("Continuous Bracket 0.7 EV 2 Img. -"),	0x0004C27F,	0 },
+	{ N_("Continuous Bracket 0.7 EV 3 Img."),	0x00048377,	0 },
+	{ N_("Continuous Bracket 0.7 EV 5 Img."),	0x00048577,	0 },
+	{ N_("Continuous Bracket 0.7 EV 7 Img."),	0x00048777,	0 },
+	{ N_("Continuous Bracket 0.7 EV 9 Img."),	0x00048977,	0 },
+	{ N_("Continuous Bracket 1.0 EV 2 Img. +"),	0x0004C211,	0 },
+	{ N_("Continuous Bracket 1.0 EV 2 Img. -"),	0x0004C219,	0 },
+	{ N_("Continuous Bracket 1.0 EV 3 Img."),	0x00048311,	0 },
+	{ N_("Continuous Bracket 1.0 EV 5 Img."),	0x00048511,	0 },
+	{ N_("Continuous Bracket 1.0 EV 7 Img."),	0x00048711,	0 },
+	{ N_("Continuous Bracket 1.0 EV 9 Img."),	0x00048911,	0 },
+	{ N_("Continuous Bracket 1.3 EV 2 Img. +"),	0x0004C241,	0 },
+	{ N_("Continuous Bracket 1.3 EV 2 Img. -"),	0x0004C249,	0 },
+	{ N_("Continuous Bracket 1.3 EV 3 Img."),	0x00048341,	0 },
+	{ N_("Continuous Bracket 1.3 EV 5 Img."),	0x00048541,	0 },
+	{ N_("Continuous Bracket 1.3 EV 7 Img."),	0x00048741,	0 },
+	{ N_("Continuous Bracket 1.5 EV 2 Img. +"),	0x0004C261,	0 },
+	{ N_("Continuous Bracket 1.5 EV 2 Img. -"),	0x0004C269,	0 },
+	{ N_("Continuous Bracket 1.5 EV 3 Img."), 	0x00048361,	0 },
+	{ N_("Continuous Bracket 1.5 EV 5 Img."), 	0x00048561,	0 },
+	{ N_("Continuous Bracket 1.5 EV 7 Img."), 	0x00048761,	0 },
+	{ N_("Continuous Bracket 1.7 EV 2 Img. +"),	0x0004C281,	0 },
+	{ N_("Continuous Bracket 1.7 EV 2 Img. -"),	0x0004C289,	0 },
+	{ N_("Continuous Bracket 1.7 EV 3 Img."),	0x00048381,	0 },
+	{ N_("Continuous Bracket 1.7 EV 5 Img."),	0x00048581,	0 },
+	{ N_("Continuous Bracket 1.7 EV 7 Img."),	0x00048781,	0 },
+	{ N_("Continuous Bracket 2.0 EV 2 Img. +"),	0x0004C221,	0 },
+	{ N_("Continuous Bracket 2.0 EV 2 Img. -"),	0x0004C229,	0 },
+	{ N_("Continuous Bracket 2.0 EV 3 Img."),	0x00048321,	0 },
+	{ N_("Continuous Bracket 2.0 EV 5 Img."),	0x00048521,	0 },
+	{ N_("Continuous Bracket 2.0 EV 7 Img."),	0x00048721,	0 },
+	{ N_("Continuous Bracket 2.3 EV 2 Img. +"),	0x0004C251,	0 },
+	{ N_("Continuous Bracket 2.3 EV 2 Img. -"),	0x0004C259,	0 },
+	{ N_("Continuous Bracket 2.3 EV 3 Img."), 	0x00048351,	0 },
+	{ N_("Continuous Bracket 2.3 EV 5 Img."), 	0x00048551,	0 },
+	{ N_("Continuous Bracket 2.5 EV 2 Img. +"),	0x0004C271,	0 },
+	{ N_("Continuous Bracket 2.5 EV 2 Img. -"),	0x0004C279,	0 },
+	{ N_("Continuous Bracket 2.5 EV 3 Img."), 	0x00048371,	0 },
+	{ N_("Continuous Bracket 2.5 EV 5 Img."), 	0x00048571,	0 },
+	{ N_("Continuous Bracket 2.7 EV 2 Img. +"), 	0x0004C291,	0 },
+	{ N_("Continuous Bracket 2.7 EV 2 Img. -"), 	0x0004C299,	0 },
+	{ N_("Continuous Bracket 2.7 EV 3 Img."), 	0x00048391,	0 },
+	{ N_("Continuous Bracket 2.7 EV 5 Img."), 	0x00048591,	0 },
+	{ N_("Continuous Bracket 3.0 EV 2 Img. +"), 	0x0004C231,	0 },
+	{ N_("Continuous Bracket 3.0 EV 2 Img. -"), 	0x0004C239,	0 },
+	{ N_("Continuous Bracket 3.0 EV 3 Img."), 	0x00048331,	0 },
+	{ N_("Continuous Bracket 3.0 EV 5 Img."), 	0x00048531,	0 },
+	{ N_("Single Bracket 0.3 EV 2 Img. +"), 	0x0005C236,	0 },
+	{ N_("Single Bracket 0.3 EV 2 Img. -"), 	0x0005C23E,	0 },
+	{ N_("Single Bracket 0.3 EV 3 Img."), 		0x00058336,	0 },
+	{ N_("Single Bracket 0.3 EV 5 Img."), 		0x00058536,	0 },
+	{ N_("Single Bracket 0.3 EV 7 Img."), 		0x00058736,	0 },
+	{ N_("Single Bracket 0.3 EV 9 Img."), 		0x00058936,	0 },
+	{ N_("Single Bracket 0.5 EV 2 Img. +"), 	0x0005C256,	0 },
+	{ N_("Single Bracket 0.5 EV 2 Img. -"), 	0x0005C25E,	0 },
+	{ N_("Single Bracket 0.5 EV 3 Img."), 		0x00058356,	0 },
+	{ N_("Single Bracket 0.5 EV 5 Img."), 		0x00058556,	0 },
+	{ N_("Single Bracket 0.5 EV 7 Img."), 		0x00058756,	0 },
+	{ N_("Single Bracket 0.5 EV 9 Img."), 		0x00058956,	0 },
+	{ N_("Single Bracket 0.7 EV 2 Img. +"), 	0x0005C276,	0 },
+	{ N_("Single Bracket 0.7 EV 2 Img. -"), 	0x0005C27E,	0 },
+	{ N_("Single Bracket 0.7 EV 3 Img."), 		0x00058376,	0 },
+	{ N_("Single Bracket 0.7 EV 5 Img."), 		0x00058576,	0 },
+	{ N_("Single Bracket 0.7 EV 7 Img."), 		0x00058776,	0 },
+	{ N_("Single Bracket 0.7 EV 9 Img."), 		0x00058976,	0 },
+	{ N_("Single Bracket 1.0 EV 2 Img. +"), 	0x0005C210,	0 },
+	{ N_("Single Bracket 1.0 EV 2 Img. -"), 	0x0005C218,	0 },
+	{ N_("Single Bracket 1.0 EV 3 Img."), 		0x00058310,	0 },
+	{ N_("Single Bracket 1.0 EV 5 Img."), 		0x00058510,	0 },
+	{ N_("Single Bracket 1.0 EV 7 Img."), 		0x00058710,	0 },
+	{ N_("Single Bracket 1.0 EV 9 Img."), 		0x00058910,	0 },
+	{ N_("Single Bracket 1.3 EV 2 Img. +"), 	0x0005C240,	0 },
+	{ N_("Single Bracket 1.3 EV 2 Img. -"), 	0x0005C248,	0 },
+	{ N_("Single Bracket 1.3 EV 3 Img."), 		0x00058340,	0 },
+	{ N_("Single Bracket 1.3 EV 5 Img."), 		0x00058540,	0 },
+	{ N_("Single Bracket 1.3 EV 7 Img."), 		0x00058740,	0 },
+	{ N_("Single Bracket 1.5 EV 2 Img. +"), 	0x0005C260,	0 },
+	{ N_("Single Bracket 1.5 EV 2 Img. -"), 	0x0005C268,	0 },
+	{ N_("Single Bracket 1.5 EV 3 Img."), 		0x00058360,	0 },
+	{ N_("Single Bracket 1.5 EV 5 Img."), 		0x00058560,	0 },
+	{ N_("Single Bracket 1.5 EV 7 Img."), 		0x00058760,	0 },
+	{ N_("Single Bracket 1.7 EV 2 Img. +"), 	0x0005C280,	0 },
+	{ N_("Single Bracket 1.7 EV 2 Img. -"), 	0x0005C288,	0 },
+	{ N_("Single Bracket 1.7 EV 3 Img."),		0x00058380,	0 },
+	{ N_("Single Bracket 1.7 EV 5 Img."),		0x00058580,	0 },
+	{ N_("Single Bracket 1.7 EV 7 Img."),		0x00058780,	0 },
+	{ N_("Single Bracket 2.0 EV 2 Img. +"),		0x0005C220,	0 },
+	{ N_("Single Bracket 2.0 EV 2 Img. -"),		0x0005C228,	0 },
+	{ N_("Single Bracket 2.0 EV 3 Img."),		0x00058320,	0 },
+	{ N_("Single Bracket 2.0 EV 5 Img."),		0x00058520,	0 },
+	{ N_("Single Bracket 2.0 EV 7 Img."),		0x00058720,	0 },
+	{ N_("Single Bracket 2.3 EV 2 Img. +"),		0x0005C250,	0 },
+	{ N_("Single Bracket 2.3 EV 2 Img. -"),		0x0005C258,	0 },
+	{ N_("Single Bracket 2.3 EV 3 Img."),		0x00058350,	0 },
+	{ N_("Single Bracket 2.3 EV 5 Img."),		0x00058550,	0 },
+	{ N_("Single Bracket 2.5 EV 2 Img. +"),		0x0005C270,	0 },
+	{ N_("Single Bracket 2.5 EV 2 Img. -"),		0x0005C278,	0 },
+	{ N_("Single Bracket 2.5 EV 3 Img."),		0x00058370,	0 },
+	{ N_("Single Bracket 2.5 EV 5 Img."),		0x00058570,	0 },
+	{ N_("Single Bracket 2.7 EV 2 Img. +"),		0x0005C290,	0 },
+	{ N_("Single Bracket 2.7 EV 2 Img. -"),		0x0005C298,	0 },
+	{ N_("Single Bracket 2.7 EV 3 Img."),		0x00058390,	0 },
+	{ N_("Single Bracket 2.7 EV 5 Img."),		0x00058590,	0 },
+	{ N_("Single Bracket 3.0 EV 2 Img. +"),		0x0005C230,	0 },
+	{ N_("Single Bracket 3.0 EV 2 Img. -"),		0x0005C238,	0 },
+	{ N_("Single Bracket 3.0 EV 3 Img."),		0x00058330,	0 },
+	{ N_("Single Bracket 3.0 EV 5 Img."),		0x00058530,	0 },
+	{ N_("White Balance Bracket Lo"),		0x00068018, 	0 },
+	{ N_("White Balance Bracket Hi"),		0x00068028, 	0 },
+	{ N_("DRO Bracket Lo"),				0x00078019,	0 },
+	{ N_("DRO Bracket Hi"),				0x00078029,	0 },
+	{ N_("LPF Bracket"),				0x0007801A,	0 },
+	{ N_("Remote Commander"),			0x0007800A,	0 },
+	{ N_("Mirror Up"),				0x0007800B,	0 },
+	{ N_("Self Portrait 1 Person"),			0x00078006,	0 },
+	{ N_("Self Portrait 2 People"),			0x00078007,	0 },
+	{ N_("Continuous Self Timer 3 Img."),		0x00088008,	0 },
+	{ N_("Continuous Self Timer 5 Img."),		0x00088009,	0 },
+	{ N_("Continuous Self Timer 3 Img. 5 Sec."),	0x0008800C,	0 },
+	{ N_("Continuous Self Timer 5 Img. 5 Sec."),	0x0008800D,	0 },
+	{ N_("Continuous Self Timer 3 Img. 2 Sec."),	0x0008800E,	0 },
+	{ N_("Continuous Self Timer 5 Img. 2 Sec."),	0x0008800F,	0 },
+	{ N_("Spot Burst Shooting Lo"),			0x00098030,	0 },
+	{ N_("Spot Burst Shooting Mid"),		0x00098031,	0 },
+	{ N_("Spot Burst Shooting Hi"),			0x00098032,	0 },
+	{ N_("Focus Bracket"),				0x000A8040,	0 },
+};
+GENERIC32TABLE(Sony3_CaptureMode,sony3_capturemode)
 
 static struct deviceproptableu16 fuji_filmsimulation[] = {
 	{ N_("PROVIA/Standard"),            1,	PTP_VENDOR_FUJI },
@@ -3268,13 +3425,11 @@ _get_Sony_ISO(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
-/* old method, using stepping */
 static int
-_put_Sony_ISO(CONFIG_PUT_ARGS)
-{
-	const char	*value;
-	uint32_t	raw_iso;
-	PTPParams	*params = &(camera->pl->params);
+_put_Sony_ISO(CONFIG_PUT_ARGS) {
+	const char *value;
+	uint32_t raw_iso;
+	PTPParams *params = &(camera->pl->params);
 
 	CR (gp_widget_get_value(widget, &value));
 	CR (_parse_Sony_ISO(value, &raw_iso));
@@ -3282,10 +3437,17 @@ _put_Sony_ISO(CONFIG_PUT_ARGS)
 	propval->u32 = raw_iso;
 	*alreadyset = 1;
 
-	return _put_sony_value_u32(params, dpd->DevicePropCode, raw_iso, 1);
+	if (params->sony_mode_ver == 2) {
+		/* old method, using stepping */
+		return _put_sony_value_u32(params, dpd->DevicePropCode, raw_iso, 1);
+	} else {
+		/* new method, can just set the value via setcontroldevicea */
+		return translate_ptp_result(
+			ptp_sony_setdevicecontrolvaluea(params, dpd->DevicePropCode, propval, PTP_DTC_UINT32));
+	}
 }
 
-/* new method, can just set the value via setcontroldevicea */
+/* undocumented property available on 2020+ cameras, can just set the value via setcontroldevicea */
 static int
 _put_Sony_ISO2(CONFIG_PUT_ARGS)
 {
@@ -3603,7 +3765,6 @@ _get_Sony_FNumber(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
-
 static int
 _put_Sony_FNumber(CONFIG_PUT_ARGS)
 {
@@ -3619,7 +3780,14 @@ _put_Sony_FNumber(CONFIG_PUT_ARGS)
 	else
 		return GP_ERROR;
 	*alreadyset = 1;
-	return _put_sony_value_u16 (params, PTP_DPC_FNumber, fvalue*100, 0);
+
+	if (params->sony_mode_ver==3) {
+		/* new method, can just set the value via setcontroldevicea */
+		return translate_ptp_result(
+			ptp_sony_setdevicecontrolvaluea(params, PTP_DPC_FNumber, propval, PTP_DTC_UINT32));
+	} else {
+		return _put_sony_value_u16(params, PTP_DPC_FNumber, propval->u16, 0);
+	}
 }
 
 static int
@@ -4277,8 +4445,11 @@ static struct deviceproptableu16 capture_mode[] = {
 	{ N_("Selftimer 5s 5 Pictures"),0x800d, PTP_VENDOR_SONY},
 	{ N_("Selftimer 2s 3 Pictures"),0x800e, PTP_VENDOR_SONY},
 	{ N_("Selftimer 2s 5 Pictures"),0x800f, PTP_VENDOR_SONY},
-	{ N_("Continuous Hi+ Speed"),   0x8010, PTP_VENDOR_SONY}, /* A7III */
-	{ N_("Continuous Med Speed"),   0x8015, PTP_VENDOR_SONY}, /* A7III */
+	{ N_("Continuous Hi+ Speed"),	0x8010, PTP_VENDOR_SONY}, /* A7III */
+	{ N_("Continuous Lo Speed"),	0x8012, PTP_VENDOR_SONY},
+	{ N_("Continuous Shooting"),	0x8013, PTP_VENDOR_SONY},
+	{ N_("Continuous Speed Priority"),	0x8014, PTP_VENDOR_SONY},
+	{ N_("Continuous Med Speed"),		0x8015, PTP_VENDOR_SONY}, /* A7III */
 
 	{ N_("Bracketing C 0.3 Steps 3 Pictures"),	0x8337, PTP_VENDOR_SONY},
 	{ N_("Bracketing C 0.3 Steps 5 Pictures"),	0x8537, PTP_VENDOR_SONY},
@@ -4511,10 +4682,16 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Slow sync"),				0x8004, PTP_VENDOR_FUJI},
 	{ N_("Rear-curtain with slow sync"),		0x8005, PTP_VENDOR_FUJI},
 	{ N_("Rear-curtain sync"),			0x8006, PTP_VENDOR_FUJI},
-
+	{ N_("Slow Sync"),				0x8001, PTP_VENDOR_SONY},
 	{ N_("Rear Curtain Sync"),			0x8003, PTP_VENDOR_SONY},
 	{ N_("Wireless Sync"),				0x8004, PTP_VENDOR_SONY},
-	{ N_("Slow Sync"),				0x8032, PTP_VENDOR_SONY},
+	{ N_("HSS auto"),				0x8021, PTP_VENDOR_SONY},
+	{ N_("HSS fill"),				0x8022, PTP_VENDOR_SONY},
+	{ N_("HSS WL"),					0x8024, PTP_VENDOR_SONY},
+	{ N_("Slow Slow Sync Red Eye On"),		0x8031, PTP_VENDOR_SONY},
+	{ N_("Slow Sync Red Eye Off"),			0x8032, PTP_VENDOR_SONY},
+	{ N_("Slow Sync Wireless"),			0x8041, PTP_VENDOR_SONY},
+	{ N_("Rear Sync Wireless"),			0x8042, PTP_VENDOR_SONY},
 };
 GENERIC16TABLE(FlashMode,flash_mode)
 
@@ -5387,7 +5564,7 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 }
 
 static int
-_put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
+_put_Sony_ShutterSpeedMode2(CONFIG_PUT_ARGS) {
 	int		x,y,a,b,direction,position_current,position_new;
 	const char	*val;
 	float 		old,new,current;
@@ -5422,12 +5599,12 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 		}
 		new32 = (x<<16)|y;
 	}
-	/* new style */
+	/* set directly if this property exists */
 	if (have_prop (camera, PTP_VENDOR_SONY, PTP_DPC_SONY_ShutterSpeed2)) {
 		propval->u32 = new32;
 		return translate_ptp_result (ptp_sony_setdevicecontrolvaluea(params, PTP_DPC_SONY_ShutterSpeed2, propval, PTP_DTC_UINT32));
 	}
-	/* old style uses stepping */
+	/* otherwise use stepping */
 
 	new = ((float)x)/(float)y;
 
@@ -5553,6 +5730,43 @@ _put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
 	} while (1);
 	*alreadyset = 1;
 	propval->u32 = new;
+	return GP_OK;
+}
+
+static int
+_put_Sony_ShutterSpeed(CONFIG_PUT_ARGS) {
+	PTPParams	*params = &(camera->pl->params);
+	GPContext 	*context = ((PTPData *) params->data)->context;
+	int		numerator,denominator,a,b;
+	const char	*val;
+	PTPPropValue	value;
+
+	if (params->sony_mode_ver == 2) {
+		/* old way */
+		return _put_Sony_ShutterSpeedMode2(CONFIG_PUT_NAMES);
+	}
+
+	CR (gp_widget_get_value (widget, &val));
+
+	if (!strcmp(val,_("Bulb"))) {
+		value.u32 = 0; // Docs imply bulb can be set with zero, but this doesn't seem to work...
+	} else {
+		if (2==sscanf(val, "%d/%d", &a, &b)) {
+			numerator = a;
+			denominator = b;
+		} else if (1==sscanf(val,"%d", &a)) {
+			numerator = 10 * a;
+			denominator = 10;
+		} else {
+			return GP_ERROR_BAD_PARAMETERS;
+		}
+		value.u32 = (numerator<<16)|denominator;
+	}
+
+	// Docs say to call SDIO_ControlDevice, but this doesn't work on A7R4.  Either work on A7R5.
+	C_PTP_REP (ptp_sony_setdevicecontrolvaluea(params, dpd->DevicePropCode, &value, PTP_DTC_UINT32));
+	*alreadyset = 1;
+	propval->u32 = value.u32;
 	return GP_OK;
 }
 
@@ -7028,6 +7242,7 @@ static struct deviceproptableu8 sony_pc_save_image_size[] = {
 GENERIC8TABLE(Sony_PcSaveImageSize, sony_pc_save_image_size)
 
 static struct deviceproptableu8 sony_pc_save_image_format[] = {
+	{ N_("Disabled"),     0x00, 0 },
 	{ N_("RAW & JPEG"),   0x01, 0 },
 	{ N_("JPEG Only"),    0x02, 0 },
 	{ N_("RAW Only"),     0x03, 0 },
@@ -8989,7 +9204,7 @@ _put_Sony_ManualFocus(CONFIG_PUT_ARGS)
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_NearFar, &xpropval, PTP_DTC_INT16));
 	} else {
 		xpropval.i16 = 1;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, 0xd2d2, &xpropval, PTP_DTC_INT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AFMFHold, &xpropval, PTP_DTC_INT16));
 	}
 	*alreadyset = 1;
 	return GP_OK;
@@ -9082,6 +9297,90 @@ _put_Sony_FocusMagnifyProp(CONFIG_PUT_ARGS)
 	*alreadyset = 1;
 	return GP_OK;
 }
+
+static int
+_get_Sony_FocusMagnifySetting(CONFIG_GET_ARGS) {
+	char buffer[1024];
+	int i,x,y;
+	uint32_t mag,magInteger,magDecimal;
+	uint32_t currentMag;
+	uint64_t currentVal;
+
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	currentVal = dpd->CurrentValue.u64;
+	x = (int)(currentVal >> 16 & 0xffff);
+	y = (int)(currentVal & 0xffff);
+	currentMag = (int)(currentVal >> 32);
+
+	for (i = 0; i < dpd->FORM.Enum.NumberOfValues; i++) {
+		PTPPropValue *value = dpd->FORM.Enum.SupportedValue + i;
+		mag = (uint32_t) (value->u64 >> 32);
+		magInteger = mag / 10;
+		magDecimal = mag % 10;
+		int len = 0;
+		if (magInteger == 0 && magDecimal == 0) {
+			strcpy(buffer, "Off");
+			len = 3;
+		} else if (magDecimal) {
+			len = sprintf (buffer, "%d.%d", magInteger, magDecimal);
+		} else {
+			len = sprintf (buffer, "%d", magInteger);
+		}
+		gp_widget_add_choice (*widget, buffer);
+		if (mag==currentMag) {
+			if (len < 0) {
+				len = 0;
+			}
+			sprintf (buffer + len, ",%d,%d", x, y);
+			gp_widget_set_value(*widget, buffer);
+		}
+	}
+
+	return GP_OK;
+}
+
+static int
+_put_Sony_FocusMagnifySetting(CONFIG_PUT_ARGS)
+{
+	PTPParams* params = &(camera->pl->params);
+	PTPPropValue xpropval;
+	char* xval;
+	uint32_t magInteger=0,magDecimal=0, x=0,y=0;
+	uint64_t currentVal;
+
+	currentVal = dpd->CurrentValue.u64;
+	x = (int)(currentVal >> 16 & 0xffff);
+	y = (int)(currentVal & 0xffff);
+
+	CR (gp_widget_get_value(widget, &xval));
+#define SONY_TOUCH_MAX_X (640-1)
+#define SONY_TOUCH_MAX_Y (480-1)
+	if (sscanf (xval, "%d.%1d,%d,%d", &magInteger, &magDecimal, &x, &y) == 4) {
+		GP_LOG_D ("mag: %d.%d x: %d y: %d", magInteger, magDecimal, x, y);
+	} else if (sscanf (xval, "%d,%d,%d", &magInteger, &x, &y) == 3) {
+		GP_LOG_D ("mag: %d x: %d y: %d", magInteger, x, y);
+	} else if (sscanf (xval, "%d.%d", &magInteger, &magDecimal) == 2) {
+		GP_LOG_D ("mag: %d.%d", magInteger, magDecimal);
+	} else if (sscanf (xval, "%d", &magInteger) == 1) {
+		GP_LOG_D ("mag: %d", magInteger);
+	}
+	if (x > SONY_TOUCH_MAX_X) {
+		x = SONY_TOUCH_MAX_X;
+	}
+	if (y > SONY_TOUCH_MAX_Y) {
+		y = SONY_TOUCH_MAX_Y;
+	}
+#undef SONY_TOUCH_MAX_X
+#undef SONY_TOUCH_MAX_Y
+	xpropval.u64 = ((uint64_t)(magInteger*10 + magDecimal) << 32) + (x << 16) + y;
+
+	C_PTP (ptp_sony_setdevicecontrolvaluea (params, dpd->DevicePropCode, &xpropval, PTP_DTC_UINT64));
+	*alreadyset = 1;
+	return GP_OK;
+}
+
 
 static int
 _get_Panasonic_Movie(CONFIG_GET_ARGS) {
@@ -10858,6 +11157,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Remote Key Down"),                "remotekeydown", PTP_DPC_SONY_RemoteKeyDown, PTP_VENDOR_SONY, PTP_DTC_UINT16,   _get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
 	{ N_("Remote Key Left"),                "remotekeyleft", PTP_DPC_SONY_RemoteKeyLeft, PTP_VENDOR_SONY, PTP_DTC_UINT16,   _get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
 	{ N_("Remote Key Right"),               "remotekeyright",PTP_DPC_SONY_RemoteKeyRight,PTP_VENDOR_SONY, PTP_DTC_UINT16,   _get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Focus Magnifier"),                "focusmagnifier",PTP_DPC_SONY_FocusMagnifierSetting,PTP_VENDOR_SONY, PTP_DTC_UINT64,_get_Sony_FocusMagnifySetting,     _put_Sony_FocusMagnifySetting },
 	{ N_("Canon Disable Mode Dial"),        "disablemodedial",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_SetModeDialDisable,    _get_Canon_SetModeDialDisable,  _put_Canon_SetModeDialDisable },
 	{ N_("PTP Opcode"),                     "opcode",           0,  0,                  PTP_OC_GetDeviceInfo,               _get_Generic_OPCode,            _put_Generic_OPCode },
 	{ 0,0,0,0,0,0,0 },
@@ -11105,7 +11405,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Image Quality"),                  "imagequality",             PTP_DPC_CompressionSetting,             0,                  PTP_DTC_UINT8,  _get_CompressionSetting,            _put_CompressionSetting },
 	{ N_("JPEG Quality"),                   "jpegquality",              PTP_DPC_SONY_JpegQuality,               PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_300_JpegCompressionSetting, _put_Sony_300_JpegCompressionSetting },
 	{ N_("PC Save Image Size"),             "pcsaveimgsize",            PTP_DPC_SONY_PcSaveImageSize,           PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_PcSaveImageSize,          _put_Sony_PcSaveImageSize },
-	{ N_("PC Save Image Format"),           "pcsaveimgformat",          PTP_DPC_SONY_PcSaveImageFormat,         PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_PcSaveImageFormat,        _put_Sony_PcSaveImageFormat },
+	{ N_("RAW+J PC Save Image"),            "pcsaveimgformat",          PTP_DPC_SONY_PcSaveImageFormat,         PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_PcSaveImageFormat,        _put_Sony_PcSaveImageFormat },
 	{ N_("Focus Distance"),                 "focusdistance",            PTP_DPC_FocusDistance,                  0,                  PTP_DTC_UINT16, _get_FocusDistance,                 _put_FocusDistance },
 	{ N_("Focal Length"),                   "focallength",              PTP_DPC_FocalLength,                    0,                  PTP_DTC_UINT32, _get_FocalLength,                   _put_FocalLength },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_FocusMode,                      PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FocusMode,                     _put_Sony_FocusMode },
@@ -11131,6 +11431,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("HDR High Dynamic"),               "hdrhighdynamic",           PTP_DPC_NIKON_HDRHighDynamic,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDRHighDynamic,          _put_Nikon_HDRHighDynamic },
 	{ N_("HDR Smoothing"),                  "hdrsmoothing",             PTP_DPC_NIKON_HDRSmoothing,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDRSmoothing,            _put_Nikon_HDRSmoothing },
 	{ N_("Still Capture Mode"),             "capturemode",              PTP_DPC_StillCaptureMode,               0,                  PTP_DTC_UINT16, _get_CaptureMode,                   _put_CaptureMode },
+	{ N_("Still Capture Mode"),             "capturemode",              PTP_DPC_StillCaptureMode,               PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony3_CaptureMode,             _put_Sony3_CaptureMode },
 	{ N_("Still Capture Mode"),             "capturemode",              PTP_DPC_FUJI_ReleaseMode,               PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_ReleaseMode,              _put_Fuji_ReleaseMode },
 	{ N_("Canon Shooting Mode"),            "shootingmode",             PTP_DPC_CANON_ShootingMode,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ShootMode,               _put_Canon_ShootMode },
 	{ N_("Canon Auto Exposure Mode"),       "autoexposuremode",         PTP_DPC_CANON_EOS_AutoExposureMode,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_AutoExposureMode,    _put_Canon_EOS_AutoExposureMode },

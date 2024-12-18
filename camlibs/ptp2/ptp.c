@@ -4307,9 +4307,11 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	*props = NULL;
 	*size = 0;
 	if(has_sony_mode_300(params)) {
+		/* New mode - From Sony docs: 'For 2020 Models or Later' */
 		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x12c /* newer mode (3.00) */, 1);
 		params->sony_mode_ver = 3;
 	} else {
+		/* Old mode - From Sony docs: 'For Models Earlier than 2020' */
 		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x0c8 /* older mode (2.00) */);
 		params->sony_mode_ver = 2;
 	}
@@ -4597,6 +4599,26 @@ ptp_sony_9281 (PTPParams* params, uint32_t param1) {
 	return PTP_RC_OK;
 }
 
+static struct {
+    uint16_t ControlCode;
+    uint16_t Datatype;
+    uint8_t FormFlag;
+} sony_mode3_controls[] = {
+	{ PTP_DPC_SONY_ShutterHalfRelease, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
+	{ PTP_DPC_SONY_ShutterRelease, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
+	{ PTP_DPC_SONY_AELButton, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
+	{ PTP_DPC_SONY_AFLButton, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
+	{ PTP_DPC_SONY_RequestOneShooting, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
+	{ PTP_DPC_SONY_MovieRecButtonHold, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
+	{ PTP_DPC_SONY_FELButton, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
+	{ PTP_DPC_SONY_NearFar, PTP_DTC_UINT16, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_AWBLButton, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
+	{ PTP_DPC_SONY_AF_Area_Position, PTP_DTC_UINT32, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_ZoomOperation, PTP_DTC_INT8, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_SaveZoomAndFocusPosition, PTP_DTC_UINT8, PTP_DPFF_Enumeration },
+	{ PTP_DPC_SONY_LoadZoomAndFocusPosition, PTP_DTC_UINT8, PTP_DPFF_Enumeration },
+};
+
 /**
  * ptp_generic_getdevicepropdesc:
  *
@@ -4616,6 +4638,7 @@ ptp_sony_9281 (PTPParams* params, uint32_t param1) {
 uint16_t
 ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePropDesc *dpd)
 {
+	unsigned int	i;
 	time_t		now = time(NULL);
 
 	PTPDevicePropDesc* dpd_in_cache = ptp_find_dpd_in_cache(params, propcode);
@@ -4631,6 +4654,7 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 		}
 		/* free cached entry as we will refetch it. */
 		ptp_free_devicepropdesc (dpd_in_cache);
+		dpd_in_cache = NULL;
 	}
 
 	/* Sony is handled directly here, also for "normal" properties */
@@ -4641,6 +4665,26 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 
 		dpd_in_cache = ptp_find_dpd_in_cache(params, propcode);
 		if (!dpd_in_cache) {
+			if (params->sony_mode_ver==3) {
+				// Sony's GetAllExtDevicePropInfo API doesn't return some properties in mode 3.
+				// These are referred to as 'Controls' in the Sony documentation, if the Control is
+				// listed in PTPDeviceInfo.DeviceProps but not returned by SDIO_GetAllExtDevicePropInfo,
+				// then add it here. Controls usually are toggle buttons, but some can be ranges of
+				// values or even compound values.
+				for (i=0;i<ARRAYSIZE(sony_mode3_controls);i++) {
+					if (sony_mode3_controls[i].ControlCode == propcode) {
+						array_push_back_empty(&params->dpd_cache, &dpd_in_cache);
+						dpd_in_cache->DevicePropCode = propcode;
+						dpd_in_cache->DataType = sony_mode3_controls[i].Datatype;
+						// Not so much get / but for sure set!
+						dpd_in_cache->GetSet = PTP_DPGS_GetSet;
+						dpd_in_cache->FormFlag = sony_mode3_controls[i].FormFlag;
+						dpd_in_cache->timestamp = now;
+						goto done;
+					}
+				}
+			}
+
 			ptp_debug (params, "alpha property 0x%04x not found?\n", propcode);
 			return PTP_RC_GeneralError;
 		}
@@ -7337,39 +7381,63 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		uint16_t dpc;
 		const char *txt;
 	} ptp_device_properties_SONY[] = {
+		{PTP_DPC_WhiteBalance, N_("White Balance")},		/* 0x5005 */
 		{PTP_DPC_SONY_DPCCompensation, ("DOC Compensation")},	/* 0xD200 */
 		{PTP_DPC_SONY_DRangeOptimize, ("DRangeOptimize")},	/* 0xD201 */
 		{PTP_DPC_SONY_ImageSize, N_("Image size")},		/* 0xD203 */
 		{PTP_DPC_SONY_ShutterSpeed, N_("Shutter speed")},	/* 0xD20D */
-		{PTP_DPC_SONY_QX_ShutterSpeed, N_("Shutter speed")},
 		{PTP_DPC_SONY_ColorTemp, N_("Color temperature")},	/* 0xD20F */
 		{PTP_DPC_SONY_CCFilter, ("CC Filter")},			/* 0xD210 */
 		{PTP_DPC_SONY_AspectRatio, N_("Aspect Ratio")}, 	/* 0xD211 */
 		{PTP_DPC_SONY_FocusFound, N_("Focus status")},		/* 0xD213 */
+		{PTP_DPC_SONY_Zoom, N_("Zoom")},
 		{PTP_DPC_SONY_ObjectInMemory, N_("Objects in memory")},	/* 0xD215 */
 		{PTP_DPC_SONY_ExposeIndex, N_("Expose Index")},		/* 0xD216 */
 		{PTP_DPC_SONY_BatteryLevel, N_("Battery Level")},	/* 0xD218 */
 		{PTP_DPC_SONY_PictureEffect, N_("Picture Effect")},	/* 0xD21B */
 		{PTP_DPC_SONY_ABFilter, N_("AB Filter")},		/* 0xD21C */
 		{PTP_DPC_SONY_ISO, N_("ISO")},				/* 0xD21E */
-		{PTP_DPC_SONY_QX_ISO, N_("ISO")},
-		{PTP_DPC_SONY_QX_Aperture, N_("Aperture")},
+		{PTP_DPC_SONY_StillImageStoreDestination, N_("Capture Target")},
 		{PTP_DPC_SONY_ExposureCompensation, N_("Exposure Bias Compensation")},	/* 0xD224 */
-		{PTP_DPC_SONY_QX_ExposureCompensation, N_("Exposure Bias Compensation")},
 		{PTP_DPC_SONY_ISO2, N_("ISO")},				/* 0xD226 */
-		{PTP_DPC_SONY_ShutterSpeed2, N_("Shutter speed")},	/* 0xD229 */
+		{PTP_DPC_SONY_ShutterSpeed2, N_("Shutter Speed")},	/* 0xD229 */
+		{PTP_DPC_SONY_FocusArea, N_("Focus Area")},
+		{PTP_DPC_SONY_FocusMagnifierSetting, N_("Focus Magnifier Setting")},	/* 0xD254 */
 		{PTP_DPC_SONY_LiveViewSettingEffect, N_("Live View Setting Effect")},
 		{PTP_DPC_SONY_MovieRecButtonHold, "MovieRecButtonHold"},/* 0xD2C8 */
 		{PTP_DPC_SONY_RequestOneShooting, "RequestOneShooting"},/* 0xD2C7 */
 		{PTP_DPC_SONY_SensorCrop, N_("Sensor Crop")},
 		{PTP_DPC_SONY_ShutterHalfRelease, "ShutterHalfRelease"},
-		{PTP_DPC_SONY_FocusArea, N_("Focus Area")},
 		{PTP_DPC_SONY_ShutterRelease, "ShutterRelease"},
-		{PTP_DPC_WhiteBalance, N_("White Balance")},		/* 0x5005 */
-		{PTP_DPC_SONY_Zoom, N_("Zoom")},
-		{PTP_DPC_SONY_StillImageStoreDestination, N_("Capture Target")},
+		{PTP_DPC_SONY_AELButton, "AELButton"},
+		{PTP_DPC_SONY_AFLButton, "AFLButton"},
+		{PTP_DPC_SONY_ReleaseLock, "ReleaseLock"},
+		{PTP_DPC_SONY_FELButton, "FELButton"},
+		{PTP_DPC_SONY_MediaFormat, "MediaFormat"},
+		{PTP_DPC_SONY_FocusMagnifier, "Focus Magnifier"},
+		{PTP_DPC_SONY_FocusMagnifierCancel, "Focus Magnifier Cancel"},
+		{PTP_DPC_SONY_RemoteKeyRight, "Remote Key Right"},
+		{PTP_DPC_SONY_RemoteKeyLeft, "Remote Key Left"},
+		{PTP_DPC_SONY_RemoteKeyUp, "Remote Key Up"},
+		{PTP_DPC_SONY_RemoteKeyDown, "Remote Key Down"},
 		{PTP_DPC_SONY_NearFar, N_("Near Far")},
+		{PTP_DPC_SONY_AFMFHold, "AFMFHold"},
+		{PTP_DPC_SONY_CancelPixelShiftShooting, "CancelPixelShiftShooting"},
+		{PTP_DPC_SONY_PixelShiftShootingMode, "PixelShiftShootingMode"},
+		{PTP_DPC_SONY_HFRStandby, "HFRStandby"},
+		{PTP_DPC_SONY_HFRRecordingCancel, "HFRRecordingCancel"},
+		{PTP_DPC_SONY_FocusStepNear, "FocusStepNear"},
+		{PTP_DPC_SONY_FocusStepFar, "FocusStepFar"},
+		{PTP_DPC_SONY_AWBLButton, "AWBLButton"},
 		{PTP_DPC_SONY_AF_Area_Position, N_("AF Area Position")},
+		{PTP_DPC_SONY_ZoomOperation, N_("Zoom Operation")},
+		{PTP_DPC_SONY_SaveZoomAndFocusPosition, N_("Save Zoom and Focus Position")},
+		{PTP_DPC_SONY_LoadZoomAndFocusPosition, N_("Load Zoom and Focus Position")},
+
+		{PTP_DPC_SONY_QX_ShutterSpeed, N_("Shutter speed")},
+		{PTP_DPC_SONY_QX_ISO, N_("ISO")},
+		{PTP_DPC_SONY_QX_Aperture, N_("Aperture")},
+		{PTP_DPC_SONY_QX_ExposureCompensation, N_("Exposure Bias Compensation")},
 		{PTP_DPC_SONY_QX_DateTime, N_("Date Time")},
 		{PTP_DPC_SONY_QX_Zoom_Absolute, "Zoom_Absolute"},
 		{PTP_DPC_SONY_QX_Movie_Rec, "Movie_Rec"},
