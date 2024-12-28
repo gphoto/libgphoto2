@@ -167,7 +167,7 @@ jobs:
         run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}"
 
       - name: 'make check'
-        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" check
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" check || { cat libgphoto2_port/tests/testsuite.log; cat tests/testsuite.log; exit 1; }
 
       - name: 'make install'
         run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" install
