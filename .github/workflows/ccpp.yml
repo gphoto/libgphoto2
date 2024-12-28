@@ -161,7 +161,7 @@ jobs:
         run: autoreconf -i -f
 
       - name: 'configure'
-        run: ./configure ${COMMON_CONFIGURE_FLAGS} --prefix=$PWD/__prefix
+        run: ./configure ${COMMON_CONFIGURE_FLAGS} --prefix=$PWD/__prefix --host=${{ matrix.prefix }}
 
       - name: 'make'
         run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}"
