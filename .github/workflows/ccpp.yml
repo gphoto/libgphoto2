@@ -120,3 +120,54 @@ jobs:
           make install
           ${LDD-false} __pref/bin/ambs-lgp2-frontend
           __pref/bin/ambs-lgp2-frontend
+
+  cross-build:
+    runs-on: ubuntu-latest
+    container: debian:11
+    strategy:
+      matrix:
+        include:
+          - { arch: i386,  processor: i686,    prefix: i686-linux-gnu,          inc-lib: i386-linux-gnu          }
+          - { arch: armhf, processor: armhf,   prefix: arm-linux-gnueabihf,     inc-lib: arm-linux-gnueabihf     }
+          - { arch: arm64, processor: aarch64, prefix: aarch64-linux-gnueabihf, inc-lib: aarch64-linux-gnueabihf }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'Add architecture and update software database'
+        run: |
+          dpkg --add-architecture ${{ matrix.arch }}
+          apt-get update
+
+      - name: 'Install build requirements'
+        run: >-
+          apt-get install -y
+          autopoint
+          gettext
+          crossbuild-essential-${{matrix.arch}}
+          libusb-1.0-0-dev:${{matrix.arch}}
+          libcurl4-openssl-dev:${{matrix.arch}}
+          libgd-dev:${{matrix.arch}}
+          libltdl-dev:${{matrix.arch}}
+
+      - name: 'Determine number of cores to build on (Linux)'
+        run: echo NPROC=$(nproc) >> $GITHUB_ENV
+
+      # Setting MAKE interferes with Makefile{,.in,.am} using $(MAKE) internally
+      - name: 'Prepare concurrent make'
+        run: if test "x$NPROC" = x; then echo ci_MAKE="make" >> $GITHUB_ENV; echo "NPROC must be set"; exit 1; else echo ci_MAKE="make -j${NPROC} -l${NPROC}" >> $GITHUB_ENV; fi
+
+      - name: 'autoreconf'
+        run: autoreconf -i -f
+
+      - name: 'configure'
+        run: ./configure ${COMMON_CONFIGURE_FLAGS} --prefix=$PWD/__prefix
+
+      - name: 'make'
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}"
+
+      - name: 'make check'
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" check
+
+      - name: 'make install'
+        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" install
