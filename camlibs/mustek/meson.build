@@ -1,0 +1,22 @@
+shared_module(
+  'mustek',
+  'mdc800.c',
+  'core.c',
+  'image.c',
+  'io.c',
+  'rs232.c',
+  'usb.c',
+  'core.h',
+  'image.h',
+  'io.h',
+  'mdc800_spec.h',
+  'print.h',
+  'rs232.h',
+  'usb.h',
+  dependencies: [
+    libgphoto2_dep,
+  ],
+  name_prefix: '',
+  install: true,
+  install_dir: camlibs_dir,
+)
