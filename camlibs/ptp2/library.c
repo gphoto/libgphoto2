@@ -4878,7 +4878,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		!strcmp(params->deviceinfo.Model, "DSC-RX100M7")	||
 		!strcmp(params->deviceinfo.Model, "ILCE-7RM4")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")		||
-		!strcmp(params->deviceinfo.Model, "ILCE-7RM5")		||
 		!strcmp(params->deviceinfo.Model, "DSC-RX0M2")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7M3")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7SM3")		||
@@ -4909,16 +4908,20 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 	/* regular code */
 
-	C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
+	if (params->sony_mode_ver==2) {
+		// Compression setting is only available in mode2
+		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_CompressionSetting, &dpd));
 
-	GP_LOG_D ("PTP_DPC_CompressionSetting dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
-	GP_LOG_D ("PTP_DPC_CompressionSetting dpd.DefaultValue.u8 = %x", dpd.DefaultValue.u8);
+		GP_LOG_D ("PTP_DPC_CompressionSetting dpd.CurrentValue.u8 = %x", dpd.CurrentValue.u8);
+		GP_LOG_D ("PTP_DPC_CompressionSetting dpd.DefaultValue.u8 = %x", dpd.DefaultValue.u8);
 
-	if (dpd.CurrentValue.u8 == 0)
-		dpd.CurrentValue.u8 = dpd.DefaultValue.u8;
-	if (dpd.CurrentValue.u8 == 0x13) {
-		GP_LOG_D ("expecting raw+jpeg capture");
+		if (dpd.CurrentValue.u8 == 0)
+			dpd.CurrentValue.u8 = dpd.DefaultValue.u8;
+		if (dpd.CurrentValue.u8 == 0x13) {
+			GP_LOG_D ("expecting raw+jpeg capture");
+		}
 	}
+
 	/* half-press */
 	propval.u16 = 2;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterHalfRelease, &propval, PTP_DTC_UINT16));
