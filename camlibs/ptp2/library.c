@@ -7188,9 +7188,8 @@ sonyout:
 				*eventdata = path;
 				/* We have now handed over the file, disclaim responsibility by unref. */
 				gp_file_unref (file);
-				break;
+				return GP_OK;
 			}
-
 			gp_context_idle (context);
 		} while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
