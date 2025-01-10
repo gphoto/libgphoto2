@@ -2,6 +2,9 @@ libusb_req         = '>= 0.1.5'
 libusb1_req        = '>= 1.0.0'
 
 ltdl_dep = cc.find_library('ltdl', required : false)
+if not ltdl_dep.found()
+  ltdl_dep = cc.find_library('libltdl', required : false)
+endif
 libusb_dep = dependency('libusb', version: libusb_req, required: 'usb' in get_option('iolibs'))
 libusb1_dep = dependency('libusb-1.0', version: libusb1_req, required: 'libusb1' in get_option('iolibs'))
 lockdev_dep = cc.find_library('lockdev', required : false)

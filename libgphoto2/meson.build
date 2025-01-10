@@ -39,6 +39,38 @@ libgphoto2_private_headers = files(
   'jpeg.h',
 )
 
+endian_dic = configuration_data()
+
+# Look for NetBSD-style extended byte swapping macros
+if cc.has_function('le32toh', prefix: '#include <machine/endian.h>')
+  endian_dic.set10('HAS_LE32TOH', true)
+elif cc.has_function('ntohl', prefix: '#include <arpa/inet.h>')
+  endian_dic.set10('HAS_NTOHL_ARPA_INET', true)
+elif cc.has_function('ntohl', prefix: '#include <netinet/in.h>')
+  endian_dic.set10('HAS_NTOHL_NETINET_IN', true)
+endif
+
+if cc.has_function('swap32', prefix: '#include <machine/endian.h>')
+  endian_dic.set10('HAS_SWAP32', true)
+elif cc.has_function('__byte_swap_long', prefix: '#include <sys/types.h>')
+  endian_dic.set10('HAS_BYTE_SWAP_LONG', true)
+elif cc.has_function('NXSwapLong', prefix: '#include <machine/byte_order.h>')
+  endian_dic.set10('HAS_NXSWAPLONG', true)
+endif
+
+# The i386 and compatibles can handle unaligned memory access,
+# so use the optimized macros above to do this job
+endian_dic.set('CAN_CAST_BYTES_TO_MEM', target_machine.cpu_family() in ['x86', 'x86_64'])
+
+
+gphoto2_endian = configure_file(
+  input: 'gphoto2-endian.h.in',
+  output: '@BASENAME@',
+  configuration: endian_dic
+)
+
+libgphoto2_private_headers += gphoto2_endian
+
 libgphoto2_lib = library(
   'gphoto2',
   libgphoto2_sources,
@@ -52,6 +84,7 @@ libgphoto2_lib = library(
     ltdl_dep,
     libexif_dep,
     m_dep,
+    intl_dep,
     libgphoto2_port_dep,
     config_dep,
   ],
@@ -69,6 +102,7 @@ libgphoto2_dep = declare_dependency(
   link_with: libgphoto2_lib,
   include_directories: [libgphoto2_root_inc, include_directories('.'),],
   dependencies: [ libgphoto2_port_dep, config_dep ],
+  sources: gphoto2_endian,
 )
 
 pkg.generate(
