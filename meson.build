@@ -12,7 +12,6 @@ project('libgphoto2', 'c',
 i18n = import('i18n')
 pkg = import('pkgconfig')
 
-glib_req           = '>= 2.76.0'
 libxml_req         = '>= 2.0'
 libcurl_req        = '>= 7.1'
 libgd_req          = '>= 2.0'
@@ -61,14 +60,13 @@ test_cflags = [
 
 common_cflags = cc.get_supported_arguments(test_cflags)
 
-m_dep          = cc.find_library('m', required: false)
-glib_dep       = dependency('glib-2.0', version: glib_req)
-gobject_dep    = dependency('gobject-2.0', version: glib_req)
-libxml_dep     = dependency('libxml-2.0', version: libxml_req, required: 'lumix' in get_option('camlibs'))
-libcurl_dep    = dependency('libcurl', version: libcurl_req, required: ['lumix', 'pentax'] in get_option('camlibs'))
-libgd_dep      = dependency('gdlib', version: libgd_req, required: 'docupen' in get_option('camlibs'))
-libexif_dep    = dependency('libexif', version: libexif_req, required: false)
-libjpeg_dep    = dependency('libjpeg', required: false)
+m_dep       = cc.find_library('m', required: false)
+libxml_dep  = dependency('libxml-2.0', version: libxml_req, required: 'lumix' in get_option('camlibs'))
+libcurl_dep = dependency('libcurl', version: libcurl_req, required: ['lumix', 'pentax'] in get_option('camlibs'))
+libgd_dep   = dependency('gdlib', version: libgd_req, required: 'docupen' in get_option('camlibs'))
+libexif_dep = dependency('libexif', version: libexif_req, required: false)
+libjpeg_dep = dependency('libjpeg', required: false)
+intl_dep    = dependency('intl', required: false)
 
 add_project_arguments('-DMAIL_GPHOTO_DEVEL="<gphoto-devel@lists.sourceforge.net>"', language: 'c')
 
@@ -150,7 +148,9 @@ endforeach
 add_project_arguments(common_cflags, language: 'c')
 add_project_arguments('-D_GPHOTO2_INTERNAL_CODE', language: 'c')
 add_project_arguments('-DLOCALEDIR="@0@"'.format (get_option('prefix') / get_option('localedir')), language: 'c')
-add_project_arguments('-DENABLE_NLS=1', language: 'c')
+if intl_dep.found()
+  add_project_arguments('-DENABLE_NLS=1', language: 'c')
+endif
 
 libgphoto2_root_inc = include_directories('.')
 
@@ -168,6 +168,7 @@ config_data.set_quoted('GP_CAMLIB_SET', ' '.join(get_option('camlibs')))
 config_data.set_quoted('CAMLIBS', camlibs_dir)
 config_data.set_quoted('GETTEXT_PACKAGE_LIBGPHOTO2_PORT', 'libgphoto2_port-@0@'.format(libgphoto2_port_current_min))
 config_data.set_quoted('GETTEXT_PACKAGE_LIBGPHOTO2', 'libgphoto2-@0@'.format(libgphoto2_current_min))
+config_data.set10('WORDS_BIGENDIAN', target_machine.endian() == 'big')
 
 config_h = configure_file(
   output: 'config.h',

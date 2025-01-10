@@ -37,6 +37,7 @@ libgphoto2_port_lib = library(
     ltdl_dep,
     lockdev_dep,
     m_dep,
+    intl_dep,
     config_dep,
   ],
 )

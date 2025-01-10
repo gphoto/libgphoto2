@@ -1,5 +1,5 @@
 if target_machine.system() != 'linux'
-  error('usbscsi is only available on linux.')
+  error('usbdiskdirect is only available on linux.')
 endif
 
 shared_module('usbdiskdirect',
