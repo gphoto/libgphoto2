@@ -9756,7 +9756,8 @@ camera_init (Camera *camera, GPContext *context)
 		break;
 	/* case PTP_VENDOR_SONY: setup already done in fixup_cached_deviceinfo */
 	case PTP_VENDOR_FUJI:
-		CR (camera_prepare_capture (camera, context));
+		//the line below causes camera to move from BULB to 30s, afterwards becomes unusable 
+		//CR (camera_prepare_capture (camera, context));
 		break;
 	case PTP_VENDOR_GP_SIGMAFP:
 		if (ptp_operation_issupported(params, 0x9035)) {

@@ -515,6 +515,7 @@ camera_prepare_capture (Camera *camera, GPContext *context)
 
 		if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
 			propval.u16 = 0x0002;
+			//the line below causes camera to move from BULB to 30s, afterwards becomes unusable 
 			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
 		}
 
@@ -1455,15 +1456,19 @@ static struct deviceproptableu16 whitebalance[] = {
 	{ N_("Fluorescent Lamp 1"),	0x8001, PTP_VENDOR_FUJI },
 	{ N_("Fluorescent Lamp 2"),	0x8002, PTP_VENDOR_FUJI },
 	{ N_("Fluorescent Lamp 3"),	0x8003, PTP_VENDOR_FUJI },
-	{ N_("Fluorescent Lamp 4"),	0x8004, PTP_VENDOR_FUJI },
-	{ N_("Fluorescent Lamp 5"),	0x8005, PTP_VENDOR_FUJI },
+//	{ N_("Fluorescent Lamp 4"),	0x8004, PTP_VENDOR_FUJI },
+//	{ N_("Fluorescent Lamp 5"),	0x8005, PTP_VENDOR_FUJI },
+	{ N_("Daylight"),	0x4, PTP_VENDOR_FUJI },
+	{ N_("Incandescent"),	0x6, PTP_VENDOR_FUJI },
 	{ N_("Shade"),			0x8006, PTP_VENDOR_FUJI },
 	{ N_("Choose Color Temperature"),0x8007, PTP_VENDOR_FUJI },
 	{ N_("Preset Custom 1"),	0x8008, PTP_VENDOR_FUJI },
 	{ N_("Preset Custom 2"),	0x8009, PTP_VENDOR_FUJI },
 	{ N_("Preset Custom 3"),	0x800a, PTP_VENDOR_FUJI },
-	{ N_("Preset Custom 4"),	0x800b, PTP_VENDOR_FUJI },
-	{ N_("Preset Custom 5"),	0x800c, PTP_VENDOR_FUJI },
+//	{ N_("Preset Custom 4"),	0x800b, PTP_VENDOR_FUJI },
+//	{ N_("Preset Custom 5"),	0x800c, PTP_VENDOR_FUJI },
+	{ N_("Underwater"),	0x8, PTP_VENDOR_FUJI },
+	{ N_("Auto"),	0x2, PTP_VENDOR_FUJI },
 
 	{ N_("Shade"),			0x8011, PTP_VENDOR_SONY },
 	{ N_("Cloudy"),			0x8010, PTP_VENDOR_SONY },
@@ -3087,10 +3092,12 @@ _put_Olympus_OMD_Bulb(CONFIG_PUT_ARGS)
 
 static struct deviceproptableu16 fuji_action[] = {
 	{ N_("Shoot"),			0x0304, 0 },
-	{ N_("Bulb On"),		0x0500, 0 },
-	{ N_("Bulb Off"),		0x000c, 0 },
+//	{ N_("Bulb On"),		0x0500, 0 },
+//	{ N_("Bulb Off"),		0x000c, 0 },
 	{ N_("AF"),			0x0200, 0 },
 	{ N_("Cancel AF"),		0x0004, 0 },
+	{ N_("Unknown"),		0x0104, 0 },
+
 /* D208 is some kind of control, likely bitmasked. reported like an enum.
  * 0x200 seems to mean focusing?
  * 0x208 capture?
@@ -6116,7 +6123,7 @@ static struct deviceproptablei16 fuji_shutterspeed[] = {
 GENERICI16TABLE(Fuji_ShutterSpeed,fuji_shutterspeed)
 
 static struct deviceproptableu32 fuji_new_shutterspeed[] = {
-	{ N_("bulb"),	0xffffffff, 0 },
+//	{ N_("bulb"),	0xffffffff, 0 },
 	{ "60m",	64000180, 0 },
 	{ "30m",	64000150, 0 },
 	{ "15m",	64000120, 0 },
