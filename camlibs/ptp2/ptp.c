@@ -4593,9 +4593,9 @@ static struct {
 	{ PTP_DPC_SONY_RequestOneShooting, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
 	{ PTP_DPC_SONY_MovieRecButtonHold, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
 	{ PTP_DPC_SONY_FELButton, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
-	{ PTP_DPC_SONY_NearFar, PTP_DTC_UINT16, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_ManualFocusAdjust, PTP_DTC_UINT16, PTP_DPFF_Range },
 	{ PTP_DPC_SONY_AWBLButton, PTP_DTC_UINT16, PTP_DPFF_Enumeration },
-	{ PTP_DPC_SONY_AF_Area_Position, PTP_DTC_UINT32, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_AFAreaPosition, PTP_DTC_UINT32, PTP_DPFF_Range },
 	{ PTP_DPC_SONY_ZoomOperation, PTP_DTC_INT8, PTP_DPFF_Range },
 	{ PTP_DPC_SONY_SaveZoomAndFocusPosition, PTP_DTC_UINT8, PTP_DPFF_Enumeration },
 	{ PTP_DPC_SONY_LoadZoomAndFocusPosition, PTP_DTC_UINT8, PTP_DPFF_Enumeration },
@@ -7371,48 +7371,114 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		{PTP_DPC_SONY_ColorTemp, N_("Color temperature")},	/* 0xD20F */
 		{PTP_DPC_SONY_CCFilter, ("CC Filter")},			/* 0xD210 */
 		{PTP_DPC_SONY_AspectRatio, N_("Aspect Ratio")}, 	/* 0xD211 */
-		{PTP_DPC_SONY_FocusFound, N_("Focus status")},		/* 0xD213 */
-		{PTP_DPC_SONY_Zoom, N_("Zoom")},
+		{PTP_DPC_SONY_FocusFound, N_("Focus Indication")},	/* 0xD213 */
+		{PTP_DPC_SONY_Zoom, N_("Zoom")},			/* 0xD214 */
 		{PTP_DPC_SONY_ObjectInMemory, N_("Objects in memory")},	/* 0xD215 */
 		{PTP_DPC_SONY_ExposeIndex, N_("Expose Index")},		/* 0xD216 */
+		{PTP_DPC_SONY_AELockIndication, N_("AELock Indication")},/* 0xD217 */
 		{PTP_DPC_SONY_BatteryLevel, N_("Battery Level")},	/* 0xD218 */
 		{PTP_DPC_SONY_PictureEffect, N_("Picture Effect")},	/* 0xD21B */
 		{PTP_DPC_SONY_ABFilter, N_("AB Filter")},		/* 0xD21C */
+		{PTP_DPC_SONY_BatteryLevelIndicator, N_("Battery Level Indicator")},	/* 0xD20E */
+		{PTP_DPC_SONY_MovieRecordingState, N_("Movie Recording State")},	/* 0xD21D */
 		{PTP_DPC_SONY_ISO, N_("ISO")},				/* 0xD21E */
+		{PTP_DPC_SONY_FELockIndication, N_("FELock Indication")},	/* 0xD21F */
+		{PTP_DPC_SONY_LiveViewStatus, N_("Live View Status")},	/* 0xD221 */
 		{PTP_DPC_SONY_StillImageStoreDestination, N_("Capture Target")},
+		{PTP_DPC_SONY_DateTimeSet, N_("Date/Time Set")},
 		{PTP_DPC_SONY_ExposureCompensation, N_("Exposure Bias Compensation")},	/* 0xD224 */
 		{PTP_DPC_SONY_ISO2, N_("ISO")},				/* 0xD226 */
+		{PTP_DPC_SONY_FormatMediaStatus, N_("Format Media Status")},
 		{PTP_DPC_SONY_ShutterSpeed2, N_("Shutter Speed")},	/* 0xD229 */
 		{PTP_DPC_SONY_FocusArea, N_("Focus Area")},
-		{PTP_DPC_SONY_FocusMagnifierSetting, N_("Focus Magnifier Setting")},	/* 0xD254 */
+		{PTP_DPC_SONY_FocusMagnifierPosition, N_("Focus Magnifier Position")},
 		{PTP_DPC_SONY_LiveViewSettingEffect, N_("Live View Setting Effect")},
-		{PTP_DPC_SONY_MovieRecButtonHold, "MovieRecButtonHold"},/* 0xD2C8 */
-		{PTP_DPC_SONY_RequestOneShooting, "RequestOneShooting"},/* 0xD2C7 */
+		{PTP_DPC_SONY_FocusMagnifierStatus, N_("Focus Magnifier Status")},
+		{PTP_DPC_SONY_CurrentFocusMagnifierRatio, N_("Current Focus Magnifier Ratio")},
+		{PTP_DPC_SONY_ManualFocusAdjustEnableStatus, N_("Manual Focus Adjust Enabled")},
+		{PTP_DPC_SONY_PixelShiftShootingMode2, N_("Pixel Shift Shooting Mode")},
+		{PTP_DPC_SONY_PixelShiftShootingNumber, N_("Pixel Shift Shooting Number")},
+		{PTP_DPC_SONY_PixelShiftShootingInterval, N_("Pixel Shift Shooting Interval")},
+		{PTP_DPC_SONY_PixelShiftShootingStatus, N_("Pixel Shift Shooting Status")},
+		{PTP_DPC_SONY_PixelShiftShootingProgress, N_("Pixel Shift Shooting Progress")},
+		{PTP_DPC_SONY_PictureProfile, N_("Picture Profile")},
+		{PTP_DPC_SONY_CreativeStyle, N_("Creative Style")},
+		{PTP_DPC_SONY_FileFormatMovie, N_("File Format Movie")},
+		{PTP_DPC_SONY_RecordingSettingMovie, N_("Recording Setting Movie")},
+		{PTP_DPC_SONY_MediaSLOT1Status, N_("Media SLOT1 Status")},
+		{PTP_DPC_SONY_MediaSLOT1RemainingShots, N_("Media SLOT1 Remaining Shots")},
+		{PTP_DPC_SONY_MediaSLOT1ShootingTime, N_("Media SLOT1 Shooting Time")},
+		{PTP_DPC_SONY_FocalPosition, N_("Focal Position")},
+		{PTP_DPC_SONY_AWBLockIndication, N_("AWB Lock Indication")},
+		{PTP_DPC_SONY_IntervalRECModel, N_("Interval REC Model")},
+		{PTP_DPC_SONY_IntervalRECStatus, N_("Interval REC Status")},
+		{PTP_DPC_SONY_DeviceOverheatStatus, N_("Device Overheat Status")},
+		{PTP_DPC_SONY_JpegQuality, N_("Jpeg Quality")},
+		{PTP_DPC_SONY_CompressionSetting, N_("File Format Still")},
+		{PTP_DPC_SONY_FocusMagnifierSetting, N_("Focus Magnifier Setting")},	/* 0xD254 */
+		{PTP_DPC_SONY_AFTrackingSensitivity, N_("AF Tracking Sens. Still")},
+		{PTP_DPC_SONY_MediaSLOT2Status, N_("Media SLOT2 Status")},
+		{PTP_DPC_SONY_MediaSLOT2RemainingShots, N_("Media SLOT2 Remaining Shots")},
+		{PTP_DPC_SONY_MediaSLOT2ShootingTime, N_("Media SLOT2 Shooting Time")},
+		{PTP_DPC_SONY_PriorityMode, N_("Priority Mode")},
+		{PTP_DPC_SONY_ZoomEnableStatus, N_("Zoom Enable Status")},
+		{PTP_DPC_SONY_ZoomScale, N_("Zoom Scale")},
+		{PTP_DPC_SONY_ZoomBarInformation, N_("Zoom Bar Info")},
+		{PTP_DPC_SONY_ZoomSpeedRange, N_("Zoom Speed Range")},
+		{PTP_DPC_SONY_ZoomSetting, N_("Zoom Setting")},
+		{PTP_DPC_SONY_ZoomTypeStatus, N_("Zoom Type Status")},
+		{PTP_DPC_SONY_WirelessFlashSetting, N_("Wireless Flash")},
+		{PTP_DPC_SONY_RedEyeReduction, N_("Red Eye Reduction")},
+		{PTP_DPC_SONY_RemoteControlRestrictionStatus, N_("Remote Control Restrict")},
+		{PTP_DPC_SONY_LiveViewArea, N_("Live View Area")},
+		{PTP_DPC_SONY_PcSaveImageSize, N_("PC Save Image Size")},
+		{PTP_DPC_SONY_PcSaveImageFormat, N_("PC Save Image Format")},
+		{PTP_DPC_SONY_LiveViewImageQuality, N_("Live View Image Quality")},
+		{PTP_DPC_SONY_CustomWBCaptureArea, N_("CustomWB Capture Area")},
+		{PTP_DPC_SONY_CustomWBCaptureFrameSize, N_("CustomWB Capture Frame Size")},
+		{PTP_DPC_SONY_CustomWBCaptureStandbyEnable, N_("CustomWB Capture Standby Enable")},
+		{PTP_DPC_SONY_CustomWBCaptureStandbyCancelEnable, N_("CustomWB Capture Standby Cancel Enable")},
+		{PTP_DPC_SONY_CustomWBCaptureEnable, N_("CustomWB Capture Enable")},
+		{PTP_DPC_SONY_CustomWBExecutionState, N_("CustomWB Execution State")},
+		{PTP_DPC_SONY_SettingsSaveEnable, N_("Settings Save Enable")},
+		{PTP_DPC_SONY_SettingsReadEnable, N_("Settings Read Enable")},
+		{PTP_DPC_SONY_SettingsSaveReadState, N_("Settings Save/Read State")},
+		{PTP_DPC_SONY_FTPSettingSaveEnable, N_("FTP Setting Save Enable")},
+		{PTP_DPC_SONY_FTPSettingReadEnable, N_("FTP Setting Read Enable")},
+		{PTP_DPC_SONY_FTPSettingSaveReadState, N_("FTP Setting Save Read State")},
+		{PTP_DPC_SONY_MovieRecButtonHold, N_("MovieRecButtonHold")},
+		{PTP_DPC_SONY_RequestOneShooting, N_("RequestOneShooting")},
 		{PTP_DPC_SONY_SensorCrop, N_("Sensor Crop")},
-		{PTP_DPC_SONY_ShutterHalfRelease, "ShutterHalfRelease"},
-		{PTP_DPC_SONY_ShutterRelease, "ShutterRelease"},
-		{PTP_DPC_SONY_AELButton, "AELButton"},
-		{PTP_DPC_SONY_AFLButton, "AFLButton"},
-		{PTP_DPC_SONY_ReleaseLock, "ReleaseLock"},
-		{PTP_DPC_SONY_FELButton, "FELButton"},
-		{PTP_DPC_SONY_MediaFormat, "MediaFormat"},
-		{PTP_DPC_SONY_FocusMagnifier, "Focus Magnifier"},
-		{PTP_DPC_SONY_FocusMagnifierCancel, "Focus Magnifier Cancel"},
-		{PTP_DPC_SONY_RemoteKeyRight, "Remote Key Right"},
-		{PTP_DPC_SONY_RemoteKeyLeft, "Remote Key Left"},
-		{PTP_DPC_SONY_RemoteKeyUp, "Remote Key Up"},
-		{PTP_DPC_SONY_RemoteKeyDown, "Remote Key Down"},
-		{PTP_DPC_SONY_NearFar, N_("Near Far")},
-		{PTP_DPC_SONY_AFMFHold, "AFMFHold"},
-		{PTP_DPC_SONY_CancelPixelShiftShooting, "CancelPixelShiftShooting"},
-		{PTP_DPC_SONY_PixelShiftShootingMode, "PixelShiftShootingMode"},
-		{PTP_DPC_SONY_HFRStandby, "HFRStandby"},
-		{PTP_DPC_SONY_HFRRecordingCancel, "HFRRecordingCancel"},
-		{PTP_DPC_SONY_FocusStepNear, "FocusStepNear"},
-		{PTP_DPC_SONY_FocusStepFar, "FocusStepFar"},
-		{PTP_DPC_SONY_AWBLButton, "AWBLButton"},
-		{PTP_DPC_SONY_AF_Area_Position, N_("AF Area Position")},
+		{PTP_DPC_SONY_ShutterHalfRelease, N_("ShutterHalfRelease")},
+		{PTP_DPC_SONY_ShutterRelease, N_("ShutterRelease")},
+		{PTP_DPC_SONY_AELButton, N_("AELButton")},
+		{PTP_DPC_SONY_AFLButton, N_("AFLButton")},
+		{PTP_DPC_SONY_ReleaseLock, N_("ReleaseLock")},
+		{PTP_DPC_SONY_FELButton, N_("FELButton")},
+		{PTP_DPC_SONY_FormatMedia, N_("FormatMedia")},
+		{PTP_DPC_SONY_FocusMagnifier, N_("Focus Magnifier")},
+		{PTP_DPC_SONY_FocusMagnifierCancel, N_("Focus Magnifier Cancel")},
+		{PTP_DPC_SONY_RemoteKeyRight, N_("Remote Key Right")},
+		{PTP_DPC_SONY_RemoteKeyLeft, N_("Remote Key Left")},
+		{PTP_DPC_SONY_RemoteKeyUp, N_("Remote Key Up")},
+		{PTP_DPC_SONY_RemoteKeyDown, N_("Remote Key Down")},
+		{PTP_DPC_SONY_ManualFocusAdjust, N_("Manual Focus Adjust")},
+		{PTP_DPC_SONY_AFMFHold, N_("AF/MF Hold")},
+		{PTP_DPC_SONY_CancelPixelShiftShooting, N_("CancelPixelShiftShooting")},
+		{PTP_DPC_SONY_PixelShiftShootingMode, N_("PixelShiftShootingMode")},
+		{PTP_DPC_SONY_HFRStandby, N_("HFRStandby")},
+		{PTP_DPC_SONY_HFRRecordingCancel, N_("HFRRecordingCancel")},
+		{PTP_DPC_SONY_FocusStepNear, N_("FocusStepNear")},
+		{PTP_DPC_SONY_FocusStepFar, N_("FocusStepFar")},
+		{PTP_DPC_SONY_AWBLButton, N_("AWBLButton")},
+		{PTP_DPC_SONY_AFAreaPosition, N_("AF Area Position")},
 		{PTP_DPC_SONY_ZoomOperation, N_("Zoom Operation")},
+		{PTP_DPC_SONY_CustomWBCaptureStandby, N_("CustomWB Capture Standby")},
+		{PTP_DPC_SONY_CustomWBCaptureStandbyCancel, N_("CustomWB Capture Standby Cancel")},
+		{PTP_DPC_SONY_CustomWBCapture, N_("CustomWB Capture")},
+		{PTP_DPC_SONY_FormatMediaCard, N_("Format Media Card")},
+		{PTP_DPC_SONY_RemoteTouch, N_("Remote Touch")},
+		{PTP_DPC_SONY_RemoteTouchCancel, N_("Remote Touch Cancel")},
 		{PTP_DPC_SONY_SaveZoomAndFocusPosition, N_("Save Zoom and Focus Position")},
 		{PTP_DPC_SONY_LoadZoomAndFocusPosition, N_("Load Zoom and Focus Position")},
 
@@ -8430,6 +8496,8 @@ ptp_render_ofc(PTPParams* params, uint16_t ofc, int spaceleft, char *txt)
 			switch (ofc) {
 			case PTP_OFC_SONY_RAW:
 				return snprintf (txt, spaceleft,"ARW");
+			case PTP_OFC_SONY_MPO:
+				return snprintf (txt, spaceleft,"MPO");
 			default:
 				break;
 			}

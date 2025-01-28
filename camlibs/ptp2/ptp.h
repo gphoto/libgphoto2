@@ -3180,6 +3180,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_DRangeOptimize			0xD201
 #define PTP_DPC_SONY_ImageSize				0xD203
 #define PTP_DPC_SONY_ShutterSpeed			0xD20D
+#define PTP_DPC_SONY_BatteryLevelIndicator		0xD20E
 #define PTP_DPC_SONY_ColorTemp				0xD20F
 #define PTP_DPC_SONY_CCFilter				0xD210
 #define PTP_DPC_SONY_AspectRatio			0xD211
@@ -3187,28 +3188,79 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_Zoom     				0xD214 /* might be focal length * 1.000.000 */
 #define PTP_DPC_SONY_ObjectInMemory     		0xD215 /* used to signal when to retrieve new object */
 #define PTP_DPC_SONY_ExposeIndex			0xD216
+#define PTP_DPC_SONY_AELockIndication			0xD217
 #define PTP_DPC_SONY_BatteryLevel			0xD218
 #define PTP_DPC_SONY_SensorCrop				0xD219
 #define PTP_DPC_SONY_PictureEffect			0xD21B
 #define PTP_DPC_SONY_ABFilter				0xD21C
+#define PTP_DPC_SONY_MovieRecordingState		0xD21D
 #define PTP_DPC_SONY_ISO				0xD21E	/* ? */
+#define PTP_DPC_SONY_FELockIndication			0xD21F
+#define PTP_DPC_SONY_LiveViewStatus			0xD221
 #define PTP_DPC_SONY_StillImageStoreDestination		0xD222  /* (type=0x4) Enumeration [1,17,16] value: 17 */
-/* guessed DPC_SONY_DateTimeSettings 0xD223  error on query */
-/* guessed DPC_SONY_FileType 0xD235  (enum: 0,1) */
-/* guessed DPC_SONY_JpegQuality 0xD252 */
-/* d255 reserved 5 */
-/* d254 reserved 4 */
+#define PTP_DPC_SONY_DateTimeSet			0xD223  /* write only  */
 #define PTP_DPC_SONY_ExposureCompensation		0xD224
+/* guessed DPC_SONY_FileType 0xD235  (enum: 0,1) */
 #define PTP_DPC_SONY_ISO2				0xD226
+#define PTP_DPC_SONY_FormatMediaStatus			0xD227
 #define PTP_DPC_SONY_ShutterSpeed2			0xD229
 #define PTP_DPC_SONY_FocusArea				0xD22C  /* (type=0x4) Enumeration [1,2,3,257,258,259,260,513,514,515,516,517,518,519,261,520] value: 1 */
-#define PTP_DPC_SONY_LiveViewSettingEffect  0xD231  /* (type=0x2) Enumeration [1,2] value: 1 */
+#define PTP_DPC_SONY_FocusMagnifierStatus		0xD22D
+#define PTP_DPC_SONY_CurrentFocusMagnifierRatio		0xD22F
+#define PTP_DPC_SONY_FocusMagnifierPosition		0xD230
+#define PTP_DPC_SONY_LiveViewSettingEffect		0xD231  /* (type=0x2) Enumeration [1,2] value: 1 */
+#define PTP_DPC_SONY_ManualFocusAdjustEnableStatus	0xD235
+#define PTP_DPC_SONY_PixelShiftShootingMode2		0xD239
+#define PTP_DPC_SONY_PixelShiftShootingNumber		0xD23A
+#define PTP_DPC_SONY_PixelShiftShootingInterval		0xD23B
+#define PTP_DPC_SONY_PixelShiftShootingStatus		0xD23C
+#define PTP_DPC_SONY_PixelShiftShootingProgress		0xD23D
+#define PTP_DPC_SONY_PictureProfile			0xD23F
+#define PTP_DPC_SONY_CreativeStyle			0xD240
+#define PTP_DPC_SONY_FileFormatMovie			0xD241
+#define PTP_DPC_SONY_RecordingSettingMovie		0xD242
+#define PTP_DPC_SONY_MediaSLOT1Status			0xD248
+#define PTP_DPC_SONY_MediaSLOT1RemainingShots		0xD249
+#define PTP_DPC_SONY_MediaSLOT1ShootingTime		0xD24A
+#define PTP_DPC_SONY_FocalPosition			0xD24C
+#define PTP_DPC_SONY_AWBLockIndication			0xD24E
+#define PTP_DPC_SONY_IntervalRECModel			0xD24F
+#define PTP_DPC_SONY_IntervalRECStatus			0xD250
+#define PTP_DPC_SONY_DeviceOverheatStatus		0xD251
 #define PTP_DPC_SONY_JpegQuality			0xD252
 #define PTP_DPC_SONY_CompressionSetting			0xD253
 #define PTP_DPC_SONY_FocusMagnifierSetting		0xD254 /* mode 3 */
+#define PTP_DPC_SONY_AFTrackingSensitivity		0xD255
+#define PTP_DPC_SONY_MediaSLOT2Status			0xD256
+#define PTP_DPC_SONY_MediaSLOT2RemainingShots		0xD257
+#define PTP_DPC_SONY_MediaSLOT2ShootingTime		0xD258
 #define PTP_DPC_SONY_PriorityMode			0xD25A
+#define PTP_DPC_SONY_ZoomEnableStatus			0xD25B
+#define PTP_DPC_SONY_ZoomScale				0xD25C
+#define PTP_DPC_SONY_ZoomBarInformation			0xD25D
+#define PTP_DPC_SONY_ZoomSpeedRange			0xD25E
+#define PTP_DPC_SONY_ZoomSetting			0xD25F
+#define PTP_DPC_SONY_ZoomTypeStatus			0xD260
+#define PTP_DPC_SONY_WirelessFlashSetting		0xD262
+#define PTP_DPC_SONY_RedEyeReduction			0xD263
+#define PTP_DPC_SONY_RemoteControlRestrictionStatus	0xD264
+#define PTP_DPC_SONY_LiveViewArea			0xD267
 #define PTP_DPC_SONY_PcSaveImageSize			0xD268
 #define PTP_DPC_SONY_PcSaveImageFormat			0xD269
+#define PTP_DPC_SONY_LiveViewImageQuality		0xD26A
+#define PTP_DPC_SONY_CustomWBCaptureArea		0xD26B
+#define PTP_DPC_SONY_CustomWBCaptureFrameSize		0xD26C
+#define PTP_DPC_SONY_CustomWBCaptureStandbyEnable	0xD26D
+#define PTP_DPC_SONY_CustomWBCaptureStandbyCancelEnable	0xD26E
+#define PTP_DPC_SONY_CustomWBCaptureEnable		0xD26F
+#define PTP_DPC_SONY_CustomWBExecutionState		0xD270
+#define PTP_DPC_SONY_SettingsSaveEnable			0xD271
+#define PTP_DPC_SONY_SettingsReadEnable			0xD272
+#define PTP_DPC_SONY_SettingsSaveReadState		0xD273
+#define PTP_DPC_SONY_FTPSettingSaveEnable		0xD274
+#define PTP_DPC_SONY_FTPSettingReadEnable		0xD275
+#define PTP_DPC_SONY_FTPSettingSaveReadState		0xD276
+
 #define PTP_DPC_SONY_ShutterHalfRelease			0xD2C1 /* ? half-press */
 #define PTP_DPC_SONY_ShutterRelease			0xD2C2 /* ? full-press */
 #define PTP_DPC_SONY_AELButton				0xD2C3
@@ -3217,14 +3269,14 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_RequestOneShooting			0xD2C7
 #define PTP_DPC_SONY_MovieRecButtonHold			0xD2C8
 #define PTP_DPC_SONY_FELButton				0xD2C9
-#define PTP_DPC_SONY_MediaFormat			0xD2CA
+#define PTP_DPC_SONY_FormatMedia			0xD2CA
 #define PTP_DPC_SONY_FocusMagnifier			0xD2CB
 #define PTP_DPC_SONY_FocusMagnifierCancel		0xD2CC
-#define PTP_DPC_SONY_RemoteKeyUp	    		0xD2CD
+#define PTP_DPC_SONY_RemoteKeyUp			0xD2CD
 #define PTP_DPC_SONY_RemoteKeyDown			0xD2CE
 #define PTP_DPC_SONY_RemoteKeyLeft			0xD2CF
 #define PTP_DPC_SONY_RemoteKeyRight			0xD2D0
-#define PTP_DPC_SONY_NearFar				0xD2D1
+#define PTP_DPC_SONY_ManualFocusAdjust			0xD2D1
 #define PTP_DPC_SONY_AFMFHold				0xD2D2
 #define PTP_DPC_SONY_CancelPixelShiftShooting		0xD2D3
 #define PTP_DPC_SONY_PixelShiftShootingMode		0xD2D4
@@ -3233,8 +3285,14 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_FocusStepNear			0xD2D7
 #define PTP_DPC_SONY_FocusStepFar			0xD2D8
 #define PTP_DPC_SONY_AWBLButton				0xD2D9
-#define PTP_DPC_SONY_AF_Area_Position			0xD2DC
+#define PTP_DPC_SONY_AFAreaPosition			0xD2DC
 #define PTP_DPC_SONY_ZoomOperation			0xD2DD
+#define PTP_DPC_SONY_CustomWBCaptureStandby		0xD2DF
+#define PTP_DPC_SONY_CustomWBCaptureStandbyCancel	0xD2E0
+#define PTP_DPC_SONY_CustomWBCapture			0xD2E1
+#define PTP_DPC_SONY_FormatMediaCard			0xD2E2
+#define PTP_DPC_SONY_RemoteTouch			0xD2E4
+#define PTP_DPC_SONY_RemoteTouchCancel			0xD2E5
 #define PTP_DPC_SONY_SaveZoomAndFocusPosition		0xD2E9
 #define PTP_DPC_SONY_LoadZoomAndFocusPosition		0xD2EA
 

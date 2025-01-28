@@ -4122,6 +4122,8 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Movie (M)"),				0x8053, PTP_VENDOR_SONY},
 	{ N_("Movie (Scene)"),			0x8054, PTP_VENDOR_SONY},
 	{ N_("Tele-zoom Cont. Priority AE"),	0x8031, PTP_VENDOR_SONY},
+	{ N_("Tele-Zoom Cont. Priority AE 10"),	0x8032, PTP_VENDOR_SONY},
+	{ N_("3D Sweep Panorama Shooting"),	0x8040, PTP_VENDOR_SONY},
 	{ N_("Sweep Panorama"),			0x8041, PTP_VENDOR_SONY},
 	{ N_("Intelligent Auto Flash Off"),	0x8060, PTP_VENDOR_SONY},
 	{ N_("Sports Action"),			0x8011, PTP_VENDOR_SONY},
@@ -4133,7 +4135,10 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Night Portrait"),			0x8017, PTP_VENDOR_SONY},
 	{ N_("Anti Motion Blur"),		0x8018, PTP_VENDOR_SONY},
 	{ N_("Picture Effect"),			0x8070, PTP_VENDOR_SONY},
-	{ N_("S&Q"),				0x8084, PTP_VENDOR_SONY}, /* on A7III */
+	{ N_("S&Q Motion (P)"),			0x8084, PTP_VENDOR_SONY}, /* on A7III */
+	{ N_("S&Q Motion (A)"),			0x8085, PTP_VENDOR_SONY},
+	{ N_("S&Q Motion (S)"),			0x8086, PTP_VENDOR_SONY},
+	{ N_("S&Q Motion (M)"),			0x8087, PTP_VENDOR_SONY},
 };
 GENERIC16TABLE(ExposureProgram,exposure_program_modes)
 
@@ -6265,10 +6270,12 @@ static struct deviceproptableu16 focusmodes[] = {
 	{ N_("C-AF"),		0x8002, PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("S-AF+MF"),	0x8001, PTP_VENDOR_GP_OLYMPUS_OMD },
 
-	{ N_("AF-A"),		0x8005, PTP_VENDOR_SONY },
 	{ N_("AF-C"),		0x8004, PTP_VENDOR_SONY },
+	{ N_("AF-A"),		0x8005, PTP_VENDOR_SONY },
 	{ N_("DMF"),		0x8006, PTP_VENDOR_SONY },
-
+	{ N_("Manual Reverse"),	0x8007, PTP_VENDOR_SONY },
+	{ N_("AF-D"),		0x8008, PTP_VENDOR_SONY },
+	{ N_("Preset Focus"),	0x8009, PTP_VENDOR_SONY },
 };
 GENERIC16TABLE(FocusMode,focusmodes)
 
@@ -9201,7 +9208,7 @@ _put_Sony_ManualFocus(CONFIG_PUT_ARGS)
 		else if(val <= 6.0) xpropval.i16 = 6;
 		else if(val <= 7.0) xpropval.i16 = 7;
 		else xpropval.i16 = 0;
-		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_NearFar, &xpropval, PTP_DTC_INT16));
+		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ManualFocusAdjust, &xpropval, PTP_DTC_INT16));
 	} else {
 		xpropval.i16 = 1;
 		C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AFMFHold, &xpropval, PTP_DTC_INT16));
@@ -11112,7 +11119,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
 
 	{ N_("Auto-Focus"),                     "autofocus",        PTP_DPC_SONY_ShutterHalfRelease, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_Autofocus,      _put_Sony_Autofocus },
-	{ N_("Manual-Focus"),                   "manualfocus",      PTP_DPC_SONY_NearFar,   PTP_VENDOR_SONY, PTP_DTC_INT16,     _get_Sony_ManualFocus,          _put_Sony_ManualFocus },
+	{ N_("Manual-Focus"),                   "manualfocus",      PTP_DPC_SONY_ManualFocusAdjust,  PTP_VENDOR_SONY, PTP_DTC_INT16,  _get_Sony_ManualFocus,    _put_Sony_ManualFocus },
 	{ N_("Capture"),                        "capture",          PTP_DPC_SONY_ShutterRelease,PTP_VENDOR_SONY,PTP_DTC_UINT16, _get_Sony_Capture,              _put_Sony_Capture },
 	{ N_("Power Down"),                     "powerdown",        0,  0,                  PTP_OC_PowerDown,                   _get_PowerDown,                 _put_PowerDown },
 	{ N_("Focus Lock"),                     "focuslock",        0,  PTP_VENDOR_CANON,   PTP_OC_CANON_FocusLock,             _get_Canon_FocusLock,           _put_Canon_FocusLock },
