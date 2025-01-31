@@ -9340,7 +9340,7 @@ _get_Sony_FocusMagnifySetting(CONFIG_GET_ARGS) {
 	gp_widget_set_name (*widget, menu->name);
 
 	currentVal = dpd->CurrentValue.u64;
-	x = (int)(currentVal >> 16 & 0xffff);
+	x = (int)((currentVal >> 16) & 0xffff);
 	y = (int)(currentVal & 0xffff);
 
 	// Current magnification level
@@ -9389,7 +9389,7 @@ _put_Sony_FocusMagnifySetting(CONFIG_PUT_ARGS)
 	uint64_t currentVal;
 
 	currentVal = dpd->CurrentValue.u64;
-	x = (int)(currentVal >> 16 & 0xffff);
+	x = (int)((currentVal >> 16) & 0xffff);
 	y = (int)(currentVal & 0xffff);
 
 	CR (gp_widget_get_value(widget, &xval));
@@ -9442,7 +9442,7 @@ _put_Sony_SpotFocusArea(CONFIG_PUT_ARGS) {
 	// Camera must be set to an autofocus mode and focusarea has to be set to one of the Spot Focus modes
 
 	currentVal = dpd->CurrentValue.u32;
-	x = (int)(currentVal >> 16 & 0xffff);
+	x = (int)((currentVal >> 16) & 0xffff);
 	y = (int)(currentVal & 0xffff);
 
 	CR (gp_widget_get_value(widget, &xval));
