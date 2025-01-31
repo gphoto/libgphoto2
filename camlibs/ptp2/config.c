@@ -4135,6 +4135,10 @@ static struct deviceproptableu16 exposure_program_modes[] = {
 	{ N_("Night Portrait"),			0x8017, PTP_VENDOR_SONY},
 	{ N_("Anti Motion Blur"),		0x8018, PTP_VENDOR_SONY},
 	{ N_("Picture Effect"),			0x8070, PTP_VENDOR_SONY},
+	{ N_("High Frame Rate (P)"),		0x8080, PTP_VENDOR_SONY},
+	{ N_("High Frame Rate (A)"),		0x8081, PTP_VENDOR_SONY},
+	{ N_("High Frame Rate (S)"),		0x8082, PTP_VENDOR_SONY},
+	{ N_("High Frame Rate (M)"),		0x8083, PTP_VENDOR_SONY},
 	{ N_("S&Q Motion (P)"),			0x8084, PTP_VENDOR_SONY}, /* on A7III */
 	{ N_("S&Q Motion (A)"),			0x8085, PTP_VENDOR_SONY},
 	{ N_("S&Q Motion (S)"),			0x8086, PTP_VENDOR_SONY},
@@ -4778,6 +4782,25 @@ _put_FocalLength(CONFIG_PUT_ARGS) {
 		}
 	}
 	propval->u32 = newval;
+	return GP_OK;
+}
+
+static int
+_get_Sony_FocalPosition(CONFIG_GET_ARGS) {
+	float float_value;
+
+	// Sony focus distance adjust between 0 and 100
+	// Camera must be set to manual focus (and if there is a MF/AF toggle on the lens - it may need be set to 'AF')
+	// 0   - focus near as possible
+	// 100 - focus at infinity
+	// Adjust via /actions/manualfocus
+
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_range (*widget, 0, 100, 1);
+	float_value = dpd->CurrentValue.u8;
+	gp_widget_set_value (*widget, &float_value);
+
 	return GP_OK;
 }
 
@@ -9319,10 +9342,14 @@ _get_Sony_FocusMagnifySetting(CONFIG_GET_ARGS) {
 	currentVal = dpd->CurrentValue.u64;
 	x = (int)(currentVal >> 16 & 0xffff);
 	y = (int)(currentVal & 0xffff);
+
+	// Current magnification level
 	currentMag = (int)(currentVal >> 32);
 
+	// Enum the focus magnifications
 	for (i = 0; i < dpd->FORM.Enum.NumberOfValues; i++) {
 		PTPPropValue *value = dpd->FORM.Enum.SupportedValue + i;
+		// Magnification value e.g. Off, 1.0, 4.0, 8.0
 		mag = (uint32_t) (value->u64 >> 32);
 		magInteger = mag / 10;
 		magDecimal = mag % 10;
@@ -9340,6 +9367,7 @@ _get_Sony_FocusMagnifySetting(CONFIG_GET_ARGS) {
 			if (len < 0) {
 				len = 0;
 			}
+			// Append the current x and y position to the focus magnified string
 			sprintf (buffer + len, ",%d,%d", x, y);
 			gp_widget_set_value(*widget, buffer);
 		}
@@ -9347,6 +9375,9 @@ _get_Sony_FocusMagnifySetting(CONFIG_GET_ARGS) {
 
 	return GP_OK;
 }
+
+#define SONY_TOUCH_MAX_X (640-1)
+#define SONY_TOUCH_MAX_Y (480-1)
 
 static int
 _put_Sony_FocusMagnifySetting(CONFIG_PUT_ARGS)
@@ -9362,8 +9393,9 @@ _put_Sony_FocusMagnifySetting(CONFIG_PUT_ARGS)
 	y = (int)(currentVal & 0xffff);
 
 	CR (gp_widget_get_value(widget, &xval));
-#define SONY_TOUCH_MAX_X (640-1)
-#define SONY_TOUCH_MAX_Y (480-1)
+
+	// Magnification string sets the magnification level and current magnification position
+
 	if (sscanf (xval, "%d.%1d,%d,%d", &magInteger, &magDecimal, &x, &y) == 4) {
 		GP_LOG_D ("mag: %d.%d x: %d y: %d", magInteger, magDecimal, x, y);
 	} else if (sscanf (xval, "%d,%d,%d", &magInteger, &x, &y) == 3) {
@@ -9379,14 +9411,62 @@ _put_Sony_FocusMagnifySetting(CONFIG_PUT_ARGS)
 	if (y > SONY_TOUCH_MAX_Y) {
 		y = SONY_TOUCH_MAX_Y;
 	}
-#undef SONY_TOUCH_MAX_X
-#undef SONY_TOUCH_MAX_Y
+
 	xpropval.u64 = ((uint64_t)(magInteger*10 + magDecimal) << 32) + (x << 16) + y;
 
 	C_PTP (ptp_sony_setdevicecontrolvaluea (params, dpd->DevicePropCode, &xpropval, PTP_DTC_UINT64));
 	*alreadyset = 1;
 	return GP_OK;
 }
+
+static int
+_get_Sony_SpotFocusArea(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	// Current value not available via Sony API
+	uint32_t value = 0;
+	gp_widget_set_value  (*widget, &value);
+
+	return GP_OK;
+}
+
+static int
+_put_Sony_SpotFocusArea(CONFIG_PUT_ARGS) {
+	PTPParams* params = &(camera->pl->params);
+	PTPPropValue xpropval;
+	char* xval;
+	uint32_t x=0,y=0;
+	uint64_t currentVal;
+
+	// Camera must be set to an autofocus mode and focusarea has to be set to one of the Spot Focus modes
+
+	currentVal = dpd->CurrentValue.u32;
+	x = (int)(currentVal >> 16 & 0xffff);
+	y = (int)(currentVal & 0xffff);
+
+	CR (gp_widget_get_value(widget, &xval));
+
+	if (sscanf (xval, "%d,%d", &x, &y) == 2) {
+		GP_LOG_D ("spotfocusarea: x: %d y: %d", x, y);
+	}
+	if (x > SONY_TOUCH_MAX_X) {
+		x = SONY_TOUCH_MAX_X;
+	}
+	if (y > SONY_TOUCH_MAX_Y) {
+		y = SONY_TOUCH_MAX_Y;
+	}
+
+	xpropval.u32 = (x << 16) + y;
+
+	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_AFAreaPosition, &xpropval, PTP_DTC_UINT32));
+
+	*alreadyset = 1;
+	return GP_OK;
+}
+
+#undef SONY_TOUCH_MAX_X
+#undef SONY_TOUCH_MAX_Y
 
 
 static int
@@ -11159,12 +11239,13 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_PANASONIC,PTP_OC_PANASONIC_MovieRecControl,  _get_Panasonic_Movie,           _put_Panasonic_Movie },
 	{ N_("Movie Mode"),                     "eosmoviemode",     0,  PTP_VENDOR_CANON,   0,                                  _get_Canon_EOS_MovieModeSw,     _put_Canon_EOS_MovieModeSw },
 	{ N_("Focus Magnifier"),                "focusmagnifier",   PTP_DPC_SONY_FocusMagnifier,PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Focus Magnifier Cancel"),         "focusmagnifierexit", PTP_DPC_SONY_FocusMagnifierCancel, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
-	{ N_("Remote Key Up"),                  "remotekeyup",   PTP_DPC_SONY_RemoteKeyUp,   PTP_VENDOR_SONY, PTP_DTC_UINT16,   _get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Remote Key Down"),                "remotekeydown", PTP_DPC_SONY_RemoteKeyDown, PTP_VENDOR_SONY, PTP_DTC_UINT16,   _get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Remote Key Left"),                "remotekeyleft", PTP_DPC_SONY_RemoteKeyLeft, PTP_VENDOR_SONY, PTP_DTC_UINT16,   _get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Remote Key Right"),               "remotekeyright",PTP_DPC_SONY_RemoteKeyRight,PTP_VENDOR_SONY, PTP_DTC_UINT16,   _get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Focus Magnifier"),                "focusmagnifier",PTP_DPC_SONY_FocusMagnifierSetting,PTP_VENDOR_SONY, PTP_DTC_UINT64,_get_Sony_FocusMagnifySetting,     _put_Sony_FocusMagnifySetting },
+	{ N_("Focus Magnifier Cancel"),         "focusmagnifierexit",PTP_DPC_SONY_FocusMagnifierCancel, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
+	{ N_("Remote Key Up"),                  "remotekeyup",      PTP_DPC_SONY_RemoteKeyUp,   PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Remote Key Down"),                "remotekeydown",    PTP_DPC_SONY_RemoteKeyDown, PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Remote Key Left"),                "remotekeyleft",    PTP_DPC_SONY_RemoteKeyLeft, PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Remote Key Right"),               "remotekeyright",   PTP_DPC_SONY_RemoteKeyRight,PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Focus Magnifier"),                "focusmagnifier",   PTP_DPC_SONY_FocusMagnifierSetting,PTP_VENDOR_SONY, PTP_DTC_UINT64,_get_Sony_FocusMagnifySetting, _put_Sony_FocusMagnifySetting },
+	{ N_("Spot Focus Area"),                "spotfocusarea",    PTP_DPC_SONY_AFAreaPosition,PTP_VENDOR_SONY,PTP_DTC_UINT32, _get_Sony_SpotFocusArea,        _put_Sony_SpotFocusArea },
 	{ N_("Canon Disable Mode Dial"),        "disablemodedial",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_SetModeDialDisable,    _get_Canon_SetModeDialDisable,  _put_Canon_SetModeDialDisable },
 	{ N_("PTP Opcode"),                     "opcode",           0,  0,                  PTP_OC_GetDeviceInfo,               _get_Generic_OPCode,            _put_Generic_OPCode },
 	{ 0,0,0,0,0,0,0 },
@@ -11415,6 +11496,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("RAW+J PC Save Image"),            "pcsaveimgformat",          PTP_DPC_SONY_PcSaveImageFormat,         PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_PcSaveImageFormat,        _put_Sony_PcSaveImageFormat },
 	{ N_("Focus Distance"),                 "focusdistance",            PTP_DPC_FocusDistance,                  0,                  PTP_DTC_UINT16, _get_FocusDistance,                 _put_FocusDistance },
 	{ N_("Focal Length"),                   "focallength",              PTP_DPC_FocalLength,                    0,                  PTP_DTC_UINT32, _get_FocalLength,                   _put_FocalLength },
+	{ N_("Focal Position"),                 "focalposition",            PTP_DPC_SONY_FocalPosition,             PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_FocalPosition,            _put_None },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_FocusMode,                      PTP_VENDOR_SONY,    PTP_DTC_UINT16, _get_FocusMode,                     _put_Sony_FocusMode },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_FocusMode,                      0,                  PTP_DTC_UINT16, _get_FocusMode,                     _put_FocusMode },
 	{ N_("Focus Mode"),                     "focusmode",                PTP_DPC_OLYMPUS_FocusMode,              PTP_VENDOR_GP_OLYMPUS_OMD,  PTP_DTC_UINT16, _get_FocusMode,             _put_FocusMode },
