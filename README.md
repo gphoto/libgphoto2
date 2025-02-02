@@ -80,13 +80,35 @@ libgphoto2 has _not_ (yet?) been ported to any operating system from MicroSoft.
 - Crystal: [gphoto2.cr](https://github.com/sija/gphoto2.cr)
 
 
-## How to set up libgphoto2
+## How do I build it?
 
-For information on how to set up libgphoto2 and its frontends, see
-The gphoto2 Manual.
+If you want to have 'libgphoto2' installed  into `$HOME/.local`, keep the `PKG_CONFIG_PATH=` and `--prefix=` arguments to `configure`. Otherwise adapt or remove them.
 
-It is available at the following places:
+```
+autoreconf -is  # if using a git clone
+./configure PKG_CONFIG_PATH="$HOME/.local/lib/pkgconfig${PKG_CONFIG_PATH+":${PKG_CONFIG_PATH}"}" --prefix="$HOME/.local"
+make
+make install
+```
 
+Out-of-tree builds are supported. `./configure --help` may help.
+
+### using Meson build system
+
+Since [f5bb6c875c143c53bc8ba725e9d34726b31c47af](https://github.com/gphoto/libgphoto2/commit/f5bb6c875c143c53bc8ba725e9d34726b31c47af), you can use meson to build the library :
+
+```
+cd /path/to/source/root
+meson setup builddir && cd builddir
+meson compile
+meson test
+```
+
+### Where to get the sources
+
+The sources are available at the following places:
+
+ - At gphoto's github repository (this page) : https://github.com/gphoto/libgphoto2
  - At the gphoto website: [gphoto project home page]
  - In the SVN module gphoto2-manual
 
