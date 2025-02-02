@@ -4,7 +4,7 @@ shared_module('usb1',
   install_dir: iolibs_dir,
   install: true,
   dependencies: [
-    libusb1_dep,
+    libusb_dep,
     libgphoto2_port_dep,
   ],
 )
