@@ -4166,7 +4166,7 @@ static struct deviceproptableu8 nikon_scenemode[] = {
 	{ N_("Night Portrait"),		18, 0 },
 
 };
-GENERIC8TABLE(NIKON_SceneMode,nikon_scenemode);
+GENERIC8TABLE(NIKON_SceneMode,nikon_scenemode)
 
 /* Nikon 1 S1 specials in here */
 static struct deviceproptableu8 nikon_1_j3_iso[] = {
@@ -4211,7 +4211,7 @@ static struct deviceproptableu8 nikon_1_j3_iso[] = {
 	{ "6400",	0x2e, 0 },
 	/* more unknown values */
 };
-GENERIC8TABLE(Nikon_1_J3_ISO,nikon_1_j3_iso);
+GENERIC8TABLE(Nikon_1_J3_ISO,nikon_1_j3_iso)
 
 /* Nikon 1 S1 specials in here */
 static struct deviceproptableu8 nikon_1_s1_iso[] = {
@@ -4248,7 +4248,7 @@ static struct deviceproptableu8 nikon_1_s1_iso[] = {
 	{ "3200",	0x28, 0 },
 	{ "6400",	0x2e, 0 },
 };
-GENERIC8TABLE(Nikon_1_S1_ISO,nikon_1_s1_iso);
+GENERIC8TABLE(Nikon_1_S1_ISO,nikon_1_s1_iso)
 
 /* Generic Nikon 1 ISO */
 static struct deviceproptableu8 nikon_1_iso[] = {
@@ -4287,7 +4287,7 @@ static struct deviceproptableu8 nikon_1_iso[] = {
 	{ "3200",	0x28, 0 },
 	{ "6400",	0x2e, 0 },
 };
-GENERIC8TABLE(Nikon_1_ISO,nikon_1_iso);
+GENERIC8TABLE(Nikon_1_ISO,nikon_1_iso)
 
 static struct deviceproptableu8 nikon_1_whitebalance[] = {
 	/* values from a J3 */
@@ -4303,7 +4303,7 @@ static struct deviceproptableu8 nikon_1_whitebalance[] = {
 	{ N_("Water"),			0x0a, 0 },
 	{ N_("Preset"),			0x08, 0 },
 };
-GENERIC8TABLE(Nikon_1_WhiteBalance,nikon_1_whitebalance);
+GENERIC8TABLE(Nikon_1_WhiteBalance,nikon_1_whitebalance)
 
 static struct deviceproptableu8 nikon_hdrhighdynamic[] = {
 	{ N_("Auto"),	0, 0 },
@@ -4311,7 +4311,7 @@ static struct deviceproptableu8 nikon_hdrhighdynamic[] = {
 	{ N_("2 EV"),	2, 0 },
 	{ N_("3 EV"),	3, 0 },
 };
-GENERIC8TABLE(Nikon_HDRHighDynamic,nikon_hdrhighdynamic);
+GENERIC8TABLE(Nikon_HDRHighDynamic,nikon_hdrhighdynamic)
 
 static struct deviceproptableu8 nikon_aebracketstep[] = {
 	{ N_("1/3 EV"),	0, 0 },
@@ -4321,14 +4321,14 @@ static struct deviceproptableu8 nikon_aebracketstep[] = {
 	{ N_("2 EV"),	4, 0 },
 	{ N_("3 EV"),	5, 0 },
 };
-GENERIC8TABLE(Nikon_AEBracketStep,nikon_aebracketstep);
+GENERIC8TABLE(Nikon_AEBracketStep,nikon_aebracketstep)
 
 static struct deviceproptableu8 nikon_wbbracketstep[] = {
 	{ N_("1 EV"),	0, 0 },
 	{ N_("2 EV"),	1, 0 },
 	{ N_("3 EV"),	2, 0 },
 };
-GENERIC8TABLE(Nikon_WBBracketStep,nikon_wbbracketstep);
+GENERIC8TABLE(Nikon_WBBracketStep,nikon_wbbracketstep)
 
 static struct deviceproptableu8 nikon_adlbracketstep[] = {
 	{ N_("Auto"),		0, 0 },
@@ -4337,7 +4337,7 @@ static struct deviceproptableu8 nikon_adlbracketstep[] = {
 	{ N_("High"),		3, 0 },
 	{ N_("Extra high"),	4, 0 },
 };
-GENERIC8TABLE(Nikon_ADLBracketStep,nikon_adlbracketstep);
+GENERIC8TABLE(Nikon_ADLBracketStep,nikon_adlbracketstep)
 
 static struct deviceproptableu8 nikon_bracketpattern[] = {
 	{ N_("2 images (normal and under)"),			0, 0 },
@@ -4350,7 +4350,7 @@ static struct deviceproptableu8 nikon_bracketpattern[] = {
 	{ N_("9 images (normal, 4 unders and 4 overs)"),	7, 0 },
 	{ N_("0 image"),					8, 0 },
 };
-GENERIC8TABLE(Nikon_BracketPattern,nikon_bracketpattern);
+GENERIC8TABLE(Nikon_BracketPattern,nikon_bracketpattern)
 
 static struct deviceproptableu8 nikon_adlbracketpattern[] = {
 	{ N_("2 shots (Off -> User setting)"),				0, 0 },
@@ -4359,7 +4359,7 @@ static struct deviceproptableu8 nikon_adlbracketpattern[] = {
 	{ N_("5 shots (Off -> Low -> Normal -> High -> Extra High)"),	3, 0 },
 	{ N_("0 image"),						4, 0 },
 };
-GENERIC8TABLE(Nikon_ADLBracketPattern,nikon_adlbracketpattern);
+GENERIC8TABLE(Nikon_ADLBracketPattern,nikon_adlbracketpattern)
 
 static struct deviceproptableu8 nikon_hdrsmoothing[] = {
 	{ N_("Auto"),		3, 0 },
@@ -4368,7 +4368,7 @@ static struct deviceproptableu8 nikon_hdrsmoothing[] = {
 	{ N_("High"),		0, 0 },
 	{ N_("Extra high"),	4, 0 },
 };
-GENERIC8TABLE(Nikon_HDRSmoothing,nikon_hdrsmoothing);
+GENERIC8TABLE(Nikon_HDRSmoothing,nikon_hdrsmoothing)
 
 static struct deviceproptableu16 nikon_d7100_exposure_program_modes[] = {
 	{ "M",			0x0001, 0 },
@@ -6805,14 +6805,14 @@ static struct deviceproptableu8 nikon_microphone[] = {
 	{N_("Low sensitivity"),		3, 0},
 	{N_("Microphone off"),		4, 0},
 };
-GENERIC8TABLE(Nikon_Microphone, nikon_microphone);
+GENERIC8TABLE(Nikon_Microphone, nikon_microphone)
 
 static struct deviceproptableu8 nikon_moviequality[] = {
 	{"320x216",	0, 0},
 	{"640x424",	1, 0},
 	{"1280x720",	2, 0},
 };
-GENERIC8TABLE(Nikon_MovieQuality, nikon_moviequality);
+GENERIC8TABLE(Nikon_MovieQuality, nikon_moviequality)
 
 static struct deviceproptableu8 nikon_d850_moviequality[] = {
 	{"3840x2160; 30p",	0, 0},
@@ -6832,7 +6832,7 @@ static struct deviceproptableu8 nikon_d850_moviequality[] = {
 	{"1920x1080; 25p x4 (slow-mo)",	11, 0},
 	{"1920x1080; 24p x5 (slow-mo)",	12, 0},
 };
-GENERIC8TABLE(Nikon_D850_MovieQuality, nikon_d850_moviequality);
+GENERIC8TABLE(Nikon_D850_MovieQuality, nikon_d850_moviequality)
 
 static struct deviceproptableu8 nikon_d5100_moviequality[] = {
 	{"640x424; 25fps; normal",		0, 0},
@@ -6846,7 +6846,7 @@ static struct deviceproptableu8 nikon_d5100_moviequality[] = {
 	{"1920x1080; 25fps; normal",		8, 0},
 	{"1920x1080; 25fps; high quality",	9, 0},
 };
-GENERIC8TABLE(Nikon_D5100_MovieQuality, nikon_d5100_moviequality);
+GENERIC8TABLE(Nikon_D5100_MovieQuality, nikon_d5100_moviequality)
 
 static struct deviceproptableu8 nikon_d7100_moviequality[] = {
 	{"1920x1080; 60i",	0, 0},
@@ -6857,13 +6857,13 @@ static struct deviceproptableu8 nikon_d7100_moviequality[] = {
 	{"1280x720; 60p",	5, 0},
 	{"1280x720; 50p",	6, 0},
 };
-GENERIC8TABLE(Nikon_D7100_MovieQuality, nikon_d7100_moviequality);
+GENERIC8TABLE(Nikon_D7100_MovieQuality, nikon_d7100_moviequality)
 
 static struct deviceproptableu8 nikon_d7100_moviequality2[] = {
 	{"Norm",	0, 0},
 	{"High",	1, 0},
 };
-GENERIC8TABLE(Nikon_D7100_MovieQuality2, nikon_d7100_moviequality2);
+GENERIC8TABLE(Nikon_D7100_MovieQuality2, nikon_d7100_moviequality2)
 
 static struct deviceproptableu8 nikon_1_moviequality[] = {
 	{"1080/60i",	0, 0},
@@ -6871,7 +6871,7 @@ static struct deviceproptableu8 nikon_1_moviequality[] = {
 	{"720/60p",	3, 0},
 	{"720/30p",	4, 0},
 };
-GENERIC8TABLE(Nikon_1_MovieQuality, nikon_1_moviequality);
+GENERIC8TABLE(Nikon_1_MovieQuality, nikon_1_moviequality)
 
 static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 	{"400",		0, 0},
@@ -6881,7 +6881,7 @@ static struct deviceproptableu8 nikon_d90_isoautohilimit[] = {
 	{N_("Hi 1"),	4, 0},
 	{N_("Hi 2"),	5, 0},
 };
-GENERIC8TABLE(Nikon_D90_ISOAutoHiLimit, nikon_d90_isoautohilimit);
+GENERIC8TABLE(Nikon_D90_ISOAutoHiLimit, nikon_d90_isoautohilimit)
 
 static struct deviceproptableu8 nikon_d7100_isoautohilimit[] = {
 	{ "200",    0,  0 },
@@ -6911,7 +6911,7 @@ static struct deviceproptableu8 nikon_d7100_isoautohilimit[] = {
 	{ "Hi 1",   24, 0 },
 	{ "Hi 2",   25, 0 },
 };
-GENERIC8TABLE(Nikon_D7100_ISOAutoHiLimit, nikon_d7100_isoautohilimit);
+GENERIC8TABLE(Nikon_D7100_ISOAutoHiLimit, nikon_d7100_isoautohilimit)
 
 static struct deviceproptableu8 nikon_manualbracketmode[] = {
 	{N_("Flash/speed"),	0, 0},
@@ -6919,7 +6919,7 @@ static struct deviceproptableu8 nikon_manualbracketmode[] = {
 	{N_("Flash/aperture"),	2, 0},
 	{N_("Flash only"),	3, 0},
 };
-GENERIC8TABLE(Nikon_ManualBracketMode, nikon_manualbracketmode);
+GENERIC8TABLE(Nikon_ManualBracketMode, nikon_manualbracketmode)
 
 static struct deviceproptableu8 nikon_d3s_isoautohilimit[] = {
 	{"400",	   0, 0},
@@ -6944,7 +6944,7 @@ static struct deviceproptableu8 nikon_d3s_isoautohilimit[] = {
 	{"51200", 25, 0},
 	{"102400",26, 0},
 };
-GENERIC8TABLE(Nikon_D3s_ISOAutoHiLimit, nikon_d3s_isoautohilimit);
+GENERIC8TABLE(Nikon_D3s_ISOAutoHiLimit, nikon_d3s_isoautohilimit)
 
 #if 0
 static struct deviceproptableu8 nikon_d70s_padvpvalue[] = {
