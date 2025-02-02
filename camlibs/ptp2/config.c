@@ -8386,7 +8386,7 @@ static int
 _get_STR_as_time(CONFIG_GET_ARGS) {
 	time_t		camtime;
 	struct tm	tm;
-	char		capture_date[64],tmp[5];
+	char		capture_date[65],tmp[5];
 
 	/* strptime() is not widely accepted enough to use yet */
 	memset(&tm,0,sizeof(tm));
@@ -8394,7 +8394,8 @@ _get_STR_as_time(CONFIG_GET_ARGS) {
 		return (GP_ERROR);
 	gp_widget_new (GP_WIDGET_DATE, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	strncpy(capture_date,dpd->CurrentValue.str,sizeof(capture_date));
+	strncpy(capture_date,dpd->CurrentValue.str,sizeof(capture_date) - 1);
+	capture_date[64] = 0;
 	strncpy (tmp, capture_date, 4);
 	tmp[4] = 0;
 	tm.tm_year=atoi (tmp) - 1900;
