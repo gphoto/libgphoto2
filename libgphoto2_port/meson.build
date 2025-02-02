@@ -1,10 +1,15 @@
 libusb_req         = '>= 0.1.5'
 libusb1_req        = '>= 1.0.0'
 
-ltdl_dep = cc.find_library('ltdl', required : false)
+ltdl_dep = cc.find_library(
+  'ltdl',
+  has_headers: 'ltdl.h',
+  required: false
+)
 if not ltdl_dep.found()
-  ltdl_dep = cc.find_library('libltdl', required : false)
+  ltdl_dep = cc.find_library('libltdl', has_headers: 'ltdl.h', required: true)
 endif
+add_project_arguments('-DHAVE_LTDL=1', language: 'c')
 
 # This will be libusb-1.0 by default and fallback on the older libusb.
 libusb_dep = dependency('libusb-1.0', version: libusb1_req, required: 'libusb1' in get_option('iolibs'))
@@ -38,10 +43,6 @@ else
 endif
 
 lockdev_dep = cc.find_library('lockdev', required : false)
-
-if ltdl_dep.found()
-  add_project_arguments('-DHAVE_LTDL=1', language: 'c')
-endif
 
 if lockdev_dep.found()
   add_project_arguments('-DHAVE_LOCKDEV=1', language: 'c')
