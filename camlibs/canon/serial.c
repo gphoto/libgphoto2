@@ -219,28 +219,10 @@ serial_set_timeout (GPPort *gdev, int to)
 static int
 canon_serial_get_byte (GPPort *gdev)
 {
-	static unsigned char cache[512];
-	static unsigned char *cachep = cache;
-	static unsigned char *cachee = cache;
-	int recv;
-
-	/* if still data in cache, get it */
-	if (cachep < cachee) {
-		return (int) *cachep++;
-	}
-
-	recv = gp_port_read (gdev, (char *)cache, 1);
-	if (recv < 0)		/* An error occurred */
+	char byte;
+	if (gp_port_read (gdev, &byte, 1) < 0)		/* An error occurred */
 		return -1;
-
-	cachep = cache;
-	cachee = cache + recv;
-
-	if (recv) {
-		return (int) *cachep++;
-	}
-
-	return -1;
+	return byte;
 }
 
 /* ------------------------- Frame-level processing ------------------------- */
