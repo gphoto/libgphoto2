@@ -4687,7 +4687,15 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_SONY) &&
 		ptp_operation_issupported(params, PTP_OC_SONY_GetDevicePropdesc)
 	) {
-		CHECK_PTP_RC(ptp_sony_getdevicepropdesc (params, propcode, dpd_in_cache));
+		PTPDevicePropDesc tmpdpd;
+
+		CHECK_PTP_RC(ptp_sony_getdevicepropdesc (params, propcode, &tmpdpd));
+
+		if (!dpd_in_cache)
+			array_push_back_empty(&params->dpd_cache, &dpd_in_cache);
+		else
+			ptp_free_devicepropdesc (dpd_in_cache);
+		move(*dpd_in_cache, tmpdpd);
 		goto done;
 	}
 
@@ -4705,13 +4713,23 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 			else
 				goto generic;
 		}
+		if (!dpd_in_cache) {
+			array_push_back_empty(&params->dpd_cache, &dpd_in_cache);
+		}
 		duplicate_DevicePropDesc(eos_dpd, dpd_in_cache);
 		goto done;
 	}
 
 generic:
 	if (ptp_operation_issupported(params, PTP_OC_GetDevicePropDesc)) {
-		CHECK_PTP_RC(ptp_getdevicepropdesc (params, propcode, dpd_in_cache));
+		PTPDevicePropDesc tmpdpd;
+
+		CHECK_PTP_RC(ptp_getdevicepropdesc (params, propcode, &tmpdpd));
+		if (!dpd_in_cache)
+			array_push_back_empty(&params->dpd_cache, &dpd_in_cache);
+		else
+			ptp_free_devicepropdesc (dpd_in_cache);
+		move(*dpd_in_cache, tmpdpd);
 		goto done;
 	}
 
