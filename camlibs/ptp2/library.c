@@ -8105,14 +8105,10 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 	if (!strcmp(folder, "/")) {
 		/* use the cached storageids. they should be valid after camera_init */
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
-			if (!params->storageids.len) {
-				CR (gp_list_append (list, STORAGE_FOLDER_PREFIX"00010001", NULL));
-			} else {
-				char fname[PTP_MAXSTRLEN];
-				for_each (uint32_t*, psid, params->storageids) {
-					snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x", *psid);
-					CR (gp_list_append (list, fname, NULL));
-				}
+			char fname[PTP_MAXSTRLEN];
+			for_each (uint32_t*, psid, params->storageids) {
+				snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x", *psid);
+				CR (gp_list_append (list, fname, NULL));
 			}
 		} else {
 			gp_list_append (list, STORAGE_FOLDER_PREFIX"deadbeef", NULL);
