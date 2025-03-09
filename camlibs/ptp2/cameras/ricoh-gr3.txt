@@ -1,0 +1,225 @@
+
+Camera summary:
+Manufacturer: RICOH IMAGING COMPANY, LTD.
+Model: RICOH GR III
+  Version: 1.91
+  Serial Number: nnnnnnn
+Vendor Extension ID: 0x6 (1.10)
+Vendor Extension Description: microsoft.com/DeviceServices: 1.0; 
+
+Capture Formats: Association/Directory Apple Quicktime Defined Type JPEG
+Display Formats: Undefined Type, Association/Directory, Apple Quicktime, Defined Type, JPEG
+
+Device Capabilities:
+	File Download, No File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: SD
+	VolumeLabel: 
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 127831900160 (121910 MB)
+	Free Space (Bytes): 110838677504 (105704 MB)
+	Free Space (Images): 2077
+store_000f0001:
+	StorageDescription: Software License
+	VolumeLabel: 
+	Storage Type: Builtin RAM
+	Filesystemtype: Generic Hierarchical
+	Access Capability: Read-Only
+	Maximum Capability: 1377287 (1 MB)
+	Free Space (Bytes): 0 (0 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 100, step 1] value: 100% (100)
+Date & Time(0x5011):(readwrite) (type=0xffff) '20250306T105201'
+Session Initiator Info(0xd406):(readwrite) (type=0xffff) ''
+Perceived Device Type(0xd407):(read only) (type=0x6) 1
+Property 0xd303:(read only) (type=0x2) 1
+
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1741276349
+Printable: Thu 06 Mar 2025 10:52:29 AM EST
+Help: Use 'now' as the current time when setting.
+
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: 0178521
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 1
+Type: TEXT
+Current: RICOH IMAGING COMPANY, LTD.
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: RICOH GR III
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 1
+Type: TEXT
+Current: 1.91
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 1
+Type: TEXT
+Current: microsoft.com/DeviceServices: 1.0; 
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 100
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+Choice: 4 4
+Choice: 5 5
+Choice: 6 6
+Choice: 7 7
+Choice: 8 8
+Choice: 9 9
+Choice: 10 10
+Choice: 11 11
+Choice: 12 12
+Choice: 13 13
+Choice: 14 14
+Choice: 15 15
+Choice: 16 16
+Choice: 17 17
+Choice: 18 18
+Choice: 19 19
+Choice: 20 20
+Choice: 21 21
+Choice: 22 22
+Choice: 23 23
+Choice: 24 24
+Choice: 25 25
+Choice: 26 26
+Choice: 27 27
+Choice: 28 28
+Choice: 29 29
+Choice: 30 30
+Choice: 31 31
+Choice: 32 32
+Choice: 33 33
+Choice: 34 34
+Choice: 35 35
+Choice: 36 36
+Choice: 37 37
+Choice: 38 38
+Choice: 39 39
+Choice: 40 40
+Choice: 41 41
+Choice: 42 42
+Choice: 43 43
+Choice: 44 44
+Choice: 45 45
+Choice: 46 46
+Choice: 47 47
+Choice: 48 48
+Choice: 49 49
+Choice: 50 50
+Choice: 51 51
+Choice: 52 52
+Choice: 53 53
+Choice: 54 54
+Choice: 55 55
+Choice: 56 56
+Choice: 57 57
+Choice: 58 58
+Choice: 59 59
+Choice: 60 60
+Choice: 61 61
+Choice: 62 62
+Choice: 63 63
+Choice: 64 64
+Choice: 65 65
+Choice: 66 66
+Choice: 67 67
+Choice: 68 68
+Choice: 69 69
+Choice: 70 70
+Choice: 71 71
+Choice: 72 72
+Choice: 73 73
+Choice: 74 74
+Choice: 75 75
+Choice: 76 76
+Choice: 77 77
+Choice: 78 78
+Choice: 79 79
+Choice: 80 80
+Choice: 81 81
+Choice: 82 82
+Choice: 83 83
+Choice: 84 84
+Choice: 85 85
+Choice: 86 86
+Choice: 87 87
+Choice: 88 88
+Choice: 89 89
+Choice: 90 90
+Choice: 91 91
+Choice: 92 92
+Choice: 93 93
+Choice: 94 94
+Choice: 95 95
+Choice: 96 96
+Choice: 97 97
+Choice: 98 98
+Choice: 99 99
+Choice: 100 100
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20250306T105229
+END
+/main/other/d406
+Label: Session Initiator Info
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d407
+Label: Perceived Device Type
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 1
+END

@@ -2732,6 +2732,8 @@ static struct {
 
 	/* Arda Kaan <ardakaan@gmail.com> */
 	{"Ricoh:WG-M2 (PTP mode)",        	0x25fb, 0x210b, 0},
+	/* https://github.com/gphoto/libgphoto2/issues/1099 */
+	{"Ricoh:GR III (PTP mode)",        	0x25fb, 0x210f, 0},
 	/* https://github.com/libmtp/libmtp/issues/148 */
 	{"Ricoh:GR IIIx (PTP mode)",        	0x25fb, 0x25fb, 0},
 
