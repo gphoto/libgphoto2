@@ -2808,6 +2808,8 @@ static struct {
 
 	/* Bernhard Wagner <me@bernhardwagner.net> */
 	{"Leica:M9",				0x1a98,	0x0002, PTP_CAP},
+	/* https://github.com/gphoto/libgphoto2/issues/1098 */
+	{"Leica:M11 Monochrom",			0x1a98,	0x2083, PTP_CAP},
 
 	/* https://github.com/gphoto/gphoto2/issues/601 */
 	{"Leica:Q3",				0x1a98,	0x2376, PTP_CAP|PTP_CAP_PREVIEW|PTP_NO_CAPTURE_COMPLETE},
