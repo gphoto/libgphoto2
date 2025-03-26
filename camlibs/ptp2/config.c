@@ -12447,7 +12447,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 						ptp_free_propvalue (cursub->type, &propval);
 					}
 					ptp_free_devicepropdesc(&dpd);
-					if (ret != GP_OK) continue; /* see if we have another match */
+					if (ret == GP_OK) continue; /* see if we have another match */
 				} else {
 					ret = cursub->putfunc (camera, widget, NULL, NULL, NULL);
 				}
