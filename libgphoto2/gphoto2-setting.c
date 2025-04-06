@@ -179,7 +179,10 @@ load_settings (void)
 	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, buf);
 	strcat (buf, "\\.gphoto");
 #else
-	snprintf (buf, sizeof(buf), "%s/.gphoto", getenv ("HOME"));
+	if (getenv("XDG_CONFIG_HOME") != NULL)
+		snprintf (buf, sizeof(buf), "%s/gphoto", getenv("XDG_CONFIG_HOME"));
+	else
+		snprintf (buf, sizeof(buf), "%s/.config/gphoto", getenv ("HOME"));
 #endif
 	GP_LOG_D ("Creating gphoto config directory ('%s')", buf);
 	(void)gp_system_mkdir (buf);
@@ -189,7 +192,10 @@ load_settings (void)
 	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, buf);
 	strcat(buf, "\\.gphoto\\settings");
 #else
-	snprintf(buf, sizeof(buf), "%s/.gphoto/settings", getenv("HOME"));
+	if (getenv("XDG_CONFIG_HOME") != NULL)
+		snprintf(buf, sizeof(buf), "%s/gphoto/settings", getenv("XDG_CONFIG_HOME"));
+	else
+		snprintf(buf, sizeof(buf), "%s/.config/gphoto/settings", getenv("HOME"));
 #endif
 
 	if (verify_settings(buf) != GP_OK)
@@ -236,7 +242,10 @@ save_settings (void)
 	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, buf);
 	strcat(buf, "\\.gphoto\\settings");
 #else
-	snprintf (buf, sizeof(buf), "%s/.gphoto/settings", getenv ("HOME"));
+	if (getenv("XDG_CONFIG_HOME") != NULL)
+		snprintf(buf, sizeof(buf), "%s/gphoto/settings", getenv("XDG_CONFIG_HOME"));
+	else
+		snprintf(buf, sizeof(buf), "%s/.config/gphoto/settings", getenv ("HOME"));
 #endif
 
 
