@@ -7288,10 +7288,16 @@ static struct deviceproptableu8 sony_sensorcrop[] = {
 GENERIC8TABLE(Sony_SensorCrop,sony_sensorcrop)
 
 static struct deviceproptableu8 sony_liveviewsettingeffect[] = {
-		{ N_("On"),  0x01, 0 },
-		{ N_("Off"), 0x02, 0 },
+	{ N_("On"),	0x01, 0 },
+	{ N_("Off"),	0x02, 0 },
 };
 GENERIC8TABLE(Sony_LiveViewSettingEffect,sony_liveviewsettingeffect)
+
+static struct deviceproptableu8 sony_image_stabilization[] = {
+	{ N_("Off"),	0x01, 0 },
+	{ N_("On"),	0x02, 0 },
+};
+GENERIC8TABLE(Sony_ImageStabilization,sony_image_stabilization)
 
 /* Sony specific, we need to wait for it settle (around 1 second), otherwise we get trouble later on */
 static int
@@ -11660,6 +11666,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("HDMI Output Data Depth"),         "hdmioutputdatadepth",      PTP_DPC_NIKON_HDMIOutputDataDepth,      PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_HDMIDataDepth,           _put_Nikon_HDMIDataDepth },
 	{ N_("Face Detection"),                 "facedetection",            PTP_DPC_NIKON_FaceDetection,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FaceDetection,           _put_Nikon_FaceDetection },
 	{ N_("Movie Servo AF"),                 "movieservoaf",             PTP_DPC_CANON_EOS_MovieServoAF,         PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_Canon_EOS_MovieServoAF,        _put_Canon_EOS_MovieServoAF },
+	{ N_("Image Stabilization"),            "imagestabilization",       PTP_DPC_SONY_ImageStabilization,        PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_ImageStabilization,       _put_Sony_ImageStabilization },
 
 	{ 0,0,0,0,0,0,0 },
 };
