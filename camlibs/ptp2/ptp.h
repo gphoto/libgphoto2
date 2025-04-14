@@ -3176,6 +3176,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_FocalDistanceUnitSetting		0xD006
 #define PTP_DPC_SONY_FocusModeSetting			0xD007
 
+#define PTP_DPC_SONY_ImageStabilization			0xD0D9
 #define PTP_DPC_SONY_DPCCompensation			0xD200
 #define PTP_DPC_SONY_DRangeOptimize			0xD201
 #define PTP_DPC_SONY_ImageSize				0xD203
