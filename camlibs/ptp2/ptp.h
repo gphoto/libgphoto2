@@ -4892,11 +4892,13 @@ has_sony_mode_300(PTPParams *params) {
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM5")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-9M2")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-9M3")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-1")) return 1;
 	/* https://github.com/gphoto/libgphoto2/issues/937#issuecomment-2014097435 */
 	// TODO: likely the two cameras below are ok now, and can have mode 3 enabled, needs testing.
 	// if (!strcmp(params->deviceinfo.Model, "ILCE-7C")) return 1;
 	// if (!strcmp(params->deviceinfo.Model, "ILCE-7M4")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILX-LR1")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ZV-E1")) return 1;
 	// TODO add other mode 300 camera models
 	return 0;
