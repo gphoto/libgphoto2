@@ -11983,7 +11983,18 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 
 					if ((mode == MODE_SINGLE_GET) && strcmp (cursub->name, confname))
 						continue;
-					if (mode == MODE_LIST) {
+
+					if (mode == MODE_GET) {
+						/* prevent getting the same property twice, some sony cameras have two */
+						/* property settings with the same name, and only the first can be set. */
+						/* for example Sony DSC-RX0M2 when connected with mode 2 the following */
+						/* will be displayed twice: iso, exposurecompensation & shutterspeed */
+						CameraWidget* child = NULL;
+						int r = gp_widget_get_child_by_name(section, cursub->name, &child);
+						if (r == GP_OK && child != NULL) {
+							continue;
+						}
+					} else if (mode == MODE_LIST) {
 						gp_list_append (list, cursub->name, NULL);
 						continue;
 					}
@@ -12447,7 +12458,13 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 						ptp_free_propvalue (cursub->type, &propval);
 					}
 					ptp_free_devicepropdesc(&dpd);
-					if (ret != GP_OK) continue; /* see if we have another match */
+					if (ret != GP_OK) {
+						if (mode == MODE_SET) {
+							/* Clear changed flag so we can try another match */
+							gp_widget_set_changed (widget, FALSE);
+						}
+						continue; /* see if we have another match */
+					}
 				} else {
 					ret = cursub->putfunc (camera, widget, NULL, NULL, NULL);
 				}
