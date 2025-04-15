@@ -3176,6 +3176,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_SONY_FocalDistanceUnitSetting		0xD006
 #define PTP_DPC_SONY_FocusModeSetting			0xD007
 
+#define PTP_DPC_SONY_ImageStabilization			0xD0D9
 #define PTP_DPC_SONY_DPCCompensation			0xD200
 #define PTP_DPC_SONY_DRangeOptimize			0xD201
 #define PTP_DPC_SONY_ImageSize				0xD203
@@ -4891,11 +4892,13 @@ has_sony_mode_300(PTPParams *params) {
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM5")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-9M2")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-9M3")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-1")) return 1;
 	/* https://github.com/gphoto/libgphoto2/issues/937#issuecomment-2014097435 */
 	// TODO: likely the two cameras below are ok now, and can have mode 3 enabled, needs testing.
 	// if (!strcmp(params->deviceinfo.Model, "ILCE-7C")) return 1;
 	// if (!strcmp(params->deviceinfo.Model, "ILCE-7M4")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILX-LR1")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ZV-E1")) return 1;
 	// TODO add other mode 300 camera models
 	return 0;

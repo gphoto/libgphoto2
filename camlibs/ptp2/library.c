@@ -1138,6 +1138,9 @@ static struct {
 	/* t.ludewig@gmail.com */
 	{"Sony:DSC-HX200V (PTP mode)",0x054c, 0x061f, 0},
 
+	/* Mark Watson <watsonmw@gmail.com> */
+	{"Sony:SLT-A99V",             0x054c, 0x0641, 0},
+
 	/* https://sourceforge.net/p/gphoto/feature-requests/424/ */
 	{"Sony:SLT-A57", 	      0x054c, 0x0669, 0},
 
@@ -1370,6 +1373,12 @@ static struct {
 
 	/* via email */
 	{"Sony:A6700 (PC Control)",		0x054c, 0x0e78, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Mark Watson <watsonmw@gmail.com> */
+	{"Sony:ILCE-9M3 (Control)",		0x054c, 0x0e80, PTP_CAP|PTP_CAP_PREVIEW},
+
+	/* Mark Watson <watsonmw@gmail.com> */
+	{"Sony:ILX-LR1 (PC Control)",		0x054c, 0x0e90, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
