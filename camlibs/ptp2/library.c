@@ -7256,9 +7256,8 @@ sonyout:
 		}  while (waiting_for_timeout (&back_off_wait, event_start, timeout));
 
 downloadomdfile:
-		C_MEM (path = calloc(1, sizeof(CameraFilePath)));
-
 		if (newobject != 0) {
+			C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 			CR (add_object_to_fs_and_path (camera, newobject, path, context));
 
 			*eventtype = GP_EVENT_FILE_ADDED;
