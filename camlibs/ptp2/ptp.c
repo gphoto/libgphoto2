@@ -2093,6 +2093,7 @@ ptp_getstorageids (PTPParams* params, PTPStorageIDs* storageids)
 		if ((*psid & 0xffff) != 0) // filter out invalid storageIDs once instead of everywhere
 			array_push_back(storageids, *psid);
 
+	free_array (&all_ids);
 	return PTP_RC_OK;
 }
 
