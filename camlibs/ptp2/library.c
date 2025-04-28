@@ -8083,6 +8083,7 @@ generic_list_func (PTPParams *params, const char *folder, int is_directory, Came
 	}
 
 	GP_LOG_D ("returning list with %d %s entries", gp_list_count(list), is_directory ? "directory" : "file");
+	free_array (&handles);
 
 	return GP_OK;
 }
