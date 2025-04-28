@@ -7949,6 +7949,7 @@ static uint32_t
 find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t handle, PTPObject **retob)
 {
 	uint16_t ret;
+	uint32_t found_child;
 
 	const char *slash = strchr (path, '/');
 	size_t filename_len = slash ? (size_t)(slash - path) : strlen(path);
@@ -7970,9 +7971,12 @@ find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t hand
 		if (!strncmp (ob->oi.Filename, path, filename_len)) {
 			if (retob)
 				*retob = ob;
-			return *poid;
+			found_child = *poid;
+			free_array (&handles);
+			return found_child;
 		}
 	}
+	free_array (&handles);
 	/* else not found */
 	return PTP_HANDLER_SPECIAL;
 }
