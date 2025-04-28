@@ -28,6 +28,9 @@
 extern "C" {
 #endif /* __cplusplus */
 
+typedef int(*gp_settings_func)(char*,char*,char*,void*);
+void gp_setting_set_get_func (gp_settings_func func, void *userdata);
+void gp_setting_set_set_func (gp_settings_func func, void *userdata);
 int gp_setting_set (char *id, char *key, char *value);
 int gp_setting_get (char *id, char *key, char *value);
 

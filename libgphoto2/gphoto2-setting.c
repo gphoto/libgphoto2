@@ -61,6 +61,39 @@ static int save_settings (void);
 
 static int load_settings (void);
 
+static void *get_func_userdata = NULL;
+static void *set_func_userdata = NULL;
+static gp_settings_func custom_get_func = NULL;
+static gp_settings_func custom_set_func = NULL;
+
+/**
+ * \brief Set user defined function to get a gphoto setting.
+ * \param func The function to get the settings
+ * \param userdata userdata passed to func
+ *
+ * This function is expected to behave like gp_settings_get.
+ * To clear set func to NULL.
+ */
+void gp_setting_set_get_func (gp_settings_func func, void *userdata)
+{
+	custom_get_func = func;
+	get_func_userdata = userdata;
+}
+
+/**
+ * \brief Set user defined function to set a gphoto setting.
+ * \param func The function to set the settings
+ * \param userdata userdata passed to func
+ *
+ * This function is expected to behave like gp_settings_set.
+ * To clear set func to NULL.
+ */
+void gp_setting_set_set_func (gp_settings_func func, void *userdata)
+{
+	custom_set_func = func;
+	set_func_userdata = userdata;
+}
+
 /**
  * \brief Retrieve a specific gphoto setting.
  * \param id the frontend id of the caller
@@ -74,6 +107,9 @@ static int load_settings (void);
 int
 gp_setting_get (char *id, char *key, char *value)
 {
+	if (custom_get_func != NULL)
+		return custom_get_func(id, key, value, get_func_userdata);
+
 	int x;
 
 	C_PARAMS (id && key);
@@ -106,6 +142,9 @@ gp_setting_get (char *id, char *key, char *value)
 int
 gp_setting_set (char *id, char *key, char *value)
 {
+	if (custom_set_func != NULL)
+		return custom_set_func(id, key, value, set_func_userdata);
+
 	int x;
 
 	C_PARAMS (id && key);
