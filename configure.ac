@@ -90,10 +90,11 @@ dnl              libgphoto2-2.3.1.2.trunk (new gp_camera_get_storageinfo() funct
 dnl A:R:C=0:0:6  libgphoto2-2.5.0	(fixed CameraList API, ... )
 dnl A:R:C=1:0:7  libgphoto2-2.5.24	(added GP_EVENT_FILE_CHANGED ... )
 dnl A:R:C=2:0:8  libgphoto2-2.5.28	(added gp_filesystem_set_info_dirty ... )
-dnl A:R:C=3:0:9  libgphoto2-2.5.XXX	(added gp_init_localedir ... )
-AC_SUBST([LIBGPHOTO2_AGE],      [3])
+dnl A:R:C=3:0:9  libgphoto2-2.5.31	(added gp_init_localedir ... )
+dnl A:R:C=4:0:10 libgphoto2-2.5.XXX	(added gp_setting_set_get_func / gp_setting_set_set_func ... )
+AC_SUBST([LIBGPHOTO2_AGE],      [4])
 AC_SUBST([LIBGPHOTO2_REVISION], [0])
-AC_SUBST([LIBGPHOTO2_CURRENT],  [9])
+AC_SUBST([LIBGPHOTO2_CURRENT],  [10])
 AC_SUBST([LIBGPHOTO2_CURRENT_MIN],
          [`expr $LIBGPHOTO2_CURRENT - $LIBGPHOTO2_AGE`])
 AC_SUBST([LIBGPHOTO2_VERSION_INFO],
