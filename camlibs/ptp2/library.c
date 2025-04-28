@@ -6532,6 +6532,14 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 		return translate_ptp_result(ptp_panasonic_capture(params));
 	}
 
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) &&
+		ptp_operation_issupported(params, PTP_OC_OLYMPUS_OMD_Capture)
+	) {
+		C_PTP_REP(ptp_generic_no_data(params, PTP_OC_OLYMPUS_OMD_Capture, 1, 0x3));
+		C_PTP_REP(ptp_generic_no_data(params, PTP_OC_OLYMPUS_OMD_Capture, 1, 0x6));
+		return GP_OK;
+	}
+
 	if (!ptp_operation_issupported(params,PTP_OC_InitiateCapture)) {
 		gp_context_error(context, _("Sorry, your camera does not support generic capture"));
 		return GP_ERROR_NOT_SUPPORTED;
