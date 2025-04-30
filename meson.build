@@ -31,9 +31,9 @@ libexif_req        = '>= 0.6.13'
 #  change does not break upward compatibility (ie it is an addition),
 #  increment AGE, Otherwise AGE is reset to 0. If CURRENT has changed,
 #  REVISION is set to 0, otherwise REVISION is incremented.
-libgphoto2_age         = 3
+libgphoto2_age         = 4
 libgphoto2_revision    = 0
-libgphoto2_current     = 9
+libgphoto2_current     = 10
 libgphoto2_current_min = libgphoto2_current - libgphoto2_age
 
 libgphoto2_port_name    = 'libgphoto2_port'
