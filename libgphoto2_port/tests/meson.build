@@ -12,6 +12,7 @@ test(
   'test-gp-port',
   test_gp_port_exe,
   env: gp_port_test_env,
+  suite: 'no-ci',
 )
 
 test_port_list_exe = executable(

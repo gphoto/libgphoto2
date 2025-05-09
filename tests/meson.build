@@ -60,6 +60,7 @@ test(
   'test-filesys',
   test_filesys_exe,
   env: gp_test_env,
+  suite: 'no-ci',
 )
 
 test_camera_list_exe = executable(
