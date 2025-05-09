@@ -110,7 +110,7 @@ pkg.generate(
   filebase: 'libgphoto2',
   description: 'Device-independent access to serial, USB, and other ports',
   url: 'http://gphoto.org/proj/libgphoto2/',
-  subdirs: 'gphoto2',
+  subdirs: ['.', 'gphoto2'],
   version: meson.project_version(),
   requires: [ libgphoto2_port_lib ],
   variables: [
