@@ -18,6 +18,7 @@
  * Boston, MA  02110-1301  USA
  */
 
+#define _DARWIN_C_SOURCE
 #include "config.h"
 
 #include <gphoto2/gphoto2-library.h>

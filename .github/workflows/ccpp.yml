@@ -68,10 +68,9 @@ jobs:
         if: runner.os == 'Linux'
         run: echo OS_SPECIFIC_CPPFLAGS="" >> $GITHUB_ENV
 
-      # FIXME: Fix source to build without the -D_DARWIN_C_SOURCE here
       - name: 'OS specific build flags (macOS)'
         if: runner.os == 'macOS'
-        run: echo OS_SPECIFIC_CPPFLAGS="-D_DARWIN_C_SOURCE -I$(brew --prefix)/include" >> $GITHUB_ENV
+        run: echo OS_SPECIFIC_CPPFLAGS="-I$(brew --prefix)/include" >> $GITHUB_ENV
 
       - name: 'autoreconf'
         run: autoreconf -i -f

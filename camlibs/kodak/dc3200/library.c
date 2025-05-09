@@ -29,6 +29,7 @@
  *                                                  *
  ****************************************************/
 
+#define _DARWIN_C_SOURCE
 #include "config.h"
 #include "library.h"
 
