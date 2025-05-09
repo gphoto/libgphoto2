@@ -10,7 +10,9 @@
 #mesondefine HAS_LE32TOH
 #mesondefine HAS_NTOHL_ARPA_INET
 #mesondefine HAS_NTOHL_NETINET_IN
+#mesondefine HAS_BSWAP_32
 #mesondefine HAS_SWAP32
+#mesondefine HAS_BSWAP32
 #mesondefine HAS_BYTE_SWAP_LONG
 #mesondefine HAS_NXSWAPLONG
 
@@ -27,7 +29,17 @@
 #endif
 
 /* Define generic byte swapping functions */
-#if HAS_SWAP32
+#if HAS_BSWAP_32
+#include <byteswap.h>
+# define swap16(x) bswap_16(x)
+# define swap32(x) bswap_32(x)
+# define swap64(x) bswap_64(x)
+#elif HAS_SWAP32
+# if !MACHINE_ENDIAN_INCLUDED
+#  include <machine/endian.h>
+# endif
+/* swap32 and swap16 are defined in machine/endian.h */
+#elif HAS_BSWAP32
 # if !MACHINE_ENDIAN_INCLUDED
 #  include <machine/endian.h>
 # endif
