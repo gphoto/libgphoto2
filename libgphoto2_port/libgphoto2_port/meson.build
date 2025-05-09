@@ -58,7 +58,7 @@ pkg.generate(
   filebase: 'libgphoto2_port',
   description: 'Device-independent access to serial, USB, and other ports',
   url: 'http://gphoto.org/proj/libgphoto2/',
-  subdirs: 'gphoto2',
+  subdirs: ['.', 'gphoto2'],
   version: libgphoto2_port_version,
   variables: [
     'VERSION=@0@'.format(libgphoto2_port_version),
