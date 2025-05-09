@@ -1,7 +1,7 @@
 test_i18n_exe = executable(
   'test-i18n',
   'test-i18n.c',
-  dependencies: libgphoto2_dep,
+  dependencies: [ libgphoto2_dep, intl_dep ],
 )
 
 test(
