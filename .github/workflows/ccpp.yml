@@ -12,10 +12,6 @@ on:
 
 env:
   LC_ALL: C
-  COMMON_CONFIGURE_FLAGS: >-
-    --enable-vusb
-    --with-camlibs=everything
-    SLEEP=no
 
 jobs:
   build:
@@ -28,21 +24,16 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, macos-latest]
+        include:
+           - os: ubuntu-latest
+             ldd: 'ldd'
+             iolibs: 'disk,vusb,ptpip,serial,libusb1,usb,usbdiskdirect,usbscsi'
+           - os: macos-latest
+             ldd: 'otool -L'
+             iolibs: 'disk,vusb,ptpip,serial,libusb1,usb'
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: 'Determine number of cores to build on (Linux)'
-        if: runner.os == 'Linux'
-        run: echo NPROC=$(nproc) >> $GITHUB_ENV
-
-      - name: 'Determine number of cores to build on (macOS)'
-        if: runner.os == 'macOS'
-        run: echo NPROC=$(sysctl -n hw.logicalcpu) >> $GITHUB_ENV
-
-      # Setting MAKE interferes with Makefile{,.in,.am} using $(MAKE) internally
-      - name: 'Prepare concurrent make'
-        run: if test "x$NPROC" = x; then echo ci_MAKE="make" >> $GITHUB_ENV; echo "NPROC must be set"; exit 1; else echo ci_MAKE="make -j${NPROC} -l${NPROC}" >> $GITHUB_ENV; fi
 
       - name: 'Update software database (Linux)'
         if: runner.os == 'Linux'
@@ -58,65 +49,42 @@ jobs:
 
       - name: 'Install build requirements (Linux)'
         if: runner.os == 'Linux'
-        run: sudo apt-get install -y autopoint gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev libltdl-dev
+        run: |
+          sudo apt-get install -y python3-pip ninja-build gettext libusb-1.0-0-dev libcurl4-openssl-dev libgd-dev libltdl-dev
+          pip3 install --user meson==1.4.2
 
       - name: 'Install build requirements (macOS)'
         if: runner.os == 'macOS'
-        run: brew install automake gd gettext libexif libtool libusb
+        run: brew install meson gd gettext libexif libtool libusb
 
       - name: 'OS specific build flags (Linux)'
         if: runner.os == 'Linux'
-        run: echo OS_SPECIFIC_CPPFLAGS="" >> $GITHUB_ENV
+        run: echo CPPFLAGS="" >> $GITHUB_ENV
 
-      # FIXME: Fix source to build without the -D_DARWIN_C_SOURCE here
       - name: 'OS specific build flags (macOS)'
         if: runner.os == 'macOS'
-        run: echo OS_SPECIFIC_CPPFLAGS="-D_DARWIN_C_SOURCE -I$(brew --prefix)/include" >> $GITHUB_ENV
+        run: |
+          echo CPPFLAGS="-I$(brew --prefix)/include" >> $GITHUB_ENV
+          echo LDFLAGS="-L$(brew --prefix)/lib" >> $GITHUB_ENV
 
-      - name: 'autoreconf'
-        run: autoreconf -i -f
+      - name: 'Setup'
+        run: meson setup _build -Diolibs=${{ matrix.iolibs }} --prefix=$PWD/__prefix -Dlibdir=$PWD/__prefix/lib
 
-      - name: 'configure'
-        run: ./configure ${COMMON_CONFIGURE_FLAGS} --prefix=$PWD/__prefix
+      - name: 'Compile'
+        run: meson compile -C _build
 
-      - name: 'make'
-        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}"
+      - name: 'Test'
+        run: meson test --print-errorlogs --no-suite=no-ci -C _build
 
-      - name: 'make check'
-        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" check
-
-      # FIXME: fix make distcheck to run on macOS
-      - name: 'make distcheck (non-macOS)'
-        if: runner.os != 'macOS'
-        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" DISTCHECK_CONFIGURE_FLAGS="${COMMON_CONFIGURE_FLAGS}" distcheck
-
-      - name: 'make install'
-        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" install
-
-      - name: 'make installcheck'
-        run: set -x; ${ci_MAKE} CPPFLAGS="${OS_SPECIFIC_CPPFLAGS}" installcheck
-
-      - name: 'find ldd replacement (MacOS)'
-        if: runner.os == 'macOS'
-        run: echo 'LDD=otool -L' >> $GITHUB_ENV
-
-      - name: 'find ldd replacement (Linux)'
-        if: runner.os == 'Linux'
-        run: echo 'LDD=ldd' >> $GITHUB_ENV
+      - name: 'Install'
+        run: meson install -C _build
 
       - name: 'Build and run example libgphoto2 frontend (ambs-lgp2-frontend)'
         run: |
-          set -x
-          exec 2>&1
-          abs_top_builddir="$PWD"
-          export PKG_CONFIG_PATH="${abs_top_builddir}/__prefix/lib/pkgconfig"
-          export LD_LIBRARY_PATH="${abs_top_builddir}/__prefix/lib"
+          export PKG_CONFIG_PATH="$PWD/__prefix/lib/pkgconfig"
+          export LD_LIBRARY_PATH="$PWD/__prefix/lib"
           cd examples/ambs-lgp2-frontend
-          autoreconf -vis
-          ./configure --prefix="$PWD/__pref"
-          make
-          ${LDD-false} ambs-lgp2-frontend
-          ./ambs-lgp2-frontend
-          make install
-          ${LDD-false} __pref/bin/ambs-lgp2-frontend
+          meson setup _build --prefix="$PWD/__pref"
+          meson install -C _build
+          ${{ matrix.ldd }} __pref/bin/ambs-lgp2-frontend
           __pref/bin/ambs-lgp2-frontend

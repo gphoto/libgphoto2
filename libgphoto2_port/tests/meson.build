@@ -1,3 +1,7 @@
+gp_port_test_env = [
+  'IOLIBS=@0@'.format(':'.join(iolib_paths)),
+]
+
 test_gp_port_exe = executable(
   'test-gp-port',
   'test-gp-port.c',
@@ -7,9 +11,8 @@ test_gp_port_exe = executable(
 test(
   'test-gp-port',
   test_gp_port_exe,
-  env: [
-    'LTDL_LIBRARY_PATH=@0@'.format(':'.join(iolib_paths)),
-  ]
+  env: gp_port_test_env,
+  suite: 'no-ci',
 )
 
 test_port_list_exe = executable(
@@ -21,7 +24,5 @@ test_port_list_exe = executable(
 test(
   'test-port-list',
   test_port_list_exe,
-  env: [
-    'LTDL_LIBRARY_PATH=@0@'.format(':'.join(iolib_paths)),
-  ]
+  env: gp_port_test_env,
 )
