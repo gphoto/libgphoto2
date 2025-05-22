@@ -5082,7 +5082,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	log_objectinfo(params, &oi);
 	sprintf (path->folder,"/");
 	if (oi.Filename && strlen(oi.Filename) > 4) {
-		sprintf (path->name, "%s", oi.Filename);
+		sprintf (path->name, "capt_%s", oi.Filename);  // capt prefix is mandatory when deleting file
 	} else {
 		if (oi.ObjectFormat == PTP_OFC_SONY_RAW)
 			sprintf (path->name, "capt%04d.arw", params->capcnt++);
@@ -7056,14 +7056,14 @@ downloadnow:
 				if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
 					GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
 					if (oi.Filename && strlen(oi.Filename) > 4) {
-						sprintf (path->name, "%s", oi.Filename);
+						sprintf (path->name, "capt_%s", oi.Filename);  // capt prefix is mandatory when deleting file
 					} else {
 						sprintf (path->name, "capt%04d.arw", params->capcnt++);
 					}
 					gp_file_set_mime_type (file, "image/x-sony-arw"); /* FIXME */
 				} else {
 					if (oi.Filename && strlen(oi.Filename) > 4) {
-						sprintf (path->name, "%s", oi.Filename);
+						sprintf (path->name, "capt_%s", oi.Filename);  // capt prefix is mandatory when deleting file
 					} else {
 						sprintf (path->name, "capt%04d.jpg", params->capcnt++);
 					}
