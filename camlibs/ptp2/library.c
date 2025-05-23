@@ -5554,6 +5554,7 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 			switch (event.Code) {
 			case PTP_EC_Olympus_ObjectAdded:
 			case PTP_EC_Olympus_ObjectAdded_New:	/* seen in newer traces, https://github.com/gphoto/gphoto2/issues/310 */
+			case PTP_EC_Olympus_CaptureComplete:
 			case PTP_EC_ObjectAdded:
 				newobject = event.Param1;
 				goto downloadfile;
