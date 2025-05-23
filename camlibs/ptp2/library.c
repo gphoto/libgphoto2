@@ -4936,6 +4936,38 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		}
 	}
 
+	/* Clean RAM memory. Image may remain in memory when something went wrong during previous capture.camera,
+	e.g. when uploading/deleting image . In this case the image is immidiately available as object in RAM 0x8001 so
+	function will start download during exposition and we get another image than supposed. It may even accumulate so
+	we will get images from history. Camera on-off does not delete RAM. Just USB reconnection helps.
+	*/
+	do {
+		C_PTP (ptp_sony_getalldevicepropdesc (params)); /* avoid caching */
+		C_PTP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ObjectInMemory, &dpd));
+		GP_LOG_D ("DEBUG== 0xd215 before capture = %d", dpd.CurrentValue.u16);
+
+		if (dpd.CurrentValue.u16 >= 0x8000) {
+
+			uint32_t objecthandle = 0xffffc001;
+			if (dpd.CurrentValue.u16 == 0x8001) {
+				GP_LOG_D ("SONY ObjectInMemory 0x%x seen, cleaning RAM", dpd.CurrentValue.u16);
+				C_PTP (ptp_getobjectinfo (params, objecthandle, &oi));
+				log_objectinfo(params, &oi);
+				ptp_free_objectinfo(&oi);
+				/* PTP_OC_DeleteObject is not supported */
+				unsigned char *ximage = NULL;
+				C_PTP (ptp_getobject(params, objecthandle, &ximage));
+				free (ximage);
+			} else {
+				GP_LOG_D ("SONY ObjectInMemory 0x%x seen, unknown type to clean it", dpd.CurrentValue.u16);
+				/* TODO: might be there also other object (preview, ...) object reported this way ? */
+				break;
+			}
+		} else {
+			break;
+		}
+	} while (TRUE);
+
 	/* half-press */
 	propval.u16 = 2;
 	C_PTP (ptp_sony_setdevicecontrolvalueb (params, PTP_DPC_SONY_ShutterHalfRelease, &propval, PTP_DTC_UINT16));
@@ -5046,11 +5078,16 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 	/* FIXME: handle multiple images (as in BurstMode) */
 	C_PTP (ptp_getobjectinfo (params, newobject, &oi));
 
+	log_objectinfo(params, &oi);
 	sprintf (path->folder,"/");
-	if (oi.ObjectFormat == PTP_OFC_SONY_RAW)
-		sprintf (path->name, "capt%04d.arw", params->capcnt++);
-	else
-		sprintf (path->name, "capt%04d.jpg", params->capcnt++);
+	if (oi.Filename && strlen(oi.Filename) > 4) {
+		sprintf (path->name, "capt_%s", oi.Filename);  // capt prefix is mandatory when deleting file
+	} else {
+		if (oi.ObjectFormat == PTP_OFC_SONY_RAW)
+			sprintf (path->name, "capt%04d.arw", params->capcnt++);
+		else
+			sprintf (path->name, "capt%04d.jpg", params->capcnt++);
+	}
 	ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
 	ptp_free_objectinfo (&oi);
 	return ret;
@@ -7018,10 +7055,18 @@ downloadnow:
 				}
 				if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
 					GP_LOG_D ("raw? ofc is 0x%04x, name is %s", oi.ObjectFormat,oi.Filename);
-					sprintf (path->name, "capt%04d.arw", params->capcnt++);
+					if (oi.Filename && strlen(oi.Filename) > 4) {
+						sprintf (path->name, "capt_%s", oi.Filename);  // capt prefix is mandatory when deleting file
+					} else {
+						sprintf (path->name, "capt%04d.arw", params->capcnt++);
+					}
 					gp_file_set_mime_type (file, "image/x-sony-arw"); /* FIXME */
 				} else {
-					sprintf (path->name, "capt%04d.jpg", params->capcnt++);
+					if (oi.Filename && strlen(oi.Filename) > 4) {
+						sprintf (path->name, "capt_%s", oi.Filename);  // capt prefix is mandatory when deleting file
+					} else {
+						sprintf (path->name, "capt%04d.jpg", params->capcnt++);
+					}
 					gp_file_set_mime_type (file, GP_MIME_JPEG);
 				}
 				gp_file_set_mtime (file, time(NULL));
