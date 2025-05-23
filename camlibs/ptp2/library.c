@@ -4957,7 +4957,6 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 				/* PTP_OC_DeleteObject is not supported */
 				unsigned char *ximage = NULL;
 				C_PTP (ptp_getobject(params, objecthandle, &ximage));
-				/* PTP_OC_DeleteObject is not supported */
 				free (ximage);
 			} else {
 				GP_LOG_D ("SONY ObjectInMemory 0x%x seen, unknown type to clean it", dpd.CurrentValue.u16);
