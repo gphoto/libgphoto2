@@ -37,7 +37,7 @@ $(HTML_APIDOC_DIR).log: Doxyfile
 	  fi; \
 	fi
 
-$(HTML_APIDOC_DIR).tar.gz: $(HTML_APIDOC_DIR).stamp
+$(HTML_APIDOC_DIR).tar.gz: $(HTML_APIDOC_DIR).log
 	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_DIR) | GZIP=--best gzip -c) > $@
 
 $(HTML_APIDOC_INTERNALS_DIR).tar.gz: $(HTML_APIDOC_INTERNALS_DIR).stamp
