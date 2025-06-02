@@ -1,364 +1,374 @@
 # Brazilian Portuguese translation of libgphoto2.
-# Copyright (C) 2002-2019 Free Software Foundation, Inc.
+# Copyright (C) 2024 Free Software Foundation, Inc.
 # This file is distributed under the same license as the libgphoto2 package.
 # Evandro Gardenali <evandro@fasternet.com.br>, 2002.
 # Fabrício Godoy <skarllot@gmail.com>, 2010, 2016, 2019.
+# Rafael Fontenelle <rafaelff@gnome.org>, 2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.5.23\n"
+"Project-Id-Version: libgphoto2_port 2.5.28\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2019-05-04 15:58+0200\n"
-"PO-Revision-Date: 2019-12-24 20:20-0300\n"
-"Last-Translator: Fabrício Godoy <skarllot@gmail.com>\n"
+"POT-Creation-Date: 2022-01-03 11:20+0100\n"
+"PO-Revision-Date: 2024-09-23 13:11-0300\n"
+"Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <ldpbr-translation@lists.sourceforge.net>\n"
 "Language: pt_BR\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-Generator: Gtranslator 46.1\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:411
+#: libgphoto2_port/gphoto2-port-info-list.c:394
 msgid "Generic Port"
 msgstr "Porta genérica"
 
-#: libgphoto2_port/gphoto2-port-result.c:58
+#: libgphoto2_port/gphoto2-port-result.c:42
 msgid "No error"
 msgstr "Sem erro"
 
-#: libgphoto2_port/gphoto2-port-result.c:60
+#: libgphoto2_port/gphoto2-port-result.c:44
 msgid "Unspecified error"
 msgstr "Erro não especificado"
 
-#: libgphoto2_port/gphoto2-port-result.c:62
+#: libgphoto2_port/gphoto2-port-result.c:46
 msgid "I/O problem"
 msgstr "Problema de E/S"
 
-#: libgphoto2_port/gphoto2-port-result.c:64
+#: libgphoto2_port/gphoto2-port-result.c:48
 msgid "Bad parameters"
 msgstr "Parâmetros incorretos"
 
-#: libgphoto2_port/gphoto2-port-result.c:66
+#: libgphoto2_port/gphoto2-port-result.c:50
 msgid "Unsupported operation"
 msgstr "Operação sem suporte"
 
-#: libgphoto2_port/gphoto2-port-result.c:68
+#: libgphoto2_port/gphoto2-port-result.c:52
 msgid "Fixed limit exceeded"
 msgstr "O limite definido foi excedido"
 
-#: libgphoto2_port/gphoto2-port-result.c:70
+#: libgphoto2_port/gphoto2-port-result.c:54
 msgid "Timeout reading from or writing to the port"
 msgstr "Tempo esgotado ao ler ou gravar da/para a porta"
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:56
 msgid "Serial port not supported"
 msgstr "Porta serial sem suporte"
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:58
 msgid "USB port not supported"
 msgstr "Porta USB sem suporte"
 
-#: libgphoto2_port/gphoto2-port-result.c:76
+#: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unknown port"
 msgstr "Porta desconhecida"
 
-#: libgphoto2_port/gphoto2-port-result.c:78
+#: libgphoto2_port/gphoto2-port-result.c:62
 msgid "Out of memory"
 msgstr "Memória cheia"
 
-#: libgphoto2_port/gphoto2-port-result.c:80
+#: libgphoto2_port/gphoto2-port-result.c:64
 msgid "Error loading a library"
 msgstr "Erro ao carregar uma biblioteca"
 
-#: libgphoto2_port/gphoto2-port-result.c:82
+#: libgphoto2_port/gphoto2-port-result.c:66
 msgid "Error initializing the port"
 msgstr "Erro ao inicializar a porta"
 
-#: libgphoto2_port/gphoto2-port-result.c:84
+#: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Error reading from the port"
 msgstr "Erro ao ler da porta"
 
-#: libgphoto2_port/gphoto2-port-result.c:86
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Error writing to the port"
 msgstr "Erro ao escrever na porta"
 
-#: libgphoto2_port/gphoto2-port-result.c:88
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "Error updating the port settings"
 msgstr "Erro ao atualizar as configurações da porta"
 
-#: libgphoto2_port/gphoto2-port-result.c:90
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Error setting the serial port speed"
 msgstr "Erro ao ajustar a velocidade da porta serial"
 
-#: libgphoto2_port/gphoto2-port-result.c:92
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Error clearing a halt condition on the USB port"
 msgstr "Erro ao apagar uma condição de desligamento na porta USB"
 
-#: libgphoto2_port/gphoto2-port-result.c:94
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Could not find the requested device on the USB port"
 msgstr "Não foi possível localizar o dispositivo especificado na porta USB"
 
-#: libgphoto2_port/gphoto2-port-result.c:96
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Could not claim the USB device"
 msgstr "Não foi possível contactar o dispositivo USB"
 
-#: libgphoto2_port/gphoto2-port-result.c:98
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Could not lock the device"
 msgstr "Não foi possível travar o dispositivo"
 
-#: libgphoto2_port/gphoto2-port-result.c:100
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "libhal error"
 msgstr "erro no libhal"
 
-#: libgphoto2_port/gphoto2-port-result.c:102
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Unknown error"
 msgstr "Erro desconhecido"
 
-#: libgphoto2_port/gphoto2-port.c:59
+#: libgphoto2_port/gphoto2-port.c:46
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "Não há suporte a operação \"%s\" por esse dispositivo"
 
-#: libgphoto2_port/gphoto2-port.c:60
+#: libgphoto2_port/gphoto2-port.c:47
 msgid "The port has not yet been initialized"
 msgstr "A porta ainda não foi inicializada"
 
-#: libgphoto2_port/gphoto2-port.c:686
+#: libgphoto2_port/gphoto2-port.c:673
 msgid "low"
 msgstr "baixo"
 
-#: libgphoto2_port/gphoto2-port.c:687
+#: libgphoto2_port/gphoto2-port.c:674
 msgid "high"
 msgstr "alto"
 
-#: libgphoto2_port/gphoto2-port.c:1215
+#: libgphoto2_port/gphoto2-port.c:1202
 msgid "No error description available"
 msgstr "Descrição do erro não disponível"
 
-#: disk/disk.c:149 disk/disk.c:150 disk/disk.c:228 disk/disk.c:229
-#: disk/disk.c:269 disk/disk.c:292
+#: disk/disk.c:133 disk/disk.c:134 disk/disk.c:212 disk/disk.c:213
+#: disk/disk.c:253 disk/disk.c:276
 #, c-format
 msgid "Media '%s'"
 msgstr "Mídia \"%s\""
 
-#: serial/unix.c:230
-#, c-format
-msgid "Could not lock device '%s'"
-msgstr "Não foi possível travar o dispositivo \"%s\""
-
-#: serial/unix.c:240 usbdiskdirect/linux.c:95
-#, c-format
-msgid "Device '%s' is locked by pid %d"
-msgstr "O dispositivo \"%s\" está travado pelo PID %d"
-
-#: serial/unix.c:243 usbdiskdirect/linux.c:98
-#, c-format
-msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "O dispositivo \"%s\" não pôde ser travado (dev_lock retornou %d)"
-
-#: serial/unix.c:272
-#, c-format
-msgid "Device '%s' could not be unlocked."
-msgstr "O dispositivo \"%s\" não pôde ser destravado."
-
-#: serial/unix.c:284 usbdiskdirect/linux.c:127
-#, c-format
-msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "O dispositivo \"%s\" não pôde ser destravado pois está travado pelo PID %d."
-
-#: serial/unix.c:288 usbdiskdirect/linux.c:131
-#, c-format
-msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "O dispositivo \"%s\" não pôde ser destravado (dev_unlock retornou %d)"
-
-#: serial/unix.c:346
-#, c-format
-msgid "Serial Port %i"
-msgstr "Porta serial %i"
-
-#: serial/unix.c:359
-msgid "Serial Port Device"
-msgstr "Dispositivo de porta serial"
-
-#: serial/unix.c:441
-#, c-format
-msgid "Failed to open '%s' (%s)."
-msgstr "Falha ao abrir \"%s\" (%s)."
-
-#: serial/unix.c:461
-#, c-format
-msgid "Could not close '%s' (%s)."
-msgstr "Não foi possível fechar \"%s\" (%s)."
-
-#: serial/unix.c:517
-#, c-format
-msgid "Could not write to port (%s)"
-msgstr "Não foi possível gravar na porta (%s)"
-
-#: serial/unix.c:594
-msgid "Parity error."
-msgstr "Erro de paridade."
-
-#: serial/unix.c:598
-#, c-format
-msgid "Unexpected parity response sequence 0xff 0x%02x."
-msgstr "Sequência de resposta de paridade inesperada 0xff 0x%02x."
-
-#: serial/unix.c:641
-#, c-format
-msgid "Unknown pin %i."
-msgstr "Pino desconhecido %i."
-
-#: serial/unix.c:663
-#, c-format
-msgid "Could not get level of pin %i (%s)."
-msgstr "Não foi possível obter o nível do pino %i (%s)."
-
-#: serial/unix.c:699
-#, c-format
-msgid "Could not set level of pin %i to %i (%s)."
-msgstr "Não foi possível ajustar o nível do pino %i para %i (%s)."
-
-#: serial/unix.c:726
-#, c-format
-msgid "Could not flush '%s' (%s)."
-msgstr "Não foi possível descarregar \"%s\" (%s)."
-
-#: serial/unix.c:838
-#, c-format
-msgid "Could not set the baudrate to %d"
-msgstr "Não foi possível ajustar a taxa de baud para %d"
-
-#: usbdiskdirect/linux.c:234
-msgid "USB Mass Storage direct IO"
-msgstr "E/S direta para armazenamento em massa USB"
-
-#: usbdiskdirect/linux.c:285 usbscsi/linux.c:269
-#, c-format
-msgid "Failed to open '%s' (%m)."
-msgstr "Falhou ao abrir \"%s\" (%m)."
-
-#: usbdiskdirect/linux.c:299 usbscsi/linux.c:297
-#, c-format
-msgid "Could not close '%s' (%m)."
-msgstr "Não foi possível fechar \"%s\" (%m)."
-
-#: usbdiskdirect/linux.c:323
-#, c-format
-msgid "Could not seek to offset: %x on '%s' (%m)."
-msgstr "Não foi possível buscar até a posição %x em \"%s\" (%m)."
-
-#: usbdiskdirect/linux.c:345
-#, c-format
-msgid "Could not write to '%s' (%m)."
-msgstr "Não foi possível escrever para \"%s\" (%m)."
-
-#: usbdiskdirect/linux.c:366
-#, c-format
-msgid "Could not read from '%s' (%m)."
-msgstr "Não foi possível ler de \"%s\" (%m)."
-
-#: usb/libusb.c:264 libusb1/libusb1.c:401
+#: libusb1/libusb1.c:386 usb/libusb.c:248
 #, c-format
 msgid "Could not open USB device (%s)."
 msgstr "Não foi possível abrir o dispositivo USB (%s)."
 
-#: usb/libusb.c:277 libusb1/libusb1.c:410
+#: libusb1/libusb1.c:395 usb/libusb.c:261
 msgid "Camera is already in use."
 msgstr "A câmera já está em uso."
 
-#: usb/libusb.c:285
-#, c-format
-msgid "Could not detach kernel driver '%s' of camera device."
-msgstr "Não foi possível desanexar o driver de kernel \"%s\" do dispositivo de câmera."
+#: libusb1/libusb1.c:404
+msgid "Could not detach kernel driver of camera device."
+msgstr "Não foi possível desanexar o driver de kernel do dispositivo de câmera."
 
-#: usb/libusb.c:290 libusb1/libusb1.c:425
+#: libusb1/libusb1.c:410 usb/libusb.c:274
 msgid "Could not query kernel driver of device."
 msgstr "Não foi possível examinar o driver de kernel do dispositivo."
 
-#: usb/libusb.c:299 libusb1/libusb1.c:432
+#: libusb1/libusb1.c:417 usb/libusb.c:283
 #, c-format
 msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
 msgstr "Não foi possível chamar a interface %d (%s). Tenha certeza de que nenhum outro programa (%s) ou módulo do kernel (como %s) está usando o dispositivo, e que você tem acesso de leitura e escrita para o dispositivo."
 
-#: usb/libusb.c:311 libusb1/libusb1.c:443
+#: libusb1/libusb1.c:428 usb/libusb.c:295
 msgid "MacOS PTPCamera service"
 msgstr "Serviço PTPCamera MacOS"
 
-#: usb/libusb.c:313 libusb1/libusb1.c:445
+#: libusb1/libusb1.c:430 usb/libusb.c:297
 msgid "unknown libgphoto2 using program"
 msgstr "O programa está usando uma libgphoto2 desconhecida"
 
-#: usb/libusb.c:330 libusb1/libusb1.c:514
+#: libusb1/libusb1.c:499 usb/libusb.c:314
 #, c-format
 msgid "Could not release interface %d (%s)."
 msgstr "Não foi possível liberar a interface %d (%s)."
 
-#: usb/libusb.c:345 libusb1/libusb1.c:528
+#: libusb1/libusb1.c:513 usb/libusb.c:329
 #, c-format
 msgid "Could not reset USB port (%s)."
 msgstr "Não foi possível reiniciar a porta USB (%s)."
 
-#: usb/libusb.c:375
-#, c-format
-msgid "Could not close USB port (%s)."
-msgstr "Não foi possível fechar a porta USB (%s)."
+#: libusb1/libusb1.c:522
+msgid "Could not reattach kernel driver of camera device."
+msgstr "Não foi possível reanexar o driver de kernel do dispositivo de câmera."
 
-#: usb/libusb.c:637 libusb1/libusb1.c:971
+#: libusb1/libusb1.c:956 usb/libusb.c:621
 #, c-format
 msgid "Could not set config %d/%d (%s)"
 msgstr "Não foi possível definir a configuração %d/%d (%s)"
 
-#: usb/libusb.c:668 libusb1/libusb1.c:1000
+#: libusb1/libusb1.c:985 usb/libusb.c:652
 #, c-format
 msgid "Could not set altsetting from %d to %d (%s)"
 msgstr "Não foi possível definir a configuração alternativa de %d para %d (%s)"
 
-#: usb/libusb.c:757 libusb1/libusb1.c:1165
-#, c-format
-msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "O fabricante ou o ID do produto (0x%x,0x%x) não é válido."
-
-#: usb/libusb.c:828 usb/libusb.c:914 libusb1/libusb1.c:1134
-#: libusb1/libusb1.c:1226
+#: libusb1/libusb1.c:1119 libusb1/libusb1.c:1211 usb/libusb.c:812
+#: usb/libusb.c:898
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Não foi possível localizar o dispositivo USB (fabricante 0x%x, produto 0x%x). Tenha certeza de que esse dispositivo está conectado ao computador."
 
-#: usb/libusb.c:1207 libusb1/libusb1.c:1515
+#: libusb1/libusb1.c:1150 usb/libusb.c:741
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "O fabricante ou o ID do produto (0x%x,0x%x) não é válido."
+
+#: libusb1/libusb1.c:1500 usb/libusb.c:1191
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Não foi possível localizar o dispositivo USB (classe 0x%x, subclasse 0x%x, protocolo 0x%x). Tenha certeza de que esse dispositivo está conectado ao computador."
 
-#: libusb1/libusb1.c:419
-msgid "Could not detach kernel driver of camera device."
-msgstr "Não foi possível desanexar o driver de kernel do dispositivo de câmera."
+#: ptpip/ptpip.c:161
+msgid "PTP/IP Connection"
+msgstr "Conexão PTP/IP"
 
-#: libusb1/libusb1.c:537
-msgid "Could not reattach kernel driver of camera device."
-msgstr "Não foi possível reanexar o driver de kernel do dispositivo de câmera."
+#: ptpip/ptpip.c:174
+msgid "IP Connection"
+msgstr "Conexão IP"
 
-#: usbscsi/linux.c:108
+#: serial/unix.c:209
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr "Não foi possível travar o dispositivo \"%s\""
+
+#: serial/unix.c:219 usbdiskdirect/linux.c:79
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "O dispositivo \"%s\" está travado pelo PID %d"
+
+#: serial/unix.c:222 usbdiskdirect/linux.c:82
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "O dispositivo \"%s\" não pôde ser travado (dev_lock retornou %d)"
+
+#: serial/unix.c:251
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "O dispositivo \"%s\" não pôde ser destravado."
+
+#: serial/unix.c:263 usbdiskdirect/linux.c:111
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "O dispositivo \"%s\" não pôde ser destravado pois está travado pelo PID %d."
+
+#: serial/unix.c:267 usbdiskdirect/linux.c:115
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "O dispositivo \"%s\" não pôde ser destravado (dev_unlock retornou %d)"
+
+#: serial/unix.c:313
+#, c-format
+msgid "Serial Port %i"
+msgstr "Porta serial %i"
+
+#: serial/unix.c:326
+msgid "Serial Port Device"
+msgstr "Dispositivo de porta serial"
+
+#: serial/unix.c:401
+#, c-format
+msgid "Failed to open '%s' (%s)."
+msgstr "Falha ao abrir \"%s\" (%s)."
+
+#: serial/unix.c:421
+#, c-format
+msgid "Could not close '%s' (%s)."
+msgstr "Não foi possível fechar \"%s\" (%s)."
+
+#: serial/unix.c:477
+#, c-format
+msgid "Could not write to port (%s)"
+msgstr "Não foi possível gravar na porta (%s)"
+
+#: serial/unix.c:552
+msgid "Parity error."
+msgstr "Erro de paridade."
+
+#: serial/unix.c:556
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "Sequência de resposta de paridade inesperada 0xff 0x%02x."
+
+#: serial/unix.c:599
+#, c-format
+msgid "Unknown pin %i."
+msgstr "Pino desconhecido %i."
+
+#: serial/unix.c:621
+#, c-format
+msgid "Could not get level of pin %i (%s)."
+msgstr "Não foi possível obter o nível do pino %i (%s)."
+
+#: serial/unix.c:657
+#, c-format
+msgid "Could not set level of pin %i to %i (%s)."
+msgstr "Não foi possível ajustar o nível do pino %i para %i (%s)."
+
+#: serial/unix.c:684
+#, c-format
+msgid "Could not flush '%s' (%s)."
+msgstr "Não foi possível descarregar \"%s\" (%s)."
+
+#: serial/unix.c:778
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "Não foi possível ajustar a taxa de baud para %d"
+
+#: usb/libusb.c:269
+#, c-format
+msgid "Could not detach kernel driver '%s' of camera device."
+msgstr "Não foi possível desanexar o driver de kernel \"%s\" do dispositivo de câmera."
+
+#: usb/libusb.c:359
+#, c-format
+msgid "Could not close USB port (%s)."
+msgstr "Não foi possível fechar a porta USB (%s)."
+
+#: usbdiskdirect/linux.c:218
+msgid "USB Mass Storage direct IO"
+msgstr "E/S direta para armazenamento em massa USB"
+
+#: usbdiskdirect/linux.c:269 usbscsi/linux.c:253
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "Falhou ao abrir \"%s\" (%m)."
+
+#: usbdiskdirect/linux.c:283 usbscsi/linux.c:281
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "Não foi possível fechar \"%s\" (%m)."
+
+#: usbdiskdirect/linux.c:307
+#, c-format
+msgid "Could not seek to offset: %x on '%s' (%m)."
+msgstr "Não foi possível buscar até a posição %x em \"%s\" (%m)."
+
+#: usbdiskdirect/linux.c:329
+#, c-format
+msgid "Could not write to '%s' (%m)."
+msgstr "Não foi possível escrever para \"%s\" (%m)."
+
+#: usbdiskdirect/linux.c:350
+#, c-format
+msgid "Could not read from '%s' (%m)."
+msgstr "Não foi possível ler de \"%s\" (%m)."
+
+#: usbscsi/linux.c:92
 #, c-format
 msgid "Device '%s' is locked by another app."
 msgstr "O dispositivo \"%s\" está bloqueado por outro aplicativo."
 
-#: usbscsi/linux.c:113
+#: usbscsi/linux.c:97
 #, c-format
 msgid "Failed to lock '%s' (%m)."
 msgstr "Falha ao bloquear \"%s\" (%m)."
 
-#: usbscsi/linux.c:129
+#: usbscsi/linux.c:113
 #, c-format
 msgid "Failed to unlock '%s' (%m)."
 msgstr "Falha ao desbloquear \"%s\" (%m)."
 
-#: usbscsi/linux.c:230
+#: usbscsi/linux.c:214
 msgid "USB Mass Storage raw SCSI"
 msgstr "Armazenamento em massa USB bruto SCSI"
 
-#: usbscsi/linux.c:341
+#: usbscsi/linux.c:325
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
 msgstr "Não foi possível enviar um comando SCSI para \"%s\" (%m)."
