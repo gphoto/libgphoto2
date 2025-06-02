@@ -11,10 +11,16 @@ ptp2:
 * Big code and (canon eos) debug outout cleanups by Axel W
 * --summary output format changed to be more condensed
 * Canon EOS: imageformat output changed
+* Canon: added disablemodedial
+* Canon: keepdeviceon send less often to speed up
+* Sony: Now officially documented by Sony. Changes imported from the documentation.
 * Sony: support newer sony property format
+* Sony: added capturemode, focalposition, magnifysetting, spotfocusarea,
 * Sony: fixed crash in movie option
+* Panasonic: bugfixes
 * Fuji: configurations added, af drive manual, availableshots, graineffect, rawcompression
 * Fuji: bugfixes
+* Nikon: support 32bit properties
 * Added ids:
   - Canon EOS R100, R3, R8, R50
   - Sony Alpha A6100, ZV-E10, A6700
@@ -32,6 +38,7 @@ ports/serial:
 all:
 * IOLIBS and CAMLIBS now runtime configurable
 * Builds use silent rules by default now
+* Meson buildsupport, parallel to automake
 
 translations:
 * added georgian, friulian, polish, romanian, ukrainian, chinese
