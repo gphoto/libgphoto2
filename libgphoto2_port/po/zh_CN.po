@@ -3,362 +3,371 @@
 # This file is distributed under the same license as the libgphoto2 package.
 # Wang Li <charles@linux.net.cn>, 2002
 # Mingye Wang (Arthur2e5) <arthur200126@gmail.com>, 2016.
+# Boyuan Yang <073plan@gmail.com>, 2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.5.10\n"
+"Project-Id-Version: libgphoto2_port 2.5.28\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2016-02-22 21:02+0100\n"
-"PO-Revision-Date: 2016-10-16 16:31-0400\n"
-"Last-Translator: Mingye Wang (Arthur2e5) <arthur200126@gmail.com>\n"
+"POT-Creation-Date: 2022-01-03 11:20+0100\n"
+"PO-Revision-Date: 2024-08-26 20:34-0400\n"
+"Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Bugs: Report translation errors to the Language-Team address.\n"
-"X-Generator: Poedit 1.8.7\n"
+"X-Generator: Poedit 2.4.3\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:409
+#: libgphoto2_port/gphoto2-port-info-list.c:394
 msgid "Generic Port"
 msgstr "通用端口"
 
-#: libgphoto2_port/gphoto2-port-result.c:58
+#: libgphoto2_port/gphoto2-port-result.c:42
 msgid "No error"
 msgstr "无错误"
 
-#: libgphoto2_port/gphoto2-port-result.c:60
+#: libgphoto2_port/gphoto2-port-result.c:44
 msgid "Unspecified error"
 msgstr "未指明的错误"
 
-#: libgphoto2_port/gphoto2-port-result.c:62
+#: libgphoto2_port/gphoto2-port-result.c:46
 msgid "I/O problem"
 msgstr "I/O 问题"
 
-#: libgphoto2_port/gphoto2-port-result.c:64
+#: libgphoto2_port/gphoto2-port-result.c:48
 msgid "Bad parameters"
 msgstr "错误的参数"
 
-#: libgphoto2_port/gphoto2-port-result.c:66
+#: libgphoto2_port/gphoto2-port-result.c:50
 msgid "Unsupported operation"
 msgstr "不支持的操作"
 
-#: libgphoto2_port/gphoto2-port-result.c:68
+#: libgphoto2_port/gphoto2-port-result.c:52
 msgid "Fixed limit exceeded"
 msgstr "超出了固定限制"
 
-#: libgphoto2_port/gphoto2-port-result.c:70
+#: libgphoto2_port/gphoto2-port-result.c:54
 msgid "Timeout reading from or writing to the port"
 msgstr "读取或写入端口超时"
 
-#: libgphoto2_port/gphoto2-port-result.c:72
+#: libgphoto2_port/gphoto2-port-result.c:56
 msgid "Serial port not supported"
 msgstr "不支持串口"
 
-#: libgphoto2_port/gphoto2-port-result.c:74
+#: libgphoto2_port/gphoto2-port-result.c:58
 msgid "USB port not supported"
 msgstr "不支持 USB 接口"
 
-#: libgphoto2_port/gphoto2-port-result.c:76
+#: libgphoto2_port/gphoto2-port-result.c:60
 msgid "Unknown port"
 msgstr "未知端口"
 
-#: libgphoto2_port/gphoto2-port-result.c:78
+#: libgphoto2_port/gphoto2-port-result.c:62
 msgid "Out of memory"
 msgstr "内存耗尽"
 
-#: libgphoto2_port/gphoto2-port-result.c:80
+#: libgphoto2_port/gphoto2-port-result.c:64
 msgid "Error loading a library"
-msgstr "装入库出错"
+msgstr "加载库出错"
 
-#: libgphoto2_port/gphoto2-port-result.c:82
+#: libgphoto2_port/gphoto2-port-result.c:66
 msgid "Error initializing the port"
 msgstr "初始化端口出错"
 
-#: libgphoto2_port/gphoto2-port-result.c:84
+#: libgphoto2_port/gphoto2-port-result.c:68
 msgid "Error reading from the port"
 msgstr "读端口出错"
 
-#: libgphoto2_port/gphoto2-port-result.c:86
+#: libgphoto2_port/gphoto2-port-result.c:70
 msgid "Error writing to the port"
 msgstr "写端口出错"
 
-#: libgphoto2_port/gphoto2-port-result.c:88
+#: libgphoto2_port/gphoto2-port-result.c:72
 msgid "Error updating the port settings"
 msgstr "更新端口设置出错"
 
-#: libgphoto2_port/gphoto2-port-result.c:90
+#: libgphoto2_port/gphoto2-port-result.c:74
 msgid "Error setting the serial port speed"
 msgstr "设置串口速度出错"
 
-#: libgphoto2_port/gphoto2-port-result.c:92
+#: libgphoto2_port/gphoto2-port-result.c:76
 msgid "Error clearing a halt condition on the USB port"
 msgstr "清除 USB 端口的一个中止条件出错"
 
-#: libgphoto2_port/gphoto2-port-result.c:94
+#: libgphoto2_port/gphoto2-port-result.c:78
 msgid "Could not find the requested device on the USB port"
 msgstr "无法在 USB 端口找到请求的设备"
 
-#: libgphoto2_port/gphoto2-port-result.c:96
+#: libgphoto2_port/gphoto2-port-result.c:80
 msgid "Could not claim the USB device"
 msgstr "无法请求 USB 设备"
 
-#: libgphoto2_port/gphoto2-port-result.c:98
+#: libgphoto2_port/gphoto2-port-result.c:82
 msgid "Could not lock the device"
 msgstr "无法锁定设备"
 
-#: libgphoto2_port/gphoto2-port-result.c:100
+#: libgphoto2_port/gphoto2-port-result.c:84
 msgid "libhal error"
 msgstr "libhal 错误"
 
-#: libgphoto2_port/gphoto2-port-result.c:102
+#: libgphoto2_port/gphoto2-port-result.c:86
 msgid "Unknown error"
 msgstr "未知的错误"
 
-#: libgphoto2_port/gphoto2-port.c:59
+#: libgphoto2_port/gphoto2-port.c:46
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "该设备不支持操作‘%s’"
 
-#: libgphoto2_port/gphoto2-port.c:60
+#: libgphoto2_port/gphoto2-port.c:47
 msgid "The port has not yet been initialized"
 msgstr "端口尚未初始化"
 
-#: libgphoto2_port/gphoto2-port.c:682
+#: libgphoto2_port/gphoto2-port.c:673
 msgid "low"
 msgstr "低"
 
-#: libgphoto2_port/gphoto2-port.c:683
+#: libgphoto2_port/gphoto2-port.c:674
 msgid "high"
 msgstr "高"
 
-#: libgphoto2_port/gphoto2-port.c:1211
+#: libgphoto2_port/gphoto2-port.c:1202
 msgid "No error description available"
 msgstr "没有可用的错误描述"
 
-#: disk/disk.c:147 disk/disk.c:148 disk/disk.c:224 disk/disk.c:225
-#: disk/disk.c:265 disk/disk.c:288
+#: disk/disk.c:133 disk/disk.c:134 disk/disk.c:212 disk/disk.c:213
+#: disk/disk.c:253 disk/disk.c:276
 #, c-format
 msgid "Media '%s'"
 msgstr "介质 %s"
 
-#: serial/unix.c:223
-#, c-format
-msgid "Could not lock device '%s'"
-msgstr "无法锁定设备‘%s’"
-
-#: serial/unix.c:233 usbdiskdirect/linux.c:95
-#, c-format
-msgid "Device '%s' is locked by pid %d"
-msgstr "设备‘%s’已经被进行号为 %d 的进程锁定"
-
-#: serial/unix.c:236 usbdiskdirect/linux.c:98
-#, c-format
-msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "无法锁定设备‘%s’(dev_lock 返回 %d)"
-
-#: serial/unix.c:265
-#, c-format
-msgid "Device '%s' could not be unlocked."
-msgstr "无法解锁设备‘%s’。"
-
-#: serial/unix.c:277 usbdiskdirect/linux.c:127
-#, c-format
-msgid "Device '%s' could not be unlocked as it is locked by pid %d."
-msgstr "由于设备‘%s’已被进程号为 %d 的进程锁定，所以无法锁定。"
-
-#: serial/unix.c:281 usbdiskdirect/linux.c:131
-#, c-format
-msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "无法解锁设备‘%s’(dev_unlock 返回 %d)"
-
-#: serial/unix.c:339
-#, c-format
-msgid "Serial Port %i"
-msgstr "串口 %i"
-
-#: serial/unix.c:352
-msgid "Serial Port Device"
-msgstr "串口设备"
-
-#: serial/unix.c:434
-#, c-format
-msgid "Failed to open '%s' (%s)."
-msgstr "打开 %s 时失败 (%s)。"
-
-#: serial/unix.c:454
-#, c-format
-msgid "Could not close '%s' (%s)."
-msgstr "无法关闭 %s (%s)。"
-
-#: serial/unix.c:510
-#, c-format
-msgid "Could not write to port (%s)"
-msgstr "无法写入端口 (%s)"
-
-#: serial/unix.c:587
-msgid "Parity error."
-msgstr "奇偶错误。"
-
-#: serial/unix.c:591
-#, c-format
-msgid "Unexpected parity response sequence 0xff 0x%02x."
-msgstr "意外的奇偶应答序列 0xff 0x%02x。"
-
-#: serial/unix.c:634
-#, c-format
-msgid "Unknown pin %i."
-msgstr "未知插脚 %i。"
-
-#: serial/unix.c:656
-#, c-format
-msgid "Could not get level of pin %i (%s)."
-msgstr "无法获取针脚 %i 的级别 (%s)。"
-
-#: serial/unix.c:692
-#, c-format
-msgid "Could not set level of pin %i to %i (%s)."
-msgstr "无法将针脚 %i 的级别设置为 %i (%s)。"
-
-#: serial/unix.c:719
-#, c-format
-msgid "Could not flush '%s' (%s)."
-msgstr "无法刷新 %s (%s)。"
-
-#: serial/unix.c:831
-#, c-format
-msgid "Could not set the baudrate to %d"
-msgstr "无法设置将波特率设置为 %d"
-
-#: usbdiskdirect/linux.c:234
-msgid "USB Mass Storage direct IO"
-msgstr "USB 大容量存储器直接 IO"
-
-#: usbdiskdirect/linux.c:285 usbscsi/linux.c:269
-#, c-format
-msgid "Failed to open '%s' (%m)."
-msgstr "打开‘%s’(%m)失败。"
-
-#: usbdiskdirect/linux.c:299 usbscsi/linux.c:297
-#, c-format
-msgid "Could not close '%s' (%m)."
-msgstr "无法关闭‘%s’(%m)。"
-
-#: usbdiskdirect/linux.c:323
-#, c-format
-msgid "Could not seek to offset: %x on '%s' (%m)."
-msgstr "无法寻址到偏移：%x 于 %s (%m)。"
-
-#: usbdiskdirect/linux.c:345
-#, c-format
-msgid "Could not write to '%s' (%m)."
-msgstr "无法写入 %s (%m)。"
-
-#: usbdiskdirect/linux.c:366
-#, c-format
-msgid "Could not read from '%s' (%m)."
-msgstr "无法读取 %s (%m)。"
-
-#: usb/libusb.c:260 libusb1/libusb1.c:373
+#: libusb1/libusb1.c:386 usb/libusb.c:248
 #, c-format
 msgid "Could not open USB device (%s)."
 msgstr "无法打开 USB 设备 (%s)。"
 
-#: usb/libusb.c:273 libusb1/libusb1.c:382
+#: libusb1/libusb1.c:395 usb/libusb.c:261
 msgid "Camera is already in use."
 msgstr "照相机在使用中。"
 
-#: usb/libusb.c:281
-#, c-format
-msgid "Could not detach kernel driver '%s' of camera device."
-msgstr "无法卸除照相机设备的内核驱动程序 %s。"
+#: libusb1/libusb1.c:404
+msgid "Could not detach kernel driver of camera device."
+msgstr "无法卸除照相机设备的内核驱动程序。"
 
-#: usb/libusb.c:286 libusb1/libusb1.c:397
+#: libusb1/libusb1.c:410 usb/libusb.c:274
 msgid "Could not query kernel driver of device."
 msgstr "无法查询设备的内核驱动程序。"
 
-#: usb/libusb.c:295 libusb1/libusb1.c:404
+#: libusb1/libusb1.c:417 usb/libusb.c:283
 #, c-format
 msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
 msgstr "无法请求接口 %d (%s)。请确认没有其它程序 (%s) 或内核模块 (例如 %s) 正在使用这个设备，并且您有对这个设备的读/写权。"
 
-#: usb/libusb.c:307 libusb1/libusb1.c:415
+#: libusb1/libusb1.c:428 usb/libusb.c:295
 msgid "MacOS PTPCamera service"
 msgstr "MacOS PTPCamera 服务"
 
-#: usb/libusb.c:309 libusb1/libusb1.c:417
+#: libusb1/libusb1.c:430 usb/libusb.c:297
 msgid "unknown libgphoto2 using program"
 msgstr "未知的 libgphoto2 正使用程序"
 
-#: usb/libusb.c:326 libusb1/libusb1.c:484
+#: libusb1/libusb1.c:499 usb/libusb.c:314
 #, c-format
 msgid "Could not release interface %d (%s)."
 msgstr "无法释放接口 %d (%s)。"
 
-#: usb/libusb.c:341 libusb1/libusb1.c:498
+#: libusb1/libusb1.c:513 usb/libusb.c:329
 #, c-format
 msgid "Could not reset USB port (%s)."
 msgstr "无法重置 USB 端口 (%s)。"
 
-#: usb/libusb.c:371
-#, c-format
-msgid "Could not close USB port (%s)."
-msgstr "无法关闭 USB 端口 (%s)。"
+#: libusb1/libusb1.c:522
+msgid "Could not reattach kernel driver of camera device."
+msgstr "无法重新装载照相机设备的内核驱动程序。"
 
-#: usb/libusb.c:632 libusb1/libusb1.c:839
+#: libusb1/libusb1.c:956 usb/libusb.c:621
 #, c-format
 msgid "Could not set config %d/%d (%s)"
 msgstr "无法设置配置 %d/%d (%s)"
 
-#: usb/libusb.c:663 libusb1/libusb1.c:868
+#: libusb1/libusb1.c:985 usb/libusb.c:652
 #, c-format
 msgid "Could not set altsetting from %d to %d (%s)"
 msgstr "无法设置从 %d 到 %d 的替代设置 (%s)"
 
-#: usb/libusb.c:752 libusb1/libusb1.c:1033
-#, c-format
-msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
-msgstr "给出的供应商或产品 id (0x%x、0x%x) 不合法。"
-
-#: usb/libusb.c:823 usb/libusb.c:909 libusb1/libusb1.c:1002
-#: libusb1/libusb1.c:1094
+#: libusb1/libusb1.c:1119 libusb1/libusb1.c:1211 usb/libusb.c:812
+#: usb/libusb.c:898
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "无法找到 USB 设备 (供应商 0x%x、产品 0x%x)。确信该设备已连接到计算机。"
 
-#: usb/libusb.c:1202 libusb1/libusb1.c:1383
+#: libusb1/libusb1.c:1150 usb/libusb.c:741
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "给出的供应商或产品 id (0x%x、0x%x) 不合法。"
+
+#: libusb1/libusb1.c:1500 usb/libusb.c:1191
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "无法找到 USB 设备 (类 0x%x、子类 0x%x、协议 0x%x)。确信该设备已连接到计算机。"
 
-#: libusb1/libusb1.c:391
-msgid "Could not detach kernel driver of camera device."
-msgstr "无法卸除照相机设备的内核驱动程序。"
+#: ptpip/ptpip.c:161
+msgid "PTP/IP Connection"
+msgstr "PTP/IP 连接"
 
-#: libusb1/libusb1.c:507
-msgid "Could not reattach kernel driver of camera device."
-msgstr "无法重新装载照相机设备的内核驱动程序。"
+#: ptpip/ptpip.c:174
+msgid "IP Connection"
+msgstr "IP 连接"
 
-#: usbscsi/linux.c:108
+#: serial/unix.c:209
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr "无法锁定设备‘%s’"
+
+#: serial/unix.c:219 usbdiskdirect/linux.c:79
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "设备‘%s’已经被进行号为 %d 的进程锁定"
+
+#: serial/unix.c:222 usbdiskdirect/linux.c:82
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "无法锁定设备‘%s’(dev_lock 返回 %d)"
+
+#: serial/unix.c:251
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "无法解锁设备‘%s’。"
+
+#: serial/unix.c:263 usbdiskdirect/linux.c:111
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "由于设备‘%s’已被进程号为 %d 的进程锁定，所以无法锁定。"
+
+#: serial/unix.c:267 usbdiskdirect/linux.c:115
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "无法解锁设备‘%s’(dev_unlock 返回 %d)"
+
+#: serial/unix.c:313
+#, c-format
+msgid "Serial Port %i"
+msgstr "串口 %i"
+
+#: serial/unix.c:326
+msgid "Serial Port Device"
+msgstr "串口设备"
+
+#: serial/unix.c:401
+#, c-format
+msgid "Failed to open '%s' (%s)."
+msgstr "打开 %s 时失败 (%s)。"
+
+#: serial/unix.c:421
+#, c-format
+msgid "Could not close '%s' (%s)."
+msgstr "无法关闭 %s (%s)。"
+
+#: serial/unix.c:477
+#, c-format
+msgid "Could not write to port (%s)"
+msgstr "无法写入端口 (%s)"
+
+#: serial/unix.c:552
+msgid "Parity error."
+msgstr "奇偶错误。"
+
+#: serial/unix.c:556
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "意外的奇偶应答序列 0xff 0x%02x。"
+
+#: serial/unix.c:599
+#, c-format
+msgid "Unknown pin %i."
+msgstr "未知插脚 %i。"
+
+#: serial/unix.c:621
+#, c-format
+msgid "Could not get level of pin %i (%s)."
+msgstr "无法获取针脚 %i 的级别 (%s)。"
+
+#: serial/unix.c:657
+#, c-format
+msgid "Could not set level of pin %i to %i (%s)."
+msgstr "无法将针脚 %i 的级别设置为 %i (%s)。"
+
+#: serial/unix.c:684
+#, c-format
+msgid "Could not flush '%s' (%s)."
+msgstr "无法刷新 %s (%s)。"
+
+#: serial/unix.c:778
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "无法设置将波特率设置为 %d"
+
+#: usb/libusb.c:269
+#, c-format
+msgid "Could not detach kernel driver '%s' of camera device."
+msgstr "无法卸除照相机设备的内核驱动程序 %s。"
+
+#: usb/libusb.c:359
+#, c-format
+msgid "Could not close USB port (%s)."
+msgstr "无法关闭 USB 端口 (%s)。"
+
+#: usbdiskdirect/linux.c:218
+msgid "USB Mass Storage direct IO"
+msgstr "USB 大容量存储器直接 IO"
+
+#: usbdiskdirect/linux.c:269 usbscsi/linux.c:253
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "打开‘%s’(%m)失败。"
+
+#: usbdiskdirect/linux.c:283 usbscsi/linux.c:281
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "无法关闭‘%s’(%m)。"
+
+#: usbdiskdirect/linux.c:307
+#, c-format
+msgid "Could not seek to offset: %x on '%s' (%m)."
+msgstr "无法寻址到偏移量：%x 于 %s (%m)。"
+
+#: usbdiskdirect/linux.c:329
+#, c-format
+msgid "Could not write to '%s' (%m)."
+msgstr "无法写入 %s (%m)。"
+
+#: usbdiskdirect/linux.c:350
+#, c-format
+msgid "Could not read from '%s' (%m)."
+msgstr "无法读取 %s (%m)。"
+
+#: usbscsi/linux.c:92
 #, c-format
 msgid "Device '%s' is locked by another app."
 msgstr "设备 %s 已被另一个应用程序锁定。"
 
-#: usbscsi/linux.c:113
+#: usbscsi/linux.c:97
 #, c-format
 msgid "Failed to lock '%s' (%m)."
 msgstr "锁定 %s 时失败 (%m)。"
 
-#: usbscsi/linux.c:129
+#: usbscsi/linux.c:113
 #, c-format
 msgid "Failed to unlock '%s' (%m)."
 msgstr "解锁 %s 时失败 (%m)。"
 
-#: usbscsi/linux.c:230
+#: usbscsi/linux.c:214
 msgid "USB Mass Storage raw SCSI"
 msgstr "USB 大容量存储器原始 SCSI"
 
-#: usbscsi/linux.c:341
+#: usbscsi/linux.c:325
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
 msgstr "无法发送 scsi 命令给：%s (%m)。"
