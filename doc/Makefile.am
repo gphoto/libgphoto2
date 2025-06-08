@@ -44,7 +44,7 @@ $(HTML_APIDOC_INTERNALS_DIR).tar.gz: $(HTML_APIDOC_INTERNALS_DIR).stamp
 	(cd $(DOXYGEN_OUTPUT_DIR) && $(AMTAR) chof - $(HTML_APIDOC_INTERNALS_DIR) | GZIP=--best gzip -c) > $@
 
 LOCAL_INSTALL += install-apidocs
-install-apidocs: $(HTML_APIDOC_DIR).stamp
+install-apidocs: $(HTML_APIDOC_DIR).log
 	mkdir -p "$(DESTDIR)$(docdir)"
 	find "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)" \
 		\( -type d -exec chmod 0755 {} \; \) -or \
@@ -59,7 +59,7 @@ uninstall-apidocs:
 LOCAL_CLEAN += clean-apidocs
 clean-apidocs:
 	rm -rf "$(DOXYGEN_OUTPUT_DIR)/$(HTML_APIDOC_DIR)"
-	rm -f $(HTML_APIDOC_DIR).stamp
+	rm -f $(HTML_APIDOC_DIR).log
 	rm -f $(HTML_APIDOC_DIR).tar.gz
 
 if ENABLE_INTERNAL_DOCS
