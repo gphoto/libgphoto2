@@ -22,12 +22,14 @@ ptp2:
 * Fuji: bugfixes
 * Nikon: support 32bit properties
 * Added ids:
-  - Canon EOS R100, R3, R8, R50
-  - Sony Alpha A6100, ZV-E10, A6700
-  - Nikon Zf
-  - Olympus OM-1Mark3
-  - Fuji H2S, X100V1
-  - Leica Q3
+  - Canon EOS R100, R3, R8, R50, G7 X Mark 3,
+  - Sony Alpha A6100, ZV-E10, A6700, NEX-5N, SLT A99V, ILCE-9M3, ILX-LR1
+  - Nikon Zf, Z6 III
+  - Olympus OM-1Mark2
+  - Fuji X-H2S, X100V1, GFX100 II
+  - Ricoh GR III
+  - Leica Q3, M11 Monochrome
+
 
 ports/usb:
 * added more Android support (passing in filedescriptor)
@@ -41,7 +43,7 @@ all:
 * Meson buildsupport, parallel to automake
 
 translations:
-* added georgian, friulian, polish, romanian, ukrainian, chinese
+* added georgian, friulian, polish, romanian, ukrainian, chinese, brazilian
 ------------------------------------------------------------------------------
 libgphoto2 2.5.31 release
 
