@@ -2810,6 +2810,10 @@ static struct {
 	/* This is a camera ... reported by TAN JIAN QI <JQTAN1@e.ntu.edu.sg */
 	{"Samsung:EK-GC100",			0x04e8,	0x6866, 0},
 
+	
+	/* https://sourceforge.net/p/libmtp/bugs/1950/ */
+	{"TOPDON:TC004 Mini",			0x3474,	0x0020, 0},
+
 	/* 522903503@qq.com */
 	{"Sigma:fp",				0x1003,	0xc432, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/882 */
