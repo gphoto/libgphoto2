@@ -153,7 +153,7 @@ struct _PDCPicInfo {
 static const char *quality[] = {N_("normal"), N_("fine"), N_("superfine"),
 				NULL};
 static const char *flash[]   = {N_("auto"), N_("on"), N_("off"), NULL};
-static const char *bool[]    = {N_("off"), N_("on"), NULL};
+static const char *onoff[]    = {N_("off"), N_("on"), NULL};
 static const char *mode[]    = {N_("play"), N_("record"), N_("menu"), NULL};
 static const char *power[]   = {N_("battery"), N_("a/c adaptor"), NULL};
 /* no real need to translate those ... */
@@ -972,9 +972,9 @@ camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 	gp_widget_new (GP_WIDGET_SECTION, _("Camera"), &section);
 	gp_widget_append (*window, section);
 
-	add_radio (section, LCD_STATE,     bool,    info.lcd);
-	add_radio (section, SELF_TIMER,    bool,    info.timer);
-	add_radio (section, SHOW_CAPTIONS, bool,    info.caption);
+	add_radio (section, LCD_STATE,     onoff,    info.lcd);
+	add_radio (section, SELF_TIMER,    onoff,    info.timer);
+	add_radio (section, SHOW_CAPTIONS, onoff,    info.caption);
 
 	/* Auto poweroff */
 	gp_widget_new (GP_WIDGET_RANGE, AUTO_POWEROFF, &child);
@@ -1054,15 +1054,15 @@ camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 		CR (pdc700_config (camera, PDC_CONF_FLASH,
 				   (unsigned char) i, context));
 
-	if ((i = which_radio_button (window, LCD_STATE, bool)) >= 0)
+	if ((i = which_radio_button (window, LCD_STATE, onoff)) >= 0)
 		CR (pdc700_config (camera, PDC_CONF_LCD,
 				   (unsigned char) i, context));
 
-	if ((i = which_radio_button (window, SELF_TIMER, bool)) >= 0)
+	if ((i = which_radio_button (window, SELF_TIMER, onoff)) >= 0)
 		CR (pdc700_config (camera, PDC_CONF_TIMER,
 				   (unsigned char) i, context));
 
-	if ((i = which_radio_button (window, SHOW_CAPTIONS, bool)) >= 0)
+	if ((i = which_radio_button (window, SHOW_CAPTIONS, onoff)) >= 0)
 		CR (pdc700_config (camera, PDC_CONF_CAPTION,
 				   (unsigned char) i, context));
 
@@ -1123,9 +1123,9 @@ camera_summary (Camera *camera, CameraText *about, GPContext *context)
 		_(mode[info.mode]),
 		_(quality[info.quality]),
 		_(flash[info.flash]),
-		_(bool[info.caption]),
-		_(bool[info.timer]),
-		_(bool[info.lcd]),
+		_(onoff[info.caption]),
+		_(onoff[info.timer]),
+		_(onoff[info.lcd]),
 		info.auto_poweroff,
 		_(power[info.ac_power]));
 
