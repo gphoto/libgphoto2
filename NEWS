@@ -1,4 +1,4 @@
-libgphoto2 2.5.31.1 development
+libgphoto2 2.5.32 release
 
 quicktake1x0:
 * New Apple Quicktake (serial camera) driver
@@ -30,7 +30,6 @@ ptp2:
   - Ricoh GR III
   - Leica Q3, M11 Monochrome
 
-
 ports/usb:
 * added more Android support (passing in filedescriptor)
 
@@ -41,6 +40,12 @@ all:
 * IOLIBS and CAMLIBS now runtime configurable
 * Builds use silent rules by default now
 * Meson buildsupport, parallel to automake
+* print-camera-list can now print camera list in JSON format
+* added new functions: gp_setting_set_get_func, gp_setting_set_set_func
+  for user defined settings setters
+* added new port functions: gp_port_usb_set_sys_device,
+  gp_port_usb_get_sys_device used for Android
+
 
 translations:
 * added georgian, friulian, polish, romanian, ukrainian, chinese, brazilian
