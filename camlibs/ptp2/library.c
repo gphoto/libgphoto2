@@ -9942,6 +9942,26 @@ camera_init (Camera *camera, GPContext *context)
 		gp_port_set_timeout (camera->port, timeout);
 	}
 
+
+	/* initial reading of the root directory is needed for some reason for Canons EOS 1500D to not hang */
+
+	/* avoid doing this on the Sonys DSLRs in control mode, they hang. :( */
+	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY) {
+		PTPObjectHandles handles = {0};
+		ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL, &handles);
+	}
+
+	{
+		unsigned int k;
+		PTPObjectHandles handles = {0};
+
+		for (k=0;k<params->storageids.len;k++) {
+			if (!(params->storageids.val[k] & 0xffff)) continue;
+			if (params->storageids.val[k] == 0x80000001) continue;
+			ptp_list_folder (params, params->storageids.val[k], PTP_HANDLER_SPECIAL, &handles);
+		}
+	}
+
 	/* moved down here in case the filesystem needs to first be initialized as the Olympus app does */
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) {
 
