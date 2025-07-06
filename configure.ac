@@ -4,9 +4,9 @@ AC_PREREQ([2.69])
 dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
-dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.31 at least or higher!
+dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.33 at least or higher!
 AC_INIT([libgphoto2 photo camera library],
-        [2.5.32],
+        [2.5.32.1],
         [gphoto-devel@lists.sourceforge.net],
         [libgphoto2])
 
