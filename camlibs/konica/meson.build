@@ -1,5 +1,5 @@
 
-konica_localization_dir = camlibs_dir_suffix / 'konica'
+konica_localization_dir = camlibs_datadir / 'konica'
 install_data(
   files(
     'localization/english',

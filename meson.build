@@ -1,5 +1,5 @@
 project('libgphoto2', 'c',
-  version : '2.5.31.1',
+  version : '2.5.32.1',
   meson_version : '>= 1.4.0',
   default_options : [
     'buildtype=debugoptimized',
@@ -159,6 +159,7 @@ iolibs_dir = get_option('prefix') / get_option('libdir') / iolibs_dir_suffix
 
 camlibs_dir_suffix = meson.project_name() / meson.project_version()
 camlibs_dir = get_option('prefix') / get_option('libdir') / camlibs_dir_suffix
+camlibs_datadir = get_option('prefix') / get_option('datadir') / camlibs_dir_suffix
 
 config_data = configuration_data()
 config_data.set_quoted('PACKAGE_VERSION', meson.project_version())
