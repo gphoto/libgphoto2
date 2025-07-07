@@ -65,7 +65,7 @@
 
 ## tag release
 
-   bump version in `configure.ac`, `NEWS`, commit and push.
+   bump version in `configure.ac`, `NEWS`, `meson.build`, commit and push.
 
     make clean
     make
