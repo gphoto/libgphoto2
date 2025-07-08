@@ -3359,7 +3359,7 @@ append_folder_from_handle (Camera *camera, uint32_t storage, uint32_t handle, ch
 	if (handle == PTP_HANDLER_ROOT)
 		return GP_OK;
 
-	C_PTP (ptp_object_want (params, handle, PTPOBJECT_PARENTOBJECT_LOADED, &ob)); // refresh
+	C_PTP (ptp_object_want (params, handle, PTPOBJECT_PARENTOBJECT_LOADED|PTPOBJECT_OBJECTINFO_LOADED, &ob)); // refresh
 	CR (append_folder_from_handle (camera, storage, ob->oi.ParentObject, folder));
 	/* re-fetch invalidated ob cache pointer */
 	ptp_find_object_in_cache(params, handle, &ob);
