@@ -55,7 +55,7 @@ libgphoto2_la_LDFLAGS      += -export-symbols $(srcdir)/libgphoto2.sym
 
 libgphoto2_la_LDFLAGS      += -version-info @LIBGPHOTO2_VERSION_INFO@
 
-libgphoto2_la_LIBADD       += $(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la
+libgphoto2_la_LIBADD       += $(libgphoto2_port_la)
 
 # The libtool docs describe these params, but they don't build.
 #	"-dlopen" self \
