@@ -2806,12 +2806,42 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_ViewModeBrightenShadow		0x1D00C
 #define PTP_DPC_NIKON_StarlightView			0x1D00E
 #define PTP_DPC_NIKON_MovieTVLockSetting		0x1D00F
-#define PTP_DPC_NIKON_MovieAVLockSetting		0x1D00F
+#define PTP_DPC_NIKON_MovieAVLockSetting		0x1D010
 #define PTP_DPC_NIKON_SilentMode			0x1D011
 #define PTP_DPC_NIKON_ShutterSoundEffect		0x1D012
 #define PTP_DPC_NIKON_AFWhenSubjectNotDetected		0x1D014
 #define PTP_DPC_NIKON_FocusPointLock			0x1D015
 #define PTP_DPC_NIKON_MovieFocusPointLock		0x1D016
+#define PTP_DPC_NIKON_SkinSoftening			0x1D017
+#define PTP_DPC_NIKON_MovieSkinSoftening		0x1D018
+#define PTP_DPC_NIKON_PortraitImpressionBalance		0x1D019
+#define PTP_DPC_NIKON_MoviePortraitImpressionBalance	0x1D01A
+#define PTP_DPC_NIKON_MovieExtendedShutterSpeedsManual	0x1D01B
+#define PTP_DPC_NIKON_ToneMode				0x1D01C
+#define PTP_DPC_NIKON_ActivePicCtrlHlgItem		0x1D01D
+#define PTP_DPC_NIKON_ExtendOverSampling		0x1D01E
+#define PTP_DPC_NIKON_MovieExtendIsoStepManual		0x1D01F
+#define PTP_DPC_NIKON_PreCapturePreReleaseBurst		0x1D025
+#define PTP_DPC_NIKON_PreCapturePostReleaseBurst	0x1D026
+#define PTP_DPC_NIKON_MovieNRaw12bitToneMode		0x1D028
+#define PTP_DPC_NIKON_MovieProResRawHq12bitToneMode	0x1D029
+#define PTP_DPC_NIKON_MovieQualityNRaw			0x1D029
+#define PTP_DPC_NIKON_HighFrequencyFlickerReduction	0x1D031
+#define PTP_DPC_NIKON_MovieHighFrequencyFlickerReduction	0x1D032
+#define PTP_DPC_NIKON_HiResZoom				0x1D033
+#define PTP_DPC_NIKON_ViewModeShowEffectsOfSettings	0x1D036
+#define PTP_DPC_NIKON_FlickerReductionShutterSpeed	0x1D03D
+#define PTP_DPC_NIKON_EnableDXImageSize			0x1D041
+#define PTP_DPC_NIKON_ImageSizeDX			0x1D042
+#define PTP_DPC_NIKON_PixelShiftShootingMode		0x1D045
+#define PTP_DPC_NIKON_WideAreaAFC1			0x1D046
+#define PTP_DPC_NIKON_WideAreaAFC2			0x1D047
+#define PTP_DPC_NIKON_MovieWideAreaAFC1			0x1D048
+#define PTP_DPC_NIKON_MovieWideAreaAFC2			0x1D049
+#define PTP_DPC_NIKON_FmmManualSetting2			0x1D04A
+#define PTP_DPC_NIKON_F0ManualSetting2			0x1D04B
+#define PTP_DPC_NIKON_ManualSettingLensName		0x1D04C
+#define PTP_DPC_NIKON_PixelShiftShootingInterval	0x1D050
 
 /* Fuji specific */
 
