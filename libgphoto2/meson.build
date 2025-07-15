@@ -115,6 +115,22 @@ gphoto2_endian = configure_file(
 
 libgphoto2_private_headers += gphoto2_endian
 
+libgphoto2_link_args = []
+libgphoto2_link_deps = []
+
+if has_version_script
+  libgphoto2_version_script = custom_target(
+    'libgphoto2.ver',
+    output: 'libgphoto2.ver',
+    input: files('sym_to_ver.py', 'libgphoto2.sym'),
+    command: [python, '@INPUT0@', '@INPUT1@', '@OUTPUT@'],
+  )
+  libgphoto2_link_args += ['-Wl,--version-script=@0@'.format(
+    libgphoto2_version_script.full_path()
+  )]
+  libgphoto2_link_deps += [libgphoto2_version_script]
+endif
+
 libgphoto2_lib = library(
   'gphoto2',
   libgphoto2_sources,
@@ -134,7 +150,9 @@ libgphoto2_lib = library(
   ],
   c_args: [
     '-D_GPHOTO2_INTERNAL_CODE',
-  ]
+  ],
+  link_args: libgphoto2_link_args,
+  link_depends: libgphoto2_link_deps,
 )
 
 install_headers(

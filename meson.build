@@ -11,6 +11,8 @@ project('libgphoto2', 'c',
 
 i18n = import('i18n')
 pkg = import('pkgconfig')
+py = import('python')
+python = py.find_installation()
 
 libxml_req         = '>= 2.0'
 libcurl_req        = '>= 7.1'
@@ -151,6 +153,10 @@ add_project_arguments('-DLOCALEDIR="@0@"'.format (get_option('prefix') / get_opt
 if intl_dep.found()
   add_project_arguments('-DENABLE_NLS=1', language: 'c')
 endif
+
+has_version_script = cc.has_link_argument('-Wl,--version-script=@0@'.format(
+  meson.current_source_dir() / 'libgphoto2_port' / 'libgphoto2_port' / 'libgphoto2_port.ver'
+))
 
 libgphoto2_root_inc = include_directories('.')
 

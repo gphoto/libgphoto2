@@ -24,6 +24,17 @@ libgphoto2_port_private_headers = files(
   'compiletime-assert.h',
 )
 
+libgphoto2_port_link_args = []
+libgphoto2_port_link_deps = []
+
+if has_version_script
+  libgphoto2_port_version_script = files('libgphoto2_port.ver')[0]
+  libgphoto2_port_link_args += ['-Wl,--version-script=@0@'.format(
+    libgphoto2_port_version_script.full_path()
+  )]
+  libgphoto2_port_link_deps += [libgphoto2_port_version_script]
+endif
+
 libgphoto2_port_lib = library(
   'gphoto2_port',
   libgphoto2_port_sources,
@@ -40,6 +51,8 @@ libgphoto2_port_lib = library(
     intl_dep,
     config_dep,
   ],
+  link_args: libgphoto2_port_link_args,
+  link_depends: libgphoto2_port_link_deps,
 )
 
 install_headers(
