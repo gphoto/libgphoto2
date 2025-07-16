@@ -105,6 +105,7 @@ gp_filesystem_get_file
 gp_filesystem_read_file
 gp_filesystem_get_folder
 gp_filesystem_get_info
+gp_filesystem_get_storageinfo
 gp_filesystem_list_files
 gp_filesystem_list_folders
 gp_filesystem_make_dir
