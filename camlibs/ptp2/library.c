@@ -1367,6 +1367,7 @@ static struct {
 
 	/* https://github.com/gphoto/gphoto2/issues/596 */
 	{"Sony:ZV-E10 (MTP mode)",		0x054c, 0x0de3, 0},
+	{"Sony:ZV-E10M2 (MTP mode)",	0x054c, 0x0ee7, 0},
 
 	/* The A7-RV */
 	{"Sony:ILCE-7RM5 (PC Control)",		0x054c, 0x0e0c, PTP_CAP|PTP_CAP_PREVIEW},
