@@ -1367,7 +1367,6 @@ static struct {
 
 	/* https://github.com/gphoto/gphoto2/issues/596 */
 	{"Sony:ZV-E10 (MTP mode)",		0x054c, 0x0de3, 0},
-	{"Sony:ZV-E10M2 (MTP mode)",	0x054c, 0x0ee7, 0},
 
 	/* The A7-RV */
 	{"Sony:ILCE-7RM5 (PC Control)",		0x054c, 0x0e0c, PTP_CAP|PTP_CAP_PREVIEW},
@@ -1380,6 +1379,8 @@ static struct {
 
 	/* Mark Watson <watsonmw@gmail.com> */
 	{"Sony:ILX-LR1 (PC Control)",		0x054c, 0x0e90, PTP_CAP|PTP_CAP_PREVIEW},
+
+	{"Sony:ZV-E10M2 (MTP mode)",		0x054c, 0x0ee7, 0},
 
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
