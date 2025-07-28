@@ -185,6 +185,11 @@ struct _GPPortPrivateLibrary {
 	int fd;       /* Device handle */
 	int baudrate; /* Current speed */
 	int parity;   /* Current parity */
+
+	/* Internal cache for faster reading */
+	char cache[512];
+	const char *cachep;
+	const char *cachee;
 };
 
 static int gp_port_serial_check_speed (GPPort *dev);
@@ -511,7 +516,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 	FD_ZERO (&readfs);
 	FD_SET (dev->pl->fd, &readfs);
 
-	while (readen < size) {
+	while (size > 0) {
 
 		/* Set timeout value within input loop */
 		timeout.tv_usec = (dev->timeout % 1000) * 1000;
@@ -558,14 +563,30 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 				/* Ok, we read 1 byte and it is 0xff */
 				/* FALLTHROUGH */
 			}
-		} else {
-			/* Just read the bytes */
-			now = read (dev->pl->fd, bytes, size - readen);
+		} else if (dev->pl->cachep == dev->pl->cachee && size >= sizeof(dev->pl->cache)) {
+			/* We're trying to read a chunk larger than the cache and the cache is empty.
+			 * In this case, skip the cache entirely and read as much as we can directly into the destination. */
+			now = read (dev->pl->fd, bytes, size);
 			if (now < 0)
 				return GP_ERROR_IO_READ;
+		} else {
+			if (dev->pl->cachep == dev->pl->cachee) {
+				/* We're reading only a few bytes and the cache is empty; fill it up. */
+				now = read (dev->pl->fd, dev->pl->cache, sizeof(dev->pl->cache));
+				if (now < 0)
+					return GP_ERROR_IO_READ;
+				/* Reset cache pointers */
+				dev->pl->cachep = dev->pl->cache;
+				dev->pl->cachee = dev->pl->cache + now;
+			}
+			/* read up to the required chunk size from cache */
+			now = MIN(size, dev->pl->cachee - dev->pl->cachep);
+			memcpy(bytes, dev->pl->cachep, now);
+			dev->pl->cachep += now;
 		}
 		bytes += now;
 		readen += now;
+		size -= readen;
 	}
 
 	return readen;
