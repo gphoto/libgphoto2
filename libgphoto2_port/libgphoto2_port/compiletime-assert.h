@@ -35,6 +35,11 @@
 
 #include <assert.h>
 
+/* needed for older Macs https://github.com/gphoto/libgphoto2/issues/1145 */
+#ifndef static_assert
+#define static_assert _Static_assert
+#endif
+
 /** Compiletime assertion for use inside a function. */
 #define COMPILETIME_ASSERT(CONDITION) \
 	static_assert((CONDITION), #CONDITION)
