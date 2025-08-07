@@ -1,72 +1,40 @@
 # libgphoto2
 
-Hello and welcome to the wonderful world of gphoto! This is libgphoto2, the
-successor of gphoto with lots of new features and additional camera
-drivers.
+Hello and welcome to the wonderful world of gphoto! This is libgphoto2, the successor of gphoto with lots of new features and additional camera drivers.
 
-If you miss a feature, would like to report success or failure, or have any
-questions, please don't hesitate to contact our mailing list.
+If you miss a feature, would like to report success or failure, or have any questions, please don't hesitate to contact our [mailing list](http://www.gphoto.org/mailinglists/).
 
 
 ## What is libgphoto2?
 
-libgphoto2 is a library that can be used by applications to access various
-digital cameras.  
+libgphoto2 is a library that can be used by applications to access various digital cameras. For more information on gphoto, please visit the [gphoto project website](http://www.gphoto.org/).
 
-For more information on gphoto, see [gphoto project home page].
-
-There, you can also get information on mailing lists, supported cameras,
-and availability of gphoto2. Another source of information is [gphoto github project page].
-
-where you can access our SVN server to fetch the source code of
-gphoto2, gtkam and GnoCam (see below).
+You can find information there about our mailing lists, a list of [supported cameras](https://gphoto.sourceforge.io/proj/libgphoto2/support.php), and the availability of gphoto2. Another source of information is [gphoto github project page](https://github.com/gphoto) where you can fetch the source code of gphoto2, libgphoto2, gtkam and other related projects. 
 
 
-## What is libgphoto2 not?
+## What libgphoto2 is NOT
 
-libgphoto2 itself is not a GUI application, opposed to gphoto. There are
-GUI frontends for the gphoto2 library, however, such as gtkam for
-example.
+Unlike the original gphoto, libgphoto2 is not a standalone graphical user interface (GUI) application. Instead, it is a backend library. There are several GUI frontends for the gphoto2 library, such as [gtkam](http://www.gphoto.org/proj/gtkam/), a reference implementation for a graphical libgphoto2 client in GTK2.
 
-libgphoto2 can only talk to cameras the language of those it understands.
-That is, if you own a camera that speaks a language that isn't published
-anywhere and nobody has been able to figure out the meaning of the sentences,
-libgphoto2 cannot communicate with those cameras.
+libgphoto2 can only communicate with cameras that use protocols it understands. If a camera uses a proprietary protocol that has not been publicly documented or reverse-engineered, libgphoto2 will not be able to communicate with it.
 
-Then, there are cameras supporting the so-called USB Mass Storage protocol.
-This is a protocol that has been published and lets you access any storage
-device, be it a camera or a disk connected via USB to your computer. As there
-are already drivers for this protocol out there, you don't need an additional
-library like libgphoto2. The list of camera that use USB Mass Storage is getting
-longer everyday, so we won't publish it.
+## USB Communication Protocols
 
-For a more up to date list, you can consult [camera list with support status].
+Cameras typically use one of two main protocols for communication via USB:
 
-Your operating system will tell you about that because it is likely to recognize
-the device as a SCSI disk that you can mount (for Linux 'dmesg' will tell you).
-Again, those cameras *cannot* be accessed through libgphoto2. Some of them can
-be switched to use a different communication protocol and might be in that case
-usable with libgphoto2.
+* [USB Mass Storage protocol](https://en.wikipedia.org/wiki/USB_mass_storage_device_class): This protocol treats the camera's internal storage (e.g., an SD card) as a standard disk drive. Your operating system will automatically recognize it as an external drive that you can mount to access files, just like a flash drive. Because there are already built-in OS drivers for this protocol, you do not need libgphoto2 for these cameras.
 
-Other camera support a protocol called PTP or USB Imaging Devices that has
-been developed by Kodak and other. libgphoto2 does support PTP. Also working
-will be cameras labeled as "PictBridge", which is a extension to PTP.
+* [PTP (Picture Transfer Protocol)](https://en.wikipedia.org/wiki/Picture_Transfer_Protocol): Developed by Kodak and others, PTP is a dedicated protocol for transferring images. libgphoto2 fully supports PTP. Almost all modern cameras that are not USB Mass Storage devices use this protocol, including models from Nikon, Canon, Fuji, Sony, and Panasonic. Cameras labeled as "PictBridge" also work, as this is an extension of PTP. If a PTP camera is unknown to libgphoto2, it will be detected as a generic PTP camera and will typically still work without any special configuration.
 
-Almost all cameras that are not mass storage support it these days, including
-but not limited to all Nikon, Canon, Fuji, Sony, Panasonic, HP and more.
+* [MTP (Media Transfer Protocol)](https://en.wikipedia.org/wiki/Media_Transfer_Protocol): MTP is a Microsoft-developed extension of PTP. MTP-capable devices are also accessible through libgphoto2.
 
-PTP camera unknown to libgphoto2 will be detected as a generic PTP camera and
-will work as-is without any changes.
-
-MTP (Microsoft Transfer Protocol) capable devices will also be accessible,
-since MTP is based on PTP.
+For an up-to-date list of supported cameras and their protocol status, please consult the
+[camera list with support status](https://gphoto.sourceforge.io/proj/libgphoto2/support.php).
 
 
 ## Platforms
 
-libgphoto2 should compile and run on pretty much all Unix-like platforms.
-libgphoto2 has _not_ (yet?) been ported to any operating system from MicroSoft.
-
+libgphoto2 is designed to compile and run on most Unix-like platforms. Support for operating systems from Microsoft is not currently available.
 
 ## Bindings
 
@@ -95,7 +63,7 @@ Out-of-tree builds are supported. `./configure --help` may help.
 
 ### using Meson build system
 
-Since [f5bb6c875c143c53bc8ba725e9d34726b31c47af](https://github.com/gphoto/libgphoto2/commit/f5bb6c875c143c53bc8ba725e9d34726b31c47af), you can use meson to build the library :
+Since [f5bb6c875c143c53bc8ba725e9d34726b31c47af](https://github.com/gphoto/libgphoto2/commit/f5bb6c875c143c53bc8ba725e9d34726b31c47af), you can also build the library using Meson:
 
 ```
 cd /path/to/source/root
@@ -104,46 +72,41 @@ meson compile
 meson test
 ```
 
-### Where to get the sources
+### Getting the sources
 
 The sources are available at the following places:
 
- - At gphoto's github repository (this page) : https://github.com/gphoto/libgphoto2
- - At the gphoto website: [gphoto project home page]
+ - The [gphoto github repository](https://github.com/gphoto/libgphoto2/) (this page) at https://github.com/gphoto/libgphoto2
+ - The [gphoto project website](http://www.gphoto.org/)
  - In the SVN module gphoto2-manual
 
-The gphoto2 Manual includes information about setting up USB
-hotplugging.
-
-If you run into problems, you may also consult the FAQ (also included
-in The gphoto2 Manual).
+The gphoto2 Manual includes important information about setting up USB hotplugging. If you encounter problems, you may also consult the FAQ, which is included in the manual.
 
 
 ## Frontends
 
-gphoto2 is a command line frontend which is quite powerful,
-especially in combination with scripts. See The gphoto2 Manual
-for a short description.
+[gphoto2](https://github.com/gphoto/gphoto2) is a command line frontend which is quite powerful, especially in combination with scripts. See [The gphoto2 Manual](http://www.gphoto.com/doc/manual/) for more information.
 
-For the GUI lovers, there are for example digikam (KDE), gthumb (GNOME),
-f-spot (GNOME / Mono) and more. We also have a GTK2 reference GUI
-called gtkam, which is unmaintained, its only special features are
-capture ability.
-Additionally, there are plugins for other programs available like
-kio_camera (KDE - Konqueror) and a fuse plugin, gphotofs.
+For the GUI lovers, there are many applications that use libgphoto2 as a backend. Examples include:
+
+* [digiKam](https://www.digikam.org/) (KDE)
+* [gThumb](https://wiki.gnome.org/Apps/Gthumb) (GNOME)
+* [Shotwell](https://wiki.gnome.org/Apps/Shotwell) (GNOME)
+* [Darktable](https://www.darktable.org/) (a virtual lighttable and darkroom for photographers)
+* [Entangle](https://entangle-photo.org/) (a GUI for tethered shooting)
+* [f-spot](https://github.com/f-spot/f-spot) (GNOME / Mono)
+* [GIMP](https://www.gimp.org/) (via the [gtkam-gimp](https://github.com/gphoto/gtkam/blob/master/src/gtkam-gimp.c) plugin)
+
+We also have a GTK2 reference GUI called gtkam, which is unmaintained. Its primary special feature is its capture ability. Additionally, there are plugins for other programs available like kio_camera (which integrates camera support into KDE's file manager, Konqueror) and a FUSE plugin [gphotofs](https://github.com/gphoto/gphotofs).
 
 
 ## Reporting Bugs
 
-Every piece of software contains errors and flaws. So does
-libgphoto2. When you encounter something that does not work, please do
-the following:
+Every piece of software contains errors and flaws. So does libgphoto2. When you encounter something that does not work, please do the following:
 
-1. Find out whether this is a known problem.
+1. Find out whether this is a known problem by searching the [mailing lists](http://www.gphoto.com/mailinglists/) and the [Github issues](https://github.com/gphoto/libgphoto2/issues).
 
-2. Reproduce the problem with debug output enabled and the language
-    set to English, so that the development team will understand the
-    messages. You can do this by running:
+2. Reproduce the problem with debug output enabled and the language set to English, so that the development team will understand the messages. You can do this by running:
 
         env LC_ALL=C gtkam
 
