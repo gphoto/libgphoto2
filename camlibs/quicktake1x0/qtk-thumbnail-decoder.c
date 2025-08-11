@@ -55,8 +55,8 @@ static int qt100_thumbnail_decode(unsigned char *raw, unsigned char **out) {
 	for (s = 0; s < QT1X0_THUMB_SIZE; s++) {
 		v = raw[s];
 
-		p1 = ((v >> 4) & 0b00001111) << 4;
-		p2 = ((v >> 0) & 0b00001111) << 4;
+		p1 = ((v >> 4) & 0x0F) << 4;
+		p2 = ((v >> 0) & 0x0F) << 4;
 
 		/* FIXME do color thumbnails */
 		r = g = b = p1;
@@ -108,8 +108,8 @@ static int qt150_thumbnail_decode(unsigned char *raw, unsigned char **out) {
 		cur_out = line;
 		for (i = 0; i < QT1X0_THUMB_WIDTH; i++) {
 			c = *cur_in++;
-			a   = (((c>>4) & 0b00001111) << 4);
-			b   = (((c)    & 0b00001111) << 4);
+			a   = (((c>>4) & 0x0F) << 4);
+			b   = (((c)    & 0x0F) << 4);
 			*cur_out++ = a;
 			*cur_out++ = b;
 		}
