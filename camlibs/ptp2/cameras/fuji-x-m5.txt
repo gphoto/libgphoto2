@@ -1,0 +1,93 @@
+Camera summary:
+Manufacturer: FUJIFILM
+Model: X-M5
+  Version: 1.10
+  Serial Number: 59353736303125032629231012115E
+Vendor Extension ID: 0xe (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: 
+Display Formats: JPEG, JFIF, Unknown(3812)
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_10000001:
+	StorageDescription: External Memory
+	VolumeLabel: 000000000000000000000000000000000000000000000000
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 127865454592 (121942 MB)
+	Free Space (Bytes): 121241993216 (115625 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level(0x5001):(read only) (type=0x2) Range [0 - 10, step 1] value: 10% (10)
+Property 0xd303:(read only) (type=0x2) 1
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd041:(readwrite) (type=0x4) Enumeration [1] value: 1
+Exposure Time(0x500d): error 200a on query.
+F-Number(0x5007): error 200a on query.
+LensZoomPosCaps(0xd38c): error 200a on query.
+FocusPosition(0xd171): error 200a on query.
+Property 0xd21c: error 200a on query.
+Focus Point(0xd347): error 200a on query.
+LensZoomPos(0xd170): error 200a on query.
+BatteryLevel(0xd242): error 200a on query.
+LiveViewImageSize(0xd174): error 200a on query.
+VideoOutOnOff(0xd168): error 200a on query.
+LiveViewImageQuality(0xd173): error 200a on query.
+ForceMode(0xd230): error 200a on query.
+Property 0xd16e: error 200a on query.
+FocusArea1(0xd372): error 200a on query.
+FaceDetectionMode(0xd020): error 200a on query.
+RawCompression(0xd022): error 200a on query.
+GrainEffect(0xd023): error 200a on query.
+SetEyeAFMode(0xd024): error 200a on query.
+FocusPoints(0xd025): error 200a on query.
+MFAssistMode(0xd026): error 200a on query.
+InterlockAEAFArea(0xd027): error 200a on query.
+Shadowing(0xd029): error 200a on query.
+CropMode(0xd16f): error 200a on query.
+TNumber(0xd02f): error 200a on query.
+FocusArea4(0xd395): error 200a on query.
+HighLightTone(0xd320): error 200a on query.
+ShadowTone(0xd321): error 200a on query.
+LongExposureNR(0xd322): error 200a on query.
+FullTimeManualFocus(0xd323): error 200a on query.
+LensISSwitch(0xd346): error 200a on query.
+InstantAFMode(0xd34a): error 200a on query.
+PreAFMode(0xd34b): error 200a on query.
+LMOMode(0xd34d): error 200a on query.
+ISMode(0xd351): error 200a on query.
+FocusCheckMode(0xd35e): error 200a on query.
+LiveViewImageQuality(0xd173): error 200a on query.
+FileNamePrefix1(0xd365): error 200a on query.
+FileNamePrefix2(0xd366): error 200a on query.
+FocusArea3(0xd374): error 200a on query.
+TotalShotCount(0xd310): error 200a on query.
+ExposurePreview(0xd359): error 200a on query.
+FrameGuideGridInfo1(0xd375): error 200a on query.
+FrameGuideGridInfo2(0xd376): error 200a on query.
+CustomDispInfo(0xd36e): error 200a on query.
+ViewMode1(0xd33f): error 200a on query.
+CustomAutoPowerOff(0xd364): error 200a on query.
+LockButtonMode(0xd34e): error 200a on query.
+WideDynamicRange(0xd02e): error 200a on query.
+LensNameAndSerial(0xd36d): error 200a on query.
+LensUnknownData(0xd38a): error 200a on query.
+BatteryInfo1(0xd36a): error 200a on query.
+BatteryInfo2(0xd36b): error 200a on query.
+FunctionLockCategory1(0xd36f): error 200a on query.
+FunctionLockCategory2(0xd370): error 200a on query.
+SensitivityFineTune1(0xd222): error 200a on query.
+SensitivityFineTune2(0xd223): error 200a on query.
+LensZoomPosCaps(0xd38c): error 200a on query.
+LensFNumberList(0xd38d): error 200a on query.
+LensFocalLengthList(0xd38e): error 200a on query.
+Property 0xd17b: error 200a on query.
+
