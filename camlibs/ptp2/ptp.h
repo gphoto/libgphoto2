@@ -3117,6 +3117,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_WhiteBalanceAdjustA		0xD161
 #define PTP_DPC_OLYMPUS_WhiteBalanceAdjustB		0xD162
 
+/* OM Systems */
+/* from an O-M1 Mark II */
+#define PTP_DPC_OMS_ISO							0xD1C0
+
 /* unsure where these were from */
 #define PTP_DPC_OLYMPUS_ResolutionMode			0xD102
 #define PTP_DPC_OLYMPUS_FocusPriority			0xD103
