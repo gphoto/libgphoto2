@@ -2,7 +2,7 @@ Camera summary:
 Manufacturer: OMSYSTEM
 Model: OM-1MarkII
   Version: 1.00
-  Serial Number: BJccnnnnn
+  Serial Number: BJRAnnnnn
 Vendor Extension ID: 0xfffd (1.0)
 Vendor Extension Description: 
 
@@ -16,305 +16,295 @@ Device Capabilities:
 Storage Devices Summary:
 
 Device Property Summary:
-Battery Level(0x5001):(read only) (type=0x2) Range [1 - 100, step 1] value: 80% (80)
-Date & Time(0x5011):(readwrite) (type=0xffff) '20240000T000000'
-Property 0xd405:(read only) (type=0x4002) a[73728] 0,0,1,0,5,0,0,0,0,0,1,0,32,0,94,219,0,0,86,0,0,0,48,48,0,0,1,0,32,0,168,37,0,0,180,219,0,0,32,32,0,0,1,0,32,0,168,16,0,0,92,1,1,0,24,24,0,0,1,0,32,0,136,9, ...
-Property 0xd406:(readwrite) (type=0xffff) 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
-Property 0xd407:(read only) (type=0x6) 1
-Property 0xd002:(readwrite) (type=0x4) Enumeration [10,11,12,14,16,18,20,22,25,28,32,35,40,45,50,56,63,71,80,90,100,110,130,140,160,180,200,220,250,290,320,360,400,450,510,570,640,720,810,910] value: 56
-Property 0xd003:(readwrite) (type=0x4) Enumeration [2,32770,1,32772,32775] value: 2
-Property 0xd004:(readwrite) (type=0x4) Enumeration [32769,2,4,32785,32786] value: 32769
-Property 0xd005:(readwrite) (type=0x4) Enumeration [2] value: 2
-Property 0xd006:(read only) (type=0x4) Enumeration [1,2,3,4,8,11] value: 1
-Property 0xd008:(readwrite) (type=0x4) Enumeration [] value: 65535
-Property 0xd009:(readwrite) (type=0x4) Enumeration [1,33,7,39,40,72,4,5,36,6] value: 33
-Property 0xd00c:(readwrite) (type=0x4) Enumeration [33024,34817,34818,34819,34820,34821,35073,35074] value: 34818
-Property 0xd00d:(readwrite) (type=0x4) Enumeration [32,257,258,259,260,289,290,291,292] value: 289
-Property 0xd00e:(readwrite) (type=0x4) Enumeration [2000,2050,2100,2150,2200,2250,2300,2350,2400,2450,2500,2550,2600,2650,2700,2750,2800,2900,3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000,4200,4400,4600,4800,5000,5200,5400,5600,5800,6000,6200,6400,6600,6800,7000,7400,7800,8200,8600,9000,9400,9800,10000,11000,12000,13000,14000] value: 3000
-Property 0xd00f:(readwrite) (type=0x4) Enumeration [62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000] value: 0
-Property 0xd010:(readwrite) (type=0x4) Enumeration [33281,33537,2,1,32771,32769,33025,34561,34049,35585,35586,34306,35617,35618,34308,35649,35650,35665,35666,35667,35681,35682,35697,35698,34313,35729,35730,35745,35746,35761,35762,35777,35778,35779,35793,35794,35795,35809,35810,34320] value: 1
-Property 0xd011:(readwrite) (type=0x4) Enumeration [0,1] value: 0
-Property 0xd013:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
-Property 0xd014:(readwrite) (type=0x4) Enumeration [2] value: 2
-Property 0xd018:(readwrite) (type=0x4) Enumeration [65535,0,1] value: 65535
-Property 0xd01b:(readwrite) (type=0x6) Enumeration [262147,1048585,196610,65537,196612] value: 262147
-Property 0xd01c:(readwrite) (type=0x6) Enumeration [39321610,32768010,26214410,19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,655373,655376,655380,655385,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536,75536,78336,81536,85536,91136,97536] value: 66036
-Property 0xd01d:(readwrite) (type=0x4) Enumeration [0,4,1,2,3] value: 4
-Property 0xd01e:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13] value: 1
-Property 0xd01f:(readwrite) (type=0x4) Enumeration [2,1] value: 1
-Property 0xd020:(readwrite) (type=0x4) Enumeration [2,1,3,0] value: 2
-Property 0xd021:(readwrite) (type=0x4) Enumeration [2,1,3,0] value: 0
-Property 0xd022:(readwrite) (type=0x4) Enumeration [2,1,3,0] value: 0
-Property 0xd025:(readwrite) (type=0x4) Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
-Property 0xd026:(readwrite) (type=0x4) Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
-Property 0xd027:(readwrite) (type=0x4) Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
-Property 0xd029:(readwrite) (type=0x6) Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
-Property 0xd02a:(readwrite) (type=0x6) Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
-Property 0xd02b:(readwrite) (type=0x6) Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
-Property 0xd02d:(readwrite) (type=0x4) Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 52
-Property 0xd02e:(readwrite) (type=0x4) Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 51
-Property 0xd02f:(readwrite) (type=0x4) Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 50
-Property 0xd030:(readwrite) (type=0x4) Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 98
-Property 0xd031:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd032:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd033:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 5
-Property 0xd034:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd035:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 65529
-Property 0xd036:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd037:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 65529
-Property 0xd038:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd039:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 65529
-Property 0xd03a:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd03b:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 65529
-Property 0xd03c:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd03d:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 65529
-Property 0xd03e:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd03f:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 65529
-Property 0xd040:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd041:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd042:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd043:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd044:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd045:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd046:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd047:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd048:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd04a:(read only) (type=0x4) Range [20 - 20, step 1] value: 20
-Property 0xd04b:(readwrite) (type=0x4) Enumeration [1,2,3] value: 2
-Property 0xd04c:(readwrite) (type=0x6) Enumeration [4294967295,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600] value: 4294967295
-Property 0xd050:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd051:(readwrite) (type=0x4) Enumeration [41,44,47,50,53,56,59,62,65,68,71,74,77,158,161,164,167,170,173,176,179,182,185,188,191,194,275,278,281,284,287,290,293,296,299,302,305,308,311,392,395,398,401,404,407,410,413,416,419,422,425,428,509,512,515,518,521,524,527,530,533,536,539,542,545,626,629,632,635,638,641,644,647,650,653,656,659,662,743,746,749,752,755,758,761,764,767,770,773,776,779,860,863,866,869,872,875,878,881,884,887,890,893,896,977,980,983,986,989,992,995,998,1001,1004,1007,1010,1013] value: 524
-Property 0xd052:(readwrite) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd053:(read only) (type=0x4) Range [64636 - 900, step 1] value: 65493
-Property 0xd054:(read only) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd055:(read only) (type=0x4) Range [64636 - 900, step 1] value: 7
-Property 0xd056:(read only) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd057:(read only) (type=0x4) Enumeration [1,2,3,4,5,6] value: 1
-Property 0xd058:(read only) (type=0x4) Range [0 - 9999, step 1] value: 0
-Property 0xd059:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 0
-Property 0xd05a:(read only) (type=0x4) Range [0 - 1279, step 1] value: 128
-Property 0xd05b:(read only) (type=0x4) Range [0 - 1279, step 1] value: 1152
-Property 0xd05c:(read only) (type=0x4) Enumeration [1,2,3] value: 3
-Property 0xd05d:(read only) (type=0x4) Range [0 - 1279, step 1] value: 0
-Property 0xd05e:(read only) (type=0x4) Range [0 - 959, step 1] value: 0
-Property 0xd061:(read only) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd062:(read only) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd063:(read only) (type=0x4) Enumeration [5] value: 5
-Property 0xd064:(read only) (type=0x4) Enumeration [1,2,3,4] value: 3
-Property 0xd065:(readwrite) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd066:(read only) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd067:(read only) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd068:(read only) (type=0x4) Range [0 - 65535, step 1] value: 0
-Property 0xd069:(readwrite) (type=0x4) Enumeration [2,1] value: 1
-Property 0xd06a:(readwrite) (type=0x6) Enumeration [339742512] value: 339742512
-Property 0xd06d:(readwrite) (type=0x6) Enumeration [0,52429400,83887040,20971760,41943520,67109632] value: 0
-Property 0xd070:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6] value: 3
-Property 0xd071:(read only) (type=0x4) Range [0 - 959, step 1] value: 80
-Property 0xd072:(read only) (type=0x4) Range [0 - 959, step 1] value: 876
-Property 0xd073:(read only) (type=0x4) Enumeration [1,2,3,4,5] value: 1
-Property 0xd074:(read only) (type=0x4) Range [0 - 1279, step 1] value: 0
-Property 0xd075:(read only) (type=0x4) Range [0 - 959, step 1] value: 0
-Property 0xd077:(read only) (type=0x4) Enumeration [784] value: 784
-Property 0xd078:(readwrite) (type=0x4) Enumeration [1] value: 1
-Property 0xd079:(read only) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd07a:(readwrite) (type=0x6) Enumeration [65786,65736,65696,65661,65636,65616,65596] value: 65786
-Property 0xd07b:(readwrite) (type=0x6) Enumeration [65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,655385,655380,655376,655373,655370,851978,1048586,1310730,1638410,2097162,2621450,3276810,3932170,5242890,6553610,8519690,9830410,13107210,16384010,19660810,26214410,32768010,39321610] value: 65596
-Property 0xd07c:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd07d:(read only) (type=0x4) Enumeration [62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000] value: 0
-Property 0xd07f:(read only) (type=0x4) Enumeration [17] value: 17
-Property 0xd080:(read only) (type=0x4) Enumeration [160] value: 160
-Property 0xd081:(read only) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd082:(read only) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd083:(read only) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd084:(read only) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9] value: 7
-Property 0xd085:(read only) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd086:(read only) (type=0x6) Enumeration [97536] value: 97536
-Property 0xd087:(read only) (type=0x6) Enumeration [39321610] value: 39321610
-Property 0xd08b:(readwrite) (type=0x4) Enumeration [17,18,19,22] value: 17
-Property 0xd08c:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
-Property 0xd08e:(readwrite) (type=0x4) Enumeration [1,3,4] value: 3
-Property 0xd08f:(read only) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd097:(readwrite) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd09f:(read only) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd0a2:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9] value: 1
-Property 0xd0a3:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9] value: 2
-Property 0xd0a4:(readwrite) (type=0x4) Enumeration [22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1] value: 1
-Property 0xd0a7:(readwrite) (type=0x4) Enumeration [1,6,8,9,10,12,13,14,16] value: 1
-Property 0xd0a8:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
-Property 0xd0a9:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
-Property 0xd0aa:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
-Property 0xd0ab:(readwrite) (type=0x4) Enumeration [1,2,4,5] value: 1
-Property 0xd0ac:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd0ad:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8] value: 1
-Property 0xd0ae:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd0b2:(readwrite) (type=0x4) Enumeration [4,3,1] value: 3
-Property 0xd0b3:(readwrite) (type=0x4) Enumeration [4,3,1] value: 1
-Property 0xd0b4:(readwrite) (type=0x4) Enumeration [4,3,1] value: 4
-Property 0xd0b6:(readwrite) (type=0x4) Enumeration [5] value: 5
-Property 0xd0b7:(readwrite) (type=0x4) Enumeration [1,5] value: 5
-Property 0xd0b8:(readwrite) (type=0x4) Enumeration [5] value: 5
-Property 0xd0bc:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 5
-Property 0xd0bd:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 5
-Property 0xd0be:(readwrite) (type=0x4) Enumeration [1,6,2,3,4,5] value: 5
-Property 0xd0c4:(readwrite) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd0c5:(readwrite) (type=0x4) Enumeration [2,32770,1,32769,32772] value: 32770
-Property 0xd0c6:(read only) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd0c7:(readwrite) (type=0x4) Enumeration [264,262,263,296,294,295] value: 296
-Property 0xd0c9:(readwrite) (type=0x6) Enumeration [0,65544,65540,655380,655370,1310730,2621450,5242890,9830410,19660810] value: 0
-Property 0xd0cb:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd0cc:(readwrite) (type=0x4) Range [3 - 999, step 1] value: 99
-Property 0xd0cd:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10] value: 5
-Property 0xd0cf:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 2
-Property 0xd0d0:(read only) (type=0x4) Range [0 - 1279, step 1] value: 0
-Property 0xd0d1:(read only) (type=0x4) Range [0 - 959, step 1] value: 0
-Property 0xd0d2:(read only) (type=0x4) Range [0 - 1279, step 1] value: 0
-Property 0xd0d3:(read only) (type=0x4) Range [0 - 959, step 1] value: 0
-Property 0xd0d4:(read only) (type=0x6) Range [0 - 41877983, step 1] value: 0
-Property 0xd0d5:(read only) (type=0x6) Range [0 - 41877983, step 1] value: 41877504
-Property 0xd0d6:(read only) (type=0x6) Range [0 - 41877983, step 1] value: 478
-Property 0xd0d7:(read only) (type=0x6) Range [0 - 41877983, step 1] value: 41877982
-Property 0xd0d8:(read only) (type=0x6) Range [0 - 41877983, step 1] value: 0
-Property 0xd0d9:(read only) (type=0x6) Range [0 - 41877983, step 1] value: 41877504
-Property 0xd0da:(read only) (type=0x6) Range [0 - 41877983, step 1] value: 478
-Property 0xd0db:(read only) (type=0x6) Range [0 - 41877983, step 1] value: 41877982
-Property 0xd0dc:(readwrite) (type=0x4) Enumeration [3,2,1] value: 2
-Property 0xd0dd:(read only) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd0de:(read only) (type=0x4) Enumeration [0,1] value: 0
-Property 0xd0e1:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 0
-Property 0xd0e2:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 0
-Property 0xd0e3:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd0e4:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd0e6:(readwrite) (type=0x4) Enumeration [1,3,4,5,6,7,8,9,14,19,24] value: 4
-Property 0xd0ec:(readwrite) (type=0x4) Enumeration [1,2,4,8,15,20,25,30] value: 8
-Property 0xd0ed:(read only) (type=0x4) Enumeration [0] value: 0
-Property 0xd0ef:(readwrite) (type=0x4) Enumeration [65516,65517,65518,65519,65520,65521,65522,65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] value: 0
-Property 0xd0f0:(readwrite) (type=0x4) Enumeration [65516,65517,65518,65519,65520,65521,65522,65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] value: 0
-Property 0xd0f1:(readwrite) (type=0x4) Enumeration [65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13] value: 0
-Property 0xd0f2:(readwrite) (type=0x4) Enumeration [65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13] value: 0
-Property 0xd0f4:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 3
-Property 0xd0f6:(readwrite) (type=0x4) Enumeration [65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10] value: 0
-Property 0xd0f7:(readwrite) (type=0x4) Enumeration [65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10] value: 0
-Property 0xd0f8:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
-Property 0xd0f9:(readwrite) (type=0x4) Enumeration [2,1] value: 1
-Property 0xd0fa:(readwrite) (type=0x4) Enumeration [2,1] value: 1
-Property 0xd0fb:(readwrite) (type=0x4) Enumeration [1] value: 1
-Property 0xd0fe:(readwrite) (type=0x4) Enumeration [16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1] value: 8
-Property 0xd0ff:(readwrite) (type=0x4) Range [0 - 9999, step 1] value: 9999
-Property 0xd100:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd101:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
-Property 0xd102:(readwrite) (type=0x4) Enumeration [2,1] value: 1
-Property 0xd118:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd119:(readwrite) (type=0x6) Enumeration [39321610,32768010,26214410,19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,655373,655376,655380,655385,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536] value: 65786
-Property 0xd11a:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 1
-Property 0xd11b:(readwrite) (type=0x4) Enumeration [1] value: 1
-Property 0xd11c:(readwrite) (type=0x4) Enumeration [2] value: 2
-Property 0xd11d:(readwrite) (type=0x4) Enumeration [2] value: 2
-Property 0xd11e:(readwrite) (type=0x4) Enumeration [2] value: 2
-Property 0xd11f:(readwrite) (type=0x4) Enumeration [2,1] value: 1
-Property 0xd120:(readwrite) (type=0x4) Range [0 - 999, step 1] value: 200
-Property 0xd121:(read only) (type=0x4) Range [0 - 15, step 1] value: 1
-Property 0xd122:(read only) (type=0x4) Range [0 - 15, step 1] value: 1
-Property 0xd123:(read only) (type=0x4) Range [0 - 255, step 1] value: 0
-Property 0xd124:(read only) (type=0x4) Enumeration [1,2] value: 2
-Property 0xd125:(read only) (type=0x4) Enumeration [1,2,3,4,5] value: 5
-Property 0xd126:(read only) (type=0x4) Range [0 - 9999, step 1] value: 6497
-Property 0xd127:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 9727
-Property 0xd128:(read only) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd12d:(read only) (type=0x4) Enumeration [1,2,6] value: 6
-Property 0xd12e:(read only) (type=0x4) Enumeration [1,2,3,4,5] value: 5
-Property 0xd12f:(read only) (type=0x4) Range [0 - 101, step 1] value: 101
-Property 0xd130:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 96
-Property 0xd131:(read only) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd132:(readwrite) (type=0x4) Enumeration [32,257,258,259,260,289,290,291,292] value: 289
-Property 0xd133:(readwrite) (type=0x4) Enumeration [264,262,263,296,294,295] value: 296
-Property 0xd134:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 4294967295
-Property 0xd135:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 4294967295
-Property 0xd136:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 4294967295
-Property 0xd137:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 4294967295
-Property 0xd138:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 4294967295
-Property 0xd139:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 4294967295
-Property 0xd13a:(read only) (type=0x4) Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 63236
-Property 0xd141:(read only) (type=0x5) Range [0 - 16309, step 1] value: 1562
-Property 0xd147:(readwrite) (type=0x5) Range [-32767 - 32767, step 1] value: 32767
-Property 0xd148:(readwrite) (type=0x5) Range [-32767 - 32767, step 1] value: -32767
-Property 0xd151:(readwrite) (type=0x6) Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
-Property 0xd152:(readwrite) (type=0x6) Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
-Property 0xd161:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 65529
-Property 0xd162:(readwrite) (type=0x4) Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property 0xd163:(read only) (type=0x6) Range [0 - 4294967295, step 1] value: 63
-Property 0xd164:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 1
-Property 0xd165:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8] value: 1
-Property 0xd166:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 1
-Property 0xd167:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8] value: 1
-Property 0xd168:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 1
-Property 0xd169:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8] value: 1
-Property 0xd16a:(readwrite) (type=0x4) Enumeration [1,2,3,4,5] value: 1
-Property 0xd16b:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8] value: 1
-Property 0xd16c:(readwrite) (type=0x4) Enumeration [1,3,5,7,9,11,15,19,23,27] value: 7
-Property 0xd16d:(readwrite) (type=0x4) Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
-Property 0xd16e:(readwrite) (type=0x4) Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
-Property 0xd16f:(readwrite) (type=0x4) Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
-Property 0xd170:(readwrite) (type=0x4) Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
-Property 0xd171:(readwrite) (type=0x4) Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
-Property 0xd172:(readwrite) (type=0x4) Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
-Property 0xd173:(readwrite) (type=0x4) Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
-Property 0xd174:(read only) (type=0x4) Enumeration [1,2,3,4,32769] value: 32769
-Property 0xd176:(readwrite) (type=0xffff) '20240321T220116Z'
-Property 0xd177:(read only) (type=0x4) Enumeration [512] value: 512
-Property 0xd178:(read only) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,327,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,345,346,347,348,349,350,351,352,353,354,355,356,357,358,359,360,361,362,363,364,365,366,367,368,369,370,371,372,373,374,375,376,377,378,379,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,420,421,422,423,424,425,426,427,428,429,430,431,432,433,434,435,436,437,438,439,440,441,442,443,444,445,446,447,448,449,450,451,452,453,454,455,456,457,458,459,460,461,462,463,464,465,466,467,468,469,470,471,472,473,474,475,476,477,478,479,480,481,482,483,484,485,486,487,488,489,490,491,492,493,494,495,496,497,498,499,500,501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523,524,525,526,527,528,529,530,531,532,533,534,535,536,537,538,539,540,541,542,543,544,545,546,547,548,549,550,551,552,553,554,555,556,557,558,559,560,561,562,563,564,565,566,567,568,569,570,571,572,573,574,575,576,577,578,579,580,581,582,583,584,585,586,587,588,589,590,591,592,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607,608,609,610,611,612,613,614,615,616,617,618,619,620,621,622,623,624,625,626,627,628,629,630,631,632,633,634,635,636,637,638,639,640,641,642,643,644,645,646,647,648,649,650,651,652,653,654,655,656,657,658,659,660,661,662,663,664,665,666,667,668,669,670,671,672,673,674,675,676,677,678,679,680,681,682,683,684,685,686,687,688,689,690,691,692,693,694,695,696,697,698,699,700,701,702,703,704,705,706,707,708,709,710,711,712,713,714,715,716,717,718,719,720,721,722,723,724,725,726,727,728,729,730,731,732,733,734,735,736,737,738,739,740,741,742,743,744,745,746,747,748,749,750,751,752,753,754,755,756,757,758,759,760,761,762,763,764,765,766,767,768,769,770,771,772,773,774,775,776,777,778,779,780,781,782,783,784,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,810,811,812,813,814,815,816,817,818,819,820,821,822,823,824,825,826,827,828,829,830,831,832,833,834,835,836,837,838,839,840,841,842,843,844,845,846,847,848,849,850,851,852,853,854,855,856,857,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,873,874,875,876,877,878,879,880,881,882,883,884,885,886,887,888,889,890,891,892,893,894,895,896,897,898,899,900,901,902,903,904,905,906,907,908,909,910,911,912,913,914,915,916,917,918,919,920,921,922,923,924,925,926,927,928,929,930,931,932,933,934,935,936,937,938,939,940,941,942,943,944,945,946,947,948,949,950,951,952,953,954,955,956,957,958,959,960,961,962,963,964,965,966,967,968,969,970,971,972,973,974,975,976,977,978,979,980,981,982,983,984,985,986,987,988,989,990,991,992,993,994,995,996,997,998,999,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020,1021,1022,1023,1024,1025,1026,1027,1028,1029,1030,1031,1032,1033,1034,1035,1036,1037,1038,1039,1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053] value: 0
-Property 0xd179: error 200a on query.
-Property 0xd17b: error 200a on query.
-Property 0xd19f:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd1a0:(read only) (type=0x4) Enumeration [10,14,20] value: 10
-Property 0xd1a1:(readwrite) (type=0x4) Enumeration [10,20,30,40,50,60,70,80,90,100] value: 100
-Property 0xd1a2:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd1a3:(readwrite) (type=0x4) Range [2 - 99, step 1] value: 50
-Property 0xd1a4:(readwrite) (type=0x4) Enumeration [50,100,150,200] value: 200
-Property 0xd1a5:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd1a6:(readwrite) (type=0x4) Range [2 - 99, step 1] value: 50
-Property 0xd1a7:(readwrite) (type=0x4) Enumeration [600,1000,1200] value: 1200
-Property 0xd1a8:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd1a9:(readwrite) (type=0x4) Range [2 - 99, step 1] value: 50
-Property 0xd1aa:(readwrite) (type=0x4) Enumeration [125,167,250,500] value: 500
-Property 0xd1ab:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd1ac:(readwrite) (type=0x4) Range [2 - 99, step 1] value: 50
-Property 0xd1ad:(readwrite) (type=0x4) Enumeration [50,100,150,200] value: 200
-Property 0xd1ae:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd1af:(readwrite) (type=0x4) Range [2 - 99, step 1] value: 50
-Property 0xd1b0:(readwrite) (type=0x4) Range [0 - 99, step 1] value: 25
-Property 0xd1b1:(readwrite) (type=0x4) Enumeration [600,1000,1200] value: 1200
-Property 0xd1b2:(readwrite) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd1b3:(readwrite) (type=0x4) Range [2 - 99, step 1] value: 81
-Property 0xd1b4:(readwrite) (type=0x4) Range [0 - 99, step 1] value: 28
-Property 0xd1b5:(readwrite) (type=0x4) Enumeration [125,167,250,500] value: 500
-Property 0xd1b6:(readwrite) (type=0x4) Enumeration [2,1] value: 1
-Property 0xd1b7:(readwrite) (type=0x4) Range [2 - 99, step 1] value: 50
-Property 0xd1b8:(readwrite) (type=0x4) Range [0 - 99, step 1] value: 24
-Property 0xd1b9:(readwrite) (type=0x4) Enumeration [1,2,3] value: 1
-Property 0xd1ba:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd1bb:(readwrite) (type=0x4) Enumeration [2] value: 2
-Property 0xd1bc:(readwrite) (type=0x4) Range [3 - 15, step 1] value: 8
-Property 0xd1bd:(readwrite) (type=0x4) Enumeration [1,2,3,4,5,6,7,8,9,10] value: 5
-Property 0xd1be:(readwrite) (type=0x6) Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
-Property 0xd1bf:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd1c0:(readwrite) (type=0x6) Enumeration [4294967295,80,100,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,64000,80000,102400] value: 25600
-Property 0xd1c1:(read only) (type=0x6) Enumeration [6400] value: 6400
-Property 0xd1c2:(read only) (type=0x6) Enumeration [200] value: 200
-Property 0xd1c3:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd1c4:(readwrite) (type=0x4) Enumeration [1,2,3,4] value: 2
-Property 0xd1c5:(read only) (type=0x6) Enumeration [209717600] value: 209717600
-Property 0xd1c6:(read only) (type=0x6) Enumeration [125830560] value: 125830560
-Property 0xd1c7:(read only) (type=0x6) Enumeration [83887040] value: 83887040
-Property 0xd1c8:(read only) (type=0x6) Enumeration [67109632] value: 67109632
-Property 0xd1c9:(readwrite) (type=0x4) Enumeration [35328,35329,35330] value: 35328
-Property 0xd1cb:(read only) (type=0x4) Enumeration [2,1] value: 2
-Property 0xd1cc:(read only) (type=0x4) Enumeration [1,2,3] value: 3
-Property 0xd1cd:(readwrite) (type=0x4) Enumeration [2,1] value: 1
-Property 0xd1cf:(readwrite) (type=0x4) Enumeration [1,2] value: 1
-Property 0xd1d0:(readwrite) (type=0x4) Enumeration [1,7,2,3,4,5,6] value: 1
-Property 0xd1d1:(readwrite) (type=0x4) Enumeration [12,14] value: 12
-Property 0xd1d2:(read only) (type=0x4) Enumeration [1,2] value: 1
-
+Battery Level             (5001 ro u8 ): Range [1 - 100, step 1] value: 64% (64)
+Date & Time               (5011 rw str): '20250824T113936'
+[Unknown Property]        (d405 ro [u8 ]): a[73728] 0,0,1,0,5,0,0,0,0,0,1,0,32,0,94,219,0,0,86,0,0,0,48,48,0,0,1,0,32,0,168,37,0,0,180,219,0,0,32,32,0,0,1,0,32,0,168,16,0,0,92,1,1,0,24,24,0,0,1,0,32,0,136,9, ...
+[Unknown Property]        (d406 rw str): 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+[Unknown Property]        (d407 ro u32): 1
+[Unknown Property]        (d002 rw u16): Enumeration [10,11,12,14,16,18,20,22,25,28,32,35,40,45,50,56,63,71,80,90,100,110,130,140,160,180,200,220,250,290,320,360,400,450,510,570,640,720,810,910] value: 12
+[Unknown Property]        (d003 rw u16): Enumeration [2,32770,1,32772,32775] value: 2
+[Unknown Property]        (d004 rw u16): Enumeration [32769,2,4,32785,32786] value: 32769
+[Unknown Property]        (d005 rw u16): Enumeration [3,2,32786] value: 3
+[Unknown Property]        (d006 ro u16): Enumeration [1,2,3,4,8,11] value: 2
+[Unknown Property]        (d008 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
+[Unknown Property]        (d009 rw u16): Enumeration [1,33,7,39,40,41,67,72,73,4,5,36,6] value: 1
+[Unknown Property]        (d00c rw u16): Enumeration [33024,34817,34818,34819,34820,34821] value: 34818
+[Unknown Property]        (d00d rw u16): Enumeration [32,257,258,259,260,289,290,291,292] value: 258
+[Unknown Property]        (d00e rw u16): Enumeration [2000,2050,2100,2150,2200,2250,2300,2350,2400,2450,2500,2550,2600,2650,2700,2750,2800,2900,3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000,4200,4400,4600,4800,5000,5200,5400,5600,5800,6000,6200,6400,6600,6800,7000,7400,7800,8200,8600,9000,9400,9800,10000,11000,12000,13000,14000] value: 5400
+[Unknown Property]        (d00f rw u16): Enumeration [62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000] value: 0
+[Unknown Property]        (d010 rw u16): Enumeration [33281,33537,2,1,32771,32769,33025,34561,34049,35585,35586,34306,35617,35618,34308,35649,35650,35665,35666,35667,35681,35682,35697,35698,34313,35729,35730,35745,35746,35761,35762,35777,35778,35779,35793,35794,35795,35809,35810,34320] value: 2
+[Unknown Property]        (d011 rw u16): Enumeration [0,1] value: 0
+[Unknown Property]        (d013 rw u16): Enumeration [1,2,3,4] value: 1
+[Unknown Property]        (d014 rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d018 rw u16): Enumeration [65535,0,1] value: 65535
+[Unknown Property]        (d01b rw u32): Enumeration [262147,1048585,196610,65537,196612] value: 262147
+[Unknown Property]        (d01c rw u32): Enumeration [39321610,32768010,26214410,19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,655373,655376,655380,655385,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536] value: 65551
+[Unknown Property]        (d01d rw u16): Enumeration [0,4,1,2,3] value: 4
+[Unknown Property]        (d01e rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13] value: 1
+[Unknown Property]        (d01f rw u16): Enumeration [2,1] value: 1
+[Unknown Property]        (d020 rw u16): Enumeration [2,1,3,0] value: 2
+[Unknown Property]        (d021 rw u16): Enumeration [2,1,3,0] value: 0
+[Unknown Property]        (d022 rw u16): Enumeration [2,1,3,0] value: 0
+[Unknown Property]        (d025 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
+[Unknown Property]        (d026 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
+[Unknown Property]        (d027 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
+[Unknown Property]        (d029 rw u32): Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
+[Unknown Property]        (d02a rw u32): Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
+[Unknown Property]        (d02b rw u32): Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
+[Unknown Property]        (d02d rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 52
+[Unknown Property]        (d02e rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 51
+[Unknown Property]        (d02f rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 50
+[Unknown Property]        (d030 rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 98
+[Unknown Property]        (d031 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d032 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d033 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d034 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d035 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d036 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d037 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d038 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d039 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d03a rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d03b rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d03c rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d03d rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d03e rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d03f rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d040 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d041 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d042 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d043 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d044 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d045 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d046 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d047 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d048 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d04a ro u16): Range [17 - 17, step 1] value: 17
+[Unknown Property]        (d04b rw u16): Enumeration [1,2,3] value: 2
+[Unknown Property]        (d04c rw u32): Enumeration [4294967295,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600] value: 4294967295
+[Unknown Property]        (d050 rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d051 rw u16): Enumeration [41,44,47,50,53,56,59,62,65,68,71,74,77,158,161,164,167,170,173,176,179,182,185,188,191,194,275,278,281,284,287,290,293,296,299,302,305,308,311,392,395,398,401,404,407,410,413,416,419,422,425,428,509,512,515,518,521,524,527,530,533,536,539,542,545,626,629,632,635,638,641,644,647,650,653,656,659,662,743,746,749,752,755,758,761,764,767,770,773,776,779,860,863,866,869,872,875,878,881,884,887,890,893,896,977,980,983,986,989,992,995,998,1001,1004,1007,1010,1013] value: 527
+[Unknown Property]        (d052 rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d053 ro u16): Range [64636 - 900, step 1] value: 65531
+[Unknown Property]        (d054 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d055 ro u16): Range [64636 - 900, step 1] value: 65459
+[Unknown Property]        (d056 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d057 ro u16): Enumeration [1,2,3,4,5,6] value: 1
+[Unknown Property]        (d058 ro u16): Range [0 - 9999, step 1] value: 6044
+[Unknown Property]        (d059 ro u32): Range [0 - 4294967295, step 1] value: 2469
+[Unknown Property]        (d05a ro u16): Range [0 - 1279, step 1] value: 16
+[Unknown Property]        (d05b ro u16): Range [0 - 1279, step 1] value: 304
+[Unknown Property]        (d05c ro u16): Enumeration [1,2,3] value: 3
+[Unknown Property]        (d05d ro u16): Range [0 - 1279, step 1] value: 0
+[Unknown Property]        (d05e ro u16): Range [0 - 959, step 1] value: 0
+[Unknown Property]        (d061 ro u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d062 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d063 ro u16): Enumeration [5] value: 5
+[Unknown Property]        (d064 ro u16): Enumeration [1,2,3,4] value: 3
+[Unknown Property]        (d065 rw u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d066 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d067 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d068 ro u16): Range [0 - 65535, step 1] value: 0
+[Unknown Property]        (d069 rw u16): Enumeration [2,1] value: 1
+[Unknown Property]        (d06a rw u32): Enumeration [339742512] value: 339742512
+[Unknown Property]        (d06d rw u32): Enumeration [0,52429400,83887040,20971760,41943520,67109632] value: 0
+[Unknown Property]        (d070 rw u16): Enumeration [1,2,3,4,5,6] value: 3
+[Unknown Property]        (d071 ro u16): Range [0 - 959, step 1] value: 9
+[Unknown Property]        (d072 ro u16): Range [0 - 959, step 1] value: 230
+[Unknown Property]        (d073 ro u16): Enumeration [1,2,3,4,5] value: 5
+[Unknown Property]        (d074 ro u16): Range [0 - 1279, step 1] value: 0
+[Unknown Property]        (d075 ro u16): Range [0 - 959, step 1] value: 0
+[Unknown Property]        (d077 ro u16): Enumeration [784] value: 784
+[Unknown Property]        (d078 rw u16): Enumeration [1] value: 1
+[Unknown Property]        (d079 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d07a rw u32): Enumeration [65786,65736,65696,65661,65636,65616,65596] value: 65786
+[Unknown Property]        (d07b rw u32): Enumeration [65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,655385,655380,655376,655373,655370,851978,1048586,1310730,1638410,2097162,2621450,3276810,3932170,5242890,6553610,8519690,9830410,13107210,16384010,19660810,26214410,32768010,39321610] value: 65596
+[Unknown Property]        (d07c rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d07d ro u16): Enumeration [62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000] value: 0
+[Unknown Property]        (d07f ro u16): Enumeration [12] value: 12
+[Unknown Property]        (d080 ro u16): Enumeration [160] value: 160
+[Unknown Property]        (d081 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d082 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d083 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d084 ro u16): Enumeration [1,2,3,4,5,6,7,8,9] value: 7
+[Unknown Property]        (d085 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d086 ro u32): Enumeration [73536] value: 73536
+[Unknown Property]        (d087 ro u32): Enumeration [39321610] value: 39321610
+[Unknown Property]        (d08b rw u16): Enumeration [17,18,19,22] value: 17
+[Unknown Property]        (d08c rw u16): Enumeration [1,2,3,4] value: 1
+[Unknown Property]        (d08e rw u16): Enumeration [1,3,4] value: 3
+[Unknown Property]        (d08f ro u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d097 rw u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d09f ro u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d0a2 rw u16): Enumeration [1,2,3,4,5,6,7,8,9] value: 1
+[Unknown Property]        (d0a3 rw u16): Enumeration [1,2,3,4,5,6,7,8,9] value: 2
+[Unknown Property]        (d0a4 rw u16): Enumeration [22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1] value: 1
+[Unknown Property]        (d0a7 rw u16): Enumeration [1,6,8,9,10,12,13,14,16] value: 1
+[Unknown Property]        (d0a8 rw u16): Enumeration [1,2,3,4] value: 1
+[Unknown Property]        (d0a9 rw u16): Enumeration [1,2,3,4] value: 1
+[Unknown Property]        (d0aa rw u16): Enumeration [1,2,3,4] value: 1
+[Unknown Property]        (d0ab rw u16): Enumeration [1,2,4,5] value: 1
+[Unknown Property]        (d0ac rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d0ad rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+[Unknown Property]        (d0ae rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d0b2 rw u16): Enumeration [4,3,1] value: 3
+[Unknown Property]        (d0b3 rw u16): Enumeration [4,3,1] value: 1
+[Unknown Property]        (d0b4 rw u16): Enumeration [4,3,1] value: 4
+[Unknown Property]        (d0b6 rw u16): Enumeration [5] value: 5
+[Unknown Property]        (d0b7 rw u16): Enumeration [1,5] value: 5
+[Unknown Property]        (d0b8 rw u16): Enumeration [5] value: 5
+[Unknown Property]        (d0bc rw u16): Enumeration [1,2,3,4,5] value: 5
+[Unknown Property]        (d0bd rw u16): Enumeration [1,2,3,4,5] value: 5
+[Unknown Property]        (d0be rw u16): Enumeration [1,6,2,3,4,5] value: 5
+[Unknown Property]        (d0c4 rw u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d0c5 rw u16): Enumeration [2,32770,1,32769,32772] value: 32770
+[Unknown Property]        (d0c6 ro u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d0c7 rw u16): Enumeration [264,262,263,296,294,295] value: 296
+[Unknown Property]        (d0c9 rw u32): Enumeration [0,65544,65540,655380,655370,1310730,2621450,5242890,9830410,19660810] value: 0
+[Unknown Property]        (d0cb rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d0cc rw u16): Range [3 - 999, step 1] value: 99
+[Unknown Property]        (d0cd rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10] value: 5
+[Unknown Property]        (d0cf rw u16): Enumeration [1,2,3,4,5] value: 4
+[Unknown Property]        (d0d0 ro u16): Range [0 - 1279, step 1] value: 0
+[Unknown Property]        (d0d1 ro u16): Range [0 - 959, step 1] value: 0
+[Unknown Property]        (d0d2 ro u16): Range [0 - 1279, step 1] value: 0
+[Unknown Property]        (d0d3 ro u16): Range [0 - 959, step 1] value: 0
+[Unknown Property]        (d0d4 ro u32): Range [0 - 41877983, step 1] value: 0
+[Unknown Property]        (d0d5 ro u32): Range [0 - 41877983, step 1] value: 41877504
+[Unknown Property]        (d0d6 ro u32): Range [0 - 41877983, step 1] value: 478
+[Unknown Property]        (d0d7 ro u32): Range [0 - 41877983, step 1] value: 41877982
+[Unknown Property]        (d0d8 ro u32): Range [0 - 41877983, step 1] value: 0
+[Unknown Property]        (d0d9 ro u32): Range [0 - 41877983, step 1] value: 41877504
+[Unknown Property]        (d0da ro u32): Range [0 - 41877983, step 1] value: 478
+[Unknown Property]        (d0db ro u32): Range [0 - 41877983, step 1] value: 41877982
+[Unknown Property]        (d0dc rw u16): Enumeration [3,2,1] value: 2
+[Unknown Property]        (d0dd ro u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d0de ro u16): Enumeration [0,1] value: 0
+[Unknown Property]        (d0e1 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d0e2 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d0e3 rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d0e4 rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d0e6 rw u16): Enumeration [1,3,4,5,6,7,8,9,14,19,24] value: 1
+[Unknown Property]        (d0ec rw u16): Enumeration [1,2,4,8,15,20,25,30] value: 8
+[Unknown Property]        (d0ed ro u16): Enumeration [0] value: 0
+[Unknown Property]        (d0ef rw u16): Enumeration [65516,65517,65518,65519,65520,65521,65522,65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] value: 0
+[Unknown Property]        (d0f0 rw u16): Enumeration [65516,65517,65518,65519,65520,65521,65522,65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] value: 0
+[Unknown Property]        (d0f1 rw u16): Enumeration [65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13] value: 0
+[Unknown Property]        (d0f2 rw u16): Enumeration [65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13] value: 0
+[Unknown Property]        (d0f4 rw u16): Enumeration [1,2,3,4] value: 3
+[Unknown Property]        (d0f6 rw u16): Enumeration [65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10] value: 0
+[Unknown Property]        (d0f7 rw u16): Enumeration [65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10] value: 0
+[Unknown Property]        (d0f8 rw u16): Enumeration [1,2,3,4] value: 1
+[Unknown Property]        (d0f9 rw u16): Enumeration [2,1] value: 1
+[Unknown Property]        (d0fa rw u16): Enumeration [2,1] value: 1
+[Unknown Property]        (d0fb rw u16): Enumeration [1] value: 1
+[Unknown Property]        (d0fe rw u16): Enumeration [16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1] value: 8
+[Unknown Property]        (d0ff rw u16): Range [0 - 9999, step 1] value: 9999
+[Unknown Property]        (d100 rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d101 rw u16): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d102 rw u16): Enumeration [2,1] value: 1
+[Unknown Property]        (d118 rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d119 rw u32): Enumeration [39321610,32768010,26214410,19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,655373,655376,655380,655385,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536] value: 65786
+[Unknown Property]        (d11a rw u16): Enumeration [1,2,3,4] value: 3
+[Unknown Property]        (d11b rw u16): Enumeration [1,2,5,6] value: 1
+[Unknown Property]        (d11c rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d11d rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d11e rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d11f rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d120 rw u16): Range [0 - 999, step 1] value: 0
+[Unknown Property]        (d121 ro u16): Range [0 - 15, step 1] value: 15
+[Unknown Property]        (d122 ro u16): Range [0 - 15, step 1] value: 0
+[Unknown Property]        (d123 ro u16): Range [0 - 255, step 1] value: 0
+[Unknown Property]        (d124 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d125 ro u16): Enumeration [1,2,3,4,5] value: 5
+[Unknown Property]        (d126 ro u16): Range [0 - 9999, step 1] value: 6044
+[Unknown Property]        (d127 ro u32): Range [0 - 4294967295, step 1] value: 2469
+[Unknown Property]        (d128 ro u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d12d ro u16): Enumeration [1,2,6] value: 6
+[Unknown Property]        (d12e ro u16): Enumeration [1,2,3,4,5] value: 5
+[Unknown Property]        (d12f ro u16): Range [0 - 101, step 1] value: 101
+[Unknown Property]        (d130 ro u32): Range [0 - 4294967295, step 1] value: 118
+[Unknown Property]        (d131 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d132 rw u16): Enumeration [32,257,258,259,260,289,290,291,292] value: 258
+[Unknown Property]        (d133 rw u16): Enumeration [264,262,263,296,294,295] value: 296
+[Unknown Property]        (d134 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d135 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d136 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d137 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d138 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d139 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d13a ro u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
+[Unknown Property]        (d141 ro i32): Range [1543 - 4241, step 1] value: 2959
+[Unknown Property]        (d147 rw i32): Range [-32767 - 32767, step 1] value: 32767
+[Unknown Property]        (d148 rw i32): Range [-32767 - 32767, step 1] value: -32767
+[Unknown Property]        (d151 rw u32): Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
+[Unknown Property]        (d152 rw u32): Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
+[Unknown Property]        (d161 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d162 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+[Unknown Property]        (d163 ro u32): Range [0 - 4294967295, step 1] value: 63
+[Unknown Property]        (d164 rw u16): Enumeration [1,2,3,4,5] value: 1
+[Unknown Property]        (d165 rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+[Unknown Property]        (d166 rw u16): Enumeration [1,2,3,4,5] value: 1
+[Unknown Property]        (d167 rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+[Unknown Property]        (d168 rw u16): Enumeration [1,2,3,4,5] value: 1
+[Unknown Property]        (d169 rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+[Unknown Property]        (d16a rw u16): Enumeration [1,2,3,4,5] value: 1
+[Unknown Property]        (d16b rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+[Unknown Property]        (d16c rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
+[Unknown Property]        (d16d rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
+[Unknown Property]        (d16e rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
+[Unknown Property]        (d16f rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
+[Unknown Property]        (d170 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
+[Unknown Property]        (d171 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
+[Unknown Property]        (d172 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
+[Unknown Property]        (d173 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
+[Unknown Property]        (d174 ro u16): Enumeration [1,2,3,4,32769] value: 32769
+[Unknown Property]        (d176 rw str): '20250824T193938Z'
+[Unknown Property]        (d177 ro u16): Enumeration [512] value: 512
+[Unknown Property]        (d178 ro u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,327,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,345,346,347,348,349,350,351,352,353,354,355,356,357,358,359,360,361,362,363,364,365,366,367,368,369,370,371,372,373,374,375,376,377,378,379,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,420,421,422,423,424,425,426,427,428,429,430,431,432,433,434,435,436,437,438,439,440,441,442,443,444,445,446,447,448,449,450,451,452,453,454,455,456,457,458,459,460,461,462,463,464,465,466,467,468,469,470,471,472,473,474,475,476,477,478,479,480,481,482,483,484,485,486,487,488,489,490,491,492,493,494,495,496,497,498,499,500,501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523,524,525,526,527,528,529,530,531,532,533,534,535,536,537,538,539,540,541,542,543,544,545,546,547,548,549,550,551,552,553,554,555,556,557,558,559,560,561,562,563,564,565,566,567,568,569,570,571,572,573,574,575,576,577,578,579,580,581,582,583,584,585,586,587,588,589,590,591,592,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607,608,609,610,611,612,613,614,615,616,617,618,619,620,621,622,623,624,625,626,627,628,629,630,631,632,633,634,635,636,637,638,639,640,641,642,643,644,645,646,647,648,649,650,651,652,653,654,655,656,657,658,659,660,661,662,663,664,665,666,667,668,669,670,671,672,673,674,675,676,677,678,679,680,681,682,683,684,685,686,687,688,689,690,691,692,693,694,695,696,697,698,699,700,701,702,703,704,705,706,707,708,709,710,711,712,713,714,715,716,717,718,719,720,721,722,723,724,725,726,727,728,729,730,731,732,733,734,735,736,737,738,739,740,741,742,743,744,745,746,747,748,749,750,751,752,753,754,755,756,757,758,759,760,761,762,763,764,765,766,767,768,769,770,771,772,773,774,775,776,777,778,779,780,781,782,783,784,785,786,787,788,789,790,791,792,793,794,795,796,797,798,799,800,801,802,803,804,805,806,807,808,809,810,811,812,813,814,815,816,817,818,819,820,821,822,823,824,825,826,827,828,829,830,831,832,833,834,835,836,837,838,839,840,841,842,843,844,845,846,847,848,849,850,851,852,853,854,855,856,857,858,859,860,861,862,863,864,865,866,867,868,869,870,871,872,873,874,875,876,877,878,879,880,881,882,883,884,885,886,887,888,889,890,891,892,893,894,895,896,897,898,899,900,901,902,903,904,905,906,907,908,909,910,911,912,913,914,915,916,917,918,919,920,921,922,923,924,925,926,927,928,929,930,931,932,933,934,935,936,937,938,939,940,941,942,943,944,945,946,947,948,949,950,951,952,953,954,955,956,957,958,959,960,961,962,963,964,965,966,967,968,969,970,971,972,973,974,975,976,977,978,979,980,981,982,983,984,985,986,987,988,989,990,991,992,993,994,995,996,997,998,999,1000,1001,1002,1003,1004,1005,1006,1007,1008,1009,1010,1011,1012,1013,1014,1015,1016,1017,1018,1019,1020,1021,1022,1023,1024,1025,1026,1027,1028,1029,1030,1031,1032,1033,1034,1035,1036,1037,1038,1039,1040,1041,1042,1043,1044,1045,1046,1047,1048,1049,1050,1051,1052,1053] value: 0
+[Unknown Property]        (d179 -- ---): PTP error 200a on query
+[Unknown Property]        (d17b -- ---): PTP error 200a on query
+[Unknown Property]        (d19f rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d1a0 ro u16): Enumeration [10,14,20] value: 10
+[Unknown Property]        (d1a1 rw u16): Enumeration [10,20,30,40,50,60,70,80,90,100] value: 100
+[Unknown Property]        (d1a2 rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d1a3 rw u16): Range [2 - 99, step 1] value: 50
+[Unknown Property]        (d1a4 rw u16): Enumeration [50,100,150,200] value: 200
+[Unknown Property]        (d1a5 rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d1a6 rw u16): Range [2 - 99, step 1] value: 50
+[Unknown Property]        (d1a7 rw u16): Enumeration [600,1000,1200] value: 1200
+[Unknown Property]        (d1a8 rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d1a9 rw u16): Range [2 - 99, step 1] value: 50
+[Unknown Property]        (d1aa rw u16): Enumeration [125,167,250] value: 250
+[Unknown Property]        (d1ab rw u16): Enumeration [2,1] value: 2
+[Unknown Property]        (d1ac rw u16): Range [2 - 99, step 1] value: 50
+[Unknown Property]        (d1ad rw u16): Enumeration [50,100,150,200] value: 200
+[Unknown Property]        (d1ae rw u16): Enumeration [2,1] value: 1
+[Unknown Property]        (d1af rw u16): Range [2 - 99, step 1] value: 50
+[Unknown Property]        (d1b0 rw u16): Range [0 - 99, step 1] value: 10
+[Unknown Property]        (d1b1 rw u16): Enumeration [600,1000,1200] value: 1200
+[Unknown Property]        (d1b2 rw u16): Enumeration [2,1] value: 1
+[Unknown Property]        (d1b3 rw u16): Range [2 - 99, step 1] value: 50
+[Unknown Property]        (d1b4 rw u16): Range [0 - 99, step 1] value: 28
+[Unknown Property]        (d1b5 rw u16): Enumeration [125,167,250] value: 250
+[Unknown Property]        (d1b6 rw u16): Enumeration [2,1] value: 1
+[Unknown Property]        (d1b7 rw u16): Range [2 - 99, step 1] value: 50
+[Unknown Property]        (d1b8 rw u16): Range [0 - 99, step 1] value: 12
+[Unknown Property]        (d1b9 rw u16): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d1ba rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d1bb rw u16): Enumeration [2] value: 2
+[Unknown Property]        (d1bc rw u16): Range [3 - 15, step 1] value: 8
+[Unknown Property]        (d1bd rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10] value: 5
+[Unknown Property]        (d1be rw u32): Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
+[Unknown Property]        (d1bf rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d1c0 rw u32): Enumeration [4294967295,80,100,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,64000,80000,102400] value: 4294967295
+[Unknown Property]        (d1c1 ro u32): Enumeration [6400] value: 6400
+[Unknown Property]        (d1c2 ro u32): Enumeration [200] value: 200
+[Unknown Property]        (d1c3 rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d1c4 rw u16): Enumeration [1,2,3,4] value: 2
+[Unknown Property]        (d1c5 ro u32): Enumeration [209717600] value: 209717600
+[Unknown Property]        (d1c6 ro u32): Enumeration [125830560] value: 125830560
+[Unknown Property]        (d1c7
 /main/actions/bulb
 Label: Bulb Mode
 Readonly: 0
@@ -344,8 +334,8 @@ END
 Label: Camera Date and Time
 Readonly: 0
 Type: DATE
-Current: 1711054885
-Printable: Thu 21 Mar 2024 05:01:25 PM EDT
+Current: 1756060790
+Printable: Sun Aug 24 11:39:50 2025
 Help: Use 'now' as the current time when setting.
 
 END
@@ -353,7 +343,7 @@ END
 Label: Serial Number
 Readonly: 1
 Type: TEXT
-Current: BJRA05657
+Current: BJRAnnnnn
 END
 /main/status/manufacturer
 Label: Camera Manufacturer
@@ -383,13 +373,13 @@ END
 Label: Battery Level
 Readonly: 1
 Type: TEXT
-Current: 80%
+Current: 64%
 END
 /main/imgsettings/imageformat
 Label: Image Format
 Readonly: 0
 Type: RADIO
-Current: Large Fine JPEG+RAW
+Current: Large Normal JPEG
 Choice: 0 RAW
 Choice: 1 Large Fine JPEG
 Choice: 2 Large Normal JPEG
@@ -399,6 +389,43 @@ Choice: 5 Large Fine JPEG+RAW
 Choice: 6 Large Normal JPEG+RAW
 Choice: 7 Medium Normal JPEG+RAW
 Choice: 8 Small Normal JPEG+RAW
+END
+/main/imgsettings/iso
+Label: ISO Speed
+Readonly: 0
+Type: RADIO
+Current: Auto
+Choice: 0 Auto
+Choice: 1 L80
+Choice: 2 L100
+Choice: 3 200
+Choice: 4 250
+Choice: 5 320
+Choice: 6 400
+Choice: 7 500
+Choice: 8 640
+Choice: 9 800
+Choice: 10 1000
+Choice: 11 1250
+Choice: 12 1600
+Choice: 13 2000
+Choice: 14 2500
+Choice: 15 3200
+Choice: 16 4000
+Choice: 17 5000
+Choice: 18 6400
+Choice: 19 8000
+Choice: 20 10000
+Choice: 21 12800
+Choice: 22 16000
+Choice: 23 20000
+Choice: 24 25600
+Choice: 25 Extension 32000
+Choice: 26 Extension 40000
+Choice: 27 Extension 51200
+Choice: 28 Extension 64000
+Choice: 29 Extension 80000
+Choice: 30 Extension 102400
 END
 /main/imgsettings/whitebalance
 Label: WhiteBalance
@@ -419,11 +446,146 @@ Choice: 10 Preset 3
 Choice: 11 Preset 4
 Choice: 12 Custom
 END
+/main/imgsettings/colortemperature
+Label: Color Temperature
+Readonly: 0
+Type: RADIO
+Current: 5400
+Choice: 0 2000
+Choice: 1 2050
+Choice: 2 2100
+Choice: 3 2150
+Choice: 4 2200
+Choice: 5 2250
+Choice: 6 2300
+Choice: 7 2350
+Choice: 8 2400
+Choice: 9 2450
+Choice: 10 2500
+Choice: 11 2550
+Choice: 12 2600
+Choice: 13 2650
+Choice: 14 2700
+Choice: 15 2750
+Choice: 16 2800
+Choice: 17 2900
+Choice: 18 3000
+Choice: 19 3100
+Choice: 20 3200
+Choice: 21 3300
+Choice: 22 3400
+Choice: 23 3500
+Choice: 24 3600
+Choice: 25 3700
+Choice: 26 3800
+Choice: 27 3900
+Choice: 28 4000
+Choice: 29 4200
+Choice: 30 4400
+Choice: 31 4600
+Choice: 32 4800
+Choice: 33 5000
+Choice: 34 5200
+Choice: 35 5400
+Choice: 36 5600
+Choice: 37 5800
+Choice: 38 6000
+Choice: 39 6200
+Choice: 40 6400
+Choice: 41 6600
+Choice: 42 6800
+Choice: 43 7000
+Choice: 44 7400
+Choice: 45 7800
+Choice: 46 8200
+Choice: 47 8600
+Choice: 48 9000
+Choice: 49 9400
+Choice: 50 9800
+Choice: 51 10000
+Choice: 52 11000
+Choice: 53 12000
+Choice: 54 13000
+Choice: 55 14000
+END
+/main/imgsettings/whitebalanceadjusta
+Label: WhiteBalance Adjust A
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 -7
+Choice: 1 -6
+Choice: 2 -5
+Choice: 3 -4
+Choice: 4 -3
+Choice: 5 -2
+Choice: 6 -1
+Choice: 7 0
+Choice: 8 1
+Choice: 9 2
+Choice: 10 3
+Choice: 11 4
+Choice: 12 5
+Choice: 13 6
+Choice: 14 7
+END
+/main/imgsettings/whitebalanceadjustb
+Label: WhiteBalance Adjust B
+Readonly: 0
+Type: RADIO
+Current: 0
+Choice: 0 -7
+Choice: 1 -6
+Choice: 2 -5
+Choice: 3 -4
+Choice: 4 -3
+Choice: 5 -2
+Choice: 6 -1
+Choice: 7 0
+Choice: 8 1
+Choice: 9 2
+Choice: 10 3
+Choice: 11 4
+Choice: 12 5
+Choice: 13 6
+Choice: 14 7
+END
 /main/capturesettings/exposurecompensation
 Label: Exposure Compensation
 Readonly: 0
 Type: RADIO
-Current: -0.001
+Current: 0
+Choice: 0 -5
+Choice: 1 -4.7
+Choice: 2 -4.3
+Choice: 3 -4
+Choice: 4 -3.7
+Choice: 5 -3.3
+Choice: 6 -3
+Choice: 7 -2.7
+Choice: 8 -2.3
+Choice: 9 -2
+Choice: 10 -1.7
+Choice: 11 -1.3
+Choice: 12 -1
+Choice: 13 -0.7
+Choice: 14 -0.3
+Choice: 15 0
+Choice: 16 0.3
+Choice: 17 0.7
+Choice: 18 1
+Choice: 19 1.3
+Choice: 20 1.7
+Choice: 21 2
+Choice: 22 2.3
+Choice: 23 2.7
+Choice: 24 3
+Choice: 25 3.3
+Choice: 26 3.7
+Choice: 27 4
+Choice: 28 4.3
+Choice: 29 4.7
+Choice: 30 5
 END
 /main/capturesettings/focusmode
 Label: Focus Mode
@@ -433,7 +595,7 @@ Current: Automatic
 Choice: 0 Automatic
 Choice: 1 C-AF
 Choice: 2 Manual
-Choice: 3 Unknown value 8004
+Choice: 3 Preset MF
 Choice: 4 Unknown value 8007
 END
 /main/capturesettings/aspectratio
@@ -462,7 +624,7 @@ END
 Label: Aperture
 Readonly: 0
 Type: RADIO
-Current: 5.6
+Current: 1.2
 Choice: 0 1.0
 Choice: 1 1.1
 Choice: 2 1.2
@@ -508,7 +670,7 @@ END
 Label: Shutter Speed
 Readonly: 0
 Type: RADIO
-Current: 1/500
+Current: 1/15
 Choice: 0 60
 Choice: 1 50
 Choice: 2 40
@@ -567,18 +729,12 @@ Choice: 54 1/4000
 Choice: 55 1/5000
 Choice: 56 1/6400
 Choice: 57 1/8000
-Choice: 58 1/10000
-Choice: 59 1/12800
-Choice: 60 1/16000
-Choice: 61 1/20000
-Choice: 62 1/25600
-Choice: 63 1/32000
 END
 /main/other/5001
 Label: Battery Level
 Readonly: 1
 Type: MENU
-Current: 80
+Current: 64
 Choice: 0 1
 Choice: 1 2
 Choice: 2 3
@@ -684,7 +840,7 @@ END
 Label: Date & Time
 Readonly: 0
 Type: TEXT
-Current: 20240321T170125
+Current: 20250824T113950
 END
 /main/other/d405
 Label: PTP Property 0xd405
@@ -708,7 +864,7 @@ END
 Label: PTP Property 0xd002
 Readonly: 0
 Type: MENU
-Current: 56
+Current: 12
 Choice: 0 10
 Choice: 1 11
 Choice: 2 12
@@ -776,14 +932,16 @@ END
 Label: PTP Property 0xd005
 Readonly: 0
 Type: MENU
-Current: 2
-Choice: 0 2
+Current: 3
+Choice: 0 3
+Choice: 1 2
+Choice: 2 32786
 END
 /main/other/d006
 Label: PTP Property 0xd006
 Readonly: 1
 Type: MENU
-Current: 1
+Current: 2
 Choice: 0 1
 Choice: 1 2
 Choice: 2 3
@@ -795,23 +953,57 @@ END
 Label: PTP Property 0xd008
 Readonly: 0
 Type: MENU
-Current: 65535
+Current: 0
+Choice: 0 60536
+Choice: 1 60836
+Choice: 2 61236
+Choice: 3 61536
+Choice: 4 61836
+Choice: 5 62236
+Choice: 6 62536
+Choice: 7 62836
+Choice: 8 63236
+Choice: 9 63536
+Choice: 10 63836
+Choice: 11 64236
+Choice: 12 64536
+Choice: 13 64836
+Choice: 14 65236
+Choice: 15 0
+Choice: 16 300
+Choice: 17 700
+Choice: 18 1000
+Choice: 19 1300
+Choice: 20 1700
+Choice: 21 2000
+Choice: 22 2300
+Choice: 23 2700
+Choice: 24 3000
+Choice: 25 3300
+Choice: 26 3700
+Choice: 27 4000
+Choice: 28 4300
+Choice: 29 4700
+Choice: 30 5000
 END
 /main/other/d009
 Label: PTP Property 0xd009
 Readonly: 0
 Type: MENU
-Current: 33
+Current: 1
 Choice: 0 1
 Choice: 1 33
 Choice: 2 7
 Choice: 3 39
 Choice: 4 40
-Choice: 5 72
-Choice: 6 4
-Choice: 7 5
-Choice: 8 36
-Choice: 9 6
+Choice: 5 41
+Choice: 6 67
+Choice: 7 72
+Choice: 8 73
+Choice: 9 4
+Choice: 10 5
+Choice: 11 36
+Choice: 12 6
 END
 /main/other/d00c
 Label: PTP Property 0xd00c
@@ -824,14 +1016,12 @@ Choice: 2 34818
 Choice: 3 34819
 Choice: 4 34820
 Choice: 5 34821
-Choice: 6 35073
-Choice: 7 35074
 END
 /main/other/d00d
 Label: PTP Property 0xd00d
 Readonly: 0
 Type: MENU
-Current: 289
+Current: 258
 Choice: 0 32
 Choice: 1 257
 Choice: 2 258
@@ -846,7 +1036,7 @@ END
 Label: PTP Property 0xd00e
 Readonly: 0
 Type: MENU
-Current: 3000
+Current: 5400
 Choice: 0 2000
 Choice: 1 2050
 Choice: 2 2100
@@ -933,7 +1123,7 @@ END
 Label: PTP Property 0xd010
 Readonly: 0
 Type: MENU
-Current: 1
+Current: 2
 Choice: 0 33281
 Choice: 1 33537
 Choice: 2 2
@@ -999,6 +1189,7 @@ Readonly: 0
 Type: MENU
 Current: 2
 Choice: 0 2
+Choice: 1 1
 END
 /main/other/d018
 Label: PTP Property 0xd018
@@ -1024,7 +1215,7 @@ END
 Label: PTP Property 0xd01c
 Readonly: 0
 Type: MENU
-Current: 66036
+Current: 65551
 Choice: 0 39321610
 Choice: 1 32768010
 Choice: 2 26214410
@@ -1083,12 +1274,6 @@ Choice: 54 69536
 Choice: 55 70536
 Choice: 56 71936
 Choice: 57 73536
-Choice: 58 75536
-Choice: 59 78336
-Choice: 60 81536
-Choice: 61 85536
-Choice: 62 91136
-Choice: 63 97536
 END
 /main/other/d01d
 Label: PTP Property 0xd01d
@@ -1483,7 +1668,7 @@ END
 Label: PTP Property 0xd033
 Readonly: 0
 Type: MENU
-Current: 5
+Current: 0
 Choice: 0 65529
 Choice: 1 65530
 Choice: 2 65531
@@ -1525,7 +1710,7 @@ END
 Label: PTP Property 0xd035
 Readonly: 0
 Type: MENU
-Current: 65529
+Current: 0
 Choice: 0 65529
 Choice: 1 65530
 Choice: 2 65531
@@ -1567,7 +1752,7 @@ END
 Label: PTP Property 0xd037
 Readonly: 0
 Type: MENU
-Current: 65529
+Current: 0
 Choice: 0 65529
 Choice: 1 65530
 Choice: 2 65531
@@ -1609,7 +1794,7 @@ END
 Label: PTP Property 0xd039
 Readonly: 0
 Type: MENU
-Current: 65529
+Current: 0
 Choice: 0 65529
 Choice: 1 65530
 Choice: 2 65531
@@ -1651,7 +1836,7 @@ END
 Label: PTP Property 0xd03b
 Readonly: 0
 Type: MENU
-Current: 65529
+Current: 0
 Choice: 0 65529
 Choice: 1 65530
 Choice: 2 65531
@@ -1693,7 +1878,7 @@ END
 Label: PTP Property 0xd03d
 Readonly: 0
 Type: MENU
-Current: 65529
+Current: 0
 Choice: 0 65529
 Choice: 1 65530
 Choice: 2 65531
@@ -1735,7 +1920,7 @@ END
 Label: PTP Property 0xd03f
 Readonly: 0
 Type: MENU
-Current: 65529
+Current: 0
 Choice: 0 65529
 Choice: 1 65530
 Choice: 2 65531
@@ -1945,8 +2130,8 @@ END
 Label: PTP Property 0xd04a
 Readonly: 1
 Type: MENU
-Current: 20
-Choice: 0 20
+Current: 17
+Choice: 0 17
 END
 /main/other/d04b
 Label: PTP Property 0xd04b
@@ -1994,7 +2179,7 @@ END
 Label: PTP Property 0xd051
 Readonly: 0
 Type: MENU
-Current: 524
+Current: 527
 Choice: 0 41
 Choice: 1 44
 Choice: 2 47
@@ -2117,7 +2302,7 @@ END
 Label: PTP Property 0xd052
 Readonly: 0
 Type: MENU
-Current: 2
+Current: 1
 Choice: 0 1
 Choice: 1 2
 END
@@ -2125,13 +2310,13 @@ END
 Label: PTP Property 0xd053
 Readonly: 1
 Type: MENU
-Current: 65493
+Current: 65531
 END
 /main/other/d054
 Label: PTP Property 0xd054
 Readonly: 1
 Type: MENU
-Current: 1
+Current: 2
 Choice: 0 1
 Choice: 1 2
 END
@@ -2139,13 +2324,13 @@ END
 Label: PTP Property 0xd055
 Readonly: 1
 Type: MENU
-Current: 7
+Current: 65459
 END
 /main/other/d056
 Label: PTP Property 0xd056
 Readonly: 1
 Type: MENU
-Current: 1
+Current: 2
 Choice: 0 1
 Choice: 1 2
 END
@@ -2165,7 +2350,7 @@ END
 Label: PTP Property 0xd058
 Readonly: 1
 Type: RANGE
-Current: 0
+Current: 6044
 Bottom: 0
 Top: 9999
 Step: 1
@@ -2174,7 +2359,7 @@ END
 Label: PTP Property 0xd059
 Readonly: 1
 Type: RANGE
-Current: 0
+Current: 2469
 Bottom: 0
 Top: 4.29497e+09
 Step: 1
@@ -2183,7 +2368,7 @@ END
 Label: PTP Property 0xd05a
 Readonly: 1
 Type: RANGE
-Current: 128
+Current: 16
 Bottom: 0
 Top: 1279
 Step: 1
@@ -2192,7 +2377,7 @@ END
 Label: PTP Property 0xd05b
 Readonly: 1
 Type: RANGE
-Current: 1152
+Current: 304
 Bottom: 0
 Top: 1279
 Step: 1
@@ -2333,7 +2518,7 @@ END
 Label: PTP Property 0xd071
 Readonly: 1
 Type: RANGE
-Current: 80
+Current: 9
 Bottom: 0
 Top: 959
 Step: 1
@@ -2342,7 +2527,7 @@ END
 Label: PTP Property 0xd072
 Readonly: 1
 Type: RANGE
-Current: 876
+Current: 230
 Bottom: 0
 Top: 959
 Step: 1
@@ -2351,7 +2536,7 @@ END
 Label: PTP Property 0xd073
 Readonly: 1
 Type: MENU
-Current: 1
+Current: 5
 Choice: 0 1
 Choice: 1 2
 Choice: 2 3
@@ -2497,8 +2682,8 @@ END
 Label: PTP Property 0xd07f
 Readonly: 1
 Type: MENU
-Current: 17
-Choice: 0 17
+Current: 12
+Choice: 0 12
 END
 /main/other/d080
 Label: PTP Property 0xd080
@@ -2558,8 +2743,8 @@ END
 Label: PTP Property 0xd086
 Readonly: 1
 Type: MENU
-Current: 97536
-Choice: 0 97536
+Current: 73536
+Choice: 0 73536
 END
 /main/other/d087
 Label: PTP Property 0xd087
@@ -2939,7 +3124,7 @@ END
 Label: PTP Property 0xd0cf
 Readonly: 0
 Type: MENU
-Current: 2
+Current: 4
 Choice: 0 1
 Choice: 1 2
 Choice: 2 3
@@ -3117,7 +3302,7 @@ END
 Label: PTP Property 0xd0e6
 Readonly: 0
 Type: MENU
-Current: 4
+Current: 1
 Choice: 0 1
 Choice: 1 3
 Choice: 2 4
@@ -3540,7 +3725,7 @@ END
 Label: PTP Property 0xd11a
 Readonly: 0
 Type: MENU
-Current: 1
+Current: 3
 Choice: 0 1
 Choice: 1 2
 Choice: 2 3
@@ -3552,33 +3737,39 @@ Readonly: 0
 Type: MENU
 Current: 1
 Choice: 0 1
+Choice: 1 2
+Choice: 2 5
+Choice: 3 6
 END
 /main/other/d11c
 Label: PTP Property 0xd11c
 Readonly: 0
 Type: MENU
-Current: 2
-Choice: 0 2
+Current: 1
+Choice: 0 1
+Choice: 1 2
 END
 /main/other/d11d
 Label: PTP Property 0xd11d
 Readonly: 0
 Type: MENU
-Current: 2
-Choice: 0 2
+Current: 1
+Choice: 0 1
+Choice: 1 2
 END
 /main/other/d11e
 Label: PTP Property 0xd11e
 Readonly: 0
 Type: MENU
-Current: 2
-Choice: 0 2
+Current: 1
+Choice: 0 1
+Choice: 1 2
 END
 /main/other/d11f
 Label: PTP Property 0xd11f
 Readonly: 0
 Type: MENU
-Current: 1
+Current: 2
 Choice: 0 2
 Choice: 1 1
 END
@@ -3586,7 +3777,7 @@ END
 Label: PTP Property 0xd120
 Readonly: 0
 Type: RANGE
-Current: 200
+Current: 0
 Bottom: 0
 Top: 999
 Step: 1
@@ -3595,7 +3786,7 @@ END
 Label: PTP Property 0xd121
 Readonly: 1
 Type: MENU
-Current: 1
+Current: 15
 Choice: 0 0
 Choice: 1 1
 Choice: 2 2
@@ -3617,7 +3808,7 @@ END
 Label: PTP Property 0xd122
 Readonly: 1
 Type: MENU
-Current: 1
+Current: 0
 Choice: 0 0
 Choice: 1 1
 Choice: 2 2
@@ -3667,7 +3858,7 @@ END
 Label: PTP Property 0xd126
 Readonly: 1
 Type: RANGE
-Current: 6497
+Current: 6044
 Bottom: 0
 Top: 9999
 Step: 1
@@ -3676,7 +3867,7 @@ END
 Label: PTP Property 0xd127
 Readonly: 1
 Type: RANGE
-Current: 9727
+Current: 2469
 Bottom: 0
 Top: 4.29497e+09
 Step: 1
@@ -3821,7 +4012,7 @@ END
 Label: PTP Property 0xd130
 Readonly: 1
 Type: RANGE
-Current: 96
+Current: 118
 Bottom: 0
 Top: 4.29497e+09
 Step: 1
@@ -3830,7 +4021,7 @@ END
 Label: PTP Property 0xd131
 Readonly: 1
 Type: MENU
-Current: 1
+Current: 2
 Choice: 0 1
 Choice: 1 2
 END
@@ -3838,7 +4029,7 @@ END
 Label: PTP Property 0xd132
 Readonly: 0
 Type: MENU
-Current: 289
+Current: 258
 Choice: 0 32
 Choice: 1 257
 Choice: 2 258
@@ -3919,7 +4110,7 @@ END
 Label: PTP Property 0xd13a
 Readonly: 1
 Type: MENU
-Current: 62836
+Current: 0
 Choice: 0 60536
 Choice: 1 60836
 Choice: 2 61236
@@ -3956,9 +4147,9 @@ END
 Label: PTP Property 0xd141
 Readonly: 1
 Type: RANGE
-Current: 1562
-Bottom: 0
-Top: 16309
+Current: 2959
+Bottom: 1543
+Top: 4241
 Step: 1
 END
 /main/other/d147
@@ -4015,7 +4206,7 @@ END
 Label: PTP Property 0xd161
 Readonly: 0
 Type: MENU
-Current: 65529
+Current: 0
 Choice: 0 65529
 Choice: 1 65530
 Choice: 2 65531
@@ -4166,7 +4357,7 @@ END
 Label: PTP Property 0xd16c
 Readonly: 0
 Type: MENU
-Current: 7
+Current: 3
 Choice: 0 1
 Choice: 1 3
 Choice: 2 5
@@ -4313,7 +4504,7 @@ END
 Label: PTP Property 0xd176
 Readonly: 0
 Type: TEXT
-Current: 20240321T220127Z
+Current: 20250824T193951Z
 END
 /main/other/d177
 Label: PTP Property 0xd177
@@ -5773,11 +5964,10 @@ END
 Label: PTP Property 0xd1aa
 Readonly: 0
 Type: MENU
-Current: 500
+Current: 250
 Choice: 0 125
 Choice: 1 167
 Choice: 2 250
-Choice: 3 500
 END
 /main/other/d1ab
 Label: PTP Property 0xd1ab
@@ -5905,7 +6095,7 @@ END
 Label: PTP Property 0xd1ae
 Readonly: 0
 Type: MENU
-Current: 2
+Current: 1
 Choice: 0 2
 Choice: 1 1
 END
@@ -6017,7 +6207,7 @@ END
 Label: PTP Property 0xd1b0
 Readonly: 0
 Type: MENU
-Current: 25
+Current: 10
 Choice: 0 0
 Choice: 1 1
 Choice: 2 2
@@ -6132,7 +6322,7 @@ END
 Label: PTP Property 0xd1b2
 Readonly: 0
 Type: MENU
-Current: 2
+Current: 1
 Choice: 0 2
 Choice: 1 1
 END
@@ -6140,7 +6330,7 @@ END
 Label: PTP Property 0xd1b3
 Readonly: 0
 Type: MENU
-Current: 81
+Current: 50
 Choice: 0 2
 Choice: 1 3
 Choice: 2 4
@@ -6350,11 +6540,10 @@ END
 Label: PTP Property 0xd1b5
 Readonly: 0
 Type: MENU
-Current: 500
+Current: 250
 Choice: 0 125
 Choice: 1 167
 Choice: 2 250
-Choice: 3 500
 END
 /main/other/d1b6
 Label: PTP Property 0xd1b6
@@ -6472,7 +6661,7 @@ END
 Label: PTP Property 0xd1b8
 Readonly: 0
 Type: MENU
-Current: 24
+Current: 12
 Choice: 0 0
 Choice: 1 1
 Choice: 2 2
@@ -6661,7 +6850,7 @@ END
 Label: PTP Property 0xd1c0
 Readonly: 0
 Type: MENU
-Current: 25600
+Current: -1
 Choice: 0 -1
 Choice: 1 80
 Choice: 2 100
