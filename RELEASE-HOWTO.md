@@ -59,7 +59,7 @@
 
 ## update NEWS
 
-    git diff libgphoto2-2\_5\_21-release.. | less
+    git diff v2.5.32.. | less
 
    summarize changes
 

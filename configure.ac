@@ -5,6 +5,7 @@ dnl NOTE: Be version style _higher_ than the last release.
 dnl       So lastversion.X.trunk for instance. Bump X if necessary.
 
 dnl ******* THE NEXT RELEASE VERSION MUST BE 2.5.33 at least or higher!
+dnl ******* also update meson.build!
 AC_INIT([libgphoto2 photo camera library],
         [2.5.32.1],
         [gphoto-devel@lists.sourceforge.net],
