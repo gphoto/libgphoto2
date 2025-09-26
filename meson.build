@@ -83,6 +83,34 @@ if cc.has_function('strncpy', prefix: '#include <string.h>')
   add_project_arguments('-DHAVE_STRNCPY=1', language: 'c')
 endif
 
+if cc.has_function('snprintf', prefix: '#include <stdio.h>')
+  add_project_arguments('-DHAVE_SNPRINTF=1', language: 'c')
+endif
+
+if cc.has_function('statvfs', prefix: '#include <sys/statvfs.h>')
+  add_project_arguments('-DHAVE_STATVFS=1', language: 'c')
+endif
+
+if cc.has_function('localtime_r', prefix: '#include <time.h>')
+  add_project_arguments('-DHAVE_LOCALTIME_R=1', language: 'c')
+endif
+
+if cc.has_function('lstat', prefix: '#include <sys/stat.h>')
+  add_project_arguments('-DHAVE_LSTAT=1', language: 'c')
+endif
+
+if cc.has_function('inet_aton', prefix: '#include <sys/socket.h>\n#include <netinet/in.h>\n#include <arpa/inet.h>')
+  add_project_arguments('-DHAVE_INET_ATON=1', language: 'c')
+endif
+
+if cc.has_function('setenv', prefix: '#include <stdlib.h>')
+  add_project_arguments('-DHAVE_SETENV=1', language: 'c')
+endif
+
+if cc.has_member('struct tm', 'tm_gmtoff', prefix : '#include <time.h>')
+  add_project_arguments('-DHAVE_RM_GMTOFF=1', language: 'c')
+endif
+
 if (libcurl_dep.found())
   add_project_arguments('-DHAVE_LIBCURL=1', language: 'c')
 endif
@@ -135,10 +163,16 @@ int main(int argc, char **argv)
   endif
 endif
 
+# The iconv detection from autoconf does more than checking
+# the header.
+if cc.has_header('iconv.h')
+  add_project_arguments('-DHAVE_ICONV=1', language: 'c')
+endif
+
 headers = [
   'sys/param.h', 'sys/mman.h', 'sys/select.h', 'locale.h', 'memory.h',
   'getopt.h', 'unistd.h', 'mcheck.h', 'limits.h', 'sys/time.h', 'langinfo.h',
-  'stdio.h', 'stdlib.h', 'string.h',
+  'stdio.h', 'stdlib.h', 'string.h', 'sys/statvfs.h',
 ]
 
 foreach header : headers
