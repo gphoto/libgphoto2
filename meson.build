@@ -1,5 +1,5 @@
 project('libgphoto2', 'c',
-  version : '2.5.33',
+  version : '2.5.33.1',
   meson_version : '>= 1.4.0',
   default_options : [
     'buildtype=debugoptimized',
