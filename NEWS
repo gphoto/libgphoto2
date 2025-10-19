@@ -1,4 +1,9 @@
 libgphoto2 2.5.32.1 development
+
+ptp2:
+* fixed crash on capture regression
+
+translations: updated romanian, chinese, polish, ukrainian
 ------------------------------------------------------------------------------
 libgphoto2 2.5.32 release
 
