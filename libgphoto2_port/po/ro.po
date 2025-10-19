@@ -1,24 +1,32 @@
+# Romanian translation for libgphoto2_port.
 # Traducerea mesajelor din libgphoto2_port, în limba română.
+# Copyright © 2023, 2025 The gPhoto Team.
 # This file is distributed under the same license as the libgphoto2 package.
 #
-# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2022.
+# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2022, 2025.
+#
+# Cronologia traducerii fișierului „libgphoto2_port”:
+# Traducerea inițială, făcută de R-GC, pentru versiunea libgphoto2_port 2.5.28, feb-2022.
+# Actualizare a traducerii pentru versiunea 2.5.32, făcută de R-GC, iul-2025.
+# Actualizare a traducerii pentru versiunea Y, făcută de X, Z(luna-anul).
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: libgphoto2_port 2.5.28\n"
+"Project-Id-Version: libgphoto2_port 2.5.32\n"
 "Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2022-01-03 11:20+0100\n"
-"PO-Revision-Date: 2022-01-07 15:44+0100\n"
+"POT-Creation-Date: 2025-02-22 11:30+0100\n"
+"PO-Revision-Date: 2025-07-07 11:48+0200\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
 "Language: ro\n"
-"X-Bugs: Report translation errors to the Language-Team address.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.12.0\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"X-Generator: Poedit 3.5\n"
 
-#: libgphoto2_port/gphoto2-port-info-list.c:394
+#: libgphoto2_port/gphoto2-port-info-list.c:454
 msgid "Generic Port"
 msgstr "Port generic"
 
@@ -116,39 +124,38 @@ msgstr "eroare în «libhal»"
 msgid "Unknown error"
 msgstr "Eroare necunoscută"
 
-#: libgphoto2_port/gphoto2-port.c:46
+#: libgphoto2_port/gphoto2-port.c:48
 #, c-format
 msgid "The operation '%s' is not supported by this device"
 msgstr "Operația „%s” nu este acceptată de acest dispozitiv"
 
-#: libgphoto2_port/gphoto2-port.c:47
+#: libgphoto2_port/gphoto2-port.c:49
 msgid "The port has not yet been initialized"
 msgstr "Portul nu a fost încă inițializat"
 
-#: libgphoto2_port/gphoto2-port.c:673
+#: libgphoto2_port/gphoto2-port.c:687
 msgid "low"
 msgstr "redus"
 
-#: libgphoto2_port/gphoto2-port.c:674
+#: libgphoto2_port/gphoto2-port.c:688
 msgid "high"
 msgstr "ridicat"
 
-#: libgphoto2_port/gphoto2-port.c:1202
+#: libgphoto2_port/gphoto2-port.c:1216
 msgid "No error description available"
 msgstr "Nu este disponibilă nicio descriere a erorii"
 
-#: disk/disk.c:133 disk/disk.c:134 disk/disk.c:212 disk/disk.c:213
-#: disk/disk.c:253 disk/disk.c:276
+#: disk/disk.c:135 disk/disk.c:214 disk/disk.c:253 disk/disk.c:276
 #, c-format
 msgid "Media '%s'"
 msgstr "Media „%s”"
 
-#: libusb1/libusb1.c:386 usb/libusb.c:248
+#: libusb1/libusb1.c:480 usb/libusb.c:248
 #, c-format
 msgid "Could not open USB device (%s)."
 msgstr "Nu s-a putut deschide dispozitivul USB (%s)."
 
-#: libusb1/libusb1.c:395 usb/libusb.c:261
+#: libusb1/libusb1.c:490 usb/libusb.c:261
 msgid "Camera is already in use."
 msgstr "Camera este deja în uz."
 
@@ -160,66 +167,66 @@ msgstr "Camera este deja în uz."
 # dar, normal, asta e opinia mea...
 # Și a ta?
 # Tu ce zici, Daniel?
-#: libusb1/libusb1.c:404
+#: libusb1/libusb1.c:499
 msgid "Could not detach kernel driver of camera device."
-msgstr "Nu s-a putut detașa driverul din nucleu al dispozitivului «cameră»."
+msgstr "Nu s-a putut detașa controlorul din nucleu al dispozitivului «cameră»."
 
-#: libusb1/libusb1.c:410 usb/libusb.c:274
+#: libusb1/libusb1.c:505 usb/libusb.c:274
 msgid "Could not query kernel driver of device."
-msgstr "Nu s-a putut apela driverul din nucleu, al dispozitivului."
+msgstr "Nu s-a putut apela controlorul din nucleu, al dispozitivului."
 
-#: libusb1/libusb1.c:417 usb/libusb.c:283
+#: libusb1/libusb1.c:512 usb/libusb.c:283
 #, c-format
 msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
-msgstr "Nu s-a putut apela interfața %d (%s). Asigurați-vă că niciun alt program (%s) sau modul kernel (cum ar fi %s) nu utilizează dispozitivul și că aveți acces de citire/scriere la dispozitiv."
+msgstr "Nu s-a putut apela interfața %d (%s). Asigurați-vă că niciun alt program (%s) sau modul al nucleului (cum ar fi %s) nu utilizează dispozitivul și că aveți acces de citire/scriere la dispozitiv."
 
-#: libusb1/libusb1.c:428 usb/libusb.c:295
+#: libusb1/libusb1.c:523 usb/libusb.c:295
 msgid "MacOS PTPCamera service"
 msgstr "Serviciu MacOS pentru PTPCamera"
 
-#: libusb1/libusb1.c:430 usb/libusb.c:297
+#: libusb1/libusb1.c:525 usb/libusb.c:297
 msgid "unknown libgphoto2 using program"
 msgstr "program necunoscut ce utilizează biblioteca „libgphoto2”"
 
 # lansa cu sensul de-a pornii(direct), și de-a afișa(indirect)
-#: libusb1/libusb1.c:499 usb/libusb.c:314
+#: libusb1/libusb1.c:597 usb/libusb.c:314
 #, c-format
 msgid "Could not release interface %d (%s)."
 msgstr "Nu s-a putut lansa interfața %d (%s)."
 
 # Întrebare:
 # este mai potrivit termenul „reiniția”, pentru a traduce «reset»?
-#: libusb1/libusb1.c:513 usb/libusb.c:329
+#: libusb1/libusb1.c:611 usb/libusb.c:329
 #, c-format
 msgid "Could not reset USB port (%s)."
 msgstr "Nu s-a putut repornii portul USB (%s)."
 
-#: libusb1/libusb1.c:522
+#: libusb1/libusb1.c:620
 msgid "Could not reattach kernel driver of camera device."
-msgstr "Nu s-a putut reatașa driverul din nucleu, al dispozitivului «cameră»."
+msgstr "Nu s-a putut reatașa controlorul din nucleu, al dispozitivului «cameră»."
 
-#: libusb1/libusb1.c:956 usb/libusb.c:621
+#: libusb1/libusb1.c:1054 usb/libusb.c:621
 #, c-format
 msgid "Could not set config %d/%d (%s)"
 msgstr "Nu s-a putut definii configurația %d/%d (%s)"
 
-#: libusb1/libusb1.c:985 usb/libusb.c:652
+#: libusb1/libusb1.c:1083 usb/libusb.c:652
 #, c-format
 msgid "Could not set altsetting from %d to %d (%s)"
 msgstr "Nu s-a putut schimba configurarea alternativă de la %d la %d (%s)"
 
-#: libusb1/libusb1.c:1119 libusb1/libusb1.c:1211 usb/libusb.c:812
+#: libusb1/libusb1.c:1217 libusb1/libusb1.c:1309 usb/libusb.c:812
 #: usb/libusb.c:898
 #, c-format
 msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
 msgstr "Nu s-a putut găsi dispozitivul USB (fabricant 0x%x, produs 0x%x). Asigurați-vă că acest dispozitiv este conectat la calculator."
 
-#: libusb1/libusb1.c:1150 usb/libusb.c:741
+#: libusb1/libusb1.c:1248 usb/libusb.c:741
 #, c-format
 msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
 msgstr "id-ul fabricantului sau al produsului furnizat (0x%x,0x%x), nu este valid."
 
-#: libusb1/libusb1.c:1500 usb/libusb.c:1191
+#: libusb1/libusb1.c:1598 usb/libusb.c:1191
 #, c-format
 msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
 msgstr "Nu s-a putut găsi dispozitivul USB (clasa 0x%x, subclasa 0x%x, protocol 0x%x). Asigurați-vă că acest dispozitiv este conectat la calculator."
@@ -232,7 +239,7 @@ msgstr "Conexiune PTP/IP"
 msgid "IP Connection"
 msgstr "Conexiune IP"
 
-#: serial/unix.c:209
+#: serial/unix.c:210
 #, c-format
 msgid "Could not lock device '%s'"
 msgstr "Nu s-a putut bloca dispozitivul „%s”"
@@ -241,80 +248,80 @@ msgstr "Nu s-a putut bloca dispozitivul „%s”"
 # sunt din ce în ce, mai tentat, de-a traduce «pid», ca:
 # „proces(ul) cu id-ul”; cel puțin în mesaje ca acesta, nu în cele ce apar la utilizarea opțiunii „--help” cu numele software-ului, din
 # cauza lipsei de spațiu...
-#: serial/unix.c:219 usbdiskdirect/linux.c:79
+#: serial/unix.c:220 usbdiskdirect/linux.c:79
 #, c-format
 msgid "Device '%s' is locked by pid %d"
 msgstr "Dispozitivul „%s” este blocat de pid-ul %d"
 
-#: serial/unix.c:222 usbdiskdirect/linux.c:82
+#: serial/unix.c:223 usbdiskdirect/linux.c:82
 #, c-format
 msgid "Device '%s' could not be locked (dev_lock returned %d)"
-msgstr "Dispozitivul „%s” nu a putut fi blocat (dev_lock a returnat %d)"
+msgstr "Dispozitivul „%s” nu a putut fi blocat (dev_lock() a returnat %d)"
 
-#: serial/unix.c:251
+#: serial/unix.c:252
 #, c-format
 msgid "Device '%s' could not be unlocked."
 msgstr "Dispozitivul „%s” nu a putut fi deblocat."
 
-#: serial/unix.c:263 usbdiskdirect/linux.c:111
+#: serial/unix.c:264 usbdiskdirect/linux.c:111
 #, c-format
 msgid "Device '%s' could not be unlocked as it is locked by pid %d."
 msgstr "Dispozitivul „%s” nu a putut fi deblocat deoarece este blocat de pid-ul %d."
 
-#: serial/unix.c:267 usbdiskdirect/linux.c:115
+#: serial/unix.c:268 usbdiskdirect/linux.c:115
 #, c-format
 msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
-msgstr "Dispozitivul „%s” nu a putut fi deblocat (dev_unlock a returnat %d)"
+msgstr "Dispozitivul „%s” nu a putut fi deblocat (dev_unlock() a returnat %d)"
 
-#: serial/unix.c:313
+#: serial/unix.c:311
 #, c-format
 msgid "Serial Port %i"
 msgstr "Port serial %i"
 
-#: serial/unix.c:326
+#: serial/unix.c:324
 msgid "Serial Port Device"
 msgstr "Dispozitiv cu port serial"
 
-#: serial/unix.c:401
+#: serial/unix.c:400
 #, c-format
 msgid "Failed to open '%s' (%s)."
 msgstr "Nu s-a putut deschide „%s” (%s)."
 
-#: serial/unix.c:421
+#: serial/unix.c:420
 #, c-format
 msgid "Could not close '%s' (%s)."
 msgstr "Nu s-a putut închide „%s” (%s)."
 
-#: serial/unix.c:477
+#: serial/unix.c:476
 #, c-format
 msgid "Could not write to port (%s)"
 msgstr "Nu s-a putut scrie în portul (%s)"
 
-#: serial/unix.c:552
+#: serial/unix.c:551
 msgid "Parity error."
 msgstr "Eroare de paritate."
 
-#: serial/unix.c:556
+#: serial/unix.c:555
 #, c-format
 msgid "Unexpected parity response sequence 0xff 0x%02x."
 msgstr "Secvență de răspuns de paritate 0xff 0x%02x, neașteptată."
 
-#: serial/unix.c:599
+#: serial/unix.c:598
 #, c-format
 msgid "Unknown pin %i."
 msgstr "%i, pin necunoscut."
 
-#: serial/unix.c:621
+#: serial/unix.c:620
 #, c-format
 msgid "Could not get level of pin %i (%s)."
 msgstr "Nu s-a putut obține nivelul pinului %i (%s)."
 
-#: serial/unix.c:657
+#: serial/unix.c:656
 #, c-format
 msgid "Could not set level of pin %i to %i (%s)."
 msgstr "Nu s-a putut configura nivelul pinului %i la %i (%s)."
 
-#: serial/unix.c:684
+#: serial/unix.c:683
 #, c-format
 msgid "Could not flush '%s' (%s)."
 msgstr "Nu s-a putut goli „%s” (%s)."
@@ -327,38 +334,38 @@ msgstr "Nu s-a putut configura viteza de transmitere a %d"
 #: usb/libusb.c:269
 #, c-format
 msgid "Could not detach kernel driver '%s' of camera device."
-msgstr "Nu s-a putut detașa driverul din nucleu „%s”, al dispozitivului camerei."
+msgstr "Nu s-a putut detașa controlorul din nucleu „%s”, al dispozitivului camerei."
 
 #: usb/libusb.c:359
 #, c-format
 msgid "Could not close USB port (%s)."
 msgstr "Nu s-a putut închide portul USB (%s)."
 
-#: usbdiskdirect/linux.c:218
+#: usbdiskdirect/linux.c:219
 msgid "USB Mass Storage direct IO"
 msgstr "In/Ieș(I/O) directă, pentru stocarea în masă USB"
 
-#: usbdiskdirect/linux.c:269 usbscsi/linux.c:253
+#: usbdiskdirect/linux.c:270 usbscsi/linux.c:254
 #, c-format
 msgid "Failed to open '%s' (%m)."
 msgstr "Nu s-a putut deschide „%s” (%m)."
 
-#: usbdiskdirect/linux.c:283 usbscsi/linux.c:281
+#: usbdiskdirect/linux.c:284 usbscsi/linux.c:282
 #, c-format
 msgid "Could not close '%s' (%m)."
 msgstr "Nu s-a putut închide „%s” (%m)."
 
-#: usbdiskdirect/linux.c:307
+#: usbdiskdirect/linux.c:308
 #, c-format
 msgid "Could not seek to offset: %x on '%s' (%m)."
-msgstr "Nu s-a putut continua deplasarea: %x pe „%s” (%m)."
+msgstr "Nu s-a putut căuta poziția: %x pe „%s” (%m)."
 
-#: usbdiskdirect/linux.c:329
+#: usbdiskdirect/linux.c:330
 #, c-format
 msgid "Could not write to '%s' (%m)."
 msgstr "Nu s-a putut scrie în „%s” (%m)."
 
-#: usbdiskdirect/linux.c:350
+#: usbdiskdirect/linux.c:351
 #, c-format
 msgid "Could not read from '%s' (%m)."
 msgstr "Nu s-a putut citi din „%s” (%m)."
@@ -378,11 +385,11 @@ msgstr "Nu s-a putut bloca „%s” (%m)."
 msgid "Failed to unlock '%s' (%m)."
 msgstr "Nu s-a putut debloca „%s” (%m)."
 
-#: usbscsi/linux.c:214
+#: usbscsi/linux.c:215
 msgid "USB Mass Storage raw SCSI"
 msgstr "SCSI brut, pentru stocarea în masă USB"
 
-#: usbscsi/linux.c:325
+#: usbscsi/linux.c:326
 #, c-format
 msgid "Could not send scsi command to: '%s' (%m)."
 msgstr "Nu s-a putut trimite comanda scsi la: „%s” (%m)."
