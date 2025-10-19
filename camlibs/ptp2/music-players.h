@@ -2060,6 +2060,9 @@
   /* https://sourceforge.net/p/libmtp/feature-requests/303/ */
   { "SONY", 0x0fce, "Xperia 5 II Phone", 0x020d,
       DEVICE_FLAG_NONE },
+  /* https://github.com/libmtp/libmtp/issues/315 */
+  { "SONY", 0x0fce, "Xperia 10 VI", 0x020e,
+      DEVICE_FLAG_NONE },
 
   /* https://bugs.kde.org/show_bug.cgi?id=387454 ... probably not in the ADB/CDROM method? */
   { "SONY", 0x0fce, "Xperia XA2 (Jolla Sailfish)", 0x0a07,
@@ -2217,6 +2220,8 @@
   { "SONY", 0x0fce, "Xperia 10 V Phone MTP+CDROM", 0x420c,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia 5 II Phone MTP+CDROM", 0x420d,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia 10 VI MTP+CDROM", 0x420e,
       DEVICE_FLAG_NONE },
 
   /*
@@ -2395,6 +2400,8 @@
   { "SONY", 0x0fce, "Xperia 10 V Phone MTP+ADB", 0x520c,
       DEVICE_FLAG_NONE },
   { "SONY", 0x0fce, "Xperia 5 II Phone MTP+ADB", 0x520d,
+      DEVICE_FLAG_NONE },
+  { "SONY", 0x0fce, "Xperia 10 VI MTP+ADB", 0x520e,
       DEVICE_FLAG_NONE },
 
   /*
@@ -3205,6 +3212,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/102 */
   { "Lenovo", 0x17ef, "Tab M10", 0x7bdf,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://sourceforge.net/p/libmtp/bugs/1955/ */
+  { "Lenovo", 0x17ef, "Tab V7", 0x7beb,
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1944/ */
   { "Lenovo", 0x17ef, "Yoga Smart Tab", 0x7c12,
@@ -4120,6 +4130,8 @@
   /* https://github.com/libmtp/libmtp/issues/245 */
   { "Garmin", 0x091e, "EPIX Pro (Gen 2)", 0x50d8, DEVICE_FLAGS_ANDROID_BUGS },
   { "Garmin", 0x091e, "EPIX Pro", 0x50d9, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/328 */
+  { "Garmin", 0x091e, "EPIX Pro (Gen 2) 51mm", 0x50da, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/152 */
   { "Garmin", 0x091e, "Forerunner 965", 0x50db, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/218 */
@@ -4132,6 +4144,7 @@
   { "Garmin", 0x091e, "Fenix8", 0x51b6, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/251 */
   { "Garmin", 0x091e, "Fenix 8 AMOLED", 0x51b8, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Fenix 8 Solar Sapphire", 0x51b5, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/207 */
   { "Garmin", 0x091e, "Tactix 7 AMOLED", 0x51be, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/305 */
@@ -4140,6 +4153,8 @@
   { "Garmin", 0x091e, "Forerunner 570", 0x51de, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/303 */
   { "Garmin", 0x091e, "Vivoactive 6", 0x5211, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/309 */
+  { "Garmin", 0x091e, "Instinct 3 Solar", 0x5297, DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Wacom
@@ -4157,6 +4172,9 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/bugs/1245/ */
   { "DigiLand", 0x1f3a, "DL701Q", 0x0c02,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* Marcus temu tablet */
+  { "Allwinner", 0x1f3a, "IT_701A", 0x4ee1,
       DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
@@ -4514,6 +4532,8 @@
   { "Teenage engineering", 0x2367, "TP-7", 0x0019, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/160 */
   { "Teenage engineering", 0x2367, "OP-1 field", 0x0102, DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/311 */
+  { "Teenage engineering", 0x2367, "OP-XY", 0x0021, DEVICE_FLAGS_ANDROID_BUGS },
 
   /* https://github.com/libmtp/libmtp/issues/203 */
   { "DJI", 0x2ca3, "Controller 2", 0x1021, DEVICE_FLAGS_ANDROID_BUGS },
