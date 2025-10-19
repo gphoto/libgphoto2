@@ -1,7 +1,18 @@
 libgphoto2 2.5.32.1 development
 
+serial:
+* added caching
+
+canon:
+* use caching from serial driver
+
 ptp2:
 * fixed crash on capture regression
+* added new ids:
+  * Sony ZV-E10M2
+  * Fuji X-M5
+  * Ricoh GR IIIx (corrected id)
+* imported libmtp ids
 
 translations: updated romanian, chinese, polish, ukrainian
 ------------------------------------------------------------------------------
