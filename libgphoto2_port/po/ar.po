@@ -1,0 +1,369 @@
+# Arabic translation for libgphoto2_port.
+# This file is distributed under the same license as the libgphoto2 package.
+# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: libgphoto2_port-2.5.32\n"
+"Report-Msgid-Bugs-To: gphoto-devel@lists.sourceforge.net\n"
+"POT-Creation-Date: 2025-02-22 11:30+0100\n"
+"PO-Revision-Date: 2025-10-09 11:21+0400\n"
+"Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
+"Language-Team: Arabic <(nothing)>\n"
+"Language: ar\n"
+"X-Bugs: Report translation errors to the Language-Team address.\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100 >= 3 && n%100<=10 ? 3 : n%100 >= 11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 23.08.5\n"
+
+#: libgphoto2_port/gphoto2-port-info-list.c:454
+msgid "Generic Port"
+msgstr "منفذ عام"
+
+#: libgphoto2_port/gphoto2-port-result.c:42
+msgid "No error"
+msgstr "لا أخطاء"
+
+#: libgphoto2_port/gphoto2-port-result.c:44
+msgid "Unspecified error"
+msgstr "خطأ غير محدد"
+
+#: libgphoto2_port/gphoto2-port-result.c:46
+msgid "I/O problem"
+msgstr "مشكلة إدخال/إخراج"
+
+#: libgphoto2_port/gphoto2-port-result.c:48
+msgid "Bad parameters"
+msgstr "معاملات سيئة"
+
+#: libgphoto2_port/gphoto2-port-result.c:50
+msgid "Unsupported operation"
+msgstr "عملية غير متاحة"
+
+#: libgphoto2_port/gphoto2-port-result.c:52
+msgid "Fixed limit exceeded"
+msgstr "تجاوز الحد الثابت"
+
+#: libgphoto2_port/gphoto2-port-result.c:54
+msgid "Timeout reading from or writing to the port"
+msgstr "انتهت مهلة القراءة أو الكتابة من/إلى المنفذ"
+
+#: libgphoto2_port/gphoto2-port-result.c:56
+msgid "Serial port not supported"
+msgstr "المنفذ التسلسلي غير مدعوم"
+
+#: libgphoto2_port/gphoto2-port-result.c:58
+msgid "USB port not supported"
+msgstr "منفذ USB غير مدعوم"
+
+#: libgphoto2_port/gphoto2-port-result.c:60
+msgid "Unknown port"
+msgstr "منفذ غير معروف"
+
+#: libgphoto2_port/gphoto2-port-result.c:62
+msgid "Out of memory"
+msgstr "نفاد الذاكرة"
+
+#: libgphoto2_port/gphoto2-port-result.c:64
+msgid "Error loading a library"
+msgstr "خطأ في تحميل مكتبة"
+
+#: libgphoto2_port/gphoto2-port-result.c:66
+msgid "Error initializing the port"
+msgstr "خطأ في تهيئة المنفذ"
+
+#: libgphoto2_port/gphoto2-port-result.c:68
+msgid "Error reading from the port"
+msgstr "خطأ في القراءة من المنفذ"
+
+#: libgphoto2_port/gphoto2-port-result.c:70
+msgid "Error writing to the port"
+msgstr "خطأ في الكتابة إلى المنفذ"
+
+#: libgphoto2_port/gphoto2-port-result.c:72
+msgid "Error updating the port settings"
+msgstr "خطأ في تحديث إعدادات المنفذ"
+
+#: libgphoto2_port/gphoto2-port-result.c:74
+msgid "Error setting the serial port speed"
+msgstr "خطأ في ضبط سرعة المنفذ التسلسلي"
+
+#: libgphoto2_port/gphoto2-port-result.c:76
+msgid "Error clearing a halt condition on the USB port"
+msgstr "خطأ في مسح شرط التوقف على منفذ USB"
+
+#: libgphoto2_port/gphoto2-port-result.c:78
+msgid "Could not find the requested device on the USB port"
+msgstr "لا أستطيع إيجاد الجهاز المطلوب على منفذ USB"
+
+#: libgphoto2_port/gphoto2-port-result.c:80
+msgid "Could not claim the USB device"
+msgstr "لا أستطيع المطالبة بجهاز USB"
+
+#: libgphoto2_port/gphoto2-port-result.c:82
+msgid "Could not lock the device"
+msgstr "لا أستطيع قفل الجهاز"
+
+#: libgphoto2_port/gphoto2-port-result.c:84
+msgid "libhal error"
+msgstr "خطأ libhal"
+
+#: libgphoto2_port/gphoto2-port-result.c:86
+msgid "Unknown error"
+msgstr "خطأ غير معروف"
+
+#: libgphoto2_port/gphoto2-port.c:48
+#, c-format
+msgid "The operation '%s' is not supported by this device"
+msgstr "العملية '%s' غير مدعومة من قبل هذا الجهاز"
+
+#: libgphoto2_port/gphoto2-port.c:49
+msgid "The port has not yet been initialized"
+msgstr "لم يُهيأ المنفذ بعد"
+
+#: libgphoto2_port/gphoto2-port.c:687
+msgid "low"
+msgstr "منخفض"
+
+#: libgphoto2_port/gphoto2-port.c:688
+msgid "high"
+msgstr "عالي"
+
+#: libgphoto2_port/gphoto2-port.c:1216
+msgid "No error description available"
+msgstr "لا يوجد وصف للخطأ متاح"
+
+#: disk/disk.c:135 disk/disk.c:214 disk/disk.c:253 disk/disk.c:276
+#, c-format
+msgid "Media '%s'"
+msgstr "الوسائط '%s'"
+
+#: libusb1/libusb1.c:480 usb/libusb.c:248
+#, c-format
+msgid "Could not open USB device (%s)."
+msgstr "لا أستطيع فتح جهاز USB (%s)."
+
+#: libusb1/libusb1.c:490 usb/libusb.c:261
+msgid "Camera is already in use."
+msgstr "الكاميرا قيد الاستخدام بالفعل."
+
+#: libusb1/libusb1.c:499
+msgid "Could not detach kernel driver of camera device."
+msgstr "لا أستطيع فصل برنامج تشغيل النواة لجهاز الكاميرا."
+
+#: libusb1/libusb1.c:505 usb/libusb.c:274
+msgid "Could not query kernel driver of device."
+msgstr "لا أستطيع الاستعلام عن برنامج تشغيل النواة للجهاز."
+
+#: libusb1/libusb1.c:512 usb/libusb.c:283
+#, c-format
+msgid "Could not claim interface %d (%s). Make sure no other program (%s) or kernel module (such as %s) is using the device and you have read/write access to the device."
+msgstr "لا أستطيع المطالبة بالواجهة %d (%s). تأكد أن لا برنامج آخر (%s) أو وحدة نواة (مثل %s) يستخدم الجهاز وأن لديك صلاحيات القراءة/الكتابة إليه."
+
+#: libusb1/libusb1.c:523 usb/libusb.c:295
+msgid "MacOS PTPCamera service"
+msgstr "خدمة PTPCamera لنظام ماك أو إس"
+
+#: libusb1/libusb1.c:525 usb/libusb.c:297
+msgid "unknown libgphoto2 using program"
+msgstr "برنامج غير معروف يستخدم libgphoto2"
+
+#: libusb1/libusb1.c:597 usb/libusb.c:314
+#, c-format
+msgid "Could not release interface %d (%s)."
+msgstr "لا أستطيع تحرير الواجهة %d (%s)."
+
+#: libusb1/libusb1.c:611 usb/libusb.c:329
+#, c-format
+msgid "Could not reset USB port (%s)."
+msgstr "لا أستطيع إعادة ضبط منفذ USB (%s)."
+
+#: libusb1/libusb1.c:620
+msgid "Could not reattach kernel driver of camera device."
+msgstr "لا أستطيع إعادة إرفاق برنامج تشغيل النواة لجهاز الكاميرا."
+
+#: libusb1/libusb1.c:1054 usb/libusb.c:621
+#, c-format
+msgid "Could not set config %d/%d (%s)"
+msgstr "لا أستطيع ضبط تشكيلة %d/%d (%s)"
+
+#: libusb1/libusb1.c:1083 usb/libusb.c:652
+#, c-format
+msgid "Could not set altsetting from %d to %d (%s)"
+msgstr "لا أستطيع ضبط الإعداد البديل من %d إلى %d (%s)"
+
+#: libusb1/libusb1.c:1217 libusb1/libusb1.c:1309 usb/libusb.c:812
+#: usb/libusb.c:898
+#, c-format
+msgid "Could not find USB device (vendor 0x%x, product 0x%x). Make sure this device is connected to the computer."
+msgstr "لا أستطيع إيجاد جهاز USB (المورد 0x%x، المنتج 0x%x). تأكد أن هذا الجهاز موصول بـ **الحاسوب**."
+
+#: libusb1/libusb1.c:1248 usb/libusb.c:741
+#, c-format
+msgid "The supplied vendor or product id (0x%x,0x%x) is not valid."
+msgstr "معرّف المورد أو المنتج المزود (0x%x,0x%x) غير صالح."
+
+#: libusb1/libusb1.c:1598 usb/libusb.c:1191
+#, c-format
+msgid "Could not find USB device (class 0x%x, subclass 0x%x, protocol 0x%x). Make sure this device is connected to the computer."
+msgstr "لا أستطيع إيجاد جهاز USB (الصنف 0x%x، الصنف الفرعي 0x%x، البروتوكول 0x%x). تأكد أن هذا الجهاز موصول بـ **الحاسوب**."
+
+#: ptpip/ptpip.c:161
+msgid "PTP/IP Connection"
+msgstr "اتصال PTP/IP"
+
+#: ptpip/ptpip.c:174
+msgid "IP Connection"
+msgstr "اتصال IP"
+
+#: serial/unix.c:210
+#, c-format
+msgid "Could not lock device '%s'"
+msgstr "لا أستطيع قفل الجهاز '%s'"
+
+#: serial/unix.c:220 usbdiskdirect/linux.c:79
+#, c-format
+msgid "Device '%s' is locked by pid %d"
+msgstr "الجهاز '%s' مقفول بمعرّف العملية %d"
+
+#: serial/unix.c:223 usbdiskdirect/linux.c:82
+#, c-format
+msgid "Device '%s' could not be locked (dev_lock returned %d)"
+msgstr "لا أستطيع قفل الجهاز '%s' (أعاد dev_lock القيمة %d)"
+
+#: serial/unix.c:252
+#, c-format
+msgid "Device '%s' could not be unlocked."
+msgstr "لا أستطيع فك قفل الجهاز '%s'."
+
+#: serial/unix.c:264 usbdiskdirect/linux.c:111
+#, c-format
+msgid "Device '%s' could not be unlocked as it is locked by pid %d."
+msgstr "لا أستطيع فك قفل الجهاز '%s' لأنه مقفول بمعرّف العملية %d."
+
+#: serial/unix.c:268 usbdiskdirect/linux.c:115
+#, c-format
+msgid "Device '%s' could not be unlocked (dev_unlock returned %d)"
+msgstr "لا أستطيع فك قفل الجهاز '%s' (أعاد dev_unlock القيمة %d)"
+
+#: serial/unix.c:311
+#, c-format
+msgid "Serial Port %i"
+msgstr "منفذ تسلسلي %i"
+
+#: serial/unix.c:324
+msgid "Serial Port Device"
+msgstr "جهاز منفذ تسلسلي"
+
+#: serial/unix.c:400
+#, c-format
+msgid "Failed to open '%s' (%s)."
+msgstr "فشل فتح '%s' (%s)."
+
+#: serial/unix.c:420
+#, c-format
+msgid "Could not close '%s' (%s)."
+msgstr "لا أستطيع إغلاق '%s' (%s)."
+
+#: serial/unix.c:476
+#, c-format
+msgid "Could not write to port (%s)"
+msgstr "لا أستطيع الكتابة إلى المنفذ (%s)"
+
+#: serial/unix.c:551
+msgid "Parity error."
+msgstr "خطأ في التكافؤ."
+
+#: serial/unix.c:555
+#, c-format
+msgid "Unexpected parity response sequence 0xff 0x%02x."
+msgstr "تسلسل استجابة التكافؤ غير متوقع 0xff 0x%02x."
+
+#: serial/unix.c:598
+#, c-format
+msgid "Unknown pin %i."
+msgstr "دبوس %i غير معروف."
+
+#: serial/unix.c:620
+#, c-format
+msgid "Could not get level of pin %i (%s)."
+msgstr "لا أستطيع الحصول على مستوى الدبوس %i (%s)."
+
+#: serial/unix.c:656
+#, c-format
+msgid "Could not set level of pin %i to %i (%s)."
+msgstr "لا أستطيع ضبط مستوى الدبوس %i إلى %i (%s)."
+
+#: serial/unix.c:683
+#, c-format
+msgid "Could not flush '%s' (%s)."
+msgstr "لا أستطيع تفريغ '%s' (%s)."
+
+#: serial/unix.c:778
+#, c-format
+msgid "Could not set the baudrate to %d"
+msgstr "لا أستطيع ضبط معدل الباود إلى %d"
+
+#: usb/libusb.c:269
+#, c-format
+msgid "Could not detach kernel driver '%s' of camera device."
+msgstr "لا أستطيع فصل برنامج تشغيل النواة '%s' لجهاز الكاميرا."
+
+#: usb/libusb.c:359
+#, c-format
+msgid "Could not close USB port (%s)."
+msgstr "لا أستطيع إغلاق منفذ USB (%s)."
+
+#: usbdiskdirect/linux.c:219
+msgid "USB Mass Storage direct IO"
+msgstr "تخزين USB كبير الإدخال/الإخراج المباشر"
+
+#: usbdiskdirect/linux.c:270 usbscsi/linux.c:254
+#, c-format
+msgid "Failed to open '%s' (%m)."
+msgstr "فشل فتح '%s' (%m)."
+
+#: usbdiskdirect/linux.c:284 usbscsi/linux.c:282
+#, c-format
+msgid "Could not close '%s' (%m)."
+msgstr "لا أستطيع إغلاق '%s' (%m)."
+
+#: usbdiskdirect/linux.c:308
+#, c-format
+msgid "Could not seek to offset: %x on '%s' (%m)."
+msgstr "لا أستطيع البحث عن الإزاحة: %x على '%s' (%m)."
+
+#: usbdiskdirect/linux.c:330
+#, c-format
+msgid "Could not write to '%s' (%m)."
+msgstr "لا أستطيع الكتابة إلى '%s' (%m)."
+
+#: usbdiskdirect/linux.c:351
+#, c-format
+msgid "Could not read from '%s' (%m)."
+msgstr "لا أستطيع القراءة من '%s' (%m)."
+
+#: usbscsi/linux.c:92
+#, c-format
+msgid "Device '%s' is locked by another app."
+msgstr "الجهاز '%s' مقفول من تطبيق آخر."
+
+#: usbscsi/linux.c:97
+#, c-format
+msgid "Failed to lock '%s' (%m)."
+msgstr "فشل قفل '%s' (%m)."
+
+#: usbscsi/linux.c:113
+#, c-format
+msgid "Failed to unlock '%s' (%m)."
+msgstr "فشل فك قفل '%s' (%m)."
+
+#: usbscsi/linux.c:215
+msgid "USB Mass Storage raw SCSI"
+msgstr "تخزين USB كبير SCSI خام"
+
+#: usbscsi/linux.c:326
+#, c-format
+msgid "Could not send scsi command to: '%s' (%m)."
+msgstr "لا أستطيع إرسال أمر scsi إلى: '%s' (%m)."
