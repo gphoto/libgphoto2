@@ -2537,8 +2537,8 @@ static struct {
 	{"Canon:EOS R10",			0x04a9, 0x32f8, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/642 */
 	{"Canon:EOS M50m2",			0x04a9, 0x32f9, PTP_CAP|PTP_CAP_PREVIEW},
-    /* Andreas Jäger */
-    {"Canon:EOS R1",            0x04a9, 0x3313, PTP_CAP|PTP_CAP_PREVIEW},
+	/* Andreas Jäger */
+	{"Canon:EOS R1",            0x04a9, 0x3313, PTP_CAP|PTP_CAP_PREVIEW},
     /* E-mail */
 	{"Canon:EOS R3",			0x04a9, 0x32fc, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Ingmar Rieger via email */
