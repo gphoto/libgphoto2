@@ -3238,7 +3238,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 /* guessed DPC_SONY_FileType 0xD235  (enum: 0,1) */
 #define PTP_DPC_SONY_ISO2				0xD226
 #define PTP_DPC_SONY_FormatMediaStatus			0xD227
-#define PTP_DPC_SONY_ShutterSpeed2			0xD229
+#define PTP_DPC_SONY_ShutterSpeed2			0xD229  /* D229 is shutter speed in mode 2 only and only on small set of cams */
 #define PTP_DPC_SONY_FocusArea				0xD22C  /* (type=0x4) Enumeration [1,2,3,257,258,259,260,513,514,515,516,517,518,519,261,520] value: 1 */
 #define PTP_DPC_SONY_FocusMagnifierStatus		0xD22D
 #define PTP_DPC_SONY_CurrentFocusMagnifierRatio		0xD22F
@@ -4928,6 +4928,7 @@ has_sony_mode_300(PTPParams *params) {
 	if (!strcmp(params->deviceinfo.Model, "ILCE-9M2")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-9M3")) return 1;
 	if (!strcmp(params->deviceinfo.Model, "ILCE-1")) return 1;
+	if (!strcmp(params->deviceinfo.Model, "ILCE-1M2")) return 1;
 	/* https://github.com/gphoto/libgphoto2/issues/937#issuecomment-2014097435 */
 	// TODO: likely the two cameras below are ok now, and can have mode 3 enabled, needs testing.
 	// if (!strcmp(params->deviceinfo.Model, "ILCE-7C")) return 1;

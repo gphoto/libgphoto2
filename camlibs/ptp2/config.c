@@ -5526,7 +5526,12 @@ _get_Sony_ShutterSpeed(CONFIG_GET_ARGS) {
 	if (dpd->DataType != PTP_DTC_UINT32)
 		return GP_ERROR;
 
-	if (have_prop (camera, PTP_VENDOR_SONY, PTP_DPC_SONY_ShutterSpeed2))
+	/* In mode 2 if the following property is available - get the list of shutter speeds from it
+	   NOTE 1: In mode 3 this property controls a different setting, so we have to check for mode 2 here
+	   NOTE 2: This property is only known to exist on A7R4 when in mode 2, but we now connect to it in mode 3
+	           It's possible this property exists on other ~2019 Sony cameras, and we may connect to them in mode 2,
+	           so we still check for it. */
+	if (params->sony_mode_ver == 2 && have_prop (camera, PTP_VENDOR_SONY, PTP_DPC_SONY_ShutterSpeed2))
 		C_PTP_REP (ptp_generic_getdevicepropdesc (params, PTP_DPC_SONY_ShutterSpeed2, dpd));
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -5628,6 +5633,7 @@ _put_Sony_ShutterSpeedMode2(CONFIG_PUT_ARGS) {
 		new32 = (x<<16)|y;
 	}
 	/* set directly if this property exists */
+	/* NOTE: in mode 3 property 0xD229 is a different setting, but this function is only called in mode 2 */
 	if (have_prop (camera, PTP_VENDOR_SONY, PTP_DPC_SONY_ShutterSpeed2)) {
 		propval->u32 = new32;
 		return translate_ptp_result (ptp_sony_setdevicecontrolvaluea(params, PTP_DPC_SONY_ShutterSpeed2, propval, PTP_DTC_UINT32));
@@ -11584,7 +11590,6 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_OLYMPUS_Shutterspeed,           PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_EOS_ShutterSpeed,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_FUJI_ShutterSpeed,              PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_Fuji_ShutterSpeed,             _put_Fuji_ShutterSpeed },
-	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed2,             PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed,              PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_RICOH_ShutterSpeed,             PTP_VENDOR_PENTAX,  PTP_DTC_UINT64, _get_Ricoh_ShutterSpeed,            _put_Ricoh_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_GP_SIGMA_FP_ShutterSpeed,       PTP_VENDOR_GP_SIGMAFP,PTP_DTC_UINT64, _get_SigmaFP_ShutterSpeed,        _put_SigmaFP_ShutterSpeed },

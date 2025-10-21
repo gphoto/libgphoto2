@@ -1382,6 +1382,9 @@ static struct {
 
 	{"Sony:ZV-E10M2 (MTP mode)",		0x054c, 0x0ee7, 0},
 
+	/* Mark Watson <watsonmw@gmail.com> */
+	{"Sony:ILCE-1M2 (PC Control)",		0x054c, 0x0eed, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Nikon Coolpix 2500: M. Meissner, 05 Oct 2003 */
 	{"Nikon:Coolpix 2500 (PTP mode)", 0x04b0, 0x0109, 0},
 	/* Nikon Coolpix 5700: A. Tanenbaum, 29 Oct 2002 */
