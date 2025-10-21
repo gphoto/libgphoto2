@@ -1,0 +1,527 @@
+Camera summary:                                                                
+Manufacturer: Sony Corporation
+Model: ILCE-1M2
+  Version: 3.00
+  Serial Number: 00000000000000003285861001355783
+Vendor Extension ID: 0x11 (1.0)
+Vendor Extension Description: Sony PTP Extensions
+
+Capture Formats: 
+Display Formats: Association/Directory, JPEG, ARW, MPEG, Unknown(b982), Unknown(b110)
+
+Device Capabilities:
+	File Download, No File Deletion, File Upload
+	No Image Capture, No Open Capture, Sony Capture
+
+Storage Devices Summary:
+
+Device Property Summary:
+White Balance             (5005 rw u16): Enumeration [2,4,32785,32784,6,32769,32770,32771,32772,7,32816,32786,32800,32801,32802] value: Daylight (4)
+Focus Mode                (500a ro u16): Enumeration [2,32772,32774,1] value: Manual Focus (1)
+Exposure Metering Mode    (500b rw u16): Enumeration [32769,32770,32772,32773,32771,32774] value: 32769
+Flash Mode                (500c rw u16): Enumeration [2,1,3,32769,32771] value: Fill flash (3)
+Exposure Bias Compensation (5010 ro i16): Enumeration [5000,4700,4300,4000,3700,3300,3000,2700,2300,2000,1700,1300,1000,700,300,0,-300,-700,-1000,-1300,-1700,-2000,-2300,-2700,-3000,-3300,-3700,-4000,-4300,-4700,-5000] value: 0.0 stops (0)
+DOC Compensation          (d200 rw i16): Enumeration [3000,2700,2300,2000,1700,1300,1000,700,300,0,-300,-700,-1000,-1300,-1700,-2000,-2300,-2700,-3000] value: 0
+DRangeOptimize            (d201 rw u8 ): Enumeration [1,31,17,18,19,20,21] value: 31
+Shutter speed             (d20d rw u32): Enumeration [327690,262154,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536,75536,78336,81536,85536,91136,97536] value: 65556
+[Unknown Property]        (d19f rw u64): Enumeration [21474836490,17179869194,4294967299,4294967300,4294967301,4294967302,4294967304,4294967306,4294967309,4294967311,4294967316,4294967321,4294967326,4294967336,4294967346,4294967356,4294967376,4294967396,4294967421,4294967456,4294967496,4294967546,4294967616,4294967696,4294967796,4294967936,4294968096,4294968296,4294968546,4294968896,4294969296,4294969796,4294970496,4294971296,4294972296,4294973696,4294975296,4294977296,4294980096,4294983296,4294987296,4294992896,4294999296] value: 4294967316
+Color temperature         (d20f ro u16): Range [2500 - 9900, step 100] value: 0
+Aspect Ratio              (d211 rw u8 ): Enumeration [1,3,2,4] value: 1
+Focus Indication          (d213 ro u8 ): Enumeration [1,2,3,2,5,6,7] value: 1
+AELock Indication         (d217 ro u8 ): Enumeration [] value: 1
+Sensor Crop               (d219 ro u8 ): Enumeration [2,1] value: 1
+Live View Status          (d221 ro u8 ): Enumeration [] value: 1
+ISO                       (d21e rw u32): Enumeration [16777215,268435506,268435520,268435536,100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,268475456,268486656,268499456,268515456,268537856] value: 250
+Capture Target            (d222 rw u16): Enumeration [1,17,16] value: 1
+Date/Time Set             (d223 rw str): ''
+Focus Area                (d22c rw u16): Enumeration [1,2,3,263,259,258,257,262,260,4353,4354,4355,513,514,515,522,518,517,516,521,519,4609,4610,4611] value: 1
+Live View Setting Effect  (d231 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d238 ro u8 ): Enumeration [] value: 0
+Pixel Shift Shooting Mode (d239 ro u8 ): Enumeration [] value: 0
+Pixel Shift Shooting Number (d23a ro u16): Enumeration [1,4,16] value: 0
+Pixel Shift Shooting Interval (d23b ro u16): Enumeration [65535,1,2,3,4,5,10,15,30] value: 0
+Pixel Shift Shooting Status (d23c ro u8 ): Enumeration [] value: 0
+Pixel Shift Shooting Progress (d23d ro u16): Enumeration [] value: 1
+File Format Movie         (d241 rw u8 ): Enumeration [10,11,8,9,14,15] value: 9
+Interval REC Model        (d24f rw u8 ): Enumeration [1,2] value: 1
+AF Tracking Sens. Still   (d255 rw u8 ): Enumeration [1,2,3,4,5] value: 3
+Priority Mode             (d25a rw u8 ): Enumeration [0,1] value: 0
+Zoom Speed Range          (d25e ro i8 ): Range [-8 - 8, step 1] value: 0
+Zoom Setting              (d25f ro u8 ): Enumeration [1,3,4] value: 1
+Wireless Flash            (d262 rw u8 ): Enumeration [0,1] value: 0
+Red Eye Reduction         (d263 rw u8 ): Enumeration [1,0] value: 0
+PC Save Image Size        (d268 ro u8 ): Enumeration [] value: 1
+PC Save Image Format      (d269 ro u8 ): Enumeration [1,2,3] value: 0
+CustomWB Capture Area     (d26b ro u32): Range [0 - 0, step 1] value: 0
+CustomWB Capture Frame Size (d26c ro u32): Range [0 - 0, step 1] value: 0
+CustomWB Execution State  (d270 ro u8 ): Enumeration [] value: 0
+Settings Save Enable      (d271 ro u8 ): Enumeration [] value: 0
+Settings Read Enable      (d272 ro u8 ): Enumeration [] value: 0
+Settings Save/Read State  (d273 ro u8 ): Enumeration [] value: 0
+FTP Setting Save Enable   (d274 ro u8 ): Enumeration [] value: 1
+FTP Setting Read Enable   (d275 ro u8 ): Enumeration [] value: 1
+FTP Setting Save Read State (d276 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d281 rw u8 ): Enumeration [1,0] value: 0
+[Unknown Property]        (d283 rw u8 ): Enumeration [9,8,5,1] value: 9
+[Unknown Property]        (d287 rw u8 ): Enumeration [1,3,2] value: 1
+[Unknown Property]        (d289 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d28a ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d28b ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d28c ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d28d ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d28e ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d291 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d295 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d296 ro u8 ): Enumeration [] value: 0
+Battery Level Indicator   (d20e ro u8 ): Enumeration [] value: 15
+Battery Level             (d218 ro i8 ): Range [-1 - 100, step 1] value: -1
+[Unknown Property]        (d12e ro u8 ): Enumeration [] value: 255
+[Unknown Property]        (d12d ro i8 ): Range [-1 - 100, step 1] value: -1
+[Unknown Property]        (d205 ro u8 ): Enumeration [] value: 15
+[Unknown Property]        (d204 ro i16): Range [0 - 0, step 0] value: -1
+Media SLOT1 Remaining Shots (d249 ro u32): Range [0 - 4294967295, step 1] value: 0
+Media SLOT2 Remaining Shots (d257 ro u32): Range [0 - 4294967295, step 1] value: 0
+Media SLOT1 Shooting Time (d24a ro u32): Range [0 - 4294967295, step 1] value: 0
+Media SLOT2 Shooting Time (d258 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d261 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d27b ro u32): Range [0 - 4294967295, step 1] value: 0
+Focal Position            (d24c ro u8 ): Range [0 - 100, step 1] value: 69
+CC Filter                 (d210 rw u8 ): Range [164 - 220, step 1] value: 192
+AB Filter                 (d21c rw u8 ): Range [164 - 220, step 2] value: 192
+Zoom Bar Info             (d25d ro u32): 16777216
+Zoom Type Status          (d260 ro u8 ): Enumeration [] value: 1
+Remote Control Restrict   (d264 ro u8 ): Enumeration [] value: 0
+Live View Area            (d267 ro u32): Range [0 - 41943520, step 1] value: 0
+[Unknown Property]        (d282 ro u64): Range [0 - 0, step 1] value: 0
+[Unknown Property]        (d297 ro u8 ): Enumeration [0,1,2,3,4] value: 0
+[Unknown Property]        (d298 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d299 rw u8 ): Enumeration [1,2] value: 1
+Still Capture Mode        (5013 ro u32): Enumeration [1,98320,65538,98325,98322,229380,229379,229381,557064,557065,557068,557069,557070,557071,311863,311871,295735,296247,296759,297271,311895,311903,295767,296279,296791,297303,311927,311935,295799,296311,296823,297335,311825,311833,295697,296209,296721,297233,311873,311881,295745,296257,296769,311905,311913,295777,296289,296801,311937,311945,295809,296321,296833,311841,311849,295713,296225,296737,311889,311897,295761,296273,311921,311929,295793,296305,311953,311961,295825,296337,311857,311865,295729,296241,377398,377406,361270,361782,362294,362806,377430,377438,361302,361814,362326,362838,377462,377470,361334,361846,362358,362870,377360,377368,361232,361744,362256,362768,377408,377416,361280,361792,362304,377440,377448,361312,361824,362336,377472,377480,361344,361856,362368,377376,377384,361248,361760,362272,377424,377432,361296,361808,377456,377464,361328,361840,377488,377496,361360,361872,377392,377400,361264,361776,688192,426024,426008,491561,491545] value: 98325
+Focus Magnifier Setting   (d254 rw u64): Enumeration [4294967295,47244640255,184683593727,369367187455] value: 27590975
+[Unknown Property]        (d17b rw u8 ): Enumeration [2,5,255] value: 255
+Zoom Scale                (d25c ro u32): Range [1000 - 1000, step 100] value: 1000
+[Unknown Property]        (d27d ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d27e ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d286 rw u8 ): Enumeration [3,5,7,1] value: 3
+Media SLOT1 Status        (d248 ro u8 ): Enumeration [] value: 2
+Media SLOT2 Status        (d256 ro u8 ): Enumeration [] value: 2
+[Unknown Property]        (d279 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d27a ro u8 ): Enumeration [] value: 0
+Image size                (d203 ro u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d28f ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d290 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d292 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d293 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d294 ro u8 ): Enumeration [] value: 0
+Manual Focus Adjust Enabled (d235 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d236 ro u8 ): Enumeration [] value: 1
+Zoom Enable Status        (d25b ro u8 ): Enumeration [0,1] value: 0
+Device Overheat Status    (d251 ro u8 ): Range [0 - 2, step 1] value: 0
+[Unknown Property]        (d27f ro u8 ): Enumeration [] value: 4
+Movie Recording State     (d21d ro u8 ): Range [0 - 3, step 1] value: 0
+FELock Indication         (d21f ro u8 ): Enumeration [] value: 1
+AWB Lock Indication       (d24e ro u16): Enumeration [] value: 1
+Interval REC Status       (d250 ro u8 ): Enumeration [] value: 0
+Jpeg Quality              (d252 ro u8 ): Enumeration [1,2,3,4] value: 0
+File Format Still         (d253 rw u8 ): Enumeration [1,2,3] value: 1
+CustomWB Capture Standby Enable (d26d ro u8 ): Enumeration [] value: 0
+CustomWB Capture Standby Cancel Enable (d26e ro u8 ): Enumeration [] value: 0
+CustomWB Capture Enable   (d26f ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d27c rw u8 ): Enumeration [1,2,3,4,5,6,7,8,9] value: 1
+[Unknown Property]        (d280 ro u16): Enumeration [] value: 0
+[Unknown Property]        (d288 rw u8 ): Enumeration [5,2,3,4,1] value: 1
+[Unknown Property]        (d284 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d285 ro u8 ): Enumeration [] value: 0
+F-Number                  (5007 rw u16): Enumeration [200,220,250,280,320,350,400,450,500,560,630,710,800,900,1000,1100,1300,1400,1600,1800,2000,2200] value: f/8 (800)
+Exposure Program Mode     (500e ro u32): Enumeration [294912,65538,131075,196612,1,491604,491600,491601,491602,491603,622685,622681,622682,622683,622684,819351,819347,819348,819349,819350] value: M (1)
+Recording Setting Movie   (d242 rw u16): Enumeration [61,63,66] value: 63
+[Unknown Property]        (d099 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d049 rw u8 ): Enumeration [1,2] value: 2
+[Unknown Property]        (d04a rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d29b ro u8 ): Enumeration [0,1] value: 1
+[Unknown Property]        (d29a ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d047 rw u8 ): Enumeration [1,2] value: 2
+[Unknown Property]        (d04c rw str): ''
+[Unknown Property]        (d04b rw u64): Range [0 - -1, step 1] value: 0
+[Unknown Property]        (d092 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d001 ro u8 ): Enumeration [1,2] value: 0
+[Unknown Property]        (d013 ro u8 ): Enumeration [1,2] value: 0
+[Unknown Property]        (d01c ro u8 ): Enumeration [1,2] value: 0
+[Unknown Property]        (d023 ro u32): Enumeration [] value: 0
+[Unknown Property]        (d04d rw u8 ): Enumeration [1,2] value: 2
+[Unknown Property]        (d03c ro u16): Enumeration [1,2,3,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272] value: 2
+[Unknown Property]        (d020 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d022 ro u16): Enumeration [] value: 0
+[Unknown Property]        (d042 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d044 ro u32): Enumeration [2,4,8,16,32,64,128,256] value: 0
+[Unknown Property]        (d045 rw u32): Range [1 - 4294967295, step 1] value: 222
+[Unknown Property]        (d046 rw u8 ): Enumeration [1,2,3,4,5,6,7] value: 2
+[Unknown Property]        (d043 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d048 rw u8 ): Enumeration [1,4,2,3] value: 1
+[Unknown Property]        (d2b9 ro u8 ): Enumeration [60,30,15,0] value: 15
+[Unknown Property]        (d2a4 rw u8 ): Enumeration [1,0] value: 0
+[Unknown Property]        (d2a5 rw u16): Range [2 - 900, step 1] value: 60
+[Unknown Property]        (d2a6 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d2a7 ro u16): Range [0 - 65535, step 1] value: 0
+[Unknown Property]        (d2a8 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d29c ro u8 ): Enumeration [0,1] value: 0
+[Unknown Property]        (d29d rw u16): Enumeration [3,5,10] value: 3
+[Unknown Property]        (d29f rw u8 ): Enumeration [1,0] value: 0
+[Unknown Property]        (d2a0 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d2ba ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d2bb ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d2a2 rw u8 ): Range [1 - 10, step 1] value: 4
+[Unknown Property]        (d2a1 rw u16): Range [2 - 299, step 1] value: 3
+[Unknown Property]        (d0ab ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d162 rw u16): Enumeration [30,20,15,10,5] value: 30
+[Unknown Property]        (d163 rw u16): Enumeration [20,15,10,5] value: 20
+[Unknown Property]        (d164 rw u16): Enumeration [20,15,10,5] value: 15
+[Unknown Property]        (d165 rw u16): Enumeration [20,15,10,5] value: 5
+[Unknown Property]        (d0c0 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d206 ro u8 ): Enumeration [] value: 0
+Picture Profile           (d23f rw u8 ): Enumeration [0,1,2,3,4,5,6,10,11] value: 0
+[Unknown Property]        (d0d0 rw u8 ): Enumeration [3,5,7,1] value: 3
+[Unknown Property]        (d052 rw u16): Enumeration [240,120,60,30,15,8,4,2,1] value: 120
+[Unknown Property]        (d0d1 rw u16): Enumeration [61,63,66] value: 63
+[Unknown Property]        (d0d2 ro u8 ): Enumeration [1,0] value: 1
+[Unknown Property]        (d0d3 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d104 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d0d4 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d105 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d0d5 ro u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d0d6 ro u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d0d7 ro u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d0d8 ro u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d11f ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d120 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d0f2 ro i8 ): Range [-7 - 7, step 1] value: 0
+[Unknown Property]        (d0f3 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d0f4 ro i8 ): Range [-2 - 2, step 1] value: 0
+[Unknown Property]        (d0f5 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d0f6 ro i8 ): Range [0 - 7, step 1] value: 0
+[Unknown Property]        (d0f7 ro i8 ): Range [0 - 7, step 1] value: 0
+[Unknown Property]        (d0f8 ro i8 ): Range [0 - 4, step 1] value: 0
+[Unknown Property]        (d0f9 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d107 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d0e0 ro i8 ): Range [-15 - 15, step 1] value: 0
+[Unknown Property]        (d0e1 ro u16): Enumeration [] value: 0
+[Unknown Property]        (d0e2 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d0e3 ro i8 ): Range [-7 - 7, step 1] value: 0
+[Unknown Property]        (d0e4 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d0e5 ro u16): Enumeration [] value: 0
+[Unknown Property]        (d0e6 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d0e7 ro u16): Enumeration [] value: 0
+[Unknown Property]        (d0e8 ro i8 ): Range [-5 - 5, step 1] value: 0
+[Unknown Property]        (d0e9 ro u16): Enumeration [] value: 0
+[Unknown Property]        (d0ea ro i8 ): Range [-32 - 32, step 1] value: 0
+[Unknown Property]        (d0eb ro i8 ): Range [-7 - 7, step 1] value: 0
+[Unknown Property]        (d0ec ro i8 ): Range [-7 - 7, step 1] value: 0
+[Unknown Property]        (d0ed ro i8 ): Range [-7 - 7, step 1] value: 0
+[Unknown Property]        (d0ee ro i8 ): Range [-7 - 7, step 1] value: 0
+[Unknown Property]        (d0ef ro i8 ): Range [-7 - 7, step 1] value: 0
+[Unknown Property]        (d0f0 ro i8 ): Range [-7 - 7, step 1] value: 0
+[Unknown Property]        (d0f1 ro i8 ): Range [-7 - 7, step 1] value: 0
+[Unknown Property]        (d0fa rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10,257,258,259,260,261,262] value: 1
+[Unknown Property]        (d0fb rw i8 ): Range [-9 - 9, step 1] value: 0
+[Unknown Property]        (d0fc rw i8 ): Range [-9 - 9, step 1] value: 0
+[Unknown Property]        (d0fd rw i8 ): Range [-9 - 9, step 1] value: 0
+[Unknown Property]        (d0fe rw i8 ): Range [0 - 9, step 1] value: 0
+[Unknown Property]        (d0ff rw i8 ): Range [-9 - 9, step 1] value: 0
+[Unknown Property]        (d100 rw i8 ): Range [0 - 9, step 1] value: 4
+[Unknown Property]        (d101 rw i8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d102 rw i8 ): Range [0 - 9, step 1] value: 1
+[Unknown Property]        (d103 ro u16): Enumeration [] value: 0
+[Unknown Property]        (d108 ro u8 ): Enumeration [] value: 1
+Image Stabilization       (d0d9 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d0da ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d0db rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d0dc rw u8 ): Enumeration [1,2,3] value: 2
+[Unknown Property]        (d0dd rw u8 ): Enumeration [1,2] value: 2
+[Unknown Property]        (d0de rw u8 ): Enumeration [1,2] value: 2
+[Unknown Property]        (d0df rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d040 ro str): '3.00'
+[Unknown Property]        (d07d ro str): '01'
+[Unknown Property]        (d106 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d027 rw u8 ): Enumeration [19,9] value: 9
+[Unknown Property]        (d109 ro u16): Enumeration [3] value: 3
+[Unknown Property]        (d17c rw u8 ): Range [0 - 15, step 1] value: 7
+[Unknown Property]        (d17f rw u16): Enumeration [65535,1,2,4,260] value: 65535
+[Unknown Property]        (d180 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d181 rw u16): Enumeration [65535,1,2,4,260] value: 65535
+[Unknown Property]        (d124 rw u8 ): Enumeration [1,2,4,3] value: 1
+[Unknown Property]        (d0cd rw u8 ): Enumeration [1,2,3] value: 2
+[Unknown Property]        (d0ce rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d0cf ro u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d0c6 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d129 ro u8 ): Enumeration [41] value: 0
+[Unknown Property]        (d12a ro u8 ): Enumeration [42] value: 0
+[Unknown Property]        (d12b ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d133 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d134 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d128 ro i16): Enumeration [3000,2700,2300,2000,1700,1300,1000,700,300,0,-300,-700,-1000,-1300,-1700,-2000,-2300,-2700,-3000] value: 0
+[Unknown Property]        (d15b ro u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d15c rw u8 ): Enumeration [3,2,1] value: 3
+[Unknown Property]        (d15d ro u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d15e rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d15f rw u16): Enumeration [1,2,257,258] value: 1
+[Unknown Property]        (d160 rw u16): Enumeration [1,2,257] value: 1
+[Unknown Property]        (d161 rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d166 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d167 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d168 rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d169 rw u16): Enumeration [65535,10,20,30,50,100,150,300] value: 65535
+[Unknown Property]        (d16a rw u16): Range [1 - 5999, step 1] value: 1
+[Unknown Property]        (d16b rw u16): Range [10 - 600, step 10] value: 30
+[Unknown Property]        (d16c rw u16): Range [1 - 9999, step 1] value: 30
+[Unknown Property]        (d16d rw u8 ): Enumeration [4,3,2] value: 3
+[Unknown Property]        (d16e rw u8 ): Enumeration [2,3] value: 3
+[Unknown Property]        (d16f ro u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d171 ro u8 ): Enumeration [3,2,1] value: 3
+[Unknown Property]        (d173 ro u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d178 ro u8 ): Enumeration [1,4,3,2] value: 1
+[Unknown Property]        (d179 rw u8 ): Enumeration [1,2,3] value: 3
+[Unknown Property]        (d17a rw u8 ): Enumeration [1,2,3] value: 3
+[Unknown Property]        (d17e rw u8 ): Enumeration [2,4,3,1] value: 2
+[Unknown Property]        (d182 ro u16): Enumeration [1,3,6] value: 0
+[Unknown Property]        (d183 rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d184 ro u8 ): Enumeration [1,3,6] value: 0
+[Unknown Property]        (d186 rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d187 ro u8 ): Enumeration [2,1] value: 0
+[Unknown Property]        (d079 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d17d rw u8 ): Enumeration [10,5,2,0] value: 0
+[Unknown Property]        (d14d ro u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d176 ro u64): Enumeration [0,4294983296,4294975296,4294971296,4294969296,4294968296,4294967796,4294967546,4294967421,4294967356,4294967326,4294967311,4294967304,4294967300,21474836490,42949672970,85899345930,171798691850,343597383690,644245094410,1288490188810] value: 0
+[Unknown Property]        (d177 ro u8 ): Enumeration [1,2,3,4,5] value: 3
+[Unknown Property]        (d132 ro u8 ): Enumeration [0] value: 0
+[Unknown Property]        (d12f rw u16): Enumeration [30,20,15,10,5] value: 30
+[Unknown Property]        (d130 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d131 ro u8 ): Enumeration [] value: 2
+[Unknown Property]        (d189 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d18a rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d19b ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d18b rw u32): Enumeration [30,40,50,60,70,80,90,100,200,300,400,500,600,700,800,900,1000] value: 500
+[Unknown Property]        (d18c rw u16): Enumeration [0,1,2,3,4,5,257] value: 0
+[Unknown Property]        (d18d rw u16): Enumeration [0,1,2,3,4,5] value: 0
+[Unknown Property]        (d155 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d156 rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d041 ro u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d04e rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d14a rw u8 ): Enumeration [1,2] value: 2
+[Unknown Property]        (d14b rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d14c rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d19a rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d04f rw u8 ): Enumeration [1,2,3] value: 1
+Expose Index              (d216 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d199 rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d225 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d157 rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d158 rw u16): Enumeration [1,2,3,4,5,6,7,65535] value: 1
+[Unknown Property]        (d229 ro u32): Enumeration [1,2,4,8,16,32] value: 0
+[Unknown Property]        (d234 rw u32): Range [1 - 4294967295, step 1] value: 63
+[Unknown Property]        (d159 rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d150 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d153 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d154 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d151 rw u8 ): Enumeration [10,9,8] value: 10
+[Unknown Property]        (d055 rw u32): Enumeration [60,50,40,30,20,10,9,8,7,6,5,4,3,2,1] value: 1
+[Unknown Property]        (d152 rw u16): Enumeration [61,63,66] value: 63
+[Unknown Property]        (d19c ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d0c8 ro u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] value: 0
+[Unknown Property]        (d0c9 ro u8 ): Enumeration [1,2] value: 0
+[Unknown Property]        (d0ca ro u16): Enumeration [0,259,515,257,1027,1283,513] value: 0
+[Unknown Property]        (d0c7 ro u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,65535] value: 0
+[Unknown Property]        (d0cc rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] value: 0
+[Unknown Property]        (d08b ro u8 ): Enumeration [0,1] value: 0
+[Unknown Property]        (d194 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d195 ro u16): Enumeration [] value: 1
+[Unknown Property]        (d197 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d198 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d00b ro u32): Range [28000 - 28000, step 100] value: 28000
+[Unknown Property]        (d07b ro str): 'FE 28mm F2'
+[Unknown Property]        (d135 rw u8 ): Enumeration [1,2,3] value: 3
+[Unknown Property]        (d148 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d149 rw u8 ): Enumeration [1,5,6] value: 1
+[Unknown Property]        (d15a rw u16): Enumeration [4,8,16,32] value: 4
+[Unknown Property]        (d007 ro u8 ): Enumeration [1,2] value: 2
+[Unknown Property]        (d061 ro u8 ): Range [1 - 7, step 1] value: 5
+[Unknown Property]        (d062 ro u8 ): Range [1 - 5, step 1] value: 5
+[Unknown Property]        (d060 rw u8 ): Enumeration [1,3] value: 1
+[Unknown Property]        (d138 ro u64): Range [0 - -1, step 1] value: 0
+[Unknown Property]        (d19e ro u64): Range [0 - -1, step 1] value: 0
+[Unknown Property]        (d09a ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d1a0 rw u8 ): Enumeration [0,1] value: 0
+[Unknown Property]        (d1a1 rw u8 ): Enumeration [1,2,3,4,5,6] value: 1
+[Unknown Property]        (d004 ro u32): Range [0 - 4294967295, step 1] value: 700
+[Unknown Property]        (d0bc ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d0c2 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d19d ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d196 ro u8 ): Enumeration [2,1] value: 0
+[Unknown Property]        (d1a2 rw u8 ): Enumeration [2,3,1] value: 2
+[Unknown Property]        (d1a3 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1a4 ro u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1a5 ro u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1a6 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d1a7 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1a8 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1aa rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d1ab rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1ac rw u8 ): Enumeration [2,1,3] value: 1
+[Unknown Property]        (d1ad rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1ae rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1af ro u8 ): Enumeration [2,1] value: 0
+[Unknown Property]        (d1b0 ro u8 ): Enumeration [2,1] value: 0
+[Unknown Property]        (d1b1 rw u8 ): Range [0 - 5, step 1] value: 3
+[Unknown Property]        (d1b2 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1b3 rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1b6 ro u32): Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,64000,80000,102400] value: 100
+[Unknown Property]        (d1b7 ro u32): Enumeration [100,125,160,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,64000,80000,102400] value: 12800
+[Unknown Property]        (d1b4 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d1b5 ro i16): Range [-8000 - 8000, step 100] value: -4000
+[Unknown Property]        (d1a9 ro u8 ): Enumeration [3,2,1] value: 1
+[Unknown Property]        (d1bb ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d1bc ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d207 rw u8 ): Enumeration [0,1] value: 0
+[Unknown Property]        (d208 ro u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,20,21,22,23,24,26,27,28] value: 0
+[Unknown Property]        (d209 ro u16): Enumeration [5,11,20,21,22,23,24,26,27,28] value: 0
+[Unknown Property]        (d20a ro u16): Enumeration [16385,16386,16387,16388] value: 0
+[Unknown Property]        (d20b ro u16): Enumeration [] value: 0
+[Unknown Property]        (d20c ro u16): Enumeration [] value: 1
+[Unknown Property]        (d1b8 rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1b9 ro u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1bd rw u16): Enumeration [10,42] value: 10
+[Unknown Property]        (d1ba rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1be rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d1bf ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d1c1 ro u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1c6 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d1c7 rw u8 ): Enumeration [2,3,1] value: 3
+[Unknown Property]        (d1c8 ro u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1cb ro u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d1cd rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1c2 ro u8 ): Enumeration [0,1,2] value: 0
+[Unknown Property]        (d1c3 ro u32): Enumeration [100] value: 100
+[Unknown Property]        (d1c4 ro u32): Enumeration [100] value: 100
+[Unknown Property]        (d1c5 ro u32): Range [0 - 4294967295, step 1] value: 0
+[Unknown Property]        (d1da ro u8 ): Enumeration [] value: 2
+[Unknown Property]        (d1dd ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d192 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d193 ro u16): Enumeration [8,9,10,11,12,13,14,15,16,17,18,19,20,21,24,25,28,30,32,35,40,45,50,55,60,70,75,80,85,90,100,105,120,135,150,180,200,210,250,300,350,400,450,500,600,800,1000] value: 0
+[Unknown Property]        (d1de rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1df ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d1e5 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1fd rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d1fe rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1ff rw u16): Enumeration [1,771,1025,1026] value: 1
+[Unknown Property]        (d1c9 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d1e6 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1e7 rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d1e8 rw u8 ): Enumeration [1,2,3,255] value: 1
+[Unknown Property]        (d1e9 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1ea rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1eb rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1ec rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d1ed rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1ee rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1ef rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1f0 rw u8 ): Enumeration [1,2,3] value: 1
+[Unknown Property]        (d1f1 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1f2 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1f3 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1f4 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1f5 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1f6 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1f7 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1f8 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1f9 rw u8 ): Range [1 - 5, step 1] value: 3
+[Unknown Property]        (d1fa rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d1fb rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d1fc rw i16): Range [-2 - 2, step 1] value: 0
+[Unknown Property]        (d220 rw u8 ): Enumeration [2,1] value: 1
+[Unknown Property]        (d1ca rw str): 'DSC'
+[Unknown Property]        (d1ce rw str): ''
+[Unknown Property]        (d1cf rw str): ''
+[Unknown Property]        (d1db ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d1dc rw str): 'C'
+[Unknown Property]        (d2ad rw u8 ): Enumeration [1,2,3] value: 2
+[Unknown Property]        (d1d4 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d1d5 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d1d6 ro u64): Range [0 - -1, step 1] value: 0
+[Unknown Property]        (d1d7 ro u64): Range [0 - -1, step 1] value: 0
+[Unknown Property]        (d1d8 ro u8 ): Enumeration [] value: 0
+[Unknown Property]        (d1d9 ro u8 ): Enumeration [] value: 1
+[Unknown Property]        (d2b2 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d2bd ro i8 ): Range [0 - 0, step 0] value: 0
+[Unknown Property]        (d202 rw u8 ): Enumeration [1,2] value: 1
+[Unknown Property]        (d2b5 rw u8 ): Enumeration [2,1] value: 2
+[Unknown Property]        (d237 ro u16): Enumeration [] value: 30
+[Unknown Property]        (d2b4 ro u32): Enumeration [] value: 100
+Zoom                      (d214 ro u32): Range [0 - 4294967295, step 1] value: 118092000
+[Unknown Property]        (d057 ro u32): Enumeration [100] value: 100
+[Unknown Property]        (d059 ro u32): Enumeration [100] value: 100
+[Unknown Property]        (d05a ro u32): Enumeration [100] value: 100
+[Unknown Property]        (d0bf ro u32): Enumeration [100] value: 100
+[Unknown Property]        (d0c1 ro u32): Range [0 - 4294967295, step 1] value: 2097140
+[Unknown Property]        (d1c0 ro u32): Enumeration [100] value: 100
+Objects in memory         (d215 ro u16): Range [0 - 65535, step 1] value: 0
+Live View Image Quality   (d26a rw u8 ): Enumeration [1,2] value: 2
+[Unknown Property]        (d278 ro str): ''
+ShutterHalfRelease        (d2c1 rw u16): Enumeration [] value: 0
+ShutterRelease            (d2c2 rw u16): Enumeration [] value: 0
+AELButton                 (d2c3 rw u16): Enumeration [] value: 0
+AFLButton                 (d2c4 rw u16): Enumeration [] value: 0
+RequestOneShooting        (d2c7 rw u16): Enumeration [] value: 0
+MovieRecButtonHold        (d2c8 rw u16): Enumeration [] value: 0
+FELButton                 (d2c9 rw u16): Enumeration [] value: 0
+Manual Focus Adjust       (d2d1 rw u16): Range [0 - 0, step 0] value: 0
+AF/MF Hold                (d2d2 -- ---): PTP error 2002 on query
+CancelPixelShiftShooting  (d2d3 -- ---): PTP error 2002 on query
+PixelShiftShootingMode    (d2d4 -- ---): PTP error 2002 on query
+FocusStepNear             (d2d7 -- ---): PTP error 2002 on query
+FocusStepFar              (d2d8 -- ---): PTP error 2002 on query
+AWBLButton                (d2d9 rw u16): Enumeration [] value: 0
+[Unknown Property]        (d2da -- ---): PTP error 2002 on query
+[Unknown Property]        (d2db -- ---): PTP error 2002 on query
+AF Area Position          (d2dc rw u32): Range [0 - 0, step 0] value: 0
+Zoom Operation            (d2dd rw i8 ): Range [0 - 0, step 0] value: 0
+CustomWB Capture Standby  (d2df -- ---): PTP error 2002 on query
+CustomWB Capture Standby Cancel (d2e0 -- ---): PTP error 2002 on query
+CustomWB Capture          (d2e1 -- ---): PTP error 2002 on query
+Format Media Card         (d2e2 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2e3 -- ---): PTP error 2002 on query
+Remote Touch              (d2e4 -- ---): PTP error 2002 on query
+Remote Touch Cancel       (d2e5 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2e6 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2e7 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2e8 -- ---): PTP error 2002 on query
+Save Zoom and Focus Position (d2e9 rw u8 ): Enumeration [] value: 0
+Load Zoom and Focus Position (d2ea rw u8 ): Enumeration [] value: 0
+[Unknown Property]        (d2eb -- ---): PTP error 2002 on query
+[Unknown Property]        (d2f3 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2f0 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2f1 -- ---): PTP error 2002 on query
+[Unknown Property]        (d302 -- ---): PTP error 2002 on query
+[Unknown Property]        (d303 -- ---): PTP error 2002 on query
+[Unknown Property]        (d305 -- ---): PTP error 2002 on query
+[Unknown Property]        (d306 -- ---): PTP error 2002 on query
+[Unknown Property]        (d304 -- ---): PTP error 2002 on query
+[Unknown Property]        (d301 -- ---): PTP error 2002 on query
+[Unknown Property]        (d300 -- ---): PTP error 2002 on query
+[Unknown Property]        (d308 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2f6 -- ---): PTP error 2002 on query
+[Unknown Property]        (d2f2 -- ---): PTP error 2002 on query
+[Unknown Property]        (d309 -- ---): PTP error 2002 on query
+[Unknown Property]        (d30a -- ---): PTP error 2002 on query
+[Unknown Property]        (d30b -- ---): PTP error 2002 on query
+[Unknown Property]        (d30c -- ---): PTP error 2002 on query
+[Unknown Property]        (d30d -- ---): PTP error 2002 on query
+[Unknown Property]        (d30e -- ---): PTP error 2002 on query
+[Unknown Property]        (d312 -- ---): PTP error 2002 on query
+[Unknown Property]        (d313 -- ---): PTP error 2002 on query
+[Unknown Property]        (d314 -- ---): PTP error 2002 on query
+[Unknown Property]        (d30f -- ---): PTP error 2002 on query
+[Unknown Property]        (d311 -- ---): PTP error 2002 on query
+[Unknown Property]        (d310 -- ---): PTP error 2002 on query
+Remote Key Up             (d2cd -- ---): PTP error 2002 on query
+Remote Key Down           (d2ce -- ---): PTP error 2002 on query
+Remote Key Left           (d2cf -- ---): PTP error 2002 on query
+Remote Key Right          (d2d0 -- ---): PTP error 2002 on query
