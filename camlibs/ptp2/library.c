@@ -1611,6 +1611,9 @@ static struct {
 	/* t.ludewig@gmail.com */
 	{"Nikon:Coolpix S01",  		  0x04b0, 0x0337, PTP_CAP},
 
+	/* via email */
+	{"Nikon:Coolpix S3500",		  0x04b0, 0x033b, PTP_CAP},
+
 	/* https://sourceforge.net/p/gphoto/bugs/971/ */
 	{"Nikon:Coolpix S2700", 	  0x04b0, 0x033f, PTP_CAP},
 

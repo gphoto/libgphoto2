@@ -1,0 +1,301 @@
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/settings/datetime
+Label: Camera Date and Time
+Readonly: 0
+Type: DATE
+Current: 1760799799
+Printable: Sat Oct 18 08:03:19 2025
+Help: Use 'now' as the current time when setting.
+
+END
+/main/settings/thumbsize
+Label: Thumb Size
+Readonly: 0
+Type: RADIO
+Current: 
+Choice: 0 normal
+Choice: 1 large
+END
+/main/settings/fastfs
+Label: Fast Filesystem
+Readonly: 0
+Type: TOGGLE
+Current: 1
+END
+/main/settings/capturetarget
+Label: Capture Target
+Readonly: 0
+Type: RADIO
+Current: Internal RAM
+Choice: 0 Internal RAM
+Choice: 1 Memory card
+END
+/main/settings/autofocus
+Label: Autofocus
+Readonly: 0
+Type: RADIO
+Current: On
+Choice: 0 On
+Choice: 1 Off
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: 
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 1
+Type: TEXT
+Current: Nikon Corporation
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: S3500
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 1
+Type: TEXT
+Current: COOLPIX S3500 V1.0
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 1
+Type: TEXT
+Current: microsoft.com: 1.0;
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/capturesettings/flashmode
+Label: Flash Mode
+Readonly: 0
+Type: RADIO
+Current: Flash off
+Choice: 0 Automatic Flash
+Choice: 1 Flash off
+Choice: 2 Fill flash
+Choice: 3 Red-eye automatic
+END
+/main/capturesettings/focallength
+Label: Focal Length
+Readonly: 1
+Type: RANGE
+Current: 35
+Bottom: 35
+Top: 105
+Step: 1
+END
+/main/capturesettings/focusmode
+Label: Focus Mode
+Readonly: 0
+Type: RADIO
+Current: Automatic
+Choice: 0 Automatic
+Choice: 1 Automatic Macro
+END
+/main/wifiprofiles/new/name
+Label: Profile name
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/wifiprofiles/new/essid
+Label: WIFI ESSID
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/wifiprofiles/new/ipaddr
+Label: IP address (empty for DHCP)
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/wifiprofiles/new/netmask
+Label: Network mask
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/wifiprofiles/new/gw
+Label: Default gateway
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/wifiprofiles/new/accessmode
+Label: Access mode
+Readonly: 0
+Type: RADIO
+Current: Managed
+Choice: 0 Managed
+Choice: 1 Ad-hoc
+END
+/main/wifiprofiles/new/channel
+Label: WIFI channel
+Readonly: 0
+Type: RANGE
+Current: 1
+Bottom: 1
+Top: 11
+Step: 1
+END
+/main/wifiprofiles/new/encryption
+Label: Encryption
+Readonly: 0
+Type: RADIO
+Current: None
+Choice: 0 None
+Choice: 1 WEP 64-bit
+Choice: 2 WEP 128-bit
+END
+/main/wifiprofiles/new/key
+Label: Encryption key (hex)
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/wifiprofiles/new/write
+Label: Write
+Readonly: 0
+Type: TOGGLE
+Current: 0
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: 
+END
+/main/other/d002
+Label: PTP Property 0xd002
+Readonly: 0
+Type: MENU
+Current: 7
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+Choice: 4 5
+Choice: 5 6
+Choice: 6 7
+END
+/main/other/5011
+Label: Date & Time
+Readonly: 0
+Type: TEXT
+Current: 20251018T080319
+END
+/main/other/500c
+Label: Flash Mode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 1
+Choice: 1 2
+Choice: 2 3
+Choice: 3 4
+END
+/main/other/500a
+Label: Focus Mode
+Readonly: 0
+Type: MENU
+Current: 2
+Choice: 0 2
+Choice: 1 3
+END
+/main/other/5008
+Label: Focal Length
+Readonly: 1
+Type: MENU
+Current: 3500
+Choice: 0 3500
+Choice: 1 4600
+Choice: 2 5300
+Choice: 3 6100
+Choice: 4 7300
+Choice: 5 8600
+Choice: 6 10500
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 100
+Choice: 0 2
+Choice: 1 5
+Choice: 2 25
+Choice: 3 50
+Choice: 4 65
+Choice: 5 80
+Choice: 6 100
+END
+/main/other/d303
+Label: UseDeviceStageFlag
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+Camera summary:
+Manufacturer: Nikon Corporation
+Model: S3500
+  Version: COOLPIX S3500 V1.0
+  Serial Number: 
+Vendor Extension ID: 0xa (1.0)
+Vendor Extension Description: microsoft.com: 1.0;
+
+Capture Formats: JPEG
+Display Formats: Undefined Type, Association/Directory, Defined Type, JPEG, DPOF, MS AVI, Apple Quicktime, MS Wave
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+	Nikon Wifi support
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: S3500
+	VolumeLabel: 
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 31902400512 (30424 MB)
+	Free Space (Bytes): 31514099712 (30054 MB)
+	Free Space (Images): 2860
+
+Device Property Summary:
+Property 0xd407:(read only) (type=0x6) 1
+Property 0xd406:(readwrite) (type=0xffff) ''
+Property 0xd002:(readwrite) (type=0x6) Enumeration [1,2,3,4,5,6,7] value: 7
+Date & Time(0x5011):(readwrite) (type=0xffff) '20251018T080031'
+Flash Mode(0x500c):(readwrite) (type=0x4) Enumeration [1,2,3,4] value: Flash off (2)
+Focus Mode(0x500a):(readwrite) (type=0x4) Enumeration [2,3] value: Automatic (2)
+Focal Length(0x5008):(read only) (type=0x6) Enumeration [3500,4600,5300,6100,7300,8600,10500] value: 35 mm (3500)
+Battery Level(0x5001):(read only) (type=0x2) Enumeration [2,5,25,50,65,80,100] value: 100% (100)
+UseDeviceStageFlag(0xd303):(read only) (type=0x2) 1
+
