@@ -8,6 +8,9 @@ shared_module(
   dependencies: [
     libgphoto2_dep,
     libgd_dep,
+# On systems such as mingw/Windows, mmap(2) is not part of the
+# standard library and needs an explicit library to link against.
+    mman_dep,
   ],
   name_prefix: '',
   install: true,
