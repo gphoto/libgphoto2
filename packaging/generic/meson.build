@@ -12,6 +12,7 @@ if target_machine.system() in ['linux']
 
   install_data(
     'check-ptp-camera',
-    install_dir: udev_script_dir
+    install_dir: udev_script_dir,
+    install_tag: 'bin',
   )
 endif
