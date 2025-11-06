@@ -8,3 +8,9 @@ shared_module(
   install: true,
   install_dir: camlibs_dir,
 )
+
+install_data(
+  'README.enigma13',
+  install_dir: camlibdoc_dir,
+  install_tag: 'doc',
+)

@@ -11,3 +11,9 @@ shared_module(
   install: true,
   install_dir: camlibs_dir,
 )
+
+install_data(
+  'README.sonix',
+  install_dir: camlibdoc_dir,
+  install_tag: 'doc',
+)
