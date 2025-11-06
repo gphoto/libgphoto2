@@ -181,6 +181,13 @@ foreach header : headers
   endif
 endforeach
 
+# If sys/mman.h is present, check whether mmap requires the mman
+mman_dep = []
+if not cc.has_function('mmap', prefix: '#include <sys/mman.h>')
+  mman_dep = cc.find_library('mman')
+  cc.has_function('mmap', prefix: '#include <sys/mman.h>', dependencies: mman_dep, required: true)
+endif
+
 add_project_arguments(common_cflags, language: 'c')
 add_project_arguments('-D_GPHOTO2_INTERNAL_CODE', language: 'c')
 add_project_arguments('-DLOCALEDIR="@0@"'.format (get_option('prefix') / get_option('localedir')), language: 'c')
