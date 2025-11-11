@@ -3005,27 +3005,89 @@ static struct deviceproptableu16 canon_eos_drive_mode[] = {
 };
 GENERIC16TABLE(Canon_EOS_DriveMode,canon_eos_drive_mode)
 
+struct olympus_iso_alias {
+	uint32_t    code; // code for a given ISO mode
+	const char *desc; // string representation for special ISO modes
+};
+
+/* These are the ISOs which are displayed with additional info in camera */
+static const struct olympus_iso_alias olympus_iso_aliases[] = {
+	{ 0xffffffff, N_("Auto") }, // 32 bit
+	{ 0x0000ffff, N_("Auto") }, // 16 bit
+	{ 0x0000fffd, N_("Low") },  // E-M1 Mark I (effectively the same as L100)
+	{ 0x00000040, N_("L64") },  // E-M1 Mark II, E-M1 Mark III, (possibly some E-M5s and E-M10s as well?)
+	{ 0x00000050, N_("L80") },  // O-M1 Mark I, O-M1 Mark II, OM-3, (possibly OM-5s?)
+	{ 0x00000064, N_("L100") }  // Most OM-Ds, OMs
+};
+static const size_t olympus_iso_aliases_len = sizeof(olympus_iso_aliases) / sizeof(olympus_iso_aliases[0]);
+
+static inline const char* olympus_iso_label_for(uint32_t code) {
+	for (size_t i = 0; i < olympus_iso_aliases_len; ++i)
+		if (olympus_iso_aliases[i].code == code)
+			return _(olympus_iso_aliases[i].desc);
+	return NULL;
+}
+
+static inline int olympus_iso_code_for(const char *label, uint32_t *out) {
+	for (size_t i = 0; i < olympus_iso_aliases_len; ++i) {
+		const char *translated = _(olympus_iso_aliases[i].desc);
+		if (strcmp(label, translated) == 0) {
+			*out = olympus_iso_aliases[i].code;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+/**
+ * Retrieves a device property value (current or enumerated) from a PTPDevicePropDesc.
+ *
+ * @param dpd   Pointer to the device property descriptor.
+ * @param index Index of the enumerated value to retrieve. If index < 0, the current value is returned.
+ *
+ * @return The requested value as a 32-bit unsigned integer. If the data type is unsupported,
+ *         the function returns 0. It is the caller's responsibility to ensure the data type is valid.
+ */
+static uint32_t get_dpd_value(const PTPDevicePropDesc *dpd, int index) {
+	if (dpd->DataType == PTP_DTC_UINT32) {
+		return index < 0 ? dpd->CurrentValue.u32 : dpd->FORM.Enum.SupportedValue[index].u32;
+	} else if (dpd->DataType == PTP_DTC_UINT16) {
+		return index < 0 ? dpd->CurrentValue.u16 : dpd->FORM.Enum.SupportedValue[index].u16;
+	}
+
+	return 0; // fallback, should be guarded by caller
+}
+
 static int
 _get_Olympus_ISO(CONFIG_GET_ARGS) {
-	int i;
-
 	if (!(dpd->FormFlag & PTP_DPFF_Enumeration))
 		return GP_ERROR;
-	if (dpd->DataType != PTP_DTC_UINT16)
+	if (dpd->DataType != PTP_DTC_UINT32 && dpd->DataType != PTP_DTC_UINT16)
 		return GP_ERROR;
+
+	const uint32_t current = get_dpd_value(dpd, -1);
 
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
-	for (i=0;i<dpd->FORM.Enum.NumberOfValues; i++) {
-		char	buf[20];
 
-		sprintf(buf,"%d",dpd->FORM.Enum.SupportedValue[i].u16);
-		if (dpd->FORM.Enum.SupportedValue[i].u16 == 0xffff) { strcpy(buf,_("Auto")); }
-		if (dpd->FORM.Enum.SupportedValue[i].u16 == 0xfffd) { strcpy(buf,_("Low")); }
-		gp_widget_add_choice (*widget,buf);
-		if (dpd->FORM.Enum.SupportedValue[i].u16 == dpd->CurrentValue.u16)
-			gp_widget_set_value (*widget,buf);
+	for (size_t i = 0; i < dpd->FORM.Enum.NumberOfValues; i++) {
+		const uint32_t code = get_dpd_value(dpd, i);
+		const char *label = olympus_iso_label_for(code);
+		char buf[32];
+
+		if (label) {
+			snprintf(buf, sizeof(buf), "%s", label);
+		} else {
+			snprintf(buf, sizeof(buf), "%u", code);
+		}
+
+		gp_widget_add_choice(*widget, buf);
+
+		if (code == current) {
+			gp_widget_set_value(*widget, buf);
+		}
 	}
+
 	return GP_OK;
 }
 
@@ -3033,22 +3095,32 @@ static int
 _put_Olympus_ISO(CONFIG_PUT_ARGS)
 {
 	char *value;
-	unsigned int	u;
+	uint32_t code;
 
 	CR (gp_widget_get_value(widget, &value));
-	if (!strcmp(value,_("Auto"))) {
-		propval->u16 = 0xffff;
-		return GP_OK;
-	}
-	if (!strcmp(value,_("Low"))) {
-		propval->u16 = 0xfffd;
+
+	if (olympus_iso_code_for(value, &code)) {
+		if (dpd->DataType == PTP_DTC_UINT32) {
+			propval->u32 = code;
+		} else if (dpd->DataType == PTP_DTC_UINT16) {
+			propval->u16 = (uint16_t)code;
+		} else {
+			return GP_ERROR;
+		}
 		return GP_OK;
 	}
 
-	if (sscanf(value, "%ud", &u)) {
-		propval->u16 = u;
+	if (sscanf(value, "%u", &code) == 1) {
+		if (dpd->DataType == PTP_DTC_UINT32) {
+			propval->u32 = code;
+		} else if (dpd->DataType == PTP_DTC_UINT16) {
+			propval->u16 = (uint16_t)code;
+		} else {
+			return GP_ERROR;
+		}
 		return GP_OK;
 	}
+
 	return GP_ERROR;
 }
 
@@ -11423,6 +11495,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_SONY_ISO,                       PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ISO,                  _put_Sony_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_NIKON_1_ISO,                    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_ISO,               _put_Nikon_1_ISO },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_OLYMPUS_ISO,                    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ISO,        _put_Olympus_ISO },
+	{ N_("ISO Speed"),              "iso",                  PTP_DPC_OMS_ISO,                        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ISO,        _put_Olympus_ISO },
 	{ N_("ISO Speed"),              "iso",                  0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_UINT32, _get_Panasonic_ISO,         _put_Panasonic_ISO },
 	{ N_("ISO Auto"),               "isoauto",              PTP_DPC_NIKON_ISO_Auto,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("Auto ISO"),               "autoiso",              PTP_DPC_NIKON_ISOAuto,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
