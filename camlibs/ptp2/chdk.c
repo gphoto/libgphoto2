@@ -1145,7 +1145,7 @@ static void yuv_live_to_jpeg(unsigned char *p_yuv,
 	struct		jpeg_error_mgr jerr;
 	JSAMPROW	row_ptr[1];
 	uint8_t		*outbuf = NULL, *tmprowbuf = NULL;
-	unsigned long	outlen = 0;
+	uint32_t	outlen = 0;
 	unsigned int	row_inc;
 	int		sshift, dshift, xshift, skip;
 
