@@ -181,6 +181,13 @@ foreach header : headers
   endif
 endforeach
 
+# If sys/mman.h is present, check whether mmap requires the mman
+mman_dep = []
+if not cc.has_function('mmap', prefix: '#include <sys/mman.h>')
+  mman_dep = cc.find_library('mman')
+  cc.has_function('mmap', prefix: '#include <sys/mman.h>', dependencies: mman_dep, required: true)
+endif
+
 add_project_arguments(common_cflags, language: 'c')
 add_project_arguments('-D_GPHOTO2_INTERNAL_CODE', language: 'c')
 add_project_arguments('-DLOCALEDIR="@0@"'.format (get_option('prefix') / get_option('localedir')), language: 'c')
@@ -193,6 +200,9 @@ has_version_script = cc.has_link_argument('-Wl,--version-script=@0@'.format(
 ))
 
 libgphoto2_root_inc = include_directories('.')
+
+doc_dir = get_option('prefix') / get_option('datadir') / 'doc' / '@0@-@1@'.format(meson.project_name(), libgphoto2_current_min)
+camlibdoc_dir = doc_dir / 'camlibs'
 
 iolibs_dir_suffix = libgphoto2_port_name / libgphoto2_port_version
 iolibs_dir = get_option('prefix') / get_option('libdir') / iolibs_dir_suffix
