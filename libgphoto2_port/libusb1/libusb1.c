@@ -736,18 +736,7 @@ _cb_irq(struct libusb_transfer *transfer)
 			pl->irqs_head = irq_new;
 	}
 
-	if (	(transfer->status == LIBUSB_TRANSFER_CANCELLED) ||
-		(transfer->status == LIBUSB_TRANSFER_TIMED_OUT) || /* on close */
-		(transfer->status == LIBUSB_TRANSFER_NO_DEVICE) || /* on removing camera */
-		(transfer->status != LIBUSB_TRANSFER_COMPLETED) /* any error */
-	) {
-		if (transfer->status != LIBUSB_TRANSFER_COMPLETED) {
-			/* So far we don't requeue for any error, previous behavior, maybe we should?
-			 * Note: some times in case of device removed, libusb encounter an
-			 * errno == -71, that results in a LIBUSB_TRANSFER_ERROR (1)
-			 */
-			GP_LOG_D("Transfer %p should be in LIBUSB_TRANSFER_COMPLETED, but is %d!", transfer, transfer->status);
-		}
+	if ( transfer->status != LIBUSB_TRANSFER_COMPLETED) {
 		/* Only requeue the global transfers, not temporary ones */
 		for (i = 0; i < sizeof(pl->transfers)/sizeof(pl->transfers[0]); i++) {
 			if (pl->transfers[i] == transfer) {
@@ -757,6 +746,11 @@ _cb_irq(struct libusb_transfer *transfer)
 				return;
 			}
 		}
+		return;
+	}
+
+	if (transfer->status != LIBUSB_TRANSFER_COMPLETED) {
+		GP_LOG_D("Transfer %p should be in LIBUSB_TRANSFER_COMPLETED, but is %d!", transfer, transfer->status);
 		return;
 	}
 
