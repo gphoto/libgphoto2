@@ -110,7 +110,7 @@ inline static int log_on_ptp_error_helper( int _r, const char* _func, const char
 #define CR(RESULT) do {\
 	int cr_r=(RESULT);\
 	if (cr_r<0) {\
-		GP_LOG_E ("'%s' failed: '%s' (%d)", #RESULT, gp_port_result_as_string(cr_r), cr_r);\
+		GP_LOG_E ("'%s' failed: '%s' (%d)", #RESULT, gp_result_as_string(cr_r), cr_r);\
 		return cr_r;\
 	}\
 } while (0)
