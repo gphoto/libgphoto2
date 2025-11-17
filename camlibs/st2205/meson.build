@@ -8,8 +8,18 @@ shared_module(
   dependencies: [
     libgphoto2_dep,
     libgd_dep,
+# On systems such as mingw/Windows, mmap(2) is not part of the
+# standard library and needs an explicit library to link against.
+    mman_dep,
   ],
   name_prefix: '',
   install: true,
   install_dir: camlibs_dir,
+)
+
+install_data(
+  'README.st2205',
+  'README.st2205-compression',
+  install_dir: camlibdoc_dir,
+  install_tag: 'doc',
 )

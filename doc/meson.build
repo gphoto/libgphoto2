@@ -21,8 +21,6 @@ if get_option('docs')
     cdata_internals = cdata
     cdata_internals.set('HTML_APIDOC_INTERNALS_DIR', 'html-internals')
 
-    datadir = join_paths(get_option('datadir'), 'doc', meson.project_name())
-
     doxyfile = configure_file(
       input: 'Doxyfile.in',
       output: 'Doxyfile',
@@ -36,7 +34,7 @@ if get_option('docs')
       output: 'html',
       command: [doxygen, '@INPUT@'],
       install: true,
-      install_dir: datadir
+      install_dir: doc_dir
     )
 
     if get_option('docs-internal')
@@ -53,7 +51,7 @@ if get_option('docs')
         output: 'html-internals',
         command: [doxygen, '@INPUT@'],
         install: true,
-        install_dir: datadir
+        install_dir: doc_dir
       )
     endif
   endif

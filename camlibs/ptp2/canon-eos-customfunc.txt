@@ -36,7 +36,7 @@ A 'value' of the CustomFuncEx property is a list of numbers (4 byte
 integers) that forms a two-level hierarchical structure of individual
 enumerated custom functions. First level is the group of functions,
 second level is the list of functions within that group. The 5DM3
-seems to have 3 groups (1,2,4), the 60D 4 groups (1,2,3,4). The groups
+has 3 groups (1,2,4), the 60D 4 groups (1,2,3,4). The groups
 seem to be somewhat related to the different pages in the custom
 functions menu structure on the camera. The first group of the 5DM3
 contains the individual functions numbered 101, 102, 104, 105, 106,
@@ -53,7 +53,7 @@ explained on the example
 is as follows (remember: every number is hex encoded):
 1. size of the whole data set in bytes: here 0x60 = 96, i.e. 96/4=24 integers
 2. number of groups in this data set: always 1
-3. group id: here 1, I've seen 1, 2, 3 and 4
+3. group id: here 1, I've seen 1 to 6
 4. size of the group part in bytes: here 0x54 = 84, i.e. 84/4=21 integers
 5. number of individual custom functions in the group: here 6
 --- and now for each custom function in this group ---
@@ -66,8 +66,8 @@ individual functions (e.g. 20,1,1,14,1,101,1,1 which sets the 101
 function to '1') but the camera then sets all other available
 functions in the same group back to their default state. Notice: the
 group id is redundant since the function id completely determines the
-function. If you try to set a 10x function inside group 2 nothing
-happens.
+function. But you still need to specify the correct group id, otherwise
+nothing happens.
 
 To actually make use of that feature (e.g. toggle mirror lockup on a
 5DM2) you may proceed as follows:
@@ -76,8 +76,8 @@ To actually make use of that feature (e.g. toggle mirror lockup on a
 3) set the mirror lockup to on (you may have to disconnect the camera
 if it says 'busy')
 4) gphoto2 --debug --debug-logfile=on.txt --get-config customfuncex
-5) grep custom off.txt | cut -d' ' -f 12
-6) grep custom on.txt | cut -d' ' -f 12
+5) grep "prop d1a0 value ==" off.txt | cut -d' ' -f48 | sort -sut ',' -k3
+6) grep "prop d1a0 value ==" on.txt | cut -d' ' -f48 | sort -sut ',' -k3
 
 The last two commands will output something like:
 
@@ -98,9 +98,19 @@ and 1. Hence, to enable mirror lockup you may finally call
     gphoto2 --set-config
 customfuncex=84,1,3,78,8,505,1,0,506,1,0,50f,1,0,510,1,0,50e,1,0,60f,1,1,508,1,0,507,5,0,ff,0,ff,0,
 
-In fact if you don't care for anything else than mirror lockup you may also call
+In fact if you don't care for anything other than mirror lockup you may also call
 
     gphoto2 --set-config customfuncex=20,1,3,14,1,60f,1,1
+
+
+Here are a few settings (from the EOS R8) I personally cared about:
+
+ 101 = Exposure level increments (0 = 1/3, 1 = 1/2)
+ 102 = ISO speed setting increments (0 = 1/3, 1 = 1/1)
+ 104 = Bracket auto cancel (0 = On, 1 = Off)
+ 105 = Braketing sequence (0 = '0-+', 1 = '-0+', 2 = '+0-')
+ 106 = Number of bracketed shots (2|3|5|7 = #shots, 2nd param: 0-2 = ?)
+ 814 = Retract lens on power off (0 = On, 1 = Off)
 
 DISCLAIMER: Throwing random numbers at your Canon may SET IT ON FIRE!
 (Well, that is actually pretty unlikely but anyway: _your_ risk. What
