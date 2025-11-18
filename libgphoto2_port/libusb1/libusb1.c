@@ -552,9 +552,9 @@ _close_async_interrupts(GPPort *port)
 	tv.tv_usec = 1000;
 	LOG_ON_LIBUSB_E (libusb_handle_events_timeout(port->pl->ctx, &tv));
 	/* Now cancel and free the async transfers */
+	GP_LOG_D("canceling USB IRQ transfers");
 	for (i = 0; i < sizeof(port->pl->transfers)/sizeof(port->pl->transfers[0]); i++) {
 		if (port->pl->transfers[i]) {
-			GP_LOG_D("canceling transfer %d:%p (status %d)",i, port->pl->transfers[i], port->pl->transfers[i]->status);
 			/* this happens if the transfer is completed for instance, but not reaped. we cannot cancel it. */
 			if (LOG_ON_LIBUSB_E(libusb_cancel_transfer(port->pl->transfers[i])) < 0) {
 				/* do not libusb_free_transfer (port->pl->transfers[i]); causes crashes */
@@ -720,7 +720,21 @@ _cb_irq(struct libusb_transfer *transfer)
 	unsigned int i;
 	int ret;
 
-	GP_LOG_D("%p with status %d", transfer, transfer->status);
+	if (transfer->status != LIBUSB_TRANSFER_CANCELLED && transfer->status != LIBUSB_TRANSFER_COMPLETED) {
+		static const char* const status_strings[] = {
+			"LIBUSB_TRANSFER_COMPLETED",
+			"LIBUSB_TRANSFER_ERROR",
+			"LIBUSB_TRANSFER_TIMED_OUT",
+			"LIBUSB_TRANSFER_CANCELLED",
+			"LIBUSB_TRANSFER_STALL",
+			"LIBUSB_TRANSFER_NO_DEVICE",
+			"LIBUSB_TRANSFER_OVERFLOW"
+		};
+		const char* status_str = (transfer->status >= 0 && transfer->status < sizeof(status_strings)/sizeof(status_strings[0]))
+				? status_strings[transfer->status]
+				: "unknown libusb transfer status";
+		GP_LOG_D("IRQ transfer %p failed with %s", transfer, status_str);
+	}
 
 	if ((transfer->status != LIBUSB_TRANSFER_CANCELLED) &&
 		(transfer->status != LIBUSB_TRANSFER_TIMED_OUT)
@@ -736,7 +750,7 @@ _cb_irq(struct libusb_transfer *transfer)
 			pl->irqs_head = irq_new;
 	}
 
-	if ( transfer->status != LIBUSB_TRANSFER_COMPLETED) {
+	if (transfer->status != LIBUSB_TRANSFER_COMPLETED) {
 		/* Only requeue the global transfers, not temporary ones */
 		for (i = 0; i < sizeof(pl->transfers)/sizeof(pl->transfers[0]); i++) {
 			if (pl->transfers[i] == transfer) {
@@ -746,11 +760,6 @@ _cb_irq(struct libusb_transfer *transfer)
 				return;
 			}
 		}
-		return;
-	}
-
-	if (transfer->status != LIBUSB_TRANSFER_COMPLETED) {
-		GP_LOG_D("Transfer %p should be in LIBUSB_TRANSFER_COMPLETED, but is %d!", transfer, transfer->status);
 		return;
 	}
 
