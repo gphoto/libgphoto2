@@ -12441,6 +12441,72 @@ camera_get_single_config (Camera *camera, const char *confname, CameraWidget **w
 	return _get_config (camera, confname, widget, NULL, context);
 }
 
+static int
+_has_better_matching_property(unsigned int menuno, unsigned int submenuno, PTPDevicePropDesc* dpd, CameraAbilities* ab,
+	const char* confname, CameraWidget* subwindow)
+{
+	CameraWidget	*section, *widget;
+	int		ret;
+	uint32_t	propid = dpd->DevicePropCode;
+	enum {
+		MODE_SET, MODE_SINGLE_SET
+	} mode = MODE_SET;
+
+	if (confname) mode = MODE_SINGLE_SET;
+	for (; menuno < ARRAYSIZE(menus) ; menuno++ )
+	{
+		if (mode == MODE_SET) {
+			ret = gp_widget_get_child_by_label (subwindow, _(menus[menuno].label), &section);
+			if (ret != GP_OK)
+				continue;
+		}
+
+		if ((menus[menuno].usb_vendorid != 0) && (ab->port == GP_PORT_USB)) {
+			if (menus[menuno].usb_vendorid != ab->usb_vendor)
+				continue;
+			if (	menus[menuno].usb_productid &&
+				(menus[menuno].usb_productid != ab->usb_product)
+			)
+				continue;
+		}
+
+		if (!menus[menuno].submenus)
+		{
+			continue;
+		}
+
+		/* Standard menu with submenus */
+		for (; menus[menuno].submenus[submenuno].label ; submenuno++ ) {
+			struct submenu *cursub = menus[menuno].submenus+submenuno;
+
+			if (mode == MODE_SET) {
+				ret = gp_widget_get_child_by_label (section, _(cursub->label), &widget);
+				if (ret != GP_OK)
+					continue;
+
+				if (!gp_widget_changed (widget))
+					continue;
+			}
+
+			if (	propid == cursub->propid ||
+				((cursub->propid == 0) && cursub->type == propid)) {
+				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
+					continue;
+
+				if (cursub->type == dpd->DataType)
+				{
+					GP_LOG_E ("Found better match for prop 0x%04x  menu name: %s vendor: 0x%04x",
+						propid, cursub->name, cursub->vendorid);
+					return 1;
+				}
+			}
+
+		}
+		submenuno = 0;
+	}
+
+	return 0;
+}
 
 static int
 _set_config (Camera *camera, const char *confname, CameraWidget *window, GPContext *context)
@@ -12511,9 +12577,6 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 
 				if (!gp_widget_changed (widget))
 					continue;
-
-				/* restore the "changed flag" */
-				gp_widget_set_changed (widget, TRUE);
 			}
 
 			if (	have_prop(camera,cursub->vendorid,cursub->propid) ||
@@ -12522,7 +12585,6 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
 					continue;
 
-				gp_widget_set_changed (widget, FALSE); /* clear flag */
 				GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid );
 				if (	((cursub->propid & 0x7000) == 0x5000) ||
 					(NIKON_1(params) && ((cursub->propid & 0xf000) == 0xf000))
@@ -12541,7 +12603,12 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 						/* array is not compatible to non-array */
 						if (((cursub->type ^ dpd.DataType) & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
 							continue;
-						/* FIXME: continue to search here perhaps instead of below? */
+						/* check rest of menu for a better item matching this property, if a
+						 * better match is found skip this one */
+						if (_has_better_matching_property(menuno, submenuno, &dpd, &ab, confname, subwindow)) {
+							GP_LOG_D ("Better matching property found, skipping...");
+							continue;
+						}
 					}
 					if (dpd.GetSet == PTP_DPGS_GetSet) {
 						ret = cursub->putfunc (camera, widget, &propval, &dpd, &alreadyset);
@@ -12562,15 +12629,12 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					}
 					ptp_free_devicepropdesc(&dpd);
 					if (ret != GP_OK) {
-						if (mode == MODE_SET) {
-							/* Clear changed flag so we can try another match */
-							gp_widget_set_changed (widget, FALSE);
-						}
 						continue; /* see if we have another match */
 					}
 				} else {
 					ret = cursub->putfunc (camera, widget, NULL, NULL, NULL);
 				}
+				gp_widget_set_changed (widget, FALSE); /* clear flag */
 				if (mode == MODE_SINGLE_SET)
 					return ret;
 			}
@@ -12580,7 +12644,6 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 
 				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
 					continue;
-				gp_widget_set_changed (widget, FALSE); /* clear flag */
 				if ((cursub->propid & 0x7000) == 0x5000) {
 					GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid);
 					memset(&dpd,0,sizeof(dpd));
@@ -12609,6 +12672,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					else
 						continue;
 				}
+				gp_widget_set_changed (widget, FALSE); /* clear flag */
 				if (mode == MODE_SINGLE_SET)
 					return ret;
 			}
