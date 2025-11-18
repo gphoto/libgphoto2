@@ -7409,7 +7409,6 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		{PTP_DPC_SONY_ExposureCompensation, N_("Exposure Bias Compensation")},	/* 0xD224 */
 		{PTP_DPC_SONY_ISO2, N_("ISO")},				/* 0xD226 */
 		{PTP_DPC_SONY_FormatMediaStatus, N_("Format Media Status")},
-		{PTP_DPC_SONY_ShutterSpeed2, N_("Shutter Speed")},	/* 0xD229 */
 		{PTP_DPC_SONY_FocusArea, N_("Focus Area")},
 		{PTP_DPC_SONY_FocusMagnifierPosition, N_("Focus Magnifier Position")},
 		{PTP_DPC_SONY_LiveViewSettingEffect, N_("Live View Setting Effect")},
