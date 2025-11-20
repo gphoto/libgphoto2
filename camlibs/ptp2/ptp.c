@@ -3200,106 +3200,86 @@ ptp_add_event (PTPParams *params, PTPContainer *event)
 }
 
 /* CANON EOS fast directory mode: uses ptp_canon_eos_getobjectinfoex to get list of
- * ObjectInfos instead of just a list of handles that have to be queried the one by one.*/
+ * ObjectInfos instead of just a list of handles that have to be queried then one by one.*/
 static uint16_t
 ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle, PTPObjectHandles *children) {
-	unsigned int	i, last, changed;
+	unsigned int	last = 0, changed = 0;
 	PTPCANONFolderEntry *tmp = NULL;
 	unsigned int	nroftmp = 0;
-	uint16_t	ret;
-	PTPStorageIDs	storageids = {0};
 
-	if (storage == 0xffffffff) {
-		if (handle != 0xffffffff)
-			handle = 0xffffffff;
-		ret = ptp_getstorageids(params, &storageids);
-		if (ret != PTP_RC_OK)
-			return ret;
-	} else {
-		array_push_back(&storageids, storage);
-	}
-	last = changed = 0;
+	ptp_debug (params, "list_folder_eos(storage=0x%08x, handle=0x%08x)", storage, handle);
+	/* the following call currently always fails for the R5m2 for an unkown reason */
+	CHECK_PTP_RC (ptp_canon_eos_getobjectinfoex (
+		params, storage, handle ? handle : PTP_HANDLER_SPECIAL, 0x100000, &tmp, &nroftmp));
 
-	for_each (uint32_t*, psid, storageids) {
-		ptp_debug (params, "list_folder_eos(storage=0x%08x, handle=0x%08x)", *psid, handle);
-		tmp = NULL;
-		ret = ptp_canon_eos_getobjectinfoex (
-			  params, *psid, handle ? handle : 0xffffffff, 0x100000, &tmp, &nroftmp);
-		if (ret != PTP_RC_OK) {
-			ptp_error (params, "error 0x%04x", ret);
-			free_array (&storageids);
-			return ret;
-		}
+	if (children)
+		array_extend_capacity(children, nroftmp);
+
+	/* convert read entries into objectinfos */
+	for (unsigned int i=0; i<nroftmp; i++) {
+		PTPObject	*ob = NULL;
+		unsigned int	j;
 
 		if (children)
-			array_extend_capacity(children, nroftmp);
+			children->val[children->len++] = tmp[i].ObjectHandle;
 
-		/* convert read entries into objectinfos */
-		for (i=0;i<nroftmp;i++) {
-			PTPObject	*ob = NULL;
-			unsigned int	j;
-
-			if (children)
-				children->val[children->len++] = tmp[i].ObjectHandle;
-
-			/* TODO: the following is actually slow when adding new entries, as the complete list needs to be traversed.
-			 * Make better use of the fact that the list is sorted. */
-			for (j=0; j<params->objects.len; j++) {
-				if (params->objects.val[(last+j) % params->objects.len].oid == tmp[i].ObjectHandle)  {
-					ob = &params->objects.val[(last+j) % params->objects.len];
-					break;
-				}
-			}
-			if (ob == NULL) {
-				ptp_debug (params, "adding new object: handle 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects.len, j);
-
-				array_push_back_empty (&params->objects, &ob);
-
-				ob->oid = tmp[i].ObjectHandle;
-				ob->oi.Handle = tmp[i].ObjectHandle;
-				ob->flags = 0;
-
-				ob->oi.StorageID = *psid;
-				ob->flags |= PTPOBJECT_STORAGEID_LOADED;
-				ob->oi.ParentObject = handle == 0xffffffff ? 0 : handle;
-				ob->flags |= PTPOBJECT_PARENTOBJECT_LOADED;
-				ob->oi.Filename = strdup(tmp[i].Filename);
-				ob->oi.ObjectFormat = tmp[i].ObjectFormatCode;
-
-				ptp_debug (params, "   flags %x", tmp[i].Flags);
-				if (tmp[i].Flags & 0x1)
-					ob->oi.ProtectionStatus = PTP_PS_ReadOnly;
-				else
-					ob->oi.ProtectionStatus = PTP_PS_NoProtection;
-				ob->canon_flags = tmp[i].Flags;
-				ob->oi.ObjectSize = tmp[i].ObjectSize;
-				ob->oi.CaptureDate = tmp[i].Time;
-				ob->oi.ModificationDate = tmp[i].Time;
-				ob->flags |= PTPOBJECT_OBJECTINFO_LOADED;
-
-				/*log_objectinfo(params, &ob->oi);*/
-				last = params->objects.len;
-				changed = 1;
-			} else {
-				ptp_debug (params, "adding old object: handle 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects.len, j);
-				/* for speeding up search */
-				last = (last+j) % params->objects.len;
-				if (handle != PTP_HANDLER_SPECIAL) {
-					ob->oi.ParentObject = handle;
-					ob->flags |= PTPOBJECT_PARENTOBJECT_LOADED;
-				}
-				if (*psid != PTP_HANDLER_SPECIAL) {
-					ob->oi.StorageID = *psid;
-					ob->flags |= PTPOBJECT_STORAGEID_LOADED;
-				}
+		/* TODO: the following is actually slow when adding new entries, as the complete list needs to be traversed.
+			* Make better use of the fact that the list is sorted. */
+		for (j=0; j<params->objects.len; j++) {
+			if (params->objects.val[(last+j) % params->objects.len].oid == tmp[i].ObjectHandle)  {
+				ob = &params->objects.val[(last+j) % params->objects.len];
+				break;
 			}
 		}
-		free (tmp);
+		if (ob == NULL) {
+			ptp_debug (params, "adding new object: handle 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects.len, j);
+
+			array_push_back_empty (&params->objects, &ob);
+
+			ob->oid = tmp[i].ObjectHandle;
+			ob->oi.Handle = tmp[i].ObjectHandle;
+			ob->flags = 0;
+
+			ob->oi.StorageID = storage;
+			ob->flags |= PTPOBJECT_STORAGEID_LOADED;
+			ob->oi.ParentObject = handle == PTP_HANDLER_SPECIAL ? 0 : handle;
+			ob->flags |= PTPOBJECT_PARENTOBJECT_LOADED;
+			ob->oi.Filename = strdup(tmp[i].Filename);
+			ob->oi.ObjectFormat = tmp[i].ObjectFormatCode;
+
+			ptp_debug (params, "   flags %x", tmp[i].Flags);
+			if (tmp[i].Flags & 0x1)
+				ob->oi.ProtectionStatus = PTP_PS_ReadOnly;
+			else
+				ob->oi.ProtectionStatus = PTP_PS_NoProtection;
+			ob->canon_flags = tmp[i].Flags;
+			ob->oi.ObjectSize = tmp[i].ObjectSize;
+			ob->oi.CaptureDate = tmp[i].Time;
+			ob->oi.ModificationDate = tmp[i].Time;
+			ob->flags |= PTPOBJECT_OBJECTINFO_LOADED;
+
+			/*log_objectinfo(params, &ob->oi);*/
+			last = params->objects.len;
+			changed = 1;
+		} else {
+			ptp_debug (params, "adding old object: handle 0x%08x (nrofobs=%d,j=%d)", tmp[i].ObjectHandle, params->objects.len, j);
+			/* for speeding up search */
+			last = (last+j) % params->objects.len;
+			if (handle != PTP_HANDLER_SPECIAL) {
+				ob->oi.ParentObject = handle;
+				ob->flags |= PTPOBJECT_PARENTOBJECT_LOADED;
+			}
+			if (storage != PTP_HANDLER_SPECIAL) {
+				ob->oi.StorageID = storage;
+				ob->flags |= PTPOBJECT_STORAGEID_LOADED;
+			}
+		}
 	}
+	free (tmp);
+
 	if (changed)
 		ptp_objects_sort (params);
 
-	free_array (&storageids);
 	return PTP_RC_OK;
 }
 
@@ -3318,6 +3298,16 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle, PTPObject
 	/* TODO: remove special handling of root folder by introducing a 'root' object */
 	if (handle == PTP_HANDLER_SPECIAL)
 		handle = 0;
+
+	/* camera_init calls this once for each storage with handle == 0 and children == NULL to read the root folder,
+	 * subsequent calls asking for the root folder will simply return the cached list. This only works since we
+	 * assume the entries in the root folder can never change. */
+	if (!handle && children && params->objects.len != 0) {
+		for_each (PTPObject*, pob, params->objects)
+			if (pob->oi.ParentObject == 0 && pob->oi.StorageID == storage)
+				array_push_back(children, pob->oid);
+		return PTP_RC_OK;
+	}
 
 	if (handle) { /* 0 is the virtual root */
 		PTPObject		*ob;
@@ -3341,6 +3331,7 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle, PTPObject
 
 	/* Canon EOS Fast directory strategy */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
+	    storage != PTP_HANDLER_SPECIAL &&
 	    ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetObjectInfoEx)) {
 		ret = ptp_list_folder_eos (params, storage, handle, children);
 		if (ret == PTP_RC_OK)
