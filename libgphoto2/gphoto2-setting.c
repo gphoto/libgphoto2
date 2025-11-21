@@ -170,6 +170,74 @@ gp_setting_set (char *id, char *key, char *value)
 	return (GP_OK);
 }
 
+#define GP_PATH_MAX 1024
+
+static int
+gp_settings_path (char (*out)[GP_PATH_MAX], int create_dir)
+{
+#ifdef WIN32
+
+	/* TODO: improve robustness */
+	/* TODO: respect system-defined folders of Windows as well (AppData etc.) */
+	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, *out);
+	strcat (*out, "\\.gphoto");
+	if (create_dir) {
+		GP_LOG_D("Creating gphoto config directory ('%s')", *out);
+		(void)gp_system_mkdir(*out);
+	}
+	strcat(*out, "\\settings");
+
+#else
+
+	const char *home = getenv("HOME");
+	char xdg_config_home[GP_PATH_MAX];
+
+# ifdef __APPLE__
+	/* TODO: use more native approach */
+	const char *xdg_fallback = "Library/Application Support";
+# else
+	const char *xdg_fallback = ".config";
+# endif
+
+	const char *xdg_tmpvar = getenv("XDG_CONFIG_HOME");
+	if (xdg_tmpvar != NULL && xdg_tmpvar[0] != '\0') {
+		snprintf (xdg_config_home, GP_PATH_MAX, "%s", xdg_tmpvar);
+	} else {
+		snprintf (xdg_config_home, GP_PATH_MAX, "%s/%s", home, xdg_fallback);
+	}
+
+	char dir[GP_PATH_MAX];
+	snprintf(dir, GP_PATH_MAX, "%s/gphoto", xdg_config_home);
+
+	char path[GP_PATH_MAX];
+	snprintf(path, GP_PATH_MAX, "%s/settings", dir);
+
+	FILE *tmp = fopen(path, "r");
+	if (tmp) {
+		fclose(tmp);
+	} else {
+		char legacy[GP_PATH_MAX];
+		snprintf (legacy, GP_PATH_MAX, "%s/.gphoto/settings", home);
+		if ((tmp = fopen(legacy, "r"))) {
+			fclose(tmp);
+			snprintf(dir, GP_PATH_MAX, "%s/.gphoto", home);
+			snprintf(path, GP_PATH_MAX, "%s", legacy);
+			GP_LOG_D("Using legacy settings path ('%s')", path);
+		}
+	}
+
+	if (create_dir) {
+		GP_LOG_D("Creating gphoto config directory ('%s')", dir);
+		(void)gp_system_mkdir(dir);
+	}
+
+	snprintf(*out, GP_PATH_MAX, "%s", path);
+
+#endif
+
+	return (GP_OK);
+}
+
 static int
 verify_settings (char *settings_file)
 {
@@ -211,31 +279,10 @@ static int
 load_settings (void)
 {
 	FILE *f;
-	char buf[1024], *id, *key, *value;
+	char buf[GP_PATH_MAX], *id, *key, *value;
 
-	/* Make sure the directories are created */
-#ifdef WIN32
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, buf);
-	strcat (buf, "\\.gphoto");
-#else
-	if (getenv("XDG_CONFIG_HOME") != NULL)
-		snprintf (buf, sizeof(buf), "%s/gphoto", getenv("XDG_CONFIG_HOME"));
-	else
-		snprintf (buf, sizeof(buf), "%s/.config/gphoto", getenv ("HOME"));
-#endif
-	GP_LOG_D ("Creating gphoto config directory ('%s')", buf);
-	(void)gp_system_mkdir (buf);
-
+	gp_settings_path (&buf, 1);
 	glob_setting_count = 0;
-#ifdef WIN32
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, buf);
-	strcat(buf, "\\.gphoto\\settings");
-#else
-	if (getenv("XDG_CONFIG_HOME") != NULL)
-		snprintf(buf, sizeof(buf), "%s/gphoto/settings", getenv("XDG_CONFIG_HOME"));
-	else
-		snprintf(buf, sizeof(buf), "%s/.config/gphoto/settings", getenv("HOME"));
-#endif
 
 	if (verify_settings(buf) != GP_OK)
 		/* verify_settings will unlink and recreate the settings file */
@@ -274,19 +321,10 @@ static int
 save_settings (void)
 {
 	FILE *f;
-	char buf[1024];
+	char buf[GP_PATH_MAX];
 	int x=0;
 
-#ifdef WIN32
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, buf);
-	strcat(buf, "\\.gphoto\\settings");
-#else
-	if (getenv("XDG_CONFIG_HOME") != NULL)
-		snprintf(buf, sizeof(buf), "%s/gphoto/settings", getenv("XDG_CONFIG_HOME"));
-	else
-		snprintf(buf, sizeof(buf), "%s/.config/gphoto/settings", getenv ("HOME"));
-#endif
-
+	gp_settings_path (&buf, 0);
 
 	GP_LOG_D ("Saving %i setting(s) to file \"%s\"", glob_setting_count, buf);
 
