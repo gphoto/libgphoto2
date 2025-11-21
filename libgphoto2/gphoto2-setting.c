@@ -179,18 +179,21 @@ gp_settings_path (char (*out)[GP_PATH_MAX], int create_dir)
 
 	/* TODO: improve robustness */
 	/* TODO: respect system-defined folders of Windows as well (AppData etc.) */
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, *out);
+	SHGetFolderPath (NULL, CSIDL_PROFILE, NULL, 0, *out);
 	strcat (*out, "\\.gphoto");
 	if (create_dir) {
-		GP_LOG_D("Creating gphoto config directory ('%s')", *out);
-		(void)gp_system_mkdir(*out);
+		GP_LOG_D ("Creating gphoto config directory ('%s')", *out);
+		(void)gp_system_mkdir (*out);
 	}
-	strcat(*out, "\\settings");
+	strcat (*out, "\\settings");
 
 #else
 
+	char dir[GP_PATH_MAX];
+	char path[GP_PATH_MAX];
 	const char *home = getenv("HOME");
 	char xdg_config_home[GP_PATH_MAX];
+	FILE *tmp;
 
 # ifdef __APPLE__
 	/* TODO: use more native approach */
@@ -199,39 +202,37 @@ gp_settings_path (char (*out)[GP_PATH_MAX], int create_dir)
 	const char *xdg_fallback = ".config";
 # endif
 
-	const char *xdg_tmpvar = getenv("XDG_CONFIG_HOME");
+	const char *xdg_tmpvar = getenv ("XDG_CONFIG_HOME");
 	if (xdg_tmpvar != NULL && xdg_tmpvar[0] != '\0') {
 		snprintf (xdg_config_home, GP_PATH_MAX, "%s", xdg_tmpvar);
 	} else {
 		snprintf (xdg_config_home, GP_PATH_MAX, "%s/%s", home, xdg_fallback);
 	}
 
-	char dir[GP_PATH_MAX];
-	snprintf(dir, GP_PATH_MAX, "%s/gphoto", xdg_config_home);
+	snprintf (dir, GP_PATH_MAX, "%s/gphoto", xdg_config_home);
+	snprintf (path, GP_PATH_MAX, "%s/settings", dir);
 
-	char path[GP_PATH_MAX];
-	snprintf(path, GP_PATH_MAX, "%s/settings", dir);
-
-	FILE *tmp = fopen(path, "r");
+	tmp = fopen (path, "r");
 	if (tmp) {
-		fclose(tmp);
+		fclose (tmp);
 	} else {
 		char legacy[GP_PATH_MAX];
 		snprintf (legacy, GP_PATH_MAX, "%s/.gphoto/settings", home);
-		if ((tmp = fopen(legacy, "r"))) {
-			fclose(tmp);
-			snprintf(dir, GP_PATH_MAX, "%s/.gphoto", home);
-			snprintf(path, GP_PATH_MAX, "%s", legacy);
-			GP_LOG_D("Using legacy settings path ('%s')", path);
+		tmp = fopen (legacy, "r");
+		if (tmp) {
+			fclose (tmp);
+			snprintf (dir, GP_PATH_MAX, "%s/.gphoto", home);
+			snprintf (path, GP_PATH_MAX, "%s", legacy);
+			GP_LOG_D ("Using legacy settings path ('%s')", path);
 		}
 	}
 
 	if (create_dir) {
-		GP_LOG_D("Creating gphoto config directory ('%s')", dir);
-		(void)gp_system_mkdir(dir);
+		GP_LOG_D ("Creating gphoto config directory ('%s')", dir);
+		(void)gp_system_mkdir (dir);
 	}
 
-	snprintf(*out, GP_PATH_MAX, "%s", path);
+	snprintf (*out, GP_PATH_MAX, "%s", path);
 
 #endif
 
