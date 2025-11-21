@@ -173,7 +173,7 @@ gp_setting_set (char *id, char *key, char *value)
 #define GP_PATH_MAX 1024
 
 static int
-gp_settings_path (char (*out)[GP_PATH_MAX], int create_dir)
+gp_settings_path (char (*out)[GP_PATH_MAX])
 {
 #ifdef WIN32
 
@@ -181,10 +181,8 @@ gp_settings_path (char (*out)[GP_PATH_MAX], int create_dir)
 	/* TODO: respect system-defined folders of Windows as well (AppData etc.) */
 	SHGetFolderPath (NULL, CSIDL_PROFILE, NULL, 0, *out);
 	strcat (*out, "\\.gphoto");
-	if (create_dir) {
-		GP_LOG_D ("Creating gphoto config directory ('%s')", *out);
-		(void)gp_system_mkdir (*out);
-	}
+	GP_LOG_D ("Creating gphoto config directory ('%s')", *out);
+	(void)gp_system_mkdir (*out);
 	strcat (*out, "\\settings");
 
 #else
@@ -227,10 +225,8 @@ gp_settings_path (char (*out)[GP_PATH_MAX], int create_dir)
 		}
 	}
 
-	if (create_dir) {
-		GP_LOG_D ("Creating gphoto config directory ('%s')", dir);
-		(void)gp_system_mkdir (dir);
-	}
+	GP_LOG_D ("Creating gphoto config directory ('%s')", dir);
+	(void)gp_system_mkdir (dir);
 
 	snprintf (*out, GP_PATH_MAX, "%s", path);
 
@@ -282,7 +278,7 @@ load_settings (void)
 	FILE *f;
 	char buf[GP_PATH_MAX], *id, *key, *value;
 
-	gp_settings_path (&buf, 1);
+	gp_settings_path (&buf);
 	glob_setting_count = 0;
 
 	if (verify_settings(buf) != GP_OK)
@@ -325,7 +321,7 @@ save_settings (void)
 	char buf[GP_PATH_MAX];
 	int x=0;
 
-	gp_settings_path (&buf, 0);
+	gp_settings_path (&buf);
 
 	GP_LOG_D ("Saving %i setting(s) to file \"%s\"", glob_setting_count, buf);
 
