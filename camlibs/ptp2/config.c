@@ -8106,29 +8106,27 @@ _get_Canon_EOS_RemoteRelease(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 
-	/* FIXME: remember state of release */
 	gp_widget_add_choice (*widget, _("None"));
-	gp_widget_add_choice (*widget, _("Press Half"));
-	gp_widget_add_choice (*widget, _("Press Full"));
+	gp_widget_add_choice (*widget, _("Press Half AF"));
+	gp_widget_add_choice (*widget, _("Press Full AF"));
+	gp_widget_add_choice (*widget, _("Press Half MF"));
+	gp_widget_add_choice (*widget, _("Press Full MF"));
 	gp_widget_add_choice (*widget, _("Release Half"));
 	gp_widget_add_choice (*widget, _("Release Full"));
-	gp_widget_add_choice (*widget, _("Immediate"));
-	/* debugging */
-	gp_widget_add_choice (*widget, _("Press 1"));
-	gp_widget_add_choice (*widget, _("Press 2"));
-	gp_widget_add_choice (*widget, _("Press 3"));
-	gp_widget_add_choice (*widget, _("Release 1"));
-	gp_widget_add_choice (*widget, _("Release 2"));
-	gp_widget_add_choice (*widget, _("Release 3"));
+	gp_widget_add_choice (*widget, _("Release"));
 	gp_widget_set_value (*widget, _("None"));
 	return (GP_OK);
 }
 
-/* On EOS 7D:
- * 9128 1 0  (half?)
- * 9128 2 0  (full?)
- * parameters: press mode, ? afmode ? SDK seems to suggest 1==NonAF, 0 == AF
- */
+/* ptp_canon_eos_remotereleaseon:
+ *   first parameter: 1 == half press, 2 == full press, 3 == half+full press in one go
+ *   second parameter: 0 == AF, 1 == MF
+ *
+ * Typical use cases:
+ *  - take picture with AF: "Press Full AF" -> "Release"
+ *  - take picture without AF: "Press Full MF" -> "Release"
+ *  - only perform a AF cycle: "Press Half AF" -> "Release"
+ * */
 
 static int
 _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
@@ -8146,31 +8144,19 @@ _put_Canon_EOS_RemoteRelease(CONFIG_PUT_ARGS) {
 
 	if (!strcmp (val, _("None"))) {
 		return GP_OK;
-	} else if (!strcmp (val, _("Press Half"))) {
-		C_PTP (ptp_canon_eos_remotereleaseon (params, 1, 1));
-	} else if (!strcmp (val, _("Press Full"))) {
-		C_PTP (ptp_canon_eos_remotereleaseon (params, 3, 1));
-	} else if (!strcmp (val, _("Immediate"))) {
-		/* HACK by Flori Radlherr: "fire and forget" half release before release:
-		   Avoids autofocus drive while focus-switch on the lens is in AF state */
-		C_PTP (ptp_canon_eos_remotereleaseon (params, 1, 1));
-		C_PTP (ptp_canon_eos_remotereleaseon (params, 3, 1));
-	/* try out others with 0 */
-	} else if (!strcmp (val, _("Press 1"))) {
+	} else if (!strcmp (val, _("Press Half AF"))) {
 		C_PTP (ptp_canon_eos_remotereleaseon (params, 1, 0));
-	} else if (!strcmp (val, _("Press 2"))) {
-		C_PTP (ptp_canon_eos_remotereleaseon (params, 2, 0));
-	} else if (!strcmp (val, _("Press 3"))) {
+	} else if (!strcmp (val, _("Press Full AF"))) {
 		C_PTP (ptp_canon_eos_remotereleaseon (params, 3, 0));
-	} else if (!strcmp (val, _("Release 1"))) {
-		C_PTP (ptp_canon_eos_remotereleaseoff (params, 1));
-	} else if (!strcmp (val, _("Release 2"))) {
-		C_PTP (ptp_canon_eos_remotereleaseoff (params, 2));
-	} else if (!strcmp (val, _("Release 3"))) {
-		C_PTP (ptp_canon_eos_remotereleaseoff (params, 3));
+	} else if (!strcmp (val, _("Press Half MF"))) {
+		C_PTP (ptp_canon_eos_remotereleaseon (params, 1, 1));
+	} else if (!strcmp (val, _("Press Full MF"))) {
+		C_PTP (ptp_canon_eos_remotereleaseon (params, 3, 1));
 	} else if (!strcmp (val, _("Release Half"))) {
 		C_PTP (ptp_canon_eos_remotereleaseoff (params, 1));
 	} else if (!strcmp (val, _("Release Full"))) {
+		C_PTP (ptp_canon_eos_remotereleaseoff (params, 2));
+	} else if (!strcmp (val, _("Release"))) {
 		C_PTP (ptp_canon_eos_remotereleaseoff (params, 3));
 	} else {
 		GP_LOG_D ("Unknown value %s", val);
