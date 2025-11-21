@@ -9953,14 +9953,17 @@ camera_init (Camera *camera, GPContext *context)
 		gp_port_set_timeout (camera->port, timeout);
 	}
 
-	/* initial reading of the root directory is needed for some reason for Canons EOS 1500D to not hang
-	 * TODO: maybe only do this for specific Canon models that need it */
-	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) {
-		/* avoid doing this on the Sonys DSLRs in control mode, they hang. :( */
+	/* initial reading of the root directory of each storage, which serves 2 purposes:
+	 * a) the ptp_list_folder caching of root queries depends on this being done once
+	 * b) this is needed for some reason for Canons EOS 1500D to not hang
+	 */
+	if (params->storageids.len == 0) {
+		/* if ptp_getstorageids failed or was not available, use the catch-all storageID
+		 * (whether this code is ever called is unclear and simply added as a precaution) */
 		ptp_list_folder (params, PTP_HANDLER_SPECIAL, PTP_HANDLER_SPECIAL, NULL);
-
+	} else {
 		for_each (uint32_t*, psid, params->storageids) {
-			if ((*psid & 0xffff) && (*psid != 0x80000001))
+			if (*psid != 0x80000001)
 				ptp_list_folder (params, *psid, PTP_HANDLER_SPECIAL, NULL);
 		}
 	}
