@@ -85,7 +85,7 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 	struct jpeg_error_mgr jcerr, jderr;
 	JOCTET *jpeg_header = NULL;
 	int outputsize = 0;
-	unsigned long jpeg_header_size = 0;
+	uint32_t jpeg_header_size = 0;
 	int i, x, y, x1, y1, jpeg_data_size, jpeg_data_idx, eoi, size, ret;
 	JSAMPLE green[8 * 16];
 	JSAMPLE red[8 * 8];
