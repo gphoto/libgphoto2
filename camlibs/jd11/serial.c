@@ -23,7 +23,6 @@
 #include "config.h"
 
 #include <stdio.h>
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -37,6 +36,9 @@
 #include "serial.h"
 #include "decomp.h"
 
+#ifdef HAVE_LIBTIFF
+#include "dng.h"
+#endif
 
 #if 0
 static int
@@ -489,6 +491,12 @@ jd11_get_image_full(Camera *camera, CameraFile*file, int nr, int raw, GPContext 
 	int			ret, sizes[3];
 	unsigned char	*data;
 	int 		h;
+	int low_quality;
+	int result;
+	// Plane indexes
+	static const int GREEN_P = 0;
+	static const int RED_P = 1;
+	static const int BLUE_P = 2;
 
 	ret = serial_image_reader(camera, file, nr, &imagebufs, sizes, context);
 	if (ret!=GP_OK)
@@ -496,7 +504,15 @@ jd11_get_image_full(Camera *camera, CameraFile*file, int nr, int raw, GPContext 
 	uncomp[0] = malloc(320*480);
 	uncomp[1] = malloc(320*480/2);
 	uncomp[2] = malloc(320*480/2);
-	if (sizes[0]!=115200) {
+	if (!uncomp[0] || !uncomp[1] || !uncomp[2]) {
+		free(uncomp[0]);
+		free(uncomp[1]);
+		free(uncomp[2]);
+		return GP_ERROR_NO_MEMORY;
+	}
+	
+	low_quality = sizes[0] != 115200;
+	if (low_quality) {
 		picture_decomp_v1(imagebufs[0], uncomp[0], 320, 480);
 		picture_decomp_v1(imagebufs[1], uncomp[1], 320, 480/2);
 		picture_decomp_v1(imagebufs[2], uncomp[2], 320, 480/2);
@@ -505,36 +521,77 @@ jd11_get_image_full(Camera *camera, CameraFile*file, int nr, int raw, GPContext 
 		picture_decomp_v2(imagebufs[1], uncomp[1], 320, 480/2);
 		picture_decomp_v2(imagebufs[2], uncomp[2], 320, 480/2);
 	}
-	gp_file_append(file, IMGHEADER, strlen(IMGHEADER));
-	data = malloc(640*480*3);
-	if (!data) {
-		free(uncomp[0]);free(uncomp[1]);free(uncomp[2]);
-		free(imagebufs[0]);free(imagebufs[1]);free(imagebufs[2]);free(imagebufs);
-		return GP_ERROR_NO_MEMORY;
+	free(imagebufs[0]);
+	free(imagebufs[1]);
+	free(imagebufs[2]);
+	free(imagebufs);
+
+	unsigned char *bayerpre = malloc(640*480);
+	if (!bayerpre) {
+		result = GP_ERROR_NO_MEMORY;
+		goto finish;
 	}
 
-	if (!raw) {
-		unsigned char *bayerpre;
-		s = bayerpre = malloc(640*480);
-		/* note that picture is upside down and left<->right mirrored */
-		for (h=480;h--;) {
-			int w;
-			for (w=320;w--;) {
-				if (h&1) {
-					/* G B G B G B G B G */
-					*s++ = uncomp[0][h*320+w];
-					*s++ = uncomp[2][(h/2)*320+w];
-				} else {
-					/* R G R G R G R G R */
-					*s++ = uncomp[1][(h/2)*320+w];
-					*s++ = uncomp[0][h*320+w];
-				}
+	/* note that picture is upside down and left<->right mirrored */
+	s = bayerpre;
+	for (h=480;h--;) {
+		int w;
+		for (w=320;w--;) {
+			if (h&1) {
+				/* G B G B G B G B G */
+				*s++ = uncomp[GREEN_P][h*320+w];
+				*s++ = uncomp[BLUE_P][(h/2)*320+w];
+			} else {
+				/* R G R G R G R G R */
+				*s++ = uncomp[RED_P][(h/2)*320+w];
+				*s++ = uncomp[GREEN_P][h*320+w];
 			}
 		}
-		/*gp_bayer_decode(bayerpre,640,480,data,BAYER_TILE_GRBG);*/
-		gp_ahd_decode(bayerpre, 640, 480, data, BAYER_TILE_GRBG);
-		free(bayerpre);
-	} else {
+	}
+
+#ifdef HAVE_LIBTIFF
+	if (raw) {
+		// Save as a raw DNG
+		CameraAbilities a;
+		const char *unique_model = gp_camera_get_abilities(camera, &a) == GP_OK ? a.model : NULL;
+		uint8_t *dng_buf = NULL;
+		size_t dng_size = 0;
+			
+		if (!write_dng_cfa8_to_memory(
+			bayerpre,
+			640, 480,
+			(uint8_t[4]) {
+				CFA_G, CFA_B,
+				CFA_R, CFA_G
+			},
+			0, low_quality ? 252 : 255,
+			"Minton", "JD11", unique_model,
+			2,
+			&dng_buf, &dng_size))
+		{
+			result = GP_ERROR;
+			goto finish;
+		}
+			
+		gp_file_clean(file);
+		gp_file_set_mime_type(file, GP_MIME_DNG);
+		// Takes ownership of dng_buf:
+		gp_file_set_data_and_size(file, (char*)dng_buf, dng_size);
+		result = GP_OK;
+		goto finish;
+	}
+#endif
+
+	// Save as a PNM (raw or demosaiced)
+	gp_file_append(file, IMGHEADER, strlen(IMGHEADER));
+
+	data = malloc(640*480*3);
+	if (!data) {
+		result = GP_ERROR_NO_MEMORY;
+		goto finish;
+	}
+
+	if (raw) {
 		s=data;
 		for (h=480;h--;) { /* upside down */
 			int w;
@@ -545,10 +602,21 @@ jd11_get_image_full(Camera *camera, CameraFile*file, int nr, int raw, GPContext 
 				*s++=uncomp[2][(h/2)*320+(w/2)];
 			}
 		}
+	} else {
+		/*gp_bayer_decode(bayerpre,640,480,data,BAYER_TILE_GRBG);*/
+		gp_ahd_decode(bayerpre, 640, 480, data, BAYER_TILE_GRBG);
 	}
-	free(uncomp[0]);free(uncomp[1]);free(uncomp[2]);
-	free(imagebufs[0]);free(imagebufs[1]);free(imagebufs[2]);free(imagebufs);
+	
+	gp_file_set_mime_type (file, GP_MIME_PNM);
 	gp_file_append(file, (char*)data, 640*480*3);
 	free(data);
-	return GP_OK;
+	result = GP_OK;
+	
+finish:
+	free(bayerpre);
+	free(uncomp[0]);
+	free(uncomp[1]);
+	free(uncomp[2]);
+	
+	return result;
 }

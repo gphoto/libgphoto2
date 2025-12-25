@@ -387,6 +387,16 @@ GP_CHECK_LIBRARY([LIBGD],[gdlib],[>= 2.0],[gd.h],[gdImageCreateTrueColor],[
 GP_CONFIG_MSG([libGD conversion support],[${have_LIBGD}])
 
 dnl ---------------------------------------------------------------------------
+dnl libtiff
+dnl ---------------------------------------------------------------------------
+GP_CHECK_LIBRARY([LIBTIFF],[libtiff-4],[>= 4.0],
+         [tiffio.h],[TIFFOpen],[],[],
+         [default-on],
+         [https://gitlab.com/libtiff/libtiff]
+)
+GP_CONFIG_MSG([TIFF support],[${have_LIBTIFF}])
+
+dnl ---------------------------------------------------------------------------
 dnl Checks for header files.
 dnl ---------------------------------------------------------------------------
 AC_HEADER_DIRENT
