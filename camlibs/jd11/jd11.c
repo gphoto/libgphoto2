@@ -87,6 +87,12 @@ int camera_abilities (CameraAbilitiesList *list)
 	 */
 	strcpy(a.model, "IOMagic:MagicImage 420");
 	gp_abilities_list_append(list, a);
+
+	/* Another rebrand, this one sold in Australia and New Zealand
+	 * https://www.digitalkameramuseum.de/en/cameras/item/digipix-axis-digital-camera
+	 */
+	strcpy(a.model, "DigiPix:AXIS N705");
+	gp_abilities_list_append(list, a);
 	return (GP_OK);
 }
 
