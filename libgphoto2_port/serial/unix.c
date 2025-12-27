@@ -523,7 +523,7 @@ gp_port_serial_read (GPPort *dev, char *bytes, int size)
 		timeout.tv_sec = (dev->timeout / 1000);
 
 		/* Any data available? */
-		if (!select (dev->pl->fd + 1, &readfs, NULL, NULL, &timeout))
+		if (dev->pl->cachep == dev->pl->cachee && !select (dev->pl->fd + 1, &readfs, NULL, NULL, &timeout))
 			return GP_ERROR_TIMEOUT;
 		if (!FD_ISSET (dev->pl->fd, &readfs))
 			return (GP_ERROR_TIMEOUT);
