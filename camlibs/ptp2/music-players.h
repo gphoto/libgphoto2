@@ -3284,6 +3284,9 @@
   /* https://sourceforge.net/p/libmtp/bugs/1361/ */
   { "Huawei", 0x12d1, "Ascend P8", 0x1082,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/libmtp/libmtp/issues/334 */
+  { "Huawei", 0x12d1, "Nova14", 0x1101,
+      DEVICE_FLAGS_ANDROID_BUGS },
   /* https://sourceforge.net/p/libmtp/support-requests/276/ */
   { "Huawei", 0x12d1, "Y600", 0x2008,
       DEVICE_FLAGS_ANDROID_BUGS },
@@ -3597,8 +3600,10 @@
       DEVICE_FLAGS_ANDROID_BUGS },
   { "Foxconn (for Vizio)", 0x0489, "VTAB1008", 0xe040,
       DEVICE_FLAGS_ANDROID_BUGS },
+/* ... seems to cause problems, see https://github.com/libmtp/libmtp/issues/346 
   { "Foxconn (for Lenovo)", 0x0489, "IdeaTab A2109/A2110/Medion LIFETAB S9714", 0xe111,
       DEVICE_FLAGS_ANDROID_BUGS },
+*/
 
 
   /*
@@ -4153,6 +4158,8 @@
   { "Garmin", 0x091e, "Forerunner 570", 0x51de, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/303 */
   { "Garmin", 0x091e, "Vivoactive 6", 0x5211, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Edge 850", 0x521a, DEVICE_FLAGS_ANDROID_BUGS },
+  { "Garmin", 0x091e, "Venu 4 - 41mm", 0x5224, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/309 */
   { "Garmin", 0x091e, "Instinct 3 Solar", 0x5297, DEVICE_FLAGS_ANDROID_BUGS },
 
