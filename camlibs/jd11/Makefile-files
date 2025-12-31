@@ -18,3 +18,11 @@ jd11_la_CPPFLAGS      = $(camlib_cppflags)
 jd11_la_DEPENDENCIES  = $(camlib_dependencies)
 jd11_la_LDFLAGS       = $(camlib_ldflags)
 jd11_la_LIBADD        = $(camlib_libadd)
+
+if HAVE_LIBTIFF
+jd11_la_SOURCES      += %reldir%/dng.h
+jd11_la_SOURCES      += %reldir%/dng.c
+
+jd11_la_CPPFLAGS     += $(LIBTIFF_CFLAGS)
+jd11_la_LIBADD       += $(LIBTIFF_LIBS)
+endif

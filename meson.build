@@ -68,6 +68,7 @@ libcurl_dep = dependency('libcurl', version: libcurl_req, required: ['lumix', 'p
 libgd_dep   = dependency('gdlib', version: libgd_req, required: 'docupen' in get_option('camlibs'))
 libexif_dep = dependency('libexif', version: libexif_req, required: false)
 libjpeg_dep = dependency('libjpeg', required: false)
+libtiff_dep = dependency('libtiff-4', required: false)
 intl_dep    = dependency('intl', required: false)
 
 add_project_arguments('-DMAIL_GPHOTO_DEVEL="<gphoto-devel@lists.sourceforge.net>"', language: 'c')
@@ -117,6 +118,10 @@ endif
 
 if (libgd_dep.found())
   add_project_arguments('-DHAVE_LIBGD=1', language: 'c')
+endif
+
+if (libtiff_dep.found())
+  add_project_arguments('-DHAVE_LIBTIFF=1', language: 'c')
 endif
 
 if (libexif_dep.found())
