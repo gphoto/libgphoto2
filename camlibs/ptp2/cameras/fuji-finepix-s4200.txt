@@ -1,0 +1,257 @@
+Camera summary:
+Manufacturer: FUJIFILM
+Model: FinePix S4200
+  Version: 1.00
+  Serial Number: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Vendor Extension ID: 0xe (1.0)
+Vendor Extension Description: fujifilm.co.jp: 1.0; 
+
+Capture Formats: 
+Display Formats: JPEG, JFIF, MS Wave
+
+Device Capabilities:
+	File Download, File Deletion, File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: External Memory
+	VolumeLabel: 000000000000000000000000000000000000000000000000
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read Only with Object deletion
+	Maximum Capability: 31998345216 (30516 MB)
+	Free Space (Bytes): 31994839040 (30512 MB)
+	Free Space (Images): 11792
+
+Device Property Summary:
+Battery Level             (5001 ro u8 ): Range [0 - 3, step 1] value: 3% (3)
+[Unknown Property]        (d303 ro u8 ): 1
+[Unknown Property]        (d407 ro u32): 1
+[Unknown Property]        (d406 rw str): ''
+Exposure Time             (500d -- ---): PTP error 200a on query
+F-Number                  (5007 -- ---): PTP error 200a on query
+LensZoomPosCaps           (d38c -- ---): PTP error 200a on query
+FocusPosition             (d171 -- ---): PTP error 200a on query
+[Unknown Property]        (d21c -- ---): PTP error 200a on query
+Focus Point               (d347 -- ---): PTP error 200a on query
+LensZoomPos               (d170 -- ---): PTP error 200a on query
+BatteryLevel              (d242 -- ---): PTP error 200a on query
+LiveViewImageSize         (d174 -- ---): PTP error 200a on query
+VideoOutOnOff             (d168 -- ---): PTP error 200a on query
+LiveViewImageQuality      (d173 -- ---): PTP error 200a on query
+ForceMode                 (d230 -- ---): PTP error 200a on query
+[Unknown Property]        (d16e -- ---): PTP error 200a on query
+FocusArea1                (d372 -- ---): PTP error 200a on query
+FaceDetectionMode         (d020 -- ---): PTP error 200a on query
+RawCompression            (d022 -- ---): PTP error 200a on query
+GrainEffect               (d023 -- ---): PTP error 200a on query
+SetEyeAFMode              (d024 -- ---): PTP error 200a on query
+FocusPoints               (d025 -- ---): PTP error 200a on query
+MFAssistMode              (d026 -- ---): PTP error 200a on query
+InterlockAEAFArea         (d027 -- ---): PTP error 200a on query
+Shadowing                 (d029 -- ---): PTP error 200a on query
+CropMode                  (d16f -- ---): PTP error 200a on query
+TNumber                   (d02f -- ---): PTP error 200a on query
+FocusArea4                (d395 -- ---): PTP error 200a on query
+HighLightTone             (d320 -- ---): PTP error 200a on query
+ShadowTone                (d321 -- ---): PTP error 200a on query
+LongExposureNR            (d322 -- ---): PTP error 200a on query
+FullTimeManualFocus       (d323 -- ---): PTP error 200a on query
+LensISSwitch              (d346 -- ---): PTP error 200a on query
+InstantAFMode             (d34a -- ---): PTP error 200a on query
+PreAFMode                 (d34b -- ---): PTP error 200a on query
+LMOMode                   (d34d -- ---): PTP error 200a on query
+ISMode                    (d351 -- ---): PTP error 200a on query
+FocusCheckMode            (d35e -- ---): PTP error 200a on query
+LiveViewImageQuality      (d173 -- ---): PTP error 200a on query
+FileNamePrefix1           (d365 -- ---): PTP error 200a on query
+FileNamePrefix2           (d366 -- ---): PTP error 200a on query
+FocusArea3                (d374 -- ---): PTP error 200a on query
+TotalShotCount            (d310 -- ---): PTP error 200a on query
+ExposurePreview           (d359 -- ---): PTP error 200a on query
+FrameGuideGridInfo1       (d375 -- ---): PTP error 200a on query
+FrameGuideGridInfo2       (d376 -- ---): PTP error 200a on query
+CustomDispInfo            (d36e -- ---): PTP error 200a on query
+ViewMode1                 (d33f -- ---): PTP error 200a on query
+CustomAutoPowerOff        (d364 -- ---): PTP error 200a on query
+LockButtonMode            (d34e -- ---): PTP error 200a on query
+WideDynamicRange          (d02e -- ---): PTP error 200a on query
+LensNameAndSerial         (d36d -- ---): PTP error 200a on query
+LensUnknownData           (d38a -- ---): PTP error 200a on query
+BatteryInfo1              (d36a -- ---): PTP error 200a on query
+BatteryInfo2              (d36b -- ---): PTP error 200a on query
+FunctionLockCategory1     (d36f -- ---): PTP error 200a on query
+FunctionLockCategory2     (d370 -- ---): PTP error 200a on query
+SensitivityFineTune1      (d222 -- ---): PTP error 200a on query
+SensitivityFineTune2      (d223 -- ---): PTP error 200a on query
+LensZoomPosCaps           (d38c -- ---): PTP error 200a on query
+LensFNumberList           (d38d -- ---): PTP error 200a on query
+LensFocalLengthList       (d38e -- ---): PTP error 200a on query
+[Unknown Property]        (d17b -- ---): PTP error 200a on query
+Exposure Bias Compensation (5010 -- ---): PTP error 200a on query
+CommandDialMode           (d028 -- ---): PTP error 200a on query
+ExposureIndex             (d02a -- ---): PTP error 200a on query
+MovieISO                  (d02b -- ---): PTP error 200a on query
+[Unknown Property]        (d02d -- ---): PTP error 200a on query
+[Unknown Property]        (d156 -- ---): PTP error 200a on query
+[Unknown Property]        (d16b -- ---): PTP error 200a on query
+StandbyMode               (d176 -- ---): PTP error 200a on query
+[Unknown Property]        (d17b -- ---): PTP error 200a on query
+ResetSetting              (d17f -- ---): PTP error 200a on query
+[Unknown Property]        (d208 -- ---): PTP error 200a on query
+[Unknown Property]        (d21c -- ---): PTP error 200a on query
+
+
+/main/actions/autofocusdrive
+Label: Drive Fuji Autofocus
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/autofocusdrivemanual
+Label: Drive Fuji Autofocus in manual
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: XXXXXXXXXXXXXXXXXXXXXXXXXXPGnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 1
+Type: TEXT
+Current: FUJIFILM
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: FinePix S4200
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 1
+Type: TEXT
+Current: 1.00
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 1
+Type: TEXT
+Current: fujifilm.co.jp: 1.0; 
+END
+/main/status/batterylevel
+Label: Battery Level
+Readonly: 1
+Type: TEXT
+Current: 100%
+END
+/main/other/5001
+Label: Battery Level
+Readonly: 1
+Type: MENU
+Current: 3
+Choice: 0 0
+Choice: 1 1
+Choice: 2 2
+Choice: 3 3
+END
+/main/other/d303
+Label: PTP Property 0xd303
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d407
+Label: PTP Property 0xd407
+Readonly: 1
+Type: TEXT
+Current: 1
+END
+/main/other/d406
+Label: PTP Property 0xd406
+Readonly: 0
+Type: TEXT
+Current: 
+END
+
+0000  2b 01 00 00 02 00 01 10-01 00 00 00 64 00 06 00  +...........d...
+0010  00 00 64 00 16 66 00 75-00 6a 00 69 00 66 00 69  ..d..f.u.j.i.f.i
+0020  00 6c 00 6d 00 2e 00 63-00 6f 00 2e 00 6a 00 70  .l.m...c.o...j.p
+0030  00 3a 00 20 00 31 00 2e-00 30 00 3b 00 20 00 00  .:. .1...0.;. ..
+0040  00 00 00 19 00 00 00 01-10 02 10 03 10 04 10 05  ................
+0050  10 06 10 07 10 08 10 09-10 0a 10 0b 10 0c 10 0d  ................
+0060  10 0f 10 14 10 15 10 16-10 1b 10 01 98 02 98 03  ................
+0070  98 05 98 0c 90 0d 90 1d-90 07 00 00 00 02 40 03  ..............@.
+0080  40 04 40 05 40 06 40 08-40 09 40 04 00 00 00 01  @.@.@.@.@.@.....
+0090  50 03 d3 07 d4 06 d4 00-00 00 00 03 00 00 00 01  P...............
+00a0  38 08 38 08 30 09 46 00-55 00 4a 00 49 00 46 00  8.8.0.F.U.J.I.F.
+00b0  49 00 4c 00 4d 00 00 00-0e 46 00 69 00 6e 00 65  I.L.M....F.i.n.e
+00c0  00 50 00 69 00 78 00 20-00 53 00 34 00 32 00 30  .P.i.x. .S.4.2.0
+00d0  00 30 00 00 00 05 31 00-2e 00 30 00 30 00 00 00  .0....1...0.0...
+00e0  25 35 00 39 00 32 00 44-00 33 00 31 00 33 00 34  %5.9.2.D.3.1.3.4
+00f0  00 33 00 37 00 33 00 36-00 33 00 31 00 31 00 32  .3.7.3.6.3.1.1.2
+0100  00 30 00 34 00 30 00 35-00 31 00 30 00 31 00 30  .0.4.0.5.1.0.1.0
+0110  00 35 00 32 00 50 00 47-00 30 00 31 00 34 00 36  .5.2.P.G.0.1.4.6
+0120  00 34 00 01 00 02 00 01-00 00 00                 .4.........     
+
+Device info:
+Manufacturer: FUJIFILM
+  Model: FinePix S4200
+  device version: 1.00
+  serial number: '592D3134373631120405101052PG01464'
+Vendor extension ID: 0x00000006
+Vendor extension version: 100
+Vendor extension description: fujifilm.co.jp: 1.0; 
+Functional Mode: 0x0000
+PTP Standard Version: 100
+Supported operations:
+  0x1001 (Get device info)
+  0x1002 (Open session)
+  0x1003 (Close session)
+  0x1004 (Get storage IDs)
+  0x1005 (Get storage info)
+  0x1006 (Get number of objects)
+  0x1007 (Get object handles)
+  0x1008 (Get object info)
+  0x1009 (Get object)
+  0x100a (Get thumbnail)
+  0x100b (Delete object)
+  0x100c (Send object info)
+  0x100d (Send object)
+  0x100f (Format storage)
+  0x1014 (Get device property description)
+  0x1015 (Get device property value)
+  0x1016 (Set device property value)
+  0x101b (Get partial object)
+  0x9801 (Get object properties supported)
+  0x9802 (Get object property description)
+  0x9803 (Get object property value)
+  0x9805 (Get object property list)
+  0x900c (Unknown PTP_OC)
+  0x900d (Unknown PTP_OC)
+  0x901d (Unknown PTP_OC)
+Events Supported:
+  0x4002 (ObjectAdded)
+  0x4003 (ObjectRemoved)
+  0x4004 (StoreAdded)
+  0x4005 (StoreRemoved)
+  0x4006 (DevicePropChanged)
+  0x4008 (DeviceInfoChanged)
+  0x4009 (RequestObjectTransfer)
+Device Properties Supported:
+  0x5001 (Battery Level)
+  0xd303 (Unknown DPC code)
+  0xd407 (Perceived Device Type)
+  0xd406 (Session Initiator Info)

@@ -2645,6 +2645,8 @@ static struct {
 	{"Fuji:FinePix JX370",			0x04cb, 0x0250, 0},
 	/* Luis Arias <kaaloo@gmail.com> */
 	{"Fuji:FinePix X10",			0x04cb, 0x0263, 0},
+	/* https://github.com/gphoto/libgphoto2/issues/1199 */
+	{"Fuji:FinePix S4200",			0x04cb, 0x0264, 0},
 	/* t.ludewig@gmail.com */
 	{"Fuji:FinePix S4300",			0x04cb, 0x0265, 0},
 	/* t.ludewig@gmail.com */
