@@ -9147,8 +9147,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 	handle = find_child(params, filename, storage, handle, NULL);
 
-	/* in some cases we return errors ... just ignore them for now */
-	LOG_ON_PTP_E (ptp_deleteobject(params, handle, 0));
+	C_PTP (ptp_deleteobject(params, handle, 0));
 
 	/* On some Canon firmwares, a DeleteObject causes a ObjectRemoved event
 	 * to be sent. At least on Digital IXUS II and PowerShot A85. But
