@@ -46,9 +46,9 @@ fi
 
 # We're only interested in the target CPU, but it's not always set
 effective_target="$target"
-if test "x$effective_target" = xNONE || test "x$effective_target" = x ; then
+AS_IF([test "x$effective_target" = xNONE || test "x$effective_target" = x], [dnl
 	effective_target="$host"
-fi
+])
 AC_SUBST(effective_target)
 
 m4_pattern_allow([GP_BYTEORDER_H])dnl

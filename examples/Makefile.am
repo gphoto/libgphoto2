@@ -35,8 +35,9 @@ best_iso_SOURCES = best-iso.c
 sample_justfocus_SOURCES = samples.h sample-justfocus.c context.c focus.c
 # sample_libfuzz_SOURCES = samples.h sample-libfuzz.c context.c autodetect.c
 
-LDADD = $(top_builddir)/libgphoto2/libgphoto2.la \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+LDADD = \
+	$(libgphoto2_la) \
+	$(libgphoto2_port_la) \
 	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)

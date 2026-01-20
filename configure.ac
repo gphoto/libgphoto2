@@ -51,13 +51,14 @@ dnl   libtool  2011-10-18 2.4.2
 AM_SILENT_RULES([yes])
 
 
+dnl Every compile example will be using the C language unless
+dnl something else is said explicitly.
+AC_LANG([C])
+
+
 dnl Flag all GP_ strings in result as error unless specifically allowed.
 m4_pattern_forbid([^_?GP_])dnl
 
-
-GP_CHECK_SHELL_ENVIRONMENT
-GP_CONFIG_MSG([Build])
-GP_CONFIG_MSG([Source code location],[${srcdir}])
 
 dnl ---------------------------------------------------------------------------
 dnl Advanced information about versioning:
@@ -100,6 +101,11 @@ AC_SUBST([LIBGPHOTO2_CURRENT_MIN],
          [`expr $LIBGPHOTO2_CURRENT - $LIBGPHOTO2_AGE`])
 AC_SUBST([LIBGPHOTO2_VERSION_INFO],
          [$LIBGPHOTO2_CURRENT:$LIBGPHOTO2_REVISION:$LIBGPHOTO2_AGE])
+
+
+GP_CHECK_SHELL_ENVIRONMENT
+GP_CONFIG_MSG([Build])
+GP_CONFIG_MSG([Source code location], [${srcdir}])
 
 
 dnl ---------------------------------------------------------------------------
@@ -213,17 +219,14 @@ dnl GP_CONDITIONAL_COMPILE_FLAGS([CFLAGS], [-Wno-stringop-truncation])
 
 ])dnl GP_WITH_EMPTY_CONFDEFS_H
 
-dnl Every compile example after here will be using the C language
-AC_LANG([C])
-
 
 dnl ---------------------------------------------------------------------------
 dnl Turn on (almost) all warnings when using gcc
 dnl ---------------------------------------------------------------------------
-if test "x$GCC" = "xyes"; then
+AS_VAR_IF([GCC], [yes], [dnl
 	AC_SUBST([NO_UNUSED_CFLAGS], [-Wno-unused])
-fi
-AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = "xyes"])
+])
+AM_CONDITIONAL([HAVE_GCC], [test "x$GCC" = xyes])
 
 # Activate internal code
 AM_CPPFLAGS="$AM_CPPFLAGS -D_GPHOTO2_INTERNAL_CODE"
@@ -265,9 +268,9 @@ GP_LIBLTDL
 
 
 # report on compiler/libtool setup
-GP_CONFIG_MSG([Compiler],[${CC}])
-GP_CONFIG_MSG([libltdl includes],[$LTDLINCL])
-GP_CONFIG_MSG([libltdl library],[$LIBLTDL])
+GP_CONFIG_MSG([Compiler],         [${CC}])
+GP_CONFIG_MSG([libltdl includes], [$LTDLINCL])
+GP_CONFIG_MSG([libltdl library],  [$LIBLTDL])
 
 AC_DEFINE_UNQUOTED([HAVE_CC], ["$CC"],
                    [The C compiler we are using])
@@ -346,7 +349,7 @@ AC_SUBST([LIBWS232_LIBS])
 AC_ARG_WITH([ws232],
             [AS_HELP_STRING([--without-ws232],
 	                    [Build without ws2_32 library (default: no)])])
-AS_IF([test "x$with_ws232" != "xno"], [dnl
+AS_VAR_IF([with_ws232], [no], [], [dnl
 	AC_CHECK_LIB([ws2_32], [WSAStartup], [dnl
 		AC_CHECK_HEADER([winsock.h], [dnl
 			AC_DEFINE([HAVE_LIBWS232], [1],
@@ -356,35 +359,32 @@ AS_IF([test "x$with_ws232" != "xno"], [dnl
 		])
 	])
 ])
-GP_CONFIG_MSG([Winsocket support (for PTP/IP)],[${libws232_msg}])
+GP_CONFIG_MSG([Winsocket support (for PTP/IP)], [${libws232_msg}])
 
 dnl ---------------------------------------------------------------------------
 dnl check for libxml2
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBXML2],[libxml-2.0],[>= 2.0],
-                [libxml/parser.h],[xmlFirstElementChild],[],[],
-                [default-on],
-                [http://xmlsoft.org]
-)
-GP_CONFIG_MSG([XML support for Olympus E series],[${have_LIBXML2}])
+GP_CHECK_LIBRARY([LIBXML2], [libxml-2.0], [>= 2.0],
+                 [libxml/parser.h], [xmlFirstElementChild], [], [],
+                 [default-on],
+                 [http://xmlsoft.org])
+GP_CONFIG_MSG([XML support for Olympus E series], [${have_LIBXML2}])
 
-GP_CHECK_LIBRARY([LIBCURL],[libcurl],[>= 7.1],
-		[curl/curl.h],[curl_easy_init],[],[],
-                [default-on],
-		[https://www.curl.org]
-)
-GP_CONFIG_MSG([CURL support for Lumix Wifi],[${have_LIBCURL}])
+GP_CHECK_LIBRARY([LIBCURL], [libcurl], [>= 7.1],
+                 [curl/curl.h], [curl_easy_init], [], [],
+                 [default-on],
+                 [https://www.curl.org])
+GP_CONFIG_MSG([CURL support for Lumix Wifi], [${have_LIBCURL}])
 
 dnl ---------------------------------------------------------------------------
 dnl check for libgd
 dnl they call it "gdlib" ... confusing.
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBGD],[gdlib],[>= 2.0],[gd.h],[gdImageCreateTrueColor],[
+GP_CHECK_LIBRARY([LIBGD], [gdlib], [>= 2.0], [gd.h], [gdImageCreateTrueColor], [dnl
 	# gdlib-config --libs upstream does not include -lgd, but only the dependencies
 	LIBGD_LIBS="-lgd $LIBGD_LIBS"
-
-],[],[default-on],[http://www.libgd.org/])
-GP_CONFIG_MSG([libGD conversion support],[${have_LIBGD}])
+], [], [default-on], [http://www.libgd.org/])
+GP_CONFIG_MSG([libGD conversion support], [${have_LIBGD}])
 
 dnl ---------------------------------------------------------------------------
 dnl libtiff
@@ -401,7 +401,19 @@ dnl Checks for header files.
 dnl ---------------------------------------------------------------------------
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS([sys/param.h sys/mman.h sys/select.h locale.h memory.h getopt.h unistd.h mcheck.h limits.h sys/time.h langinfo.h])
+AC_CHECK_HEADERS([m4_normalize([
+  getopt.h
+  langinfo.h
+  limits.h
+  locale.h
+  mcheck.h
+  memory.h
+  sys/mman.h
+  sys/param.h
+  sys/select.h
+  sys/time.h
+  unistd.h
+])])
 
 dnl If sys/mman.h is present, check whether mmap requires the mman
 dnl library (see camlibs/st2205/st2205.c st2205_malloc_page_aligned()).
@@ -428,7 +440,25 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS([getenv getopt getopt_long mkdir setenv strdup strncpy strcpy snprintf sprintf vsnprintf gmtime_r statvfs localtime_r lstat inet_aton rand_r])
+AC_CHECK_FUNCS([m4_normalize([
+  getenv
+  getopt
+  getopt_long
+  gmtime_r
+  inet_aton
+  localtime_r
+  lstat
+  mkdir
+  rand_r
+  setenv
+  snprintf
+  sprintf
+  statvfs
+  strcpy
+  strdup
+  strncpy
+  vsnprintf
+])])
 
 dnl Find out how to get struct tm
 AC_STRUCT_TM
@@ -451,7 +481,12 @@ tm.tm_gmtoff;
   AC_MSG_RESULT([no])
 ])
 
-AC_CHECK_HEADERS([sys/mount.h sys/statvfs.h sys/user.h sys/vfs.h], [], [], [
+AC_CHECK_HEADERS([m4_normalize([
+  sys/mount.h
+  sys/statvfs.h
+  sys/user.h
+  sys/vfs.h
+])], [], [], [dnl
 #include <sys/types.h>
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
@@ -490,9 +525,11 @@ dnl ---------------------------------------------------------------------------
 
 AC_SUBST([PACKAGE_TARNAME])
 
-if test "x${utilsdir}" = "x"; then utilsdir="\${libdir}/\${PACKAGE_TARNAME}"; fi
-AC_ARG_VAR([utilsdir],[Directory where utilities like print-camera-list will be installed])
-AC_SUBST([utilsdir])
+AC_ARG_VAR([utilsdir],
+           [Directory where utilities like print-camera-list will be installed])
+AS_VAR_IF([utilsdir], [], [dnl
+  utilsdir="\${libdir}/\${PACKAGE_TARNAME}"
+])
 
 GP_UDEV([true])
 
@@ -612,19 +649,22 @@ GPKG_CHECK_LINUX()dnl Check whether to package for a linux system
 dnl --------------------------------------------------------------------
 dnl guess directory to install *.pc into
 dnl --------------------------------------------------------------------
-pkgconfigdir='${libdir}/pkgconfig'
-AC_SUBST([pkgconfigdir])
+AC_ARG_VAR([pkgconfigdir],
+           [where to install pkg-config *.pc files to])
+AS_VAR_IF([pkgconfigdir], [], [dnl
+  pkgconfigdir='${libdir}/pkgconfig'
+])
 
 
 dnl ---------------------------------------------------------------------------
 dnl libexif: The CameraFilesystem can use libexif for extracting thumbnails
 dnl	     out of EXIF data. Similarly, it can extract the mtime of
-dnl	     a file. 
+dnl	     a file.
 dnl	     libexif is available from
 dnl	     http://www.sourceforge.net/projects/libexif
 dnl ---------------------------------------------------------------------------
-GP_CHECK_LIBRARY([LIBEXIF],[libexif],[>= 0.6.13],
-		 [libexif/exif-data.h],[exif_data_new],[
+GP_CHECK_LIBRARY([LIBEXIF], [libexif], [>= 0.6.13],
+                 [libexif/exif-data.h], [exif_data_new], [dnl
 AC_MSG_CHECKING([whether we use a version of libexif with ExifData.ifd[[]]])
 # Check for libexif version
 dnl FIXME: Use AC_CHECK_MEMBER?
@@ -649,22 +689,32 @@ AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
    AC_MSG_RESULT([no])
 ])
 CPPFLAGS="$CPPFLAGS_save"
-],[],[default-on],[http://www.sourceforge.net/projects/libexif])dnl
+], [], [default-on], [https://github.com/libexif/libexif])dnl
+
+
+dnl ---------------------------------------------------------------------------
+dnl Make it easier to possibly move the libraries around
+dnl ---------------------------------------------------------------------------
+
+AC_SUBST([libgphoto2_port_la],
+         ['${top_builddir}/libgphoto2_port/libgphoto2_port/libgphoto2_port.la'])
+AC_SUBST([libgphoto2_la],
+         ['${top_builddir}/libgphoto2/libgphoto2.la'])
 
 
 dnl ---------------------------------------------------------------------------
 dnl Configure subprojects
 dnl ---------------------------------------------------------------------------
-if test -d "$srcdir/libgphoto2_port"; then
+AS_IF([test -d "$srcdir/libgphoto2_port"], [dnl
 	AC_CONFIG_SUBDIRS([libgphoto2_port])
-else
+], [dnl
 	AC_MSG_ERROR([
 ******************************************************
 *** Hey, where have you hidden my libgphoto2_port? ***
 *** I needed that!                                 ***
 ******************************************************
 ])
-fi
+])
 
 
 # ---------------------------------------------------------------------------
@@ -696,7 +746,7 @@ AC_CONFIG_FILES([
 ])
 AC_OUTPUT
 
-AS_IF([test "x$CDPATH" != "x"], [dnl
+AS_VAR_IF([CDPATH], [], [], [dnl
   AC_MSG_WARN([
 
     #=========================================================#
