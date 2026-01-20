@@ -6019,8 +6019,13 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 	int			back_off_wait = 0;
 	uint32_t		result;
 	PTPDevicePropDesc	dpd;
+	int full_press_wait = 0;
 
 	GP_LOG_D ("camera_trigger_canon_eos_capture");
+
+	for (unsigned i = 0; i < params->nrofcanon_props; i++)
+			if (params->canon_props[i].proptype == PTP_DPC_CANON_EOS_Owner)
+					full_press_wait = atoi(params->canon_props[i].dpd.CurrentValue.str);
 
 	if (!params->eos_captureenabled)
 		camera_prepare_capture (camera, context);
@@ -6132,6 +6137,12 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 				return GP_ERROR;
 			}
 			/* no event check between */
+
+			if (full_press_wait) {
+				GP_LOG_D ("waiting %dms", full_press_wait);
+				usleep (full_press_wait * 1000);
+			}
+
 			/* full release now */
 			C_PTP_REP_MSG (ptp_canon_eos_remotereleaseoff (params, 2), _("Canon EOS Full-Release failed"));
 			ptp_check_eos_events (params);
@@ -6209,6 +6220,23 @@ camera_trigger_canon_eos_capture (Camera *camera, GPContext *context)
 			return GP_ERROR;
 		}
 	}
+
+	if (full_press_wait)
+	{
+		struct timeval event_start = time_now();
+		PTPPropertyValue propval = { 0 };
+		for (unsigned i = 0; i < params->nrofcanon_props; i++)
+			if (params->canon_props[i].proptype == PTP_DPC_CANON_EOS_ISOSpeed)
+				propval.u16 = params->canon_props[i].dpd.CurrentValue.u16;
+
+		do {
+			// if setting iso does not return busy, the camera is ready to take new commands or is lost -> exit
+			ret = ptp_canon_eos_setdevicepropvalue (params, PTP_DPC_CANON_EOS_ISOSpeed, &propval, PTP_DTC_UINT16);
+			back_off_wait = 0;
+		} while (ret == PTP_RC_DeviceBusy && waiting_for_timeout (&back_off_wait, event_start, 30*1000));
+		params->eos_camerastatus = 0; /* manually set it to 'done' */
+	}
+
 	return GP_OK;
 }
 
