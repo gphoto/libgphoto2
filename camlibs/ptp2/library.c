@@ -1790,6 +1790,9 @@ static struct {
 	/* Daniel Baertschi <daniel@avisec.ch> */
 	{"Nikon:Z50",                	  0x04b0, 0x0444, PTP_CAP|PTP_CAP_PREVIEW},
 
+    /* ArvinSpace <yanhui-180@163.com> */
+	{"Nikon:Z50_2",                	  0x04b0, 0x0455, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* Schreiber, Steve via Gphoto-devel */
 	{"Nikon:DSC D3500",		  0x04b0, 0x0445, PTP_CAP|PTP_CAP_PREVIEW},
 
