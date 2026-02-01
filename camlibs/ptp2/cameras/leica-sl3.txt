@@ -1,0 +1,125 @@
+Camera summary:
+Manufacturer: LEICA
+Model: LEICA SL3
+  Version: 4.0.0
+  Serial Number: 000000000nnnnnnn
+PTP Standard Version: 1.10
+
+Capture Formats: 
+Display Formats: Association/Directory, DPOF, Apple Quicktime, Defined Type, TIFF EP, JPEG
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+
+Device Property Summary:
+Battery Level             (5001 -- ---): PTP error 2003 on query
+White Balance             (5005 -- ---): PTP error 2003 on query
+Focus Mode                (500a -- ---): PTP error 2003 on query
+Exposure Metering Mode    (500b -- ---): PTP error 2003 on query
+Exposure Program Mode     (500e -- ---): PTP error 2003 on query
+Exposure Index (film speed ISO) (500f -- ---): PTP error 2003 on query
+Exposure Bias Compensation (5010 -- ---): PTP error 2003 on query
+Still Capture Mode        (5013 -- ---): PTP error 2003 on query
+Contrast                  (5014 -- ---): PTP error 2003 on query
+Sharpness                 (5015 -- ---): PTP error 2003 on query
+Artist                    (501e -- ---): PTP error 2003 on query
+Copyright Info            (501f -- ---): PTP error 2003 on query
+Supported Streams         (5020 -- ---): PTP error 2003 on query
+Enabled Streams           (5021 -- ---): PTP error 2003 on query
+Video Format              (5022 -- ---): PTP error 2003 on query
+Video Resolution          (5023 -- ---): PTP error 2003 on query
+Video Framerate           (5025 -- ---): PTP error 2003 on query
+[Unknown Property]        (d004 -- ---): PTP error 2003 on query
+[Unknown Property]        (d00b -- ---): PTP error 2003 on query
+[Unknown Property]        (d00c -- ---): PTP error 2003 on query
+[Unknown Property]        (d04f -- ---): PTP error 2003 on query
+[Unknown Property]        (d00f -- ---): PTP error 2003 on query
+[Unknown Property]        (d014 -- ---): PTP error 2003 on query
+[Unknown Property]        (d01a -- ---): PTP error 2003 on query
+[Unknown Property]        (d03b -- ---): PTP error 2003 on query
+[Unknown Property]        (d03c -- ---): PTP error 2003 on query
+[Unknown Property]        (d097 -- ---): PTP error 2003 on query
+[Unknown Property]        (d09c -- ---): PTP error 2003 on query
+[Unknown Property]        (d0b3 -- ---): PTP error 2003 on query
+[Unknown Property]        (d0bf -- ---): PTP error 2003 on query
+[Unknown Property]        (d0e0 -- ---): PTP error 2003 on query
+[Unknown Property]        (d0e1 -- ---): PTP error 2003 on query
+[Unknown Property]        (d0eb -- ---): PTP error 2003 on query
+[Unknown Property]        (d0ec -- ---): PTP error 2003 on query
+[Unknown Property]        (d0ee -- ---): PTP error 2003 on query
+[Unknown Property]        (d108 -- ---): PTP error 2003 on query
+[Unknown Property]        (d136 -- ---): PTP error 2003 on query
+[Unknown Property]        (d137 -- ---): PTP error 2003 on query
+[Unknown Property]        (d13e -- ---): PTP error 2003 on query
+[Unknown Property]        (d360 -- ---): PTP error 2003 on query
+[Unknown Property]        (d196 -- ---): PTP error 2003 on query
+[Unknown Property]        (d1f7 -- ---): PTP error 2003 on query
+[Unknown Property]        (d020 -- ---): PTP error 2003 on query
+[Unknown Property]        (d209 -- ---): PTP error 2003 on query
+[Unknown Property]        (d212 -- ---): PTP error 2003 on query
+[Unknown Property]        (d21b -- ---): PTP error 2003 on query
+[Unknown Property]        (d02f -- ---): PTP error 2003 on query
+[Unknown Property]        (d32c -- ---): PTP error 2003 on query
+[Unknown Property]        (d32d -- ---): PTP error 2003 on query
+[Unknown Property]        (d406 -- ---): PTP error 2003 on query
+[Unknown Property]        (d60c -- ---): PTP error 2003 on query
+[Unknown Property]        (d60e -- ---): PTP error 2003 on query
+[Unknown Property]        (d610 -- ---): PTP error 2003 on query
+[Unknown Property]        (d61a -- ---): PTP error 2003 on query
+[Unknown Property]        (d625 -- ---): PTP error 2003 on query
+[Unknown Property]        (d627 -- ---): PTP error 2003 on query
+[Unknown Property]        (d62c -- ---): PTP error 2003 on query
+[Unknown Property]        (d632 -- ---): PTP error 2003 on query
+[Unknown Property]        (d639 -- ---): PTP error 2003 on query
+[Unknown Property]        (d65f -- ---): PTP error 2003 on query
+[Unknown Property]        (d68a -- ---): PTP error 2003 on query
+[Unknown Property]        (d69c -- ---): PTP error 2003 on query
+[Unknown Property]        (d69d -- ---): PTP error 2003 on query
+[Unknown Property]        (d6ad -- ---): PTP error 2003 on query
+
+
+/main/actions/bulb
+Label: Bulb Mode
+Readonly: 0
+Type: TOGGLE
+Current: 2
+END
+/main/actions/opcode
+Label: PTP Opcode
+Readonly: 0
+Type: TEXT
+Current: 0x1001,0xparam1,0xparam2
+END
+/main/status/serialnumber
+Label: Serial Number
+Readonly: 1
+Type: TEXT
+Current: 000000000nnnnnnn
+END
+/main/status/manufacturer
+Label: Camera Manufacturer
+Readonly: 1
+Type: TEXT
+Current: LEICA
+END
+/main/status/cameramodel
+Label: Camera Model
+Readonly: 1
+Type: TEXT
+Current: LEICA SL3
+END
+/main/status/deviceversion
+Label: Device Version
+Readonly: 1
+Type: TEXT
+Current: 4.0.0
+END
+/main/status/vendorextension
+Label: Vendor Extension
+Readonly: 1
+Type: TEXT
+Current: 
+END
