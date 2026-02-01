@@ -1921,6 +1921,30 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			           prefix, e[i].u.object.Handle, e[i].u.object.ObjectFormat,
 			           e[i].u.object.ObjectSize, e[i].u.object.Filename);
 			break;
+		case PTP_EC_CANON_EOS_RequestObjectTransfer64LFN:
+			if (size < 0x25) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, PTP_cee_OI_Name+1);
+				break;
+			}
+#define PTP_cee_OA64LFN_Handle	0x08
+#define PTP_cee_OA64LFN_OFC	0x0c
+#define PTP_cee_OA64LFN_Size	0x14
+#define PTP_cee_OA64LFN_Parent	0x1d
+/*
+1.434663 ptp                         (2):          0x000: 40 c0 32 14   08 b1  -  -    -  -  -  -   d4 1c a6 02
+1.434664 ptp                         (2):          0x010:  -  -  -  -    - c0 32 14   06  -  -  -   -
+*/
+			e[i].type = PTP_EOSEvent_ObjectAdded;
+			e[i].u.object.Handle        = dtoh32a(curdata + PTP_cee_OA64LFN_Handle);
+			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA64LFN_OFC);
+			e[i].u.object.StorageID     = 0; /* use as marker */
+			e[i].u.object.ParentObject  = dtoh32a(curdata + PTP_cee_OA64LFN_Parent);
+			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OA64LFN_Size);
+			e[i].u.object.Filename      = NULL;
+			ptp_debug (params, "%s request object transfer 64lfn: handle %08x, ofc %04x, size %ld",
+			           prefix, e[i].u.object.Handle, e[i].u.object.ObjectFormat,
+			           e[i].u.object.ObjectSize);
+			break;
 		case PTP_EC_CANON_EOS_AvailListChanged: {	/* property desc */
 			if (size < PTP_cee_DPD_Data) {
 				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, PTP_cee_DPD_Data);
