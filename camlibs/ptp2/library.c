@@ -234,14 +234,6 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 		return GP_OK;
 	}
 
-	/* LEICA */
-	if (    ((!di->VendorExtensionID) || (di->VendorExtensionID == PTP_VENDOR_MICROSOFT)) &&
-		(camera->port->type == GP_PORT_USB) &&
-		(a.usb_vendor == 0x1a98)
-	) {
-		di->VendorExtensionID = PTP_VENDOR_GP_LEICA;
-	}
-
 	/* XML style Olympus E series control. internal deviceInfos is encoded in XML. */
 	if (	di->Manufacturer && !strcmp(di->Manufacturer,"OLYMPUS") &&
 		(params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED)
@@ -299,6 +291,8 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			a.usb_vendor = 0x4b0;
 		if (strstr (di->Manufacturer,"FUJIFILM"))
 			a.usb_vendor = 0x4cb;
+		if (strstr (di->Manufacturer,"LEICA"))
+			a.usb_vendor = 0x1a98;
 	}
 	/* Switch the PTP vendor, so that the vendor specific sets become available. */
 	if (	(di->VendorExtensionID == PTP_VENDOR_MICROSOFT) &&
@@ -334,6 +328,14 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 	) {
 		/*camera->pl->bugs |= PTP_MTP;*/
 		di->VendorExtensionID = PTP_VENDOR_NIKON;
+	}
+
+	/* LEICA */
+	if (    ((!di->VendorExtensionID) || (di->VendorExtensionID == PTP_VENDOR_MICROSOFT)) &&
+		(camera->port->type == GP_PORT_USB) &&
+		(a.usb_vendor == 0x1a98)
+	) {
+		di->VendorExtensionID = PTP_VENDOR_GP_LEICA;
 	}
 
 	/* Fuji S5 Pro mostly, make its vendor set available. */
