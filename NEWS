@@ -1,4 +1,8 @@
 libgphoto2 2.5.33.1 development
+
+ptp2:
+* new Canon EOS SDRAM capture method added
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.33 release
 

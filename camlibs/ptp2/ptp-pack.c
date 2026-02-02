@@ -1934,7 +1934,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 1.434663 ptp                         (2):          0x000: 40 c0 32 14   08 b1  -  -    -  -  -  -   d4 1c a6 02
 1.434664 ptp                         (2):          0x010:  -  -  -  -    - c0 32 14   06  -  -  -   -
 */
-			e[i].type = PTP_EOSEvent_ObjectAdded;
+			e[i].type = PTP_EOSEvent_ObjectTransfer;
 			e[i].u.object.Handle        = dtoh32a(curdata + PTP_cee_OA64LFN_Handle);
 			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA64LFN_OFC);
 			e[i].u.object.StorageID     = 0; /* use as marker */

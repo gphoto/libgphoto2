@@ -4495,11 +4495,17 @@ camera_canon_eos_capture (Camera *camera, CameraCaptureType type, CameraFilePath
 			case PTP_EOSEvent_Unknown:
 				GP_LOG_D ("event unknown: %s", event.u.info);
 				continue; /* in loop ... do not poll while draining the queue */
-			case PTP_EOSEvent_ObjectTransfer:
+			case PTP_EOSEvent_ObjectTransfer: {
+				char buf[20];
 				GP_LOG_D ("object transfer requested: handle 0x%x, name %s, size %lu",
 							event.u.object.Handle, event.u.object.Filename, event.u.object.ObjectSize);
+				if (!event.u.object.Filename)  {
+					sprintf (buf, "capt%04d.", params->capcnt++);
+					event.u.object.Filename = strdup(buf);
+				}
 				move(oi, event.u.object);
 				break;
+			}
 			case PTP_EOSEvent_ObjectRemoved:
 				GP_LOG_D ("object removed: handle 0x%x", event.u.object.Handle);
 				ptp_remove_object_from_cache(params, event.u.object.Handle);
