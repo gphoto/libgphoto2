@@ -2734,7 +2734,8 @@ static struct {
 	{"Fuji:Fujifilm GFX100 II",		0x04cb, 0x02fe, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/964 */
 	{"Fuji:Fujifilm X100VI",		0x04cb, 0x0305, 0},
-	{"Fuji:Fujifilm X-M5",			0x04cb, 0x030c, 0},
+	/* Capture when camera set in Tether. */
+	{"Fuji:Fujifilm X-M5",			0x04cb, 0x030c, PTP_CAP|PTP_CAP_PREVIEW},
 	/* No capture support. */
 	{"Fuji:Fujifilm X-E5",			0x04cb, 0x0313, 0},
 
