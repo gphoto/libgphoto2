@@ -2735,6 +2735,8 @@ static struct {
 	/* https://github.com/gphoto/libgphoto2/issues/964 */
 	{"Fuji:Fujifilm X100VI",		0x04cb, 0x0305, 0},
 	{"Fuji:Fujifilm X-M5",			0x04cb, 0x030c, 0},
+	/* No capture support. */
+	{"Fuji:Fujifilm X-E5",			0x04cb, 0x0313, 0},
 
 	{"Ricoh:Caplio R5 (PTP mode)",          0x05ca, 0x0110, 0},
 	{"Ricoh:Caplio GX (PTP mode)",          0x05ca, 0x0325, 0},
