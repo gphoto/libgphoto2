@@ -5078,9 +5078,13 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		if (ptp_get_one_event(params, &event)) {
 			GP_LOG_D ("during wait for image event.code=%04x Param1=%08x", event.Code, event.Param1);
 			if (event.Code == PTP_EC_Sony_ObjectAdded) {
-				newobject = event.Param1;
-				GP_LOG_D ("SONY ObjectAdded received, ending wait");
-				break;
+				if (params->deviceinfo.Model && !strncmp(params->deviceinfo.Model, "ILCE-7", 6)) {
+					GP_LOG_D ("SONY ObjectAdded received, waiting for poll flag");
+				} else {
+					newobject = event.Param1;
+					GP_LOG_D ("SONY ObjectAdded received, ending wait");
+					break;
+				}
 			}
 		}
 #endif
