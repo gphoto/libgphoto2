@@ -1327,8 +1327,8 @@ void canon_int_find_new_image (
                         if ( is_image ( new_name ) ) {
                                 /* Yup, we'll assume that this is the new image. */
                                 GP_DEBUG ( "  Found our new image file" );
-                                strcpy ( path->name, new_name );
-                                strcpy ( path->folder, canon2gphotopath ( camera, path->folder ) );
+                                strncpy ( path->name, new_name, sizeof(path->name) );
+                                strncpy ( path->folder, canon2gphotopath ( camera, path->folder ), sizeof(path->folder) );
 
 				/* FIXME: Marcus: make it less large effort... */
 				gp_filesystem_reset (camera->fs);
