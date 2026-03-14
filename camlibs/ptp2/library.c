@@ -3285,8 +3285,10 @@ camera_exit (Camera *camera, GPContext *context)
 			/* Sony cameras expect to be issued this shutdown command after any
 			 * operation in PTPIP mode. */
 			if (camera->port->type == GP_PORT_PTPIP) {
-				if (ptp_operation_issupported(params, 0x9280)) {
+				if (ptp_operation_issupported(params, 0x9280)
+					&& ptp_operation_issupported(params, 0x9280)) {
 					C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0,0,0));
+					C_PTP (ptp_sony_9281(params, 0x4));
 				}
 			}
 			break;
@@ -9865,6 +9867,7 @@ camera_init (Camera *camera, GPContext *context)
 		if (camera->port->type == GP_PORT_PTPIP) {
 			if (ptp_operation_issupported(params, 0x9280)) {
 				C_PTP (ptp_sony_9280(params, 0x4,2,2,0,0,1,1));
+				C_PTP (ptp_sony_9281(params, 0x4));
 			}
 		}
 		/* Other setup already done in fixup_cached_deviceinfo */
