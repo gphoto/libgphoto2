@@ -3282,12 +3282,13 @@ camera_exit (Camera *camera, GPContext *context)
 			}
 			break;
 		case PTP_VENDOR_SONY:
-#if 0
-			/* if we call this, the camera shuts down on close in MTP mode */
-			if (ptp_operation_issupported(params, 0x9280)) {
-				C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0,0,0));
+			/* Sony cameras expect to be issued this shutdown command after any
+			 * operation in PTPIP mode. */
+			if (camera->port->type == GP_PORT_PTPIP) {
+				if (ptp_operation_issupported(params, 0x9280)) {
+					C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0,0,0));
+				}
 			}
-#endif
 			break;
 		case PTP_VENDOR_FUJI:
 			CR (camera_unprepare_capture (camera, context));
