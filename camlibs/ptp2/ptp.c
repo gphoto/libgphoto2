@@ -4544,6 +4544,7 @@ ptp_sony_9280 (PTPParams* params, uint32_t param1,
 {
 	PTPContainer	ptp;
 	unsigned char 	buf[18];
+	unsigned char*	data = buf;
 
 	PTP_CNT_INIT(ptp, 0x9280, param1);
 
@@ -4558,7 +4559,7 @@ ptp_sony_9280 (PTPParams* params, uint32_t param1,
 	/* only sent in the case where additional is 2 */
 	buf[16]= x; buf[17]= y;
 
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 16+additional, (unsigned char**)&buf, NULL);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, 16+additional, &data, NULL);
 }
 
 uint16_t
