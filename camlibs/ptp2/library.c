@@ -3282,12 +3282,15 @@ camera_exit (Camera *camera, GPContext *context)
 			}
 			break;
 		case PTP_VENDOR_SONY:
-#if 0
-			/* if we call this, the camera shuts down on close in MTP mode */
-			if (ptp_operation_issupported(params, 0x9280)) {
-				C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0,0,0));
+			/* Sony cameras expect to be issued this shutdown command after any
+			 * operation in PTPIP mode. */
+			if (camera->port->type == GP_PORT_PTPIP) {
+				if (ptp_operation_issupported(params, 0x9280)
+					&& ptp_operation_issupported(params, 0x9280)) {
+					C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0,0,0));
+					C_PTP (ptp_sony_9281(params, 0x4));
+				}
 			}
-#endif
 			break;
 		case PTP_VENDOR_FUJI:
 			CR (camera_unprepare_capture (camera, context));
@@ -9859,7 +9862,16 @@ camera_init (Camera *camera, GPContext *context)
 		if (ptp_operation_issupported(params, PTP_OC_NIKON_CurveDownload))
 			add_special_file("curve.ntc", nikon_curve_get, nikon_curve_put);
 		break;
-	/* case PTP_VENDOR_SONY: setup already done in fixup_cached_deviceinfo */
+	case PTP_VENDOR_SONY:
+		/* Some Sony cameras expect this before filesytem reading is available. */
+		if (camera->port->type == GP_PORT_PTPIP) {
+			if (ptp_operation_issupported(params, 0x9280)) {
+				C_PTP (ptp_sony_9280(params, 0x4,2,2,0,0,1,1));
+				C_PTP (ptp_sony_9281(params, 0x4));
+			}
+		}
+		/* Other setup already done in fixup_cached_deviceinfo */
+		break;
 	case PTP_VENDOR_FUJI:
 		CR (camera_prepare_capture (camera, context));
 		break;
