@@ -1590,8 +1590,8 @@ ReadImageFromCamera(Camera *camera, CameraFilePath *path, GPContext *context) {
 		}
 	}
 	curl_easy_cleanup(imageUrl);
-	strcpy(path->name, strrchr(image,'/')+1);
-	strcpy(path->folder, "/");
+	strncpy(path->name, strrchr(image,'/')+1, sizeof(path->name));
+	strncpy(path->folder, "/", sizeof(path->folder));
 	return add_objectid_and_upload (camera, path, context, lmb.data, lmb.size);
 }
 #endif
@@ -1657,8 +1657,8 @@ camera_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GP
 	if (camera->pl->pics[after-1].url_large) url = camera->pl->pics[after-1].url_large;
 	if (camera->pl->pics[after-1].url_raw) url = camera->pl->pics[after-1].url_raw;
 	s = strrchr(url,'/')+1;
-	strcpy(path->name, s);
-	strcpy(path->folder, "/");
+	strncpy(path->name, s, sizeof(path->name));
+	strncpy(path->folder, "/", sizeof(path->folder));
 	return GP_OK;
 }
 
