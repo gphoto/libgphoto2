@@ -3403,7 +3403,7 @@ find_object_path (Camera *camera, PTPObject **ob, CameraFilePath *path)
 	GP_LOG_D ("(storage=0x%08x, handle=0x%08x)", (*ob)->oi.StorageID, (*ob)->oi.Handle);
 
 	uint32_t handle = (*ob)->oi.Handle;
-	strcpy  (path->name,  (*ob)->oi.Filename);
+	strncpy  (path->name,  (*ob)->oi.Filename, sizeof(path->name));
 	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)(*ob)->oi.StorageID);
 	CR (append_folder_from_handle (camera, (*ob)->oi.StorageID, (*ob)->oi.ParentObject, path->folder));
 	/* re-fetch invalidated ob cache pointer */
