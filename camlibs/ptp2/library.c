@@ -3286,7 +3286,7 @@ camera_exit (Camera *camera, GPContext *context)
 			 * operation in PTPIP mode. */
 			if (camera->port->type == GP_PORT_PTPIP) {
 				if (ptp_operation_issupported(params, 0x9280)
-					&& ptp_operation_issupported(params, 0x9280)) {
+					&& ptp_operation_issupported(params, 0x9281)) {
 					C_PTP (ptp_sony_9280(params, 0x4,0,5,0,0,0,0));
 					C_PTP (ptp_sony_9281(params, 0x4));
 				}
@@ -9865,7 +9865,8 @@ camera_init (Camera *camera, GPContext *context)
 	case PTP_VENDOR_SONY:
 		/* Some Sony cameras expect this before filesytem reading is available. */
 		if (camera->port->type == GP_PORT_PTPIP) {
-			if (ptp_operation_issupported(params, 0x9280)) {
+				if (ptp_operation_issupported(params, 0x9280)
+					&& ptp_operation_issupported(params, 0x9281)) {
 				C_PTP (ptp_sony_9280(params, 0x4,2,2,0,0,1,1));
 				C_PTP (ptp_sony_9281(params, 0x4));
 			}
