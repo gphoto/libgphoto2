@@ -166,7 +166,7 @@ camera_abilities (CameraAbilitiesList *list)
 	/* https://github.com/asalamon74/pktriggercord/issues/21 */
 	strcpy (a.model, "Pentax:K1II");
 	a.usb_vendor		= 0x25fb;
-	a.usb_product           = 0x0183;
+	a.usb_product           = 0x0182; // in MSC mode, which is used by usbscsi
 	if (GP_OK != (ret = gp_abilities_list_append (list, a)))
 		return ret;
 
