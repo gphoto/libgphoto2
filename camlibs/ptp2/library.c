@@ -1882,7 +1882,7 @@ static struct {
 	{"Panasonic:DMC-LX7",		  0x04da, 0x2374, 0},
 	/* Constantin B <klochto@gmail.com> */
 	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
-
+	/* Matthias <mattjowil@hotmail.com>: The Panasonic Lumix DC-G9 reports the same vendor and product ID (04da:2382) */
 	{"Panasonic:DC-GH5",		  0x04da, 0x2382, PTP_CAP|PTP_CAP_PREVIEW},
 
 

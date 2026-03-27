@@ -959,54 +959,55 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_PARROT_MagnetoCalibStatus	0x9212
 #define PTP_OC_PARROT_SendFirmwareUpdate	0x9213
 
-#define PTP_OC_PANASONIC_9101			0x9101
-#define PTP_OC_PANASONIC_OpenSession		0x9102	/* opensession (1 arg, seems to be storage id 0x00010001)*/
-#define PTP_OC_PANASONIC_CloseSession		0x9103	/* closesession (no arg) */
-#define PTP_OC_PANASONIC_9104			0x9104	/* get ext device id (1 arg?) */
+/* Panasonic opcodes */
+#define PTP_OC_PANASONIC_9101					0x9101
+#define PTP_OC_PANASONIC_OpenSession			0x9102	/* opensession (1 arg, seems to be storage id 0x00010001)*/
+#define PTP_OC_PANASONIC_CloseSession			0x9103	/* closesession (no arg) */
+#define PTP_OC_PANASONIC_9104					0x9104	/* get ext device id (1 arg?) */
 /* 9104 gets this data:
 0000  24 00 00 00 02 00 04 91-04 00 00 00 01 00 01 00  $...............
 0010  01 00 e1 07 10 00 00 00-00 00 00 00 00 00 00 00  ................
 0020  00 00 00 00            -                         ....
 */
 
-#define PTP_OC_PANASONIC_9107			0x9107	/* getsize? */
-#define PTP_OC_PANASONIC_ListProperty		0x9108
-#define PTP_OC_PANASONIC_9110			0x9110 	/* Get_Object infos */
-#define PTP_OC_PANASONIC_9112			0x9112 	/* Get Partial Object , 4 args */
-#define PTP_OC_PANASONIC_9113			0x9113 	/* Skip Objects Transfer , 1 arg */
+#define PTP_OC_PANASONIC_9107					0x9107	/* getsize? */
+#define PTP_OC_PANASONIC_ListProperty			0x9108
+#define PTP_OC_PANASONIC_9110					0x9110 	/* Get_Object infos */
+#define PTP_OC_PANASONIC_9112					0x9112 	/* Get Partial Object , 4 args */
+#define PTP_OC_PANASONIC_9113					0x9113 	/* Skip Objects Transfer , 1 arg */
 
-#define PTP_OC_PANASONIC_9401			0x9401
-#define PTP_OC_PANASONIC_GetProperty		0x9402
-#define PTP_OC_PANASONIC_SetProperty		0x9403
-#define PTP_OC_PANASONIC_InitiateCapture	0x9404	/* Rec Ctrl Release */
-#define PTP_OC_PANASONIC_9405			0x9405	/* Rec Ctrl AF AE */
-#define PTP_OC_PANASONIC_9406			0x9406	/* Setup Ctrl various functions: Format, Sensor Cleaning, Menu Save, firmware update? */
-#define PTP_OC_PANASONIC_9408			0x9408
-#define PTP_OC_PANASONIC_9409			0x9409	/* 1 arg */
-#define PTP_OC_PANASONIC_GetCaptureTarget	0x940A	/* 1 arg, e.g. 0x08000010 */
-#define PTP_OC_PANASONIC_SetCaptureTarget	0x940B	/* 1 arg, e.g. 0x08000010 */
-#define PTP_OC_PANASONIC_MovieRecControl	0x940C	/* 07000011 start, 07000012 stop, 0700013 still capture */
-#define PTP_OC_PANASONIC_PowerControl		0x940D	/* 1 arg: 0x0A000011 power off, 0x0a00012 device reset, 0x0a00013 device restart */
-#define PTP_OC_PANASONIC_PlayControl		0x940E	/* 2 arg? 0x05000011 current=0, next=1, prev=0xffffffff */
-#define PTP_OC_PANASONIC_PlayControlPlay	0x940F	/* 0x05000020 */
-#define PTP_OC_PANASONIC_9410			0x9410	/* Rec Ctrl Other */
-#define PTP_OC_PANASONIC_SetGPSDataInfo		0x9411
-#define PTP_OC_PANASONIC_Liveview		0x9412	/* 0d000010 start, 0d000011 stop */
-#define PTP_OC_PANASONIC_PollEvents		0x9414	/* ? 1 arg e.g 12000020 */
+#define PTP_OC_PANASONIC_9401					0x9401
+#define PTP_OC_PANASONIC_GetProperty			0x9402
+#define PTP_OC_PANASONIC_SetProperty			0x9403
+#define PTP_OC_PANASONIC_InitiateCapture		0x9404	/* Rec Ctrl Release */
+#define PTP_OC_PANASONIC_9405					0x9405	/* Rec Ctrl AF AE */
+#define PTP_OC_PANASONIC_9406					0x9406	/* Setup Ctrl various functions: Format, Sensor Cleaning, Menu Save, firmware update? */
+#define PTP_OC_PANASONIC_9408					0x9408
+#define PTP_OC_PANASONIC_9409					0x9409	/* 1 arg */
+#define PTP_OC_PANASONIC_GetCaptureTarget		0x940A	/* 1 arg, e.g. 0x08000010 */
+#define PTP_OC_PANASONIC_SetCaptureTarget		0x940B	/* 1 arg, e.g. 0x08000010 */
+#define PTP_OC_PANASONIC_MovieRecControl		0x940C	/* 07000011 start, 07000012 stop, 0700013 still capture */
+#define PTP_OC_PANASONIC_PowerControl			0x940D	/* 1 arg: 0x0A000011 power off, 0x0a00012 device reset, 0x0a00013 device restart */
+#define PTP_OC_PANASONIC_PlayControl			0x940E	/* 2 arg? 0x05000011 current=0, next=1, prev=0xffffffff */
+#define PTP_OC_PANASONIC_PlayControlPlay		0x940F	/* 0x05000020 */
+#define PTP_OC_PANASONIC_9410					0x9410	/* Rec Ctrl Other */
+#define PTP_OC_PANASONIC_SetGPSDataInfo			0x9411
+#define PTP_OC_PANASONIC_Liveview				0x9412	/* 0d000010 start, 0d000011 stop */
+#define PTP_OC_PANASONIC_PollEvents				0x9414	/* ? 1 arg e.g 12000020 */
 #define PTP_OC_PANASONIC_GetLiveViewParameters	0x9414	/* either all formats 0x0d800012 or current format 0x0d800011 */
 #define PTP_OC_PANASONIC_SetLiveViewParameters	0x9415	/* current format 0x0d800011 */
-#define PTP_OC_PANASONIC_ManualFocusDrive	0x9416	/* Rec Ctrl Mf Assist, Rec Ctrl Backup Req ... 1 arg */
+#define PTP_OC_PANASONIC_ManualFocusDrive		0x9416	/* Rec Ctrl Mf Assist, Rec Ctrl Backup Req ... 1 arg */
 
-#define PTP_OC_PANASONIC_ChangeEvent		0x9603	/* 2 args ... e.g. 0x4002, new (change object added event) */
-#define PTP_OC_PANASONIC_GetFromEventInfo	0x9605	/* 1 arg, e.g. 0x41000013 , 15c00021: setup exec menu save comp, 15c00022: setup exec pixel refresh comp */
-#define PTP_OC_PANASONIC_SendDataInfo		0x9606	/* no args? used during firmware update */
-#define PTP_OC_PANASONIC_StartSendData		0x9607	/* no args? used during firmware update */
+#define PTP_OC_PANASONIC_ChangeEvent			0x9603	/* 2 args ... e.g. 0x4002, new (change object added event) */
+#define PTP_OC_PANASONIC_GetFromEventInfo		0x9605	/* 1 arg, e.g. 0x41000013 , 15c00021: setup exec menu save comp, 15c00022: setup exec pixel refresh comp */
+#define PTP_OC_PANASONIC_SendDataInfo			0x9606	/* no args? used during firmware update */
+#define PTP_OC_PANASONIC_StartSendData			0x9607	/* no args? used during firmware update */
 
-#define PTP_OC_PANASONIC_9703			0x9703	/* Mnt_GetInfo_GetVersion  ... 1 arg? */
-#define PTP_OC_PANASONIC_9704			0x9704	/* Set USB Mode ... 80040001 */
-#define PTP_OC_PANASONIC_9705			0x9705	/* Ctrl Liveview */
-#define PTP_OC_PANASONIC_LiveviewImage		0x9706	/* Get Liveview Data */
-#define PTP_OC_PANASONIC_9707			0x9707	/* 4k6k cutting get stream */
+#define PTP_OC_PANASONIC_9703					0x9703	/* Mnt_GetInfo_GetVersion  ... 1 arg? */
+#define PTP_OC_PANASONIC_9704					0x9704	/* Set USB Mode ... 80040001 */
+#define PTP_OC_PANASONIC_9705					0x9705	/* Ctrl Liveview */
+#define PTP_OC_PANASONIC_LiveviewImage			0x9706	/* Get Liveview Data */
+#define PTP_OC_PANASONIC_9707					0x9707	/* 4k6k cutting get stream */
 
 /* Samsung NX:
  * 9002 send check event
@@ -3490,61 +3491,61 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_PARROT_MultisensorsIrradianceIntegrationTime	0xD218
 #define PTP_DPC_PARROT_OverlapRate				0xD219
 
-/* Panasonic does not have regular device properties, they use some 32bit values */
-#define PTP_DPC_PANASONIC_PhotoStyle			0x02000010
-#define PTP_DPC_PANASONIC_ISO				0x02000020
-#define PTP_DPC_PANASONIC_ISO_Param				0x02000021
+/* Panasonic does not have regular device properties, they use 32bit values */
+#define PTP_DPC_PANASONIC_PhotoStyle				0x02000010
+#define PTP_DPC_PANASONIC_ISO						0x02000020
+#define PTP_DPC_PANASONIC_ISO_Param					0x02000021
 #define PTP_DPC_PANASONIC_ISO_UpperLimit			0x02000022
-#define PTP_DPC_PANASONIC_ShutterSpeed			0x02000030
-#define PTP_DPC_PANASONIC_ShutterSpeed_Param			0x02000031
-#define PTP_DPC_PANASONIC_ShutterSpeed_RangeLimit		0x02000032
-#define PTP_DPC_PANASONIC_Aperture			0x02000040
+#define PTP_DPC_PANASONIC_ShutterSpeed				0x02000030
+#define PTP_DPC_PANASONIC_ShutterSpeed_Param		0x02000031
+#define PTP_DPC_PANASONIC_ShutterSpeed_RangeLimit	0x02000032
+#define PTP_DPC_PANASONIC_Aperture					0x02000040
 #define PTP_DPC_PANASONIC_Aperture_Param			0x02000041
-#define PTP_DPC_PANASONIC_Aperture_RangeLimit			0x02000042
-#define PTP_DPC_PANASONIC_WhiteBalance			0x02000050
-#define PTP_DPC_PANASONIC_WhiteBalance_Param			0x02000051
+#define PTP_DPC_PANASONIC_Aperture_RangeLimit		0x02000042
+#define PTP_DPC_PANASONIC_WhiteBalance				0x02000050
+#define PTP_DPC_PANASONIC_WhiteBalance_Param		0x02000051
 #define PTP_DPC_PANASONIC_WhiteBalance_KSet			0x02000052
-#define PTP_DPC_PANASONIC_WhiteBalance_ADJ_AB			0x02000053
-#define PTP_DPC_PANASONIC_WhiteBalance_ADJ_GM			0x02000054
-#define PTP_DPC_PANASONIC_WhiteBalance_ADJ_AB_Sep		0x02000055
-#define PTP_DPC_PANASONIC_Exposure			0x02000060
+#define PTP_DPC_PANASONIC_WhiteBalance_ADJ_AB		0x02000053
+#define PTP_DPC_PANASONIC_WhiteBalance_ADJ_GM		0x02000054
+#define PTP_DPC_PANASONIC_WhiteBalance_ADJ_AB_Sep	0x02000055
+#define PTP_DPC_PANASONIC_Exposure					0x02000060
 #define PTP_DPC_PANASONIC_Exposure_Param			0x02000061
-#define PTP_DPC_PANASONIC_Exposure_RangeLimit			0x02000062
-#define PTP_DPC_PANASONIC_AFArea			0x02000070 /* AFCONFIG */
-#define PTP_DPC_PANASONIC_AFArea_AFModeParam			0x02000071 /* AFCONFIG */
-#define PTP_DPC_PANASONIC_AFArea_AFAreaParam			0x02000072 /* AFCONFIG */
-#define PTP_DPC_PANASONIC_AFArea_SetQuickAFParam		0x02000073 /* AFCONFIG */
-#define PTP_DPC_PANASONIC_CameraMode			0x02000080
-#define PTP_DPC_PANASONIC_CameraMode_DriveMode			0x02000081
-#define PTP_DPC_PANASONIC_CameraMode_ModePos			0x02000082
-#define PTP_DPC_PANASONIC_CameraMode_CreativeMode		0x02000083
+#define PTP_DPC_PANASONIC_Exposure_RangeLimit		0x02000062
+#define PTP_DPC_PANASONIC_AFArea					0x02000070 /* AFCONFIG */
+#define PTP_DPC_PANASONIC_AFArea_AFModeParam		0x02000071 /* AFCONFIG */
+#define PTP_DPC_PANASONIC_AFArea_AFAreaParam		0x02000072 /* AFCONFIG */
+#define PTP_DPC_PANASONIC_AFArea_SetQuickAFParam	0x02000073 /* AFCONFIG */
+#define PTP_DPC_PANASONIC_CameraMode				0x02000080
+#define PTP_DPC_PANASONIC_CameraMode_DriveMode		0x02000081
+#define PTP_DPC_PANASONIC_CameraMode_ModePos		0x02000082
+#define PTP_DPC_PANASONIC_CameraMode_CreativeMode	0x02000083
 #define PTP_DPC_PANASONIC_CameraMode_iAMode			0x02000084
-#define PTP_DPC_PANASONIC_ImageFormat			0x020000A2
-#define PTP_DPC_PANASONIC_MeteringInfo			0x020000B0
-#define PTP_DPC_PANASONIC_IntervalInfo			0x020000C0
-#define PTP_DPC_PANASONIC_RecDispConfig			0x020000E0
-#define PTP_DPC_PANASONIC_RecInfoFlash			0x02000110
-#define PTP_DPC_PANASONIC_BurstBracket			0x02000140
-#define PTP_DPC_PANASONIC_RecPreviewConfig		0x02000170
-#define PTP_DPC_PANASONIC_RecInfoSelfTimer		0x020001A0
-#define PTP_DPC_PANASONIC_RecInfoFlash2			0x020001B0
-#define PTP_DPC_PANASONIC_RecCtrlRelease		0x03000010
+#define PTP_DPC_PANASONIC_ImageFormat				0x020000A2
+#define PTP_DPC_PANASONIC_MeteringInfo				0x020000B0
+#define PTP_DPC_PANASONIC_IntervalInfo				0x020000C0
+#define PTP_DPC_PANASONIC_RecDispConfig				0x020000E0
+#define PTP_DPC_PANASONIC_RecInfoFlash				0x02000110
+#define PTP_DPC_PANASONIC_BurstBracket				0x02000140
+#define PTP_DPC_PANASONIC_RecPreviewConfig			0x02000170
+#define PTP_DPC_PANASONIC_RecInfoSelfTimer			0x020001A0
+#define PTP_DPC_PANASONIC_RecInfoFlash2				0x020001B0
+#define PTP_DPC_PANASONIC_RecCtrlRelease			0x03000010
 
-#define PTP_DPC_PANASONIC_RecCtrlAFAE			0x03000020 /* cmd base for afae */
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAE    		0x03000021
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAF    		0x03000022
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAFAE    		0x03000023
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_AF_OneShot    		0x03000024
-#define PTP_DPC_PANASONIC_RecCtrlAFAE_Lock_Clear    		0x03000025
+#define PTP_DPC_PANASONIC_RecCtrlAFAE				0x03000020 /* cmd base for afae */
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAE    	0x03000021
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAF    	0x03000022
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_LockAFAE  	0x03000023
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_AF_OneShot	0x03000024
+#define PTP_DPC_PANASONIC_RecCtrlAFAE_Lock_Clear	0x03000025
 
-#define PTP_DPC_PANASONIC_Zoom				0x03000080
-#define PTP_DPC_PANASONIC_RecCtrlLens			0x03010010
-#define PTP_DPC_PANASONIC_MovConfig			0x06000010	/* uses 9408 */
-#define PTP_DPC_PANASONIC_MovConfig_C_Movie_Mode		0x06000011	/* uses 9409 */
-#define PTP_DPC_PANASONIC_MovConfig_HDMI_Mode			0x06000012	/* uses 9409 */
-#define PTP_DPC_PANASONIC_MovConfig_Quality_Mode		0x06000013	/* uses 9409 */
-#define PTP_DPC_PANASONIC_MovConfig_Rec_Mode			0x06000014	/* uses 9409 */
-#define PTP_DPC_PANASONIC_08000010			0x08000010
+#define PTP_DPC_PANASONIC_Zoom						0x03000080
+#define PTP_DPC_PANASONIC_RecCtrlLens				0x03010010
+#define PTP_DPC_PANASONIC_MovConfig					0x06000010	/* uses 9408 */
+#define PTP_DPC_PANASONIC_MovConfig_C_Movie_Mode	0x06000011	/* uses 9409 */
+#define PTP_DPC_PANASONIC_MovConfig_HDMI_Mode		0x06000012	/* uses 9409 */
+#define PTP_DPC_PANASONIC_MovConfig_Quality_Mode	0x06000013	/* uses 9409 */
+#define PTP_DPC_PANASONIC_MovConfig_Rec_Mode		0x06000014	/* uses 9409 */
+#define PTP_DPC_PANASONIC_08000010					0x08000010
 /* various modes of the camera, HDMI, GetDateTimeWorldTime Mode/Area, SetupCfgInfo, SetupConfig_DateTime, GetSystemFreq Mode, GetSetupConfig Info */
 /*
 0000  54 00 00 00 02 00 0a 94-04 00 00 00 11 00 00 08  T...............
@@ -3568,7 +3569,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 00b0  9e 00 00 00 16 00 00 08-14 00 00 00 14 00 00 00  ................
 00c0  01 00 01 00 00 00 00 00-01 00 00 00 2c 00 00 00  ............,...
  */
-#define PTP_DPC_PANASONIC_08000091			0x08000091 /* SetupFilesConfig_Set_Target */
+#define PTP_DPC_PANASONIC_08000091					0x08000091 /* SetupFilesConfig_Set_Target */
 /*
 0000  16 00 00 00 02 00 0a 94-04 00 00 00 91 00 00 08  ................
 0010  02 00 00 00 00 00      -                         ......
