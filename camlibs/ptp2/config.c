@@ -10260,17 +10260,13 @@ _get_Panasonic_Exposure(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
-/* ========================================================================= */
-/* PANASONIC BULB PATCH START                                                */
-/* ========================================================================= */
-
 static int
 _get_Panasonic_Bulb(CONFIG_GET_ARGS) {
     int val;
 
     gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
     gp_widget_set_name (*widget, menu->name);
-    val = 0; /* Standardwert: Bulb ist aus (0) */
+    val = 0; /* Default: Bulb OFF (0) */
     gp_widget_set_value (*widget, &val);
     
     return (GP_OK);
@@ -10284,7 +10280,7 @@ _put_Panasonic_Bulb(CONFIG_PUT_ARGS)
     int ret;
     GPContext *context = ((PTPData *) params->data)->context;
 
-    /* Wert des Toggle-Schalters auslesen (1 = Start, 0 = Stopp) */
+    /* Read toggle switch value (1 = start, 0 = stopp) */
     CR (gp_widget_get_value(widget, &val));
 
     if (val) {
@@ -10299,8 +10295,8 @@ _put_Panasonic_Bulb(CONFIG_PUT_ARGS)
         /* Bulb Stop: Opcode 0x9404, Parameter 0x03000013 */
         ret = ptp_generic_no_data(params, PTP_OC_PANASONIC_InitiateCapture, 1, 0x03000013);
         
-        /* Aufräumen (Cleanup): Opcode 0x9404, Parameter 0x03000019 */
-        /* Wird direkt hinterhergeschickt, wie beim Lumix Tether Protokoll */
+        /* Opcode 0x9404, Parameter 0x03000019 */
+        /* Lumix Thether software sends this right after Bulb stop is sent.*/
         ptp_generic_no_data(params, PTP_OC_PANASONIC_InitiateCapture, 1, 0x03000019);
         
         C_PTP_REP (ret);
@@ -10308,10 +10304,6 @@ _put_Panasonic_Bulb(CONFIG_PUT_ARGS)
     
     return GP_OK;
 }
-
-/* ========================================================================= */
-/* PANASONIC BULB PATCH END                                                  */
-/* ========================================================================= */
 
 static int
 _put_Panasonic_LiveViewSize(CONFIG_PUT_ARGS)
