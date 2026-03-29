@@ -124,7 +124,7 @@ ax206_compress_jpeg(Camera *camera, int **in, uint8_t *outbuf, int out_size,
 	jvirt_barray_ptr *in_coefficients;
 	unsigned int i, x, y;
 	int stop, size, ret, outc;
-	unsigned long regular_jpeg_size = 0, buf_size = 0;
+	JPEG_SIZE regular_jpeg_size = 0, buf_size = 0;
 	int last_dc_val[3] = { 0, 0, 0 };
 
 	/* We have a rgb24bit image in the desired dimensions, first we
