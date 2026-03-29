@@ -5,6 +5,8 @@
 
 #if JPEG_LIB_VERSION < 80 && !defined(MEM_SRCDST_SUPPORTED)
 
+#define JPEG_SIZE unsigned long
+
 void
 jpeg_mem_src (j_decompress_ptr cinfo, unsigned char * buffer,
 	unsigned long bufsize);

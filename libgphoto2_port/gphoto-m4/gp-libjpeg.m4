@@ -77,6 +77,38 @@ found and made to work.
     GP_CONFIG_MSG([JPEG mangling support],
                   [${have_libjpeg}])
   ])
+  dnl find type of memdest
+  AC_LANG_PUSH([C])
+
+  AC_MSG_CHECKING([type of jpeg_mem_dest size])
+  AC_COMPILE_IFELSE([
+    #include <stdio.h>
+    #include <unistd.h>
+    #include <jpeglib.h>
+    void f(j_compress_ptr cinfo, unsigned char ** outbuffer, unsigned long * outsize) {
+	    jpeg_mem_dest(cinfo, outbuffer, outsize);
+    }
+  ],[
+     AC_MSG_RESULT([unsigned long*])
+     AC_DEFINE([JPEG_SIZE],[unsigned long], "JPEG memdest size type")
+  ],[
+     AC_COMPILE_IFELSE([
+    #include <stdio.h>
+    #include <unistd.h>
+    #include <jpeglib.h>
+    void f(j_compress_ptr cinfo, unsigned char ** outbuffer, size_t * outsize) {
+	    jpeg_mem_dest(cinfo, outbuffer, outsize);
+    }
+    ],[
+     AC_MSG_RESULT([size_t*])
+     AC_DEFINE([JPEG_SIZE],[size_t], "JPEG memdest size type")
+    ],[
+     AC_MSG_RESULT([unknown, using unsigned long*])
+     AC_DEFINE([JPEG_SIZE],[unsigned long], "JPEG memdest size type")
+    ])
+  ]
+  )
+  AC_LANG_POP([C])
 ],
 [AC_MSG_ERROR([
 Unhandled value given to --with-jpeg: ${with_jpeg}

@@ -1202,7 +1202,7 @@ ax203_encode_image(Camera *camera, int **src, char *dest, unsigned int dest_size
 	struct jpeg_compress_struct cinfo;
 	struct jpeg_error_mgr jcerr;
 	JOCTET *jpeg_dest = NULL;
-	unsigned long jpeg_size = 0;
+	JPEG_SIZE jpeg_size = 0;
 	JSAMPLE row[camera->pl->width * 3];
 	JSAMPROW row_pointer[1] = { row };
 #endif
