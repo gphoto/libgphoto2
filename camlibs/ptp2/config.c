@@ -10280,7 +10280,7 @@ _put_Panasonic_Bulb(CONFIG_PUT_ARGS)
     int ret;
     GPContext *context = ((PTPData *) params->data)->context;
 
-    /* Read toggle switch value (1 = start, 0 = stopp) */
+    /* Read toggle switch value (1 = start, 0 = stop) */
     CR (gp_widget_get_value(widget, &val));
 
     if (val) {
