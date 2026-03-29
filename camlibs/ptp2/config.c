@@ -10293,7 +10293,7 @@ _put_Panasonic_Bulb(CONFIG_PUT_ARGS)
         ret = ptp_generic_no_data(params, PTP_OC_PANASONIC_InitiateCapture, 1, 0x03000013);
         
         /* Opcode 0x9404, Parameter 0x03000019 */
-        /* Lumix Thether software sends this right after Bulb stop is sent.*/
+        /* Lumix Thether software sends this right after Bulb stop is sent. */
         ptp_generic_no_data(params, PTP_OC_PANASONIC_InitiateCapture, 1, 0x03000019);
         
         C_PTP_REP (ret);
