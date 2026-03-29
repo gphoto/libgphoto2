@@ -9554,7 +9554,6 @@ _put_Sony_SpotFocusArea(CONFIG_PUT_ARGS) {
 #undef SONY_TOUCH_MAX_X
 #undef SONY_TOUCH_MAX_Y
 
-
 static int
 _get_Panasonic_Movie(CONFIG_GET_ARGS) {
 	int val;
@@ -10256,6 +10255,51 @@ _get_Panasonic_Exposure(CONFIG_GET_ARGS) {
 	free(list);
 
 	return GP_OK;
+}
+
+static int
+_get_Panasonic_Bulb(CONFIG_GET_ARGS) {
+    int val;
+
+    gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+    gp_widget_set_name (*widget, menu->name);
+    val = 0; /* Default: Bulb OFF (0) */
+    gp_widget_set_value (*widget, &val);
+    
+    return (GP_OK);
+}
+
+static int
+_put_Panasonic_Bulb(CONFIG_PUT_ARGS)
+{
+    PTPParams *params = &(camera->pl->params);
+    int val;
+    int ret;
+    GPContext *context = ((PTPData *) params->data)->context;
+
+    /* Read toggle switch value (1 = start, 0 = stop) */
+    CR (gp_widget_get_value(widget, &val));
+
+    if (val) {
+        /* Bulb Start: Opcode 0x9404, Parameter 0x03000012 */
+        ret = ptp_generic_no_data(params, PTP_OC_PANASONIC_InitiateCapture, 1, 0x03000012);
+        if (ret != PTP_RC_OK) {
+            gp_context_error (context, _("Failed to start Panasonic bulb capture. Make sure the dial is set to M or B."));
+            return translate_ptp_result (ret);
+        }
+        C_PTP_REP (ret);
+    } else {
+        /* Bulb Stop: Opcode 0x9404, Parameter 0x03000013 */
+        ret = ptp_generic_no_data(params, PTP_OC_PANASONIC_InitiateCapture, 1, 0x03000013);
+        
+        /* Opcode 0x9404, Parameter 0x03000019 */
+        /* Lumix Thether software sends this right after Bulb stop is sent. */
+        ptp_generic_no_data(params, PTP_OC_PANASONIC_InitiateCapture, 1, 0x03000019);
+        
+        C_PTP_REP (ret);
+    }
+    
+    return GP_OK;
 }
 
 static int
@@ -11294,6 +11338,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_TerminateCapture,      _get_Nikon_Bulb,                _put_Nikon_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_GP_OLYMPUS_OMD, PTP_OC_OLYMPUS_OMD_Capture,  _get_Olympus_OMD_Bulb,          _put_Olympus_OMD_Bulb },
 	{ N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_FUJI,    PTP_OC_InitiateCapture,             _get_Fuji_Bulb,                 _put_Fuji_Bulb },
+    { N_("Bulb Mode"),                      "bulb",             0,  PTP_VENDOR_PANASONIC,      PTP_OC_PANASONIC_InitiateCapture, _get_Panasonic_Bulb,       _put_Panasonic_Bulb },
 	{ N_("UI Lock"),                        "uilock",           0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_SetUILock,         _get_Canon_EOS_UILock,          _put_Canon_EOS_UILock },
 	{ N_("Popup Flash"),                    "popupflash",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_PopupBuiltinFlash, _get_Canon_EOS_PopupFlash,      _put_Canon_EOS_PopupFlash },
 	{ N_("Drive Nikon DSLR Autofocus"),     "autofocusdrive",   0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_AfDrive,               _get_Nikon_AFDrive,             _put_Nikon_AFDrive },
