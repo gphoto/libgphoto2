@@ -166,7 +166,7 @@ int main(int argc, char **argv)
   else
     add_project_arguments('-DHAVE_LIBJPEG=1', language: 'c')
 
-    add_project_arguments('-DJPEG_SIZE="unsigned long"', language: 'c')
+    add_project_arguments('-DJPEG_SIZE=unsigned long', language: 'c')
   endif
 endif
 
