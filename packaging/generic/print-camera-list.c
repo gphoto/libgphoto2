@@ -1138,7 +1138,7 @@ escape_html(const char *str) {
 	newstr = malloc(strlen(str)+1+inc);
 	s = str; ns = newstr;
 	do {
-		char *x;
+		const char *x;
 		x = strchr(s,'&');
 		if (x) {
 			memcpy (ns, s, x-s);

@@ -125,7 +125,7 @@ static const char *
 get_mime_type (const char *filename)
 {
 
-	char *dot;
+	const char *dot;
 	int x=0;
 
 	dot = strrchr(filename, '.');

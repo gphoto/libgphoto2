@@ -521,7 +521,7 @@ append_to_folder (CameraFilesystemFolder *folder,
 	CameraFilesystemFolder **newfolder
 ) {
 	CameraFilesystemFolder	*f;
-	char	*s;
+	const char	*s;
 
 	GP_LOG_D ("Append to folder %p/%s - %s", folder, folder->name, foldername);
 	/* Handle multiple slashes, and slashes at the end */
