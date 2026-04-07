@@ -611,7 +611,7 @@ int
 gp_file_open (CameraFile *file, const char *filename)
 {
 	FILE *fp;
-	char *name, *dot;
+	const char *name, *dot;
 	long size, size_read;
 	int  i;
 	struct stat s;
@@ -907,8 +907,8 @@ gp_file_get_name (CameraFile *file, const char **name)
 int
 gp_file_get_name_by_type (CameraFile *file, const char *basename, CameraFileType type, char **newname)
 {
-	char *prefix = NULL, *s, *new, *slash = NULL;
-	const char *suffix = NULL;
+	char *prefix = NULL, *new;
+	const char *suffix = NULL, *s, *slash = NULL;
 	int i;
 
 	C_PARAMS (file && basename && newname);
