@@ -532,7 +532,7 @@ ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, 
 {
 	char *capture_date;
 
-	if (!data || len < PTP_oi_SequenceNumber)
+	if (!data || len < PTP_oi_filenamelen + 5)
 		return;
 
 	oi->Filename = oi->Keywords = NULL;
