@@ -1380,6 +1380,7 @@ ptp_unpack_Canon_FE (PTPParams *params, const unsigned char* data, PTPCANONFolde
 	fe->ObjectSize       = dtoh32a(data + PTP_cfe_ObjectSize);
 	fe->Time     = (time_t)dtoh32a(data + PTP_cfe_Time);
 	strncpy(fe->Filename, (char*)data + PTP_cfe_Filename, PTP_CANON_FilenameBufferLen);
+	fe->Filename[PTP_CANON_FilenameBufferLen-1] = '\0';
 }
 
 /*
