@@ -1459,7 +1459,7 @@ ptp_unpack_Canon_EOS_FE (PTPParams *params, const unsigned char* data, unsigned 
 
 
 static inline uint16_t
-ptp_unpack_EOS_ImageFormat (PTPParams* params, const unsigned char** data )
+ptp_unpack_EOS_ImageFormat (PTPParams* params, const unsigned char** data, unsigned int *size )
 {
 	/*
 	  EOS ImageFormat entries look are a sequence of u32 values:
@@ -1503,28 +1503,55 @@ ptp_unpack_EOS_ImageFormat (PTPParams* params, const unsigned char** data )
 
 	const uint8_t* d = *data;
 	uint32_t offset = 0;
-	uint32_t n = dtoh32o (d, offset);
+	uint32_t n;
 	uint32_t l, t1, s1, c1, t2 = 0, s2 = 0, c2 = 0;
+
+	if (*size < sizeof(uint32_t)) {
+		ptp_debug (params, "parsing EOS ImageFormat property failed 1 (size %d)", *size);
+		return 0;
+	}
+	n = dtoh32o (d, offset);
+	*size -= sizeof(uint32_t);
 
 	if (n != 1 && n !=2) {
 		ptp_debug (params, "parsing EOS ImageFormat property failed (n != 1 && n != 2: %d)", n);
 		return 0;
 	}
-
+	if (*size < sizeof(uint32_t)) {
+		ptp_debug (params, "parsing EOS ImageFormat property failed 2 (size %d)", *size);
+		return 0;
+	}
 	l = dtoh32o (d, offset);
+	*size -= sizeof(uint32_t);
+
 	if (l != 0x10) {
 		ptp_debug (params, "parsing EOS ImageFormat property failed (l != 0x10: 0x%x)", l);
 		return 0;
 	}
 
+	if (*size < 3*sizeof(uint32_t)) {
+		ptp_debug (params, "parsing EOS ImageFormat property failed 3 (size %d)", *size);
+		return 0;
+	}
 	t1 = dtoh32o (d, offset);
 	s1 = dtoh32o (d, offset);
 	c1 = dtoh32o (d, offset);
+	*size -= 3*sizeof(uint32_t);
 
 	if (n == 2) {
+		if (*size < sizeof(uint32_t)) {
+			ptp_debug (params, "parsing EOS ImageFormat property failed 4 (size %d)", *size);
+			return 0;
+		}
 		l = dtoh32o (d, offset);
+		*size -= sizeof(uint32_t);
+
 		if (l != 0x10) {
 			ptp_debug (params, "parsing EOS ImageFormat property failed (l != 0x10: 0x%x)", l);
+			return 0;
+		}
+		if (*size < 3*sizeof(uint32_t)) {
+			ptp_debug (params, "parsing EOS ImageFormat property failed 5 (size %d)", *size);
 			return 0;
 		}
 		t2 = dtoh32o (d, offset);
@@ -1695,11 +1722,19 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint3
 
 
 static inline char*
-ptp_unpack_EOS_CustomFuncEx (PTPParams* params, const unsigned char** data )
+ptp_unpack_EOS_CustomFuncEx (PTPParams* params, const unsigned char** data, unsigned int *size )
 {
-	uint32_t s = dtoh32a( *data );
-	uint32_t n = s/4, i;
+	uint32_t s, n, i;
 	char	*str, *p;
+
+	if (*size < sizeof(uint32_t))
+		return strdup("bad length");
+
+	s = dtoh32a( *data );
+	n = s/4;
+
+	if (*size < 4+s)
+		return strdup("bad length");
 
 	if (s > 1024) {
 		ptp_debug (params, "customfuncex data is larger than 1k / %d... unexpected?", s);
@@ -2013,7 +2048,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			case PTP_DPC_CANON_EOS_ImageFormatExtHD:
 				/* special handling of ImageFormat properties */
 				for (j=0;j<dpd_count;j++) {
-					dpd->FORM.Enum.SupportedValue[j].u16 = ptp_unpack_EOS_ImageFormat( params, &xdata );
+					dpd->FORM.Enum.SupportedValue[j].u16 = ptp_unpack_EOS_ImageFormat( params, &xdata, &xsize );
 					ptp_debug (params, INDENT "prop %x option[%2d] == 0x%04x", dpc, j, dpd->FORM.Enum.SupportedValue[j].u16);
 				}
 				break;
@@ -2318,7 +2353,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			case PTP_DPC_CANON_EOS_ImageFormatSD:
 			case PTP_DPC_CANON_EOS_ImageFormatExtHD:
 				dpd->DataType = PTP_DTC_UINT16;
-				dpd->DefaultValue.u16 = ptp_unpack_EOS_ImageFormat( params, &xdata );
+				dpd->DefaultValue.u16 = ptp_unpack_EOS_ImageFormat( params, &xdata, &xsize );
 				dpd->CurrentValue.u16 = dpd->DefaultValue.u16;
 				ptp_debug (params, INDENT "prop %x value == 0x%04x (u16)", dpc, dpd->CurrentValue.u16);
 				break;
@@ -2326,7 +2361,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				dpd->DataType = PTP_DTC_STR;
 				free (dpd->DefaultValue.str);
 				free (dpd->CurrentValue.str);
-				dpd->DefaultValue.str = ptp_unpack_EOS_CustomFuncEx( params, &xdata );
+				dpd->DefaultValue.str = ptp_unpack_EOS_CustomFuncEx( params, &xdata, &xsize );
 				dpd->CurrentValue.str = strdup( (char*)dpd->DefaultValue.str );
 				ptp_debug (params, INDENT "prop %x value == %s", dpc, dpd->CurrentValue.str);
 				break;
