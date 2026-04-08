@@ -1601,23 +1601,39 @@ ptp_pack_EOS_ImageFormat (PTPParams* params, unsigned char* data, uint16_t value
 static inline char*
 ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint32_t datasize)
 {
-	uint32_t size 			= dtoh32a( *data );
-	uint32_t halfsize		= dtoh16a( (*data) + 4);
-	uint32_t version		= dtoh16a( (*data) + 6);
-	uint32_t focus_points_in_struct	= dtoh16a( (*data) + 8);
-	uint32_t focus_points_in_use	= dtoh16a( (*data) + 10);
-	uint32_t sizeX			= dtoh16a( (*data) + 12);
-	uint32_t sizeY			= dtoh16a( (*data) + 14);
-	uint32_t size2X			= dtoh16a( (*data) + 16);
-	uint32_t size2Y			= dtoh16a( (*data) + 18);
+	uint32_t size;
+	uint32_t halfsize;
+	uint32_t version;
+	uint32_t focus_points_in_struct;
+	uint32_t focus_points_in_use;
+	uint32_t sizeX;
+	uint32_t sizeY;
+	uint32_t size2X;
+	uint32_t size2Y;
 	uint32_t i;
 	uint32_t maxlen;
 	char	*str, *p;
 
+	if (datasize<4) {
+		ptp_error(params, "FocusInfoEx has invalid size (%d)", datasize);
+		return strdup("bad size 0");
+	}
+
+	size 			= dtoh32a( *data );
 	if ((size > datasize) || (size < 20)) {
 		ptp_error(params, "FocusInfoEx has invalid size (%d) vs datasize (%d)", size, datasize);
 		return strdup("bad size 1");
 	}
+
+	halfsize		= dtoh16a( (*data) + 4);
+	version			= dtoh16a( (*data) + 6);
+	focus_points_in_struct	= dtoh16a( (*data) + 8);
+	focus_points_in_use	= dtoh16a( (*data) + 10);
+	sizeX			= dtoh16a( (*data) + 12);
+	sizeY			= dtoh16a( (*data) + 14);
+	size2X			= dtoh16a( (*data) + 16);
+	size2Y			= dtoh16a( (*data) + 18);
+
 	/* If data is zero-filled, then it is just a placeholder, so nothing
 	   useful, but also not an error */
 	if (!focus_points_in_struct || !focus_points_in_use) {
