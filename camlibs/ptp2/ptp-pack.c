@@ -881,6 +881,11 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 		/* check if we have a secondary list of items, this is for newer Sonys (2024) */
 		if (val < 0x200) {	/* if a secondary list is not provided, this will be the next property code - 0x5XXX or 0xDxxx */
 			if (dpd->FormFlag == PTP_DPFF_Enumeration) {
+				/* free old enum variables */
+				for (i=0;i<dpd->FORM.Enum.NumberOfValues;i++)
+					ptp_free_propvalue (dpd->DataType, dpd->FORM.Enum.SupportedValue+i);
+				free (dpd->FORM.Enum.SupportedValue);
+
 				N = dtoh16o(data, *poffset);
 				dpd->FORM.Enum.SupportedValue = calloc(N,sizeof(dpd->FORM.Enum.SupportedValue[0]));
 				if (!dpd->FORM.Enum.SupportedValue)
