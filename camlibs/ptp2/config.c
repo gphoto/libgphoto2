@@ -4872,6 +4872,32 @@ _get_Sony_FocalPosition(CONFIG_GET_ARGS) {
 }
 
 static int
+_get_Sony_FocalDistanceMeters(CONFIG_GET_ARGS)
+{
+	char text[32];
+	text[0] = 0;
+	uint32_t value = dpd->CurrentValue.u32;
+	// 'value' is in millimeters but only accurate to .1m
+	uint32_t valueWhole = value / 1000;
+	uint32_t valueDecimal = (value % 1000) / 100; // single decimal
+	if (value == 0xffffffff) {
+		snprintf(text, sizeof(text), "Infinity");
+	} else {
+		if (valueDecimal) {
+			snprintf(text, sizeof(text), "%u.%um", valueWhole, valueDecimal);
+		} else {
+			snprintf(text, sizeof(text), "%um", valueWhole);
+		}
+	}
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget, text);
+
+	return GP_OK;
+}
+
+static int
 _get_VideoFormat(CONFIG_GET_ARGS) {
 	int i, valset = 0;
 	char buf[200];
@@ -7372,6 +7398,58 @@ static struct deviceproptableu8 sony_image_stabilization[] = {
 	{ N_("On"),	0x02, 0 },
 };
 GENERIC8TABLE(Sony_ImageStabilization,sony_image_stabilization)
+
+static struct deviceproptableu8 sony_shutter_lag_timing[] = {
+	{ N_("Off"),		0x01, 0 },
+	{ N_("Stable")	,	0x02, 0 },
+	{ N_("Fastest"),	0x03, 0 },
+};
+GENERIC8TABLE(Sony_ShutterLagTiming,sony_shutter_lag_timing)
+
+static struct deviceproptableu8 sony_focus_indication[] = {
+	{ N_("Unlock"),					0x01, 0 },
+	{ N_("Focus Locked"),				0x02, 0 },
+	{ N_("No Focus - Low Contrast"),		0x03, 0 },
+	{ N_("Tracking Acquire"),			0x05, 0 },
+	{ N_("Tracking Focused"),			0x06, 0 },
+	{ N_("Tracking No Focus - Low Contrast"),	0x07, 0 },
+	{ N_("Unpause"),				0x08, 0 },
+	{ N_("Pause"),					0x09, 0 },
+};
+GENERIC8TABLE(Sony_FocusIndication,sony_focus_indication)
+
+static struct deviceproptableu8 sony_shutter_type[] = {
+	{ N_("Auto"),		0x01, 0 },
+	{ N_("Mechanical"),	0x02, 0 },
+	{ N_("Electronic"),	0x03, 0 },
+};
+GENERIC8TABLE(Sony_ShutterType,sony_shutter_type)
+
+static struct deviceproptableu8 sony_silent_mode[] = {
+	{ N_("Off"),	0x01, 0 },
+	{ N_("On"),	0x02, 0 },
+};
+GENERIC8TABLE(Sony_SilentMode,sony_silent_mode)
+
+static struct deviceproptableu8 sony_drange_optimizer[] = {
+	{ N_("Off"),		0x01, 0 },
+	{ N_("DRO"),		0x02, 0 },
+	{ N_("DRO+"),		0x10, 0 },
+	{ N_("DRO Lv1"),	0x11, 0 },
+	{ N_("DRO Lv2"),	0x12, 0 },
+	{ N_("DRO Lv3"),	0x13, 0 },
+	{ N_("DRO Lv4"),	0x14, 0 },
+	{ N_("DRO Lv5"),	0x15, 0 },
+	{ N_("DRO Auto"),	0x1F, 0 },
+	{ N_("HDR Auto"),	0x20, 0 },
+	{ N_("HDR 1.0Ev"),	0x21, 0 },
+	{ N_("HDR 2.0Ev"),	0x22, 0 },
+	{ N_("HDR 3.0Ev"),	0x23, 0 },
+	{ N_("HDR 4.0Ev"),	0x24, 0 },
+	{ N_("HDR 5.0Ev"),	0x25, 0 },
+	{ N_("HDR 6.0Ev"),	0x26, 0 }
+};
+GENERIC8TABLE(Sony_DRangeOptimizer,sony_drange_optimizer)
 
 /* Sony specific, we need to wait for it settle (around 1 second), otherwise we get trouble later on */
 static int
@@ -11434,6 +11512,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Movie Switch"),           "eosmovieswitch",   PTP_DPC_CANON_EOS_FixedMovie,           PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Movie Prohibit Condition"), "movieprohibit",  PTP_DPC_NIKON_MovRecProhibitCondition,  PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_MovieProhibitCondition, _put_None },
 	{ N_("Liveview Prohibit Condition"), "liveviewprohibit", PTP_DPC_NIKON_LiveViewProhibitCondition, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_LiveViewProhibitCondition, _put_None },
+	{ N_("Focus Indication"),      "focusindication",   PTP_DPC_SONY_FocusFound,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_FocusIndication,      _put_None },
 	{ 0,0,0,0,0,0,0 },
 };
 
@@ -11794,6 +11873,11 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Face Detection"),                 "facedetection",            PTP_DPC_NIKON_FaceDetection,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FaceDetection,           _put_Nikon_FaceDetection },
 	{ N_("Movie Servo AF"),                 "movieservoaf",             PTP_DPC_CANON_EOS_MovieServoAF,         PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_Canon_EOS_MovieServoAF,        _put_Canon_EOS_MovieServoAF },
 	{ N_("Image Stabilization"),            "imagestabilization",       PTP_DPC_SONY_ImageStabilization,        PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_ImageStabilization,       _put_Sony_ImageStabilization },
+	{ N_("Shutter Type"),                   "shuttertype",              PTP_DPC_SONY_ShutterType,               PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_ShutterType,              _put_Sony_ShutterType },
+	{ N_("Focal Distance Meters"),          "focaldistancemeters",      PTP_DPC_SONY_FocalDistanceInMeter,      PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_FocalDistanceMeters,      _put_None },
+	{ N_("Silent Mode"),                    "silentmode",               PTP_DPC_SONY_SilentMode,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_SilentMode,               _put_Sony_SilentMode },
+	{ N_("Shutter Lag Timing"),             "shutterlagtiming",         PTP_DPC_SONY_ShutterLagTiming,          PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_ShutterLagTiming,         _put_Sony_ShutterLagTiming },
+	{ N_("DRange Optimizer"),               "dro",                      PTP_DPC_SONY_DRangeOptimize,            PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_DRangeOptimizer,          _put_Sony_DRangeOptimizer },
 
 	{ 0,0,0,0,0,0,0 },
 };
