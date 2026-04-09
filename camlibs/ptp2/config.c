@@ -7431,6 +7431,26 @@ static struct deviceproptableu8 sony_silent_mode[] = {
 };
 GENERIC8TABLE(Sony_SilentMode,sony_silent_mode)
 
+static struct deviceproptableu8 sony_drange_optimizer[] = {
+	{ N_("Off"),		0x01, 0 },
+	{ N_("DRO"),		0x02, 0 },
+	{ N_("DRO+"),		0x10, 0 },
+	{ N_("DRO Lv1"),	0x11, 0 },
+	{ N_("DRO Lv2"),	0x12, 0 },
+	{ N_("DRO Lv3"),	0x13, 0 },
+	{ N_("DRO Lv4"),	0x14, 0 },
+	{ N_("DRO Lv5"),	0x15, 0 },
+	{ N_("DRO Auto"),	0x1F, 0 },
+	{ N_("HDR Auto"),	0x20, 0 },
+	{ N_("HDR 1.0Ev"),	0x21, 0 },
+	{ N_("HDR 2.0Ev"),	0x22, 0 },
+	{ N_("HDR 3.0Ev"),	0x23, 0 },
+	{ N_("HDR 4.0Ev"),	0x24, 0 },
+	{ N_("HDR 5.0Ev"),	0x25, 0 },
+	{ N_("HDR 6.0Ev"),	0x26, 0 }
+};
+GENERIC8TABLE(Sony_DRangeOptimizer,sony_drange_optimizer)
+
 /* Sony specific, we need to wait for it settle (around 1 second), otherwise we get trouble later on */
 static int
 _put_Sony_CompressionSetting(CONFIG_PUT_ARGS) {
@@ -11492,6 +11512,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Movie Switch"),           "eosmovieswitch",   PTP_DPC_CANON_EOS_FixedMovie,           PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Movie Prohibit Condition"), "movieprohibit",  PTP_DPC_NIKON_MovRecProhibitCondition,  PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_MovieProhibitCondition, _put_None },
 	{ N_("Liveview Prohibit Condition"), "liveviewprohibit", PTP_DPC_NIKON_LiveViewProhibitCondition, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_LiveViewProhibitCondition, _put_None },
+	{ N_("Focus Indication"),      "focusindication",   PTP_DPC_SONY_FocusFound,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_FocusIndication,      _put_None },
 	{ 0,0,0,0,0,0,0 },
 };
 
@@ -11856,7 +11877,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Focal Distance Meters"),          "focaldistancemeters",      PTP_DPC_SONY_FocalDistanceInMeter,      PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_FocalDistanceMeters,      _put_None },
 	{ N_("Silent Mode"),                    "silentmode",               PTP_DPC_SONY_SilentMode,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_SilentMode,               _put_Sony_SilentMode },
 	{ N_("Shutter Lag Timing"),             "shutterlagtiming",         PTP_DPC_SONY_ShutterLagTiming,          PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_ShutterLagTiming,         _put_Sony_ShutterLagTiming },
-	{ N_("Focus Indication"),               "focusindication",          PTP_DPC_SONY_FocusFound,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_FocusIndication,          _put_Sony_FocusIndication },
+	{ N_("DRange Optimizer"),               "dro",                      PTP_DPC_SONY_DRangeOptimize,            PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_DRangeOptimizer,          _put_Sony_DRangeOptimizer },
 
 	{ 0,0,0,0,0,0,0 },
 };
