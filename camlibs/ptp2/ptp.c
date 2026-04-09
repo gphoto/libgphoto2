@@ -4258,6 +4258,23 @@ ptp_sony_qx_connect (PTPParams* params, uint32_t p1, uint32_t p2, uint32_t p3)
 	return PTP_RC_OK;
 }
 
+
+/*
+ * Old mode - From Sony docs: 'For Models Earlier than 2020'
+ * - Notch up/down shutterpeed, iso and f-stop
+ * - 16bit capture mode
+ * - New cameras also support this mode (if requested)
+ */
+#define SONY_PROTOCOL_2_00 0x0c8
+
+/*
+ * New mode - From Sony docs: 'For 2020 Models or Later'
+ * - Directly settable shutterpeed, iso and f-stop
+ * - 32bit capture mode
+ * - Many new properties
+ */
+#define SONY_PROTOCOL_3_00 0x12c
+
 /**
  * ptp_sony_get_vendorpropcodes:
  *
@@ -4280,21 +4297,22 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 
 	*props = NULL;
 	*size = 0;
-	if(has_sony_mode_300(params)) {
-		/* New mode - From Sony docs: 'For 2020 Models or Later' */
-		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x12c /* newer mode (3.00) */, 1);
-		params->sony_mode_ver = 3;
-	} else {
-		/* Old mode - From Sony docs: 'For Models Earlier than 2020' */
-		PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, 0x0c8 /* older mode (2.00) */);
-		params->sony_mode_ver = 2;
-	}
+	/* Request new protocol version - cameras that dont support it will return their max supported version */
+	PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, SONY_PROTOCOL_3_00, 1);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize));
 	if (xsize == 0) {
+		params->sony_mode_ver = 2;
 		ptp_debug (params, "No special operations sent?");
 		return PTP_RC_OK;
 	}
-	ptp_debug (params, "camera version is %d", dtoh16a(xdata));
+	uint16_t version = dtoh16a(xdata);
+	if (version == SONY_PROTOCOL_3_00) {
+		params->sony_mode_ver = 3;
+	} else {
+		params->sony_mode_ver = 2;
+	}
+
+	ptp_debug (params, "camera version is %d", version);
 	offset = 2;
 
 	ptp_unpack_uint16_t_array (params, xdata, &offset, xsize, &props1, &psize1);

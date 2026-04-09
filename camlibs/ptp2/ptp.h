@@ -4920,30 +4920,6 @@ uint16_t ptp_olympus_getcameraid (PTPParams*, unsigned char**, unsigned int *);
 uint16_t ptp_olympus_omd_capture (PTPParams* params);
 uint16_t ptp_olympus_omd_move_focus (PTPParams* params, uint32_t direction, uint32_t step_size);
 
-/* Internal function for SONY */
-static inline int
-has_sony_mode_300(PTPParams *params) {
-	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_SONY) return 0;
-	if (!params->deviceinfo.Model) return 0;
-
-	if (!strcmp(params->deviceinfo.Model, "ILCE-7SM3")) return 1;
-	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4")) return 1;
-	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM4A")) return 1;
-	if (!strcmp(params->deviceinfo.Model, "ILCE-7RM5")) return 1;
-	if (!strcmp(params->deviceinfo.Model, "ILCE-9M2")) return 1;
-	if (!strcmp(params->deviceinfo.Model, "ILCE-9M3")) return 1;
-	if (!strcmp(params->deviceinfo.Model, "ILCE-1")) return 1;
-	if (!strcmp(params->deviceinfo.Model, "ILCE-1M2")) return 1;
-	/* https://github.com/gphoto/libgphoto2/issues/937#issuecomment-2014097435 */
-	// TODO: likely the two cameras below are ok now, and can have mode 3 enabled, needs testing.
-	// if (!strcmp(params->deviceinfo.Model, "ILCE-7C")) return 1;
-	// if (!strcmp(params->deviceinfo.Model, "ILCE-7M4")) return 1;
-	if (!strcmp(params->deviceinfo.Model, "ILX-LR1")) return 1;
-	if (!strcmp(params->deviceinfo.Model, "ZV-E1")) return 1;
-	// TODO add other mode 300 camera models
-	return 0;
-}
-
 
 /* Non PTP protocol functions */
 static inline int
