@@ -839,8 +839,9 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 	   code or the Data Type is a string (with two empty strings as
 	   values). In both cases Form Flag should be set to 0x00 and FORM is
 	   not present. */
-
 	if (*poffset==PTP_dpd_Sony_DefaultValue)
+		return 1;
+	if (*poffset + sizeof(uint8_t) > dpdlen)
 		return 1;
 
 	dpd->FormFlag = dtoh8o(data, *poffset);
