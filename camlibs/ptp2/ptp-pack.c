@@ -857,6 +857,7 @@ ptp_unpack_Sony_DPD (PTPParams *params, const unsigned char* data, PTPDeviceProp
 		break;
 	case PTP_DPFF_Enumeration: {
 #define N	dpd->FORM.Enum.NumberOfValues
+		if (*poffset + sizeof(uint16_t) > dpdlen) goto outofmemory;
 		N = dtoh16o(data, *poffset);
 		dpd->FORM.Enum.SupportedValue = calloc(N,sizeof(dpd->FORM.Enum.SupportedValue[0]));
 		if (!dpd->FORM.Enum.SupportedValue)
