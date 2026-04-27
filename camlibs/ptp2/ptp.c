@@ -5691,7 +5691,7 @@ ptp_chdk_parse_live_data (PTPParams* params, unsigned char *data, unsigned int d
 	if (data_size < (header->vp_desc_start + sizeof (*vpd)) || data_size < (header->bm_desc_start + sizeof (*bmd)))
 		return PTP_ERROR_IO;
 	ptp_unpack_chdk_lv_framebuffer_desc (params, data+header->vp_desc_start, vpd);
-	ptp_unpack_chdk_lv_framebuffer_desc (params, data+header->vp_desc_start, bmd);
+	ptp_unpack_chdk_lv_framebuffer_desc (params, data+header->bm_desc_start, bmd);
 
 	/* The buffer_width field corresponds to the number of Y values in a row,
 	 * so the actual number of bytes would be either one and a half times
