@@ -1335,7 +1335,7 @@ chdk_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *contex
 
 	memset (&header, 0, sizeof (header));
 	memset (&vpd, 0, sizeof (vpd));
-	memset (&vpd, 0, sizeof (bmd));
+	memset (&bmd, 0, sizeof (bmd));
 
 	CR (camera_prepare_chdk_capture (camera, context));
 	C_PTP_REP_MSG (ptp_chdk_get_live_data (params, flags, &data, &size),
