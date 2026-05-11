@@ -11528,6 +11528,7 @@ static struct submenu camera_settings_menu[] = {
 	{ N_("Device Name"),            "devicename",           PTP_DPC_FUJI_DeviceName,            PTP_VENDOR_FUJI,    PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("WLAN GUID"),              "guid",                 PTP_DPC_NIKON_GUID,                 PTP_VENDOR_NIKON,   PTP_DTC_STR,    _get_STR,                       _put_STR },
 	{ N_("Enable Image Comment"),   "imagecommentenable",   PTP_DPC_NIKON_ImageCommentEnable,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
+	{ N_("Info Display Error Status"),"infodisperrstatus",  PTP_DPC_NIKON_InfoDispErrStatus,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("LCD Off Time"),           "lcdofftime",           PTP_DPC_NIKON_MonitorOff,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_LCDOffTime,          _put_Nikon_LCDOffTime },
 	{ N_("Recording Media"),        "recordingmedia",       PTP_DPC_NIKON_RecordingMedia,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_RecordingMedia,      _put_Nikon_RecordingMedia },
 	{ N_("Quick Review Time"),      "reviewtime",           PTP_DPC_CANON_EOS_QuickReviewTime,  PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_QuickReviewTime, _put_Canon_EOS_QuickReviewTime },
