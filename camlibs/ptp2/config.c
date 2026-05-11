@@ -1210,6 +1210,19 @@ _put_INT(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+static int
+_get_Nikon_FlashReady(CONFIG_GET_ARGS) {
+	if (dpd->FormFlag != PTP_DPFF_Range)
+		return GP_ERROR_NOT_SUPPORTED;
+	if (dpd->DataType != PTP_DTC_UINT8)
+		return GP_ERROR_NOT_SUPPORTED;
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name ( *widget, menu->name);
+	gp_widget_add_choice (*widget,_("Not ready"));
+	gp_widget_add_choice (*widget,_("Ready"));
+	gp_widget_set_value ( *widget, (dpd->CurrentValue.u8?_("Ready"):_("Not ready")));
+	return GP_OK;
+}
 
 static int
 _get_Nikon_OnOff_UINT8(CONFIG_GET_ARGS) {
@@ -11474,6 +11487,7 @@ static struct submenu camera_status_menu[] = {
 	{ N_("DPOF Version"),           "dpofversion",      PTP_DPC_CANON_EOS_DPOFVersion,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_INT,                       _put_None },
 	{ N_("AC Power"),               "acpower",          PTP_DPC_NIKON_ACPower,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
 	{ N_("External Flash"),         "externalflash",    PTP_DPC_NIKON_ExternalFlashAttached,    PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_None },
+	{ N_("External Flash Ready"),   "externalflashready",PTP_DPC_NIKON_ExternalFlashStatus,    PTP_VENDOR_NIKON,    PTP_DTC_UINT8,  _get_Nikon_FlashReady,          _put_None },
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_BatteryLevel,                   0,                  PTP_DTC_UINT8,  _get_BatteryLevel,              _put_None },
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_CANON_EOS_BatteryPower,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_BatteryLevel,    _put_None },
 	{ N_("Battery Level"),          "batterylevel",     PTP_DPC_SONY_BatteryLevel,              PTP_VENDOR_SONY,    PTP_DTC_INT8,   _get_SONY_BatteryLevel,         _put_None },
