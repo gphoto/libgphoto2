@@ -653,6 +653,8 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_NIKON_ChangeApplicationMode	0x9435
 #define PTP_OC_NIKON_ResetMenu			0x9436
 
+#define PTP_OC_NIKON_GetVendorCodes		0x9439
+
 
 /* From Nikon V1 Trace */
 #define PTP_OC_NIKON_GetDevicePropEx		0x9504	/* gets device prop data */
@@ -4605,6 +4607,7 @@ uint16_t ptp_canon_eos_getdevicepropdesc (PTPParams* params, uint16_t propcode,
 uint16_t ptp_canon_eos_setdevicepropvalue (PTPParams* params, uint16_t propcode,
 				PTPPropValue* value, uint16_t datatype);
 uint16_t ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int *size);
+uint16_t ptp_nikon_get_vendorcodes (PTPParams* params, uint32_t **props, unsigned int *size);
 uint16_t ptp_nikon_curve_download (PTPParams* params,
 				unsigned char **data, unsigned int *size);
 uint16_t ptp_nikon_getlargethumb (PTPParams *params, uint32_t handle,

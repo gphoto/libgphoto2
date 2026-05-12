@@ -1,7 +1,7 @@
 /* library.c
  *
  * Copyright (C) 2001-2005 Mariusz Woloszyn <emsi@ipartners.pl>
- * Copyright (C) 2003-2024 Marcus Meissner <marcus@jet.franken.de>
+ * Copyright (C) 2003-2026 Marcus Meissner <marcus@jet.franken.de>
  * Copyright (C) 2005 Hubert Figuiere <hfiguiere@teaser.fr>
  * Copyright (C) 2009-2024 Axel Waggershauser <awagger@web.de>
  *
@@ -651,6 +651,24 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 				free (xprops);
 			}
 		}
+
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_NIKON_GetVendorCodes)) {
+			uint32_t  	*xprops;
+			unsigned int	xsize;
+
+			if (PTP_RC_OK == LOG_ON_PTP_E (ptp_nikon_get_vendorcodes (&camera->pl->params, &xprops, &xsize))) {
+				di->DeviceProps = realloc(di->DeviceProps,sizeof(di->DeviceProps[0])*(di->DeviceProps_len + xsize));
+				if (!di->DeviceProps) {
+					free (xprops);
+					C_MEM (di->DeviceProps);
+				}
+				for (i=0;i<xsize;i++)
+					di->DeviceProps[i+di->DeviceProps_len] = xprops[i];
+				di->DeviceProps_len += xsize;
+				free (xprops);
+			}
+		}
+
 
 		/* For nikon 1 j5, they have blanked this space */
 		if (camera->pl->params.device_flags & PTP_NIKON_1) {

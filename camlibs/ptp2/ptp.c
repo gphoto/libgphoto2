@@ -4816,6 +4816,35 @@ ptp_nikon_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int
 	return PTP_RC_OK;
 }
 
+/**
+ * ptp_nikon_get_vendorcodes:
+ *
+ * This command downloads the vendor specific property codes.
+ *
+ * params:	PTPParams*
+ *
+ * Return values: Some PTP_RC_* code.
+ *      unsigned char	**data - pointer to data pointer
+ *      uint32_t 	**props - 32bit properties array
+ *      unsigned int	*size - size of data returned in elements
+ *
+ **/
+uint16_t
+ptp_nikon_get_vendorcodes (PTPParams* params, uint32_t **props, unsigned int *size)
+{
+	PTPContainer	ptp;
+	unsigned char	*data = NULL;
+	unsigned int	xsize = 0, offset = 0;
+
+	*props = NULL;
+	*size = 0;
+	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetVendorCodes);
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &xsize));
+	ptp_unpack_uint32_t_array(params, data, &offset, xsize, props, size);
+	free (data);
+	return PTP_RC_OK;
+}
+
 uint16_t
 ptp_nikon_getfileinfoinblock ( PTPParams* params,
 	uint32_t p1, uint32_t p2, uint32_t p3,
