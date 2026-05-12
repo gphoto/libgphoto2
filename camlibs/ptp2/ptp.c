@@ -4838,7 +4838,7 @@ ptp_nikon_get_vendorcodes (PTPParams* params, uint32_t **props, unsigned int *si
 
 	*props = NULL;
 	*size = 0;
-	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetVendorCodes);
+	PTP_CNT_INIT(ptp, PTP_OC_NIKON_GetVendorCodes, 0xd);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &xsize));
 	ptp_unpack_uint32_t_array(params, data, &offset, xsize, props, size);
 	free (data);
