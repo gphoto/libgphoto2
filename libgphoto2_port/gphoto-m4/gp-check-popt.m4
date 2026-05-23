@@ -231,8 +231,8 @@ AC_MSG_RESULT([${have_popt}])
 GP_CONFIG_MSG([use popt library], [${have_popt}])
 if test "$have_popt" = "yes"; then
 	AC_DEFINE([HAVE_POPT],[1],[whether the popt library is available])
-	GP_CONFIG_MSG([popt libs],[${POPT_LIBS}])
-	GP_CONFIG_MSG([popt cppflags],[${POPT_CFLAGS}])
+	GP_CONFIG_MSG([popt libs],     [${POPT_LIBS}])
+	GP_CONFIG_MSG([popt cppflags], [${POPT_CFLAGS}])
 fi
 AM_CONDITIONAL([HAVE_POPT],[test "$have_popt" = "yes"])
 ])dnl
