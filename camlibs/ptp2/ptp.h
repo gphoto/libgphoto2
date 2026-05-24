@@ -2609,6 +2609,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_MovieAfSpeedWhenToApply		0xD17D
 #define PTP_DPC_NIKON_MovieAfTrackingSensitivity	0xD17E
 #define PTP_DPC_NIKON_CSMMenu				0xD180
+#define PTP_DPC_NIKON_FlushBurstPrioritize		0xD180 /* z */
 #define PTP_DPC_NIKON_WarningDisplay			0xD181
 #define PTP_DPC_NIKON_BatteryCellKind			0xD182
 #define PTP_DPC_NIKON_ISOAutoHiLimit			0xD183
@@ -2688,6 +2689,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_MirrorUpStatus			0xD1F6
 #define PTP_DPC_NIKON_MirrorUpReleaseShootingCount	0xD1F7
 #define PTP_DPC_NIKON_MovieAfAreaMode			0xD1F8
+#define PTP_DPC_NIKON_MovieFocusMeteringMode		0xD1F8 /* z */
 #define PTP_DPC_NIKON_MovieVibrationReduction		0xD1F9
 #define PTP_DPC_NIKON_MovieFocusMode			0xD1FA
 #define PTP_DPC_NIKON_RecordTimeCodes			0xD1FB
@@ -2696,7 +2698,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_DropFrame				0xD1FE
 #define PTP_DPC_NIKON_ActivePicCtrlItem			0xD200
 #define PTP_DPC_NIKON_ChangePicCtrlItem			0xD201
-#define PTP_DPC_NIKON_ElectronicFrontCurtainShutter	0xD20D
+#define PTP_DPC_NIKON_ElectronicFrontCurtainShutter	0xD20D /* shuttertype on z */
 #define PTP_DPC_NIKON_MovieResetShootingMenu		0xD20E
 #define PTP_DPC_NIKON_MovieCaptureAreaCrop		0xD20F
 #define PTP_DPC_NIKON_MovieAutoDxCrop			0xD210
@@ -2833,7 +2835,10 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_MovieHighFrequencyFlickerReduction	0x1D032
 #define PTP_DPC_NIKON_HiResZoom				0x1D033
 #define PTP_DPC_NIKON_ViewModeShowEffectsOfSettings	0x1D036
+#define PTP_DPC_NIKON_LinkVRToFocusPoint		0x1D03C
 #define PTP_DPC_NIKON_FlickerReductionShutterSpeed	0x1D03D
+#define PTP_DPC_NIKON_MFSubjectDetectionArea		0x1D03E
+#define PTP_DPC_NIKON_MovieMFSubjectDetectionArea	0x1D03F
 #define PTP_DPC_NIKON_EnableDXImageSize			0x1D041
 #define PTP_DPC_NIKON_ImageSizeDX			0x1D042
 #define PTP_DPC_NIKON_PixelShiftShootingMode		0x1D045
@@ -2844,7 +2849,12 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_NIKON_FmmManualSetting2			0x1D04A
 #define PTP_DPC_NIKON_F0ManualSetting2			0x1D04B
 #define PTP_DPC_NIKON_ManualSettingLensName		0x1D04C
+#define PTP_DPC_NIKON_PixelShiftShootingNumberOfShots	0x1D04E
+#define PTP_DPC_NIKON_PixelShiftShootingDelay		0x1D04F
 #define PTP_DPC_NIKON_PixelShiftShootingInterval	0x1D050
+#define PTP_DPC_NIKON_PixelShiftShootingStatus		0x1D051
+#define PTP_DPC_NIKON_ProductReviewMode			0x1D05F
+#define PTP_DPC_NIKON_VideoSelfTimer			0x1D060
 
 /* Fuji specific */
 
