@@ -906,6 +906,10 @@
   { "A&K", 0x4102, "SR35", 0x1247,
     DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
     DEVICE_FLAG_OGG_IS_UNKNOWN },
+  /* https://github.com/libmtp/libmtp/issues/379 */
+  { "A&K", 0x4102, "SP4000", 0x1262,
+    DEVICE_FLAG_BROKEN_MTPGETOBJPROPLIST | DEVICE_FLAG_NO_ZERO_READS |
+    DEVICE_FLAG_OGG_IS_UNKNOWN },
   // Reported by Scott Call
   // Assume this actually supports OGG though it reports it doesn't.
   { "iRiver", 0x4102, "H10 20GB", 0x2101,
@@ -3256,6 +3260,18 @@
   /* https://github.com/libmtp/libmtp/issues/228 */
   { "Lenovo", 0x17ef, "Tab P12", 0x7e16,
       DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/M0Rf30/android-udev-rules/pull/360 */
+  { "Lenovo", 0x17ef, "Legion Tab Y700 (ADB+MTP)", 0x7f41,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/M0Rf30/android-udev-rules/pull/360 */
+  { "Lenovo", 0x17ef, "Legion Tab Y700 (ADB+PTP)", 0x7f45,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/M0Rf30/android-udev-rules/pull/360 */
+  { "Lenovo", 0x17ef, "Legion Tab Y700 (MTP)", 0x7f40,
+      DEVICE_FLAGS_ANDROID_BUGS },
+  /* https://github.com/M0Rf30/android-udev-rules/pull/360 */
+  { "Lenovo", 0x17ef, "Legion Tab Y700 (PTP)", 0x7f44,
+      DEVICE_FLAGS_ANDROID_BUGS },
 
   /*
    * Huawei
@@ -4149,6 +4165,8 @@
   { "Garmin", 0x091e, "Fenix 7s Pro Sapphire Solar", 0x5116, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/194 */
   { "Garmin", 0x091e, "Fenix 7 Pro Solar", 0x5117, DEVICE_FLAGS_ANDROID_BUGS },
+  /*  https://github.com/libmtp/libmtp/issues/386 */
+  { "Garmin", 0x091e, "Edge 1050", 0x5158, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/300 */
   { "Garmin", 0x091e, "Fenix8", 0x51b6, DEVICE_FLAGS_ANDROID_BUGS },
   /* https://github.com/libmtp/libmtp/issues/251 */
