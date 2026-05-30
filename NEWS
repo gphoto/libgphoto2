@@ -3,9 +3,50 @@ libgphoto2 2.5.33.1 development
 ptp2:
 * new Canon EOS SDRAM capture method added
 * new Nikon Z series property code list method added
+* Sony generation 2 vs 3 handling enhanced
+* Security issues fixed:
+  * CVE-2026-40333: information disclosure and denial of service via
+    unbounded reads in ptp unpack EOS events
+  * CVE-2026-40334: information disclosure and denial of service via
+    missing null terminator ptp_unpack_Canon_FE
+  * CVE-2026-40335: information disclosure via out-of-bounds read
+    in ptp_unpack_DPV
+  * CVE-2026-40336: memory leak in ptp_unpack_Sony_DPD() can lead to
+    denial of service
+  * CVE-2026-40338: information disclosure and denial of service
+    via out-of-bounds read in the PTP_DPFF_Enumeration case of
+    ptp_unpack_Sony_DPD()
+  * CVE-2026-40339: information disclosure via out-of-bounds read in
+    ptp_unpack_Sony_DPD()
+  * CVE-2026-40340: information disclosure and denial of service via
+    out-of-bounds read in ptp_unpack_OI()
+  * CVE-2026-40341: denial of service via out-of-bounds read from
+    untrusted USB devices in ptp_unpack_EOS_FocusInfoEx
+* chdk: several bugfixes for liveview
+* configs:
+  * nikon: flashready, infodisperrstatus added
+  * sony: exposureprogram mode3, focusdistancemeters, shutter lag timing, focus indication, shutter type, drange optimizer added, silent mode
+  * canon eos: remoterelease config values changed
+  * panasonic: bulb added
+* leica: detect not yet listed leicas better in generic mode
+* added ids:
+  * Sony: ILCE-1M2
+  * Nikon: CoolPix P1100, S3500, Z50_2, 
+  * Canon: EOS R1, R6 Mark III
+  * Fuji Finepix S4200, X-E5, 
+  * Leica SL3
+
+jd11:
+* allow TIFF / DNG export
+* needs libtiff library to work
+
+all:
+* some bugfixes
+* replaced various strcpy with strncpy
 
 translations:
 * updated gregorian, spanish
+* added arabic
 
 ------------------------------------------------------------------------------
 libgphoto2 2.5.33 release
