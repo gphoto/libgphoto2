@@ -2791,6 +2791,8 @@ static struct {
 	{"Ricoh:GR III (PTP mode)",        	0x25fb, 0x210f, 0},
 	/* https://github.com/libmtp/libmtp/issues/148 */
 	{"Ricoh:GR IIIx (PTP mode)",        	0x25fb, 0x2115, 0},
+	/* https://github.com/libmtp/libmtp/issues/392 */
+	{ "Ricoh:GR IV (PTP mode)", 		0x25fb, 0x2123, 0},
 
 	/* Pentax cameras */
 	{"Pentax:Optio 43WR",                   0x0a17, 0x000d, 0},
