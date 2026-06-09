@@ -8059,6 +8059,38 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 #undef APPEND_TXT
 }
 
+/*
+ * Apple iOS devices (via PTP) can return root-level association objects
+ * (month folders) from GetObjectHandles, but GetObjectInfo reports them
+ * with ParentObject = 0x00000001 instead of the expected root 0x00000000.
+ * Handle 0x00000001 is not present in the object cache, so the standard
+ * parent-child filter rejects all root-level entries, making the store
+ * appear empty.
+ *
+ * This is similar to the existing workaround for ParentObject == StorageID,
+ * but covers the case where Apple returns a different bogus parent value.
+ *
+ * Returns non-zero if the object should be treated as a root child despite
+ * its non-zero ParentObject.
+ */
+static int
+apple_orphan_root_association(PTPParams *params, uint32_t parent, PTPObject *ob)
+{
+	PTPObject	*parentob = NULL;
+
+	if (parent != PTP_HANDLER_ROOT)
+		return 0;
+	if (!params->deviceinfo.Manufacturer ||
+	    strcmp(params->deviceinfo.Manufacturer, "Apple Inc."))
+		return 0;
+	if (ob->oi.ObjectFormat != PTP_OFC_Association)
+		return 0;
+	if (!ob->oi.ParentObject || ob->oi.ParentObject == ob->oi.StorageID)
+		return 0;
+
+	return ptp_find_object_in_cache(params, ob->oi.ParentObject, &parentob) != PTP_RC_OK;
+}
+
 static uint32_t
 find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t handle, PTPObject **retob)
 {
@@ -8077,7 +8109,8 @@ find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t hand
 		PTPObject *ob;
 		if (PTP_RC_OK != ptp_object_want (params, *poid, PTPOBJECT_PARENTOBJECT_LOADED, &ob)) // refresh
 			continue; /* object might have been deleted but ObjectRemoved event not handled, yet */
-		if (ob->oi.ParentObject != handle)
+		if (ob->oi.ParentObject != handle &&
+		    !apple_orphan_root_association(params, handle, ob))
 			continue;
 
 		if (PTP_RC_OK != ptp_object_want (params, *poid, PTPOBJECT_OBJECTINFO_LOADED, &ob)) // refresh
@@ -8163,7 +8196,8 @@ generic_list_func (PTPParams *params, const char *folder, int is_directory, Came
 
 		/* If a filtered ptp_getobjecthandles in ptp_list_folder is not supported by the device,
 		 * we might end up having handles for all objects in 'handles', therefore we check the parent */
-		if ((ob->oi.ParentObject != parent))
+		if ((ob->oi.ParentObject != parent) &&
+		    !apple_orphan_root_association(params, parent, ob))
 			continue;
 
 		if (!(ob->flags & PTPOBJECT_OBJECTINFO_LOADED))

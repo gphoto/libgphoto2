@@ -3283,6 +3283,33 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle, PTPOb
 	return PTP_RC_OK;
 }
 
+/*
+ * Apple iOS devices can report root-level association objects with a
+ * bogus ParentObject (e.g. 0x00000001) that is neither root (0x00000000)
+ * nor the StorageID. These objects are returned by GetObjectHandles but
+ * would be rejected by the standard root-folder cache filter because
+ * their ParentObject does not match 0.
+ *
+ * Returns non-zero if the object should be included as a root child.
+ */
+static int
+ptp_apple_orphan_root_association (PTPParams *params, uint32_t storage, PTPObject *ob)
+{
+	PTPObject	*parentob = NULL;
+
+	if (!params->deviceinfo.Manufacturer ||
+	    strcmp (params->deviceinfo.Manufacturer, "Apple Inc."))
+		return 0;
+	if (ob->oi.StorageID != storage)
+		return 0;
+	if (ob->oi.ObjectFormat != PTP_OFC_Association)
+		return 0;
+	if (!ob->oi.ParentObject || ob->oi.ParentObject == ob->oi.StorageID)
+		return 0;
+
+	return ptp_find_object_in_cache (params, ob->oi.ParentObject, &parentob) != PTP_RC_OK;
+}
+
 uint16_t
 ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle, PTPObjectHandles *children) {
 	unsigned int		changed, last;
@@ -3304,7 +3331,9 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle, PTPObject
 	 * assume the entries in the root folder can never change. */
 	if (!handle && children && params->objects.len != 0) {
 		for_each (PTPObject*, pob, params->objects)
-			if (pob->oi.ParentObject == 0 && pob->oi.StorageID == storage)
+			if (pob->oi.StorageID == storage &&
+			    (pob->oi.ParentObject == 0 ||
+			     ptp_apple_orphan_root_association (params, storage, pob)))
 				array_push_back(children, pob->oid);
 		return PTP_RC_OK;
 	}
