@@ -35,7 +35,7 @@ typedef enum {
 
 typedef struct _tagPacket {
 	int valid;
-	int length;
+	unsigned int length;
 	unsigned char buffer[16384];
 	unsigned char checksum;
 } Packet;
