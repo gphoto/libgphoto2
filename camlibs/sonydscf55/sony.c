@@ -302,7 +302,7 @@ static int sony_packet_read(Camera * camera, Packet * pack)
 static int
 sony_packet_write(Camera * camera, Packet * p)
 {
-	unsigned short int count;
+	unsigned int count;
 	int rc;
 
 	GP_DEBUG(
