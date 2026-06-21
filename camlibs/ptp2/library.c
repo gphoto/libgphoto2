@@ -8181,7 +8181,9 @@ generic_list_func (PTPParams *params, const char *folder, int is_directory, Came
 
 		/* GP_LOG_D ("adding 0x%08x to folder", ob->oid); */
 
-#if 0 /* TODO: Axel disabled this for its performance panalty and questionable value. */
+		/* TODO: Axel disabled this for its performance panalty and questionable value. */
+		/* Marcus: Needed for Iphones still, as they duplicate filenames. See https://github.com/gphoto/libgphoto2/issues/1238 */
+
 		/* HP Photosmart 850, the camera tends to duplicate filename in the list.
 		* Original patch by clement.rezvoy@gmail.com */
 		/* search backwards, likely gets hits faster. */
@@ -8192,7 +8194,6 @@ generic_list_func (PTPParams *params, const char *folder, int is_directory, Came
 				ob->oi.Filename, folder);
 			continue;
 		}
-#endif
 		CR(gp_list_append (list, ob->oi.Filename, NULL));
 	}
 
