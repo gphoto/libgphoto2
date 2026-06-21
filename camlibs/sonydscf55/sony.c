@@ -173,7 +173,7 @@ sony_read_byte(Camera * camera, unsigned char *b)
 static unsigned char
 sony_packet_checksum(Packet * p)
 {
-	unsigned short int o = 0;
+	unsigned int o = 0;
 	unsigned long int sum = 0;
 
 	sum = 0;
