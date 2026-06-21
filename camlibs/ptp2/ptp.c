@@ -3436,7 +3436,10 @@ fallback:
 			ob->oi.Handle = *phandle;
 			ob->flags = 0;
 			/* root directory list files might return all files, so avoid tagging it */
-			if (handle != PTP_HANDLER_SPECIAL && handle) {
+			/* except on Apple, as they have parentobject of 0x1, see https://github.com/gphoto/libgphoto2/issues/1258  */
+			if (	((handle != PTP_HANDLER_SPECIAL) && handle) ||
+				(params->deviceinfo.Manufacturer && !strcmp (params->deviceinfo.Manufacturer, "Apple Inc."))
+			) {
 				ptp_debug (params, "  parent 0x%08x", handle);
 				if (*phandle == handle) { /* EOS bug where handle == parent(handle) */
 					ob->oi.ParentObject = 0;
