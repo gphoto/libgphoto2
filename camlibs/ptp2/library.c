@@ -7982,6 +7982,8 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	 */
 	C_PTP_REP (ptp_getdeviceinfo (params, &pdi));
 	CR (fixup_cached_deviceinfo (camera, &pdi));
+	/* Property name lookup uses params->deviceinfo.VendorExtensionID. */
+	params->deviceinfo.VendorExtensionID = pdi.VendorExtensionID;
 	for (i=0;i<pdi.DeviceProps_len;i++) {
 		PTPDevicePropDesc dpd;
 		unsigned int dpc = pdi.DeviceProps[i];
