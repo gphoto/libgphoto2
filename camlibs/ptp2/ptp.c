@@ -1304,8 +1304,13 @@ ptp_olympus_init_pc_mode (PTPParams* params)
 
 	ptp_debug (params,"PTP: (Olympus Init) switching to PC mode...");
 
+	params->olympus_camera_control_mode = 2;
+	ret = ptp_getdevicepropvalue (params, PTP_DPC_OLYMPUS_CameraControlMode, &propval, PTP_DTC_UINT16);
+	if (ret == PTP_RC_OK)
+		params->olympus_camera_control_mode = propval.u16;
+
 	propval.u16 = 1;
-	ret = ptp_setdevicepropvalue (params, 0xD052, &propval, PTP_DTC_UINT16);
+	ret = ptp_setdevicepropvalue (params, PTP_DPC_OLYMPUS_CameraControlMode, &propval, PTP_DTC_UINT16);
 	usleep(100000);
 
 	for(i = 0; i < 2; i++) {
@@ -1336,6 +1341,33 @@ ptp_olympus_init_pc_mode (PTPParams* params)
 	//gp_port_set_timeout (camera->port, timeout);
 	//ret=ptp_transaction(params, &ptp, PTP_DP_RESPONSEONLY, size, &data, NULL);
 	//free(data);
+	return ret;
+}
+
+uint16_t
+ptp_olympus_exit_pc_mode (PTPParams* params)
+{
+	uint16_t		ret;
+	PTPPropValue		propval;
+	PTPContainer		event;
+	int			i;
+
+	ptp_debug (params,"PTP: (Olympus Exit) leaving PC mode...");
+
+	propval.u16 = params->olympus_camera_control_mode;
+	if (!propval.u16)
+		propval.u16 = 2;
+
+	ret = ptp_setdevicepropvalue (params, PTP_DPC_OLYMPUS_CameraControlMode, &propval, PTP_DTC_UINT16);
+	usleep(100000);
+
+	for (i = 0; i < 2; i++) {
+		ptp_check_event (params);
+		if (ptp_get_one_event(params, &event))
+			break;
+		usleep(100000);
+	}
+
 	return ret;
 }
 
