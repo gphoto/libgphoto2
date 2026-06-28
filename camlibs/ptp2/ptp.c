@@ -7676,6 +7676,396 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 	struct {
 		uint16_t dpc;
 		const char *txt;
+} ptp_device_properties_Olympus[] = {
+		{PTP_DPC_OLYMPUS_PropertyD001, N_("Property D001")},	/* 0xd001 */
+		{PTP_DPC_OLYMPUS_Aperture, N_("Aperture")},	/* 0xd002 */
+		{PTP_DPC_OLYMPUS_FocusMode, N_("Focus Mode")},	/* 0xd003 */
+		{PTP_DPC_OLYMPUS_ExposureMeteringMode, N_("Focus Metering Mode")},	/* 0xd004 */
+		{PTP_DPC_OLYMPUS_FlashMode, N_("Flash Mode")},	/* 0xd005 */
+		{PTP_DPC_OLYMPUS_LensType, N_("Lens Type")},	/* 0xd006 */
+		{PTP_DPC_OLYMPUS_ISO, N_("ISO Speed")},	/* 0xd007 */
+		{PTP_DPC_OLYMPUS_ExposureCompensation, N_("Exposure Compensation")},	/* 0xd008 */
+		{PTP_DPC_OLYMPUS_OMD_DriveMode, N_("Drive Mode")},	/* 0xd009 */
+		{PTP_DPC_OLYMPUS_ExposureProgramMode, N_("Exposure Program Mode")},	/* 0xd00c */
+		{PTP_DPC_OLYMPUS_ImageFormat, N_("Image Format")},	/* 0xd00d */
+		{PTP_DPC_OLYMPUS_ColorTemperature, N_("Color Temperature")},	/* 0xd00e */
+		{PTP_DPC_OLYMPUS_FlashExposureCompensation, N_("Flash Exposure Compensation")},	/* 0xd00f */
+		{PTP_DPC_OLYMPUS_WhiteBalancePreset, N_("White Balance Preset")},	/* 0xd010 */
+		{PTP_DPC_OLYMPUS_NoiseFilter, N_("Noise Filter")},	/* 0xd011 */
+		{PTP_DPC_OLYMPUS_AFReleasePriority, N_("AF Release Priority")},	/* 0xd013 */
+		{PTP_DPC_OLYMPUS_ShutterReleasePriority, N_("Shutter Release Priority")},	/* 0xd014 */
+		{PTP_DPC_OLYMPUS_ISOAutoMode, N_("ISO Auto Mode")},	/* 0xd018 */
+		{PTP_DPC_OLYMPUS_FaceDetection, N_("Face Detection")},	/* 0xd01a */
+		{PTP_DPC_OLYMPUS_AspectRatio, N_("Aspect Ratio")},	/* 0xd01b */
+		{PTP_DPC_OLYMPUS_Shutterspeed, N_("Shutter Speed")},	/* 0xd01c */
+		{PTP_DPC_OLYMPUS_FlashSyncMode, N_("Flash Sync Mode")},	/* 0xd01d */
+		{PTP_DPC_OLYMPUS_WhiteBalance, N_("White Balance")},	/* 0xd01e */
+		{PTP_DPC_OLYMPUS_BracketSettingA, N_("Bracket Setting A")},	/* 0xd01f */
+		{PTP_DPC_OLYMPUS_BracketSettingB, N_("Bracket Setting B")},	/* 0xd020 */
+		{PTP_DPC_OLYMPUS_BracketSettingC, N_("Bracket Setting C")},	/* 0xd021 */
+		{PTP_DPC_OLYMPUS_BracketSettingD, N_("Bracket Setting D")},	/* 0xd022 */
+		{PTP_DPC_OLYMPUS_BracketSettingE, N_("Bracket Setting E")},	/* 0xd023 */
+		{PTP_DPC_OLYMPUS_BracketSettingF, N_("Bracket Setting F")},	/* 0xd024 */
+		{PTP_DPC_OLYMPUS_BracketExposureCompensationA, N_("Bracket Exposure Compensation A")},	/* 0xd025 */
+		{PTP_DPC_OLYMPUS_BracketExposureCompensationB, N_("Bracket Exposure Compensation B")},	/* 0xd026 */
+		{PTP_DPC_OLYMPUS_BracketExposureCompensationC, N_("Bracket Exposure Compensation C")},	/* 0xd027 */
+		{PTP_DPC_OLYMPUS_BracketExposureCompensationD, N_("Bracket Exposure Compensation D")},	/* 0xd028 */
+		{PTP_DPC_OLYMPUS_BracketShutterSpeed1, N_("Bracket Shutter Speed 1")},	/* 0xd029 */
+		{PTP_DPC_OLYMPUS_BracketShutterSpeed2, N_("Bracket Shutter Speed 2")},	/* 0xd02a */
+		{PTP_DPC_OLYMPUS_BracketShutterSpeed3, N_("Bracket Shutter Speed 3")},	/* 0xd02b */
+		{PTP_DPC_OLYMPUS_BracketShutterSpeed4, N_("Bracket Shutter Speed 4")},	/* 0xd02c */
+		{PTP_DPC_OLYMPUS_BracketAperture1, N_("Bracket Aperture 1")},	/* 0xd02d */
+		{PTP_DPC_OLYMPUS_BracketAperture2, N_("Bracket Aperture 2")},	/* 0xd02e */
+		{PTP_DPC_OLYMPUS_BracketAperture3, N_("Bracket Aperture 3")},	/* 0xd02f */
+		{PTP_DPC_OLYMPUS_BracketAperture4, N_("Bracket Aperture 4")},	/* 0xd030 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation01, N_("My Mode Exposure Compensation 01")},	/* 0xd031 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation02, N_("My Mode Exposure Compensation 02")},	/* 0xd032 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation03, N_("My Mode Exposure Compensation 03")},	/* 0xd033 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation04, N_("My Mode Exposure Compensation 04")},	/* 0xd034 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation05, N_("My Mode Exposure Compensation 05")},	/* 0xd035 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation06, N_("My Mode Exposure Compensation 06")},	/* 0xd036 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation07, N_("My Mode Exposure Compensation 07")},	/* 0xd037 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation08, N_("My Mode Exposure Compensation 08")},	/* 0xd038 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation09, N_("My Mode Exposure Compensation 09")},	/* 0xd039 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation10, N_("My Mode Exposure Compensation 10")},	/* 0xd03a */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation11, N_("My Mode Exposure Compensation 11")},	/* 0xd03b */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation12, N_("My Mode Exposure Compensation 12")},	/* 0xd03c */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation13, N_("My Mode Exposure Compensation 13")},	/* 0xd03d */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation14, N_("My Mode Exposure Compensation 14")},	/* 0xd03e */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation15, N_("My Mode Exposure Compensation 15")},	/* 0xd03f */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation16, N_("My Mode Exposure Compensation 16")},	/* 0xd040 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation17, N_("My Mode Exposure Compensation 17")},	/* 0xd041 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation18, N_("My Mode Exposure Compensation 18")},	/* 0xd042 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation19, N_("My Mode Exposure Compensation 19")},	/* 0xd043 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation20, N_("My Mode Exposure Compensation 20")},	/* 0xd044 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation21, N_("My Mode Exposure Compensation 21")},	/* 0xd045 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation22, N_("My Mode Exposure Compensation 22")},	/* 0xd046 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation23, N_("My Mode Exposure Compensation 23")},	/* 0xd047 */
+		{PTP_DPC_OLYMPUS_MyModeExposureCompensation24, N_("My Mode Exposure Compensation 24")},	/* 0xd048 */
+		{PTP_DPC_OLYMPUS_FlashWirelessChannel, N_("Flash Wireless Channel")},	/* 0xd049 */
+		{PTP_DPC_OLYMPUS_FirmwareVersionMinor, N_("Firmware Version Minor")},	/* 0xd04a */
+		{PTP_DPC_OLYMPUS_ImageStabilizerMode, N_("Image Stabilizer Mode")},	/* 0xd04b */
+		{PTP_DPC_OLYMPUS_AutoMinimumShutterSpeed, N_("Auto Minimum Shutter Speed")},	/* 0xd04c */
+		{PTP_DPC_OLYMPUS_FlashRemoteRatio, N_("Flash Remote Ratio")},	/* 0xd04d */
+		{PTP_DPC_OLYMPUS_FlashRemoteGroup, N_("Flash Remote Group")},	/* 0xd04e */
+		{PTP_DPC_OLYMPUS_FlashRemoteMode, N_("Flash Remote Mode")},	/* 0xd04f */
+		{PTP_DPC_OLYMPUS_OrientationSensor, N_("Orientation Sensor")},	/* 0xd050 */
+		{PTP_DPC_OLYMPUS_AFArea, N_("AF Area")},	/* 0xd051 */
+		{PTP_DPC_OLYMPUS_CameraControlMode, N_("Camera Control Mode")},	/* 0xd052 */
+		{PTP_DPC_OLYMPUS_LensFocalLengthMinimum, N_("Lens Focal Length Minimum")},	/* 0xd053 */
+		{PTP_DPC_OLYMPUS_LensApertureFormat, N_("Lens Aperture Format")},	/* 0xd054 */
+		{PTP_DPC_OLYMPUS_LensFocalLengthMaximum, N_("Lens Focal Length Maximum")},	/* 0xd055 */
+		{PTP_DPC_OLYMPUS_LensInfoFormat, N_("Lens Info Format")},	/* 0xd056 */
+		{PTP_DPC_OLYMPUS_LensMountInformation, N_("Lens Mount Information")},	/* 0xd057 */
+		{PTP_DPC_OLYMPUS_LensSerialNumberPart, N_("Lens Serial Number Part")},	/* 0xd058 */
+		{PTP_DPC_OLYMPUS_ShutterActuationCount, N_("Shutter Actuation Count")},	/* 0xd059 */
+		{PTP_DPC_OLYMPUS_LiveViewCropX, N_("Live View Crop X")},	/* 0xd05a */
+		{PTP_DPC_OLYMPUS_LiveViewCropY, N_("Live View Crop Y")},	/* 0xd05b */
+		{PTP_DPC_OLYMPUS_LensOpticalInfo, N_("Lens Optical Info")},	/* 0xd05c */
+		{PTP_DPC_OLYMPUS_AFPointPositionX, N_("AF Point Position X")},	/* 0xd05d */
+		{PTP_DPC_OLYMPUS_AFPointPositionY, N_("AF Point Position Y")},	/* 0xd05e */
+		{PTP_DPC_OLYMPUS_LensDistortionParameter, N_("Lens Distortion Parameter")},	/* 0xd05f */
+		{PTP_DPC_OLYMPUS_LensCommunicationStatus, N_("Lens Communication Status")},	/* 0xd060 */
+		{PTP_DPC_OLYMPUS_LensISStatus, N_("Lens IS Status")},	/* 0xd061 */
+		{PTP_DPC_OLYMPUS_LensFocusDriveStatus, N_("Lens Focus Drive Status")},	/* 0xd062 */
+		{PTP_DPC_OLYMPUS_LensCategory, N_("Lens Category")},	/* 0xd063 */
+		{PTP_DPC_OLYMPUS_LensVersion, N_("Lens Version")},	/* 0xd064 */
+		{PTP_DPC_OLYMPUS_FocusStackingEnable, N_("Focus Stacking Enable")},	/* 0xd065 */
+		{PTP_DPC_OLYMPUS_LensAttachedStatus, N_("Lens Attached Status")},	/* 0xd066 */
+		{PTP_DPC_OLYMPUS_LensDataValid, N_("Lens Data Valid")},	/* 0xd067 */
+		{PTP_DPC_OLYMPUS_LensErrorStatus, N_("Lens Error Status")},	/* 0xd068 */
+		{PTP_DPC_OLYMPUS_LiveViewStreamEnable, N_("Live View Stream Enable")},	/* 0xd069 */
+		{PTP_DPC_OLYMPUS_LiveViewStreamFormat, N_("Live View Stream Format")},	/* 0xd06a */
+		{PTP_DPC_OLYMPUS_PropertyD06B, N_("Property D06B")},	/* 0xd06b */
+		{PTP_DPC_OLYMPUS_PropertyD06C, N_("Property D06C")},	/* 0xd06c */
+		{PTP_DPC_OLYMPUS_LiveViewModeOM, N_("Live View Mode")},	/* 0xd06d */
+		{PTP_DPC_OLYMPUS_PropertyD06E, N_("Property D06E")},	/* 0xd06e */
+		{PTP_DPC_OLYMPUS_LiveViewQuality, N_("Live View Quality")},	/* 0xd070 */
+		{PTP_DPC_OLYMPUS_LiveViewAFAreaX, N_("Live View AF Area X")},	/* 0xd071 */
+		{PTP_DPC_OLYMPUS_LiveViewAFAreaY, N_("Live View AF Area Y")},	/* 0xd072 */
+		{PTP_DPC_OLYMPUS_LiveViewAFAreaMode, N_("Live View AF Area Mode")},	/* 0xd073 */
+		{PTP_DPC_OLYMPUS_LiveViewFrameWidth, N_("Live View Frame Width")},	/* 0xd074 */
+		{PTP_DPC_OLYMPUS_LiveViewFrameHeight, N_("Live View Frame Height")},	/* 0xd075 */
+		{PTP_DPC_OLYMPUS_LensNumericInfo, N_("Lens Numeric Info")},	/* 0xd077 */
+		{PTP_DPC_OLYMPUS_LiveViewModeSetting, N_("Live View Mode Setting")},	/* 0xd078 */
+		{PTP_DPC_OLYMPUS_LensFocusModeStatus, N_("Lens Focus Mode Status")},	/* 0xd079 */
+		{PTP_DPC_OLYMPUS_HighResShutterSpeed, N_("High Res Shutter Speed")},	/* 0xd07a */
+		{PTP_DPC_OLYMPUS_ShutterSpeedAlt, N_("Shutter Speed Alt")},	/* 0xd07b */
+		{PTP_DPC_OLYMPUS_ElectronicShutterMode, N_("Electronic Shutter Mode")},	/* 0xd07c */
+		{PTP_DPC_OLYMPUS_FlashExposureCompensationAlt, N_("Flash Exposure Compensation Alt")},	/* 0xd07d */
+		{PTP_DPC_OLYMPUS_LensFStopMinimum, N_("Lens F Stop Minimum")},	/* 0xd07f */
+		{PTP_DPC_OLYMPUS_LensFStopMaximum, N_("Lens F Stop Maximum")},	/* 0xd080 */
+		{PTP_DPC_OLYMPUS_LensOISMode, N_("Lens OIS Mode")},	/* 0xd081 */
+		{PTP_DPC_OLYMPUS_LensMFClutchStatus, N_("Lens MF Clutch Status")},	/* 0xd082 */
+		{PTP_DPC_OLYMPUS_LensFocusLimitNear, N_("Lens Focus Limit Near")},	/* 0xd083 */
+		{PTP_DPC_OLYMPUS_LensFocusLimitFar, N_("Lens Focus Limit Far")},	/* 0xd084 */
+		{PTP_DPC_OLYMPUS_LensFocusLimiterMode, N_("Lens Focus Limiter Mode")},	/* 0xd085 */
+		{PTP_DPC_OLYMPUS_LensMaxShutterSpeed, N_("Lens Max Shutter Speed")},	/* 0xd086 */
+		{PTP_DPC_OLYMPUS_LensCurrentShutterSpeed, N_("Lens Current Shutter Speed")},	/* 0xd087 */
+		{PTP_DPC_OLYMPUS_MovieFrameRate, N_("Movie Frame Rate")},	/* 0xd08b */
+		{PTP_DPC_OLYMPUS_MovieQuality, N_("Movie Quality")},	/* 0xd08c */
+		{PTP_DPC_OLYMPUS_MovieAudioMode, N_("Movie Audio Mode")},	/* 0xd08e */
+		{PTP_DPC_OLYMPUS_MovieRecordingStatus, N_("Movie Recording Status")},	/* 0xd08f */
+		{PTP_DPC_OLYMPUS_WirelessFlashMode, N_("Wireless Flash Mode")},	/* 0xd097 */
+		{PTP_DPC_OLYMPUS_GripBatteryStatus, N_("Grip Battery Status")},	/* 0xd09f */
+		{PTP_DPC_OLYMPUS_PictureModeParameter1, N_("Picture Mode Parameter 1")},	/* 0xd0a2 */
+		{PTP_DPC_OLYMPUS_PictureModeParameter2, N_("Picture Mode Parameter 2")},	/* 0xd0a3 */
+		{PTP_DPC_OLYMPUS_PictureModeParameter3, N_("Picture Mode Parameter 3")},	/* 0xd0a4 */
+		{PTP_DPC_OLYMPUS_PictureModeParameter5, N_("Picture Mode Parameter 5")},	/* 0xd0a6 */
+		{PTP_DPC_OLYMPUS_PictureModeParameter6, N_("Picture Mode Parameter 6")},	/* 0xd0a7 */
+		{PTP_DPC_OLYMPUS_PictureModeParameter7, N_("Picture Mode Parameter 7")},	/* 0xd0a8 */
+		{PTP_DPC_OLYMPUS_PictureModeParameter8, N_("Picture Mode Parameter 8")},	/* 0xd0a9 */
+		{PTP_DPC_OLYMPUS_PictureModeParameter9, N_("Picture Mode Parameter 9")},	/* 0xd0aa */
+		{PTP_DPC_OLYMPUS_PropertyD0AB, N_("Property D0AB")},	/* 0xd0ab */
+		{PTP_DPC_OLYMPUS_PictureModeToggle, N_("Picture Mode Toggle")},	/* 0xd0ac */
+		{PTP_DPC_OLYMPUS_PictureModeColorProfile, N_("Picture Mode Color Profile")},	/* 0xd0ad */
+		{PTP_DPC_OLYMPUS_PictureModeToggle2, N_("Picture Mode Toggle 2")},	/* 0xd0ae */
+		{PTP_DPC_OLYMPUS_PropertyD0AF, N_("Property D0AF")},	/* 0xd0af */
+		{PTP_DPC_OLYMPUS_PropertyD0B0, N_("Property D0B0")},	/* 0xd0b0 */
+		{PTP_DPC_OLYMPUS_PropertyD0B1, N_("Property D0B1")},	/* 0xd0b1 */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter1, N_("Art Filter Parameter 1")},	/* 0xd0b2 */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter2, N_("Art Filter Parameter 2")},	/* 0xd0b3 */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter3, N_("Art Filter Parameter 3")},	/* 0xd0b4 */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter4, N_("Art Filter Parameter 4")},	/* 0xd0b5 */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter5, N_("Art Filter Parameter 5")},	/* 0xd0b6 */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter6, N_("Art Filter Parameter 6")},	/* 0xd0b7 */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter7, N_("Art Filter Parameter 7")},	/* 0xd0b8 */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter8, N_("Art Filter Parameter 8")},	/* 0xd0b9 */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter9, N_("Art Filter Parameter 9")},	/* 0xd0ba */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter11, N_("Art Filter Parameter 11")},	/* 0xd0bc */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter12, N_("Art Filter Parameter 12")},	/* 0xd0bd */
+		{PTP_DPC_OLYMPUS_ArtFilterParameter13, N_("Art Filter Parameter 13")},	/* 0xd0be */
+		{PTP_DPC_OLYMPUS_PropertyD0BF, N_("Property D0BF")},	/* 0xd0bf */
+		{PTP_DPC_OLYMPUS_PropertyD0C0, N_("Property D0C0")},	/* 0xd0c0 */
+		{PTP_DPC_OLYMPUS_FocusBracketingEnable, N_("Focus Bracketing Enable")},	/* 0xd0c4 */
+		{PTP_DPC_OLYMPUS_MovieFocusMode, N_("Movie Focus Mode")},	/* 0xd0c5 */
+		{PTP_DPC_OLYMPUS_FocusBracketingStatus, N_("Focus Bracketing Status")},	/* 0xd0c6 */
+		{PTP_DPC_OLYMPUS_VideoResolution, N_("Video Resolution")},	/* 0xd0c7 */
+		{PTP_DPC_OLYMPUS_PropertyD0C8, N_("Property D0C8")},	/* 0xd0c8 */
+		{PTP_DPC_OLYMPUS_ProCapturePreBufferShutter, N_("Pro Capture Pre Buffer Shutter")},	/* 0xd0c9 */
+		{PTP_DPC_OLYMPUS_KeystoneCompensation, N_("Keystone Compensation")},	/* 0xd0cb */
+		{PTP_DPC_OLYMPUS_KeystoneAdjustment, N_("Keystone Adjustment")},	/* 0xd0cc */
+		{PTP_DPC_OLYMPUS_CustomModeDial, N_("Custom Mode Dial")},	/* 0xd0cd */
+		{PTP_DPC_OLYMPUS_PropertyD0CE, N_("Property D0CE")},	/* 0xd0ce */
+		{PTP_DPC_OLYMPUS_CustomModeParameter, N_("Custom Mode Parameter")},	/* 0xd0cf */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay1, N_("Live View Overlay 1")},	/* 0xd0d0 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay2, N_("Live View Overlay 2")},	/* 0xd0d1 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay3, N_("Live View Overlay 3")},	/* 0xd0d2 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay4, N_("Live View Overlay 4")},	/* 0xd0d3 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay5, N_("Live View Overlay 5")},	/* 0xd0d4 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay6, N_("Live View Overlay 6")},	/* 0xd0d5 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay7, N_("Live View Overlay 7")},	/* 0xd0d6 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay8, N_("Live View Overlay 8")},	/* 0xd0d7 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay9, N_("Live View Overlay 9")},	/* 0xd0d8 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay10, N_("Live View Overlay 10")},	/* 0xd0d9 */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay11, N_("Live View Overlay 11")},	/* 0xd0da */
+		{PTP_DPC_OLYMPUS_LiveViewOverlay12, N_("Live View Overlay 12")},	/* 0xd0db */
+		{PTP_DPC_OLYMPUS_CaptureTarget, N_("Capture Target")},	/* 0xd0dc */
+		{PTP_DPC_OLYMPUS_CaptureDestinationStatus, N_("Capture Destination Status")},	/* 0xd0dd */
+		{PTP_DPC_OLYMPUS_CaptureBusyStatus, N_("Capture Busy Status")},	/* 0xd0de */
+		{PTP_DPC_OLYMPUS_LensTemperatureStatus, N_("Lens Temperature Status")},	/* 0xd0e1 */
+		{PTP_DPC_OLYMPUS_LensExtendedInfo, N_("Lens Extended Info")},	/* 0xd0e2 */
+		{PTP_DPC_OLYMPUS_RemoteReleaseMode, N_("Remote Release Mode")},	/* 0xd0e3 */
+		{PTP_DPC_OLYMPUS_RemoteReleaseMode2, N_("Remote Release Mode 2")},	/* 0xd0e4 */
+		{PTP_DPC_OLYMPUS_PropertyD0E5, N_("Property D0E5")},	/* 0xd0e5 */
+		{PTP_DPC_OLYMPUS_IntervalShootingCount, N_("Interval Shooting Count")},	/* 0xd0e6 */
+		{PTP_DPC_OLYMPUS_PropertyD0E7, N_("Property D0E7")},	/* 0xd0e7 */
+		{PTP_DPC_OLYMPUS_PropertyD0E8, N_("Property D0E8")},	/* 0xd0e8 */
+		{PTP_DPC_OLYMPUS_PropertyD0E9, N_("Property D0E9")},	/* 0xd0e9 */
+		{PTP_DPC_OLYMPUS_PropertyD0EA, N_("Property D0EA")},	/* 0xd0ea */
+		{PTP_DPC_OLYMPUS_PropertyD0EB, N_("Property D0EB")},	/* 0xd0eb */
+		{PTP_DPC_OLYMPUS_FocusBracketingStep, N_("Focus Bracketing Step")},	/* 0xd0ec */
+		{PTP_DPC_OLYMPUS_FocusBracketingProgress, N_("Focus Bracketing Progress")},	/* 0xd0ed */
+		{PTP_DPC_OLYMPUS_HighlightShadowTone1, N_("Highlight Shadow Tone 1")},	/* 0xd0ef */
+		{PTP_DPC_OLYMPUS_HighlightShadowTone2, N_("Highlight Shadow Tone 2")},	/* 0xd0f0 */
+		{PTP_DPC_OLYMPUS_HighlightShadowTone3, N_("Highlight Shadow Tone 3")},	/* 0xd0f1 */
+		{PTP_DPC_OLYMPUS_HighlightShadowTone4, N_("Highlight Shadow Tone 4")},	/* 0xd0f2 */
+		{PTP_DPC_OLYMPUS_HighlightShadowTone5, N_("Highlight Shadow Tone 5")},	/* 0xd0f3 */
+		{PTP_DPC_OLYMPUS_HighlightShadowTone6, N_("Highlight Shadow Tone 6")},	/* 0xd0f4 */
+		{PTP_DPC_OLYMPUS_PropertyD0F5, N_("Property D0F5")},	/* 0xd0f5 */
+		{PTP_DPC_OLYMPUS_ColorCreatorProfile1, N_("Color Creator Profile 1")},	/* 0xd0f6 */
+		{PTP_DPC_OLYMPUS_ColorCreatorProfile2, N_("Color Creator Profile 2")},	/* 0xd0f7 */
+		{PTP_DPC_OLYMPUS_ColorProfileMode, N_("Color Profile Mode")},	/* 0xd0f8 */
+		{PTP_DPC_OLYMPUS_ColorProfileToggle, N_("Color Profile Toggle")},	/* 0xd0f9 */
+		{PTP_DPC_OLYMPUS_SilentMode, N_("Silent Mode")},	/* 0xd0fa */
+		{PTP_DPC_OLYMPUS_SubjectDetectionMode, N_("Subject Detection Mode")},	/* 0xd0fb */
+		{PTP_DPC_OLYMPUS_PropertyD0FC, N_("Property D0FC")},	/* 0xd0fc */
+		{PTP_DPC_OLYMPUS_PropertyD0FD, N_("Property D0FD")},	/* 0xd0fd */
+		{PTP_DPC_OLYMPUS_USBPortPriority, N_("USB Port Priority")},	/* 0xd0fe */
+		{PTP_DPC_OLYMPUS_IntervalTimerLimit, N_("Interval Timer Limit")},	/* 0xd0ff */
+		{PTP_DPC_OLYMPUS_CompositePropertyA, N_("Composite Property A")},	/* 0xd100 */
+		{PTP_DPC_OLYMPUS_CompositePropertyB, N_("Composite Property B")},	/* 0xd101 */
+		{PTP_DPC_OLYMPUS_ResolutionMode, N_("Resolution Mode")},	/* 0xd102 */
+		{PTP_DPC_OLYMPUS_FocusPriority, N_("Focus Priority")},	/* 0xd103 */
+		{PTP_DPC_OLYMPUS_DriveMode, N_("Drive Mode")},	/* 0xd104 */
+		{PTP_DPC_OLYMPUS_DateTimeFormat, N_("Date Time Format")},	/* 0xd105 */
+		{PTP_DPC_OLYMPUS_ExposureBiasStep, N_("Exposure Bias Step")},	/* 0xd106 */
+		{PTP_DPC_OLYMPUS_WBMode, N_("WB Mode")},	/* 0xd107 */
+		{PTP_DPC_OLYMPUS_OneTouchWB, N_("One Touch WB")},	/* 0xd108 */
+		{PTP_DPC_OLYMPUS_ManualWB, N_("Manual WB")},	/* 0xd109 */
+		{PTP_DPC_OLYMPUS_ManualWBRBBias, N_("Manual WBRB Bias")},	/* 0xd10a */
+		{PTP_DPC_OLYMPUS_CustomWB, N_("Custom WB")},	/* 0xd10b */
+		{PTP_DPC_OLYMPUS_CustomWBValue, N_("Custom WB Value")},	/* 0xd10c */
+		{PTP_DPC_OLYMPUS_ExposureTimeEx, N_("Exposure Time Ex")},	/* 0xd10d */
+		{PTP_DPC_OLYMPUS_BulbMode, N_("Bulb Mode")},	/* 0xd10e */
+		{PTP_DPC_OLYMPUS_AntiMirrorMode, N_("Anti Mirror Mode")},	/* 0xd10f */
+		{PTP_DPC_OLYMPUS_AEBracketingFrame, N_("AE Bracketing Frame")},	/* 0xd110 */
+		{PTP_DPC_OLYMPUS_AEBracketingStep, N_("AE Bracketing Step")},	/* 0xd111 */
+		{PTP_DPC_OLYMPUS_WBBracketingRBFrame, N_("WBBracketingRBFrame")},	/* 0xd112 */
+		{PTP_DPC_OLYMPUS_WBBracketingRBRange, N_("WB Bracketing RB Range")},	/* 0xd113 */
+		{PTP_DPC_OLYMPUS_WBBracketingGMFrame, N_("WB Bracketing GM Frame")},	/* 0xd114 */
+		{PTP_DPC_OLYMPUS_WBBracketingGMRange, N_("WB Bracketing GM Range")},	/* 0xd115 */
+		{PTP_DPC_OLYMPUS_ExtendedSetting116, N_("Extended Setting 116")},	/* 0xd116 */
+		{PTP_DPC_OLYMPUS_ExtendedSetting117, N_("Extended Setting 117")},	/* 0xd117 */
+		{PTP_DPC_OLYMPUS_FLBracketingFrame, N_("FL Bracketing Frame")},	/* 0xd118 */
+		{PTP_DPC_OLYMPUS_FLBracketingStep, N_("FL Bracketing Step")},	/* 0xd119 */
+		{PTP_DPC_OLYMPUS_FlashBiasCompensation, N_("Flash Bias Compensation")},	/* 0xd11a */
+		{PTP_DPC_OLYMPUS_ManualFocusMode, N_("Manual Focus Mode")},	/* 0xd11b */
+		{PTP_DPC_OLYMPUS_ExtendedSetting11C, N_("Extended Setting 11C")},	/* 0xd11c */
+		{PTP_DPC_OLYMPUS_RawSaveMode, N_("Raw Save Mode")},	/* 0xd11d */
+		{PTP_DPC_OLYMPUS_AUXLightMode, N_("AUX Light Mode")},	/* 0xd11e */
+		{PTP_DPC_OLYMPUS_LensSinkMode, N_("Lens Sink Mode")},	/* 0xd11f */
+		{PTP_DPC_OLYMPUS_BeepStatus, N_("Beep Status")},	/* 0xd120 */
+		{PTP_DPC_OLYMPUS_ExtendedSetting121, N_("Extended Setting 121")},	/* 0xd121 */
+		{PTP_DPC_OLYMPUS_ColorSpace, N_("Color Space")},	/* 0xd122 */
+		{PTP_DPC_OLYMPUS_ColorMatching, N_("Color Matching")},	/* 0xd123 */
+		{PTP_DPC_OLYMPUS_Saturation, N_("Saturation")},	/* 0xd124 */
+		{PTP_DPC_OLYMPUS_ExtendedSetting125, N_("Extended Setting 125")},	/* 0xd125 */
+		{PTP_DPC_OLYMPUS_NoiseReductionPattern, N_("Noise Reduction Pattern")},	/* 0xd126 */
+		{PTP_DPC_OLYMPUS_NoiseReductionRandom, N_("Noise Reduction Random")},	/* 0xd127 */
+		{PTP_DPC_OLYMPUS_ExtendedSetting128, N_("Extended Setting 128")},	/* 0xd128 */
+		{PTP_DPC_OLYMPUS_ShadingMode, N_("Shading Mode")},	/* 0xd129 */
+		{PTP_DPC_OLYMPUS_ISOBoostMode, N_("ISO Boost Mode")},	/* 0xd12a */
+		{PTP_DPC_OLYMPUS_ExposureIndexBiasStep, N_("Exposure Index Bias Step")},	/* 0xd12b */
+		{PTP_DPC_OLYMPUS_FilterEffect, N_("Filter Effect")},	/* 0xd12c */
+		{PTP_DPC_OLYMPUS_ColorTune, N_("Color Tune")},	/* 0xd12d */
+		{PTP_DPC_OLYMPUS_Language, N_("Language")},	/* 0xd12e */
+		{PTP_DPC_OLYMPUS_LanguageCode, N_("Language Code")},	/* 0xd12f */
+		{PTP_DPC_OLYMPUS_RecviewMode, N_("Recview Mode")},	/* 0xd130 */
+		{PTP_DPC_OLYMPUS_SleepTime, N_("Sleep Time")},	/* 0xd131 */
+		{PTP_DPC_OLYMPUS_ManualWBGMBias, N_("Manual WBGM Bias")},	/* 0xd132 */
+		{PTP_DPC_OLYMPUS_ExtendedSetting133, N_("Extended Setting 133")},	/* 0xd133 */
+		{PTP_DPC_OLYMPUS_ExtendedSetting134, N_("Extended Setting 134")},	/* 0xd134 */
+		{PTP_DPC_OLYMPUS_AELAFLMode, N_("AELAFL Mode")},	/* 0xd135 */
+		{PTP_DPC_OLYMPUS_AELButtonStatus, N_("AEL Button Status")},	/* 0xd136 */
+		{PTP_DPC_OLYMPUS_CompressionSettingEx, N_("Compression Setting Ex")},	/* 0xd137 */
+		{PTP_DPC_OLYMPUS_ExtendedSetting138, N_("Extended Setting 138")},	/* 0xd138 */
+		{PTP_DPC_OLYMPUS_ToneMode, N_("Tone Mode")},	/* 0xd139 */
+		{PTP_DPC_OLYMPUS_GradationMode, N_("Gradation Mode")},	/* 0xd13a */
+		{PTP_DPC_OLYMPUS_DevelopMode, N_("Develop Mode")},	/* 0xd13b */
+		{PTP_DPC_OLYMPUS_ExtendInnerFlashMode, N_("Extend Inner Flash Mode")},	/* 0xd13c */
+		{PTP_DPC_OLYMPUS_OutputDeviceMode, N_("Output Device Mode")},	/* 0xd13d */
+		{PTP_DPC_OLYMPUS_LiveViewMode, N_("Live View Mode")},	/* 0xd13e */
+		{PTP_DPC_OLYMPUS_LCDBacklight, N_("LCD Backlight")},	/* 0xd140 */
+		{PTP_DPC_OLYMPUS_CustomDevelop, N_("Custom Develop")},	/* 0xd141 */
+		{PTP_DPC_OLYMPUS_GradationAutoBias, N_("Gradation Auto Bias")},	/* 0xd142 */
+		{PTP_DPC_OLYMPUS_FlashRCMode, N_("Flash RC Mode")},	/* 0xd143 */
+		{PTP_DPC_OLYMPUS_FlashRCGroupValue, N_("Flash RC Group Value")},	/* 0xd144 */
+		{PTP_DPC_OLYMPUS_FlashRCChannelValue, N_("Flash RC Channel Value")},	/* 0xd145 */
+		{PTP_DPC_OLYMPUS_FlashRCFPMode, N_("Flash RCFP Mode")},	/* 0xd146 */
+		{PTP_DPC_OLYMPUS_FlashRCPhotoChromicMode, N_("Flash RC Photo Chromic Mode")},	/* 0xd147 */
+		{PTP_DPC_OLYMPUS_FlashRCPhotoChromicBias, N_("Flash RC Photo Chromic Bias")},	/* 0xd148 */
+		{PTP_DPC_OLYMPUS_FlashRCPhotoChromicManualBias, N_("Flash RC Photo Chromic Manual Bias")},	/* 0xd149 */
+		{PTP_DPC_OLYMPUS_FlashRCQuantityLightLevel, N_("Flash RC Quantity Light Level")},	/* 0xd14a */
+		{PTP_DPC_OLYMPUS_FocusMeteringValue, N_("Focus Metering Value")},	/* 0xd14b */
+		{PTP_DPC_OLYMPUS_ISOBracketingFrame, N_("ISO Bracketing Frame")},	/* 0xd14c */
+		{PTP_DPC_OLYMPUS_ISOBracketingStep, N_("ISO Bracketing Step")},	/* 0xd14d */
+		{PTP_DPC_OLYMPUS_BulbMFMode, N_("Bulb MF Mode")},	/* 0xd14e */
+		{PTP_DPC_OLYMPUS_BurstFPSValue, N_("Burst FPS Value")},	/* 0xd14f */
+		{PTP_DPC_OLYMPUS_ISOAutoBaseValue, N_("ISO Auto Base Value")},	/* 0xd150 */
+		{PTP_DPC_OLYMPUS_ISOAutoMaxValue, N_("ISO Auto Max Value")},	/* 0xd151 */
+		{PTP_DPC_OLYMPUS_BulbLimiterValue, N_("Bulb Limiter Value")},	/* 0xd152 */
+		{PTP_DPC_OLYMPUS_DPIMode, N_("DPI Mode")},	/* 0xd153 */
+		{PTP_DPC_OLYMPUS_DPICustomValue, N_("DPI Custom Value")},	/* 0xd154 */
+		{PTP_DPC_OLYMPUS_ResolutionValueSetting, N_("Resolution Value Setting")},	/* 0xd155 */
+		{PTP_DPC_OLYMPUS_AFTargetSize, N_("AF Target Size")},	/* 0xd157 */
+		{PTP_DPC_OLYMPUS_LightSensorMode, N_("Light Sensor Mode")},	/* 0xd158 */
+		{PTP_DPC_OLYMPUS_AEBracket, N_("AE Bracket")},	/* 0xd159 */
+		{PTP_DPC_OLYMPUS_WBRBBracket, N_("WBRB Bracket")},	/* 0xd15a */
+		{PTP_DPC_OLYMPUS_WBGMBracket, N_("WBGM Bracket")},	/* 0xd15b */
+		{PTP_DPC_OLYMPUS_FlashBracket, N_("Flash Bracket")},	/* 0xd15c */
+		{PTP_DPC_OLYMPUS_ISOBracket, N_("ISO Bracket")},	/* 0xd15d */
+		{PTP_DPC_OLYMPUS_MyModeStatus, N_("My Mode Status")},	/* 0xd15e */
+		{PTP_DPC_OLYMPUS_MyModeBankA, N_("My Mode Bank A")},	/* 0xd15f */
+		{PTP_DPC_OLYMPUS_MyModeBankB, N_("My Mode Bank B")},	/* 0xd160 */
+		{PTP_DPC_OLYMPUS_WhiteBalanceAdjustA, N_("WhiteBalance Adjust A")},	/* 0xd161 */
+		{PTP_DPC_OLYMPUS_WhiteBalanceAdjustB, N_("WhiteBalance Adjust B")},	/* 0xd162 */
+		{PTP_DPC_OLYMPUS_PropertyD163, N_("Property D163")},	/* 0xd163 */
+		{PTP_DPC_OLYMPUS_PropertyD164, N_("Property D164")},	/* 0xd164 */
+		{PTP_DPC_OLYMPUS_PropertyD165, N_("Property D165")},	/* 0xd165 */
+		{PTP_DPC_OLYMPUS_PropertyD166, N_("Property D166")},	/* 0xd166 */
+		{PTP_DPC_OLYMPUS_PropertyD167, N_("Property D167")},	/* 0xd167 */
+		{PTP_DPC_OLYMPUS_PropertyD168, N_("Property D168")},	/* 0xd168 */
+		{PTP_DPC_OLYMPUS_PropertyD169, N_("Property D169")},	/* 0xd169 */
+		{PTP_DPC_OLYMPUS_PropertyD16A, N_("Property D16A")},	/* 0xd16a */
+		{PTP_DPC_OLYMPUS_PropertyD16B, N_("Property D16B")},	/* 0xd16b */
+		{PTP_DPC_OLYMPUS_PropertyD16C, N_("Property D16C")},	/* 0xd16c */
+		{PTP_DPC_OLYMPUS_PropertyD16D, N_("Property D16D")},	/* 0xd16d */
+		{PTP_DPC_OLYMPUS_PropertyD16E, N_("Property D16E")},	/* 0xd16e */
+		{PTP_DPC_OLYMPUS_PropertyD16F, N_("Property D16F")},	/* 0xd16f */
+		{PTP_DPC_OLYMPUS_PropertyD170, N_("Property D170")},	/* 0xd170 */
+		{PTP_DPC_OLYMPUS_PropertyD171, N_("Property D171")},	/* 0xd171 */
+		{PTP_DPC_OLYMPUS_PropertyD172, N_("Property D172")},	/* 0xd172 */
+		{PTP_DPC_OLYMPUS_PropertyD173, N_("Property D173")},	/* 0xd173 */
+		{PTP_DPC_OLYMPUS_PropertyD174, N_("Property D174")},	/* 0xd174 */
+		{PTP_DPC_OLYMPUS_PropertyD175, N_("Property D175")},	/* 0xd175 */
+		{PTP_DPC_OLYMPUS_DateTimeUTC, N_("Date Time UTC")},	/* 0xd176 */
+		{PTP_DPC_OLYMPUS_PropertyD177, N_("Property D177")},	/* 0xd177 */
+		{PTP_DPC_OLYMPUS_PropertyD178, N_("Property D178")},	/* 0xd178 */
+		{PTP_DPC_OLYMPUS_PropertyD179, N_("Property D179")},	/* 0xd179 */
+		{PTP_DPC_OLYMPUS_ExtendedSetting17B, N_("Extended Setting 17B")},	/* 0xd17b */
+		{PTP_DPC_OLYMPUS_ExtendedSetting19D, N_("Extended Setting 19D")},	/* 0xd19d */
+		{PTP_DPC_OLYMPUS_ExtendedSetting19E, N_("Extended Setting 19E")},	/* 0xd19e */
+		{PTP_DPC_OLYMPUS_ExtendedSetting19F, N_("Extended Setting 19F")},	/* 0xd19f */
+		{PTP_DPC_OLYMPUS_PropertyD1A0, N_("Property D1A0")},	/* 0xd1a0 */
+		{PTP_DPC_OLYMPUS_PropertyD1A1, N_("Property D1A1")},	/* 0xd1a1 */
+		{PTP_DPC_OLYMPUS_PropertyD1A2, N_("Property D1A2")},	/* 0xd1a2 */
+		{PTP_DPC_OLYMPUS_PropertyD1A3, N_("Property D1A3")},	/* 0xd1a3 */
+		{PTP_DPC_OLYMPUS_PropertyD1A4, N_("Property D1A4")},	/* 0xd1a4 */
+		{PTP_DPC_OLYMPUS_PropertyD1A5, N_("Property D1A5")},	/* 0xd1a5 */
+		{PTP_DPC_OLYMPUS_PropertyD1A6, N_("Property D1A6")},	/* 0xd1a6 */
+		{PTP_DPC_OLYMPUS_PropertyD1A7, N_("Property D1A7")},	/* 0xd1a7 */
+		{PTP_DPC_OLYMPUS_PropertyD1A8, N_("Property D1A8")},	/* 0xd1a8 */
+		{PTP_DPC_OLYMPUS_PropertyD1A9, N_("Property D1A9")},	/* 0xd1a9 */
+		{PTP_DPC_OLYMPUS_PropertyD1AA, N_("Property D1AA")},	/* 0xd1aa */
+		{PTP_DPC_OLYMPUS_PropertyD1AB, N_("Property D1AB")},	/* 0xd1ab */
+		{PTP_DPC_OLYMPUS_PropertyD1AC, N_("Property D1AC")},	/* 0xd1ac */
+		{PTP_DPC_OLYMPUS_PropertyD1AD, N_("Property D1AD")},	/* 0xd1ad */
+		{PTP_DPC_OLYMPUS_PropertyD1AE, N_("Property D1AE")},	/* 0xd1ae */
+		{PTP_DPC_OLYMPUS_PropertyD1AF, N_("Property D1AF")},	/* 0xd1af */
+		{PTP_DPC_OLYMPUS_PropertyD1B0, N_("Property D1B0")},	/* 0xd1b0 */
+		{PTP_DPC_OLYMPUS_PropertyD1B1, N_("Property D1B1")},	/* 0xd1b1 */
+		{PTP_DPC_OLYMPUS_PropertyD1B2, N_("Property D1B2")},	/* 0xd1b2 */
+		{PTP_DPC_OLYMPUS_PropertyD1B3, N_("Property D1B3")},	/* 0xd1b3 */
+		{PTP_DPC_OLYMPUS_PropertyD1B4, N_("Property D1B4")},	/* 0xd1b4 */
+		{PTP_DPC_OLYMPUS_PropertyD1B5, N_("Property D1B5")},	/* 0xd1b5 */
+		{PTP_DPC_OLYMPUS_PropertyD1B6, N_("Property D1B6")},	/* 0xd1b6 */
+		{PTP_DPC_OLYMPUS_PropertyD1B7, N_("Property D1B7")},	/* 0xd1b7 */
+		{PTP_DPC_OLYMPUS_PropertyD1B8, N_("Property D1B8")},	/* 0xd1b8 */
+		{PTP_DPC_OLYMPUS_PropertyD1B9, N_("Property D1B9")},	/* 0xd1b9 */
+		{PTP_DPC_OLYMPUS_PropertyD1BA, N_("Property D1BA")},	/* 0xd1ba */
+		{PTP_DPC_OLYMPUS_PropertyD1BB, N_("Property D1BB")},	/* 0xd1bb */
+		{PTP_DPC_OLYMPUS_PropertyD1BC, N_("Property D1BC")},	/* 0xd1bc */
+		{PTP_DPC_OLYMPUS_PropertyD1BD, N_("Property D1BD")},	/* 0xd1bd */
+		{PTP_DPC_OLYMPUS_PropertyD1BE, N_("Property D1BE")},	/* 0xd1be */
+		{PTP_DPC_OLYMPUS_PropertyD1BF, N_("Property D1BF")},	/* 0xd1bf */
+		{PTP_DPC_OLYMPUS_PropertyD1C0, N_("Property D1C0")},	/* 0xd1c0 */
+		{PTP_DPC_OLYMPUS_PropertyD1C1, N_("Property D1C1")},	/* 0xd1c1 */
+		{PTP_DPC_OLYMPUS_PropertyD1C2, N_("Property D1C2")},	/* 0xd1c2 */
+		{PTP_DPC_OLYMPUS_PropertyD1C3, N_("Property D1C3")},	/* 0xd1c3 */
+		{PTP_DPC_OLYMPUS_PropertyD1C4, N_("Property D1C4")},	/* 0xd1c4 */
+		{PTP_DPC_OLYMPUS_PropertyD1C5, N_("Property D1C5")},	/* 0xd1c5 */
+		{PTP_DPC_OLYMPUS_PropertyD1C6, N_("Property D1C6")},	/* 0xd1c6 */
+		{PTP_DPC_OLYMPUS_PropertyD1C7, N_("Property D1C7")},	/* 0xd1c7 */
+		{PTP_DPC_MTP_DeviceIcon, N_("Device Icon")},		/* 0xd405 */
+		{PTP_DPC_MTP_SessionInitiatorInfo, N_("Session Initiator Info")},	/* 0xd406 */
+		{PTP_DPC_MTP_PerceivedDeviceType, N_("Perceived Device Type")},	/* 0xd407 */
+		{0,NULL}
+	};
+
+	struct {
+		uint16_t dpc;
+		const char *txt;
 	} ptp_device_properties_PARROT[] = {
 		{PTP_DPC_PARROT_PhotoSensorEnableMask,		"PhotoSensorEnableMask"}, /* 0xD201 */
 		{PTP_DPC_PARROT_PhotoSensorsKeepOn,		"PhotoSensorsKeepOn"}, /* 0xD202 */
@@ -7739,6 +8129,12 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		for (i=0; ptp_device_properties_SONY[i].txt!=NULL; i++)
 			if (ptp_device_properties_SONY[i].dpc==dpc)
 				return (ptp_device_properties_SONY[i].txt);
+
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_GP_OLYMPUS
+	    || params->deviceinfo.VendorExtensionID==PTP_VENDOR_GP_OLYMPUS_OMD)
+		for (i=0; ptp_device_properties_Olympus[i].txt!=NULL; i++)
+			if (ptp_device_properties_Olympus[i].dpc==dpc)
+				return (ptp_device_properties_Olympus[i].txt);
 
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_PARROT)
 		for (i=0; ptp_device_properties_PARROT[i].txt!=NULL; i++)
