@@ -4025,6 +4025,9 @@ struct _PTPParams {
 	struct timeval		starttime;
 	int			sony_mode_ver;
 
+	/* PTP: Olympus specifics */
+	uint16_t		olympus_camera_control_mode;
+
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;
 	uint8_t		wifi_profiles_number;
@@ -5135,6 +5138,7 @@ uint16_t ptp_olympus_omd_capture (PTPParams* params);
 uint16_t ptp_olympus_omd_bulbstart (PTPParams* params);
 uint16_t ptp_olympus_omd_bulbend (PTPParams* params);
 uint16_t ptp_olympus_init_pc_mode (PTPParams* params);
+uint16_t ptp_olympus_exit_pc_mode (PTPParams* params);
 uint16_t ptp_olympus_sdram_image (PTPParams* params, unsigned char **data, unsigned int *size);
 
 

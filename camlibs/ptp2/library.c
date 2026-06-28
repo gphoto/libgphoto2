@@ -3315,13 +3315,9 @@ camera_exit (Camera *camera, GPContext *context)
 		case PTP_VENDOR_FUJI:
 			CR (camera_unprepare_capture (camera, context));
 			break;
-		case PTP_VENDOR_GP_OLYMPUS_OMD: {
-			PTPPropValue propval;
-
-			propval.u16 = 0;
-			CR (ptp_setdevicepropvalue (params, 0xD052, &propval, PTP_DTC_UINT16));
+		case PTP_VENDOR_GP_OLYMPUS_OMD:
+			ptp_olympus_exit_pc_mode (params);
 			break;
-		}
 		case PTP_VENDOR_GP_LEICA:
 			if (ptp_operation_issupported(params, PTP_OC_LEICA_LECloseSession)) {
 				if ((exit_result = ptp_leica_leclosesession (params)) != PTP_RC_OK)
