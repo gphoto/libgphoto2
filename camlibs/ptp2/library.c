@@ -7724,8 +7724,20 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 
 	txt = summary->text;
 
-#define SPACE_LEFT ptp_max(0, summary->text + sizeof (summary->text) - txt)
-#define APPEND_TXT( ... ) txt += snprintf (txt, SPACE_LEFT, __VA_ARGS__)
+#define SUMMARY_END (summary->text + sizeof (summary->text))
+#define SPACE_LEFT ((int)ptp_max(0, SUMMARY_END - txt))
+#define APPEND_N(n) do { \
+	int _sn = (n); \
+	if (_sn > 0) { \
+		if ((size_t)_sn >= (size_t)SPACE_LEFT) \
+			txt = SUMMARY_END; \
+		else \
+			txt += _sn; \
+	} \
+} while (0)
+#define APPEND_TXT(...) APPEND_N(snprintf (txt, SPACE_LEFT, __VA_ARGS__))
+#define APPEND_PTP(data, dt) APPEND_N(snprintf_ptp_property (txt, SPACE_LEFT, (data), (dt)))
+#define APPEND_PROPVAL(dpc, dpd) APPEND_N(ptp_render_property_value (params, (dpc), (dpd), SPACE_LEFT, txt))
 
 	APPEND_TXT (_("Manufacturer: %s\n"),params->deviceinfo.Manufacturer);
 	APPEND_TXT (_("Model: %s\n"),params->deviceinfo.Model);
@@ -7753,7 +7765,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	APPEND_TXT (_("\nCapture Formats: "));
 
 	for (i=0;i<params->deviceinfo.CaptureFormats_len;i++) {
-		txt += ptp_render_ofc (params, params->deviceinfo.CaptureFormats[i], SPACE_LEFT, txt);
+		APPEND_N(ptp_render_ofc (params, params->deviceinfo.CaptureFormats[i], SPACE_LEFT, txt));
 		if (i<params->deviceinfo.CaptureFormats_len-1)
 			APPEND_TXT (" ");
 	}
@@ -7761,7 +7773,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 
 	APPEND_TXT (_("Display Formats: "));
 	for (i=0;i<params->deviceinfo.ImageFormats_len;i++) {
-		txt += ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], SPACE_LEFT, txt);
+		APPEND_N(ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], SPACE_LEFT, txt));
 		if (i<params->deviceinfo.ImageFormats_len-1)
 			APPEND_TXT (", ");
 	}
@@ -7814,7 +7826,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			uint32_t propcnt = 0;
 
 			APPEND_TXT ("\t");
-			txt += ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], SPACE_LEFT, txt);
+			APPEND_N(ptp_render_ofc (params, params->deviceinfo.ImageFormats[i], SPACE_LEFT, txt));
 			APPEND_TXT ("/%04x:", params->deviceinfo.ImageFormats[i]);
 
 			ret = ptp_mtp_getobjectpropssupported (params, params->deviceinfo.ImageFormats[i], &propcnt, &props);
@@ -7823,7 +7835,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			} else {
 				for (j=0;j<propcnt;j++) {
 					APPEND_TXT (" %04x/",props[j]);
-					txt += ptp_render_mtp_propname(props[j],SPACE_LEFT,txt);
+					APPEND_N(ptp_render_mtp_propname(props[j],SPACE_LEFT,txt));
 				}
 				free(props);
 			}
@@ -7985,6 +7997,9 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		unsigned int dpc = pdi.DeviceProps[i];
 		const char *propname = ptp_get_property_description (params, dpc);
 
+		if (SPACE_LEFT <= 1)
+			break;
+
 		/* drop the "EOS_" prefix */
 		if (propname && strncmp(propname, "EOS_", 4) == 0)
 			propname += 4;
@@ -8010,39 +8025,47 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			case PTP_DPFF_None:	break;
 			case PTP_DPFF_Range: {
 				APPEND_TXT ("Range [");
-				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.MinValue, dpd.DataType);
+				APPEND_PTP (&dpd.FORM.Range.MinValue, dpd.DataType);
 				APPEND_TXT (" - ");
-				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.MaxValue, dpd.DataType);
+				APPEND_PTP (&dpd.FORM.Range.MaxValue, dpd.DataType);
 				APPEND_TXT (", step ");
-				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.FORM.Range.StepSize, dpd.DataType);
+				APPEND_PTP (&dpd.FORM.Range.StepSize, dpd.DataType);
 				APPEND_TXT ("] value: ");
 				break;
 			}
-			case PTP_DPFF_Enumeration:
+			case PTP_DPFF_Enumeration: {
+				unsigned int n_enum = dpd.FORM.Enum.NumberOfValues;
+				unsigned int n_print = n_enum;
+
+				if (n_print > 64)
+					n_print = 64;
 				APPEND_TXT ("Enumeration [");
 				if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
 					APPEND_TXT ("\n\t");
-				for (j = 0; j<dpd.FORM.Enum.NumberOfValues; j++) {
-					txt += snprintf_ptp_property (txt, SPACE_LEFT, dpd.FORM.Enum.SupportedValue+j, dpd.DataType);
-					if (j+1 != dpd.FORM.Enum.NumberOfValues) {
+				for (j = 0; j < n_print; j++) {
+					APPEND_PTP (dpd.FORM.Enum.SupportedValue + j, dpd.DataType);
+					if (j + 1 != n_print) {
 						APPEND_TXT (",");
 						if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
 							APPEND_TXT ("\n\t");
 					}
 				}
+				if (n_print < n_enum)
+					APPEND_TXT (", ... (%u values)", n_enum);
 				if ((dpd.DataType & PTP_DTC_ARRAY_MASK) == PTP_DTC_ARRAY_MASK)
 					APPEND_TXT ("\n\t");
 				APPEND_TXT ("] value: ");
 				break;
 			}
+			}
 			txt_marker = txt;
-			txt += ptp_render_property_value(params, dpc, &dpd, SPACE_LEFT, txt);
+			APPEND_PROPVAL (dpc, &dpd);
 			if (txt != txt_marker) {
 				APPEND_TXT (" (");
-				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.CurrentValue, dpd.DataType);
+				APPEND_PTP (&dpd.CurrentValue, dpd.DataType);
 				APPEND_TXT (")");
 			} else {
-				txt += snprintf_ptp_property (txt, SPACE_LEFT, &dpd.CurrentValue, dpd.DataType);
+				APPEND_PTP (&dpd.CurrentValue, dpd.DataType);
 			}
 		} else {
 			APPEND_TXT (" -- ---): ");
@@ -8053,8 +8076,12 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	}
 	ptp_free_deviceinfo (&pdi);
 	return (GP_OK);
-#undef SPACE_LEFT
+#undef APPEND_PROPVAL
+#undef APPEND_PTP
+#undef APPEND_N
 #undef APPEND_TXT
+#undef SPACE_LEFT
+#undef SUMMARY_END
 }
 
 static uint32_t
