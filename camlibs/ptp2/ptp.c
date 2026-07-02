@@ -10024,6 +10024,11 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 		if (ob->oi.ParentObject == handle)
 			ob->oi.ParentObject = 0;
 
+		/* Some cameras (e.g. Ricoh GR III) report 0xffffffff for root-level
+		 * objects instead of 0x00000000. Normalize to root. */
+		if (ob->oi.ParentObject == PTP_HANDLER_SPECIAL)
+			ob->oi.ParentObject = 0;
+
 		/* Detect if the file is larger than 4GB ... indicator is size 0xffffffff ...
 		 * In that case explicitly request the MTP object proplist to get the right size */
 		if (ob->oi.ObjectSize == 0xffffffffUL) {
