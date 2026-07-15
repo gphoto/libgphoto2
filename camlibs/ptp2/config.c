@@ -2913,24 +2913,30 @@ _get_Canon_EOS_ImageFormat(CONFIG_GET_ARGS)
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
 	gp_widget_set_name (*widget, menu->name);
 
-	for (unsigned i = 0; i < dpd->FORM.Enum.NumberOfValues; i++) {
-		uint16_t val =  dpd->FORM.Enum.SupportedValue[i].u16;
-		uint8_t val1 = (val >> 8) & 0xFF;
-		uint8_t val2 = (val >> 0) & 0xFF;
+	/* dpd->FORM.Enum is only valid when FormFlag says so; some cameras
+	 * (e.g. Canon PowerShot SX740) report this property with FormFlag ==
+	 * PTP_DPFF_None, in which case FORM.Enum.NumberOfValues/SupportedValue
+	 * are uninitialized and must not be read. */
+	if (dpd->FormFlag == PTP_DPFF_Enumeration) {
+		for (unsigned i = 0; i < dpd->FORM.Enum.NumberOfValues; i++) {
+			uint16_t val =  dpd->FORM.Enum.SupportedValue[i].u16;
+			uint8_t val1 = (val >> 8) & 0xFF;
+			uint8_t val2 = (val >> 0) & 0xFF;
 
-		const char* name1 = _single_EOS_ImageFormat_name(val1);
-		const char* name2 = _single_EOS_ImageFormat_name(val2);
+			const char* name1 = _single_EOS_ImageFormat_name(val1);
+			const char* name2 = _single_EOS_ImageFormat_name(val2);
 
-		char buf[12] = { 0 };
-		strcpy (buf, name1);
-		if (val2 != 0xFF)
-			sprintf (buf + strlen(buf), " + %s", name2);
+			char buf[12] = { 0 };
+			strcpy (buf, name1);
+			if (val2 != 0xFF)
+				sprintf (buf + strlen(buf), " + %s", name2);
 
-		gp_widget_add_choice (*widget, buf);
+			gp_widget_add_choice (*widget, buf);
 
-		if (val == dpd->CurrentValue.u16) {
-			defaultset = 1;
-			gp_widget_set_value (*widget, buf);
+			if (val == dpd->CurrentValue.u16) {
+				defaultset = 1;
+				gp_widget_set_value (*widget, buf);
+			}
 		}
 	}
 	if (!defaultset) {
@@ -10357,7 +10363,7 @@ _get_Panasonic_Bulb(CONFIG_GET_ARGS) {
     gp_widget_set_name (*widget, menu->name);
     val = 0; /* Default: Bulb OFF (0) */
     gp_widget_set_value (*widget, &val);
-    
+
     return (GP_OK);
 }
 
@@ -10383,14 +10389,14 @@ _put_Panasonic_Bulb(CONFIG_PUT_ARGS)
     } else {
         /* Bulb Stop: Opcode 0x9404, Parameter 0x03000013 */
         ret = ptp_generic_no_data(params, PTP_OC_PANASONIC_InitiateCapture, 1, 0x03000013);
-        
+
         /* Opcode 0x9404, Parameter 0x03000019 */
         /* Lumix Thether software sends this right after Bulb stop is sent. */
         ptp_generic_no_data(params, PTP_OC_PANASONIC_InitiateCapture, 1, 0x03000019);
-        
+
         C_PTP_REP (ret);
     }
-    
+
     return GP_OK;
 }
 
