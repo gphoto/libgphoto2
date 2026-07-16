@@ -112,6 +112,7 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_type,"afs")) ||
 			/* avoid some dirs */
 			    (0 == strncmp(mntent->mnt_dir,"/boot",5)) ||
+			    (0 == strcmp(mntent->mnt_dir,"/")) ||
 			/* mount options */
 				/* x-systemd.automount or similar */
 			    (NULL != strstr(mntent->mnt_opts,"automount"))
@@ -184,6 +185,7 @@ gp_port_library_list (GPPortInfoList *list)
 			    (NULL != strstr(mntent->mnt_type,"afs")) ||
 			/* avoid some dirs */
 			    (0 == strncmp(mntent->mnt_dir,"/boot",5)) ||
+			    (0 == strcmp(mntent->mnt_dir,"/")) ||
 			/* options */
 			    (NULL != strstr(mntent->mnt_opts,"automount"))
 			) {
