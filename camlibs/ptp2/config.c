@@ -1788,15 +1788,18 @@ _put_ExpCompensation(CONFIG_PUT_ARGS) {
 	return GP_OK ;
 }
 
-/* old method, uses stepping */
 static int
 _put_Sony_ExpCompensation(CONFIG_PUT_ARGS) {
 	int ret;
+	PTPParams *params = &(camera->pl->params);
 
 	ret = _put_ExpCompensation(CONFIG_PUT_NAMES);
 	if (ret != GP_OK) return ret;
 	*alreadyset = 1;
-	return _put_sony_value_i16 (&camera->pl->params, dpd->DevicePropCode, propval->i16, 0);
+	if (params->sony_mode_ver == 3) {
+		return translate_ptp_result (ptp_sony_setdevicecontrolvaluea (params, dpd->DevicePropCode, propval, PTP_DTC_INT16));
+	}
+	return _put_sony_value_i16 (params, dpd->DevicePropCode, propval->i16, 0);
 }
 
 /* new method, can set directly */
