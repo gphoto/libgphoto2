@@ -1391,6 +1391,10 @@ static struct {
 	/* The A7-RV */
 	{"Sony:ILCE-7RM5 (PC Control)",		0x054c, 0x0e0c, PTP_CAP|PTP_CAP_PREVIEW},
 
+	/* The A7 V */
+	{"Sony:ILCE-7M5 (MTP mode)",		0x054c, 0x0f50, 0},
+	{"Sony:ILCE-7M5 (PC Control)",		0x054c, 0x0f56, PTP_CAP|PTP_CAP_PREVIEW},
+
 	/* via email */
 	{"Sony:A6700 (PC Control)",		0x054c, 0x0e78, PTP_CAP|PTP_CAP_PREVIEW},
 
@@ -4955,6 +4959,7 @@ camera_sony_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		!strcmp(params->deviceinfo.Model, "ILCE-7M3")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7SM3")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7M4")		||
+		!strcmp(params->deviceinfo.Model, "ILCE-7M5")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-9M2")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-1")		||
 		!strcmp(params->deviceinfo.Model, "ILCE-7C")
