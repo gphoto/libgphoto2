@@ -1,13 +1,13 @@
 # gp-check-library.m4 - generic library check                  -*- Autoconf -*-
-# serial 14
+# serial 15
 dnl | Increment the above serial number every time you edit this file.
 dnl | When it finds multiple m4 files with the same name,
 dnl | aclocal will use the one with the highest serial.
 dnl
-dnl @synopsis GP_CHECK_LIBRARY([VARNAMEPART],[libname],[VERSION-REQUIREMENT],
-dnl                            [headername],[functionname],
-dnl                            [ACTION-IF-FOUND],[ACTION-IF-NOT-FOUND],
-dnl                            [OPTIONAL-REQUIRED-ETC],[WHERE-TO-GET-IT])
+dnl @synopsis GP_CHECK_LIBRARY([VARNAMEPART], [libname], [VERSION-REQUIREMENT],
+dnl                            [headername], [functionname],
+dnl                            [ACTION-IF-FOUND], [ACTION-IF-NOT-FOUND],
+dnl                            [OPTIONAL-REQUIRED-ETC], [WHERE-TO-GET-IT])
 dnl
 dnl Checks for the presence of a certain library.
 dnl
@@ -346,7 +346,8 @@ if test "x${[userdef_][$1]}" = "xno" && test "x${[have_][$1]}" = "xyes"; then
 	AC_MSG_CHECKING([for function ][$5][ in ][$2])
 	LIBS_save="$LIBS"
 	LIBS="${[$1]_LIBS}"
-	AC_TRY_LINK_FUNC([$5],[],[have_][$1][=no])
+	AC_LINK_IFELSE([AC_LANG_CALL([], [$5])],
+	               [], [have_][$1][=no])
 	LIBS="$LIBS_save"
 	AC_MSG_RESULT([${[have_][$1]}])
 fi
@@ -404,14 +405,14 @@ fi
 AM_CONDITIONAL([HAVE_][$1], [test "x$have_[$1]" = "xyes"])
 if test "x$have_[$1]" = "xyes"; then
 	AC_DEFINE([HAVE_][$1], 1, [whether we compile with ][$2][ support])
-	GP_CONFIG_MSG([$2],[yes])dnl
+	GP_CONFIG_MSG([$2], [yes])dnl
 	AC_MSG_CHECKING([$2][ library flags])
 	AC_MSG_RESULT(["${[$1][_LIBS]}"])
 	AC_MSG_CHECKING([$2][ cpp flags])
 	AC_MSG_RESULT(["${[$1][_CFLAGS]}"])
 else
 	[REQUIREMENTS_FOR_][$1][=]
-	GP_CONFIG_MSG([$2],[no])dnl
+	GP_CONFIG_MSG([$2], [no])dnl
 fi
 dnl AC_SUBST is done implicitly by AC_ARG_VAR above.
 dnl AC_SUBST([$1][_LIBS])

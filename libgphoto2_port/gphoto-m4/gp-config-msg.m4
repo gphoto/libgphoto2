@@ -12,7 +12,7 @@ dnl      explicitly set the LHS width to the given value
 dnl
 dnl GP_CONFIG_MSG
 dnl      empty output line
-dnl GP_CONFIG_MSG([LHS],[RHS])
+dnl GP_CONFIG_MSG([LHS], [RHS])
 dnl      formatted output line "LHS: RHS"
 dnl
 dnl GP_CONFIG_OUTPUT
@@ -23,11 +23,11 @@ dnl
 dnl Example usage:
 dnl
 dnl    GP_CONFIG_INIT
-dnl    GP_CONFIG_MSG([Source code location],[${srcdir}])
-dnl    GP_CONFIG_MSG([Compiler],[${CC}])
+dnl    GP_CONFIG_MSG([Source code location], [${srcdir}])
+dnl    GP_CONFIG_MSG([Compiler], [${CC}])
 dnl    GP_CONFIG_MSG
-dnl    GP_CONFIG_MSG([Feature foo],[${foo}])
-dnl    GP_CONFIG_MSG([Location of bar],[${bar}])
+dnl    GP_CONFIG_MSG([Feature foo],     [${foo}])
+dnl    GP_CONFIG_MSG([Location of bar], [${bar}])
 dnl    [...]
 dnl    AC_OUTPUT
 dnl    GP_CONFIG_OUTPUT
@@ -86,7 +86,7 @@ if test "x$subdirs" != "x"; then
 			_subdirs="$_subdirs $ssd"
 		fi
 	done
-	GP_CONFIG_MSG([Subprojects],[${_subdirs}])dnl
+	GP_CONFIG_MSG([Subprojects], [${_subdirs}])dnl
 fi
 ])dnl
 dnl
