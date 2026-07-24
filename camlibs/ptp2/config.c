@@ -1906,16 +1906,28 @@ static int
 _get_Canon_EOS_ZoomRange(CONFIG_GET_ARGS) {
 	float	f, t, b, s;
 
-/*
-	if (!(dpd->FormFlag & PTP_DPFF_Range))
-		return GP_ERROR;
-*/
 	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
 	f = (float)dpd->CurrentValue.u32;
-	b = 0.0;
-	t = 1000.0;
-	s = 1.0;
+	if ((dpd->FormFlag & PTP_DPFF_Enumeration) && dpd->FORM.Enum.NumberOfValues) {
+		unsigned int j;
+
+		/* Some cameras (e.g. PowerShot SX740) report a single-entry
+		 * enumeration here that is really just the upper bound, not a
+		 * full list of legal positions. Treat 0 as the floor and take
+		 * the largest enumerated value as the ceiling either way. */
+		b = 0.0;
+		t = (float)dpd->FORM.Enum.SupportedValue[0].u32;
+		for (j=1; j<dpd->FORM.Enum.NumberOfValues; j++) {
+			float v = (float)dpd->FORM.Enum.SupportedValue[j].u32;
+			if (v > t) t = v;
+		}
+		s = 1.0;
+	} else {
+		b = 0.0;
+		t = 1000.0;
+		s = 1.0;
+	}
 	gp_widget_set_range (*widget, b, t, s);
 	gp_widget_set_value (*widget, &f);
 	return GP_OK;
