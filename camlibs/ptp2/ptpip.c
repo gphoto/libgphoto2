@@ -835,18 +835,15 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 
 int
 ptp_ptpip_disconnect (PTPParams* params) {
-	if (params->cmdfd != PTPSOCK_INVALID) {
+	if (PTPSOCK_IS_OPEN (params->cmdfd))
 		PTPSOCK_CLOSE (params->cmdfd);
-		params->cmdfd = PTPSOCK_INVALID;
-	}
-	if (params->evtfd != PTPSOCK_INVALID) {
+	params->cmdfd = PTPSOCK_INVALID;
+	if (PTPSOCK_IS_OPEN (params->evtfd))
 		PTPSOCK_CLOSE (params->evtfd);
-		params->evtfd = PTPSOCK_INVALID;
-	}
-	if (params->jpgfd != PTPSOCK_INVALID) {
+	params->evtfd = PTPSOCK_INVALID;
+	if (PTPSOCK_IS_OPEN (params->jpgfd))
 		PTPSOCK_CLOSE (params->jpgfd);
-		params->jpgfd = PTPSOCK_INVALID;
-	}
+	params->jpgfd = PTPSOCK_INVALID;
 	GP_LOG_D ("ptpip disconnected!");
 	return GP_OK;
 }

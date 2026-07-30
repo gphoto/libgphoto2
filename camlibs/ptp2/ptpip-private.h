@@ -45,6 +45,22 @@
 
 #include <sys/types.h> /* for ssize_t, size_t */
 
+/* Was this descriptor ever opened?
+ *
+ * This is not the same question as "!= PTPSOCK_INVALID". The cmdfd/evtfd/jpgfd
+ * members live in PTPParams, which is part of the CameraPrivateLibrary that
+ * camera_init() allocates with calloc(), so a descriptor that was never
+ * assigned reads back as 0 -- a perfectly valid descriptor number -- rather
+ * than as PTPSOCK_INVALID. Nothing initialises these members, so the
+ * PTPSOCK_INVALID convention only holds once something has explicitly stored
+ * it.
+ *
+ * socket() cannot legitimately return 0, 1 or 2 here, because stdin, stdout and
+ * stderr are already open, so treating a non-positive value as "not mine to
+ * close" is safe.
+ */
+#define PTPSOCK_IS_OPEN(fd)	((fd) != PTPSOCK_INVALID && (fd) > 0)
+
 #define PTPIP_DEFAULT_TIMEOUT_S 2
 #define PTPIP_DEFAULT_TIMEOUT_MS 500
 
