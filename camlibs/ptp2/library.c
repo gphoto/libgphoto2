@@ -3857,7 +3857,10 @@ ignoreerror:
 				}
 				break;
 			}
-			if (ret == PTP_RC_DeviceBusy) {
+			/* Nikon 1 bodies answer a not-yet-ready liveview frame with
+			 * InvalidStatus and an empty data phase; the transaction is
+			 * complete, so the next fetch just needs retrying. */
+			if (ret == PTP_RC_DeviceBusy || ret == PTP_RC_NIKON_InvalidStatus) {
 				GP_LOG_D ("busy, retrying after a bit of wait, try %d", tries);
 				usleep(10*1000);
 				continue;
