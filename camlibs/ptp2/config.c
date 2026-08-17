@@ -8841,6 +8841,40 @@ _put_Canon_EOS_ZoomPosition(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+/* EOS Touch AF. Works in approx 64 pixel steps on the EOS 1000D, but just accept
+ * all kind of pairs */
+static int
+_get_Canon_EOS_TouchAfPosition(CONFIG_GET_ARGS) {
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	gp_widget_set_value (*widget, "0,0");
+	return (GP_OK);
+}
+
+static int
+_put_Canon_EOS_TouchAfPosition(CONFIG_PUT_ARGS) {
+	const char*	val;
+	unsigned int	type_d,x,y;
+	uint8_t	type;
+	PTPParams *params = &(camera->pl->params);
+
+	if (!ptp_operation_issupported(params, PTP_OC_CANON_EOS_TouchAfPosition))
+		return (GP_ERROR_NOT_SUPPORTED);
+
+	gp_widget_get_value(widget, &val);
+	if (3!=sscanf (val, "%d,%d,%d", &type_d,&x,&y)) {
+		GP_LOG_D ("Could not parse %s (expected 'type,x,y')", val);
+		return GP_ERROR;
+	}
+	type = (uint8_t)type_d;
+	C_PTP_MSG (ptp_canon_eos_touchafposition (params, type,x,y),
+		   "Canon touch af position %d,%d,%d failed", type_d,x, y);
+	/* Get the next set of event data */
+	C_PTP (ptp_check_eos_events (params));
+	return GP_OK;
+}
+
 static int
 _get_Canon_CHDK_Script(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -11792,6 +11826,7 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Fuji Zoom Position"),             "zoompos",          PTP_DPC_FUJI_LensZoomPos, PTP_VENDOR_FUJI, PTP_DTC_UINT16,  _get_INT,                       _put_None },
 	{ N_("Canon EOS Zoom"),                 "eoszoom",          0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_Zoom,              _get_Canon_EOS_Zoom,            _put_Canon_EOS_Zoom },
 	{ N_("Canon EOS Zoom Position"),        "eoszoomposition",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_ZoomPosition,      _get_Canon_EOS_ZoomPosition,    _put_Canon_EOS_ZoomPosition },
+	{ N_("Canon EOS Touch AF Position"),    "eostouchafposition",0, PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_TouchAfPosition,   _get_Canon_EOS_TouchAfPosition, _put_Canon_EOS_TouchAfPosition },
 	{ N_("Canon EOS Viewfinder"),           "viewfinder",       0,  PTP_VENDOR_CANON,   PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinder,      _put_Canon_EOS_ViewFinder },
 	{ N_("Panasonic Viewfinder"),           "viewfinder",       0,  PTP_VENDOR_PANASONIC, 0,                                _get_Panasonic_ViewFinder,      _put_Panasonic_ViewFinder },
 	{ N_("Nikon Viewfinder"),               "viewfinder",       0,  PTP_VENDOR_NIKON,   PTP_OC_NIKON_StartLiveView,         _get_Nikon_ViewFinder,          _put_Nikon_ViewFinder },

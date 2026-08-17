@@ -5065,6 +5065,7 @@ uint16_t ptp_sony_9281 (PTPParams* params, uint32_t param1);
  **/
 #define ptp_canon_eos_zoom(params,x) ptp_generic_no_data(params,PTP_OC_CANON_EOS_Zoom,1,x)
 #define ptp_canon_eos_zoomposition(params,x,y) ptp_generic_no_data(params,PTP_OC_CANON_EOS_ZoomPosition,2,x,y)
+#define ptp_canon_eos_touchafposition(params,type,x,y) ptp_generic_no_data(params,PTP_OC_CANON_EOS_TouchAfPosition,3,type,x,y)
 
 #define ptp_canon_eos_remotereleaseon(params,x,y) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RemoteReleaseOn,2,x,y)
 #define ptp_canon_eos_remotereleaseoff(params,x) ptp_generic_no_data(params,PTP_OC_CANON_EOS_RemoteReleaseOff,1,x)
