@@ -4645,6 +4645,18 @@ static struct {
 	{ PTP_DPC_SONY_ZoomOperation, PTP_DTC_INT8, PTP_DPFF_Range },
 	{ PTP_DPC_SONY_SaveZoomAndFocusPosition, PTP_DTC_UINT8, PTP_DPFF_Enumeration },
 	{ PTP_DPC_SONY_LoadZoomAndFocusPosition, PTP_DTC_UINT8, PTP_DPFF_Enumeration },
+	/* These six are listed in DeviceInfo.DeviceProps but never returned by
+	 * SDIO_GetAllExtDevicePropInfo. Without these rows the config.c widgets
+	 * (Focus Magnifier / Remote Key {Up,Down,Left,Right}) fail to bind on
+	 * sony_mode_ver==3 bodies (A7C / A7S III / A7 IV / Z9-class).
+	 * _put_Sony_FocusMagnifyProp writes raw u16 1/2, so only DataType matters;
+	 * FormFlag follows the adjacent ManualFocusAdjust (press-and-hold) entry. */
+	{ PTP_DPC_SONY_FocusMagnifier,       PTP_DTC_UINT16, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_FocusMagnifierCancel, PTP_DTC_UINT16, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_RemoteKeyUp,          PTP_DTC_UINT16, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_RemoteKeyDown,        PTP_DTC_UINT16, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_RemoteKeyLeft,        PTP_DTC_UINT16, PTP_DPFF_Range },
+	{ PTP_DPC_SONY_RemoteKeyRight,       PTP_DTC_UINT16, PTP_DPFF_Range },
 };
 
 /**
