@@ -11803,12 +11803,16 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_SONY,    PTP_OC_SONY_QX_Connect,             _get_Sony_QX_Movie,             _put_Sony_QX_Movie },
 	{ N_("Movie Capture"),                  "movie",            0,  PTP_VENDOR_PANASONIC,PTP_OC_PANASONIC_MovieRecControl,  _get_Panasonic_Movie,           _put_Panasonic_Movie },
 	{ N_("Movie Mode"),                     "eosmoviemode",     0,  PTP_VENDOR_CANON,   0,                                  _get_Canon_EOS_MovieModeSw,     _put_Canon_EOS_MovieModeSw },
-	{ N_("Focus Magnifier"),                "focusmagnifier",   PTP_DPC_SONY_FocusMagnifier,PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Focus Magnifier Cancel"),         "focusmagnifierexit",PTP_DPC_SONY_FocusMagnifierCancel, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
-	{ N_("Remote Key Up"),                  "remotekeyup",      PTP_DPC_SONY_RemoteKeyUp,   PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Remote Key Down"),                "remotekeydown",    PTP_DPC_SONY_RemoteKeyDown, PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Remote Key Left"),                "remotekeyleft",    PTP_DPC_SONY_RemoteKeyLeft, PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
-	{ N_("Remote Key Right"),               "remotekeyright",   PTP_DPC_SONY_RemoteKeyRight,PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	/* Restored historical action names (0xD2CB-0xD2D0) so the RoundSense ccl.py A7 III (ILCE-7M3) step-based
+	 * magnify code keeps working. Upstream renamed these to focusmagnifier/focusmagnifierexit/remotekey*, which
+	 * broke the older bodies. The device property codes are unchanged; only the config names are reverted.
+	 * The newer 0xD254 "focusmagnifier" (FocusMagnifierSetting, used by A7 IV/V) is left untouched below. */
+	{ N_("Focus Magnify"),                  "focusmagnify",     PTP_DPC_SONY_FocusMagnifier,PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Focus Magnify Exit"),             "focusmagnifyexit", PTP_DPC_SONY_FocusMagnifierCancel, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_FocusMagnifyProp, _put_Sony_FocusMagnifyProp },
+	{ N_("Focus Magnify Up"),               "focusmagnifyup",   PTP_DPC_SONY_RemoteKeyUp,   PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Focus Magnify Down"),             "focusmagnifydown", PTP_DPC_SONY_RemoteKeyDown, PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Focus Magnify Left"),             "focusmagnifyleft", PTP_DPC_SONY_RemoteKeyLeft, PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
+	{ N_("Focus Magnify Right"),            "focusmagnifyright",PTP_DPC_SONY_RemoteKeyRight,PTP_VENDOR_SONY, PTP_DTC_UINT16,_get_Sony_FocusMagnifyProp,     _put_Sony_FocusMagnifyProp },
 	{ N_("Focus Magnifier"),                "focusmagnifier",   PTP_DPC_SONY_FocusMagnifierSetting,PTP_VENDOR_SONY, PTP_DTC_UINT64,_get_Sony_FocusMagnifySetting, _put_Sony_FocusMagnifySetting },
 	{ N_("Spot Focus Area"),                "spotfocusarea",    PTP_DPC_SONY_AFAreaPosition,PTP_VENDOR_SONY,PTP_DTC_UINT32, _get_Sony_SpotFocusArea,        _put_Sony_SpotFocusArea },
 	{ N_("Canon Disable Mode Dial"),        "disablemodedial",  0,  PTP_VENDOR_CANON,   PTP_OC_CANON_SetModeDialDisable,    _get_Canon_SetModeDialDisable,  _put_Canon_SetModeDialDisable },
