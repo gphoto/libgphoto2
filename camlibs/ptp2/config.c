@@ -1538,6 +1538,22 @@ static struct deviceproptableu16 fuji_graineffect[] = {
 };
 GENERIC16TABLE(Fuji_GrainEffect,fuji_graineffect)
 
+/* seen on X-T5 (X-Trans 5 HR); other values likely exist but are unconfirmed */
+static struct deviceproptableu16 fuji_drangemode[] = {
+	{ N_("DR100"),	100,	PTP_VENDOR_FUJI },
+	{ N_("DR200"),	200,	PTP_VENDOR_FUJI },
+	{ N_("DR400"),	400,	PTP_VENDOR_FUJI },
+};
+GENERIC16TABLE(Fuji_DRangeMode,fuji_drangemode)
+
+/* seen on X-T5 (X-Trans 5 HR); other values likely exist but are unconfirmed */
+static struct deviceproptableu16 fuji_noisereduction[] = {
+	{ N_("-4"),	32768,	PTP_VENDOR_FUJI },
+	{ N_("0"),	8192,	PTP_VENDOR_FUJI },
+	{ N_("+4"),	20480,	PTP_VENDOR_FUJI },
+};
+GENERIC16TABLE(Fuji_NoiseReduction,fuji_noisereduction)
+
 static struct deviceproptableu16 olympus_imageformat[] = {
 	{ N_("RAW"),			0x020,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Large Fine JPEG"),	0x101,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -11990,6 +12006,16 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_CANON_EOS_ColorSpace,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace },
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_FUJI_ColorSpace,                PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace }, /* uses 1 for sRGB, and 2 for AdobeRGB too, same as EOS */
 	{ N_("Grain Effect"),           "graineffect",          PTP_DPC_FUJI_GrainEffect,               PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_GrainEffect,          _put_Fuji_GrainEffect },
+	{ N_("Dynamic Range"),          "dynamicrange",         PTP_DPC_FUJI_DRangeMode,                PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_DRangeMode,           _put_Fuji_DRangeMode },
+	{ N_("Color"),                  "fujicolor",            PTP_DPC_FUJI_ColorMode,                 PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Noise Reduction"),        "noisereduction",       PTP_DPC_FUJI_NoiseReduction,            PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_NoiseReduction,       _put_Fuji_NoiseReduction },
+	{ N_("Clarity"),                "clarity",              PTP_DPC_FUJI_Clarity,                   PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Color Chrome FX Blue"),   "colorchromefxblue",    PTP_DPC_FUJI_ColorChromeFXBlue,         PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Smooth Skin Effect"),     "smoothskineffect",     PTP_DPC_FUJI_SmoothSkinEffect,          PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("WhiteBalance Shift Red"), "whitebalanceshiftred", PTP_DPC_FUJI_WhitebalanceTune1,         PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_INT,                       _put_INT },
+	{ N_("WhiteBalance Shift Blue"),"whitebalanceshiftblue",PTP_DPC_FUJI_WhitebalanceTune2,         PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_INT,                       _put_INT },
+	{ N_("Highlight Tone"),         "highlighttone",        PTP_DPC_FUJI_HighLightTone,             PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Shadow Tone"),            "shadowtone",           PTP_DPC_FUJI_ShadowTone,                PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
 	{ N_("Video Format"),           "videoformat",          PTP_DPC_VideoFormat,                    0,                  PTP_DTC_UINT32, _get_VideoFormat,               _put_VideoFormat },
 	{ N_("Video Resolution"),       "videoresolution",      PTP_DPC_VideoResolution,                0,                  PTP_DTC_STR   , _get_STR_ENUMList,              _put_STR },
 	{ N_("Video Quality"),          "videoquality",         PTP_DPC_VideoQuality,                   0,                  PTP_DTC_UINT16, _get_INT,                       _put_INT },
