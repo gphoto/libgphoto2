@@ -12007,6 +12007,7 @@ static struct submenu image_settings_menu[] = {
 	{ N_("Color Space"),            "colorspace",           PTP_DPC_FUJI_ColorSpace,                PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Canon_EOS_ColorSpace,      _put_Canon_EOS_ColorSpace }, /* uses 1 for sRGB, and 2 for AdobeRGB too, same as EOS */
 	{ N_("Grain Effect"),           "graineffect",          PTP_DPC_FUJI_GrainEffect,               PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_GrainEffect,          _put_Fuji_GrainEffect },
 	{ N_("Dynamic Range"),          "dynamicrange",         PTP_DPC_FUJI_DRangeMode,                PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_DRangeMode,           _put_Fuji_DRangeMode },
+	{ N_("Dynamic Range Priority"), "dynamicrangepriority", PTP_DPC_FUJI_WideDynamicRange,          PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT }, /* confirmed by differential probe on X-T5; existing "WideDynamicRange" name for 0xD02E is a guess from an older dump and may want revisiting */
 	{ N_("Color"),                  "fujicolor",            PTP_DPC_FUJI_ColorMode,                 PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
 	{ N_("Noise Reduction"),        "noisereduction",       PTP_DPC_FUJI_NoiseReduction,            PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_NoiseReduction,       _put_Fuji_NoiseReduction },
 	{ N_("Clarity"),                "clarity",              PTP_DPC_FUJI_Clarity,                   PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_INT,                       _put_INT },
