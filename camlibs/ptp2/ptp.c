@@ -10090,6 +10090,17 @@ ptp_object_want (PTPParams *params, uint32_t handle, unsigned int want, PTPObjec
 		if (ob->oi.ParentObject == handle)
 			ob->oi.ParentObject = 0;
 
+		/* Ricoh GR IV reports 0xffffffff as the parent of the root
+		 * association (DCIM), which is the value GetObjectHandles uses to
+		 * *ask* for the root, not the one GetObjectInfo should *report*.
+		 * Left as is, the cached-root branch of ptp_list_folder() filters
+		 * on ParentObject == 0, finds nothing, and the storage looks empty
+		 * as soon as this very objectinfo has been read. */
+		if (ob->oi.ParentObject == PTP_HANDLER_SPECIAL) {
+			ptp_debug (params, "parent of %s is 0xffffffff, rewriting to 0.", ob->oi.Filename);
+			ob->oi.ParentObject = 0;
+		}
+
 		/* Detect if the file is larger than 4GB ... indicator is size 0xffffffff ...
 		 * In that case explicitly request the MTP object proplist to get the right size */
 		if (ob->oi.ObjectSize == 0xffffffffUL) {
