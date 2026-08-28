@@ -9781,10 +9781,28 @@ camera_init (Camera *camera, GPContext *context)
 				sessionid = 1;
 				continue;
 			}
-		} else if ((ret == PTP_ERROR_RESP_EXPECTED) || (ret == PTP_ERROR_IO)) {
+		} else if ((ret == PTP_ERROR_RESP_EXPECTED) || (ret == PTP_ERROR_IO) || (ret == PTP_ERROR_TIMEOUT)) {
 			/* Try whacking PTP device */
-			if (tries < 3 && camera->port->type == GP_PORT_USB)
-				ptp_usb_control_device_reset_request (params);
+			if (tries < 3 && camera->port->type == GP_PORT_USB) {
+				if (PTP_RC_OK != ptp_usb_control_device_reset_request (params)) {
+					/* The class reset request is refused by some devices --
+					 * a Ricoh GR IV answers it with a pipe error. When a
+					 * previous session was interrupted mid data phase, the
+					 * camera keeps pushing the rest of it and every read
+					 * comes back one transaction late; the class reset
+					 * cannot clear that, and until now only unplugging the
+					 * camera would. A real USB device reset re-enumerates
+					 * and does the same thing without human hands. */
+					int pret;
+
+					GP_LOG_D ("class device reset refused, resetting the USB device");
+					pret = gp_port_reset (camera->port);
+					if (pret < GP_OK)
+						GP_LOG_E ("USB device reset failed: %d", pret);
+					else
+						usleep (500*1000); /* let it re-enumerate */
+				}
+			}
 		}
 
 		if (tries < 3)
