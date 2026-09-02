@@ -358,7 +358,7 @@ int coolshot_check_checksum( char *packet, int length ) {
 int coolshot_download_image( Camera *camera, CameraFile *file,
 		char *buf, int *len, int thumbnail, GPContext *context ) {
 	char packet[1024];
-	int data_len;
+	unsigned int data_len;
 	int bytes_read = 0;
 	int last_good = 0;
 	unsigned int id;
@@ -376,6 +376,9 @@ int coolshot_download_image( Camera *camera, CameraFile *file,
 
 	data_len = (unsigned char)packet[6] * 256;
 	data_len += (unsigned char)packet[7];
+
+	if (data_len > sizeof(packet) - 8 - 4)
+		return GP_ERROR_IO;
 
 	/* fixme, get rid of hardcoded length */
 	if ( coolshot_check_checksum( packet, 8 + packet_size + 4 ) == GP_OK ) {
@@ -396,6 +399,9 @@ int coolshot_download_image( Camera *camera, CameraFile *file,
 			data_len = (unsigned char)packet[6] * 256;
 			data_len += (unsigned char)packet[7];
 
+			if (data_len > sizeof(buf) - bytes_read - 8)
+				return GP_ERROR_IO;
+
 			memcpy( buf + bytes_read, packet + 8, data_len );
 
 			bytes_read += data_len;
@@ -408,6 +414,9 @@ int coolshot_download_image( Camera *camera, CameraFile *file,
 
 		data_len = (unsigned char)packet[6] * 256;
 		data_len += (unsigned char)packet[7];
+
+		if (data_len > sizeof(packet) - 8 - 4)
+			return GP_ERROR_IO;
 
 		/* fixme, get rid of hardcoded length */
 		if ( coolshot_check_checksum( packet, 8 + packet_size + 4 ) == GP_OK) {
