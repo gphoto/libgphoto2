@@ -12585,8 +12585,9 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
 			widget = NULL;
 
-			if (	have_prop(camera,cursub->vendorid,cursub->propid) ||
-				((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))
+			if (	(have_prop(camera,cursub->vendorid,cursub->propid) ||
+				 ((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))) &&
+				!have_eos_prop(params,cursub->vendorid,cursub->propid)
 			) {
 				int			j;
 
@@ -13108,8 +13109,9 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					continue;
 			}
 
-			if (	have_prop(camera,cursub->vendorid,cursub->propid) ||
-				((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))
+			if (	(have_prop(camera,cursub->vendorid,cursub->propid) ||
+				 ((cursub->propid == 0) && have_prop(camera,cursub->vendorid,cursub->type))) &&
+				!have_eos_prop(params,cursub->vendorid,cursub->propid)
 			) {
 				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
 					continue;
@@ -13372,7 +13374,8 @@ camera_lookup_by_property(Camera *camera, PTPDevicePropDesc *dpd, char **name, c
 			widget = NULL;
 
 			if (	(cursub->propid == propid) &&
-				have_prop(camera,cursub->vendorid,cursub->propid)
+				have_prop(camera,cursub->vendorid,cursub->propid) &&
+				!have_eos_prop(params,cursub->vendorid,cursub->propid)
 			) {
 
 				/* ok, looking good */
