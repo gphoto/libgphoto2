@@ -2891,6 +2891,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_MovieISO				0xD02B
 #define PTP_DPC_FUJI_WideDynamicRange			0xD02E
 #define PTP_DPC_FUJI_TNumber				0xD02F
+#define PTP_DPC_FUJI_ColorChromeFXBlue			0xD030
+#define PTP_DPC_FUJI_Clarity				0xD032
 #define PTP_DPC_FUJI_Comment				0xD100
 #define PTP_DPC_FUJI_SerialMode				0xD101
 #define PTP_DPC_FUJI_ExposureDelay			0xD102
@@ -2981,6 +2983,7 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_FUJI_IOPCode				0xD184
 #define PTP_DPC_FUJI_TetherRawConditionCode		0xD186
 #define PTP_DPC_FUJI_TetherRawCompatibilityCode		0xD187
+#define PTP_DPC_FUJI_SmoothSkinEffect			0xD189
 #define PTP_DPC_FUJI_LightTune				0xD200
 #define PTP_DPC_FUJI_ReleaseMode			0xD201
 #define PTP_DPC_FUJI_BKTFrame1				0xD202
