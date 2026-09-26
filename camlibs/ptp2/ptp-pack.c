@@ -1737,10 +1737,11 @@ ptp_unpack_EOS_CustomFuncEx (PTPParams* params, const unsigned char** data, unsi
 	if (*size < sizeof(uint32_t))
 		return strdup("bad length");
 
+	/* s is the total length of the blob, including this length field itself */
 	s = dtoh32a( *data );
 	n = s/4;
 
-	if (*size < 4+s)
+	if (*size < s)
 		return strdup("bad length");
 
 	if (s > 1024) {
@@ -2055,7 +2056,14 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			case PTP_DPC_CANON_EOS_ImageFormatExtHD:
 				/* special handling of ImageFormat properties */
 				for (j=0;j<dpd_count;j++) {
+					const uint8_t *prev = xdata;
+
 					dpd->FORM.Enum.SupportedValue[j].u16 = ptp_unpack_EOS_ImageFormat( params, &xdata, &xsize );
+					/* parser does not advance xdata on failure, e.g. EOS R7 in movie mode sends count 1 with no data */
+					if (xdata == prev) {
+						dpd->FORM.Enum.NumberOfValues = j;
+						break;
+					}
 					ptp_debug (params, INDENT "prop %x option[%2d] == 0x%04x", dpc, j, dpd->FORM.Enum.SupportedValue[j].u16);
 				}
 				break;
