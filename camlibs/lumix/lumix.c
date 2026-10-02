@@ -1822,7 +1822,7 @@ int camera_abilities (CameraAbilitiesList *list) {
 	strcpy(a.model, "Panasonic:LumixGSeries");
 	a.status	= GP_DRIVER_STATUS_EXPERIMENTAL;
 	a.port		= GP_PORT_IP;
-	a.operations	= GP_CAPTURE_IMAGE| GP_OPERATION_CAPTURE_VIDEO | GP_OPERATION_CONFIG;
+	a.operations	= GP_OPERATION_CAPTURE_IMAGE | GP_OPERATION_CAPTURE_VIDEO | GP_OPERATION_CONFIG;
 	a.file_operations = GP_FILE_OPERATION_PREVIEW  ;
 	/* it should be possible to browse and DL images the files using the ReadImageFromCamera() function but for now lets keep it simple*/
 	a.folder_operations = GP_FOLDER_OPERATION_NONE;

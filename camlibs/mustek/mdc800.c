@@ -53,7 +53,7 @@ camera_abilities (CameraAbilitiesList *list)
 	a.usb_vendor	= 0x055f;
 	a.usb_product	= 0xa800;
 	a.operations        = 	GP_OPERATION_CAPTURE_PREVIEW |
-				GP_CAPTURE_IMAGE;
+				GP_OPERATION_CAPTURE_IMAGE;
 	a.file_operations   = 	GP_FILE_OPERATION_DELETE |
 				GP_FILE_OPERATION_PREVIEW;
 	a.folder_operations = 	GP_FOLDER_OPERATION_NONE;
