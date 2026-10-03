@@ -717,6 +717,10 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 	struct sockaddr_in	saddr;
 	uint16_t	ret;
 
+	params->jpgfd = PTPSOCK_INVALID;
+	params->cmdfd = PTPSOCK_INVALID;
+	params->evtfd = PTPSOCK_INVALID;
+
 	GP_LOG_D ("connecting to %s.", address);
 	if (NULL == strchr (address,':'))
 		return GP_ERROR_BAD_PARAMETERS;

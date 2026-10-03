@@ -895,6 +895,10 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 	struct sockaddr_in	saddr;
 	uint16_t	ret;
 
+	params->jpgfd = PTPSOCK_INVALID;
+	params->cmdfd = PTPSOCK_INVALID;
+	params->evtfd = PTPSOCK_INVALID;
+
 	memset(&saddr,0,sizeof(saddr));
 
 	GP_LOG_D ("connecting to %s.", address);
