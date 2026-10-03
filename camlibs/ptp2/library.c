@@ -46,6 +46,7 @@
 #include "ptp-bugs.h"
 #include "ptp-private.h"
 #include "olympus-wrap.h"
+#include "eos-lv-histogram.h"
 
 #ifdef HAVE_LIBWS232
 #include <winsock2.h>
@@ -3686,7 +3687,8 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 				 * uint32 type
 				 * ... data ...
 				 *
-				 * 1: JPEG preview
+				 * 1 / 9 / 11: JPEG preview
+				 * 17 (0x11): planar YRGB histogram (4096 bytes), cached below
 				 */
 
 				xdata = data;
@@ -3698,8 +3700,27 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 					/* 4 byte len of jpeg data, 4 byte type */
 					/* JPEG blob */
 					/* stuff */
-					GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
+					if (type == PTP_CANON_EOS_LV_SEG_HISTOGRAM)
+						GP_LOG_D ("get_viewfinder_image header: len=%d type=%d (EOS LV histogram)", len, type);
+					else
+						GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
 					switch (type) {
+					case PTP_CANON_EOS_LV_SEG_HISTOGRAM:
+						/* Type 17 from this blob. */
+						if (len > (size-(xdata-data))) {
+							len = size;
+							GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
+						} else if (len >= 8 &&
+							   ptp_canon_eos_parse_lv_histogram (xdata+8, len-8,
+											     params->eos_lv_histogram)) {
+							params->eos_lv_histogram_valid = 1;
+							GP_LOG_D ("cached EOS LV histogram (%d bytes)",
+								  PTP_CANON_EOS_LV_HISTOGRAM_SIZE);
+						} else {
+							GP_LOG_D ("EOS LV histogram type 17 rejected");
+						}
+						xdata = xdata+len;
+						continue;
 					default:
 						if (len > (size-(xdata-data))) {
 							len = size;
@@ -3724,7 +3745,7 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 						/* Add an arbitrary file name so caller won't crash */
 						gp_file_set_name (file, "preview.jpg");
 
-						/* dump the rest of the blobs */
+						/* Remaining segments; cache type 17 if present. */
 						xdata = xdata+len;
 						while ((xdata-data) < size) {
 							len  = dtoh32a(xdata);
@@ -3735,8 +3756,21 @@ camera_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 								GP_LOG_E ("len=%d larger than rest size %ld", len, (size-(xdata-data)));
 								break;
 							}
-							GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
-							GP_LOG_DATA ((char*)xdata, len, "get_viewfinder_image header:");
+							if (type == PTP_CANON_EOS_LV_SEG_HISTOGRAM) {
+								GP_LOG_D ("get_viewfinder_image header: len=%d type=%d (EOS LV histogram)", len, type);
+								if (len >= 8 &&
+								    ptp_canon_eos_parse_lv_histogram (xdata+8, len-8,
+												      params->eos_lv_histogram)) {
+									params->eos_lv_histogram_valid = 1;
+									GP_LOG_D ("cached EOS LV histogram (%d bytes)",
+										  PTP_CANON_EOS_LV_HISTOGRAM_SIZE);
+								} else {
+									GP_LOG_D ("EOS LV histogram type 17 rejected");
+								}
+							} else {
+								GP_LOG_D ("get_viewfinder_image header: len=%d type=%d", len, type);
+								GP_LOG_DATA ((char*)xdata, len, "get_viewfinder_image header:");
+							}
 							xdata = xdata+len;
 						}
 						free (data);

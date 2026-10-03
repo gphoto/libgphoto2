@@ -7,6 +7,7 @@ EXTRA_DIST           += %reldir%/TODO
 EXTRA_DIST           += %reldir%/canon-eos-olc.txt
 EXTRA_DIST           += %reldir%/ptp-pack.c
 EXTRA_DIST           += %reldir%/ptpip.html
+EXTRA_DIST           += %reldir%/eos-lv-histogram-test.c
 
 EXTRA_DIST           += %reldir%/README.ptp2
 camlibdoc_DATA       += %reldir%/README.ptp2
@@ -33,6 +34,8 @@ ptp2_la_SOURCES      += %reldir%/chdk.c
 ptp2_la_SOURCES      += %reldir%/fujiptpip.c
 ptp2_la_SOURCES      += %reldir%/ptpip-private.h
 ptp2_la_SOURCES      += %reldir%/array.h
+ptp2_la_SOURCES      += %reldir%/eos-lv-histogram.c
+ptp2_la_SOURCES      += %reldir%/eos-lv-histogram.h
 
 ptp2_la_CFLAGS        = $(camlib_cflags)
 ptp2_la_CPPFLAGS      = $(camlib_cppflags)

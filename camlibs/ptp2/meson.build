@@ -18,6 +18,8 @@ shared_module(
   'fujiptpip.c',
   'ptpip-private.h',
   'array.h',
+  'eos-lv-histogram.c',
+  'eos-lv-histogram.h',
   dependencies: [
     libgphoto2_dep,
     libxml_dep,

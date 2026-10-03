@@ -44,6 +44,7 @@
 #include "ptp.h"
 #include "ptp-bugs.h"
 #include "ptp-private.h"
+#include "eos-lv-histogram.h"
 
 #ifdef __GNUC__
 # define __unused__ __attribute__((unused))
@@ -9054,6 +9055,66 @@ _get_Canon_EOS_ViewFinder(CONFIG_GET_ARGS) {
 	return GP_OK;
 }
 
+/*
+ * RFC 4648 base64 for eosviewfinderhistogram (TEXT widget has no binary type).
+ * Newly allocated NUL-terminated string, or NULL on OOM.
+ */
+static char *
+_ptp_bin_to_base64 (const unsigned char *in, unsigned int inlen)
+{
+	static const char b64[] =
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	unsigned int outlen = ((inlen + 2) / 3) * 4;
+	char *out;
+	unsigned int i, o = 0;
+
+	out = malloc (outlen + 1);
+	if (!out)
+		return NULL;
+	for (i = 0; i + 2 < inlen; i += 3) {
+		unsigned int n = ((unsigned int)in[i] << 16)
+			       | ((unsigned int)in[i+1] << 8)
+			       | (unsigned int)in[i+2];
+		out[o++] = b64[(n >> 18) & 63];
+		out[o++] = b64[(n >> 12) & 63];
+		out[o++] = b64[(n >> 6) & 63];
+		out[o++] = b64[n & 63];
+	}
+	if (i < inlen) {
+		unsigned int n = (unsigned int)in[i] << 16;
+		if (i + 1 < inlen)
+			n |= (unsigned int)in[i+1] << 8;
+		out[o++] = b64[(n >> 18) & 63];
+		out[o++] = b64[(n >> 12) & 63];
+		out[o++] = (i + 1 < inlen) ? b64[(n >> 6) & 63] : '=';
+		out[o++] = '=';
+	}
+	out[o] = '\0';
+	return out;
+}
+
+/* Last type-17 histogram from CapturePreview, base64. Empty until cached. */
+static int
+_get_Canon_EOS_ViewFinderHistogram(CONFIG_GET_ARGS) {
+	PTPParams	*params = &(camera->pl->params);
+	char		*b64;
+
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+
+	if (!params->eos_lv_histogram_valid ||
+	    sizeof (params->eos_lv_histogram) != PTP_CANON_EOS_LV_HISTOGRAM_SIZE) {
+		gp_widget_set_value (*widget, "");
+		return GP_OK;
+	}
+	b64 = _ptp_bin_to_base64 (params->eos_lv_histogram, PTP_CANON_EOS_LV_HISTOGRAM_SIZE);
+	if (!b64)
+		return GP_ERROR_NO_MEMORY;
+	gp_widget_set_value (*widget, b64);
+	free (b64);
+	return GP_OK;
+}
+
 static int
 _put_Canon_EOS_ViewFinder(CONFIG_PUT_ARGS) {
 	int		val;
@@ -11870,6 +11931,8 @@ static struct submenu camera_status_menu[] = {
 	{ N_("Movie Prohibit Condition"), "movieprohibit",  PTP_DPC_NIKON_MovRecProhibitCondition,  PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_MovieProhibitCondition, _put_None },
 	{ N_("Liveview Prohibit Condition"), "liveviewprohibit", PTP_DPC_NIKON_LiveViewProhibitCondition, PTP_VENDOR_NIKON, PTP_DTC_UINT32, _get_Nikon_LiveViewProhibitCondition, _put_None },
 	{ N_("Focus Indication"),      "focusindication",   PTP_DPC_SONY_FocusFound,                PTP_VENDOR_SONY,    PTP_DTC_UINT8,  _get_Sony_FocusIndication,      _put_None },
+	/* Type-17 histogram last cached by CapturePreview. */
+	{ N_("Canon EOS Viewfinder Histogram"), "eosviewfinderhistogram", 0, PTP_VENDOR_CANON, PTP_OC_CANON_EOS_GetViewFinderData, _get_Canon_EOS_ViewFinderHistogram, _put_None },
 	{ 0,0,0,0,0,0,0 },
 };
 

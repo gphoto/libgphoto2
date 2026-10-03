@@ -4311,6 +4311,17 @@ struct _PTPParams {
 	int			eos_camerastatus;
 	int			eos_uilocked;
 
+	/*
+	 * Last type-17 LV histogram from CapturePreview (0x9153).
+	 * /main/status/eosviewfinderhistogram returns it as base64.
+	 * Size matches eos-lv-histogram.h (planar YRGB 4*256*uint32).
+	 */
+#ifndef PTP_CANON_EOS_LV_HISTOGRAM_SIZE
+#define PTP_CANON_EOS_LV_HISTOGRAM_SIZE 4096
+#endif
+	unsigned char		eos_lv_histogram[PTP_CANON_EOS_LV_HISTOGRAM_SIZE];
+	int			eos_lv_histogram_valid;
+
 	/* PTP: Nikon specifics */
 	int			controlmode;
 	int			event90c7works;

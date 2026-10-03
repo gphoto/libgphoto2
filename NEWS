@@ -1,5 +1,12 @@
 libgphoto2 2.5.34.1 development
 
+ptp2:
+* Canon EOS CapturePreview caches GetViewFinderData type 17 (planar
+  YRGB LV histogram) and exposes it as /main/status/eosviewfinderhistogram
+  (base64). Same USB transaction as the JPEG; requires live view on
+  (e.g. viewfinder=1). Empty until a valid type-17 frame is seen.
+  Y/R/G/B x 256 x uint32 LE.
+
 ------------------------------------------------------------------------------
 libgphoto2 2.5.34 release
 
