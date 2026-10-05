@@ -45,6 +45,8 @@
 
 #include <sys/types.h> /* for ssize_t, size_t */
 
+#define PTPSOCK_IS_OPEN(fd)	((fd) != PTPSOCK_INVALID && (fd) > 0)
+
 #define PTPIP_DEFAULT_TIMEOUT_S 2
 #define PTPIP_DEFAULT_TIMEOUT_MS 500
 
