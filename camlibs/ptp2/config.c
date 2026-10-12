@@ -6770,8 +6770,10 @@ static struct deviceproptableu16 olympus_focusmodes[] = {
 	{ N_("S-AF+MF"),	0x8001,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("C-AF"),		0x8002,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Preset MF"),	0x8004,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("C-AF+TR"),	0x8005,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Starry Sky AF"),	0x8006,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("C-AF+MF"),	0x8005,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("C-AF+TR+MF"),	0x8006,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Starry Sky AF"),	0x8007,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Starry Sky AF+MF"),	0x8008,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(Olympus_FocusMode,olympus_focusmodes)
 
