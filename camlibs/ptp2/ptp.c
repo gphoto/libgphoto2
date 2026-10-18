@@ -7706,6 +7706,8 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 		{PTP_DPC_OLYMPUS_ExposureProgramMode, N_("Exposure Program")},	/* 0xd006 */
 		{PTP_DPC_OLYMPUS_ISO, N_("ISO Speed")},	/* 0xd007 */
 		{PTP_DPC_OLYMPUS_ISO2, N_("ISO Speed")},	/* 0xd1c0 */
+		{PTP_DPC_OLYMPUS_AFOnInMF, N_("AF-ON in MF")},	/* 0xd1cb */
+		{PTP_DPC_OLYMPUS_AFScanner, N_("AF Scanner")},	/* 0xd1cd */
 		{PTP_DPC_OLYMPUS_SubjectDetectionMode, N_("Subject Detection Mode")},	/* 0xd1d0 */
 		{PTP_DPC_OLYMPUS_HighResShot, N_("High Res Shot")},	/* 0xd1b9 */
 		{PTP_DPC_OLYMPUS_SequentialMaxFPS, N_("Sequential Max FPS")},	/* 0xd1a1 */

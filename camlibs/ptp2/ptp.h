@@ -3504,6 +3504,8 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_PropertyD1C6			0xD1C6
 #define PTP_DPC_OLYMPUS_PropertyD1C7			0xD1C7
 #define PTP_DPC_OLYMPUS_PropertyD1C8			0xD1C8
+#define PTP_DPC_OLYMPUS_AFOnInMF			0xD1CB
+#define PTP_DPC_OLYMPUS_AFScanner			0xD1CD
 #define PTP_DPC_OLYMPUS_SubjectDetectionMode		0xD1D0
 #define PTP_DPC_OLYMPUS_HighResShotRawBit		0xD1D1
 #define PTP_DPC_SONY_IrisModeSetting			0xD001
