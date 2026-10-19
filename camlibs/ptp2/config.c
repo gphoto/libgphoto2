@@ -1785,6 +1785,18 @@ static struct deviceproptableu16 olympus_releasepriority[] = {
 };
 GENERIC16TABLE(Olympus_ReleasePriority,olympus_releasepriority)
 
+static struct deviceproptableu16 olympus_afon_in_mf[] = {
+	{ N_("Yes"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("No"),	0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_AFOnInMF,olympus_afon_in_mf)
+
+static struct deviceproptableu16 olympus_afscanner[] = {
+	{ N_("On"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Off"),	0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_AFScanner,olympus_afscanner)
+
 static struct deviceproptableu16 olympus_exposureprogram[] = {
 	{ N_("M"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("P"),	0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -12388,6 +12400,8 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Image Review"),                   "imagereview",              PTP_DPC_OLYMPUS_ImageReview,            PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ImageReview,    _put_Olympus_ImageReview },
 	{ N_("Release Priority S-AF"),          "releaseprioritysaf",       PTP_DPC_OLYMPUS_ReleasePrioritySAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
 	{ N_("Release Priority C-AF"),          "releaseprioritycaf",       PTP_DPC_OLYMPUS_ReleasePriorityCAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("AF-ON in MF"),                    "afonmf",                   PTP_DPC_OLYMPUS_AFOnInMF,              PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFOnInMF,      _put_None },
+	{ N_("AF Scanner"),                     "afscanner",                PTP_DPC_OLYMPUS_AFScanner,             PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFScanner,     _put_Olympus_AFScanner },
 	{ N_("WB Keep Warm Color"),             "wbkeepwarmcolor",          PTP_DPC_OLYMPUS_WBKeepWarmColor,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
 	{ N_("Sequential Max FPS"),             "sequentialmaxfps",         PTP_DPC_OLYMPUS_SequentialMaxFPS,       PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
 	{ N_("Sequential Frame Count Limiter"), "sequentialframelimiter",   PTP_DPC_OLYMPUS_SequentialFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
