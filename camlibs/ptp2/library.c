@@ -7280,8 +7280,9 @@ sonyout:
 				if (PTP_RC_OK == ptp_find_object_in_cache (params, *phandle, &ob)) /* already have it */
 					continue;
 				/* might be a just deleted entry , seen in https://github.com/gphoto/gphoto2/issues/456 */
+				/* the X-T3 answers AccessDenied instead of DeviceBusy for already downloaded objects */
 				memset (&oi,0,sizeof(oi));
-				if (PTP_RC_DeviceBusy == ptp_getobjectinfo (params, *phandle, &oi))
+				if (PTP_RC_OK != ptp_getobjectinfo (params, *phandle, &oi))
 					continue;
 				ptp_free_objectinfo (&oi);
 				event.Code = PTP_EC_ObjectAdded;
