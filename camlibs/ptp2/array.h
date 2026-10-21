@@ -32,9 +32,9 @@
  * This is basically a TYPE* pointer and a length integer. This structure
  * together with the typical use-cases repeats regularly throughout the
  * codebase. It raises the level of abstraction and improves code
- * readabilty. axxel is a c++ developer and misses his STL ;)
+ * readability. axxel is a c++ developer and misses his STL ;)
  *
- * A typical life-cycle lookes like this:
+ * A typical life-cycle looks like this:
  *
  * typedef ARRAY_OF(PTPObject) PTPObjects;
  * PTPObjects objects;

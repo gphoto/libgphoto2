@@ -226,7 +226,7 @@ static int enigma13_download_img(Camera *camera, char *toc, int index, char **im
 
 	gp_log(GP_LOG_DEBUG, "enigma13","DOWNLOADING IMAGE NO %d",index);
 
-	/* Offset for image informations .
+	/* Offset for image information .
 	Each image has 16 bytes for name and 16 for size, and others*/
 	p = (uint8_t *)toc + (index*2)*32;
 
