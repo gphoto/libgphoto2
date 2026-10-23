@@ -454,15 +454,28 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 		di->DeviceProps_len += 72;
 
-		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_FUJI_GetDeviceInfo)) {
+		/* The Fujifilm specific GetDeviceInfo (0x902b) returns the actual
+		 * list of supported device properties, replacing the injected
+		 * X-T3 era property list. Fujifilm cameras usually do not list
+		 * 0x902b in their DeviceInfo operation list even though they
+		 * support it, so also try it once on X-Series/GFX era models
+		 * when it is not advertised, and keep the injected list if the
+		 * camera rejects the query. */
+		if (ptp_operation_issupported(&camera->pl->params, PTP_OC_FUJI_GetDeviceInfo) ||
+		    (di->Model && (di->Model[0] == 'X' || !strncmp (di->Model, "GFX", 3)))) {
 			uint16_t	*props;
 			unsigned int	numprops;
+			uint16_t	ret;
 
-			C_PTP (ptp_fuji_getdeviceinfo (params, &props, &numprops));
-			free (di->DeviceProps);
+			ret = ptp_fuji_getdeviceinfo (params, &props, &numprops);
+			if (ret != PTP_RC_OK && ptp_operation_issupported(&camera->pl->params, PTP_OC_FUJI_GetDeviceInfo))
+				C_PTP (ret);
+			if (ret == PTP_RC_OK) {
+				free (di->DeviceProps);
 
-			di->DeviceProps		= props;
-			di->DeviceProps_len	= numprops;
+				di->DeviceProps		= props;
+				di->DeviceProps_len	= numprops;
+			}
 		}
 
 	}
