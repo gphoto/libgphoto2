@@ -2753,10 +2753,14 @@ static struct {
 	{"Fuji:Fujifilm X-H2",			0x04cb, 0x02f2, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/888 */
 	{"Fuji:Fujifilm X-T5",			0x04cb, 0x02fc, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/pinpox/rawji/issues/5 */
+	{"Fuji:Fujifilm X-S20",			0x04cb, 0x02f7, PTP_CAP|PTP_CAP_PREVIEW},
 	/* via email */
 	{"Fuji:Fujifilm GFX100 II",		0x04cb, 0x02fe, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/964 */
 	{"Fuji:Fujifilm X100VI",		0x04cb, 0x0305, 0},
+	/* https://github.com/eggricesoy/filmkit/issues/12 */
+	{"Fuji:Fujifilm X-T50",			0x04cb, 0x0306, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Capture when camera set in Tether. */
 	{"Fuji:Fujifilm X-M5",			0x04cb, 0x030c, PTP_CAP|PTP_CAP_PREVIEW},
 	/* No capture support. */
