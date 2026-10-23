@@ -2748,8 +2748,9 @@ static struct {
 	{"Fuji:Fujifilm GFX 100S",		0x04cb, 0x02ea, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/603 */
 	{"Fuji:Fujifilm X-S10",			0x04cb, 0x02ea, PTP_CAP_PREVIEW},	/* only webcam mode apparently */
-	/* email */
-	{"Fuji:Fujifilm X-H2S",			0x04cb, 0x02f0, 0},
+	/* Supported by FUJIFILM Tether App, same generation as X-H2.
+	 * https://fujifilm-x.com/en-us/products/software/tether-app/specifications/ */
+	{"Fuji:Fujifilm X-H2S",			0x04cb, 0x02f0, PTP_CAP|PTP_CAP_PREVIEW},
 	{"Fuji:Fujifilm X-H2",			0x04cb, 0x02f2, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/888 */
 	{"Fuji:Fujifilm X-T5",			0x04cb, 0x02fc, PTP_CAP|PTP_CAP_PREVIEW},
@@ -2757,8 +2758,10 @@ static struct {
 	{"Fuji:Fujifilm X-S20",			0x04cb, 0x02f7, PTP_CAP|PTP_CAP_PREVIEW},
 	/* via email */
 	{"Fuji:Fujifilm GFX100 II",		0x04cb, 0x02fe, PTP_CAP|PTP_CAP_PREVIEW},
-	/* https://github.com/gphoto/libgphoto2/issues/964 */
-	{"Fuji:Fujifilm X100VI",		0x04cb, 0x0305, 0},
+	/* https://github.com/gphoto/libgphoto2/issues/964
+	 * Capture failed on early firmware, but the camera is tether-capable
+	 * per Fujifilm's Tether App supported camera list. */
+	{"Fuji:Fujifilm X100VI",		0x04cb, 0x0305, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/eggricesoy/filmkit/issues/12 */
 	{"Fuji:Fujifilm X-T50",			0x04cb, 0x0306, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Capture when camera set in Tether. */
