@@ -465,6 +465,13 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			di->DeviceProps_len	= numprops;
 		}
 
+		/* Fujifilm reuses USB product ids across camera models, so the
+		 * model we matched in the camera table can be wrong (e.g.
+		 * GFX 50S II matches the GFX100 entry, issue 1282).
+		 * Log what the camera reports for debugging and new id collection. */
+		if (di->Model && *di->Model)
+			GP_LOG_D ("Fujifilm reports model '%s', matched table entry '%s'",
+				di->Model, a.model);
 	}
 
 	/* Nikon DSLR hide its newer opcodes behind another vendor specific query,
