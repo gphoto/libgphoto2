@@ -22,14 +22,14 @@
  * In particular : fix some bugs, and implementation of advanced
  * functions : delete some images, delete all images, capture new image,
  * update an image to the camera, get thumbnails, get information, get
- * summary, get configuration, get manual, get about, get EXIF informations
+ * summary, get configuration, get manual, get about, get EXIF information
  *
  */
 
 /* NOTES :
  * Becareful, image information number starts at 1 and finish at the
  * max image number. But when you want to work on the images, you must
- * read image informations, and check the real image number in the image
+ * read image information, and check the real image number in the image
  * information header and use this number with all functions !!
  */
 
@@ -156,7 +156,7 @@ k_ping (GPPort *port) {
 }
 
 /*
- * Read image informations
+ * Read image information
  */
 static int
 k_info_img (unsigned int image_no, void *data, CameraFileInfo* info,
@@ -186,7 +186,7 @@ k_info_img (unsigned int image_no, void *data, CameraFileInfo* info,
 	/* Get the file info here and write it into <info> */
 	/* There is no audio support with this camera */
 	info->audio.fields = GP_FILE_INFO_NONE;
-	/* Preview informations */
+	/* Preview information */
 	info->preview.fields = GP_FILE_INFO_TYPE | GP_FILE_INFO_SIZE
 		| GP_FILE_INFO_WIDTH | GP_FILE_INFO_HEIGHT;
 	strcpy (info->preview.type, GP_MIME_JPEG);
@@ -340,7 +340,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	image_no = gp_filesystem_number(fs, folder, filename, context);
 	if (image_no < 0) return image_no;
 
-	/* Search the image informations */
+	/* Search the image information */
 	image_no++;
 	ret = k_info_img (image_no, data, (CameraFileInfo *)&file_info,
 		&image_number);
@@ -666,7 +666,7 @@ camera_capture (Camera* camera, CameraCaptureType type, CameraFilePath* path,
 }
 
 /*
- * Get informations about an image
+ * Get information about an image
  */
 static int
 get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
@@ -716,7 +716,7 @@ file_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 
 /** Camera settings **********************************************************/
 /*
- * List all informations about the camera
+ * List all information about the camera
  */
 static int
 camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
@@ -730,7 +730,7 @@ camera_get_config (Camera* camera, CameraWidget** window, GPContext *context)
 
 	GP_DEBUG ("*** ENTER: camera_get_config ***");
 
-	/* get informations about camera */
+	/* get information about camera */
 	cmd[0] = ESC;
 	cmd[1] = GETCAMINFO;
 	ret = gp_port_write (camera->port, (char*)cmd, sizeof(cmd));
@@ -1123,7 +1123,7 @@ camera_summary (Camera *camera, CameraText *text, GPContext *context)
 
 	GP_DEBUG ("*** ENTER: camera_summary ***");
 
-	/* get informations about camera */
+	/* get information about camera */
 	cmd[0] = ESC;
 	cmd[1] = GETCAMINFO;
 	ret = gp_port_write (camera->port, (char*)cmd, sizeof(cmd));
@@ -1179,7 +1179,7 @@ camera_summary (Camera *camera, CameraText *text, GPContext *context)
 	return (GP_OK);
 }
 
-/** Camera's driver informations *********************************************/
+/** Camera's driver information *********************************************/
 
 /*
  * Say somethings about driver's authors

@@ -40,7 +40,7 @@
  * \brief Out of memory
  */
 #define GP_ERROR_NO_MEMORY		-3
-/* FIXME: GP_ERROR_NO_MEMORY is used to communicate two completely differnt
+/* FIXME: GP_ERROR_NO_MEMORY is used to communicate two completely different
  * things, which have nothing to do with each other:
  *  - the camera went out of memory because the storage space ran out, this
  *    is totally "normal"

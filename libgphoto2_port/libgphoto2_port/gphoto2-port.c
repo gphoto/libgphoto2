@@ -244,7 +244,7 @@ gp_port_set_info (GPPort *port, GPPortInfo info)
 /**
  * \brief Retrieves information about the port.
  *
- * Retrieves the informations set by gp_port_set_info().
+ * Retrieves the information set by gp_port_set_info().
  *
  * \param port a GPPort
  * \param info GPPortInfo
@@ -456,7 +456,7 @@ gp_port_read (GPPort *port, char *data, int size)
  *
  * Reads a specified number of bytes from the interrupt endpoint
  * into the supplied buffer.
- * Function waits port->timeout miliseconds for data on interrupt endpoint.
+ * Function waits port->timeout milliseconds for data on interrupt endpoint.
  *
  * \return a gphoto2 error code
  **/
@@ -489,7 +489,7 @@ gp_port_check_int (GPPort *port, char *data, int size)
  *
  * Reads a specified number of bytes from the interrupt endpoint
  * into the supplied buffer.
- * Function waits 50 miliseconds for data on interrupt endpoint.
+ * Function waits 50 milliseconds for data on interrupt endpoint.
  *
  * \return a gphoto2 error code
  **/
