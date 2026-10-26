@@ -6623,6 +6623,12 @@ camera_trigger_capture (Camera *camera, GPContext *context)
 	) {
 		PTPPropValue propval;
 
+		/* wait_event hands priority back to the camera, take it for the capture (as camera_fuji_capture does) */
+		if (have_prop(camera, params->deviceinfo.VendorExtensionID, PTP_DPC_FUJI_PriorityMode)) {
+			propval.u16 = 0x0002;
+			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_FUJI_PriorityMode, &propval, PTP_DTC_UINT16));
+		}
+
 		/* focus */
 		propval.u16 = 0x0200;
 		C_PTP_REP (ptp_setdevicepropvalue (params, 0xd208, &propval, PTP_DTC_UINT16));
