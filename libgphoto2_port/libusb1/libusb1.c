@@ -581,6 +581,8 @@ _close_async_interrupts(GPPort *port)
 static int
 gp_libusb1_close (GPPort *port)
 {
+	int ret = GP_OK;
+
 	C_PARAMS (port);
 
 	if (port->pl->dh == NULL)
@@ -591,13 +593,19 @@ gp_libusb1_close (GPPort *port)
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
 	if (gp_port_usb_get_sys_device() == -1) {
 #endif
+	/* Keep cleaning up even when release_interface fails (typical after the
+	 * camera was unplugged). Returning early here used to skip libusb_close
+	 * and the IRQ-list free, which is the leak reported in #1262. */
 	if (libusb_release_interface (port->pl->dh,
 				   port->settings.usb.interface) < 0) {
 		int saved_errno = errno;
 		gp_port_set_error (port, _("Could not release interface %d (%s)."),
 				   port->settings.usb.interface,
 				   strerror(saved_errno));
-		return GP_ERROR_IO;
+		ret = GP_ERROR_IO;
+	} else if (port->pl->detached) {
+		if (LOG_ON_LIBUSB_E (libusb_attach_kernel_driver (port->pl->dh, port->settings.usb.interface)))
+			gp_port_set_error (port, _("Could not reattach kernel driver of camera device."));
 	}
 
 #if 0
@@ -611,14 +619,10 @@ gp_libusb1_close (GPPort *port)
 			gp_port_set_error (port, _("Could not reset "
 						   "USB port (%s)."),
 					   strerror(saved_errno));
-			return (GP_ERROR_IO);
+			ret = GP_ERROR_IO;
 		}
 	}
 #endif
-	if (port->pl->detached) {
-		if (LOG_ON_LIBUSB_E (libusb_attach_kernel_driver (port->pl->dh, port->settings.usb.interface)))
-			gp_port_set_error (port, _("Could not reattach kernel driver of camera device."));
-	}
 
 	libusb_close (port->pl->dh);
 #ifdef HAVE_LIBUSB_WRAP_SYS_DEVICE
@@ -638,7 +642,7 @@ gp_libusb1_close (GPPort *port)
 	port->pl->irqs_head = NULL;
 	port->pl->irqs_tail = NULL;
 	port->pl->dh = NULL;
-	return GP_OK;
+	return ret;
 }
 
 static int
