@@ -41,6 +41,8 @@ unsigned int digi_get_data_size             (CameraPrivateLibrary *, int entry);
 unsigned int digi_get_picture_width             (CameraPrivateLibrary *, int entry);
 int digi_is_clip                       (CameraPrivateLibrary *, int entry);
 int digi_decompress (unsigned char *out_data, unsigned char *data, int w, int h);
+int digi_decompress_quadrants (unsigned char *out_data, unsigned char *data,
+				unsigned int data_size, int w, int h);
 int digi_postprocess	(int width, int height, unsigned char* rgb);
 int digi_delete_all	(GPPort *, CameraPrivateLibrary *priv);
 

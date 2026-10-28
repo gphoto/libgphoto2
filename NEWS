@@ -1,5 +1,9 @@
 libgphoto2 2.5.34.1 development
 
+digigr8:
+* SQ Technology A130 / Dual Mode Camera 1300 (0x2770:0x9060) added,
+  including its 1280x960 photos stored as four 640x480 quadrants
+
 ptp2:
 * Canon EOS CapturePreview caches GetViewFinderData type 17 (planar
   YRGB LV histogram) and exposes it as /main/status/eosviewfinderhistogram

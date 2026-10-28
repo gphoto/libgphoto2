@@ -47,6 +47,7 @@ static const struct {
 	unsigned short idProduct;
 } models[] = {
 	{"Digigr8",		GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
+	{"SQ Technology A130", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x9060},
 	{"Cobra Digital Camera DC150", GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770,
 									0x905c},
 	{"Che-Ez Snap SNAP-U",	GP_DRIVER_STATUS_EXPERIMENTAL, 0x2770, 0x905c},
@@ -225,6 +226,7 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 	switch (w) {
 	case 176: h = 144; break;
 	case 640: h = 480; break;
+	case 1280: h = 960; break;
 	case 320: h = 240; break;
 	default:  h = 288; break;
 	}
@@ -235,7 +237,7 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 		camera->pl->last_fetched_entry = k;
 		return GP_OK;
 	}
-	if (b < w*h) {
+	if (!comp_ratio && b < w*h) {
 		GP_DEBUG("need %d bytes, supposed to read only %d", w*h, b);
 		return GP_ERROR;
 	}
@@ -285,7 +287,14 @@ get_file_func(CameraFilesystem *fs, const char *folder, const char *filename,
 		free (ppm);
 		goto end;
 	}
-	if(comp_ratio) {
+	if (camera->pl->catalog[16 * k] == 0x67) {
+		status = digi_decompress_quadrants (p_data, data, b, w, h);
+		if (status < GP_OK) {
+			free (p_data);
+			free (ppm);
+			goto end;
+		}
+	} else if(comp_ratio) {
 		digi_decompress (p_data, data, w, h);
 	} else
 		memcpy(p_data, data, w * h);
