@@ -144,6 +144,14 @@ restart:
 	alloc_table_size = priv->nb_entries * 0x10 + 0x30;
 	if (alloc_table_size%0x200)
 		alloc_table_size += 0x200 - (alloc_table_size%0x200);
+	/* nb_entries comes from the camera. The table has to fit into the
+	 * local info buffer as well as into priv->table. */
+	if ((size_t)alloc_table_size > sizeof(info) ||
+	    (size_t)alloc_table_size - 0x30 > sizeof(priv->table)) {
+		GP_DEBUG("alloc_table_size 0x%x is too large for %d entries\n",
+			 alloc_table_size, priv->nb_entries);
+		return GP_ERROR_CORRUPTED_DATA;
+	}
 	/* However, we have already just now downloaded 0x200 bytes, so
 	 * when downloading the rest of the table we correct for that and
 	 * just download whatever remains of the information block.
