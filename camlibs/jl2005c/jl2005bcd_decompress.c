@@ -123,6 +123,13 @@ jl2005bcd_decompress (unsigned char *output, unsigned char *input,
 			GP_DEBUG("No thumbnail is present!\n");
 			return GP_ERROR_NOT_SUPPORTED;
 		} else {
+			/* thumbnail_width/height come from a device header byte; the
+			 * RGB565 payload that follows the 16-byte header must actually
+			 * be large enough for that many samples. */
+			if (inputsize < 16 + 2 * thumbnail_width * thumbnail_height) {
+				GP_DEBUG("thumbnail larger than input\n");
+				return GP_ERROR_CORRUPTED_DATA;
+			}
 			out = malloc(thumbnail_width * thumbnail_height * 3);
 			thumb = (uint16_t *)(input + 16);
 			for (i = 0; i < thumbnail_width * thumbnail_height;
