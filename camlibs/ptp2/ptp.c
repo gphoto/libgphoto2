@@ -5856,7 +5856,13 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
 
 	nums = dtoh32o(data, offset);
 
-	*props = calloc(nums, sizeof(uint16_t));
+	/* a camera replying with garbage nums would make the DPD loop below
+	 * read past the buffer: clamp to the payload the camera actually sent
+	 * (each DPD blob is at least 4 bytes of its own length header). */
+	if (nums > (size - 4) / 4)
+		nums = (size - 4) / 4;
+
+	*props = calloc(nums ? nums : 1, sizeof(uint16_t));
 	if (!*props)
 		goto error;
 	*numprops = nums;
@@ -5864,6 +5870,8 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
 		PTPDevicePropDesc	dpd;
 		unsigned int		dsize = dtoh32o(data, offset);
 
+		if (dsize > size - offset)
+			break;
 		if (!ptp_unpack_DPD(params, data, &dpd, dsize, &offset))
 			break;
 		(*props)[i] = dpd.DevicePropCode;
