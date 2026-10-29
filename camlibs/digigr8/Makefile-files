@@ -14,6 +14,9 @@ camlibdoc_DATA          += %reldir%/README.9052
 EXTRA_DIST              += %reldir%/README.905C
 camlibdoc_DATA          += %reldir%/README.905C
 
+EXTRA_DIST              += %reldir%/README.9060
+camlibdoc_DATA          += %reldir%/README.9060
+
 EXTRA_DIST              += %reldir%/README.913D
 camlibdoc_DATA          += %reldir%/README.913D
 

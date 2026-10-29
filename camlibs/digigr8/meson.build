@@ -18,6 +18,7 @@ install_data(
   'README.9051',
   'README.9052',
   'README.905C',
+  'README.9060',
   'README.913D',
   install_dir: camlibdoc_dir,
   install_tag: 'doc',
