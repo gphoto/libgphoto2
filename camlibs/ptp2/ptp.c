@@ -2031,13 +2031,17 @@ ptp_free_objectpropdesc(PTPObjectPropDesc* opd)
 			for (i=0;i<opd->FORM.Enum.NumberOfValues;i++)
 				ptp_free_propvalue (opd->DataType, opd->FORM.Enum.SupportedValue+i);
 			free (opd->FORM.Enum.SupportedValue);
+			opd->FORM.Enum.SupportedValue = NULL;
+			opd->FORM.Enum.NumberOfValues = 0;
 		}
 		break;
 	case PTP_OPFF_DateTime:
 		free(opd->FORM.DateTime.String);
+		opd->FORM.DateTime.String = NULL;
 		break;
 	case PTP_OPFF_RegularExpression:
 		free(opd->FORM.RegularExpression.String);
+		opd->FORM.RegularExpression.String = NULL;
 		break;
 	case PTP_OPFF_FixedLengthArray:	/* nothing to free */ /* fallthrough */
 	case PTP_OPFF_ByteArray:	/* nothing to free */ /* fallthrough */
