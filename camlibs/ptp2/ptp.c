@@ -3949,10 +3949,12 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 		ptp_pack_EOS_CustomFuncEx( params, data + 8, value->str );
 		break;
 	default:
-		if (datatype != PTP_DTC_STR)
-			size = sizeof(uint32_t)*3;
-		else
+		if (datatype == PTP_DTC_STR)
 			size = strlen(value->str) + 1 + 8;
+		else if (datatype == PTP_DTC_AINT32)
+			size = 8 + value->a.count * sizeof(uint32_t);
+		else
+			size = sizeof(uint32_t)*3;
 		data = calloc(size,sizeof(char));
 		if (!data) return PTP_RC_GeneralError;
 		switch (datatype) {
@@ -3974,6 +3976,13 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 		case PTP_DTC_STR:
 			strcpy((char*)data + 8, value->str);
 			break;
+		case PTP_DTC_AINT32: {
+			unsigned int i;
+
+			for (i=0;i<value->a.count;i++)
+				htod32a(&data[8+i*4], value->a.v[i].i32);
+			break;
+		}
 		}
 	}
 
@@ -4014,6 +4023,10 @@ ptp_canon_eos_setdevicepropvalue (PTPParams* params,
 			case PTP_DTC_STR:
 				free (dpd->CurrentValue.str);
 				dpd->CurrentValue.str = strdup(value->str);
+				break;
+			case PTP_DTC_AINT32:
+				ptp_free_propvalue (datatype, &dpd->CurrentValue);
+				duplicate_PropertyValue (value, &dpd->CurrentValue, datatype);
 				break;
 			}
 		}
