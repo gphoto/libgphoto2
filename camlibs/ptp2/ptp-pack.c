@@ -2246,6 +2246,10 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			case PTP_DPC_CANON_EOS_WhiteBalanceAdjustB:
 				dpd->DataType = PTP_DTC_INT32;
 				break;
+			/* struct of 32bit words, the first one is the struct size in bytes */
+			case PTP_DPC_CANON_EOS_FocusShiftSetting:
+				dpd->DataType = PTP_DTC_AINT32;
+				break;
 			/* unknown props, listed from dump.... all 16 bit, but vals might be smaller */
 			case PTP_DPC_CANON_EOS_DPOFVersion:
 				dpd->DataType = PTP_DTC_UINT16;
@@ -2348,6 +2352,19 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				ptp_debug (params, INDENT "prop %x value == '%s' (str)", dpc, dpd->CurrentValue.str);
 				break;
 			}
+			case PTP_DTC_AINT32:
+				ptp_free_propvalue (dpd->DataType, &dpd->DefaultValue);
+				ptp_free_propvalue (dpd->DataType, &dpd->CurrentValue);
+				dpd->CurrentValue.a.count = xsize / sizeof(uint32_t);
+				dpd->CurrentValue.a.v = calloc (dpd->CurrentValue.a.count, sizeof(dpd->CurrentValue.a.v[0]));
+				if (!dpd->CurrentValue.a.v)
+					dpd->CurrentValue.a.count = 0;
+				for (j=0;j<dpd->CurrentValue.a.count;j++) {
+					dpd->CurrentValue.a.v[j].i32 = dtoh32a(xdata+j*4);
+					ptp_debug (params, INDENT "prop %x value[%2d] == %d (i32)", dpc, j, dpd->CurrentValue.a.v[j].i32);
+				}
+				duplicate_PropertyValue (&dpd->CurrentValue, &dpd->DefaultValue, dpd->DataType);
+				break;
 			default:
 				/* debug is printed in switch above this one */
 				break;
