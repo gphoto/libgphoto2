@@ -5707,9 +5707,21 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 			case PTP_EC_Olympus_ObjectAdded:
 			case PTP_EC_Olympus_ObjectAdded_New:	/* seen in newer traces, https://github.com/gphoto/gphoto2/issues/310 */
 			case PTP_EC_Olympus_CaptureComplete:
-			case PTP_EC_ObjectAdded:
+			case PTP_EC_ObjectAdded: {
+				PTPObject *ob;
+
 				newobject = event.Param1;
+				if (!newobject)
+					break;
+				C_PTP_REP (ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob));
+				/* An empty card creates directories before the image. */
+				if (ob->oi.ObjectFormat == PTP_OFC_Association) {
+					gp_filesystem_reset (camera->fs);
+					newobject = 0;
+					break;
+				}
 				goto downloadfile;
+			}
 			default:
 				GP_LOG_D ("unexpected unhandled event Code %04x, Param 1 %08x", event.Code, event.Param1);
 				break;
@@ -5722,7 +5734,7 @@ downloadfile:
 	path->name[0]='\0';
 	path->folder[0]='\0';
 
-	if (newobject != 0) /* FIXME: does not handle association adds I think */
+	if (newobject != 0)
 		return add_object_to_fs_and_path (camera, newobject, path, context);
 	return GP_ERROR;
 }
@@ -7427,10 +7439,18 @@ sonyout:
 
 downloadomdfile:
 		if (newobject != 0) {
+			PTPObject *ob;
+
 			C_MEM (path = calloc(1, sizeof(CameraFilePath)));
 			CR (add_object_to_fs_and_path (camera, newobject, path, context));
 
-			*eventtype = GP_EVENT_FILE_ADDED;
+			C_PTP (ptp_find_object_in_cache (params, newobject, &ob));
+			if (ob->oi.ObjectFormat == PTP_OFC_Association) {
+				*eventtype = GP_EVENT_FOLDER_ADDED;
+				gp_filesystem_reset (camera->fs);
+			} else {
+				*eventtype = GP_EVENT_FILE_ADDED;
+			}
 			*eventdata = path;
 			return GP_OK;
 		}
