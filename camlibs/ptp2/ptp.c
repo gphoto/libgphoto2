@@ -1004,9 +1004,13 @@ ptp_sigma_fp_parse_ifdlist (PTPParams* params, unsigned char *data, unsigned int
 		return PTP_RC_GeneralError;
 	}
 
+	if (size < 8) {
+		ptp_debug (params, "size %d is too small for an entry count", size);
+		return PTP_RC_GeneralError;
+	}
 	entrycount = dtoh32a(data+4);
 	offset = 8;
-	if (8 + 12*entrycount > size) {
+	if (entrycount > (size - 8) / 12) {	/* written this way so a huge count cannot overflow */
 		ptp_debug (params, "count %d entries do not fit size %d", entrycount, size);
 		return PTP_RC_GeneralError;
 	}
@@ -1018,9 +1022,13 @@ ptp_sigma_fp_parse_ifdlist (PTPParams* params, unsigned char *data, unsigned int
 		switch (dtoh16a(data+offset+i*12+2)) {
 		case 0x2: /* ASCII */
 			if (count > 4) {
-				ptp_debug (params, "ascii: %s", &data[dtoh32a(data+offset+i*12+8)]);
+				/* value is an offset into the block; keep the string inside it */
+				if ((value < size) && (count <= size - value) && (count <= 4096))
+					ptp_debug (params, "ascii: %.*s", (int)count, &data[value]);
+				else
+					ptp_debug (params, "ascii: offset %d / count %d outside the block", value, count);
 			} else {
-				ptp_debug (params, "ascii: %s", data+offset+i*12+8);
+				ptp_debug (params, "ascii: %.*s", (int)count, data+offset+i*12+8);
 			}
 			break;
 		case 0xb: /* 32bit ieee float */
