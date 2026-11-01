@@ -5335,12 +5335,18 @@ ptp_mtp_getobjectpropdesc (
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int	size;
+	uint16_t	ret;
 
 	PTP_CNT_INIT(ptp, PTP_OC_MTP_GetObjectPropDesc, opc, ofc);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_OPD (params, data, opd, size);
+	ret = ptp_unpack_OPD (params, data, opd, size);
 	free(data);
-	return PTP_RC_OK;
+	if (ret) {
+		return PTP_RC_OK;
+	} else {
+		ptp_debug (params, "ptp_mtp_getobjectpropdesc: unpacking OPD failed");
+		return PTP_RC_GeneralError;
+	}
 }
 
 /**
