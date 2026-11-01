@@ -988,7 +988,7 @@ ptp_sigma_fp_liveview_image (PTPParams* params, unsigned char **data, unsigned i
 	return ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size);
 }
 
-static uint16_t /* TODO: why is this return value ignored at all call sights? */
+static uint16_t
 ptp_sigma_fp_parse_ifdlist (PTPParams* params, unsigned char *data, unsigned int size)
 {
 	uint32_t	datalen, entrycount, offset;
@@ -1049,8 +1049,7 @@ ptp_sigma_fp_9035 (PTPParams* params, unsigned char **data, unsigned int *size)
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCameraInfo);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
-	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
-	return PTP_RC_OK;
+	return ptp_sigma_fp_parse_ifdlist (params, *data, *size);
 }
 
 uint16_t
@@ -1060,8 +1059,7 @@ ptp_sigma_fp_getcamcansetinfo5 (PTPParams* params, unsigned char **data, unsigne
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamCanSetInfo5);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
-	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
-	return PTP_RC_OK;
+	return ptp_sigma_fp_parse_ifdlist (params, *data, *size);
 }
 
 uint16_t
@@ -1071,8 +1069,7 @@ ptp_sigma_fp_getcamdatagroupfocus (PTPParams* params, unsigned char **data, unsi
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamDataGroupFocus);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
-	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
-	return PTP_RC_OK;
+	return ptp_sigma_fp_parse_ifdlist (params, *data, *size);
 }
 
 uint16_t
@@ -1082,8 +1079,7 @@ ptp_sigma_fp_getcamdatagroupmovie (PTPParams* params, unsigned char **data, unsi
 
 	PTP_CNT_INIT(ptp, PTP_OC_SIGMA_FP_GetCamDataGroupMovie);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, size));
-	ptp_sigma_fp_parse_ifdlist (params, *data, *size);
-	return PTP_RC_OK;
+	return ptp_sigma_fp_parse_ifdlist (params, *data, *size);
 }
 
 uint16_t
