@@ -1581,6 +1581,7 @@ ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode)
 {
 	PTPContainer	ptp;
 	unsigned char	data[10];
+	unsigned char	*dataptr = data;
 	uint32_t 	propcode = 0x03010011;
 	uint32_t 	type = 2;
 
@@ -1589,7 +1590,7 @@ ptp_panasonic_manualfocusdrive (PTPParams* params, uint16_t mode)
 	htod16a(&data[8], mode);	/* memcpy(&data[8], &mode, 2); */
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ManualFocusDrive, propcode);
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, NULL);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &dataptr, NULL);
 }
 
 uint16_t
@@ -1597,6 +1598,7 @@ ptp_panasonic_recordmode (PTPParams* params, uint16_t mode)
 {
 	PTPContainer	ptp;
 	unsigned char	data[10];
+	unsigned char	*dataptr = data;
 	uint32_t 	propcode = 0x06000011;
 	uint32_t 	type = 2;
 
@@ -1605,7 +1607,7 @@ ptp_panasonic_recordmode (PTPParams* params, uint16_t mode)
 	htod16a(&data[8], mode);	/* memcpy(&data[8], &mode, 2); */
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_9409, propcode);
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, NULL);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &dataptr, NULL);
 }
 
 uint16_t
@@ -1655,13 +1657,14 @@ ptp_panasonic_setcapturetarget (PTPParams* params, uint16_t mode) // mode == 1 =
 {
 	PTPContainer	ptp;
 	unsigned char	data[10];
+	unsigned char	*dataptr = data;
 
 	htod32a(data, 	  0x08000091);	/* capturetarget */
 	htod32a(&data[4], 2); 		/* size */
 	htod16a(&data[8], mode);
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetCaptureTarget, 0);
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, NULL);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &dataptr, NULL);
 }
 
 uint16_t
