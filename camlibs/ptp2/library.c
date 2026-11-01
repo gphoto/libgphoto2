@@ -5737,17 +5737,23 @@ camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath 
 	int			ret, tries;
 	SIGMAFP_PictFileInfo2Ex	pictfileinfoex2;
 	SIGMAFP_CaptureStatus	captstatus;
+	unsigned int		imageid;
 
 	C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &captstatus));
-	GP_LOG_D("status before snap 0x%04x", captstatus.status);
+	/* the capture status database is a ring: the new shot goes into the first free entry */
+	imageid = captstatus.imagedbtail;
+	GP_LOG_D("status before snap 0x%04x, new shot will be entry %d", captstatus.status, imageid);
 
 	C_PTP_REP (ptp_sigma_fp_snap(params, 1, 1));
 
 	tries = 50;
 	while (tries--) {
-		C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, 0, &captstatus));
+		C_PTP_REP (ptp_sigma_fp_getcapturestatus(params, imageid, &captstatus));
 		GP_LOG_D("trying ... status 0x%04x", captstatus.status);
 		if ((captstatus.status & 0xf000) == 0x6000) {	/* failure */
+			/* clear the failed entry, or every later capture reads its stale status */
+			if (ptp_sigma_fp_clearimagedbsingle(params, captstatus.imageid) != PTP_RC_OK)
+				GP_LOG_E ("could not clear failed capture entry %d, later captures may report its stale status", captstatus.imageid);
 			if (captstatus.status == 0x6001) {
 				gp_context_error (context, _("Capture failed: No focus."));
 				return GP_ERROR;
@@ -5766,6 +5772,12 @@ camera_sigma_fp_capture (Camera *camera, CameraCaptureType type, CameraFilePath 
 
 		usleep(200*1000);
 
+	}
+	if (tries < 0) {
+		if (ptp_sigma_fp_clearimagedbsingle(params, imageid) != PTP_RC_OK)
+			GP_LOG_E ("could not clear timed out capture entry %d", imageid);
+		gp_context_error (context, _("Capture timed out."));
+		return GP_ERROR_TIMEOUT;
 	}
 	C_PTP_REP (ptp_sigma_fp_getpictfileinfo2(params, &pictfileinfoex2));
 
