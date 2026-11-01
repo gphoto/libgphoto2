@@ -8667,6 +8667,129 @@ _put_Canon_EOS_ContinousAF(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+/* Canon EOS focus bracketing (PTP_DPC_CANON_EOS_FocusShiftSetting) is a struct of
+ * int32 words: struct size in bytes, version, then the fields below, named after
+ * Canon's EDSDK, then focus stacking trimming and flash interval.
+ * Each widget changes one field and writes back the whole struct. */
+#define EOS_FOCUSSHIFT_FUNCTION			2	/* focus bracketing off/on */
+#define EOS_FOCUSSHIFT_SHOOTINGNUMBER		3
+#define EOS_FOCUSSHIFT_STEPWIDTH		4	/* focus increment */
+#define EOS_FOCUSSHIFT_EXPOSURESMOOTHING	5
+#define EOS_FOCUSSHIFT_STACKINGFUNCTION		6	/* in-camera depth composite */
+
+/* NULL if this camera's struct lacks the field */
+static PTPPropValue *
+_canon_eos_focusshift_field(PTPDevicePropDesc *dpd, unsigned int field) {
+	if ((dpd->DataType != PTP_DTC_AINT32) || (field >= dpd->CurrentValue.a.count))
+		return NULL;
+	return &dpd->CurrentValue.a.v[field];
+}
+
+static int
+_put_canon_eos_focusshift_field(PTPPropValue *propval, PTPDevicePropDesc *dpd, unsigned int field, int32_t value) {
+	if (!_canon_eos_focusshift_field(dpd, field))
+		return GP_ERROR_NOT_SUPPORTED;
+	C_MEM (propval->a.v = calloc (dpd->CurrentValue.a.count, sizeof(propval->a.v[0])));
+	memcpy (propval->a.v, dpd->CurrentValue.a.v, dpd->CurrentValue.a.count * sizeof(propval->a.v[0]));
+	propval->a.count = dpd->CurrentValue.a.count;
+	propval->a.v[field].i32 = value;
+	return GP_OK;
+}
+
+static int
+_get_Canon_EOS_FocusShift_OnOff(CONFIG_GET_ARGS, unsigned int field) {
+	PTPPropValue *value = _canon_eos_focusshift_field(dpd, field);
+
+	if (!value)
+		return GP_ERROR_NOT_SUPPORTED;
+	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+
+	gp_widget_add_choice (*widget, _("Off"));
+	gp_widget_add_choice (*widget, _("On"));
+	switch (value->i32) {
+	case 0: gp_widget_set_value (*widget, _("Off")); break;
+	case 1: gp_widget_set_value (*widget, _("On")); break;
+	default: {
+		char buf[200];
+		sprintf(buf,_("Unknown value %d"), value->i32);
+		gp_widget_set_value (*widget, buf);
+		break;
+	}
+	}
+	return GP_OK;
+}
+
+static int
+_put_Canon_EOS_FocusShift_OnOff(CONFIG_PUT_ARGS, unsigned int field) {
+	char *val;
+	int ival;
+
+	CR(gp_widget_get_value (widget, &val));
+	if (!strcmp(val,_("Off")))
+		ival = 0;
+	else if (!strcmp(val,_("On")))
+		ival = 1;
+	else if (sscanf(val,_("Unknown value %d"),&ival) != 1)
+		return GP_ERROR_BAD_PARAMETERS;
+	return _put_canon_eos_focusshift_field (propval, dpd, field, ival);
+}
+
+static int
+_get_Canon_EOS_FocusShift_Range(CONFIG_GET_ARGS, unsigned int field, float min, float max) {
+	PTPPropValue *value = _canon_eos_focusshift_field(dpd, field);
+	float f;
+
+	if (!value)
+		return GP_ERROR_NOT_SUPPORTED;
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget,menu->name);
+	gp_widget_set_range (*widget, min, max, 1);
+	f = value->i32;
+	gp_widget_set_value (*widget, &f);
+	return GP_OK;
+}
+
+static int
+_put_Canon_EOS_FocusShift_Range(CONFIG_PUT_ARGS, unsigned int field) {
+	float f, min, max, step;
+
+	CR(gp_widget_get_value (widget, &f));
+	CR(gp_widget_get_range (widget, &min, &max, &step));
+	if ((f < min) || (f > max))
+		return GP_ERROR_BAD_PARAMETERS;
+	return _put_canon_eos_focusshift_field (propval, dpd, field, (int32_t)f);
+}
+
+#define EOS_FOCUSSHIFT_ONOFF(name,field)			\
+static int							\
+_get_##name(CONFIG_GET_ARGS) {					\
+	return _get_Canon_EOS_FocusShift_OnOff(CONFIG_GET_NAMES, field);	\
+}								\
+								\
+static int							\
+_put_##name(CONFIG_PUT_ARGS) {					\
+	return _put_Canon_EOS_FocusShift_OnOff(CONFIG_PUT_NAMES, field);	\
+}
+
+#define EOS_FOCUSSHIFT_RANGE(name,field,min,max)		\
+static int							\
+_get_##name(CONFIG_GET_ARGS) {					\
+	return _get_Canon_EOS_FocusShift_Range(CONFIG_GET_NAMES, field, min, max);	\
+}								\
+								\
+static int							\
+_put_##name(CONFIG_PUT_ARGS) {					\
+	return _put_Canon_EOS_FocusShift_Range(CONFIG_PUT_NAMES, field);	\
+}
+
+/* ranges as in the camera menus, e.g. EOS R6 Mark II */
+EOS_FOCUSSHIFT_ONOFF(Canon_EOS_FocusBracketing,          EOS_FOCUSSHIFT_FUNCTION)
+EOS_FOCUSSHIFT_RANGE(Canon_EOS_FocusBracketingShots,     EOS_FOCUSSHIFT_SHOOTINGNUMBER, 2, 999)
+EOS_FOCUSSHIFT_RANGE(Canon_EOS_FocusBracketingIncrement, EOS_FOCUSSHIFT_STEPWIDTH, 1, 10)
+EOS_FOCUSSHIFT_ONOFF(Canon_EOS_FocusBracketingSmoothing, EOS_FOCUSSHIFT_EXPOSURESMOOTHING)
+EOS_FOCUSSHIFT_ONOFF(Canon_EOS_FocusBracketingComposite, EOS_FOCUSSHIFT_STACKINGFUNCTION)
+
 static int
 _get_Canon_EOS_MFDrive(CONFIG_GET_ARGS) {
 	gp_widget_new (GP_WIDGET_RADIO, _(menu->label), widget);
@@ -12321,6 +12444,11 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Bracketing"),                     "bracketing",               PTP_DPC_NIKON_Bracketing,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,             _put_Nikon_OnOff_UINT8 },
 	{ N_("Bracketing"),                     "bracketmode",              PTP_DPC_NIKON_E6ManualModeBracketing,   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_ManualBracketMode,       _put_Nikon_ManualBracketMode },
 	{ N_("Bracket Mode"),                   "bracketmode",              PTP_DPC_CANON_EOS_BracketMode,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_BracketMode,             _put_Canon_BracketMode },
+	{ N_("Focus Bracketing"),               "focusbracketing",          PTP_DPC_CANON_EOS_FocusShiftSetting,    PTP_VENDOR_CANON,   PTP_DTC_AINT32, _get_Canon_EOS_FocusBracketing,     _put_Canon_EOS_FocusBracketing },
+	{ N_("Focus Bracketing Shots"),         "focusbracketingshots",     PTP_DPC_CANON_EOS_FocusShiftSetting,    PTP_VENDOR_CANON,   PTP_DTC_AINT32, _get_Canon_EOS_FocusBracketingShots, _put_Canon_EOS_FocusBracketingShots },
+	{ N_("Focus Bracketing Increment"),     "focusbracketingincrement", PTP_DPC_CANON_EOS_FocusShiftSetting,    PTP_VENDOR_CANON,   PTP_DTC_AINT32, _get_Canon_EOS_FocusBracketingIncrement, _put_Canon_EOS_FocusBracketingIncrement },
+	{ N_("Focus Bracketing Exposure Smoothing"), "focusbracketingsmoothing", PTP_DPC_CANON_EOS_FocusShiftSetting, PTP_VENDOR_CANON, PTP_DTC_AINT32, _get_Canon_EOS_FocusBracketingSmoothing, _put_Canon_EOS_FocusBracketingSmoothing },
+	{ N_("Focus Bracketing Depth Composite"), "focusbracketingcomposite", PTP_DPC_CANON_EOS_FocusShiftSetting,  PTP_VENDOR_CANON,   PTP_DTC_AINT32, _get_Canon_EOS_FocusBracketingComposite, _put_Canon_EOS_FocusBracketingComposite },
 	{ N_("EV Step"),                        "evstep",                   PTP_DPC_NIKON_EVStep,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_EVStep,                  _put_Nikon_EVStep },
 	{ N_("Bracket Set"),                    "bracketset",               PTP_DPC_NIKON_BracketSet,               PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketSet,              _put_Nikon_BracketSet },
 	{ N_("Bracket Order"),                  "bracketorder",             PTP_DPC_NIKON_BracketOrder,             PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_BracketOrder,            _put_Nikon_BracketOrder },
