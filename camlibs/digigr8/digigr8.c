@@ -97,6 +97,7 @@ digi_get_comp_ratio (CameraPrivateLibrary *priv, int entry)
 	case 0x61:
 	case 0x62:
 	case 0x63:
+	case 0x67:
 	case 0x76: return 1;
 	case 0x41:
 	case 0x42:
@@ -134,6 +135,7 @@ digi_get_picture_width (CameraPrivateLibrary *priv, int entry)
 	case 0x63: return 320;
 	case 0x56:
 	case 0x76: return 640;
+	case 0x67: return 1280;
 	default:
 		GP_DEBUG ("Your pictures have unknown width.\n");
 			return 0;
