@@ -1,0 +1,42 @@
+Camera summary:
+Manufacturer: OMSYSTEM
+Model: PEN
+  Version: 1.00
+  Serial Number: BJXAxxxxx
+Vendor Extension ID: 0x6 (1.0)
+Vendor Extension Description: 
+
+Capture Formats: MS Wave Undefined Video Defined Type JPEG Unknown(b101)
+Display Formats: Undefined Type, Association/Directory, DPOF, MS Wave, Undefined Video, Defined Type, JPEG, Unknown(b101)
+Supported MTP Object Properties:
+	Undefined Type/3000: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	Association/Directory/3001: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	DPOF/3006: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name
+	MS Wave/3008: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	Undefined Video/b980: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData dc87/Width dc88/Height dc89/Duration de93/SampleRate de94/NumberOfChannels de9a/AudioBitRate
+	Defined Type/3800: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData dc88/Height dc87/Width dcd3/ImageBitDepth
+	JPEG/3801: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData dc88/Height dc87/Width dcd3/ImageBitDepth
+	Unknown(b101)/b101: dc01/StorageID dc02/ObjectFormat dc03/ProtectionStatus dc04/ObjectSize dc07/ObjectFileName dc0b/ParentObject dc41/PersistantUniqueObjectIdentifier dc44/Name dc81/RepresentativeSampleFormat dc82/RepresentativeSampleSize dc83/RepresentativeSampleHeight dc84/RepresentativeSampleWidth dc86/RepresentativeSampleData dc88/Height dc87/Width dcd3/ImageBitDepth
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	No Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: 
+	VolumeLabel: 
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 127831900160 (121910 MB)
+	Free Space (Bytes): 125781016576 (119954 MB)
+	Free Space (Images): -1
+
+Device Property Summary:
+Battery Level             (5001 ro u8 ): Range [1 - 100, step 1] value: 60% (60)
+Date & Time               (5011 rw str): '20261103T160635'
+Device Icon               (d405 ro [u8 ]): a[76288] 0,0,1,0,5,0,0,0,0,0,1,0,32,0,38,228,0,0,86,0,0,0,48,48,0,0,1,0,32,0,168,37,0,0,124,228,0,0,32,32,0,0,1,0,32,0,168,16,0,0,36,10,1,0,24,24,0,0,1,0,32,0,136,9, ...
+Session Initiator Info    (d406 rw str): 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
+Perceived Device Type     (d407 ro u32): 1
+
