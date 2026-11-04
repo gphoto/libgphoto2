@@ -1,6 +1,9 @@
 libgphoto2 2.5.34.1 development
 
 ptp2:
+* live view: find the end of preview JPEGs by walking their segments, not
+  at the first FF D9, which can occur inside the quantization table
+  (Panasonic GH5 frames were cut to a 53-byte header)
 * Canon EOS CapturePreview caches GetViewFinderData type 17 (planar
   YRGB LV histogram) and exposes it as /main/status/eosviewfinderhistogram
   (base64). Same USB transaction as the JPEG; requires live view on
