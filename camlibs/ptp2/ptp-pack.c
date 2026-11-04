@@ -736,6 +736,54 @@ outofmemory:
 	return 0;
 }
 
+/* Fujifilm GetDeviceInfo (0x902b) data: a uint32 count, then per property a
+ * uint32 length followed by that property's DevicePropDesc.
+ *
+ * Returns the number of property codes stored in a newly allocated *props,
+ * which the caller frees; *props is NULL when that number is 0. The walk stops
+ * at the first entry that does not fit or does not parse. It advances by the
+ * bytes ptp_unpack_DPD used, as the original walk did, so it does not matter
+ * whether a camera counts the length field itself in that length. */
+static inline unsigned int
+ptp_unpack_Fuji_DeviceProps (PTPParams *params, const unsigned char *data, unsigned int size, uint16_t **props)
+{
+	unsigned int	nums, i, n = 0, offset = 0;
+
+	*props = NULL;
+	if (!data || size < 4)
+		return 0;
+	nums = dtoh32o(data, offset);
+	/* every entry needs at least its 4 byte length, so clamp a garbage
+	 * count to what the reply can hold before allocating */
+	if (nums > (size - offset) / 4)
+		nums = (size - offset) / 4;
+	if (!nums)
+		return 0;
+	*props = calloc(nums, sizeof(uint16_t));
+	if (!*props)
+		return 0;
+	for (i = 0; i < nums && size - offset >= 4; i++) {
+		PTPDevicePropDesc	dpd;
+		unsigned int		dsize = dtoh32o(data, offset);
+		uint32_t		used = 0;
+
+		if (dsize > size - offset)
+			dsize = size - offset;
+		/* ptp_unpack_DPD reads from the start of the buffer it is given,
+		 * so pass this entry's descriptor rather than the whole reply */
+		if (!ptp_unpack_DPD(params, data + offset, &dpd, dsize, &used))
+			break;
+		(*props)[n++] = dpd.DevicePropCode;
+		ptp_free_devicepropdesc(&dpd);
+		offset += used;
+	}
+	if (!n) {
+		free (*props);
+		*props = NULL;
+	}
+	return n;
+}
+
 /* Device Property pack/unpack */
 #define PTP_dpd_Sony_DevicePropCode		0
 #define PTP_dpd_Sony_DataType			2

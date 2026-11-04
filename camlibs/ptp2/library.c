@@ -459,10 +459,13 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 			unsigned int	numprops;
 
 			C_PTP (ptp_fuji_getdeviceinfo (params, &props, &numprops));
-			free (di->DeviceProps);
+			/* keep the injected list when the reply has no usable entry */
+			if (numprops) {
+				free (di->DeviceProps);
 
-			di->DeviceProps		= props;
-			di->DeviceProps_len	= numprops;
+				di->DeviceProps		= props;
+				di->DeviceProps_len	= numprops;
+			}
 		}
 
 	}
