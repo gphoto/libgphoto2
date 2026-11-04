@@ -4315,6 +4315,7 @@ struct _PTPParams {
 	int			eos_captureenabled;
 	int			eos_camerastatus;
 	int			eos_uilocked;
+	int			canon_modedial_disabled;	/* we sent SetModeDialDisable(1) */
 
 	/*
 	 * Last type-17 LV histogram from CapturePreview (0x9153).
