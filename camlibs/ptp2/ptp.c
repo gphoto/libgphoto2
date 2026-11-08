@@ -5874,33 +5874,13 @@ ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned int *numpr
 {
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
-	unsigned int	nums, i, offset = 0, size  = 0;
+	unsigned int	size = 0;
 
 	PTP_CNT_INIT(ptp, PTP_OC_FUJI_GetDeviceInfo);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-
-	if (size < 8)
-		goto error;
-
-	nums = dtoh32o(data, offset);
-
-	*props = calloc(nums, sizeof(uint16_t));
-	if (!*props)
-		goto error;
-	*numprops = nums;
-	for (i=0;i<nums;i++) {
-		PTPDevicePropDesc	dpd;
-		unsigned int		dsize = dtoh32o(data, offset);
-
-		if (!ptp_unpack_DPD(params, data, &dpd, dsize, &offset))
-			break;
-		(*props)[i] = dpd.DevicePropCode;
-	}
+	*numprops = ptp_unpack_Fuji_DeviceProps (params, data, size, props);
 	free (data);
 	return PTP_RC_OK;
-error:
-	free (data);
-	return PTP_RC_GeneralError;
 }
 
 uint16_t
