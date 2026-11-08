@@ -1411,6 +1411,8 @@ static struct {
 
 	/* Mark Watson <watsonmw@gmail.com> */
 	{"Sony:ILCE-9M3 (Control)",		0x054c, 0x0e80, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/libgphoto2/issues/1304 */
+	{"Sony:ILCE-7CM2 (Control)",		0x054c, 0x0e8c, PTP_CAP|PTP_CAP_PREVIEW},
 
 	/* Mark Watson <watsonmw@gmail.com> */
 	{"Sony:ILX-LR1 (PC Control)",		0x054c, 0x0e90, PTP_CAP|PTP_CAP_PREVIEW},
