@@ -157,7 +157,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 	GP_DEBUG ("Getting filename of first file");
 	r = sierra_get_string_register (camera, 79, 1, NULL,
 					(unsigned char *)filename,
-					&len, context);
+					sizeof(filename), &len, context);
 	if ((r < 0) || (len <= 0) || !strcmp (filename, "        ")) {
 		CHECK (gp_list_populate (list, "P101%04i.JPG", count));
 		return GP_OK;
@@ -172,7 +172,7 @@ int sierra_list_files (Camera *camera, const char *folder, CameraList *list, GPC
 		GP_DEBUG ("Getting filename of file %i...", i + 1);
 		CHECK (sierra_get_string_register (camera, 79, i + 1, NULL,
 						   (unsigned char *)filename,
-						   &len, context));
+						   sizeof(filename), &len, context));
 		if ((len <= 0) || !strcmp (filename, "        "))
 			snprintf (filename, sizeof (filename),
 				  "P101%04i.JPG", i + 1);
@@ -205,7 +205,7 @@ int sierra_list_folders (Camera *camera, const char *folder, CameraList *list,
 		GP_DEBUG ("*** getting name of folder %i", i + 1);
 		CHECK (sierra_get_string_register (camera, 84, 0,
 						   NULL, (unsigned char *)buf,
-						   &bsize, context));
+						   sizeof(buf), &bsize, context));
 
 		/* Remove trailing spaces */
 		for (j = strlen (buf) - 1; j >= 0 && buf[j] == ' '; j--)
@@ -1204,7 +1204,8 @@ sierra_set_string_register (Camera *camera, int reg, const char *s,
 
 int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 				CameraFile *file, unsigned char *b,
-				unsigned int *b_len, GPContext *context)
+				unsigned int b_size, unsigned int *b_len,
+				GPContext *context)
 {
 	unsigned char p[34816];
 	unsigned int packlength, total = (b_len) ? *b_len : 0;
@@ -1285,8 +1286,16 @@ int sierra_get_string_register (Camera *camera, int reg, int fnumber,
 		packlength = p[2] | (p[3] << 8);
 		GP_DEBUG ("Packet length: %d", packlength);
 
-		if (b)
+		if (b) {
+			if (packlength > b_size - *b_len) {
+				GP_DEBUG ("Packet of %u bytes does not fit "
+					"(%u of %u used)", packlength,
+					*b_len, b_size);
+				in_function = 0;
+				return GP_ERROR_CORRUPTED_DATA;
+			}
 			memcpy (&b[*b_len], &p[4], packlength);
+		}
 		*b_len += packlength;
 
 		if (file) {
@@ -1342,7 +1351,7 @@ sierra_capture_preview (Camera *camera, CameraFile *file, GPContext *context)
 
 	/* Retrieve the preview and set the MIME type */
 	CHECK (sierra_get_int_register (camera, 12, (int *)&size, context));
-	CHECK (sierra_get_string_register (camera, 14, 0, file, NULL, &size,
+	CHECK (sierra_get_string_register (camera, 14, 0, file, NULL, 0, &size,
 					   context));
 	CHECK (gp_file_set_mime_type (file, GP_MIME_JPEG));
 
@@ -1416,7 +1425,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 		 */
 		CHECK (sierra_get_string_register (camera, 79, 0, NULL,
 						   (unsigned char *)filename,
-						   &len, context));
+						   sizeof(filename), &len, context));
 		if ((len <= 0) || !strcmp (filename, "        "))
 			snprintf (filename, sizeof (filename), "P101%04i.JPG", n);
 		GP_DEBUG ("... done ('%s')", filename);
@@ -1464,7 +1473,7 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 	int value, audio_info[8];
 
 	CHECK (sierra_get_string_register (camera, 47, n, NULL, buf,
-					   &buf_len, context));
+					   sizeof(buf), &buf_len, context));
 	if (buf_len == 0) {
 		/*
 		 * Many (older) serial cameras seem to return 0 bytes back
@@ -1492,7 +1501,7 @@ int sierra_get_pic_info (Camera *camera, unsigned int n,
 		 */
 		if ((sierra_get_string_register (camera, 43, n, NULL,
 				(unsigned char *) &audio_info,
-				(unsigned int *)&value,
+				sizeof(audio_info), (unsigned int *)&value,
 				context) == GP_OK) && (value != 0)) {
 			pic_info->size_audio = audio_info[0];
 		}

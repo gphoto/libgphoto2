@@ -122,8 +122,8 @@ int sierra_set_string_register	  (Camera *camera, int reg, const char *s,
 				   long int length, GPContext *context);
 int sierra_get_string_register	  (Camera *camera, int reg, int file_number,
 				   CameraFile *file,
-				   unsigned char *b, unsigned int *b_len,
-				   GPContext *context);
+				   unsigned char *b, unsigned int b_size,
+				   unsigned int *b_len, GPContext *context);
 int sierra_delete		  (Camera *camera, int picture_number,
 				   GPContext *context);
 int sierra_delete_all             (Camera *camera, GPContext *context);

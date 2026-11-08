@@ -126,7 +126,7 @@ camera_cam_desc_get_widget (Camera *camera, CameraRegisterType *reg_p,
 		 * the fly and make a union with reg_value and a void*.
 		 */
 		ret = sierra_get_string_register (camera, reg_p->reg_number,
-					  -1, NULL, (unsigned char *)buff, &value, context);
+					  -1, NULL, (unsigned char *)buff, sizeof(buff), &value, context);
 		if ((ret == GP_OK) && value != reg_p->reg_len) {
 			GP_DEBUG ("Bad length result %d", value);
 			return (GP_ERROR);

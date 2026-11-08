@@ -575,7 +575,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 		break;
 	case GP_FILE_TYPE_AUDIO:
 		CHECK_STOP (camera, sierra_get_string_register (camera, 43, n, NULL,
-			(unsigned char *) &audio_info, &transferred, context));
+			(unsigned char *) &audio_info, sizeof(audio_info),
+			&transferred, context));
 		if (transferred == 0)
 			download_size = 0;
 		else
@@ -587,7 +588,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	/* Get the file */
 	CHECK_STOP (camera, sierra_get_string_register (camera, regd, n,
-					file, NULL, (unsigned int *)&download_size,  context));
+					file, NULL, 0, (unsigned int *)&download_size,  context));
 	if (download_size == 0) {
 		/*
 		 * Assume a failure. At least coolpix 880 returns no error
@@ -1955,19 +1956,19 @@ camera_summary (Camera *camera, CameraText *summary, GPContext *c)
 	/* Get all the string-related info */
 
 	if (sierra_get_string_register (camera, 27, 0, NULL,
-					(unsigned char *)t, (unsigned int *)&v, c) >= 0)
+					(unsigned char *)t, sizeof(t), (unsigned int *)&v, c) >= 0)
 		sprintf (buf+strlen(buf), _("Camera Model: %s\n"), t);
 	if (sierra_get_string_register (camera, 48, 0, NULL,
-					(unsigned char *)t, (unsigned int *)&v, c) >= 0)
+					(unsigned char *)t, sizeof(t), (unsigned int *)&v, c) >= 0)
 		sprintf (buf+strlen(buf), _("Manufacturer: %s\n"), t);
 	if (sierra_get_string_register (camera, 22, 0, NULL,
-					(unsigned char *)t, (unsigned int *)&v, c) >= 0)
+					(unsigned char *)t, sizeof(t), (unsigned int *)&v, c) >= 0)
 		sprintf (buf+strlen(buf), _("Camera ID: %s\n"), t);
 	if (sierra_get_string_register (camera, 25, 0, NULL,
-					(unsigned char *)t, (unsigned int *)&v, c) >= 0)
+					(unsigned char *)t, sizeof(t), (unsigned int *)&v, c) >= 0)
 		sprintf (buf+strlen(buf), _("Serial Number: %s\n"), t);
 	if (sierra_get_string_register (camera, 26, 0, NULL,
-					(unsigned char *)t, (unsigned int *)&v, c) >= 0)
+					(unsigned char *)t, sizeof(t), (unsigned int *)&v, c) >= 0)
 		sprintf (buf+strlen(buf), _("Software Rev.: %s\n"), t);
 
 	/* Get all the integer information */
@@ -2025,7 +2026,7 @@ storage_info_func (CameraFilesystem *fs,
 	sif->fstype  = GP_STORAGEINFO_FST_DCF;
 
 	if (sierra_get_string_register (camera, 25, 0, NULL,
-					(unsigned char *)t, (unsigned int *)&v, c) >= 0) {
+					(unsigned char *)t, sizeof(t), (unsigned int *)&v, c) >= 0) {
 		sif->fields |= GP_STORAGEINFO_LABEL;
 		strcpy (sif->label, t);
 	}
