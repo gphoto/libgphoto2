@@ -2768,6 +2768,8 @@ static struct {
 	{"Fuji:Fujifilm X-S20",			0x04cb, 0x02f7, PTP_CAP|PTP_CAP_PREVIEW},
 	/* via email */
 	{"Fuji:Fujifilm GFX100 II",		0x04cb, 0x02fe, PTP_CAP|PTP_CAP_PREVIEW},
+	/* https://github.com/gphoto/libgphoto2/issues/1336 */
+	{"Fuji:Fujifilm GFX100S II",		0x04cb, 0x0301, PTP_CAP|PTP_CAP_PREVIEW},
 	/* https://github.com/gphoto/libgphoto2/issues/964
 	 * Capture failed on early firmware, but the camera is tether-capable
 	 * per Fujifilm's Tether App supported camera list. */
