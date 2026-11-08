@@ -3498,6 +3498,48 @@ add_object_to_fs_and_path (Camera *camera, uint32_t handle, CameraFilePath *path
 	return gp_filesystem_set_info_noop(camera->fs, path->folder, path->name, info, context);
 }
 
+/* Find the end of the JPEG starting at jpeg (which points at FF D8) by walking
+ * its marker segments. Table segments (DQT, DHT, ...) are not byte-stuffed and
+ * may contain FF D9, so the first FF D9 is not necessarily the EOI; only in the
+ * entropy-coded data after SOS is every FF followed by 00, RSTn or a marker.
+ * Returns a pointer just past the EOI, or NULL if the data is not a well-formed
+ * JPEG (then the caller falls back to the first FF D9). */
+static unsigned char *
+jpeg_segments_end(unsigned char *jpeg, unsigned long size)
+{
+	unsigned char *p = jpeg + 2, *end = jpeg + size;
+
+	while (p < end) {
+		unsigned char	marker;
+		unsigned int	seglen;
+
+		if (*p != 0xff)
+			return NULL;
+		while (p < end && *p == 0xff)	/* fill bytes */
+			p++;
+		if (p >= end)
+			return NULL;
+		marker = *p++;
+		if (marker == 0xd9)		/* EOI */
+			return p;
+		if (marker == 0x01 || (marker >= 0xd0 && marker <= 0xd7))	/* TEM, RSTn: no length */
+			continue;
+		if (p + 2 > end)
+			return NULL;
+		seglen = (p[0] << 8) | p[1];
+		if (seglen < 2 || seglen > (unsigned long)(end - p))
+			return NULL;
+		p += seglen;
+		if (marker == 0xda) {		/* SOS: skip the entropy-coded data */
+			while (p + 1 < end && !(p[0] == 0xff && p[1] != 0x00 && p[1] != 0xff && !(p[1] >= 0xd0 && p[1] <= 0xd7)))
+				p++;
+			if (p + 1 >= end)
+				return NULL;
+		}
+	}
+	return NULL;
+}
+
 /* find JPEGs in data blobs helper ... as most preview data is encapsulated */
 static int
 save_jpeg_in_data_to_preview(const unsigned char *data, unsigned long size, CameraFile *file)
@@ -3518,6 +3560,10 @@ save_jpeg_in_data_to_preview(const unsigned char *data, unsigned long size, Came
 	if(!startptr)	/* no SOI -> no JPEG */
 		return GP_ERROR;
 
+	endptr = jpeg_segments_end(startptr, size - (startptr - data));
+	if(endptr)
+		goto found;
+
 	endptr = (unsigned char*)memchr(startptr+1, 0xff, size-(startptr-data)-1);
 	while(endptr && ((endptr+1) < (data + size))) {
 		if(*(endptr + 1) == 0xd9) { /* EOI found */
@@ -3531,6 +3577,7 @@ save_jpeg_in_data_to_preview(const unsigned char *data, unsigned long size, Came
 	if(!endptr) /* no SOI -> no JPEG */
 		return GP_ERROR;
 
+found:
 	gp_file_append (file, (char*)startptr, endptr - startptr);
 	gp_file_set_mime_type (file, GP_MIME_JPEG);
 	gp_file_set_name (file, "preview.jpg");
