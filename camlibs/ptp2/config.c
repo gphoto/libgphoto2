@@ -2555,6 +2555,22 @@ static struct deviceproptableu16 canon_eos_autoexposuremode[] = {
 };
 GENERIC16TABLE(Canon_EOS_AutoExposureMode,canon_eos_autoexposuremode)
 
+/* Some newer EOS (e.g. R50, R6 Mark II) only accept a software mode dial setting after
+ * SetModeDialDisable(1). That also locks the body controls, so only do it on demand. */
+static int
+_put_Canon_EOS_AEModeDial(CONFIG_PUT_ARGS) {
+	PTPParams *params = &(camera->pl->params);
+
+	if (!params->canon_modedial_disabled && ptp_operation_issupported(params, PTP_OC_CANON_SetModeDialDisable)) {
+		/* ignore potential error, the property set below will report it.
+		 * Mark it anyway, so camera_exit() tries to re-enable the dial. */
+		if (ptp_canon_setmodedialdisable(params, 1) != PTP_RC_OK)
+			GP_LOG_D ("SetModeDialDisable(1) failed, trying to set the mode dial anyway");
+		params->canon_modedial_disabled = 1;
+	}
+	return _put_Canon_EOS_AutoExposureMode(CONFIG_PUT_NAMES);
+}
+
 static struct deviceproptableu32 canon_eos_alomode[] = {
 	{ N_("Standard"),				0x10000, 0 },
 	{ N_("Standard (disabled in manual exposure)"),	0x00000, 0 },
@@ -11313,9 +11329,11 @@ _put_CHDK(CONFIG_PUT_ARGS) {
 
 static int
 _get_Canon_SetModeDialDisable(CONFIG_GET_ARGS) {
+	PTPParams *params = &(camera->pl->params);
+	int val = params->canon_modedial_disabled;
+
 	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
 	gp_widget_set_name (*widget,menu->name);
-	int val = 0;
 	gp_widget_set_value  (*widget, &val);
 	return GP_OK;
 }
@@ -11327,7 +11345,16 @@ _put_Canon_SetModeDialDisable(CONFIG_PUT_ARGS) {
 	if (!ptp_operation_issupported(params, PTP_OC_CANON_SetModeDialDisable))
 		return (GP_ERROR_NOT_SUPPORTED);
 	CR (gp_widget_get_value(widget, &val));
-	C_PTP (ptp_canon_setmodedialdisable(params, val));
+	if (val) {
+		/* mark it first, so camera_exit() re-enables the dial even if the response got lost */
+		params->canon_modedial_disabled = 1;
+		C_PTP (ptp_canon_setmodedialdisable(params, 1));
+	} else {
+		/* re-enabling an already enabled dial may fail with PTP general error 0x2002, ignore.
+		 * Keep the flag on failure, so camera_exit() tries again. */
+		if (ptp_canon_setmodedialdisable(params, 0) == PTP_RC_OK)
+			params->canon_modedial_disabled = 0;
+	}
 	return GP_OK;
 }
 
@@ -12253,7 +12280,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Still Capture Mode"),             "capturemode",              PTP_DPC_FUJI_ReleaseMode,               PTP_VENDOR_FUJI,    PTP_DTC_UINT16, _get_Fuji_ReleaseMode,              _put_Fuji_ReleaseMode },
 	{ N_("Canon Shooting Mode"),            "shootingmode",             PTP_DPC_CANON_ShootingMode,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_ShootMode,               _put_Canon_ShootMode },
 	{ N_("Canon Auto Exposure Mode"),       "autoexposuremode",         PTP_DPC_CANON_EOS_AutoExposureMode,     PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_AutoExposureMode,    _put_Canon_EOS_AutoExposureMode },
-	{ N_("Canon Auto Exposure Mode Dial"),  "autoexposuremodedial",     PTP_DPC_CANON_EOS_AEModeDial,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_AutoExposureMode,    _put_Canon_EOS_AutoExposureMode },
+	{ N_("Canon Auto Exposure Mode Dial"),  "autoexposuremodedial",     PTP_DPC_CANON_EOS_AEModeDial,           PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_AutoExposureMode,    _put_Canon_EOS_AEModeDial },
 	{ N_("Drive Mode"),                     "drivemode",                PTP_DPC_OLYMPUS_OMD_DriveMode,          PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_DriveMode,      _put_Olympus_DriveMode },
 	{ N_("Drive Mode"),                     "drivemode",                PTP_DPC_CANON_EOS_DriveMode,            PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_DriveMode,           _put_Canon_EOS_DriveMode },
 	{ N_("Picture Style"),                  "picturestyle",             PTP_DPC_CANON_EOS_PictureStyle,         PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_EOS_PictureStyle,        _put_Canon_EOS_PictureStyle },
