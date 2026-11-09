@@ -1572,6 +1572,14 @@ ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode,
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetProperty, propcode);
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	/* Some bodies (e.g. S5M2) reject all SetProperty writes with
+	 * InvalidParameter unless live view is running: start it and retry once. */
+	if ((ret == PTP_RC_InvalidParameter) && !params->inliveview &&
+	    (ptp_panasonic_liveview(params, 1) == PTP_RC_OK)) {
+		params->inliveview = 1;
+		PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetProperty, propcode);
+		ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	}
 	free(data);
 	return ret;
 }
