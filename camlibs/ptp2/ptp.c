@@ -1524,6 +1524,7 @@ ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
 {
 	PTPContainer	ptp;
 	unsigned char	data[16] = {0};
+	unsigned char	*xdata = data;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetLiveViewParameters, 0x0d800011);
 
@@ -1534,7 +1535,7 @@ ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
 	htod16a(data+12, liveviewsize->x);
 	htod16a(data+14, liveviewsize->freq);
 
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, 0);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
 }
 
 uint16_t
