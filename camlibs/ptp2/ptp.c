@@ -1538,6 +1538,22 @@ ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
 }
 
+/* Set "FlowState" (0x51000021) via 0x9415, as the LUMIX Flow app does.
+ * 1 = host may record (MovieRecControl otherwise returns DeviceBusy), 0 = release. */
+uint16_t
+ptp_panasonic_setflowstate (PTPParams* params, uint16_t state)
+{
+	PTPContainer	ptp;
+	unsigned char	data[10];
+	unsigned char	*xdata = data;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetLiveViewParameters, 0x51000021);
+	htod32a(data+0, 0x51000021);
+	htod32a(data+4, 2);
+	htod16a(data+8, state);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+}
+
 uint16_t
 ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode,
 			unsigned char *value, uint16_t valuesize)
