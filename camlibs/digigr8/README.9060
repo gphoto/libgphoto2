@@ -1,0 +1,39 @@
+CONCERNING 0x2770:0x9060 CAMERAS
+
+This camera identifies itself as "USB Digital Still Camera" and is sold as
+"Dual Mode Camera 1300"; usb.ids calls it "NHJ, Ltd A130". It uses the same
+command set as the 0x2770:0x905C cameras (see README.905C), so the ID block,
+the catalog and the photo data are read in the same way. What differs is the
+format of the large photos.
+
+Features:
+
+	-- 1280x960 and 640x480 resolution settings
+	-- photos are saved in volatile SDRAM, so don't let the batteries die
+	-- also works as a webcam; that mode is not supported here
+
+Catalog entries:
+
+	byte 0       0x67 for a 1280x960 photo, 0x76 for a 640x480 photo
+	bytes 1-2    0x02 0x80 (640, the width of one quadrant, big-endian)
+	bytes 4-6    size of the photo data, little-endian
+	byte 11      lighting, used for white balance as on the other cameras
+
+The 0x76 photos are a single 640x480 stream in the usual compressed format,
+exactly as on the 0x905C cameras.
+
+The 0x67 photos are stored as four 640x480 quadrants:
+
+	bytes 0-15   four 32-bit little-endian sizes, one per quadrant, in the
+	             order top-left, top-right, bottom-left, bottom-right
+	bytes 16-31  constant on every photo seen (ff bb ff ff fb d9 fb ff
+	             ff db 7f 7f ff ff bf ff), not used
+	byte 32-     the four quadrants, back to back
+
+Each quadrant is a complete 640x480 image in the usual compressed format,
+with its own fresh predictors. The quadrants together form one 1280x960
+Bayer image, which then goes through the usual demosaic and postprocessing.
+The header plus the four sizes adds up exactly to the size in the catalog.
+
+Tested with one camera (firmware ID string 2004072818), 15 photos in both
+resolutions.

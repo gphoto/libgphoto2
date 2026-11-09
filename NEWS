@@ -1,5 +1,9 @@
 libgphoto2 2.5.34.1 development
 
+digigr8:
+* SQ Technology A130 / Dual Mode Camera 1300 (0x2770:0x9060) added,
+  including its 1280x960 photos stored as four 640x480 quadrants
+
 ptp2:
 * live view: find the end of preview JPEGs by walking their segments, not
   at the first FF D9, which can occur inside the quantization table

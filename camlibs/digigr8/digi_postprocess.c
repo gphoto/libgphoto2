@@ -239,6 +239,52 @@ digi_decompress (unsigned char *out_data, unsigned char *data,
 	return(GP_OK);
 }
 
+int
+digi_decompress_quadrants (unsigned char *out_data, unsigned char *data,
+				unsigned int data_size, int w, int h)
+{
+	int tile_w = w / 2;
+	int tile_h = h / 2;
+	unsigned int max_tile_input = tile_w * tile_h;
+	unsigned int offset = 32;
+	unsigned int tile_size;
+	unsigned char *tile_input;
+	unsigned char *tile;
+	int n, y, status = GP_OK;
+
+	if (data_size < offset)
+		return GP_ERROR_CORRUPTED_DATA;
+	tile_input = calloc (max_tile_input + 1, 1);
+	tile = malloc (tile_w * tile_h);
+	if (!tile_input || !tile) {
+		free (tile_input);
+		free (tile);
+		return GP_ERROR_NO_MEMORY;
+	}
+	for (n = 0; n < 4; n++) {
+		tile_size = data[4 * n] | (data[4 * n + 1] << 8)
+			| (data[4 * n + 2] << 16) | ((unsigned int)data[4 * n + 3] << 24);
+		if (tile_size > data_size - offset || tile_size > max_tile_input) {
+			GP_DEBUG ("Quadrant %i claims %u bytes, only %u left\n",
+				  n, tile_size, data_size - offset);
+			status = GP_ERROR_CORRUPTED_DATA;
+			break;
+		}
+		memset (tile_input, 0, max_tile_input + 1);
+		memcpy (tile_input, data + offset, tile_size);
+		status = digi_decompress (tile, tile_input, tile_w, tile_h);
+		if (status < GP_OK)
+			break;
+		for (y = 0; y < tile_h; y++)
+			memcpy (out_data + ((n / 2) * tile_h + y) * w + (n % 2) * tile_w,
+				tile + y * tile_w, tile_w);
+		offset += tile_size;
+	}
+	free (tile_input);
+	free (tile);
+	return status;
+}
+
 /* Brightness correction routine adapted from
  * camlibs/polaroid/jd350e.c, copyright © 2001 Michael Trawny
  * <trawny99@users.sourceforge.net>
