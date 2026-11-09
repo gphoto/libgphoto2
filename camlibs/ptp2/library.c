@@ -189,10 +189,10 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 	gp_camera_get_abilities(camera, &a);
 
-	/* Panasonic GH5, GC9 */
+	/* Panasonic GH5, G9, S5M2 */
 	if (    (di->VendorExtensionID == PTP_VENDOR_PANASONIC) &&
 		(camera->port->type == GP_PORT_USB) &&
-		(a.usb_product == 0x2382)
+		((a.usb_product == 0x2382) || (a.usb_product == 0x2384))
 	) {
 		C_MEM (di->Operations = realloc(di->Operations,sizeof(di->Operations[0])*(di->Operations_len + 9)));
 		di->Operations[di->Operations_len+0] = PTP_OC_PANASONIC_GetProperty;
@@ -1919,6 +1919,8 @@ static struct {
 	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
 	/* Matthias <mattjowil@hotmail.com>: The Panasonic Lumix DC-G9 reports the same vendor and product ID (04da:2382) */
 	{"Panasonic:DC-GH5",		  0x04da, 0x2382, PTP_CAP|PTP_CAP_PREVIEW},
+	/* DC-S5M2 (USB mode used by the LUMIX Flow app) */
+	{"Panasonic:DC-S5M2",		  0x04da, 0x2384, PTP_CAP|PTP_CAP_PREVIEW},
 
 
 	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
