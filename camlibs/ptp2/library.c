@@ -2903,6 +2903,7 @@ static struct {
 	{"Leica:M11 Monochrom",			0x1a98,	0x2083, PTP_CAP},
 	/* https://github.com/gphoto/gphoto2/issues/601 */
 	{"Leica:Q3",				0x1a98,	0x2376, PTP_CAP|PTP_CAP_PREVIEW|PTP_NO_CAPTURE_COMPLETE},
+	{"Leica:Q3 43",				0x1a98,	0x237a, PTP_CAP|PTP_CAP_PREVIEW|PTP_NO_CAPTURE_COMPLETE},
 	/* https://github.com/gphoto/libgphoto2/issues/1203 */
 	{"Leica:SL3",				0x1a98,	0x2382, PTP_CAP|PTP_CAP_PREVIEW|PTP_NO_CAPTURE_COMPLETE},
 
