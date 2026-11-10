@@ -6144,8 +6144,20 @@ fallback:
 
 			/* add newly created object to internal structures */
 			ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-			if (ret != PTP_RC_OK)
+			if (ret != PTP_RC_OK) {
+				/* The camera might still be busy writing the newly
+				 * captured object, e.g. the Leica Q3 43 reports
+				 * DeviceBusy on GetObjectInfo directly after capture
+				 * and never re-sends the ObjectAdded event.
+				 * Remember the handle here; the object info will be
+				 * loaded by add_object_to_fs_and_path once the
+				 * camera is idle again. */
+				newobject = event.Param1;
+				done |= 2;
+				if (NO_CAPTURE_COMPLETE(params))
+					done|=1;
 				break;
+			}
 
 			/* this might be just the folder add, ignore that. */
 			if (ob->oi.ObjectFormat == PTP_OFC_Association) {
@@ -6176,8 +6188,21 @@ out:
 	path->name[0]='\0';
 	path->folder[0]='\0';
 
-	if (newobject != 0) /* FIXME: check association handling */
+	if (newobject != 0) { /* FIXME: check association handling */
+		/* If the object info could not be loaded during the event loop
+		 * because the camera was still busy writing the file (e.g. Leica
+		 * Q3 43), wait a bit and retry it now, so that
+		 * add_object_to_fs_and_path finds it fully loaded. */
+		PTPObject	*ob;
+		int		objtries = 30;
+
+		while (objtries--) {
+			if (PTP_RC_OK == ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob))
+				break;
+			sleep(1);
+		}
 		return add_object_to_fs_and_path (camera, newobject, path, context);
+	}
 	return GP_ERROR;
 }
 
