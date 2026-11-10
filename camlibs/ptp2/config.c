@@ -13821,7 +13821,7 @@ _get_config (Camera *camera, const char *confname, CameraWidget **outwidget, Cam
 			/* simple ranges might just be enumerations */
 #define X(dtc,val) 							\
 			case dtc: 					\
-				if (	((dpd.FORM.Range.MaxValue.val - dpd.FORM.Range.MinValue.val) < 128) &&	\
+				if (	(((uint64_t)dpd.FORM.Range.MaxValue.val - (uint64_t)dpd.FORM.Range.MinValue.val) < 128) &&	\
 					(dpd.FORM.Range.StepSize.val == 1)) {						\
 					type = GP_WIDGET_MENU;								\
 				} \
