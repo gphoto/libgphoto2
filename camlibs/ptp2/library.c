@@ -57,6 +57,13 @@
 #define USB_NORMAL_TIMEOUT 20000
 static int normal_timeout = USB_NORMAL_TIMEOUT;
 #define USB_TIMEOUT_CAPTURE 100000
+/* capture event loop state bitmaps: which awaited PTP events have been seen.
+ * Not a PTP concept, just internal bookkeeping: the capture event loop ends
+ * once both conditions have arrived. */
+#define CAPTURE_DONE_CAPTURECOMPLETE	(1 << 0)
+#define CAPTURE_DONE_OBJECTADDED	(1 << 1)
+#define CAPTURE_DONE_ALL		(CAPTURE_DONE_CAPTURECOMPLETE|CAPTURE_DONE_OBJECTADDED)
+
 static int capture_timeout = USB_TIMEOUT_CAPTURE;
 
 #define	SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
@@ -4441,7 +4448,7 @@ capturetriggered:
 			GP_LOG_D ("event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
 			case PTP_EC_Nikon_ObjectAddedInSDRAM:
-				done |= 3;
+				done |= CAPTURE_DONE_ALL;
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
 				break;
@@ -4456,7 +4463,7 @@ capturetriggered:
 				/* e.g. for NEF+RAW capture */
 				if (newobject != 0xffff0001) {
 					array_push_back(&stored_events, event);
-					done = 3;
+					done = CAPTURE_DONE_ALL;
 					break;
 				}
 				/* we register the object in the internal storage, and we also need to
@@ -4473,7 +4480,7 @@ capturetriggered:
 					break;
 				}
 				newobject = event.Param1;
-				done |= 2;
+				done |= CAPTURE_DONE_OBJECTADDED;
 				break;
 			}
 			case PTP_EC_Nikon_CaptureCompleteRecInSdram:
@@ -4482,7 +4489,7 @@ capturetriggered:
 					GP_LOG_D ("Capture complete ... restarting liveview");
 					ret = ptp_nikon_start_liveview (params);
 				}
-				done |= 1;
+				done |= CAPTURE_DONE_CAPTURECOMPLETE;
 				break;
 			default:
 				GP_LOG_D ("UNHANDLED event.Code is %x / param %lx, DEFER", event.Code, (unsigned long)event.Param1);
@@ -4491,16 +4498,16 @@ capturetriggered:
 			}
 		}
 		/* we got both capturecomplete and objectadded ... leave */
-		if (done == 3)
+		if (done == CAPTURE_DONE_ALL)
 			break;
 		/* just got capturecomplete ... wait a bit for a objectadded (Nikon 1) */
-		if (done == 1) {
+		if (done == CAPTURE_DONE_CAPTURECOMPLETE) { /* capturecomplete seen, waiting for objectadded (Nikon 1) */
 			if (!tries--)
 				break;
 		}
 		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
-	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 70*1000)); /* 70 seconds */
+	} while ((done != CAPTURE_DONE_ALL) && waiting_for_timeout (&back_off_wait, capture_start, 70*1000)); /* 70 seconds */
 
 	/* add all the queued events back to the event queue */
 	array_append (&params->events, &stored_events);
@@ -6120,14 +6127,14 @@ fallback:
 	 * the CaptureComplete event, while others do it the other way
 	 * round. Handle that case with some bitmask. */
 	done = 0; tries = 20;
-	while (done != 3) {
+	while (done != CAPTURE_DONE_ALL) {
 		uint16_t ret;
 
 		C_PTP_REP (ptp_wait_event (params));
 
 		if (!ptp_get_one_event(params, &event)) {
 			usleep(1000);
-			if (done & 1) /* only wait 20 rounds for objectadded */
+			if (done & CAPTURE_DONE_CAPTURECOMPLETE) /* capturecomplete seen, now only wait 20 rounds for objectadded */
 				if (!tries--)
 					break;
 			continue;
@@ -6153,9 +6160,9 @@ fallback:
 				 * loaded by add_object_to_fs_and_path once the
 				 * camera is idle again. */
 				newobject = event.Param1;
-				done |= 2;
+				done |= CAPTURE_DONE_OBJECTADDED;
 				if (NO_CAPTURE_COMPLETE(params))
-					done|=1;
+					done |= CAPTURE_DONE_CAPTURECOMPLETE;
 				break;
 			}
 
@@ -6165,9 +6172,9 @@ fallback:
 				gp_filesystem_reset (camera->fs);
 			} else {
 				newobject = event.Param1;
-				done |= 2;
+				done |= CAPTURE_DONE_OBJECTADDED;
 				if (NO_CAPTURE_COMPLETE(params))
-					done|=1;
+					done |= CAPTURE_DONE_CAPTURECOMPLETE;
 			}
 			break;
 		}
@@ -6175,7 +6182,7 @@ fallback:
 			gp_context_error (context, _("Camera memorycard ran full during capture."));
 			return GP_ERROR_NO_MEMORY;
 		case PTP_EC_CaptureComplete:
-			done |= 1;
+			done |= CAPTURE_DONE_CAPTURECOMPLETE;
 			break;
 		default:
 			GP_LOG_D ("Received event 0x%04x, ignoring (please report).",event.Code);
