@@ -59,7 +59,8 @@ static int normal_timeout = USB_NORMAL_TIMEOUT;
 #define USB_TIMEOUT_CAPTURE 100000
 /* capture event loop state bitmaps: which awaited PTP events have been seen.
  * Not a PTP concept, just internal bookkeeping: the capture event loop ends
- * once both conditions have arrived. */
+ * once both conditions have arrived. Magic numbers are replaced by the
+ * named constants below for readability. */
 #define CAPTURE_DONE_CAPTURECOMPLETE	(1 << 0)
 #define CAPTURE_DONE_OBJECTADDED	(1 << 1)
 #define CAPTURE_DONE_ALL		(CAPTURE_DONE_CAPTURECOMPLETE|CAPTURE_DONE_OBJECTADDED)
