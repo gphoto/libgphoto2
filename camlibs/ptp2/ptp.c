@@ -1296,81 +1296,103 @@ ptp_sigma_fp_clearimagedbsingle (PTPParams* params, uint32_t id)
 	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &dataptr, 0);
 }
 
+static uint16_t
+ptp_olympus_get_camera_control_mode (PTPParams *params, uint16_t *mode)
+{
+	PTPDevicePropDesc dpd = {0};
+	uint16_t ret;
+
+	CHECK_PTP_RC (ptp_getdevicepropdesc (params, PTP_DPC_OLYMPUS_CameraControlMode, &dpd));
+	ret = PTP_RC_InvalidDevicePropFormat;
+	if (dpd.DataType == PTP_DTC_UINT16) {
+		*mode = dpd.CurrentValue.u16;
+		ret = PTP_RC_OK;
+	}
+	ptp_free_devicepropdesc (&dpd);
+	return ret;
+}
+
 uint16_t
 ptp_olympus_init_pc_mode (PTPParams* params)
 {
-	uint16_t		ret;
-	PTPPropValue	propval;
-	PTPContainer		event;
-	int			i;
+	PTPPropValue propval;
+	uint16_t mode, ret;
+	struct timeval start, now;
 
 	ptp_debug (params,"PTP: (Olympus Init) switching to PC mode...");
-
-	params->olympus_camera_control_mode = 2;
-	ret = ptp_getdevicepropvalue (params, PTP_DPC_OLYMPUS_CameraControlMode, &propval, PTP_DTC_UINT16);
-	if (ret == PTP_RC_OK)
-		params->olympus_camera_control_mode = propval.u16;
-
 	propval.u16 = 1;
-	ret = ptp_setdevicepropvalue (params, PTP_DPC_OLYMPUS_CameraControlMode, &propval, PTP_DTC_UINT16);
-	usleep(100000);
-
-	for(i = 0; i < 2; i++) {
-		ptp_debug (params,"PTP: (Olympus Init) checking events...");
-		/* Just busy loop until the camera is ready again. */
-		ptp_check_event (params);
-		if (ptp_get_one_event(params, &event)) break;
-		usleep(100000);
+	CHECK_PTP_RC (ptp_setdevicepropvalue (params, PTP_DPC_OLYMPUS_CameraControlMode, &propval, PTP_DTC_UINT16));
+	gettimeofday (&start, NULL);
+	/* Confirm the state directly instead of consuming an unrelated event.
+	 * Allow bodies that finish the mode transition after acknowledging it. */
+	for (;;) {
+		ret = ptp_olympus_get_camera_control_mode (params, &mode);
+		if (ret == PTP_RC_OK && mode == 1)
+			return PTP_RC_OK;
+		if (ret != PTP_RC_OK && ret != PTP_RC_DeviceBusy)
+			return ret;
+		gettimeofday (&now, NULL);
+		if ((now.tv_sec - start.tv_sec) * 1000 + (now.tv_usec - start.tv_usec) / 1000 >= 5000)
+			break;
+		usleep (100000);
 	}
-
-/*
- * 9489 code: sends a list of PTP device properties supported apparently? on E-M1.
- * F4 00 00 00	count
-02 D0 03 D0 04 D0 05 D0 06 D0 07 D0 08 D0 09 D0 0C D0 0D D0 0E D0 0F D0 10 D0 11 D0 13 D0 14 D0 18 D0 1A D0 1B D0 1C D0 1D D0 1E D0 1F D0 20 D0 21 D0 22 D0 23 D0 24 D0 25 D0 26 D0 27 D0 28 D0 29 D0 2A D0 2B D0 2C D0 2D D0 2E D0 2F D0 30 D0 31 D0 32 D0 33 D0 34 D0 35 D0 36 D0 37 D0 38 D0 39 D0 3A D0 3B D0 3C D0 3D D0 3E D0 3F D0 40 D0 41 D0 42 D0 43 D0 44 D0 45 D0 46 D0 47 D0 48 D0 49 D0 4A D0 4B D0 4C D0 4D D0 4E D0 4F D0 50 D0 51 D0 52 D0 58 D0 59 D0 5F D0 60 D0 61 D0 62 D0 64 D0 65 D0 66 D0 68 D0 69 D0 70 D0 73 D0 67 D0 5A D0 5B D0 63 D0 6A D0 6B D0 6C D0 71 D0 72 D0 7A D0 7B D0 7C D0 7D D0 7F D0 80 D0 81 D0 82 D0 86 D0 87 D0 8B D0 8C D0 8E D0 8F D0 97 D0 9F D0 C4 D0 C5 D0 A2 D0 A3 D0 A4 D0 A6 D0 A7 D0 A8 D0 A9 D0 AA D0 AB D0 AC D0 AD D0 AE D0 B2 D0 B3 D0 B4 D0 B5 D0 B6 D0 B7 D0 B8 D0 B9 D0 BA D0 BC D0 BD D0 BE D0 BF D0 C0 D0 C6 D0 C7 D0 C8 D0 C9 D0 CB D0 CC D0 CD D0 CE D0 CF D0 D0 D0 D1 D0 D2 D0 D3 D0 D4 D0 D5 D0 D6 D0 D7 D0 D8 D0 D9 D0 DA D0 DB D0 DC D0 DD D0 DE D0 E2 D0 E3 D0 E4 D0 E5 D0 E6 D0 E7 D0 E8 D0 E9 D0 EA D0 EC D0 EF D0 F0 D0 F1 D0 F2 D0 F3 D0 F4 D0 F5 D0 F6 D0 F7 D0 F8 D0 F9 D0 FA D0 FB D0 FC D0 FD D0 FE D0 FF D0 00 D1 01 D1 02 D1 03 D1 04 D1 05 D1 06 D1 07 D1 08 D1 09 D1 0A D1 0B D1 0C D1 0D D1 0E D1 0F D1 10 D1 11 D1 12 D1 13 D1 14 D1 15 D1 16 D1 17 D1 18 D1 19 D1 1A D1 1B D1 1C D1 1D D1 1E D1 1F D1 20 D1 51 D1 52 D1 5A D1 24 D1 25 D1 26 D1 27 D1 28 D1 2D D1 2E D1 2F D1 30 D1 31 D1 34 D1 35 D1 36 D1 37 D1 38 D1 39 D1 3A D1
- *
- * 9486: queries something. gets 00 00 00 00 ... or list of devicepropdesc in standard ptp propdesc format.
- * could be some form of "properties changed" query perhaps? (32bit count in front)
- * might only monitor/return properties set by 9489?
- *
- * 948a: seems also be some kind of polling function, returns 32bit 0 if nothing is there. similar to above?
- *       returns properties sent by 94b8.
- *
- * 948b: also sends a list of ptp devprops:
- * 11 00 00 00 53 D0 54 D0 55 D0 56 D0 57 D0 6D D0 5C D0 5D D0 5E D0 74 D0 75 D0 83 D0 84 D0 85 D0 ED D0 79 D0 E1 D0
- * Events: c008: 21 D1 00 00 0F 00 00 00 01 00 00 00
- */
-	//ptp_debug (params,"PTP: (Olympus Init) getting response...");
-	//gp_port_set_timeout (camera->port, timeout);
-	//ret=ptp_transaction(params, &ptp, PTP_DP_RESPONSEONLY, size, &data, NULL);
-	//free(data);
-	return ret;
+	ptp_debug (params,"PTP: (Olympus Init) timed out waiting for camera control on");
+	return PTP_ERROR_TIMEOUT;
 }
 
 uint16_t
 ptp_olympus_exit_pc_mode (PTPParams* params)
 {
 	uint16_t		ret;
+	uint16_t		event_code = 0;
+	uint16_t		mode;
 	PTPPropValue		propval;
 	PTPContainer		event;
-	int			i;
+	struct timeval		start, now;
 
 	ptp_debug (params,"PTP: (Olympus Exit) leaving PC mode...");
 
-	propval.u16 = params->olympus_camera_control_mode;
-	if (!propval.u16)
-		propval.u16 = 2;
+	/* A caller may already have released control. Do not wait for another
+	 * completion event when the camera is already back in normal mode. */
+	if (ptp_olympus_get_camera_control_mode (params, &mode) == PTP_RC_OK && mode == 2)
+		return PTP_RC_OK;
 
-	ret = ptp_setdevicepropvalue (params, PTP_DPC_OLYMPUS_CameraControlMode, &propval, PTP_DTC_UINT16);
-	usleep(100000);
+	if (ptp_event_issupported (params, PTP_EC_Olympus_ComplateCameraControlOff_New))
+		event_code = PTP_EC_Olympus_ComplateCameraControlOff_New;
+	else if (ptp_event_issupported (params, PTP_EC_Olympus_ComplateCameraControlOff))
+		event_code = PTP_EC_Olympus_ComplateCameraControlOff;
+	/* A queued completion from an earlier mode change is not ours. */
+	if (event_code)
+		while (ptp_get_one_event_by_type (params, event_code, &event)) {}
 
-	for (i = 0; i < 2; i++) {
-		ptp_check_event (params);
-		if (ptp_get_one_event(params, &event))
+	propval.u16 = 2;
+	CHECK_PTP_RC (ptp_setdevicepropvalue (params, PTP_DPC_OLYMPUS_CameraControlMode, &propval, PTP_DTC_UINT16));
+	gettimeofday (&start, NULL);
+
+	/* The write is acknowledged before control is released. Unrelated property
+	 * events can precede completion by hundreds of milliseconds. Leave those
+	 * events queued and wait for control-off, not just the first event. */
+	for (;;) {
+		CHECK_PTP_RC (ptp_check_event (params));
+		if (event_code) {
+			if (ptp_get_one_event_by_type (params, event_code, &event))
+				return PTP_RC_OK;
+		} else {
+			/* Older bodies may not advertise a completion event. */
+			ret = ptp_olympus_get_camera_control_mode (params, &mode);
+			if (ret != PTP_RC_OK && ret != PTP_RC_DeviceBusy)
+				return ret;
+			if (ret == PTP_RC_OK && mode == 2)
+				return PTP_RC_OK;
+		}
+		gettimeofday (&now, NULL);
+		if ((now.tv_sec - start.tv_sec) * 1000 + (now.tv_usec - start.tv_usec) / 1000 >= 3000)
 			break;
-		usleep(100000);
+		usleep (100000);
 	}
 
-	return ret;
+	ptp_debug (params,"PTP: (Olympus Exit) timed out waiting for camera control off");
+	return PTP_ERROR_TIMEOUT;
 }
 
 uint16_t
