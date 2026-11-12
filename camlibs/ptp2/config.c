@@ -1779,11 +1779,11 @@ static struct deviceproptableu16 olympus_imagereview[] = {
 };
 GENERIC16TABLE(Olympus_ImageReview,olympus_imagereview)
 
-static struct deviceproptableu16 olympus_releasepriority[] = {
+static struct deviceproptableu16 olympus_onoff12[] = {
 	{ N_("On"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Off"),	0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
-GENERIC16TABLE(Olympus_ReleasePriority,olympus_releasepriority)
+GENERIC16TABLE(Olympus_OnOff12,olympus_onoff12)
 
 static struct deviceproptableu16 olympus_afon_in_mf[] = {
 	{ N_("Yes"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -12555,33 +12555,33 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("High Res Charge Time"),           "highrescharge",            PTP_DPC_OLYMPUS_HighResCharge,          PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_HighResCharge,  _put_Olympus_HighResCharge },
 	{ N_("HDR"),                            "hdrmode",                  PTP_DPC_OLYMPUS_HDRMode,                PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_HDRMode,        _put_Olympus_HDRMode },
 	{ N_("Image Review"),                   "imagereview",              PTP_DPC_OLYMPUS_ImageReview,            PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ImageReview,    _put_Olympus_ImageReview },
-	{ N_("Release Priority S-AF"),          "releaseprioritysaf",       PTP_DPC_OLYMPUS_ReleasePrioritySAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
-	{ N_("Release Priority C-AF"),          "releaseprioritycaf",       PTP_DPC_OLYMPUS_ReleasePriorityCAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Release Priority S-AF"),          "releaseprioritysaf",       PTP_DPC_OLYMPUS_ReleasePrioritySAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
+	{ N_("Release Priority C-AF"),          "releaseprioritycaf",       PTP_DPC_OLYMPUS_ReleasePriorityCAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("AF-ON in MF"),                    "afonmf",                   PTP_DPC_OLYMPUS_AFOnInMF,              PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFOnInMF,      _put_None },
 	{ N_("AF Scanner"),                     "afscanner",                PTP_DPC_OLYMPUS_AFScanner,             PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFScanner,     _put_Olympus_AFScanner },
-	{ N_("WB Keep Warm Color"),             "wbkeepwarmcolor",          PTP_DPC_OLYMPUS_WBKeepWarmColor,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("WB Keep Warm Color"),             "wbkeepwarmcolor",          PTP_DPC_OLYMPUS_WBKeepWarmColor,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Sequential Max FPS"),             "sequentialmaxfps",         PTP_DPC_OLYMPUS_SequentialMaxFPS,       PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Sequential Frame Count Limiter"), "sequentialframelimiter",   PTP_DPC_OLYMPUS_SequentialFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Sequential Frame Count Limiter"), "sequentialframelimiter",   PTP_DPC_OLYMPUS_SequentialFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Sequential Frame Count Limit"),   "sequentialframelimit",     PTP_DPC_OLYMPUS_SequentialFrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                 _put_INT },
 	{ N_("Silent Sequential Max FPS"),      "silentsequentialmaxfps",   PTP_DPC_OLYMPUS_SilentSequentialMaxFPS, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Silent Sequential Frame Count Limiter"),"silentsequentialframelimiter", PTP_DPC_OLYMPUS_SilentSequentialFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Silent Sequential Frame Count Limiter"),"silentsequentialframelimiter", PTP_DPC_OLYMPUS_SilentSequentialFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Silent Sequential Frame Count Limit"),"silentsequentialframelimit", PTP_DPC_OLYMPUS_SilentSequentialFrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,           _put_INT },
 	{ N_("SH1 Max FPS"),                    "sh1maxfps",                PTP_DPC_OLYMPUS_SH1MaxFPS,              PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("SH1 Frame Count Limiter"),        "sh1framelimiter",          PTP_DPC_OLYMPUS_SH1FrameCountLimiter,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("SH1 Frame Count Limiter"),        "sh1framelimiter",          PTP_DPC_OLYMPUS_SH1FrameCountLimiter,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("SH1 Frame Count Limit"),          "sh1framelimit",            PTP_DPC_OLYMPUS_SH1FrameCountLimit,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
 	{ N_("SH2 Max FPS"),                    "sh2maxfps",                PTP_DPC_OLYMPUS_SH2MaxFPS,              PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("SH2 Frame Count Limiter"),        "sh2framelimiter",          PTP_DPC_OLYMPUS_SH2FrameCountLimiter,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("SH2 Frame Count Limiter"),        "sh2framelimiter",          PTP_DPC_OLYMPUS_SH2FrameCountLimiter,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("SH2 Frame Count Limit"),          "sh2framelimit",            PTP_DPC_OLYMPUS_SH2FrameCountLimit,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
 	{ N_("Pro Capture Max FPS"),            "procapturemaxfps",         PTP_DPC_OLYMPUS_ProCaptureMaxFPS,       PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Pro Capture Frame Count Limiter"),"procaptureframelimiter",   PTP_DPC_OLYMPUS_ProCaptureFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Pro Capture Frame Count Limiter"),"procaptureframelimiter",   PTP_DPC_OLYMPUS_ProCaptureFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Pro Capture Frame Count Limit"),  "procaptureframelimit",     PTP_DPC_OLYMPUS_ProCaptureFrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
 	{ N_("Pro Capture Pre-Shutter Frames"), "procapturepreshutter",     PTP_DPC_OLYMPUS_ProCapturePreShutterFrames, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                 _put_INT },
 	{ N_("Pro Capture SH1 Max FPS"),        "procapturesh1maxfps",      PTP_DPC_OLYMPUS_ProCaptureSH1MaxFPS,    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Pro Capture SH1 Frame Count Limiter"),"procapturesh1framelimiter", PTP_DPC_OLYMPUS_ProCaptureSH1FrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Pro Capture SH1 Frame Count Limiter"),"procapturesh1framelimiter", PTP_DPC_OLYMPUS_ProCaptureSH1FrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Pro Capture SH1 Frame Count Limit"),"procapturesh1framelimit",  PTP_DPC_OLYMPUS_ProCaptureSH1FrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                 _put_INT },
 	{ N_("Pro Capture SH1 Pre-Shutter Frames"),"procapturesh1preshutter", PTP_DPC_OLYMPUS_ProCaptureSH1PreShutterFrames, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,               _put_INT },
 	{ N_("Pro Capture SH2 Max FPS"),        "procapturesh2maxfps",      PTP_DPC_OLYMPUS_ProCaptureSH2MaxFPS,    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Pro Capture SH2 Frame Count Limiter"),"procapturesh2framelimiter", PTP_DPC_OLYMPUS_ProCaptureSH2FrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Pro Capture SH2 Frame Count Limiter"),"procapturesh2framelimiter", PTP_DPC_OLYMPUS_ProCaptureSH2FrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Pro Capture SH2 Frame Count Limit"),"procapturesh2framelimit",  PTP_DPC_OLYMPUS_ProCaptureSH2FrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                 _put_INT },
 	{ N_("Pro Capture SH2 Pre-Shutter Frames"),"procapturesh2preshutter", PTP_DPC_OLYMPUS_ProCaptureSH2PreShutterFrames, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,               _put_INT },
 	{ N_("Face Detection"),                 "facedetection",            PTP_DPC_NIKON_FaceDetection,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FaceDetection,           _put_Nikon_FaceDetection },
