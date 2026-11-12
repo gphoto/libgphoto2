@@ -8546,7 +8546,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_LEICA_FileFormat, PTP_VENDOR_GP_LEICA, 0, N_("DNG")},	/* d004, L-/M-DNG and -JPG flavor choice is not exposed anywhere (both L- and M-DNG read 0) */
 		{PTP_DPC_LEICA_FileFormat, PTP_VENDOR_GP_LEICA, 1, N_("DNG + JPG")},
 		{PTP_DPC_LEICA_FileFormat, PTP_VENDOR_GP_LEICA, 2, N_("JPG")},	/* set to L-JPG by camera menu */
-		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 0, N_("4:3 (photo)")},	/* d632, attributed from the camera screen, read raced the menu switch */
+		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 0, N_("4:3 (photo)")},	/* d632, flip verified */
 		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 1, N_("16:9 (photo)")},
 		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 3, N_("3:2 (photo)")},
 		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 4, N_("1:1 (photo)")},

@@ -965,7 +965,7 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_DPC_LEICA_SceneMode		0xd09c	/* rw i32: scene mode, 0 = Auto, 12 = PASM, other values unobserved; 0xd212 moves in tandem */
 #define PTP_DPC_LEICA_LeicaLooks			0xd69c	/* ro i32: packed Leica Looks selection; 0xd69d moves in tandem, same value. Looks verified: 0x2000000f STD, 0x2000000c Vivid, 0x2000000d Natural */
 #define PTP_DPC_LEICA_FileFormat		0xd004	/* rw i32: file format, 0 = DNG, 1 = DNG + JPG, 2 = JPG; the L-/M- flavor choice is not exposed */
-#define PTP_DPC_LEICA_ShootingState		0xd632	/* ro i32: aspect ratio / state, 3 = 3:2, 4 = 1:1, 0 = 4:3, 1 = 16:9 (screen attributed), 7 = video */
+#define PTP_DPC_LEICA_ShootingState		0xd632	/* ro i32: aspect ratio / state, 0 = 4:3, 1 = 16:9, 3 = 3:2, 4 = 1:1, 7 = video */
 #define PTP_OC_LEICA_GetLensParameter2			0x9033	/* seen on Q3 43, unverified meaning */
 
 #define PTP_OC_PARROT_GetSunshineValues		0x9201
