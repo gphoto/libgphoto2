@@ -2012,6 +2012,42 @@ static struct deviceproptableu16 olympus_afscanner[] = {
 };
 GENERIC16TABLE(Olympus_AFScanner,olympus_afscanner)
 
+/* OM-1 D0FF is measured in tenths of a metre on the wire. */
+static int
+_get_Olympus_PresetMFDistance(CONFIG_GET_ARGS) {
+	float val;
+
+	if (dpd->DataType != PTP_DTC_UINT16 || dpd->FormFlag != PTP_DPFF_Range)
+		return GP_ERROR_NOT_SUPPORTED;
+	gp_widget_new (GP_WIDGET_RANGE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_range (*widget, dpd->FORM.Range.MinValue.u16 / 10.0f,
+		dpd->FORM.Range.MaxValue.u16 / 10.0f, dpd->FORM.Range.StepSize.u16 / 10.0f);
+	val = dpd->CurrentValue.u16 / 10.0f;
+	gp_widget_set_value (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Olympus_PresetMFDistance(CONFIG_PUT_ARGS) {
+	float val;
+	unsigned int raw;
+
+	if (dpd->DataType != PTP_DTC_UINT16 || dpd->FormFlag != PTP_DPFF_Range)
+		return GP_ERROR_NOT_SUPPORTED;
+	CR (gp_widget_get_value (widget, &val));
+	/* Also rejects NaN before conversion to an integer. */
+	if (!(val >= dpd->FORM.Range.MinValue.u16 / 10.0f &&
+	      val <= dpd->FORM.Range.MaxValue.u16 / 10.0f))
+		return GP_ERROR_BAD_PARAMETERS;
+	raw = (unsigned int)(val * 10.0f + 0.5f);
+	if (dpd->FORM.Range.StepSize.u16 &&
+	    (raw - dpd->FORM.Range.MinValue.u16) % dpd->FORM.Range.StepSize.u16)
+		return GP_ERROR_BAD_PARAMETERS;
+	propval->u16 = raw;
+	return GP_OK;
+}
+
 static struct deviceproptableu16 olympus_movienoisefilter[] = {
 	{ N_("Off"),      1, PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Low"),      2, PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -12990,6 +13026,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("AF Limiter Mode"), "aflimitermode", PTP_DPC_OLYMPUS_AFLimiterMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFLimiterMode, _put_Olympus_AFLimiterMode },
 	{ N_("AF Limiter Distance Setting"), "aflimiterdistancesetting", PTP_DPC_OLYMPUS_AFLimiterDistanceSetting, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFLimiterDistance, _put_Olympus_AFLimiterDistance },
 	{ N_("AF Limiter Release Priority"), "aflimiterreleasepriority", PTP_DPC_OLYMPUS_AFLimiterReleasePriority, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("Preset MF Distance (m)"), "presetmfdistance", PTP_DPC_OLYMPUS_PresetMFDistance, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_PresetMFDistance, _put_Olympus_PresetMFDistance },
 	{ N_("Flash X-Sync Speed"), "flashxsyncspeed", PTP_DPC_OLYMPUS_FlashXSyncSpeed, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
 	{ N_("Flash Slow Limit"), "flashslowlimit", PTP_DPC_OLYMPUS_FlashSlowLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
 	{ N_("RC Mode"), "rcmode", PTP_DPC_OLYMPUS_RCMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_RCMode, _put_Olympus_RCMode },
