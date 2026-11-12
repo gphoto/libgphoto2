@@ -27,8 +27,13 @@ ptp2:
   device/lens metadata, events, and session handling.
 * Leica Q3 43: added the camera; capture of DNG+JPEG in dual mode no
   longer hangs; identified the ISO, effective ISO, crop mode focal
-  length and AE exposure time device properties with value rendering;
-  the aperture is not exposed via PTP on this model.
+  length, AE exposure time, file format (DNG / DNG+JPG / JPG), white
+  balance, focus mode (AFs/iAF/AFc), metering, burst rates, self
+  timer, AF subject detection, scene mode, packed Leica Looks and
+  the aspect ratio / state readout with value rendering. Not exposed
+  via PTP on this model: the aperture, the video record profile,
+  the DNG L-/M- flavour, optical image stabilization, noise
+  reduction, flash mode, shutter mechanism and AF assist light.
 * Canon EOS CapturePreview caches GetViewFinderData type 17 (planar
   YRGB LV histogram) and exposes it as /main/status/eosviewfinderhistogram
   (base64). Same USB transaction as the JPEG; requires live view on
