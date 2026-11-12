@@ -1586,6 +1586,45 @@ static struct deviceproptableu16 olympus_imagequalitypreset[] = {
 };
 GENERIC16TABLE(Olympus_ImageQualityPreset,olympus_imagequalitypreset)
 
+static int
+_get_Olympus_CardRemaining (CONFIG_GET_ARGS)
+{
+	PTPParams *params = &camera->pl->params;
+	PTPDevicePropDesc current = *dpd;
+
+	/* Card-capacity descriptors can report 9999 while the current-value
+	 * request returns the actual remaining image count. Keep the descriptor's
+	 * type and range, but fetch the readout independently. */
+	C_PTP (ptp_getdevicepropvalue (params, dpd->DevicePropCode,
+		&current.CurrentValue, dpd->DataType));
+	return _get_INT (camera, widget, menu, &current);
+}
+
+static int
+_get_Olympus_ReadOnlyValue (CONFIG_GET_ARGS)
+{
+	PTPParams *params = &camera->pl->params;
+	PTPDevicePropDesc current = *dpd;
+	char value[128];
+
+	if (dpd->DataType != PTP_DTC_UINT16 && dpd->DataType != PTP_DTC_UINT32)
+		return GP_ERROR;
+	/* Status values and dynamic limits can change independently of cached
+	 * descriptors. Only the local copy receives the fresh scalar value. */
+	C_PTP (ptp_getdevicepropvalue (params, dpd->DevicePropCode,
+		&current.CurrentValue, dpd->DataType));
+	if (!ptp_render_property_value (params, dpd->DevicePropCode, &current,
+					sizeof(value), value))
+		snprintf(value, sizeof(value), "%u", dpd->DataType == PTP_DTC_UINT16
+			? (unsigned int)current.CurrentValue.u16 : (unsigned int)current.CurrentValue.u32);
+	gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget, value);
+	gp_widget_set_readonly (*widget, 1);
+	return GP_OK;
+}
+
+
 static void
 olympus_imageformat_prefix (uint16_t value, char *label, size_t length)
 {
@@ -2093,6 +2132,38 @@ static struct deviceproptableu16 olympus_afon_in_mf[] = {
 	{ N_("No"),	0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(Olympus_AFOnInMF,olympus_afon_in_mf)
+
+static struct deviceproptableu16 olympus_batterysource[] = {
+	{ N_("Body"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "PBH",      2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_BatterySource,olympus_batterysource)
+
+static struct deviceproptableu16 olympus_batterylevelstatus[] = {
+	{ N_("Full"),    1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Mid"),     2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Low"),     3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Warning"), 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Empty"),   5, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_BatteryLevelStatus,olympus_batterylevelstatus)
+
+static int
+_get_Olympus_BatteryLevelPercent(CONFIG_GET_ARGS) {
+	char value[32];
+
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return GP_ERROR_NOT_SUPPORTED;
+	if (dpd->CurrentValue.u16 <= 100)
+		snprintf (value, sizeof(value), "%u%%", (unsigned int)dpd->CurrentValue.u16);
+	else if (dpd->CurrentValue.u16 == 101)
+		snprintf (value, sizeof(value), "%s", _("Unavailable"));
+	else
+		snprintf (value, sizeof(value), _("Unknown (%u)"), (unsigned int)dpd->CurrentValue.u16);
+	CR (gp_widget_new (GP_WIDGET_TEXT, _(menu->label), widget));
+	CR (gp_widget_set_name (*widget, menu->name));
+	return gp_widget_set_value (*widget, value);
+}
 
 static struct deviceproptableu16 olympus_starryskyafoperation[] = {
 	{ N_("Half-press shutter"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -12587,6 +12658,33 @@ static struct submenu camera_actions_menu[] = {
 };
 
 static struct submenu camera_status_menu[] = {
+	{ N_("Movie Time Code Seconds"), "movietimecodeseconds", PTP_DPC_OLYMPUS_MovieTimeCodeSeconds, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Movie Time Code Frames"), "movietimecodeframes", PTP_DPC_OLYMPUS_MovieTimeCodeFrames, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("AF-ON Status"), "afonstatus", PTP_DPC_OLYMPUS_AFOnStatus, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_PressedReleased, _put_None },
+	{ N_("Aperture Preview Status"), "aperturepreviewstatus", PTP_DPC_OLYMPUS_AperturePreviewStatus, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_None },
+	{ N_("Camera State"), "camerastate", PTP_DPC_OLYMPUS_CameraState, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Camera Control Protocol Version"), "cameracontrolprotocolversion", PTP_DPC_OLYMPUS_CameraControlProtocolVersion, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Minimum F-Number"), "minimumfnumber", PTP_DPC_OLYMPUS_MinimumFNumber, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Maximum F-Number"), "maximumfnumber", PTP_DPC_OLYMPUS_MaximumFNumber, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Shutter Speed Short Limit"), "shutterspeedshortlimit", PTP_DPC_OLYMPUS_ShutterSpeedShortLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Shutter Speed Long Limit"), "shutterspeedlonglimit", PTP_DPC_OLYMPUS_ShutterSpeedLongLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Optical Zoom Drive State"), "opticalzoomdrivestate", PTP_DPC_OLYMPUS_OpticalZoomDriveState, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Electric Zoom Drive Availability"), "electriczoomdriveavailability", PTP_DPC_OLYMPUS_ElectricZoomDriveAvailability, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("AF Frame Position Over Info"), "afframepositionoverinfo", PTP_DPC_OLYMPUS_AFFramePositionOverInfo, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Camera Capabilities"), "cameracapabilities", PTP_DPC_OLYMPUS_CameraCapabilities, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("USB RAW Processing Protocol Version"), "usbrawprocessingprotocolversion", PTP_DPC_OLYMPUS_USBRawProcessingProtocolVersion, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Shooting State"), "shootingstate", PTP_DPC_OLYMPUS_ShootingState, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_None },
+	{ N_("AE Lock Status"), "aelockstatus", PTP_DPC_OLYMPUS_AELockStatus, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_None },
+	{ N_("Exposure Meter Value"), "exposuremetervalue", PTP_DPC_OLYMPUS_ExposureMeterValue, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ExpCompensation, _put_None },
+	{ N_("Battery Source"), "batterysource", PTP_DPC_OLYMPUS_BatterySource, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_BatterySource, _put_None },
+	{ N_("Battery Level Status"), "batterylevelstatus", PTP_DPC_OLYMPUS_BatteryLevelStatus, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_BatteryLevelStatus, _put_None },
+	{ N_("Battery Level Percent"), "batterypercentage", PTP_DPC_OLYMPUS_BatteryLevelPercent, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_BatteryLevelPercent, _put_None },
+	{ N_("Card Slot 1 Remaining Images"), "cardslot1remainingimages", PTP_DPC_OLYMPUS_CardSlot1RemainingImages, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_CardRemaining, _put_None },
+	{ N_("Card Slot 1 Media Status"), "cardslot1mediastatus", PTP_DPC_OLYMPUS_CardSlot1MediaStatus, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Card Slot 2 Media Status"), "cardslot2mediastatus", PTP_DPC_OLYMPUS_CardSlot2MediaStatus, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReadOnlyValue, _put_None },
+	{ N_("Card Slot 1 Remaining Movie Time (s)"), "cardslot1remainingmovietime", PTP_DPC_OLYMPUS_CardSlot1RemainingMovieTime, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_CardRemaining, _put_None },
+	{ N_("Card Slot 2 Remaining Images"), "cardslot2remainingimages", PTP_DPC_OLYMPUS_CardSlot2RemainingImages, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_CardRemaining, _put_None },
+	{ N_("Card Slot 2 Remaining Movie Time (s)"), "cardslot2remainingmovietime", PTP_DPC_OLYMPUS_CardSlot2RemainingMovieTime, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_CardRemaining, _put_None },
 	{ N_("Serial Number"),          "serialnumber",     0,  0,  PTP_OC_GetDeviceInfo,   _get_PTP_Serial_STR,            _put_None },
 	{ N_("Camera Manufacturer"),    "manufacturer",     0,  0,  PTP_OC_GetDeviceInfo,   _get_PTP_Manufacturer_STR,      _put_None },
 	{ N_("Camera Model"),           "cameramodel",      0,  0,  PTP_OC_GetDeviceInfo,   _get_PTP_Model_STR,             _put_None },
