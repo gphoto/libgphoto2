@@ -8255,6 +8255,12 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 			{PTP_DPC_LEICA_CropModeFocalLength,	N_("Crop Mode Focal Length")},	/* 0xd21d */
 			{PTP_DPC_LEICA_WhiteBalanceColorTemp,	N_("White Balance Color Temperature")},	/* 0xd014 */
 			{PTP_DPC_LEICA_AFSubjectDetection,	N_("AF Subject Detection")},	/* 0xd0bf */
+			{PTP_DPC_LEICA_LeicaLooks,		N_("Leica Looks")},	/* 0xd69c, readout 0xd69d */
+			{PTP_DPC_LEICA_SceneMode,		N_("Scene Mode")},	/* 0xd09c, tandem 0xd212 */
+			{PTP_DPC_LEICA_SelfTimerDuration,	N_("Self Timer Duration")},	/* 0xd097 */
+			{PTP_DPC_LEICA_SelfTimer,		N_("Self Timer")},	/* 0xd32d */
+			{PTP_DPC_LEICA_FileFormat,		N_("File Format")},	/* 0xd004, L/M flavor unexposed */
+			{PTP_DPC_LEICA_ShootingState,		N_("Aspect Ratio / State")},	/* 0xd632, ro */
 			{0,NULL}
 		};
 		for (i=0; ptp_device_properties_LEICA[i].txt!=NULL; i++)
@@ -8510,8 +8516,8 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 10, N_("Gray Card")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 11, N_("Kelvin")},	/* color temperature in 0xd014 */
 		{PTP_DPC_FocusMode, PTP_VENDOR_GP_LEICA, 0, "AFs"},		/* 500A */
-		{PTP_DPC_FocusMode, PTP_VENDOR_GP_LEICA, 1, "iAF"},
-		{PTP_DPC_FocusMode, PTP_VENDOR_GP_LEICA, 5, "AFc"},
+		{PTP_DPC_FocusMode, PTP_VENDOR_GP_LEICA, 1, "AFc"},
+		{PTP_DPC_FocusMode, PTP_VENDOR_GP_LEICA, 5, "iAF"},
 		{PTP_DPC_ExposureMeteringMode, PTP_VENDOR_GP_LEICA, 0, N_("Spot")},	/* 500B */
 		{PTP_DPC_ExposureMeteringMode, PTP_VENDOR_GP_LEICA, 2, N_("Center Weighted")},
 		{PTP_DPC_ExposureMeteringMode, PTP_VENDOR_GP_LEICA, 32769, N_("Highlight")},
@@ -8529,6 +8535,27 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 2, N_("Person (Eyes/Face)")},
 		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 3, N_("Animal (Body)")},
 		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 4, N_("Animal (Eyes/Body)")},
+		{PTP_DPC_LEICA_SceneMode, PTP_VENDOR_GP_LEICA, 0, N_("Auto")},	/* d09c, value 12 = PASM */
+		{PTP_DPC_LEICA_SceneMode, PTP_VENDOR_GP_LEICA, 12, N_("PASM")},
+		{PTP_DPC_LEICA_SelfTimerDuration, PTP_VENDOR_GP_LEICA, 3, "2 s"},	/* d097, 12 s = 1 (inferred from selection chain) */
+		{PTP_DPC_LEICA_SelfTimerDuration, PTP_VENDOR_GP_LEICA, 5, "6 s"},
+		{PTP_DPC_LEICA_SelfTimerDuration, PTP_VENDOR_GP_LEICA, 7, "30 s"},
+		{PTP_DPC_LEICA_SelfTimerDuration, PTP_VENDOR_GP_LEICA, 1, "12 s"},
+		{PTP_DPC_LEICA_SelfTimer, PTP_VENDOR_GP_LEICA, 0, N_("Off")},	/* d32d */
+		{PTP_DPC_LEICA_SelfTimer, PTP_VENDOR_GP_LEICA, 1, N_("On")},
+		{PTP_DPC_LEICA_FileFormat, PTP_VENDOR_GP_LEICA, 0, N_("DNG")},	/* d004, L-/M-DNG and -JPG flavor choice is not exposed anywhere (both L- and M-DNG read 0) */
+		{PTP_DPC_LEICA_FileFormat, PTP_VENDOR_GP_LEICA, 1, N_("DNG + JPG")},
+		{PTP_DPC_LEICA_FileFormat, PTP_VENDOR_GP_LEICA, 2, N_("JPG")},	/* set to L-JPG by camera menu */
+		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 0, N_("4:3 (photo)")},	/* d632, attributed from the camera screen, read raced the menu switch */
+		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 1, N_("16:9 (photo)")},
+		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 3, N_("3:2 (photo)")},
+		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 4, N_("1:1 (photo)")},
+		{PTP_DPC_LEICA_ShootingState, PTP_VENDOR_GP_LEICA, 7, N_("Video")},
+		{PTP_DPC_LEICA_LeicaLooks, PTP_VENDOR_GP_LEICA, 0x2000000f, N_("STD")},	/* d69c, packed look id */
+		{PTP_DPC_LEICA_LeicaLooks, PTP_VENDOR_GP_LEICA, 0x2000000c, N_("Vivid")},
+		{PTP_DPC_LEICA_LeicaLooks, PTP_VENDOR_GP_LEICA, 0x2000000d, N_("Natural")},
+		{PTP_DPC_LEICA_LeicaLooks, PTP_VENDOR_GP_LEICA, 0x20000010, N_("Monochrom")},
+		{PTP_DPC_LEICA_LeicaLooks, PTP_VENDOR_GP_LEICA, 0x2000000b, N_("Monochrom High Contrast")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32784, N_("Cloudy")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32785, N_("Shade")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32786, N_("Color Temperature")},

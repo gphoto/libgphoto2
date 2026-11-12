@@ -958,8 +958,14 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_DPC_LEICA_AEExposureTime		0xd03c	/* rw i32: same unit as 0xd60c; in M mode tracks the set shutter speed, otherwise slews with ambient light. Readout counterpart: 0xd60e */
 #define PTP_DPC_LEICA_AEExposureTimeReadout	0xd60e	/* ro i32: readout of 0xd03c */
 #define PTP_DPC_LEICA_CropModeFocalLength	0xd21d	/* rw u32: digital crop mode in focal length equivalents, 43/60/75/90/120/150 on the Q3 43 */
+#define PTP_DPC_LEICA_SelfTimerDuration		0xd097	/* rw i32: self timer delay, 1 = 12 s, 3 = 2 s, 5 = 6 s, 7 = 30 s */
+#define PTP_DPC_LEICA_SelfTimer			0xd32d	/* rw i32: self timer armed, 0 = off, 1 = on */
 #define PTP_DPC_LEICA_WhiteBalanceColorTemp	0xd014	/* rw i32: color temperature in Kelvin, active with WhiteBalance 11 */
 #define PTP_DPC_LEICA_AFSubjectDetection	0xd0bf	/* rw i32: AF subject detection mode, see value list */
+#define PTP_DPC_LEICA_SceneMode		0xd09c	/* rw i32: scene mode, 0 = Auto, 12 = PASM, other values unobserved; 0xd212 moves in tandem */
+#define PTP_DPC_LEICA_LeicaLooks			0xd69c	/* ro i32: packed Leica Looks selection; 0xd69d moves in tandem, same value. Looks verified: 0x2000000f STD, 0x2000000c Vivid, 0x2000000d Natural */
+#define PTP_DPC_LEICA_FileFormat		0xd004	/* rw i32: file format, 0 = DNG, 1 = DNG + JPG, 2 = JPG; the L-/M- flavor choice is not exposed */
+#define PTP_DPC_LEICA_ShootingState		0xd632	/* ro i32: aspect ratio / state, 3 = 3:2, 4 = 1:1, 0 = 4:3, 1 = 16:9 (screen attributed), 7 = video */
 #define PTP_OC_LEICA_GetLensParameter2			0x9033	/* seen on Q3 43, unverified meaning */
 
 #define PTP_OC_PARROT_GetSunshineValues		0x9201
