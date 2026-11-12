@@ -1,5 +1,22 @@
 libgphoto2 2.5.34.1 development
 
+sierra:
+* GHSA-4f44-frcc-8824: Fixed stack bufferoverflow via sierra_get_string_register 
+
+lumix:
+* capture image not correctly declared
+
+mustek/mdc800:
+* capture image not correctly declared
+
+panasonic/coolshot:
+* GHSA-j7vg-pcxj-jh45: fixed a buffer overflow in coolshot message parsing
+
+jl2005c:
+
+* CVE-2026-120451: Fixed stack-based and heap-based buffer overflow vulnerabilities in jl2005c_init()
+* CVE-2026-120452: Fixed a heap out-of-bounds read and write vulnerability in jl2005bcd_decompress()
+
 ptp2:
 * live view: find the end of preview JPEGs by walking their segments, not
   at the first FF D9, which can occur inside the quantization table
