@@ -1586,7 +1586,102 @@ static struct deviceproptableu16 olympus_imagequalitypreset[] = {
 };
 GENERIC16TABLE(Olympus_ImageQualityPreset,olympus_imagequalitypreset)
 
-GENERIC16TABLE(Olympus_Imageformat,olympus_imageformat)
+static void
+olympus_imageformat_prefix (uint16_t value, char *label, size_t length)
+{
+	if (value == 0x20)
+		snprintf (label, length, "%s", _("RAW"));
+	else if (value >= 0x121 && value <= 0x124)
+		snprintf (label, length, _("Preset %u + RAW"), value - 0x120);
+	else
+		snprintf (label, length, _("Preset %u"), value - 0x100);
+}
+
+static int
+_get_Olympus_Imageformat (CONFIG_GET_ARGS)
+{
+	PTPParams *params = &camera->pl->params;
+	struct deviceproptableu16 table[ARRAYSIZE(olympus_imageformat)];
+	char labels[ARRAYSIZE(olympus_imageformat)][128];
+	unsigned int i, preset;
+
+	memcpy (table, olympus_imageformat, sizeof(table));
+	for (i = 0; i < ARRAYSIZE(table); i++) {
+		olympus_imageformat_prefix (table[i].value, labels[i], sizeof(labels[i]));
+		table[i].label = labels[i];
+	}
+	for (preset = 0; preset < 4; preset++) {
+		PTPDevicePropDesc definition = {0};
+		const char *quality = NULL;
+		uint16_t code = PTP_DPC_OLYMPUS_ImageQualityPreset1 + preset;
+		int needed = !(dpd->FormFlag & PTP_DPFF_Enumeration) || !dpd->FORM.Enum.NumberOfValues;
+
+		if (dpd->DataType != PTP_DTC_UINT16)
+			break;
+		for (i = 0; !needed && i < dpd->FORM.Enum.NumberOfValues; i++)
+			needed = dpd->FORM.Enum.SupportedValue[i].u16 == 0x101 + preset ||
+				 dpd->FORM.Enum.SupportedValue[i].u16 == 0x121 + preset;
+		if (!needed || !ptp_property_issupported (params, code))
+			continue;
+		/* Read the definition afresh: a body-menu edit can change its meaning
+		 * without changing the selected D00D preset number. */
+		if (ptp_getdevicepropdesc (params, code, &definition) != PTP_RC_OK)
+			continue;
+		if (definition.DataType == PTP_DTC_UINT16)
+			for (i = 0; i < ARRAYSIZE(olympus_imagequalitypreset); i++)
+				if (olympus_imagequalitypreset[i].value == definition.CurrentValue.u16) {
+					quality = _(olympus_imagequalitypreset[i].label);
+					break;
+				}
+		if (quality) {
+			size_t used = strlen (labels[preset + 1]);
+			snprintf (labels[preset + 1] + used, sizeof(labels[0]) - used, ": %s", quality);
+			used = strlen (labels[preset + 5]);
+			snprintf (labels[preset + 5] + used, sizeof(labels[0]) - used, ": %s%s", quality, _(" + RAW"));
+		}
+		ptp_free_devicepropdesc (&definition);
+	}
+	return _get_Genericu16Table (CONFIG_GET_NAMES, table, ARRAYSIZE(table));
+}
+
+static int
+_put_Olympus_Imageformat (CONFIG_PUT_ARGS)
+{
+	char *value;
+	unsigned int i, j;
+	int ret;
+
+	if (dpd->DataType != PTP_DTC_UINT16)
+		return GP_ERROR;
+	CR (gp_widget_get_value (widget, &value));
+	for (i = 0; i < ARRAYSIZE(olympus_imageformat); i++) {
+		char prefix[64];
+		size_t length;
+
+		olympus_imageformat_prefix (olympus_imageformat[i].value, prefix, sizeof(prefix));
+		length = strlen (prefix);
+		if (strncmp (value, prefix, length) || (value[length] && strncmp (value + length, ": ", 2)))
+			continue;
+		/* The suffix is descriptive. Preserve the chosen preset even if its
+		 * definition changed since the widget was fetched. */
+		propval->u16 = olympus_imageformat[i].value;
+		break;
+	}
+	/* Accept the plain preset names and unknown values used by older callers. */
+	if (i == ARRAYSIZE(olympus_imageformat)) {
+		ret = _put_Genericu16Table (CONFIG_PUT_NAMES, olympus_imageformat, ARRAYSIZE(olympus_imageformat));
+		if (ret != GP_OK)
+			return ret;
+	}
+	/* Apply the same descriptor restriction to both label formats. */
+	if ((dpd->FormFlag & PTP_DPFF_Enumeration) && dpd->FORM.Enum.NumberOfValues) {
+		for (j = 0; j < dpd->FORM.Enum.NumberOfValues; j++)
+			if (dpd->FORM.Enum.SupportedValue[j].u16 == propval->u16)
+				return GP_OK;
+		return GP_ERROR_BAD_PARAMETERS;
+	}
+	return GP_OK;
+}
 
 static struct deviceproptableu16 olympus_afareasetting[] = {
 	{ N_("All"),			0x8100,	PTP_VENDOR_GP_OLYMPUS_OMD },
