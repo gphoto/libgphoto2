@@ -7871,6 +7871,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	char *txt, *txt_marker;
 	PTPParams *params = &(camera->pl->params);
 	PTPDeviceInfo pdi;
+	int storage_header_printed = 0;
 
 	SET_CONTEXT(camera, context);
 
@@ -8076,6 +8077,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 	    ptp_operation_issupported(params,PTP_OC_GetStorageInfo)
 	) {
 		APPEND_TXT (_("\nStorage Devices Summary:\n"));
+		storage_header_printed = 1;
 
 		for_each (uint32_t*, psid, params->storageids) {
 			char tmpname[20], *s;
@@ -8137,6 +8139,40 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			APPEND_TXT (_("\tFree Space (Images): %d\n"), (unsigned int)storageinfo.FreeSpaceInImages);
 			free (storageinfo.StorageDescription);
 			free (storageinfo.VolumeLabel);
+		}
+	}
+
+	/* Remote OM-D sessions can expose card readouts without storage IDs. */
+	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) {
+		static const uint16_t card_props[2][2] = {
+			{ PTP_DPC_OLYMPUS_CardSlot1RemainingImages, PTP_DPC_OLYMPUS_CardSlot1RemainingMovieTime },
+			{ PTP_DPC_OLYMPUS_CardSlot2RemainingImages, PTP_DPC_OLYMPUS_CardSlot2RemainingMovieTime }
+		};
+		unsigned int slot, field;
+
+		for (slot = 0; slot < 2; slot++) {
+			for (field = 0; field < 2; field++) {
+				PTPPropValue value;
+				uint16_t datatype = field ? PTP_DTC_UINT32 : PTP_DTC_UINT16;
+				uint32_t remaining;
+
+				if (!ptp_property_issupported(params, card_props[slot][field]))
+					continue;
+				ret = ptp_getdevicepropvalue(params, card_props[slot][field], &value, datatype);
+				if (ret != PTP_RC_OK)
+					continue;
+				remaining = field ? value.u32 : value.u16;
+				if (!storage_header_printed) {
+					APPEND_TXT (_("\nStorage Devices Summary:\n"));
+					storage_header_printed = 1;
+				}
+				if (field)
+					APPEND_TXT (_("\tSlot %u Remaining Movie Time: %02u:%02u:%02u\n"),
+						slot + 1, (unsigned int)(remaining / 3600),
+						(unsigned int)(remaining / 60 % 60), (unsigned int)(remaining % 60));
+				else
+					APPEND_TXT (_("\tSlot %u Remaining Images: %u\n"), slot + 1, (unsigned int)remaining);
+			}
 		}
 	}
 
