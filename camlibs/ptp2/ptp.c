@@ -3531,6 +3531,16 @@ handle_event_internal (PTPParams *params, PTPContainer *event)
 			dpd_in_cache->timestamp = 0;
 		break;
 	}
+	case PTP_EC_Olympus_DevicePropChanged:
+	case PTP_EC_Olympus_DevicePropChanged_New:
+		if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS ||
+		     params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) && event->Nparam >= 1) {
+			/* Olympus uses vendor events for both value and descriptor changes. */
+			PTPDevicePropDesc *dpd_in_cache = ptp_find_dpd_in_cache (params, event->Param1 & 0xffff);
+			if (dpd_in_cache)
+				dpd_in_cache->timestamp = 0;
+		}
+		break;
 	case PTP_EC_StoreAdded:
 	case PTP_EC_StoreRemoved: {
 		/* FIXME: if we just remove 1 out of many storages, we do not need to invalidate/reload the entire tree? */
