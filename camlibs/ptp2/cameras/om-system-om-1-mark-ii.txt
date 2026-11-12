@@ -2,7 +2,7 @@ Camera summary:
 Manufacturer: OMSYSTEM
 Model: OM-1MarkII
   Version: 1.00
-  Serial Number: BJRAnnnnn
+  Serial Number: BJRAxxxxx
 Vendor Extension ID: 0xfffd (1.0)
 Vendor Extension Description: 
 
@@ -11,307 +11,311 @@ Display Formats: Undefined Type, Association/Directory, DPOF, MS Wave, Unknown(b
 
 Device Capabilities:
 	File Download, File Deletion, No File Upload
-	No Image Capture, No Open Capture, No vendor specific capture
+	No Image Capture, No Open Capture, Olympus OM-D Capture
 
 Storage Devices Summary:
+	Slot 1 Remaining Images: 9999
+	Slot 1 Remaining Movie Time: 05:16:14
+	Slot 2 Remaining Images: 7939
+	Slot 2 Remaining Movie Time: 02:36:33
 
 Device Property Summary:
 Battery Level             (5001 ro u8 ): Range [1 - 100, step 1] value: 99% (99)
-Date & Time               (5011 rw str): '20260627T121533'
+Date & Time               (5011 rw str): '20261112T111019'
 Device Icon               (d405 ro [u8 ]): a[73728] 0,0,1,0,5,0,0,0,0,0,1,0,32,0,94,219,0,0,86,0,0,0,48,48,0,0,1,0,32,0,168,37,0,0,180,219,0,0,32,32,0,0,1,0,32,0,168,16,0,0,92,1,1,0,24,24,0,0,1,0,32,0,136,9, ...
 Session Initiator Info    (d406 rw str): 'Windows/6.0.5330.0 MTPClassDriver/6.0.5330.0'
 Perceived Device Type     (d407 ro u32): 1
-Aperture                  (d002 rw u16): Enumeration [10,11,12,14,16,18,20,22,25,28,32,35,40,45,50,56,63,71,80,90,100,110,130,140,160,180,200,220,250,290,320,360,400,450,510,570,640,720,810,910] value: 56
-Focus Mode                (d003 rw u16): Enumeration [2,32770,1,32772] value: 32770
+Aperture                  (d002 rw u16): Enumeration [10,11,12,14,16,18,20,22,25,28,32,35,40,45,50,56,63,71,80,90,100,110,130,140,160,180,200,220,250,290,320,360,400,450,510,570,640,720,810,910] value: 28
+Focus Mode                (d003 rw u16): Enumeration [2,32770,1,32772,32775] value: C-AF (32770)
 Focus Metering Mode       (d004 rw u16): Enumeration [32769,2,4,32785,32786] value: 32769
-Flash Mode                (d005 rw u16): Enumeration [2] value: 2
-Lens Type                 (d006 ro u16): Enumeration [1,2,3,4,8,11] value: 4
+Flash Mode                (d005 rw u16): Enumeration [3,2,32786] value: Fill flash (3)
+Exposure Program          (d006 ro u16): Enumeration [1,2,3,4,8,11] value: 4
 Exposure Compensation     (d008 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
 Drive Mode                (d009 rw u16): Enumeration [1,33,7,39,40,41,67,72,73,4,5,36,6] value: 39
-Exposure Program Mode     (d00c rw u16): Enumeration [33024,34817,34818,34819,34820,34821] value: 33024
-Image Format              (d00d rw u16): Enumeration [32,257,258,259,260,289,290,291,292] value: 32
+AF Area Setting           (d00c rw u16): Enumeration [33024,34817,34818,34819,34820,34821] value: All (33024)
+Image Format              (d00d rw u16): Enumeration [32,257,258,259,260,289,290,291,292] value: JPEG Preset 1 (257)
 Color Temperature         (d00e rw u16): Enumeration [2000,2050,2100,2150,2200,2250,2300,2350,2400,2450,2500,2550,2600,2650,2700,2750,2800,2900,3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000,4200,4400,4600,4800,5000,5200,5400,5600,5800,6000,6200,6400,6600,6800,7000,7400,7800,8200,8600,9000,9400,9800,10000,11000,12000,13000,14000] value: 5400
-Flash Exposure Compensation (d00f rw u16): Enumeration [62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000] value: 0
+Flash Exposure Compensation (d00f rw u16): Enumeration [62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000] value: 0.0 EV (0)
 White Balance Preset      (d010 rw u16): Enumeration [33281,33537,2,1,32771,32769,33025,34561,34049,35585,35586,34306,35617,35618,34308,35649,35650,35665,35666,35667,35681,35682,35697,35698,34313,35729,35730,35745,35746,35761,35762,35777,35778,35779,35793,35794,35795,35809,35810,34320] value: 2
-Noise Filter              (d011 rw u16): Enumeration [0,1] value: 0
-AF Release Priority       (d013 rw u16): Enumeration [1,2,3,4] value: 1
-Shutter Release Priority  (d014 rw u16): Enumeration [2] value: 2
-ISO Auto Mode             (d018 rw u16): Enumeration [65535,0,1] value: 65535
+RC Mode                   (d011 rw u16): Enumeration [0,1] value: 0
+RC Channel                (d013 rw u16): Enumeration [1,2,3,4] value: 1
+RC Flash FP Mode          (d014 rw u16): Enumeration [2,1] value: 2
+RC Communication Light Level (d018 rw u16): Enumeration [65535,0,1] value: 65535
 Aspect Ratio              (d01b rw u32): Enumeration [262147,1048585,196610,65537,196612] value: 262147
-Shutter Speed             (d01c rw u32): Enumeration [39321610,32768010,26214410,19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,655373,655376,655380,655385,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536,75536,78336,81536,85536,91136,97536] value: 65736
-Flash Sync Mode           (d01d rw u16): Enumeration [4,1,2,3] value: 4
+Shutter Speed             (d01c rw u32): Enumeration [39321610,32768010,26214410,19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,655373,655376,655380,655385,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536,75536,78336,81536,85536,91136,97536] value: 65636
+Image Stabilizer          (d01d rw u16): Enumeration [0,4,1,2,3] value: 4
 White Balance             (d01e rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13] value: 1
-Bracket Setting A         (d01f rw u16): Enumeration [2,1] value: 1
-Bracket Setting B         (d020 rw u16): Enumeration [2,1,3,0] value: 2
-Bracket Setting C         (d021 rw u16): Enumeration [2,1,3,0] value: 0
-Bracket Setting D         (d022 rw u16): Enumeration [2,1,3,0] value: 0
-Bracket Exposure Compensation A (d025 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
-Bracket Exposure Compensation B (d026 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
-Bracket Exposure Compensation C (d027 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
-Bracket Shutter Speed 1   (d029 rw u32): Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
-Bracket Shutter Speed 2   (d02a rw u32): Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
-Bracket Shutter Speed 3   (d02b rw u32): Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
-Bracket Aperture 1        (d02d rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 52
-Bracket Aperture 2        (d02e rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 51
-Bracket Aperture 3        (d02f rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 50
-Bracket Aperture 4        (d030 rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: 98
-My Mode Exposure Compensation 01 (d031 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 02 (d032 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 03 (d033 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 04 (d034 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 05 (d035 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 06 (d036 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 07 (d037 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 08 (d038 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 09 (d039 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 10 (d03a rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 11 (d03b rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 12 (d03c rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 13 (d03d rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 14 (d03e rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 15 (d03f rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 16 (d040 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 17 (d041 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 18 (d042 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 19 (d043 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 20 (d044 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 21 (d045 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 22 (d046 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 23 (d047 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-My Mode Exposure Compensation 24 (d048 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Firmware Version Minor    (d04a ro u16): Range [188 - 500, step 1] value: 500
-Image Stabilizer Mode     (d04b rw u16): Enumeration [1,2,3] value: 2
-Auto Minimum Shutter Speed (d04c rw u32): Enumeration [4294967295,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600] value: 4294967295
-Orientation Sensor        (d050 rw u16): Enumeration [2,1] value: 2
-AF Area                   (d051 rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64, ... (1053 values)] value: 527
+WB Keep Warm Color        (d01f rw u16): Enumeration [2,1] value: 1
+RC Group A Mode           (d020 rw u16): Enumeration [2,1,3,0] value: 2
+RC Group B Mode           (d021 rw u16): Enumeration [2,1,3,0] value: 0
+RC Group C Mode           (d022 rw u16): Enumeration [2,1,3,0] value: 0
+RC Group A Compensation   (d025 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
+RC Group B Compensation   (d026 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
+RC Group C Compensation   (d027 rw u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
+RC Group A Manual Power   (d029 rw u32): Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
+RC Group B Manual Power   (d02a rw u32): Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
+RC Group C Manual Power   (d02b rw u32): Enumeration [65537,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600,65616,65636,65664] value: 65537
+Image Quality Preset 1    (d02d rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: Large SuperFine (52)
+Image Quality Preset 2    (d02e rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: Large Fine (51)
+Image Quality Preset 3    (d02f rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: Large Normal (50)
+Image Quality Preset 4    (d030 rw u16): Enumeration [50,51,52,66,67,68,82,83,84,98,99,100,114,115,116] value: Medium 1 Normal (98)
+WB Auto A-B               (d031 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Auto G-M               (d032 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Sunny A-B              (d033 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Sunny G-M              (d034 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Shade A-B              (d035 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Shade G-M              (d036 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Cloudy A-B             (d037 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Cloudy G-M             (d038 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Incandescent A-B       (d039 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Incandescent G-M       (d03a rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Fluorescent A-B        (d03b rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Fluorescent G-M        (d03c rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Underwater A-B         (d03d rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Underwater G-M         (d03e rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Flash A-B              (d03f rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Flash G-M              (d040 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB One-touch 1 A-B        (d041 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB One-touch 1 G-M        (d042 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB One-touch 2 A-B        (d043 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB One-touch 2 G-M        (d044 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB One-touch 3 A-B        (d045 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB One-touch 3 G-M        (d046 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB One-touch 4 A-B        (d047 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB One-touch 4 G-M        (d048 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+Current Focal Length      (d04a ro u16): Range [7 - 14, step 1] value: 7
+LV Close Up Mode          (d04b rw u16): Enumeration [1,2,3] value: 2
+Manual Flash Power        (d04c rw u32): Enumeration [4294967295,655373,655376,65538,655385,65539,65540,65541,65542,65544,65546,65549,65552,65556,65561,65568,65576,65586,65600] value: 1/1 (4294967295)
+Release Priority S-AF     (d050 rw u16): Enumeration [2,1] value: 2
+AF Area                   (d051 rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64, ... (1053 values)] value: 998
 Camera Control Mode       (d052 rw u16): Enumeration [1,2] value: 1
-Lens Focal Length Minimum (d053 ro u16): Range [64636 - 900, step 1] value: 65482
-Lens Aperture Format      (d054 ro u16): Enumeration [1,2] value: 2
-Lens Focal Length Maximum (d055 ro u16): Range [64636 - 900, step 1] value: 65496
-Lens Info Format          (d056 ro u16): Enumeration [1,2] value: 2
-Lens Mount Information    (d057 ro u16): Enumeration [1,2,3,4,5,6] value: 1
-Lens Serial Number Part   (d058 ro u16): Range [0 - 9999, step 1] value: 6584
-Shutter Actuation Count   (d059 ro u32): Range [0 - 4294967295, step 1] value: 21522
-Live View Crop X          (d05a ro u16): Range [0 - 1279, step 1] value: 128
-Live View Crop Y          (d05b ro u16): Range [0 - 1279, step 1] value: 1152
-Lens Optical Info         (d05c ro u16): Enumeration [1,2,3] value: 3
-AF Point Position X       (d05d ro u16): Range [0 - 1279, step 1] value: 0
-AF Point Position Y       (d05e ro u16): Range [0 - 959, step 1] value: 0
-Lens IS Status            (d061 ro u16): Enumeration [1,2] value: 1
-Lens Focus Drive Status   (d062 ro u16): Enumeration [1,2] value: 2
+Roll Angle                (d053 ro u16): Range [64636 - 900, step 1] value: -0.6 degrees (65530)
+Roll Angle Confidence     (d054 ro u16): Enumeration [1,2] value: Unreliable (2)
+Pitch Angle               (d055 ro u16): Range [64636 - 900, step 1] value: 0.9 degrees (9)
+Pitch Angle Confidence    (d056 ro u16): Enumeration [1,2] value: Unreliable (2)
+Level Gauge Position      (d057 ro u16): Enumeration [1,2,3,4,5,6] value: 1
+Card Slot 1 Remaining Images (d058 ro u16): Range [0 - 9999, step 1] value: 0
+Card Slot 1 Remaining Movie Time (d059 ro u32): Range [0 - 4294967295, step 1] value: 0
+Live View Touch Area Min X (d05a ro u16): Range [0 - 1279, step 1] value: 208
+Live View Touch Area Max X (d05b ro u16): Range [0 - 1279, step 1] value: 1068
+AF Frame Status           (d05c ro u16): Enumeration [1,2,3] value: 3
+AF Frame X                (d05d ro u16): Range [0 - 1279, step 1] value: 0
+AF Frame Y                (d05e ro u16): Range [0 - 959, step 1] value: 0
+Camera State              (d061 ro u16): Enumeration [1,2] value: Ready (1)
+Shutter Half Press        (d062 ro u16): Enumeration [1,2] value: Released (2)
 Lens Category             (d063 ro u16): Enumeration [5] value: 5
-Lens Version              (d064 ro u16): Enumeration [1,2,3,4] value: 3
-Focus Stacking Enable     (d065 rw u16): Enumeration [1,2] value: 2
-Lens Attached Status      (d066 ro u16): Enumeration [1,2] value: 2
+[Unknown Property]        (d064 ro u16): Enumeration [1,2,3,4] value: 3
+Aperture Preview          (d065 rw u16): Enumeration [1,2] value: Off (2)
+Aperture Preview Status   (d066 ro u16): Enumeration [1,2] value: Off (2)
 Lens Data Valid           (d067 ro u16): Enumeration [1,2] value: 2
-Lens Error Status         (d068 ro u16): Range [0 - 65535, step 1] value: 5219
-Live View Stream Enable   (d069 rw u16): Enumeration [2,1] value: 1
-Live View Stream Format   (d06a rw u32): Enumeration [339742512] value: 339742512
-Live View Mode            (d06d rw u32): Enumeration [0,52429400,83887040,20971760,41943520,67109632] value: 0
+Stored File Count         (d068 ro u16): Range [0 - 65535, step 1] value: 12
+Release Priority C-AF     (d069 rw u16): Enumeration [2,1] value: 1
+Image Size L              (d06a rw u32): Enumeration [339742512] value: 5184x3888 (339742512)
+Live View Mode            (d06d rw u32): Enumeration [0,52429400,83887040,20971760,41943520,67109632] value: 83887040
 Live View Quality         (d070 rw u16): Enumeration [1,2,3,4,5,6] value: 3
-Live View AF Area X       (d071 ro u16): Range [0 - 959, step 1] value: 80
-Live View AF Area Y       (d072 ro u16): Range [0 - 959, step 1] value: 876
-Live View AF Area Mode    (d073 ro u16): Enumeration [1,2,3,4,5] value: 5
-Live View Frame Width     (d074 ro u16): Range [0 - 1279, step 1] value: 0
-Live View Frame Height    (d075 ro u16): Range [0 - 959, step 1] value: 0
-Lens Numeric Info         (d077 ro u16): Enumeration [784] value: 784
+Live View Touch Area Min Y (d071 ro u16): Range [0 - 959, step 1] value: 136
+Live View Touch Area Max Y (d072 ro u16): Range [0 - 959, step 1] value: 820
+Card Slot 1 Media Status  (d073 ro u16): Enumeration [1,2,3,4,5] value: Ready (5)
+AF Frame Width            (d074 ro u16): Range [0 - 1279, step 1] value: 0
+AF Frame Height           (d075 ro u16): Range [0 - 959, step 1] value: 0
+Camera Control Protocol Version (d077 ro u16): Enumeration [784] value: 0x0310 (784)
 Live View Mode Setting    (d078 rw u16): Enumeration [1] value: 1
-Lens Focus Mode Status    (d079 ro u16): Enumeration [1,2] value: 2
-High Res Shutter Speed    (d07a rw u32): Enumeration [65786,65736,65696,65661,65636,65616,65596] value: 65786
-Shutter Speed Alt         (d07b rw u32): Enumeration [65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,655385,655380,655376,655373,655370,851978,1048586,1310730,1638410,2097162,2621450,3276810,3932170,5242890,6553610,8519690,9830410,13107210,16384010,19660810,26214410,32768010,39321610] value: 65596
-Electronic Shutter Mode   (d07c rw u16): Enumeration [2,1] value: 2
-Flash Exposure Compensation Alt (d07d ro u16): Enumeration [62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000] value: 0
-Lens F Stop Minimum       (d07f ro u16): Enumeration [56] value: 56
-Lens F Stop Maximum       (d080 ro u16): Enumeration [290] value: 290
+Movie Recording State     (d079 ro u16): Enumeration [1,2] value: Stopped (2)
+Flash X-Sync Speed        (d07a rw u32): Enumeration [65786,65736,65696,65661,65636,65616,65596] value: 65786
+Flash Slow Limit          (d07b rw u32): Enumeration [65786,65736,65696,65661,65636,65616,65596,65586,65576,65566,65561,65556,65551,65549,65546,65544,65542,65541,65540,65539,655385,655380,655376,655373,655370,851978,1048586,1310730,1638410,2097162,2621450,3276810,3932170,5242890,6553610,8519690,9830410,13107210,16384010,19660810,26214410,32768010,39321610] value: 65596
+Flash and Exposure Compensation (d07c rw u16): Enumeration [2,1] value: 2
+Flash Exposure Compensation Readout (d07d ro u16): Enumeration [62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000] value: 0.0 EV (0)
+Minimum F-Number          (d07f ro u16): Enumeration [28] value: f/2.8 (28)
+Maximum F-Number          (d080 ro u16): Enumeration [220] value: f/22 (220)
 Lens OIS Mode             (d081 ro u16): Enumeration [1,2] value: 2
-Lens MF Clutch Status     (d082 ro u16): Enumeration [1,2] value: 2
-Lens Focus Limit Near     (d083 ro u16): Enumeration [1,2] value: 2
-Lens Focus Limit Far      (d084 ro u16): Enumeration [1,2,3,4,5,6,7,8,9] value: 8
+AE Lock Status            (d082 ro u16): Enumeration [1,2] value: Off (2)
+AF-ON Status              (d083 ro u16): Enumeration [1,2] value: Released (2)
+Shooting State            (d084 ro u16): Enumeration [1,2,3,4,5,6,7,8,9] value: 8
 Lens Focus Limiter Mode   (d085 ro u16): Enumeration [1,2] value: 2
-Lens Max Shutter Speed    (d086 ro u32): Enumeration [97536] value: 97536
-Lens Current Shutter Speed (d087 ro u32): Enumeration [39321610] value: 39321610
-Movie Frame Rate          (d08b rw u16): Enumeration [17,18,19,22] value: 22
-Movie Quality             (d08c rw u16): Enumeration [1,2,3,4] value: 1
-Movie Audio Mode          (d08e rw u16): Enumeration [4] value: 4
-Movie Recording Status    (d08f ro u16): Enumeration [1,2] value: 1
-Wireless Flash Mode       (d097 rw u16): Enumeration [1,2] value: 2
-Grip Battery Status       (d09f ro u16): Enumeration [1,2] value: 1
-Picture Mode Parameter 1  (d0a2 rw u16): Enumeration [1,2,3,4,5,6,7,8,9] value: 1
-Picture Mode Parameter 2  (d0a3 rw u16): Enumeration [1,2,3,4,5,6,7,8,9] value: 2
-Picture Mode Parameter 3  (d0a4 rw u16): Enumeration [22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1] value: 1
-Picture Mode Parameter 6  (d0a7 rw u16): Enumeration [1,6,8,9,10,12,13,14,16] value: 1
-Picture Mode Parameter 7  (d0a8 rw u16): Enumeration [1,2,3,4] value: 1
-Picture Mode Parameter 8  (d0a9 rw u16): Enumeration [1,2,3,4] value: 1
-Picture Mode Parameter 9  (d0aa rw u16): Enumeration [1,2,3,4] value: 1
-Property D0AB             (d0ab rw u16): Enumeration [1,2,4,5] value: 1
-Picture Mode Toggle       (d0ac rw u16): Enumeration [2,1] value: 2
-Picture Mode Color Profile (d0ad rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
-Picture Mode Toggle 2     (d0ae rw u16): Enumeration [2,1] value: 2
-Art Filter Parameter 1    (d0b2 rw u16): Enumeration [4,3,1] value: 3
-Art Filter Parameter 2    (d0b3 rw u16): Enumeration [4,3,1] value: 1
-Art Filter Parameter 3    (d0b4 rw u16): Enumeration [4,3,1] value: 3
-Art Filter Parameter 5    (d0b6 rw u16): Enumeration [5] value: 5
-Art Filter Parameter 6    (d0b7 rw u16): Enumeration [1,5] value: 5
-Art Filter Parameter 7    (d0b8 rw u16): Enumeration [5] value: 5
-Art Filter Parameter 11   (d0bc rw u16): Enumeration [1,2,3,4,5] value: 5
-Art Filter Parameter 12   (d0bd rw u16): Enumeration [1,2,3,4,5] value: 5
-Art Filter Parameter 13   (d0be rw u16): Enumeration [1,2,3,4,5] value: 3
-Focus Bracketing Enable   (d0c4 rw u16): Enumeration [1,2] value: 2
-Movie Focus Mode          (d0c5 rw u16): Enumeration [2,1,32769,32772] value: 1
+Shutter Speed Short Limit (d086 ro u32): Enumeration [97536] value: 1/32000 s (97536)
+Shutter Speed Long Limit  (d087 ro u32): Enumeration [39321610] value: 60 s (39321610)
+Movie Frame Rate          (d08b rw u16): Enumeration [17,18,19,22] value: 19
+Movie Exposure Mode       (d08c rw u16): Enumeration [1,2,3,4] value: 1
+Movie Image Stabilization (d08e rw u16): Enumeration [1,3,4] value: 3
+Optical Zoom Drive State  (d08f ro u16): Enumeration [1,2] value: Idle (1)
+AE Lock                   (d097 rw u16): Enumeration [1,2] value: 2
+Electric Zoom Drive Availability (d09f ro u16): Enumeration [1,2] value: Unavailable (1)
+Live Bulb Setting         (d0a2 rw u16): Enumeration [1,2,3,4,5,6,7,8,9] value: 1
+Live Time Setting         (d0a3 rw u16): Enumeration [1,2,3,4,5,6,7,8,9] value: 2
+Live Composite Setting    (d0a4 rw u16): Enumeration [22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1] value: 1
+AE Bracketing             (d0a7 rw u16): Enumeration [1,6,8,9,10,12,13,14,16] value: 1
+ISO Bracketing            (d0a8 rw u16): Enumeration [1,2,3,4] value: 1
+WB Bracketing A-B         (d0a9 rw u16): Enumeration [1,2,3,4] value: 1
+WB Bracketing G-M         (d0aa rw u16): Enumeration [1,2,3,4] value: 1
+Flash Bracketing          (d0ab rw u16): Enumeration [1,2,4,5] value: 1
+Art Bracketing Enable     (d0ac rw u16): Enumeration [2,1] value: 2
+HDR                       (d0ad rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+Keystone Compensation     (d0ae rw u16): Enumeration [2,1] value: 2
+Movie 1 Size              (d0b2 rw u16): Enumeration [4,3,1] value: 3
+Movie 2 Size              (d0b3 rw u16): Enumeration [4,3,1] value: 1
+Movie 3 Size              (d0b4 rw u16): Enumeration [4,3,1] value: 3
+Movie 1 Compression       (d0b6 rw u16): Enumeration [5] value: 5
+Movie 2 Compression       (d0b7 rw u16): Enumeration [1,5] value: 5
+Movie 3 Compression       (d0b8 rw u16): Enumeration [5] value: 5
+Movie 1 Frame Rate        (d0bc rw u16): Enumeration [1,2,3,4,5] value: 5
+Movie 2 Frame Rate        (d0bd rw u16): Enumeration [1,2,3,4,5] value: 5
+Movie 3 Frame Rate        (d0be rw u16): Enumeration [1,2,3,4,5] value: 3
+AF-ON                     (d0c4 rw u16): Enumeration [1,2] value: 2
+Movie Focus Mode          (d0c5 rw u16): Enumeration [2,32770,1,32769,32772] value: 1
 Focus Bracketing Status   (d0c6 ro u16): Enumeration [1,2] value: 1
-Video Resolution          (d0c7 rw u16): Enumeration [264,262,263,296,294,295] value: 296
-Pro Capture Pre Buffer Shutter (d0c9 rw u32): Enumeration [0,65544,65540,655380,655370,1310730,2621450,5242890,9830410,19660810] value: 0
-Keystone Compensation     (d0cb rw u16): Enumeration [2,1] value: 2
-Keystone Adjustment       (d0cc rw u16): Range [3 - 999, step 1] value: 99
-Custom Mode Dial          (d0cd rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10] value: 5
-Custom Mode Parameter     (d0cf rw u16): Enumeration [1,2,3,4,5] value: 2
-Live View Overlay 1       (d0d0 ro u16): Range [0 - 1279, step 1] value: 0
-Live View Overlay 2       (d0d1 ro u16): Range [0 - 959, step 1] value: 0
-Live View Overlay 3       (d0d2 ro u16): Range [0 - 1279, step 1] value: 0
-Live View Overlay 4       (d0d3 ro u16): Range [0 - 959, step 1] value: 0
-Live View Overlay 5       (d0d4 ro u32): Range [0 - 41877983, step 1] value: 0
-Live View Overlay 6       (d0d5 ro u32): Range [0 - 41877983, step 1] value: 41877504
-Live View Overlay 7       (d0d6 ro u32): Range [0 - 41877983, step 1] value: 478
-Live View Overlay 8       (d0d7 ro u32): Range [0 - 41877983, step 1] value: 41877982
-Live View Overlay 9       (d0d8 ro u32): Range [0 - 41877983, step 1] value: 0
-Live View Overlay 10      (d0d9 ro u32): Range [0 - 41877983, step 1] value: 41877504
-Live View Overlay 11      (d0da ro u32): Range [0 - 41877983, step 1] value: 478
-Live View Overlay 12      (d0db ro u32): Range [0 - 41877983, step 1] value: 41877982
-Capture Target            (d0dc rw u16): Enumeration [3,2,1] value: 2
+High Res Resolution       (d0c7 rw u16): Enumeration [264,262,263,296,294,295] value: 296
+High Res Wait Time        (d0c9 rw u32): Enumeration [0,65544,65540,655380,655370,1310730,2621450,5242890,9830410,19660810] value: 0
+Focus Bracketing Enable   (d0cb rw u16): Enumeration [2,1] value: 2
+Focus Bracketing Shots    (d0cc rw u16): Range [3 - 999, step 1] value: 99
+Focus Differential        (d0cd rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10] value: 5
+Live View Zoom Ratio      (d0cf rw u16): Enumeration [1,2,3,4,5] value: 3x (1)
+Live View Zoom Offset X   (d0d0 ro u16): Range [0 - 1279, step 1] value: 0
+Live View Zoom Offset Y   (d0d1 ro u16): Range [0 - 959, step 1] value: 768
+Live View Zoom Width      (d0d2 ro u16): Range [0 - 1279, step 1] value: 256
+Live View Zoom Height     (d0d3 ro u16): Range [0 - 959, step 1] value: 192
+Live View Keystone Frame Top Left (d0d4 ro u32): Range [0 - 41877983, step 1] value: 0
+Live View Keystone Frame Top Right (d0d5 ro u32): Range [0 - 41877983, step 1] value: 41877504
+Live View Keystone Frame Bottom Left (d0d6 ro u32): Range [0 - 41877983, step 1] value: 478
+Live View Keystone Frame Bottom Right (d0d7 ro u32): Range [0 - 41877983, step 1] value: 41877982
+Live View Crop Frame Top Left (d0d8 ro u32): Range [0 - 41877983, step 1] value: 0
+Live View Crop Frame Top Right (d0d9 ro u32): Range [0 - 41877983, step 1] value: 41877504
+Live View Crop Frame Bottom Left (d0da ro u32): Range [0 - 41877983, step 1] value: 478
+Live View Crop Frame Bottom Right (d0db ro u32): Range [0 - 41877983, step 1] value: 41877982
+Capture Target            (d0dc rw u16): Enumeration [3,2,1] value: SD Card (2)
 Capture Destination Status (d0dd ro u16): Enumeration [1,2] value: 1
 Capture Busy Status       (d0de ro u16): Enumeration [0,1] value: 0
-Lens Temperature Status   (d0e1 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
-Lens Extended Info        (d0e2 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
-Remote Release Mode       (d0e3 rw u16): Enumeration [1,2] value: 1
+Movie Time Code Seconds   (d0e1 ro u32): Range [0 - 4294967295, step 1] value: 11
+Movie Time Code Frames    (d0e2 ro u32): Range [0 - 4294967295, step 1] value: 12
+Time Code Mode            (d0e3 rw u16): Enumeration [1,2] value: 1
 Remote Release Mode 2     (d0e4 rw u16): Enumeration [1,2] value: 1
-Interval Shooting Count   (d0e6 rw u16): Enumeration [1,3,4,5,6,7,8,9,14,19,24] value: 1
-Focus Bracketing Step     (d0ec rw u16): Enumeration [1,2,4,8,15,20,25,30] value: 8
-Focus Bracketing Progress (d0ed ro u16): Enumeration [0] value: 0
-Highlight Shadow Tone 1   (d0ef rw u16): Enumeration [65516,65517,65518,65519,65520,65521,65522,65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] value: 0
-Highlight Shadow Tone 2   (d0f0 rw u16): Enumeration [65516,65517,65518,65519,65520,65521,65522,65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] value: 0
-Highlight Shadow Tone 3   (d0f1 rw u16): Enumeration [65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13] value: 0
-Highlight Shadow Tone 4   (d0f2 rw u16): Enumeration [65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13] value: 0
-Highlight Shadow Tone 6   (d0f4 rw u16): Enumeration [1,2,3,4] value: 3
+Image Review              (d0e6 rw u16): Enumeration [1,3,4,5,6,7,8,9,14,19,24] value: 1
+Bulb/Time Timer           (d0ec rw u16): Enumeration [1,2,4,8,15,20,25,30] value: 8
+AF Frame Position Over Info (d0ed ro u16): Enumeration [0] value: 0x0000 (0)
+Keystone Vertical Correction (d0ef rw u16): Enumeration [65516,65517,65518,65519,65520,65521,65522,65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] value: 0 (0)
+Keystone Horizontal Correction (d0f0 rw u16): Enumeration [65516,65517,65518,65519,65520,65521,65522,65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20] value: 0 (0)
+Keystone Vertical Crop Offset (d0f1 rw u16): Enumeration [65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13] value: -13 (65523)
+Keystone Horizontal Crop Offset (d0f2 rw u16): Enumeration [65523,65524,65525,65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10,11,12,13] value: -13 (65523)
+Movie Noise Filter        (d0f4 rw u16): Enumeration [1,2,3,4] value: 3
 Color Creator Profile 1   (d0f6 rw u16): Enumeration [65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10] value: 0
-Color Creator Profile 2   (d0f7 rw u16): Enumeration [65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10] value: 7
-Color Profile Mode        (d0f8 rw u16): Enumeration [1,2,3,4] value: 3
-Color Profile Toggle      (d0f9 rw u16): Enumeration [2,1] value: 1
-Silent Mode               (d0fa rw u16): Enumeration [2,1] value: 1
-Subject Detection Mode    (d0fb rw u16): Enumeration [1] value: 1
+Color Creator Profile 2   (d0f7 rw u16): Enumeration [65526,65527,65528,65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7,8,9,10] value: 0
+Color Profile Mode        (d0f8 rw u16): Enumeration [1,2,3,4] value: 1
+Volume Limiter            (d0f9 rw u16): Enumeration [2,1] value: 1
+Plug-In Power             (d0fa rw u16): Enumeration [2,1] value: 1
+Camera Rec. Volume        (d0fb rw u16): Enumeration [1] value: 1
 USB Port Priority         (d0fe rw u16): Enumeration [16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1] value: 8
-Interval Timer Limit      (d0ff rw u16): Range [0 - 9999, step 1] value: 149
-Composite Property A      (d100 rw u16): Enumeration [2,1] value: 2
-Composite Property B      (d101 rw u16): Enumeration [1,2,3] value: 1
-Resolution Mode           (d102 rw u16): Enumeration [2,1] value: 1
-FL Bracketing Frame       (d118 rw u16): Enumeration [1,2] value: 1
-FL Bracketing Step        (d119 rw u32): Enumeration [39321610,32768010,26214410,19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,655373,655376,655380,655385,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536] value: 65786
-Flash Bias Compensation   (d11a rw u16): Enumeration [1,2,3,4] value: 3
-Manual Focus Mode         (d11b rw u16): Enumeration [1,2,5,6] value: 2
-Extended Setting 11C      (d11c rw u16): Enumeration [1,2] value: 1
-Raw Save Mode             (d11d rw u16): Enumeration [1,2] value: 2
-AUX Light Mode            (d11e rw u16): Enumeration [1,2] value: 1
-Lens Sink Mode            (d11f rw u16): Enumeration [2,1] value: 2
-Beep Status               (d120 rw u16): Range [0 - 999, step 1] value: 0
-Extended Setting 121      (d121 ro u16): Range [0 - 15, step 1] value: 0
+Preset MF Distance        (d0ff rw u16): Range [0 - 9999, step 1] value: 149
+AF Limiter                (d100 rw u16): Enumeration [2,1] value: 2
+AF Limiter Distance Setting (d101 rw u16): Enumeration [1,2,3] value: 2
+AF Limiter Release Priority (d102 rw u16): Enumeration [2,1] value: 1
+ISO Auto Minimum Shutter Mode (d118 rw u16): Enumeration [1,2] value: 1
+ISO Auto Minimum Shutter Speed (d119 rw u32): Enumeration [39321610,32768010,26214410,19660810,16384010,13107210,9830410,8519690,6553610,5242890,3932170,3276810,2621450,2097162,1638410,1310730,1048586,851978,655370,655373,655376,655380,655385,65539,65540,65541,65542,65544,65546,65549,65551,65556,65561,65566,65576,65586,65596,65616,65636,65661,65696,65736,65786,65856,65936,66036,66176,66336,66536,66786,67136,67536,68036,68736,69536,70536,71936,73536] value: 65786
+Still Noise Filter        (d11a rw u16): Enumeration [1,2,3,4] value: 1
+Still Recording Mode      (d11b rw u16): Enumeration [1,2,5,6] value: 1
+Still Recording Slot      (d11c rw u16): Enumeration [1,2] value: 1
+Movie Recording Slot      (d11d rw u16): Enumeration [1,2] value: 1
+Play Slot                 (d11e rw u16): Enumeration [1,2] value: 1
+Assign Save Folder        (d11f rw u16): Enumeration [2,1] value: Do not assign (2)
+Save Folder Number        (d120 rw u16): Range [0 - 999, step 1] value: 101
+[Unknown Property]        (d121 ro u16): Range [0 - 15, step 1] value: 0
 Color Space               (d122 ro u16): Range [0 - 15, step 1] value: 0
-Color Matching            (d123 ro u16): Range [0 - 255, step 1] value: 1
-Saturation                (d124 ro u16): Enumeration [1,2] value: 2
-Extended Setting 125      (d125 ro u16): Enumeration [1,2,3,4,5] value: 5
-Noise Reduction Pattern   (d126 ro u16): Range [0 - 9999, step 1] value: 5328
-Noise Reduction Random    (d127 ro u32): Range [0 - 4294967295, step 1] value: 17431
-Extended Setting 128      (d128 ro u16): Enumeration [1,2] value: 1
-Color Tune                (d12d ro u16): Enumeration [1,2,6] value: 6
-Language                  (d12e ro u16): Enumeration [1,2,3,4,5] value: 5
-Language Code             (d12f ro u16): Range [0 - 101, step 1] value: 101
-Recview Mode              (d130 ro u32): Range [0 - 4294967295, step 1] value: 120
+Color Matching            (d123 ro u16): Range [0 - 255, step 1] value: 0
+Capture In Progress       (d124 ro u16): Enumeration [1,2] value: Idle (2)
+Card Slot 2 Media Status  (d125 ro u16): Enumeration [1,2,3,4,5] value: Ready (5)
+Card Slot 2 Remaining Images (d126 ro u16): Range [0 - 9999, step 1] value: 5318
+Card Slot 2 Remaining Movie Time (d127 ro u32): Range [0 - 4294967295, step 1] value: 9515
+[Unknown Property]        (d128 ro u16): Enumeration [1,2] value: 1
+Battery Source            (d12d ro u16): Enumeration [1,2,6] value: 6
+Battery Level Status      (d12e ro u16): Enumeration [1,2,3,4,5] value: Empty (5)
+Battery Level Percent     (d12f ro u16): Range [0 - 101, step 1] value: Unavailable (101)
+[Unknown Property]        (d130 ro u32): Range [0 - 4294967295, step 1] value: 120
 Sleep Time                (d131 ro u16): Enumeration [1,2] value: 2
-Manual WBGM Bias          (d132 rw u16): Enumeration [32,257,258,259,260,289,290,291,292] value: 32
-Extended Setting 133      (d133 rw u16): Enumeration [264,262,263,296,294,295] value: 296
-Extended Setting 134      (d134 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
-AELAFL Mode               (d135 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
-AEL Button Status         (d136 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
-Compression Setting Ex    (d137 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
-Extended Setting 138      (d138 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
-Tone Mode                 (d139 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
-Gradation Mode            (d13a ro u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0
-Custom Develop            (d141 ro i32): Range [-26720 - 28985, step 1] value: -25722
-Flash RC Photo Chromic Mode (d147 rw i32): Range [-32767 - 32767, step 1] value: 32767
-Flash RC Photo Chromic Bias (d148 rw i32): Range [-32767 - 32767, step 1] value: -32767
-ISO Auto Max Value        (d151 rw u32): Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
-Bulb Limiter Value        (d152 rw u32): Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
-WhiteBalance Adjust A     (d161 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-WhiteBalance Adjust B     (d162 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
-Property D163             (d163 ro u32): Range [0 - 4294967295, step 1] value: 63
-Property D164             (d164 rw u16): Enumeration [1,2,3,4,5] value: 1
-Property D165             (d165 rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
-Property D166             (d166 rw u16): Enumeration [1,2,3,4,5] value: 1
-Property D167             (d167 rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
-Property D168             (d168 rw u16): Enumeration [1,2,3,4,5] value: 1
-Property D169             (d169 rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
-Property D16A             (d16a rw u16): Enumeration [1,2,3,4,5] value: 1
-Property D16B             (d16b rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
-Property D16C             (d16c rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
-Property D16D             (d16d rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
-Property D16E             (d16e rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
-Property D16F             (d16f rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
-Property D170             (d170 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
-Property D171             (d171 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
-Property D172             (d172 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
-Property D173             (d173 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
-Property D174             (d174 ro u16): Enumeration [1,2,3,4,32769] value: 32769
-Date Time UTC             (d176 rw str): '20260627T111534Z'
-Property D177             (d177 ro u16): Enumeration [512] value: 512
-Property D178             (d178 ro u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64, ... (1053 values)] value: 0
-Property D179             (d179 -- ---): PTP error 200a on query
-Extended Setting 17B      (d17b -- ---): PTP error 200a on query
-Extended Setting 19F      (d19f rw u16): Enumeration [1,2] value: 1
-Property D1A0             (d1a0 ro u16): Enumeration [10,14,20] value: 10
-Property D1A1             (d1a1 rw u16): Enumeration [10,20,30,40,50,60,70,80,90,100] value: 100
-Property D1A2             (d1a2 rw u16): Enumeration [2,1] value: 2
-Property D1A3             (d1a3 rw u16): Range [2 - 99, step 1] value: 50
-Property D1A4             (d1a4 rw u16): Enumeration [50,100,150,200] value: 200
-Property D1A5             (d1a5 rw u16): Enumeration [2,1] value: 2
-Property D1A6             (d1a6 rw u16): Range [2 - 99, step 1] value: 50
-Property D1A7             (d1a7 rw u16): Enumeration [600,1000,1200] value: 1200
-Property D1A8             (d1a8 rw u16): Enumeration [2,1] value: 2
-Property D1A9             (d1a9 rw u16): Range [2 - 99, step 1] value: 50
-Property D1AA             (d1aa rw u16): Enumeration [125,167,250,500] value: 500
-Property D1AB             (d1ab rw u16): Enumeration [2,1] value: 2
-Property D1AC             (d1ac rw u16): Range [2 - 99, step 1] value: 50
-Property D1AD             (d1ad rw u16): Enumeration [50,100,150,200] value: 200
-Property D1AE             (d1ae rw u16): Enumeration [2,1] value: 1
-Property D1AF             (d1af rw u16): Range [2 - 99, step 1] value: 50
-Property D1B0             (d1b0 rw u16): Range [0 - 99, step 1] value: 10
-Property D1B1             (d1b1 rw u16): Enumeration [600,1000,1200] value: 1200
-Property D1B2             (d1b2 rw u16): Enumeration [2,1] value: 2
-Property D1B3             (d1b3 rw u16): Range [2 - 99, step 1] value: 50
-Property D1B4             (d1b4 rw u16): Range [0 - 99, step 1] value: 99
-Property D1B5             (d1b5 rw u16): Enumeration [125,167,250,500] value: 500
-Property D1B6             (d1b6 rw u16): Enumeration [2,1] value: 2
-Property D1B7             (d1b7 rw u16): Range [2 - 99, step 1] value: 50
-Property D1B8             (d1b8 rw u16): Range [0 - 99, step 1] value: 60
-Property D1B9             (d1b9 rw u16): Enumeration [1,2,3] value: 1
-Property D1BA             (d1ba rw u16): Enumeration [1,2] value: 1
-Property D1BB             (d1bb rw u16): Enumeration [2,1] value: 2
-Property D1BC             (d1bc rw u16): Range [3 - 15, step 1] value: 8
-Property D1BD             (d1bd rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10] value: 5
-Property D1BE             (d1be rw u32): Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
-Property D1BF             (d1bf rw u16): Enumeration [1,2] value: 1
-Property D1C0             (d1c0 rw u32): Enumeration [4294967295,80,100,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,64000,80000,102400] value: 4294967295
-Property D1C1             (d1c1 ro u32): Enumeration [6400] value: 6400
-Property D1C2             (d1c2 ro u32): Enumeration [200] value: 200
-Property D1C3             (d1c3 rw u16): Enumeration [1,2] value: 1
-Property D1C4             (d1c4 rw u16): Enumeration [1,2,3,4] value: 4
-Property D1C5             (d1c5 ro u32): Enumeration [209717600] value: 209717600
-Property D1C6             (d1c6 ro u32): Enumeration [125830560] value: 125830560
-Property D1C7             (d1c7 ro u32): Enumeration [83887040] value: 83887040
-[Unknown Property]        (d1c8 ro u32): Enumeration [67109632] value: 67109632
-[Unknown Property]        (d1c9 rw u16): Enumeration [35328,35329,35330] value: 35328
-[Unknown Property]        (d1cb ro u16): Enumeration [2,1] value: 2
-[Unknown Property]        (d1cc ro u16): Enumeration [1,2,3] value: 3
-[Unknown Property]        (d1cd rw u16): Enumeration [2,1] value: 1
-[Unknown Property]        (d1cf rw u16): Enumeration [1,2] value: 1
-[Unknown Property]        (d1d0 rw u16): Enumeration [1,7,2,3,4,5,6] value: 5
-[Unknown Property]        (d1d1 rw u16): Enumeration [12,14] value: 12
+Normal Image Format       (d132 rw u16): Enumeration [32,257,258,259,260,289,290,291,292] value: JPEG Preset 1 (257)
+High Res Image Format     (d133 rw u16): Enumeration [264,262,263,296,294,295] value: 296
+[Unknown Property]        (d134 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d135 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d136 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d137 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d138 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+[Unknown Property]        (d139 ro u32): Range [0 - 4294967295, step 1] value: 4294967295
+Exposure Meter Value      (d13a ro u16): Enumeration [60536,60836,61236,61536,61836,62236,62536,62836,63236,63536,63836,64236,64536,64836,65236,0,300,700,1000,1300,1700,2000,2300,2700,3000,3300,3700,4000,4300,4700,5000] value: 0.0 EV (0)
+Current Focus Position    (d141 ro i32): Range [2403 - 3709, step 1] value: 3043
+AF Limiter Near Position  (d147 rw i32): Range [-32767 - 32767, step 1] value: 32767
+AF Limiter Far Position   (d148 rw i32): Range [-32767 - 32767, step 1] value: -32767
+High Res Charge Time      (d151 rw u32): Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
+Focus Bracketing Flash Charge Time (d152 rw u32): Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
+WB Custom A-B             (d161 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+WB Custom G-M             (d162 rw u16): Enumeration [65529,65530,65531,65532,65533,65534,65535,0,1,2,3,4,5,6,7] value: 0
+Camera Capabilities       (d163 ro u32): Range [0 - 4294967295, step 1] value: 0x0000003f (63)
+Custom AF Target 1 Vertical Steps (d164 rw u16): Enumeration [1,2,3,4,5] value: 1
+Custom AF Target 1 Horizontal Steps (d165 rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+Custom AF Target 2 Vertical Steps (d166 rw u16): Enumeration [1,2,3,4,5] value: 1
+Custom AF Target 2 Horizontal Steps (d167 rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+Custom AF Target 3 Vertical Steps (d168 rw u16): Enumeration [1,2,3,4,5] value: 1
+Custom AF Target 3 Horizontal Steps (d169 rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+Custom AF Target 4 Vertical Steps (d16a rw u16): Enumeration [1,2,3,4,5] value: 1
+Custom AF Target 4 Horizontal Steps (d16b rw u16): Enumeration [1,2,3,4,5,6,7,8] value: 1
+Custom AF Target 1 Vertical Area (d16c rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
+Custom AF Target 1 Horizontal Area (d16d rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
+Custom AF Target 2 Vertical Area (d16e rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
+Custom AF Target 2 Horizontal Area (d16f rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
+Custom AF Target 3 Vertical Area (d170 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
+Custom AF Target 3 Horizontal Area (d171 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
+Custom AF Target 4 Vertical Area (d172 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27] value: 3
+Custom AF Target 4 Horizontal Area (d173 rw u16): Enumeration [1,3,5,7,9,11,15,19,23,27,33,39] value: 3
+Custom Mode               (d174 ro u16): Enumeration [1,2,3,4,32769] value: 32769
+Date Time UTC             (d176 rw str): '20261112T101020Z'
+[Unknown Property]        (d177 ro u16): Enumeration [512] value: 512
+[Unknown Property]        (d178 ro u16): Enumeration [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64, ... (1053 values)] value: 0
+USB RAW Processing Mode   (d179 -- ---): PTP error 200a on query
+USB RAW Processing Protocol Version (d17b -- ---): PTP error 200a on query
+AF Limiter Mode           (d19f rw u16): Enumeration [1,2] value: 1
+[Unknown Property]        (d1a0 ro u16): Enumeration [10,14,20] value: 10
+Sequential Max FPS        (d1a1 rw u16): Enumeration [10,20,30,40,50,60,70,80,90,100] value: 100
+Sequential Frame Count Limiter (d1a2 rw u16): Enumeration [2,1] value: 2
+Sequential Frame Count Limit (d1a3 rw u16): Range [2 - 99, step 1] value: 50
+Silent Sequential Max FPS (d1a4 rw u16): Enumeration [50,100,150,200] value: 200
+Silent Sequential Frame Count Limiter (d1a5 rw u16): Enumeration [2,1] value: 2
+Silent Sequential Frame Count Limit (d1a6 rw u16): Range [2 - 99, step 1] value: 50
+SH1 Max FPS               (d1a7 rw u16): Enumeration [600,1000,1200] value: 1200
+SH1 Frame Count Limiter   (d1a8 rw u16): Enumeration [2,1] value: 2
+SH1 Frame Count Limit     (d1a9 rw u16): Range [2 - 99, step 1] value: 50
+SH2 Max FPS               (d1aa rw u16): Enumeration [125,167,250] value: 250
+SH2 Frame Count Limiter   (d1ab rw u16): Enumeration [2,1] value: 2
+SH2 Frame Count Limit     (d1ac rw u16): Range [2 - 99, step 1] value: 50
+Pro Capture Max FPS       (d1ad rw u16): Enumeration [50,100,150,200] value: 200
+Pro Capture Frame Count Limiter (d1ae rw u16): Enumeration [2,1] value: 1
+Pro Capture Frame Count Limit (d1af rw u16): Range [2 - 99, step 1] value: 50
+Pro Capture Pre-Shutter Frames (d1b0 rw u16): Range [0 - 99, step 1] value: 10
+Pro Capture SH1 Max FPS   (d1b1 rw u16): Enumeration [600,1000,1200] value: 1200
+Pro Capture SH1 Frame Count Limiter (d1b2 rw u16): Enumeration [2,1] value: 2
+Pro Capture SH1 Frame Count Limit (d1b3 rw u16): Range [2 - 99, step 1] value: 50
+Pro Capture SH1 Pre-Shutter Frames (d1b4 rw u16): Range [0 - 99, step 1] value: 99
+Pro Capture SH2 Max FPS   (d1b5 rw u16): Enumeration [125,167,250] value: 250
+Pro Capture SH2 Frame Count Limiter (d1b6 rw u16): Enumeration [2,1] value: 2
+Pro Capture SH2 Frame Count Limit (d1b7 rw u16): Range [2 - 99, step 1] value: 50
+Pro Capture SH2 Pre-Shutter Frames (d1b8 rw u16): Range [0 - 99, step 1] value: 60
+High Res Shot             (d1b9 rw u16): Enumeration [1,2,3] value: 1
+Night Vision              (d1ba rw u16): Enumeration [1,2] value: 1
+Focus Stacking Enable     (d1bb rw u16): Enumeration [2,1] value: 2
+Focus Stacking Shots      (d1bc rw u16): Range [3 - 15, step 1] value: 8
+Focus Stacking Differential (d1bd rw u16): Enumeration [1,2,3,4,5,6,7,8,9,10] value: 5
+Focus Stacking Flash Charge Time (d1be rw u32): Enumeration [10,65546,131082,327690,655370,1310730,2621450,5242890,9830410,19660810] value: 10
+Balanced Flash Metering   (d1bf rw u16): Enumeration [1,2] value: 1
+ISO Speed                 (d1c0 rw u32): Enumeration [4294967295,80,100,200,250,320,400,500,640,800,1000,1250,1600,2000,2500,3200,4000,5000,6400,8000,10000,12800,16000,20000,25600,32000,40000,51200,64000,80000,102400] value: 4294967295
+Movie M Auto ISO Upper Limit (d1c1 ro u32): Enumeration [6400] value: 6400
+Movie M Auto ISO Default  (d1c2 ro u32): Enumeration [200] value: 200
+Video Codec               (d1c3 rw u16): Enumeration [1,2] value: 1
+Movie HS Frame Rate       (d1c4 rw u16): Enumeration [1,2,3,4] value: 4
+Image Size M1             (d1c5 ro u32): Enumeration [209717600] value: 3200x2400 (209717600)
+Image Size M2             (d1c6 ro u32): Enumeration [125830560] value: 1920x1440 (125830560)
+Image Size S1             (d1c7 ro u32): Enumeration [83887040] value: 1280x960 (83887040)
+Image Size S2             (d1c8 ro u32): Enumeration [67109632] value: 1024x768 (67109632)
+Movie Picture Mode        (d1c9 rw u16): Enumeration [35328,35329,35330] value: 35328
+AF-ON in MF               (d1cb ro u16): Enumeration [2,1] value: 2
+Starry Sky AF Operation   (d1cc ro u16): Enumeration [1,2,3] value: AF-ON Start/Stop (3)
+AF Scanner                (d1cd rw u16): Enumeration [2,1] value: 1
+LV Mode                   (d1cf rw u16): Enumeration [1,2] value: 1
+Subject Detection Mode    (d1d0 rw u16): Enumeration [1,7,2,3,4,5,6] value: 1
+High Res Shot RAW Bit Depth (d1d1 rw u16): Enumeration [12,14] value: 12
 [Unknown Property]        (d1d2 ro u16): Enumeration [1,2] value: 1
 
