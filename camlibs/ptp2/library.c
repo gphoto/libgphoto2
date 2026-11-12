@@ -3345,7 +3345,8 @@ camera_exit (Camera *camera, GPContext *context)
 			CR (camera_unprepare_capture (camera, context));
 			break;
 		case PTP_VENDOR_GP_OLYMPUS_OMD:
-			ptp_olympus_exit_pc_mode (params);
+			/* Still close the session and free resources if control-off fails. */
+			exit_result = ptp_olympus_exit_pc_mode (params);
 			break;
 		case PTP_VENDOR_GP_LEICA:
 			if (ptp_operation_issupported(params, PTP_OC_LEICA_LECloseSession)) {
@@ -10222,7 +10223,7 @@ camera_init (Camera *camera, GPContext *context)
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD) {
 
 		GP_LOG_D ("Initializing Olympus ... ");
-		ptp_olympus_init_pc_mode(params);
+		C_PTP (ptp_olympus_init_pc_mode (params));
 
 		/* try to refetch the storage ids, set before only has 0x00000001 */
 		free_array (&params->storageids);

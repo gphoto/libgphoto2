@@ -4338,9 +4338,6 @@ struct _PTPParams {
 	struct timeval		starttime;
 	int			sony_mode_ver;
 
-	/* PTP: Olympus specifics */
-	uint16_t		olympus_camera_control_mode;
-
 	/* PTP: Wifi profiles */
 	uint8_t 	wifi_profiles_version;
 	uint8_t		wifi_profiles_number;
