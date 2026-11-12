@@ -4714,9 +4714,9 @@ ptp_generic_getdevicepropdesc (PTPParams *params, uint32_t propcode, PTPDevicePr
 			duplicate_DevicePropDesc(dpd_in_cache, dpd);
 			return PTP_RC_OK;
 		}
-		/* free cached entry as we will refetch it. */
+		/* Reuse the cleared slot when refetching; dropping this pointer would
+		 * append a duplicate descriptor for every cache invalidation. */
 		ptp_free_devicepropdesc (dpd_in_cache);
-		dpd_in_cache = NULL;
 	}
 
 	/* Sony is handled directly here, also for "normal" properties */
