@@ -1,0 +1,98 @@
+Camera summary:
+Manufacturer: LEICA
+Model: LEICA Q3 43
+  Version: 4.1.1
+  Serial Number: 000000000XXXXXXX
+Vendor Extension ID: 0xfffc (0.0)
+Vendor Extension Description: 
+PTP Standard Version: 1.10
+
+Capture Formats: 
+Display Formats: Association/Directory, DPOF, Apple Quicktime, Defined Type, TIFF EP, JPEG
+
+Streams:00020001
+	Video: dss: 154618822656d, timeres: 143165575101677568d, fhsize: 8, fmxsize: 1048558, phsize: 6, pmsize: 1048576, palign: 1
+	17: error 0x2005 on getstreaminfo
+
+Device Capabilities:
+	File Download, File Deletion, No File Upload
+	Generic Image Capture, No Open Capture, No vendor specific capture
+
+Storage Devices Summary:
+store_00010001:
+	StorageDescription: SD1
+	VolumeLabel: 
+	Storage Type: Removable RAM (memory card)
+	Filesystemtype: Digital Camera Layout (DCIM)
+	Access Capability: Read-Write
+	Maximum Capability: 256288751616 (244416 MB)
+	Free Space (Bytes): 253106585600 (241381 MB)
+	Free Space (Images): 0
+
+Device Property Summary:
+Battery Level             (5001 ro u8 ): Range [0 - 100, step 1] value: 80% (80)
+White Balance             (5005 rw u16): Enumeration [0,1,2,3,4,8,10,11] value: 0
+Focus Mode                (500a rw u16): Enumeration [0,1,5] value: 0
+Exposure Metering Mode    (500b rw u16): Enumeration [0,1,32769,2] value: 32769
+Exposure Program Mode     (500e rw u16): Enumeration [1,2,3,4,512,513] value: A (3)
+Exposure Index (film speed ISO) (500f rw u32): Enumeration [0,50,64,70,80,100,125,140,160,200,250,280,320,400,500,560,640,800,1000,1100,1250,1600,2000,2200,2500,3200,4000,4500,5000,6400,8000,9000,10000,12500,16000,18000,20000,25000,32000,36000,40000,50000,64000,80000,100000] value: ISO 0 (0)
+Exposure Bias Compensation (5010 rw i16): Enumeration [-3000,-2667,-2333,-2000,-1667,-1333,-1000,-667,-333,0,333,667,1000,1333,1667,2000,2333,2667,3000] value: 0.0 stops (0)
+Still Capture Mode        (5013 rw u16): Enumeration [0,5,6,14,11,7,9,2,8] value: 0
+Contrast                  (5014 rw u8 ): Enumeration [0,3,1,4,2] value: 1
+Sharpness                 (5015 rw u8 ): Enumeration [0,3,1,4,2] value: 1
+Artist                    (501e rw str): 'Artist'
+Copyright Info            (501f rw str): 'Info'
+Supported Streams         (5020 ro u32): Range [0 - 983041, step 1] value: 0x0 (131073)
+Enabled Streams           (5021 rw u32): Range [0 - 983041, step 1] value: 0x0 (131073)
+Video Format              (5022 ro u32): Enumeration [1196444237] value: MJPG (1196444237)
+Video Resolution          (5023 -- ---): PTP error 200a on query
+Video Framerate           (5025 ro u32): Enumeration [25000,30000] value: 0.0 s/f (30000)
+[Unknown Property]        (d004 rw i32): Enumeration [0,1,2] value: 1
+[Unknown Property]        (d00b rw i32): Enumeration [200,400,800,1600,3200,6400,12500,25000,50000,100000] value: 6400
+[Unknown Property]        (d00c rw i32): Enumeration [-2147483648,2816,2560,2304,2048,1792,1536,1280,1024,768,512,256] value: -2147483648
+[Unknown Property]        (d00f rw i32): Enumeration [3,4,5] value: 3
+[Unknown Property]        (d014 rw i32): Enumeration [2000,2200,2400,2700,3000,3300,3600,3900,4200,4600,5000,5500,6000,6500,7200,8000,8700,9500,10300,11500] value: 5500
+[Unknown Property]        (d01a rw i32): Enumeration [1,3,5,-1,-3] value: -3
+[Unknown Property]        (d03b rw i32): Range [-2147483648 - 2147483647, step 1] value: -32768
+AE Exposure Time          (d03c rw i32): Range [-2147483648 - 2147483647, step 1] value: 1280
+[Unknown Property]        (d097 rw i32): Enumeration [3,5,1,7] value: 1
+[Unknown Property]        (d09c rw i32): Enumeration [12,0,1,2,3,4,5,6,7,8,9] value: 12
+[Unknown Property]        (d0b3 rw i32): Enumeration [1,2,3,4,5] value: 1
+[Unknown Property]        (d0bf rw i32): Enumeration [0,1,2,3,4] value: 1
+[Unknown Property]        (d0e0 rw u16): Enumeration [0,1,5] value: 0
+[Unknown Property]        (d0e1 rw i32): Enumeration [6,12,13] value: 12
+[Unknown Property]        (d0eb -- ---): PTP error 200a on query
+ISO Speed                 (d0ec rw u32): Enumeration [0,50,64,70,80,100,125,140,160,200,250,280,320,400,500,560,640,800,1000,1100,1250,1600,2000,2200,2500,3200,4000,4500,5000,6400,8000,9000,10000,12500,16000,18000,20000,25000,32000,36000,40000,50000,64000,80000,100000] value: ISO 0 (0)
+[Unknown Property]        (d108 rw i32): Enumeration [30,60,120,300,600] value: 120
+[Unknown Property]        (d136 rw i32): Enumeration [0,1,2] value: 1
+[Unknown Property]        (d137 rw i32): Enumeration [6,12,13] value: 12
+[Unknown Property]        (d13e rw i32): Enumeration [1,2,3,4,5] value: 1
+[Unknown Property]        (d196 rw i32): Enumeration [0,1,2] value: 0
+[Unknown Property]        (d020 rw i32): Enumeration [1,0] value: 1
+[Unknown Property]        (d199 rw i32): Enumeration [0,1,2,3,4,5] value: 0
+[Unknown Property]        (d209 rw i32): Enumeration [0,1,2] value: 1
+[Unknown Property]        (d212 rw i32): Enumeration [12,0,1,2,3,4,5,6,7,8,9] value: 12
+[Unknown Property]        (d219 rw i32): Enumeration [2,3] value: 2
+[Unknown Property]        (d21b rw i32): Enumeration [1,2] value: 1
+[Unknown Property]        (d02f rw i32): Enumeration [0,1] value: 0
+Crop Mode Focal Length    (d21d rw i32): Enumeration [43,60,75,90,120,150] value: 43 mm (43)
+[Unknown Property]        (d32c rw i32): Enumeration [0,1] value: 0
+[Unknown Property]        (d32d rw i32): Enumeration [0,1] value: 0
+[Unknown Property]        (d330 rw i32): Enumeration [0,1] value: 1
+[Unknown Property]        (d360 rw i32): Enumeration [0,1,2,3,4] value: 1
+[Unknown Property]        (d406 rw str): ''
+Metered Exposure Time     (d60c ro i32): Range [-2147483648 - 2147483647, step 1] value: 1131
+AE Exposure Time Readout  (d60e ro i32): Range [-2147483648 - 2147483647, step 1] value: 1280
+Effective ISO Speed       (d610 ro i32): Range [0 - 2147483647, step 1] value: ISO 6400 (6400)
+[Unknown Property]        (d61a ro i32): Range [0 - 2147483647, step 1] value: 1335
+[Unknown Property]        (d625 ro i32): Range [-2147483648 - 2147483647, step 1] value: -3072
+[Unknown Property]        (d627 ro i32): Range [-1 - 30, step 1] value: -1
+[Unknown Property]        (d62c ro i32): Enumeration [0,1,2,3] value: 0
+[Unknown Property]        (d632 ro i32): Enumeration [0,1,3,4,6,7,11,12,13,14,15,18,19,20] value: 3
+[Unknown Property]        (d639 ro i32): Range [-2147483648 - 2147483647, step 1] value: 3584
+[Unknown Property]        (d65f ro i32): Enumeration [0,90,180,-90] value: 0
+[Unknown Property]        (d68a ro i32): Enumeration [0,1] value: 0
+[Unknown Property]        (d69c ro i32): Range [0 - 65535, step 1] value: 536870927
+[Unknown Property]        (d69d ro i32): Range [0 - 65535, step 1] value: 536870927
+[Unknown Property]        (d6b1 ro u32): Range [9 - 9, step 1] value: 9
+

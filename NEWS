@@ -25,6 +25,10 @@ ptp2:
   autofocus/manual focus, image quality, movie/audio, card/battery status,
   level gauge, live-view controls, USB RAW processing properties,
   device/lens metadata, events, and session handling.
+* Leica Q3 43: added the camera; capture of DNG+JPEG in dual mode no
+  longer hangs; identified the ISO, effective ISO, crop mode focal
+  length and AE exposure time device properties with value rendering;
+  the aperture is not exposed via PTP on this model.
 * Canon EOS CapturePreview caches GetViewFinderData type 17 (planar
   YRGB LV histogram) and exposes it as /main/status/eosviewfinderhistogram
   (base64). Same USB transaction as the JPEG; requires live view on
