@@ -5758,10 +5758,10 @@ camera_olympus_omd_capture (Camera *camera, CameraCaptureType type, CameraFilePa
 		C_PTP_REP (ptp_check_event (params));
 
 		while (ptp_get_one_event(params, &event)) {
+			/* OM-D C103 is an AF-frame notification, not an object handle. */
 			switch (event.Code) {
 			case PTP_EC_Olympus_ObjectAdded:
 			case PTP_EC_Olympus_ObjectAdded_New:	/* seen in newer traces, https://github.com/gphoto/gphoto2/issues/310 */
-			case PTP_EC_Olympus_CaptureComplete:
 			case PTP_EC_ObjectAdded: {
 				PTPObject *ob;
 
@@ -8041,6 +8041,10 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 		case PTP_VENDOR_SONY:
 			if (ptp_operation_issupported(params, PTP_OC_SONY_SDIO_ControlDevice))
 				APPEND_TXT (_("Sony Capture, "));
+			break;
+		case PTP_VENDOR_GP_OLYMPUS_OMD:
+			if (ptp_operation_issupported(params, PTP_OC_OLYMPUS_OMD_Capture))
+				APPEND_TXT (_("Olympus OM-D Capture, "));
 			break;
 		default:
 			/* does not belong to good vendor ... needs another detection */
