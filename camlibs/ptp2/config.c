@@ -1557,15 +1557,35 @@ GENERIC16TABLE(Fuji_NoiseReduction,fuji_noisereduction)
 
 static struct deviceproptableu16 olympus_imageformat[] = {
 	{ N_("RAW"),			0x020,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Large Fine JPEG"),	0x101,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Large Normal JPEG"),	0x102,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Medium Normal JPEG"),	0x103,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Small Normal JPEG"),	0x104,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Large Fine JPEG+RAW"),	0x121,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Large Normal JPEG+RAW"),	0x122,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Medium Normal JPEG+RAW"),	0x123,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Small Normal JPEG+RAW"),	0x124,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 1"),	0x101,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 2"),	0x102,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 3"),	0x103,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 4"),	0x104,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 1 + RAW"),	0x121,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 2 + RAW"),	0x122,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 3 + RAW"),	0x123,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 4 + RAW"),	0x124,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
+
+static struct deviceproptableu16 olympus_imagequalitypreset[] = {
+	{ N_("Large SuperFine"), 52, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Large Fine"), 51, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Large Normal"), 50, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 1 SuperFine"), 100, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 1 Fine"), 99, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 1 Normal"), 98, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 2 SuperFine"), 116, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 2 Fine"), 115, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 2 Normal"), 114, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 1 SuperFine"), 68, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 1 Fine"), 67, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 1 Normal"), 66, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 2 SuperFine"), 84, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 2 Fine"), 83, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 2 Normal"), 82, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_ImageQualityPreset,olympus_imagequalitypreset)
+
 GENERIC16TABLE(Olympus_Imageformat,olympus_imageformat)
 
 static struct deviceproptableu16 olympus_afareasetting[] = {
@@ -1656,6 +1676,7 @@ static struct deviceproptableu16 olympus_liveviewzoom[] = {
 };
 GENERIC16TABLE(Olympus_LiveViewZoom,olympus_liveviewzoom)
 
+
 static struct deviceproptableu16 olympus_isoautomode[] = {
 	{ N_("Auto"),	0xffff,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Off"),	0x0000,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -1664,10 +1685,125 @@ static struct deviceproptableu16 olympus_isoautomode[] = {
 GENERIC16TABLE(Olympus_ISOAutoMode,olympus_isoautomode)
 
 static struct deviceproptableu16 olympus_noisefilter[] = {
-	{ N_("Off"),	0x0000,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("On"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Off"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Low"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Standard"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("High"), 4, PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(Olympus_NoiseFilter,olympus_noisefilter)
+static struct deviceproptableu16 olympus_balancedflashmetering[] = {
+	{ N_("Off"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("On"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_BalancedFlashMetering,olympus_balancedflashmetering)
+
+static struct deviceproptableu16 olympus_rcmode[] = {
+	{ N_("Off"), 0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("On"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCMode,olympus_rcmode)
+
+/* A/B/C share this enum, including Super FP variants observed */
+static struct deviceproptableu16 olympus_rcgroupmode[] = {
+	{ N_("Off"), 0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Auto"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("TTL"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Manual"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("FP TTL"), 0x12, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("FP Manual"), 0x13, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCGroupMode,olympus_rcgroupmode)
+
+static struct deviceproptableu16 olympus_rcflashfpmode[] = {
+	{ N_("Normal"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Super FP"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCFlashFPMode,olympus_rcflashfpmode)
+
+static struct deviceproptableu16 olympus_moviefocusmode[] = {
+	{ "MF", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "S-AF", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "C-AF", 0x8002, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "S-AF+MF", 0x8001, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Preset MF"), 0x8004, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieFocusMode,olympus_moviefocusmode)
+
+static struct deviceproptableu16 olympus_rccommunicationlight[] = {
+	{ N_("Low"), 65535, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Middle"), 0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("High"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCCommunicationLight,olympus_rccommunicationlight)
+
+static struct deviceproptableu16 olympus_rcchannel[] = {
+	{ N_("1"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("4"), 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCChannel,olympus_rcchannel)
+
+static struct deviceproptableu16 olympus_isoautominimumshuttermode[] = {
+	{ N_("Auto"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Custom"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_ISOAutoMinimumShutterMode,olympus_isoautominimumshuttermode)
+
+static struct deviceproptableu16 olympus_compositeexposure[] = {
+	{ N_("1/2"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1/1.6"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1/1.3"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1"), 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1.3"), 5, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1.6"), 6, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2"), 7, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2.5"), 8, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3.2"), 9, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("4"), 10, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("5"), 11, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("6"), 12, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("8"), 13, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("10"), 14, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("13"), 15, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("15"), 16, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("20"), 17, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("25"), 18, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("30"), 19, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("40"), 20, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("50"), 21, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("60"), 22, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_CompositeExposure,olympus_compositeexposure)
+
+static struct deviceproptableu16 olympus_bulbtimetimer[] = {
+	{ N_("1 min"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2 min"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("4 min"), 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("8 min"), 8, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("15 min"), 15, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("20 min"), 20, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("25 min"), 25, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("30 min"), 30, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_BulbTimeTimer,olympus_bulbtimetimer)
+
+/* Manual interval list in increasing enum order, anchored by camera tests. */
+static struct deviceproptableu16 olympus_liveinterval[] = {
+	{ N_("Off"),     1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("0.5 sec"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1 sec"),   3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2 sec"),   4, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("4 sec"),   5, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("8 sec"),   6, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("15 sec"),  7, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("30 sec"),  8, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("60 sec"),  9, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_LiveInterval,olympus_liveinterval)
+
+
+
 
 static struct deviceproptableu16 olympus_facedetection[] = {
 	{ N_("Off"),				0x0000,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -1704,6 +1840,30 @@ static struct deviceproptableu16 olympus_mediaslot[] = {
 	{ N_("Slot 2"),				0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(Olympus_MediaSlot,olympus_mediaslot)
+
+/* Manual flash output fractions; full power uses a sentinel, not 1/1 packed. */
+static struct deviceproptableu32 olympus_manualflashpower[] = {
+	{ "1/1",   0xffffffffU, 0 },
+	{ "1/1.3", 0x000a000d, 0 },
+	{ "1/1.6", 0x000a0010, 0 },
+	{ "1/2",   0x00010002, 0 },
+	{ "1/2.5", 0x000a0019, 0 },
+	{ "1/3",   0x00010003, 0 },
+	{ "1/4",   0x00010004, 0 },
+	{ "1/5",   0x00010005, 0 },
+	{ "1/6",   0x00010006, 0 },
+	{ "1/8",   0x00010008, 0 },
+	{ "1/10",  0x0001000a, 0 },
+	{ "1/13",  0x0001000d, 0 },
+	{ "1/16",  0x00010010, 0 },
+	{ "1/20",  0x00010014, 0 },
+	{ "1/25",  0x00010019, 0 },
+	{ "1/32",  0x00010020, 0 },
+	{ "1/40",  0x00010028, 0 },
+	{ "1/50",  0x00010032, 0 },
+	{ "1/64",  0x00010040, 0 },
+};
+GENERIC32TABLE(Olympus_ManualFlashPower,olympus_manualflashpower)
 
 static struct deviceproptableu16 olympus_highresshot[] = {
 	{ N_("Off"),		0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -1785,17 +1945,172 @@ static struct deviceproptableu16 olympus_onoff12[] = {
 };
 GENERIC16TABLE(Olympus_OnOff12,olympus_onoff12)
 
+static struct deviceproptableu16 olympus_pressedreleased[] = {
+	{ N_("Pressed"), 1, 0 },
+	{ N_("Released"), 2, 0 },
+};
+GENERIC16TABLE(Olympus_PressedReleased,olympus_pressedreleased)
+
+/* OM-1: dimensions packed as width:height, both 16 bits. */
+static struct deviceproptableu32 olympus_liveviewsize[] = {
+	{ N_("Off"),           0,          PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "320x240",           0x014000f0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "640x480",           0x028001e0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "800x600",           0x03200258, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "1024x768",          0x04000300, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "1280x960",          0x050003c0, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC32TABLE(Olympus_LiveViewSize,olympus_liveviewsize)
+
+
+static struct deviceproptableu16 olympus_aebracketing[] = {
+	{ N_("Off"),		1,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.3 EV"),	6,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.7 EV"),	8,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 1.0 EV"),	9,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("5f 0.3 EV"),	10,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("5f 0.7 EV"),	12,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("5f 1.0 EV"),	13,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("7f 0.3 EV"),	14,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("7f 0.7 EV"),	16,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_AEBracketing,olympus_aebracketing)
+
+static struct deviceproptableu16 olympus_isobracketing[] = {
+	{ N_("Off"),		1,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.3 EV"),	2,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.7 EV"),	3,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 1.0 EV"),	4,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_ISOBracketing,olympus_isobracketing)
+
+static struct deviceproptableu16 olympus_wbbracketing[] = {
+	{ N_("Off"),		1,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 2-step"),	2,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 4-step"),	3,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 6-step"),	4,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_WBBracketing,olympus_wbbracketing)
+
+static struct deviceproptableu16 olympus_flashbracketing[] = {
+	{ N_("Off"),		1,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.3 EV"),	2,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.7 EV"),	4,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 1.0 EV"),	5,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_FlashBracketing,olympus_flashbracketing)
+
 static struct deviceproptableu16 olympus_afon_in_mf[] = {
 	{ N_("Yes"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("No"),	0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(Olympus_AFOnInMF,olympus_afon_in_mf)
 
+static struct deviceproptableu16 olympus_starryskyafoperation[] = {
+	{ N_("Half-press shutter"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("AF-ON"),             2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("AF-ON Start/Stop"),  3, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_StarrySkyAFOperation,olympus_starryskyafoperation)
+
 static struct deviceproptableu16 olympus_afscanner[] = {
 	{ N_("On"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Off"),	0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(Olympus_AFScanner,olympus_afscanner)
+
+static struct deviceproptableu16 olympus_movienoisefilter[] = {
+	{ N_("Off"),      1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Low"),      2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Standard"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("High"),     4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieNoiseFilter,olympus_movienoisefilter)
+
+/* Movie 1/2/3 share size, compression and normal-rate enums; HS is separate. */
+static struct deviceproptableu16 olympus_moviesize[] = {
+	{ "Full HD", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "4K", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "C4K", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieSize,olympus_moviesize)
+
+static struct deviceproptableu16 olympus_movieframerate[] = {
+	{ "24p", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "25p", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "30p", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "50p", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "60p", 5, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "24.00p", 6, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieFrameRate,olympus_movieframerate)
+
+static struct deviceproptableu16 olympus_moviecompression[] = {
+	{ "A-I", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "Long GOP", 5, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieCompression,olympus_moviecompression)
+
+static struct deviceproptableu16 olympus_moviehsframerate[] = {
+	{ "100 fps", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "120 fps", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "200 fps", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "240 fps", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieHSFrameRate,olympus_moviehsframerate)
+
+
+static struct deviceproptableu16 olympus_camerarecordingvolume[] = {
+	{ N_("Operative"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Inoperative"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_CameraRecordingVolume,olympus_camerarecordingvolume)
+
+/* Confirmed by independent movie-mode, stabilization and picture-mode walks. */
+static struct deviceproptableu16 olympus_movieexposuremode[] = {
+	{ "P", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "A", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "S", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "M", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieExposureMode,olympus_movieexposuremode)
+
+static struct deviceproptableu16 olympus_movieimagestabilization[] = {
+	{ N_("Off"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "M-IS1", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "M-IS2", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieImageStabilization,olympus_movieimagestabilization)
+
+static struct deviceproptableu16 olympus_moviepicturemode[] = {
+	{ N_("Same as Still Photo"), 0x8A00, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Flat"), 0x8A01, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "OM-Log400", 0x8A02, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "HLG", 0x8A03, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MoviePictureMode,olympus_moviepicturemode)
+
+static struct deviceproptableu16 olympus_timecodemode[] = {
+	{ "DF", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "NDF", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_TimeCodeMode,olympus_timecodemode)
+
+
+
+static struct deviceproptableu16 olympus_aflimitermode[] = {
+	{ N_("On"),     1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Manual"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_AFLimiterMode,olympus_aflimitermode)
+
+static struct deviceproptableu16 olympus_aflimiterdistance[] = {
+	{ "1", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "2", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "3", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_AFLimiterDistance,olympus_aflimiterdistance)
+
 
 static struct deviceproptableu16 olympus_exposureprogram[] = {
 	{ N_("M"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -5119,6 +5434,7 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Red-eye automatic"),		0x0004, 0 },
 	{ N_("Red-eye fill"),			0x0005, 0 },
 	{ N_("External sync"),			0x0006, 0 },
+	{ N_("Manual"),				0xa000, PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Auto"),				0x8010, PTP_VENDOR_NIKON},
 	{ N_("Auto Slow Sync"),			0x8011, PTP_VENDOR_NIKON},
 	{ N_("Rear Curtain Sync + Slow Sync"),	0x8012, PTP_VENDOR_NIKON},
@@ -8165,6 +8481,52 @@ static struct deviceproptableu16 olympus_whitebalanceadjust[] = {
 	{"7",	7, 0},
 };
 GENERIC16TABLE(Olympus_WhiteBalanceAdjust, olympus_whitebalanceadjust)
+
+/* Keystone steps are signed values carried in UINT16, without degree scaling. */
+static struct deviceproptableu16 olympus_keystonecorrection[] = {
+	{"-20",	65516, 0},
+	{"-19",	65517, 0},
+	{"-18",	65518, 0},
+	{"-17",	65519, 0},
+	{"-16",	65520, 0},
+	{"-15",	65521, 0},
+	{"-14",	65522, 0},
+	{"-13",	65523, 0},
+	{"-12",	65524, 0},
+	{"-11",	65525, 0},
+	{"-10",	65526, 0},
+	{"-9",	65527, 0},
+	{"-8",	65528, 0},
+	{"-7",	65529, 0},
+	{"-6",	65530, 0},
+	{"-5",	65531, 0},
+	{"-4",	65532, 0},
+	{"-3",	65533, 0},
+	{"-2",	65534, 0},
+	{"-1",	65535, 0},
+	{"0",	0, 0},
+	{"1",	1, 0},
+	{"2",	2, 0},
+	{"3",	3, 0},
+	{"4",	4, 0},
+	{"5",	5, 0},
+	{"6",	6, 0},
+	{"7",	7, 0},
+	{"8",	8, 0},
+	{"9",	9, 0},
+	{"10",	10, 0},
+	{"11",	11, 0},
+	{"12",	12, 0},
+	{"13",	13, 0},
+	{"14",	14, 0},
+	{"15",	15, 0},
+	{"16",	16, 0},
+	{"17",	17, 0},
+	{"18",	18, 0},
+	{"19",	19, 0},
+	{"20",	20, 0},
+};
+GENERIC16TABLE(Olympus_KeystoneCorrection, olympus_keystonecorrection)
 
 static int
 _get_BatteryLevel(CONFIG_GET_ARGS) {
