@@ -3130,8 +3130,6 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_LiveViewModeOM			0xD06D /* UINT32: (width << 16) | height; 0 disables LV */
 #define PTP_DPC_OLYMPUS_CaptureTarget			0xD0DC
 #define PTP_DPC_OLYMPUS_ColorTemperature		0xD00E
-#define PTP_DPC_OLYMPUS_WhiteBalanceAdjustA		0xD161
-#define PTP_DPC_OLYMPUS_WhiteBalanceAdjustB		0xD162
 #define PTP_DPC_OLYMPUS_WBCompensationCustomAB		0xD161
 #define PTP_DPC_OLYMPUS_WBCompensationCustomGM		0xD162
 
@@ -3239,8 +3237,6 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_AFAreaSetting			0xD00C
 #define PTP_DPC_OLYMPUS_FlashExposureCompensation			0xD00F
 #define PTP_DPC_OLYMPUS_WhiteBalancePreset			0xD010
-#define PTP_DPC_OLYMPUS_NoiseFilter			0xD011
-#define PTP_DPC_OLYMPUS_ISOAutoMode			0xD018
 #define PTP_DPC_OLYMPUS_RCMode			0xD011
 #define PTP_DPC_OLYMPUS_RCChannel			0xD013
 /* RC flash synchronization: Super FP=1, Normal=2. */
@@ -3301,7 +3297,6 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_FlashWirelessChannel			0xD049
 #define PTP_DPC_OLYMPUS_CurrentFocalLength			0xD04A
 #define PTP_DPC_OLYMPUS_LVCloseUpMode			0xD04B
-#define PTP_DPC_OLYMPUS_AutoMinimumShutterSpeed			0xD04C
 /* Manual flash output: packed numerator/denominator; 0xffffffff is full power. */
 #define PTP_DPC_OLYMPUS_ManualFlashPower			0xD04C
 #define PTP_DPC_OLYMPUS_FlashRemoteRatio			0xD04D
@@ -3412,7 +3407,6 @@ typedef struct _PTPCanonEOSDeviceInfo {
 #define PTP_DPC_OLYMPUS_FocusBracketingStatus			0xD0C6
 #define PTP_DPC_OLYMPUS_HighResResolution			0xD0C7
 #define PTP_DPC_OLYMPUS_HighResWait			0xD0C9
-#define PTP_DPC_OLYMPUS_CustomModeDial			0xD0CD
 #define PTP_DPC_OLYMPUS_FocusBracketingEnable			0xD0CB
 #define PTP_DPC_OLYMPUS_FocusBracketingShots			0xD0CC
 #define PTP_DPC_OLYMPUS_FocusBracketingDifferential		0xD0CD
