@@ -4144,34 +4144,33 @@ ignoreerror:
 		unsigned char	*ximage = NULL;
 		PTPPropValue	value;
 		int		tries = 25;
+		int		res;
 
-		ret = ptp_getdevicepropvalue (params, PTP_DPC_OLYMPUS_LiveViewModeOM, &value, PTP_DTC_UINT32);
-		if (ret != PTP_RC_OK)
-			value.u32 = 0;
+		C_PTP (ptp_getdevicepropvalue (params, PTP_DPC_OLYMPUS_LiveViewModeOM, &value, PTP_DTC_UINT32));
 
-		if (value.u32 != 67109632) {	/* 0x04000300 */
-			value.u32 = 67109632;
-			LOG_ON_PTP_E (ptp_setdevicepropvalue (params, PTP_DPC_OLYMPUS_LiveViewModeOM, &value, PTP_DTC_UINT32));
-
-			params->inliveview = 1;
+		if (!value.u32) {	/* Preserve a live-view size selected via config. */
+			value.u32 = 0x04000300; /* Default to 1024 x 768. */
+			C_PTP (ptp_setdevicepropvalue (params, PTP_DPC_OLYMPUS_LiveViewModeOM, &value, PTP_DTC_UINT32));
 		}
+		params->inliveview = 1;
 
-		for(;;) {
-			tries--;
-			if(tries <= 0) {
-				return ret;
-			}
+		while (tries--) {
+			size = 0;
 			ret = ptp_olympus_liveview_image (params, &ximage, &size);
-			if(ret == PTP_RC_DeviceBusy || size < 1024) {
-				usleep(40000);
-				continue;
-			} else {
+			if (ret == PTP_RC_OK && ximage && size >= 1024)
 				break;
-			}
+			free (ximage);
+			ximage = NULL;
+			if (ret != PTP_RC_OK && ret != PTP_RC_DeviceBusy)
+				return translate_ptp_result (ret);
+			usleep (40000);
 		}
+		if (!ximage)
+			return GP_ERROR_TIMEOUT;
 
-		gp_file_append (file, (char*)ximage, size);
+		res = gp_file_append (file, (char*)ximage, size);
 		free (ximage);
+		CR (res);
 
 		gp_file_set_mime_type (file, GP_MIME_JPEG);
 		gp_file_set_name (file, "preview.jpg");
