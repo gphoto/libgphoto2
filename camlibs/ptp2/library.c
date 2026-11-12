@@ -7488,7 +7488,7 @@ sonyout:
 					PTPDevicePropDesc	dpd;
 
 					*eventtype = GP_EVENT_UNKNOWN;
-					/* cached devprop should have been flushed I think... */
+					/* The vendor property-change event invalidates the cached descriptor. */
 					C_PTP_REP (ptp_generic_getdevicepropdesc (params, event.Param1&0xffff, &dpd));
 
 					ret = camera_lookup_by_property(camera, &dpd, &name, &content, context);
