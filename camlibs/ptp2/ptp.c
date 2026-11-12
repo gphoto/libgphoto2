@@ -8253,6 +8253,8 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 			{PTP_DPC_LEICA_AEExposureTime,		N_("AE Exposure Time")},	/* 0xd03c */
 			{PTP_DPC_LEICA_AEExposureTimeReadout,	N_("AE Exposure Time Readout")},/* 0xd60e */
 			{PTP_DPC_LEICA_CropModeFocalLength,	N_("Crop Mode Focal Length")},	/* 0xd21d */
+			{PTP_DPC_LEICA_WhiteBalanceColorTemp,	N_("White Balance Color Temperature")},	/* 0xd014 */
+			{PTP_DPC_LEICA_AFSubjectDetection,	N_("AF Subject Detection")},	/* 0xd0bf */
 			{0,NULL}
 		};
 		for (i=0; ptp_device_properties_LEICA[i].txt!=NULL; i++)
@@ -8304,6 +8306,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 			  PTPDevicePropDesc *dpd, unsigned int length, char *out)
 {
 	unsigned int i;
+	unsigned int pass;
 	int64_t	kval;
 
 	if (params->deviceinfo.VendorExtensionID == PTP_VENDOR_GP_OLYMPUS_OMD &&
@@ -8459,6 +8462,7 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_LEICA_ISOSpeed, PTP_VENDOR_GP_LEICA, 1.0, 0.0, "ISO %.0f"},	/* d0ec, 0 = Auto, see value_list */
 		{PTP_DPC_LEICA_EffectiveISOSpeed, PTP_VENDOR_GP_LEICA, 1.0, 0.0, "ISO %.0f"},	/* d610 */
 		{PTP_DPC_LEICA_CropModeFocalLength, PTP_VENDOR_GP_LEICA, 1.0, 0.0, "%.0f mm"},	/* d21d */
+		{PTP_DPC_LEICA_WhiteBalanceColorTemp, PTP_VENDOR_GP_LEICA, 1.0, 0.0, "%.0f K"},	/* d014 */
 
 		/* Nikon device properties */
 		{PTP_DPC_NIKON_LightMeter, PTP_VENDOR_NIKON, 0.08333, 0.0, N_("%.1f stops")},/* D10A */
@@ -8494,6 +8498,37 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_WhiteBalance, 0, 7, N_("Flash")},
 
 		{PTP_DPC_LEICA_ISOSpeed, PTP_VENDOR_GP_LEICA, 0, N_("ISO Auto")},	/* d0ec */
+		/* Leica Q3 43 value remaps of the standard device properties
+		 * above, verified by camera setting flip tests. Values seen,
+		 * but to which no verified label exists, stay numeric. */
+		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 0, N_("Auto")},
+		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 1, N_("Daylight")},	/* 5005 */
+		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 2, N_("Cloudy")},
+		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 3, N_("Shadow")},
+		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 4, N_("Artificial")},
+		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 8, N_("Flash")},
+		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 10, N_("Gray Card")},
+		{PTP_DPC_WhiteBalance, PTP_VENDOR_GP_LEICA, 11, N_("Kelvin")},	/* color temperature in 0xd014 */
+		{PTP_DPC_FocusMode, PTP_VENDOR_GP_LEICA, 0, "AFs"},		/* 500A */
+		{PTP_DPC_FocusMode, PTP_VENDOR_GP_LEICA, 1, "iAF"},
+		{PTP_DPC_FocusMode, PTP_VENDOR_GP_LEICA, 5, "AFc"},
+		{PTP_DPC_ExposureMeteringMode, PTP_VENDOR_GP_LEICA, 0, N_("Spot")},	/* 500B */
+		{PTP_DPC_ExposureMeteringMode, PTP_VENDOR_GP_LEICA, 2, N_("Center Weighted")},
+		{PTP_DPC_ExposureMeteringMode, PTP_VENDOR_GP_LEICA, 32769, N_("Highlight")},
+		{PTP_DPC_StillCaptureMode, PTP_VENDOR_GP_LEICA, 0, N_("Single")},	/* 5013 */
+		{PTP_DPC_StillCaptureMode, PTP_VENDOR_GP_LEICA, 2, N_("Interval")},
+		{PTP_DPC_StillCaptureMode, PTP_VENDOR_GP_LEICA, 5, N_("Burst 2 fps")},
+		{PTP_DPC_StillCaptureMode, PTP_VENDOR_GP_LEICA, 6, N_("Burst 4 fps")},
+		{PTP_DPC_StillCaptureMode, PTP_VENDOR_GP_LEICA, 7, N_("Burst 9 fps")},
+		{PTP_DPC_StillCaptureMode, PTP_VENDOR_GP_LEICA, 8, N_("Bracketing")},
+		{PTP_DPC_StillCaptureMode, PTP_VENDOR_GP_LEICA, 9, N_("Burst 15 fps")},
+		{PTP_DPC_StillCaptureMode, PTP_VENDOR_GP_LEICA, 11, N_("Burst 7 fps")},
+		{PTP_DPC_StillCaptureMode, PTP_VENDOR_GP_LEICA, 14, N_("Burst 5 fps")},
+		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 0, N_("Off")},	/* d0bf */
+		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 1, N_("Person (Eyes/Face/Body)")},
+		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 2, N_("Person (Eyes/Face)")},
+		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 3, N_("Animal (Body)")},
+		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 4, N_("Animal (Eyes/Body)")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32784, N_("Cloudy")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32785, N_("Shade")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32786, N_("Color Temperature")},
@@ -9128,6 +9163,27 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 
 		{0, 0, 0, NULL}
 	};
+	kval = _value_to_num(&(dpd->CurrentValue), dpd->DataType);
+	/* Standard range (0x5000) device properties are shared across
+	 * vendors, but vendors remap their meanings; a vendor tagged
+	 * entry wins, the generic (vendor 0) one is the fallback. For
+	 * vendor specific device properties the vendor must match. */
+	for (pass=0; pass<2; pass++) {
+		for (i=0; ptp_value_list[i].dpc!=0; i++) {
+			if ((ptp_value_list[i].dpc == dpc) &&
+			    (((pass == 0) &&
+			      (ptp_value_list[i].vendor == params->deviceinfo.VendorExtensionID)
+			     ) ||
+			     ((pass == 1) &&
+			      (ptp_value_list[i].vendor == 0) &&
+			      ((ptp_value_list[i].dpc & 0xf000) == 0x5000)
+			     )) &&
+			    (ptp_value_list[i].key==kval)
+			) {
+				return snprintf(out, length, "%s", _(ptp_value_list[i].value));
+			}
+		}
+	}
 	for (i=0; ptp_value_trans[i].dpc!=0; i++) {
 		if ((ptp_value_trans[i].dpc == dpc) &&
 			(((ptp_value_trans[i].dpc & 0xf000) == 0x5000) ||
@@ -9139,17 +9195,6 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 				_(ptp_value_trans[i].format),
 				value * ptp_value_trans[i].coef +
 				ptp_value_trans[i].bias);
-		}
-	}
-
-	kval = _value_to_num(&(dpd->CurrentValue), dpd->DataType);
-	for (i=0; ptp_value_list[i].dpc!=0; i++) {
-		if ((ptp_value_list[i].dpc == dpc) &&
-			(((ptp_value_list[i].dpc & 0xf000) == 0x5000) ||
-			  (ptp_value_list[i].vendor == params->deviceinfo.VendorExtensionID)) &&
-		    (ptp_value_list[i].key==kval)
-		) {
-			return snprintf(out, length, "%s", _(ptp_value_list[i].value));
 		}
 	}
 	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_MICROSOFT
