@@ -8242,6 +8242,24 @@ ptp_get_property_description(PTPParams* params, uint32_t dpc)
 			if (ptp_device_properties_PARROT[i].dpc==dpc)
 				return (ptp_device_properties_PARROT[i].txt);
 
+	if (params->deviceinfo.VendorExtensionID==PTP_VENDOR_GP_LEICA) {
+		static const struct {
+			uint16_t dpc;
+			const char *txt;
+		} ptp_device_properties_LEICA[] = {
+			{PTP_DPC_LEICA_ISOSpeed,		N_("ISO Speed")},		/* 0xd0ec, 0 = Auto */
+			{PTP_DPC_LEICA_EffectiveISOSpeed,	N_("Effective ISO Speed")},	/* 0xd610 */
+			{PTP_DPC_LEICA_MeteredExposureTime,	N_("Metered Exposure Time")},	/* 0xd60c */
+			{PTP_DPC_LEICA_AEExposureTime,		N_("AE Exposure Time")},	/* 0xd03c */
+			{PTP_DPC_LEICA_AEExposureTimeReadout,	N_("AE Exposure Time Readout")},/* 0xd60e */
+			{PTP_DPC_LEICA_CropModeFocalLength,	N_("Crop Mode Focal Length")},	/* 0xd21d */
+			{0,NULL}
+		};
+		for (i=0; ptp_device_properties_LEICA[i].txt!=NULL; i++)
+			if (ptp_device_properties_LEICA[i].dpc==dpc)
+				return (ptp_device_properties_LEICA[i].txt);
+	}
+
 	return NULL;
 }
 
@@ -8437,6 +8455,11 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_EnabledStreams, 0, 0, 0, "0x%x"},		/* 5021 */
 		{PTP_DPC_VideoFrameRate, 0, 0, 0.0000001, "%.1f s/f"},	/* 5021 */
 
+		/* Leica device properties */
+		{PTP_DPC_LEICA_ISOSpeed, PTP_VENDOR_GP_LEICA, 1.0, 0.0, "ISO %.0f"},	/* d0ec, 0 = Auto, see value_list */
+		{PTP_DPC_LEICA_EffectiveISOSpeed, PTP_VENDOR_GP_LEICA, 1.0, 0.0, "ISO %.0f"},	/* d610 */
+		{PTP_DPC_LEICA_CropModeFocalLength, PTP_VENDOR_GP_LEICA, 1.0, 0.0, "%.0f mm"},	/* d21d */
+
 		/* Nikon device properties */
 		{PTP_DPC_NIKON_LightMeter, PTP_VENDOR_NIKON, 0.08333, 0.0, N_("%.1f stops")},/* D10A */
 		{PTP_DPC_NIKON_FlashExposureCompensation, PTP_VENDOR_NIKON, 0.16666, 0.0, N_("%.1f stops")}, /* D126 */
@@ -8469,6 +8492,8 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_WhiteBalance, 0, 5, N_("Fluorescent")},
 		{PTP_DPC_WhiteBalance, 0, 6, N_("Incandescent")},
 		{PTP_DPC_WhiteBalance, 0, 7, N_("Flash")},
+
+		{PTP_DPC_LEICA_ISOSpeed, PTP_VENDOR_GP_LEICA, 0, N_("ISO Auto")},	/* d0ec */
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32784, N_("Cloudy")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32785, N_("Shade")},
 		{PTP_DPC_WhiteBalance, PTP_VENDOR_NIKON, 32786, N_("Color Temperature")},

@@ -946,6 +946,26 @@ typedef struct _PTPIPHeader PTPIPHeader;
 #define PTP_OC_LEICA_MagneticCalibration		0x9115
 #define PTP_OC_LEICA_GetViewFinderData			0x9116
 
+/* Leica device properties, identified by camera setting flip tests on a
+ * Q3 43 (firmware 4.1.1). Also marks what still exists on that model:
+ * 0x9001/0x9002 (image shuttle packed settings) answer Operation Not
+ * Supported there, and 0x9003 GetLensParameter only returns a static
+ * 101 byte lens identity blob ("APO-SUMMICRON 1:2/43 ASPH." followed
+ * by constants), with any passed argument ignored. */
+#define PTP_DPC_LEICA_ISOSpeed			0xd0ec	/* rw u32: configured ISO. 0 = Auto; enum is the Q3 ISO ladder incl. extended ISO 50/64/70/80 */
+#define PTP_DPC_LEICA_EffectiveISOSpeed		0xd610	/* ro u32: camera-selected ISO (covers Auto ISO), same ladder as 0xd0ec */
+#define PTP_DPC_LEICA_MeteredExposureTime	0xd60c	/* ro i32: metered exposure time, unit is 1/256th of a stop: T = 2^(-v/256) s */
+#define PTP_DPC_LEICA_AEExposureTime		0xd03c	/* rw i32: same unit as 0xd60c; in M mode tracks the set shutter speed, otherwise slews with ambient light. Readout counterpart: 0xd60e */
+#define PTP_DPC_LEICA_AEExposureTimeReadout	0xd60e	/* ro i32: readout of 0xd03c */
+#define PTP_DPC_LEICA_CropModeFocalLength	0xd21d	/* rw u32: digital crop mode in focal length equivalents, 43/60/75/90/120/150 on the Q3 43 */
+/* Leica device properties, identified by camera setting flip tests on a
+ * Q3 43 (firmware 4.1.1). Marks which of the images shuttle / lrplugin
+ * documented operations still exist on that model: 0x9001/0x9002 answer
+ * Operation Not Supported there, 0x9003 only returns a static 101 byte
+ * lens identity blob ("APO-SUMMICRON 1:2/43 ASPH." + constants) and
+ * parses its per-opcode parameters are ignored. */
+#define PTP_OC_LEICA_GetLensParameter2\t\t\t0x9033	/* seen on Q3 43, unverified meaning */
+
 #define PTP_OC_PARROT_GetSunshineValues		0x9201
 #define PTP_OC_PARROT_GetTemperatureValues	0x9202
 #define PTP_OC_PARROT_GetAngleValues		0x9203
