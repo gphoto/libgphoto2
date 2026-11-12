@@ -1557,15 +1557,35 @@ GENERIC16TABLE(Fuji_NoiseReduction,fuji_noisereduction)
 
 static struct deviceproptableu16 olympus_imageformat[] = {
 	{ N_("RAW"),			0x020,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Large Fine JPEG"),	0x101,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Large Normal JPEG"),	0x102,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Medium Normal JPEG"),	0x103,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Small Normal JPEG"),	0x104,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Large Fine JPEG+RAW"),	0x121,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Large Normal JPEG+RAW"),	0x122,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Medium Normal JPEG+RAW"),	0x123,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Small Normal JPEG+RAW"),	0x124,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 1"),	0x101,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 2"),	0x102,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 3"),	0x103,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 4"),	0x104,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 1 + RAW"),	0x121,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 2 + RAW"),	0x122,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 3 + RAW"),	0x123,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("JPEG Preset 4 + RAW"),	0x124,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
+
+static struct deviceproptableu16 olympus_imagequalitypreset[] = {
+	{ N_("Large SuperFine"), 52, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Large Fine"), 51, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Large Normal"), 50, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 1 SuperFine"), 100, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 1 Fine"), 99, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 1 Normal"), 98, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 2 SuperFine"), 116, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 2 Fine"), 115, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Medium 2 Normal"), 114, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 1 SuperFine"), 68, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 1 Fine"), 67, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 1 Normal"), 66, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 2 SuperFine"), 84, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 2 Fine"), 83, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Small 2 Normal"), 82, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_ImageQualityPreset,olympus_imagequalitypreset)
+
 GENERIC16TABLE(Olympus_Imageformat,olympus_imageformat)
 
 static struct deviceproptableu16 olympus_afareasetting[] = {
@@ -1656,18 +1676,127 @@ static struct deviceproptableu16 olympus_liveviewzoom[] = {
 };
 GENERIC16TABLE(Olympus_LiveViewZoom,olympus_liveviewzoom)
 
-static struct deviceproptableu16 olympus_isoautomode[] = {
-	{ N_("Auto"),	0xffff,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("Off"),	0x0000,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("On"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
-};
-GENERIC16TABLE(Olympus_ISOAutoMode,olympus_isoautomode)
 
 static struct deviceproptableu16 olympus_noisefilter[] = {
-	{ N_("Off"),	0x0000,	PTP_VENDOR_GP_OLYMPUS_OMD },
-	{ N_("On"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Off"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Low"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Standard"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("High"), 4, PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(Olympus_NoiseFilter,olympus_noisefilter)
+static struct deviceproptableu16 olympus_balancedflashmetering[] = {
+	{ N_("Off"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("On"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_BalancedFlashMetering,olympus_balancedflashmetering)
+
+static struct deviceproptableu16 olympus_rcmode[] = {
+	{ N_("Off"), 0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("On"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCMode,olympus_rcmode)
+
+/* A/B/C share this enum, including Super FP variants observed */
+static struct deviceproptableu16 olympus_rcgroupmode[] = {
+	{ N_("Off"), 0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Auto"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("TTL"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Manual"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("FP TTL"), 0x12, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("FP Manual"), 0x13, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCGroupMode,olympus_rcgroupmode)
+
+static struct deviceproptableu16 olympus_rcflashfpmode[] = {
+	{ N_("Normal"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Super FP"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCFlashFPMode,olympus_rcflashfpmode)
+
+static struct deviceproptableu16 olympus_moviefocusmode[] = {
+	{ "MF", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "S-AF", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "C-AF", 0x8002, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "S-AF+MF", 0x8001, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Preset MF"), 0x8004, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieFocusMode,olympus_moviefocusmode)
+
+static struct deviceproptableu16 olympus_rccommunicationlight[] = {
+	{ N_("Low"), 65535, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Middle"), 0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("High"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCCommunicationLight,olympus_rccommunicationlight)
+
+static struct deviceproptableu16 olympus_rcchannel[] = {
+	{ N_("1"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("4"), 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_RCChannel,olympus_rcchannel)
+
+static struct deviceproptableu16 olympus_isoautominimumshuttermode[] = {
+	{ N_("Auto"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Custom"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_ISOAutoMinimumShutterMode,olympus_isoautominimumshuttermode)
+
+static struct deviceproptableu16 olympus_compositeexposure[] = {
+	{ N_("1/2"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1/1.6"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1/1.3"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1"), 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1.3"), 5, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1.6"), 6, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2"), 7, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2.5"), 8, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3.2"), 9, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("4"), 10, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("5"), 11, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("6"), 12, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("8"), 13, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("10"), 14, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("13"), 15, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("15"), 16, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("20"), 17, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("25"), 18, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("30"), 19, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("40"), 20, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("50"), 21, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("60"), 22, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_CompositeExposure,olympus_compositeexposure)
+
+static struct deviceproptableu16 olympus_bulbtimetimer[] = {
+	{ N_("1 min"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2 min"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("4 min"), 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("8 min"), 8, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("15 min"), 15, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("20 min"), 20, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("25 min"), 25, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("30 min"), 30, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_BulbTimeTimer,olympus_bulbtimetimer)
+
+/* Manual interval list in increasing enum order, anchored by camera tests. */
+static struct deviceproptableu16 olympus_liveinterval[] = {
+	{ N_("Off"),     1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("0.5 sec"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("1 sec"),   3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("2 sec"),   4, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("4 sec"),   5, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("8 sec"),   6, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("15 sec"),  7, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("30 sec"),  8, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("60 sec"),  9, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_LiveInterval,olympus_liveinterval)
+
+
+
 
 static struct deviceproptableu16 olympus_facedetection[] = {
 	{ N_("Off"),				0x0000,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -1704,6 +1833,30 @@ static struct deviceproptableu16 olympus_mediaslot[] = {
 	{ N_("Slot 2"),				0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(Olympus_MediaSlot,olympus_mediaslot)
+
+/* Manual flash output fractions; full power uses a sentinel, not 1/1 packed. */
+static struct deviceproptableu32 olympus_manualflashpower[] = {
+	{ "1/1",   0xffffffffU, 0 },
+	{ "1/1.3", 0x000a000d, 0 },
+	{ "1/1.6", 0x000a0010, 0 },
+	{ "1/2",   0x00010002, 0 },
+	{ "1/2.5", 0x000a0019, 0 },
+	{ "1/3",   0x00010003, 0 },
+	{ "1/4",   0x00010004, 0 },
+	{ "1/5",   0x00010005, 0 },
+	{ "1/6",   0x00010006, 0 },
+	{ "1/8",   0x00010008, 0 },
+	{ "1/10",  0x0001000a, 0 },
+	{ "1/13",  0x0001000d, 0 },
+	{ "1/16",  0x00010010, 0 },
+	{ "1/20",  0x00010014, 0 },
+	{ "1/25",  0x00010019, 0 },
+	{ "1/32",  0x00010020, 0 },
+	{ "1/40",  0x00010028, 0 },
+	{ "1/50",  0x00010032, 0 },
+	{ "1/64",  0x00010040, 0 },
+};
+GENERIC32TABLE(Olympus_ManualFlashPower,olympus_manualflashpower)
 
 static struct deviceproptableu16 olympus_highresshot[] = {
 	{ N_("Off"),		0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -1779,11 +1932,66 @@ static struct deviceproptableu16 olympus_imagereview[] = {
 };
 GENERIC16TABLE(Olympus_ImageReview,olympus_imagereview)
 
-static struct deviceproptableu16 olympus_releasepriority[] = {
+static struct deviceproptableu16 olympus_onoff12[] = {
 	{ N_("On"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Off"),	0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
-GENERIC16TABLE(Olympus_ReleasePriority,olympus_releasepriority)
+GENERIC16TABLE(Olympus_OnOff12,olympus_onoff12)
+
+static struct deviceproptableu16 olympus_pressedreleased[] = {
+	{ N_("Pressed"), 1, 0 },
+	{ N_("Released"), 2, 0 },
+};
+GENERIC16TABLE(Olympus_PressedReleased,olympus_pressedreleased)
+
+/* OM-1: dimensions packed as width:height, both 16 bits. */
+static struct deviceproptableu32 olympus_liveviewsize[] = {
+	{ N_("Off"),           0,          PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "320x240",           0x014000f0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "640x480",           0x028001e0, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "800x600",           0x03200258, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "1024x768",          0x04000300, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "1280x960",          0x050003c0, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC32TABLE(Olympus_LiveViewSize,olympus_liveviewsize)
+
+
+static struct deviceproptableu16 olympus_aebracketing[] = {
+	{ N_("Off"),		1,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.3 EV"),	6,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.7 EV"),	8,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 1.0 EV"),	9,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("5f 0.3 EV"),	10,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("5f 0.7 EV"),	12,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("5f 1.0 EV"),	13,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("7f 0.3 EV"),	14,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("7f 0.7 EV"),	16,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_AEBracketing,olympus_aebracketing)
+
+static struct deviceproptableu16 olympus_isobracketing[] = {
+	{ N_("Off"),		1,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.3 EV"),	2,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.7 EV"),	3,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 1.0 EV"),	4,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_ISOBracketing,olympus_isobracketing)
+
+static struct deviceproptableu16 olympus_wbbracketing[] = {
+	{ N_("Off"),		1,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 2-step"),	2,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 4-step"),	3,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 6-step"),	4,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_WBBracketing,olympus_wbbracketing)
+
+static struct deviceproptableu16 olympus_flashbracketing[] = {
+	{ N_("Off"),		1,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.3 EV"),	2,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 0.7 EV"),	4,	PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("3f 1.0 EV"),	5,	PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_FlashBracketing,olympus_flashbracketing)
 
 static struct deviceproptableu16 olympus_afon_in_mf[] = {
 	{ N_("Yes"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -1791,11 +1999,111 @@ static struct deviceproptableu16 olympus_afon_in_mf[] = {
 };
 GENERIC16TABLE(Olympus_AFOnInMF,olympus_afon_in_mf)
 
+static struct deviceproptableu16 olympus_starryskyafoperation[] = {
+	{ N_("Half-press shutter"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("AF-ON"),             2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("AF-ON Start/Stop"),  3, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_StarrySkyAFOperation,olympus_starryskyafoperation)
+
 static struct deviceproptableu16 olympus_afscanner[] = {
 	{ N_("On"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Off"),	0x0002,	PTP_VENDOR_GP_OLYMPUS_OMD },
 };
 GENERIC16TABLE(Olympus_AFScanner,olympus_afscanner)
+
+static struct deviceproptableu16 olympus_movienoisefilter[] = {
+	{ N_("Off"),      1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Low"),      2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Standard"), 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("High"),     4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieNoiseFilter,olympus_movienoisefilter)
+
+/* Movie 1/2/3 share size, compression and normal-rate enums; HS is separate. */
+static struct deviceproptableu16 olympus_moviesize[] = {
+	{ "Full HD", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "4K", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "C4K", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieSize,olympus_moviesize)
+
+static struct deviceproptableu16 olympus_movieframerate[] = {
+	{ "24p", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "25p", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "30p", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "50p", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "60p", 5, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "24.00p", 6, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieFrameRate,olympus_movieframerate)
+
+static struct deviceproptableu16 olympus_moviecompression[] = {
+	{ "A-I", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "Long GOP", 5, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieCompression,olympus_moviecompression)
+
+static struct deviceproptableu16 olympus_moviehsframerate[] = {
+	{ "100 fps", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "120 fps", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "200 fps", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "240 fps", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieHSFrameRate,olympus_moviehsframerate)
+
+
+static struct deviceproptableu16 olympus_camerarecordingvolume[] = {
+	{ N_("Operative"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Inoperative"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_CameraRecordingVolume,olympus_camerarecordingvolume)
+
+/* Confirmed by independent movie-mode, stabilization and picture-mode walks. */
+static struct deviceproptableu16 olympus_movieexposuremode[] = {
+	{ "P", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "A", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "S", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "M", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieExposureMode,olympus_movieexposuremode)
+
+static struct deviceproptableu16 olympus_movieimagestabilization[] = {
+	{ N_("Off"), 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "M-IS1", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "M-IS2", 4, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MovieImageStabilization,olympus_movieimagestabilization)
+
+static struct deviceproptableu16 olympus_moviepicturemode[] = {
+	{ N_("Same as Still Photo"), 0x8A00, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Flat"), 0x8A01, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "OM-Log400", 0x8A02, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "HLG", 0x8A03, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_MoviePictureMode,olympus_moviepicturemode)
+
+static struct deviceproptableu16 olympus_timecodemode[] = {
+	{ "DF", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "NDF", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_TimeCodeMode,olympus_timecodemode)
+
+
+
+static struct deviceproptableu16 olympus_aflimitermode[] = {
+	{ N_("On"),     1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ N_("Manual"), 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_AFLimiterMode,olympus_aflimitermode)
+
+static struct deviceproptableu16 olympus_aflimiterdistance[] = {
+	{ "1", 1, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "2", 2, PTP_VENDOR_GP_OLYMPUS_OMD },
+	{ "3", 3, PTP_VENDOR_GP_OLYMPUS_OMD },
+};
+GENERIC16TABLE(Olympus_AFLimiterDistance,olympus_aflimiterdistance)
+
 
 static struct deviceproptableu16 olympus_exposureprogram[] = {
 	{ N_("M"),	0x0001,	PTP_VENDOR_GP_OLYMPUS_OMD },
@@ -5119,6 +5427,7 @@ static struct deviceproptableu16 flash_mode[] = {
 	{ N_("Red-eye automatic"),		0x0004, 0 },
 	{ N_("Red-eye fill"),			0x0005, 0 },
 	{ N_("External sync"),			0x0006, 0 },
+	{ N_("Manual"),				0xa000, PTP_VENDOR_GP_OLYMPUS_OMD },
 	{ N_("Auto"),				0x8010, PTP_VENDOR_NIKON},
 	{ N_("Auto Slow Sync"),			0x8011, PTP_VENDOR_NIKON},
 	{ N_("Rear Curtain Sync + Slow Sync"),	0x8012, PTP_VENDOR_NIKON},
@@ -8165,6 +8474,52 @@ static struct deviceproptableu16 olympus_whitebalanceadjust[] = {
 	{"7",	7, 0},
 };
 GENERIC16TABLE(Olympus_WhiteBalanceAdjust, olympus_whitebalanceadjust)
+
+/* Keystone steps are signed values carried in UINT16, without degree scaling. */
+static struct deviceproptableu16 olympus_keystonecorrection[] = {
+	{"-20",	65516, 0},
+	{"-19",	65517, 0},
+	{"-18",	65518, 0},
+	{"-17",	65519, 0},
+	{"-16",	65520, 0},
+	{"-15",	65521, 0},
+	{"-14",	65522, 0},
+	{"-13",	65523, 0},
+	{"-12",	65524, 0},
+	{"-11",	65525, 0},
+	{"-10",	65526, 0},
+	{"-9",	65527, 0},
+	{"-8",	65528, 0},
+	{"-7",	65529, 0},
+	{"-6",	65530, 0},
+	{"-5",	65531, 0},
+	{"-4",	65532, 0},
+	{"-3",	65533, 0},
+	{"-2",	65534, 0},
+	{"-1",	65535, 0},
+	{"0",	0, 0},
+	{"1",	1, 0},
+	{"2",	2, 0},
+	{"3",	3, 0},
+	{"4",	4, 0},
+	{"5",	5, 0},
+	{"6",	6, 0},
+	{"7",	7, 0},
+	{"8",	8, 0},
+	{"9",	9, 0},
+	{"10",	10, 0},
+	{"11",	11, 0},
+	{"12",	12, 0},
+	{"13",	13, 0},
+	{"14",	14, 0},
+	{"15",	15, 0},
+	{"16",	16, 0},
+	{"17",	17, 0},
+	{"18",	18, 0},
+	{"19",	19, 0},
+	{"20",	20, 0},
+};
+GENERIC16TABLE(Olympus_KeystoneCorrection, olympus_keystonecorrection)
 
 static int
 _get_BatteryLevel(CONFIG_GET_ARGS) {
@@ -12032,6 +12387,10 @@ _get_PTP_Manufacturer_STR(CONFIG_GET_ARGS) {
 
 
 static struct submenu camera_actions_menu[] = {
+	{ N_("AF-ON"), "afon", PTP_DPC_OLYMPUS_AFOn, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("Aperture Preview"), "aperturepreview", PTP_DPC_OLYMPUS_AperturePreview, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("AE Lock"), "aelock", PTP_DPC_OLYMPUS_AELock, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	/*{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },*/
 	{ N_("Synchronize camera date and time with PC (UTC)"),"syncdatetimeutc", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
@@ -12222,6 +12581,10 @@ static struct submenu camera_settings_menu[] = {
 static struct submenu image_settings_menu[] = {
 	{ N_("Image Quality"),          "imagequality",         PTP_DPC_CANON_ImageQuality,             PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_Quality,             _put_Canon_Quality },
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_OLYMPUS_ImageFormat,            PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT16,  _get_Olympus_Imageformat, _put_Olympus_Imageformat },
+	{ N_("Image Quality Preset 1"), "imagequalitypreset1", PTP_DPC_OLYMPUS_ImageQualityPreset1, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ImageQualityPreset, _put_Olympus_ImageQualityPreset },
+	{ N_("Image Quality Preset 2"), "imagequalitypreset2", PTP_DPC_OLYMPUS_ImageQualityPreset2, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ImageQualityPreset, _put_Olympus_ImageQualityPreset },
+	{ N_("Image Quality Preset 3"), "imagequalitypreset3", PTP_DPC_OLYMPUS_ImageQualityPreset3, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ImageQualityPreset, _put_Olympus_ImageQualityPreset },
+	{ N_("Image Quality Preset 4"), "imagequalitypreset4", PTP_DPC_OLYMPUS_ImageQualityPreset4, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ImageQualityPreset, _put_Olympus_ImageQualityPreset },
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_CANON_FullViewFileFormat,       PTP_VENDOR_CANON,   PTP_DTC_UINT8,  _get_Canon_Capture_Format,      _put_Canon_Capture_Format },
 	{ N_("Image Format"),           "imageformat",          PTP_DPC_CANON_EOS_ImageFormat,          PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
 	{ N_("Image Format SD"),        "imageformatsd",        PTP_DPC_CANON_EOS_ImageFormatSD,        PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_EOS_ImageFormat,     _put_Canon_EOS_ImageFormat },
@@ -12248,7 +12611,6 @@ static struct submenu image_settings_menu[] = {
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_OLYMPUS_ISO2,                   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ISO2,       _put_Olympus_ISO2 },
 	{ N_("ISO Speed"),              "iso",                  PTP_DPC_OLYMPUS_ISO,                    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ISO,        _put_Olympus_ISO },
 	{ N_("ISO Speed"),              "iso",                  0,                                      PTP_VENDOR_PANASONIC,   PTP_DTC_UINT32, _get_Panasonic_ISO,         _put_Panasonic_ISO },
-	{ N_("ISO Auto Mode"),          "isoautomode",          PTP_DPC_OLYMPUS_ISOAutoMode,            PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ISOAutoMode, _put_Olympus_ISOAutoMode },
 	{ N_("ISO Auto"),               "isoauto",              PTP_DPC_NIKON_ISO_Auto,                 PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("Auto ISO"),               "autoiso",              PTP_DPC_NIKON_ISOAuto,                  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_OnOff_UINT8,         _put_Nikon_OnOff_UINT8 },
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_OLYMPUS_WhiteBalance,           PTP_VENDOR_GP_OLYMPUS_OMD,PTP_DTC_UINT16,_get_Olympus_WhiteBalance, _put_Olympus_WhiteBalance },
@@ -12262,8 +12624,32 @@ static struct submenu image_settings_menu[] = {
 	{ N_("WhiteBalance"),           "whitebalance",         PTP_DPC_NIKON_1_WhiteBalance,           PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_1_WhiteBalance,      _put_Nikon_1_WhiteBalance },
 	{ N_("WhiteBalance Adjust A"),  "whitebalanceadjusta",  PTP_DPC_CANON_EOS_WhiteBalanceAdjustA,  PTP_VENDOR_CANON,   PTP_DTC_INT32,  _get_Canon_EOS_WBAdjust,        _put_Canon_EOS_WBAdjust },
 	{ N_("WhiteBalance Adjust B"),  "whitebalanceadjustb",  PTP_DPC_CANON_EOS_WhiteBalanceAdjustB,  PTP_VENDOR_CANON,   PTP_DTC_INT32,  _get_Canon_EOS_WBAdjust,        _put_Canon_EOS_WBAdjust },
-	{ N_("WhiteBalance Adjust A"),  "whitebalanceadjusta",  PTP_DPC_OLYMPUS_WhiteBalanceAdjustA,    PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT16,  _get_Olympus_WhiteBalanceAdjust,  _put_Olympus_WhiteBalanceAdjust },
-	{ N_("WhiteBalance Adjust B"),  "whitebalanceadjustb",  PTP_DPC_OLYMPUS_WhiteBalanceAdjustB,    PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT16,  _get_Olympus_WhiteBalanceAdjust,  _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Auto A-B"), "wbcompensationautoab", PTP_DPC_OLYMPUS_WBCompensationAutoAB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Auto G-M"), "wbcompensationautogm", PTP_DPC_OLYMPUS_WBCompensationAutoGM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Sunny A-B"), "wbcompensationdaylightab", PTP_DPC_OLYMPUS_WBCompensationDaylightAB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Sunny G-M"), "wbcompensationdaylightgm", PTP_DPC_OLYMPUS_WBCompensationDaylightGM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Shade A-B"), "wbcompensationshadeab", PTP_DPC_OLYMPUS_WBCompensationShadeAB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Shade G-M"), "wbcompensationshadegm", PTP_DPC_OLYMPUS_WBCompensationShadeGM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Cloudy A-B"), "wbcompensationcloudyab", PTP_DPC_OLYMPUS_WBCompensationCloudyAB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Cloudy G-M"), "wbcompensationcloudygm", PTP_DPC_OLYMPUS_WBCompensationCloudyGM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Incandescent A-B"), "wbcompensationincandescentab", PTP_DPC_OLYMPUS_WBCompensationIncandescentAB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Incandescent G-M"), "wbcompensationincandescentgm", PTP_DPC_OLYMPUS_WBCompensationIncandescentGM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Fluorescent A-B"), "wbcompensationfluorescentab", PTP_DPC_OLYMPUS_WBCompensationFluorescentAB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Fluorescent G-M"), "wbcompensationfluorescentgm", PTP_DPC_OLYMPUS_WBCompensationFluorescentGM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Underwater A-B"), "wbcompensationunderwaterab", PTP_DPC_OLYMPUS_WBCompensationUnderwaterAB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Underwater G-M"), "wbcompensationunderwatergm", PTP_DPC_OLYMPUS_WBCompensationUnderwaterGM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Flash A-B"), "wbcompensationflashab", PTP_DPC_OLYMPUS_WBCompensationFlashAB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Flash G-M"), "wbcompensationflashgm", PTP_DPC_OLYMPUS_WBCompensationFlashGM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB One-touch 1 A-B"), "wbcompensationonetouch1ab", PTP_DPC_OLYMPUS_WBCompensationOneTouch1AB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB One-touch 1 G-M"), "wbcompensationonetouch1gm", PTP_DPC_OLYMPUS_WBCompensationOneTouch1GM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB One-touch 2 A-B"), "wbcompensationonetouch2ab", PTP_DPC_OLYMPUS_WBCompensationOneTouch2AB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB One-touch 2 G-M"), "wbcompensationonetouch2gm", PTP_DPC_OLYMPUS_WBCompensationOneTouch2GM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB One-touch 3 A-B"), "wbcompensationonetouch3ab", PTP_DPC_OLYMPUS_WBCompensationOneTouch3AB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB One-touch 3 G-M"), "wbcompensationonetouch3gm", PTP_DPC_OLYMPUS_WBCompensationOneTouch3GM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB One-touch 4 A-B"), "wbcompensationonetouch4ab", PTP_DPC_OLYMPUS_WBCompensationOneTouch4AB, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB One-touch 4 G-M"), "wbcompensationonetouch4gm", PTP_DPC_OLYMPUS_WBCompensationOneTouch4GM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WhiteBalanceAdjust, _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Custom A-B"),  "whitebalanceadjusta",  PTP_DPC_OLYMPUS_WBCompensationCustomAB,    PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT16,  _get_Olympus_WhiteBalanceAdjust,  _put_Olympus_WhiteBalanceAdjust },
+	{ N_("WB Custom G-M"),  "whitebalanceadjustb",  PTP_DPC_OLYMPUS_WBCompensationCustomGM,    PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT16,  _get_Olympus_WhiteBalanceAdjust,  _put_Olympus_WhiteBalanceAdjust },
 	{ N_("WhiteBalance X A"),       "whitebalancexa",       PTP_DPC_CANON_EOS_WhiteBalanceXA,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("WhiteBalance X B"),       "whitebalancexb",       PTP_DPC_CANON_EOS_WhiteBalanceXB,       PTP_VENDOR_CANON,   PTP_DTC_UINT32, _get_INT,                       _put_None },
 	{ N_("Photo Effect"),           "photoeffect",          PTP_DPC_CANON_PhotoEffect,              PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_PhotoEffect,         _put_Canon_PhotoEffect },
@@ -12335,7 +12721,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Flash Mode"),                     "flashmode",                PTP_DPC_FlashMode,                      0,                  PTP_DTC_UINT16, _get_FlashMode,                     _put_FlashMode },
 	{ N_("Flash Exposure Compensation"),    "flashexposurecompensation", PTP_DPC_OLYMPUS_FlashExposureCompensation, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ExpCompensation, _put_Olympus_ExpCompensation },
 	{ N_("Image Stabilizer"),               "imagestabilization",       PTP_DPC_OLYMPUS_ImageStabilizer,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ImageStabilizer, _put_Olympus_ImageStabilizer },
-	{ N_("Noise Filter"),                   "noisefilter",              PTP_DPC_OLYMPUS_NoiseFilter,            PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_NoiseFilter,    _put_Olympus_NoiseFilter },
+	{ N_("Noise Filter"),                   "noisefilter",              PTP_DPC_OLYMPUS_StillNoiseFilter,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_NoiseFilter,    _put_Olympus_NoiseFilter },
 	{ N_("Nikon Flash Mode"),               "nikonflashmode",           PTP_DPC_NIKON_FlashMode,                PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_InternalFlashMode,       _put_Nikon_InternalFlashMode },
 	{ N_("Flash Commander Mode"),           "flashcommandermode",       PTP_DPC_NIKON_FlashCommanderMode,       PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FlashCommanderMode,      _put_Nikon_FlashCommanderMode },
 	{ N_("Flash Commander Power"),          "flashcommanderpower",      PTP_DPC_NIKON_FlashModeCommanderPower,  PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FlashCommanderPower,     _put_Nikon_FlashCommanderPower },
@@ -12382,8 +12768,9 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Exposure Program"),               "expprogram",               PTP_DPC_OLYMPUS_ExposureProgramMode,    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ExposureProgram,_put_Olympus_ExposureProgram },
 	{ N_("Custom Mode"),                    "custommode",               PTP_DPC_OLYMPUS_CustomMode,             PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_CustomMode,     _put_Olympus_CustomMode },
 	{ N_("LV Close Up Mode"),               "lvcloseupmode",            PTP_DPC_OLYMPUS_LVCloseUpMode,          PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_LVCloseUpMode,  _put_Olympus_LVCloseUpMode },
+	{ N_("Live View Size"), "liveviewsize", PTP_DPC_OLYMPUS_LiveViewModeOM, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_LiveViewSize, _put_Olympus_LiveViewSize },
 	{ N_("Live View Zoom Ratio"),           "liveviewzoom",             PTP_DPC_OLYMPUS_LiveViewZoomRatio,      PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_LiveViewZoom,   _put_Olympus_LiveViewZoom },
-	{ N_("Custom Mode Dial"),               "custommodedial",           PTP_DPC_OLYMPUS_CustomModeDial,         PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                       _put_INT },
+	{ N_("Focus Differential"),              "focusdifferential",        PTP_DPC_OLYMPUS_FocusBracketingDifferential, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,               _put_INT },
 	{ N_("Exposure Program"),               "expprogram",               PTP_DPC_ExposureProgramMode,            0,                  PTP_DTC_UINT16, _get_ExposureProgram,               _put_ExposureProgram },
 	{ N_("Exposure Program"),               "expprogram",               PTP_DPC_ExposureProgramMode,            PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ExposureProgram_Mode3,    _put_Sony_ExposureProgram_Mode3 },
 	{ N_("Exposure Program"),               "expprogram2",              PTP_DPC_NIKON_1_Mode,                   PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_NIKON_1_ExposureProgram,       _put_NIKON_1_ExposureProgram },
@@ -12432,7 +12819,7 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("Movie Shutter Speed 2"),          "movieshutterspeed",        PTP_DPC_NIKON_MovieShutterSpeed,        PTP_VENDOR_NIKON,   PTP_DTC_UINT32, _get_Nikon_ShutterSpeed,            _put_Nikon_ShutterSpeed },
 	/* olympus uses also a 16 bit/16bit separation */
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_OLYMPUS_Shutterspeed,           PTP_VENDOR_GP_OLYMPUS_OMD,   PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
-	{ N_("Auto Minimum Shutter Speed"),     "minimumshutterspeed",      PTP_DPC_OLYMPUS_AutoMinimumShutterSpeed, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
+	{ N_("Manual Flash Power"), "manualflashpower", PTP_DPC_OLYMPUS_ManualFlashPower, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ManualFlashPower, _put_Olympus_ManualFlashPower },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_CANON_EOS_ShutterSpeed,         PTP_VENDOR_CANON,   PTP_DTC_UINT16, _get_Canon_ShutterSpeed,            _put_Canon_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_FUJI_ShutterSpeed,              PTP_VENDOR_FUJI,    PTP_DTC_INT16,  _get_Fuji_ShutterSpeed,             _put_Fuji_ShutterSpeed },
 	{ N_("Shutter Speed"),                  "shutterspeed",             PTP_DPC_SONY_ShutterSpeed,              PTP_VENDOR_SONY,    PTP_DTC_UINT32, _get_Sony_ShutterSpeed,             _put_Sony_ShutterSpeed },
@@ -12553,35 +12940,122 @@ static struct submenu capture_settings_menu[] = {
 	{ N_("High Res Resolution"),            "highresresolution",        PTP_DPC_OLYMPUS_HighResResolution,      PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_HighResResolution,_put_Olympus_HighResResolution },
 	{ N_("High Res Wait Time"),             "highreswait",              PTP_DPC_OLYMPUS_HighResWait,            PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_HighResWait,    _put_Olympus_HighResWait },
 	{ N_("High Res Charge Time"),           "highrescharge",            PTP_DPC_OLYMPUS_HighResCharge,          PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_HighResCharge,  _put_Olympus_HighResCharge },
+	{ N_("Live Bulb Setting"),              "livebulbsetting",          PTP_DPC_OLYMPUS_LiveBulbSetting,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_LiveInterval,                   _put_Olympus_LiveInterval },
+	{ N_("Live Time Setting"),              "livetimesetting",          PTP_DPC_OLYMPUS_LiveTimeSetting,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_LiveInterval,                   _put_Olympus_LiveInterval },
+	{ N_("Live Composite Setting"),         "livecompositesetting",     PTP_DPC_OLYMPUS_CompositeSetting,       PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_CompositeExposure,                   _put_Olympus_CompositeExposure },
+	{ N_("Keystone Compensation"),          "keystonecompensation",     PTP_DPC_OLYMPUS_KeystoneCompensation,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
+	{ N_("Keystone Vertical Correction"), "keystoneverticalcorrection", PTP_DPC_OLYMPUS_KeystoneVerticalCorrection, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_KeystoneCorrection, _put_Olympus_KeystoneCorrection },
+	{ N_("Keystone Horizontal Correction"), "keystonehorizontalcorrection", PTP_DPC_OLYMPUS_KeystoneHorizontalCorrection, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_KeystoneCorrection, _put_Olympus_KeystoneCorrection },
+	{ N_("Keystone Vertical Crop Offset"), "keystoneverticalcropoffset", PTP_DPC_OLYMPUS_KeystoneVerticalCropOffset, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_KeystoneCorrection, _put_Olympus_KeystoneCorrection },
+	{ N_("Keystone Horizontal Crop Offset"), "keystonehorizontalcropoffset", PTP_DPC_OLYMPUS_KeystoneHorizontalCropOffset, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_KeystoneCorrection, _put_Olympus_KeystoneCorrection },
+	{ N_("Bulb/Time Timer"),                 "bulbtimetimer",            PTP_DPC_OLYMPUS_BulbTimeTimer,           PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_BulbTimeTimer,                   _put_Olympus_BulbTimeTimer },
+	{ N_("Focus Bracketing Enable"),        "focusbracketingenable",    PTP_DPC_OLYMPUS_FocusBracketingEnable,  PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
+	{ N_("Focus Bracketing Shots"),         "focusbracketingshots",     PTP_DPC_OLYMPUS_FocusBracketingShots,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
+	{ N_("Focus Bracketing Flash Charge Time"), "focusbracketingflashcharge", PTP_DPC_OLYMPUS_FocusBracketingFlashChargeTime, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_HighResCharge, _put_Olympus_HighResCharge },
+	{ N_("Focus Stacking Enable"), "focusstackingenable", PTP_DPC_OLYMPUS_FocusStackingEnable, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("Focus Stacking Shots"), "focusstackingshots", PTP_DPC_OLYMPUS_FocusStackingShots, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Focus Stacking Differential"), "focusstackingdifferential", PTP_DPC_OLYMPUS_FocusStackingDifferential, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Focus Stacking Flash Charge Time"), "focusstackingflashcharge", PTP_DPC_OLYMPUS_FocusStackingFlashChargeTime, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_HighResCharge, _put_Olympus_HighResCharge },
+	{ N_("AE Bracketing"),                  "aebracketing",             PTP_DPC_OLYMPUS_AEBracketing,          PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AEBracketing, _put_Olympus_AEBracketing },
+	{ N_("ISO Bracketing"),                 "isobracketing",            PTP_DPC_OLYMPUS_ISOBracketing,         PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ISOBracketing,_put_Olympus_ISOBracketing },
+	{ N_("WB Bracketing A-B"),              "wbbracketingab",           PTP_DPC_OLYMPUS_WBBracketingAB,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WBBracketing,_put_Olympus_WBBracketing },
+	{ N_("WB Bracketing G-M"),              "wbbracketinggm",           PTP_DPC_OLYMPUS_WBBracketingGM,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_WBBracketing,_put_Olympus_WBBracketing },
+	{ N_("Flash Bracketing"),               "flashbracketing",          PTP_DPC_OLYMPUS_FlashBracketing,       PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_FlashBracketing,_put_Olympus_FlashBracketing },
+	{ N_("Art Bracketing Enable"),          "artbracketingenable",      PTP_DPC_OLYMPUS_ArtBracketingEnable,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("HDR"),                            "hdrmode",                  PTP_DPC_OLYMPUS_HDRMode,                PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_HDRMode,        _put_Olympus_HDRMode },
 	{ N_("Image Review"),                   "imagereview",              PTP_DPC_OLYMPUS_ImageReview,            PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ImageReview,    _put_Olympus_ImageReview },
-	{ N_("Release Priority S-AF"),          "releaseprioritysaf",       PTP_DPC_OLYMPUS_ReleasePrioritySAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
-	{ N_("Release Priority C-AF"),          "releaseprioritycaf",       PTP_DPC_OLYMPUS_ReleasePriorityCAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Release Priority S-AF"),          "releaseprioritysaf",       PTP_DPC_OLYMPUS_ReleasePrioritySAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
+	{ N_("Release Priority C-AF"),          "releaseprioritycaf",       PTP_DPC_OLYMPUS_ReleasePriorityCAF,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("AF-ON in MF"),                    "afonmf",                   PTP_DPC_OLYMPUS_AFOnInMF,              PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFOnInMF,      _put_None },
+	{ N_("Starry Sky AF Operation"),        "starryskyafoperation",     PTP_DPC_OLYMPUS_StarrySkyAFOperation,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_StarrySkyAFOperation, _put_None },
+	{ N_("Movie 1 Size"), "movie1size", PTP_DPC_OLYMPUS_Movie1Size, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieSize, _put_Olympus_MovieSize },
+	{ N_("Movie 1 Frame Rate"), "movie1framerate", PTP_DPC_OLYMPUS_Movie1FrameRate, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieFrameRate, _put_Olympus_MovieFrameRate },
+	{ N_("Time Code Mode"), "timecodemode", PTP_DPC_OLYMPUS_TimeCodeMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_TimeCodeMode, _put_Olympus_TimeCodeMode },
+	{ N_("Movie 1 Compression"), "movie1compression", PTP_DPC_OLYMPUS_Movie1Compression, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieCompression, _put_Olympus_MovieCompression },
+	{ N_("Movie 2 Size"), "movie2size", PTP_DPC_OLYMPUS_Movie2Size, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieSize, _put_Olympus_MovieSize },
+	{ N_("Movie 2 Frame Rate"), "movie2framerate", PTP_DPC_OLYMPUS_Movie2FrameRate, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieFrameRate, _put_Olympus_MovieFrameRate },
+	{ N_("Movie 2 Compression"), "movie2compression", PTP_DPC_OLYMPUS_Movie2Compression, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieCompression, _put_Olympus_MovieCompression },
+	{ N_("Movie 3 Size"), "movie3size", PTP_DPC_OLYMPUS_Movie3Size, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieSize, _put_Olympus_MovieSize },
+	{ N_("Movie 3 Frame Rate"), "movie3framerate", PTP_DPC_OLYMPUS_Movie3FrameRate, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieFrameRate, _put_Olympus_MovieFrameRate },
+	{ N_("Movie 3 Compression"), "movie3compression", PTP_DPC_OLYMPUS_Movie3Compression, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieCompression, _put_Olympus_MovieCompression },
+	{ N_("Movie HS Frame Rate"), "moviehsframerate", PTP_DPC_OLYMPUS_MovieHSFrameRate, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieHSFrameRate, _put_Olympus_MovieHSFrameRate },
+	{ N_("Movie Picture Mode"), "moviepicturemode", PTP_DPC_OLYMPUS_MoviePictureMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MoviePictureMode, _put_Olympus_MoviePictureMode },
+	{ N_("Movie Exposure Mode"), "movieexposuremode", PTP_DPC_OLYMPUS_MovieExposureMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieExposureMode, _put_Olympus_MovieExposureMode },
+	{ N_("Movie Image Stabilization"), "movieimagestabilization", PTP_DPC_OLYMPUS_MovieImageStabilization, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieImageStabilization, _put_Olympus_MovieImageStabilization },
+	{ N_("Movie M Auto ISO Upper Limit"), "moviemautoisoupperlimit", PTP_DPC_OLYMPUS_MovieMAutoISOUpperLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_INT, _put_INT },
+	{ N_("Movie M Auto ISO Default"), "moviemautoisodefault", PTP_DPC_OLYMPUS_MovieMAutoISODefault, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_INT, _put_INT },
+	{ N_("Movie Noise Filter"), "movienoisefilter", PTP_DPC_OLYMPUS_MovieNoiseFilter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieNoiseFilter, _put_Olympus_MovieNoiseFilter },
+	{ N_("Plug-In Power"), "pluginpower", PTP_DPC_OLYMPUS_PlugInPower, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("AF Limiter"), "aflimiter", PTP_DPC_OLYMPUS_AFLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("AF Limiter Mode"), "aflimitermode", PTP_DPC_OLYMPUS_AFLimiterMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFLimiterMode, _put_Olympus_AFLimiterMode },
+	{ N_("AF Limiter Distance Setting"), "aflimiterdistancesetting", PTP_DPC_OLYMPUS_AFLimiterDistanceSetting, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFLimiterDistance, _put_Olympus_AFLimiterDistance },
+	{ N_("AF Limiter Release Priority"), "aflimiterreleasepriority", PTP_DPC_OLYMPUS_AFLimiterReleasePriority, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("Flash X-Sync Speed"), "flashxsyncspeed", PTP_DPC_OLYMPUS_FlashXSyncSpeed, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
+	{ N_("Flash Slow Limit"), "flashslowlimit", PTP_DPC_OLYMPUS_FlashSlowLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
+	{ N_("RC Mode"), "rcmode", PTP_DPC_OLYMPUS_RCMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_RCMode, _put_Olympus_RCMode },
+	{ N_("RC Flash FP Mode"), "rcflashfpmode", PTP_DPC_OLYMPUS_RCFlashFPMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_RCFlashFPMode, _put_Olympus_RCFlashFPMode },
+	{ N_("Movie Focus Mode"), "moviefocusmode", PTP_DPC_OLYMPUS_MovieFocusMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_MovieFocusMode, _put_Olympus_MovieFocusMode },
+	{ N_("RC Channel"), "rcchannel", PTP_DPC_OLYMPUS_RCChannel, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_RCChannel, _put_Olympus_RCChannel },
+	{ N_("RC Communication Light Level"), "rccommunicationlight", PTP_DPC_OLYMPUS_RCCommunicationLight, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_RCCommunicationLight, _put_Olympus_RCCommunicationLight },
+	{ N_("RC Group A Mode"), "rcgroupamode", PTP_DPC_OLYMPUS_RCGroupAMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_RCGroupMode, _put_Olympus_RCGroupMode },
+	{ N_("RC Group A Compensation"), "rcgroupacompensation", PTP_DPC_OLYMPUS_RCGroupACompensation, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ExpCompensation, _put_Olympus_ExpCompensation },
+	{ N_("RC Group B Mode"), "rcgroupbmode", PTP_DPC_OLYMPUS_RCGroupBMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_RCGroupMode, _put_Olympus_RCGroupMode },
+	{ N_("RC Group B Compensation"), "rcgroupbcompensation", PTP_DPC_OLYMPUS_RCGroupBCompensation, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ExpCompensation, _put_Olympus_ExpCompensation },
+	{ N_("RC Group C Mode"), "rcgroupcmode", PTP_DPC_OLYMPUS_RCGroupCMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_RCGroupMode, _put_Olympus_RCGroupMode },
+	{ N_("RC Group C Compensation"), "rcgroupccompensation", PTP_DPC_OLYMPUS_RCGroupCCompensation, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ExpCompensation, _put_Olympus_ExpCompensation },
+	{ N_("RC Group A Manual Power"), "rcgroupamanualpower", PTP_DPC_OLYMPUS_RCGroupAManualPower, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
+	{ N_("RC Group B Manual Power"), "rcgroupbmanualpower", PTP_DPC_OLYMPUS_RCGroupBManualPower, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
+	{ N_("RC Group C Manual Power"), "rcgroupcmanualpower", PTP_DPC_OLYMPUS_RCGroupCManualPower, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
+	{ N_("ISO Auto Minimum Shutter Mode"), "isoautominimumshuttermode", PTP_DPC_OLYMPUS_ISOAutoMinimumShutterMode, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ISOAutoMinimumShutterMode, _put_Olympus_ISOAutoMinimumShutterMode },
+	{ N_("ISO Auto Custom Shutter Speed"), "isoautocustomshutterspeed", PTP_DPC_OLYMPUS_ISOAutoMinimumShutterSpeed, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT32, _get_Olympus_ShutterSpeed, _put_Olympus_ShutterSpeed },
+	{ N_("Flash and Exposure Compensation"), "flashexposurecomplink", PTP_DPC_OLYMPUS_FlashExposureCompensationLink, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("Balanced Flash Metering"), "balancedflashmetering", PTP_DPC_OLYMPUS_BalancedFlashMetering, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_BalancedFlashMetering, _put_Olympus_BalancedFlashMetering },
+	{ N_("Volume Limiter"), "volumelimiter", PTP_DPC_OLYMPUS_VolumeLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("Camera Rec. Volume"), "camerarecordingvolume", PTP_DPC_OLYMPUS_CameraRecordingVolume, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_CameraRecordingVolume, _put_Olympus_CameraRecordingVolume },
+	{ N_("Custom AF Target 1 Vertical Steps"), "customaf1verticalsteps", PTP_DPC_OLYMPUS_CustomAFTarget1VerticalSteps, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 1 Horizontal Steps"), "customaf1horizontalsteps", PTP_DPC_OLYMPUS_CustomAFTarget1HorizontalSteps, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 1 Vertical Area"), "customaf1verticalarea", PTP_DPC_OLYMPUS_CustomAFTarget1VerticalArea, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 1 Horizontal Area"), "customaf1horizontalarea", PTP_DPC_OLYMPUS_CustomAFTarget1HorizontalArea, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 2 Vertical Steps"), "customaf2verticalsteps", PTP_DPC_OLYMPUS_CustomAFTarget2VerticalSteps, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 2 Horizontal Steps"), "customaf2horizontalsteps", PTP_DPC_OLYMPUS_CustomAFTarget2HorizontalSteps, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 2 Vertical Area"), "customaf2verticalarea", PTP_DPC_OLYMPUS_CustomAFTarget2VerticalArea, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 2 Horizontal Area"), "customaf2horizontalarea", PTP_DPC_OLYMPUS_CustomAFTarget2HorizontalArea, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 3 Vertical Steps"), "customaf3verticalsteps", PTP_DPC_OLYMPUS_CustomAFTarget3VerticalSteps, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 3 Horizontal Steps"), "customaf3horizontalsteps", PTP_DPC_OLYMPUS_CustomAFTarget3HorizontalSteps, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 3 Vertical Area"), "customaf3verticalarea", PTP_DPC_OLYMPUS_CustomAFTarget3VerticalArea, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 3 Horizontal Area"), "customaf3horizontalarea", PTP_DPC_OLYMPUS_CustomAFTarget3HorizontalArea, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 4 Vertical Steps"), "customaf4verticalsteps", PTP_DPC_OLYMPUS_CustomAFTarget4VerticalSteps, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 4 Horizontal Steps"), "customaf4horizontalsteps", PTP_DPC_OLYMPUS_CustomAFTarget4HorizontalSteps, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 4 Vertical Area"), "customaf4verticalarea", PTP_DPC_OLYMPUS_CustomAFTarget4VerticalArea, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	{ N_("Custom AF Target 4 Horizontal Area"), "customaf4horizontalarea", PTP_DPC_OLYMPUS_CustomAFTarget4HorizontalArea, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT, _put_INT },
+	/* D141 and limiter endpoints are lens-internal units, not metres. */
+	{ N_("Current Focus Position"), "currentfocusposition", PTP_DPC_OLYMPUS_CurrentFocusPosition, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_INT32, _get_INT, _put_None },
+	{ N_("AF Limiter Near Position"), "aflimiternearposition", PTP_DPC_OLYMPUS_AFLimiterNearPosition, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_INT32, _get_INT, _put_None },
+	{ N_("AF Limiter Far Position"), "aflimiterfarposition", PTP_DPC_OLYMPUS_AFLimiterFarPosition, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_INT32, _get_INT, _put_None },
 	{ N_("AF Scanner"),                     "afscanner",                PTP_DPC_OLYMPUS_AFScanner,             PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_AFScanner,     _put_Olympus_AFScanner },
-	{ N_("WB Keep Warm Color"),             "wbkeepwarmcolor",          PTP_DPC_OLYMPUS_WBKeepWarmColor,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("WB Keep Warm Color"),             "wbkeepwarmcolor",          PTP_DPC_OLYMPUS_WBKeepWarmColor,        PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Sequential Max FPS"),             "sequentialmaxfps",         PTP_DPC_OLYMPUS_SequentialMaxFPS,       PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Sequential Frame Count Limiter"), "sequentialframelimiter",   PTP_DPC_OLYMPUS_SequentialFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Sequential Frame Count Limiter"), "sequentialframelimiter",   PTP_DPC_OLYMPUS_SequentialFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Sequential Frame Count Limit"),   "sequentialframelimit",     PTP_DPC_OLYMPUS_SequentialFrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                 _put_INT },
 	{ N_("Silent Sequential Max FPS"),      "silentsequentialmaxfps",   PTP_DPC_OLYMPUS_SilentSequentialMaxFPS, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Silent Sequential Frame Count Limiter"),"silentsequentialframelimiter", PTP_DPC_OLYMPUS_SilentSequentialFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Silent Sequential Frame Count Limiter"),"silentsequentialframelimiter", PTP_DPC_OLYMPUS_SilentSequentialFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Silent Sequential Frame Count Limit"),"silentsequentialframelimit", PTP_DPC_OLYMPUS_SilentSequentialFrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,           _put_INT },
 	{ N_("SH1 Max FPS"),                    "sh1maxfps",                PTP_DPC_OLYMPUS_SH1MaxFPS,              PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("SH1 Frame Count Limiter"),        "sh1framelimiter",          PTP_DPC_OLYMPUS_SH1FrameCountLimiter,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("SH1 Frame Count Limiter"),        "sh1framelimiter",          PTP_DPC_OLYMPUS_SH1FrameCountLimiter,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("SH1 Frame Count Limit"),          "sh1framelimit",            PTP_DPC_OLYMPUS_SH1FrameCountLimit,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
 	{ N_("SH2 Max FPS"),                    "sh2maxfps",                PTP_DPC_OLYMPUS_SH2MaxFPS,              PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("SH2 Frame Count Limiter"),        "sh2framelimiter",          PTP_DPC_OLYMPUS_SH2FrameCountLimiter,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("SH2 Frame Count Limiter"),        "sh2framelimiter",          PTP_DPC_OLYMPUS_SH2FrameCountLimiter,   PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("SH2 Frame Count Limit"),          "sh2framelimit",            PTP_DPC_OLYMPUS_SH2FrameCountLimit,     PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
 	{ N_("Pro Capture Max FPS"),            "procapturemaxfps",         PTP_DPC_OLYMPUS_ProCaptureMaxFPS,       PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Pro Capture Frame Count Limiter"),"procaptureframelimiter",   PTP_DPC_OLYMPUS_ProCaptureFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Pro Capture Frame Count Limiter"),"procaptureframelimiter",   PTP_DPC_OLYMPUS_ProCaptureFrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Pro Capture Frame Count Limit"),  "procaptureframelimit",     PTP_DPC_OLYMPUS_ProCaptureFrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
 	{ N_("Pro Capture Pre-Shutter Frames"), "procapturepreshutter",     PTP_DPC_OLYMPUS_ProCapturePreShutterFrames, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                 _put_INT },
 	{ N_("Pro Capture SH1 Max FPS"),        "procapturesh1maxfps",      PTP_DPC_OLYMPUS_ProCaptureSH1MaxFPS,    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Pro Capture SH1 Frame Count Limiter"),"procapturesh1framelimiter", PTP_DPC_OLYMPUS_ProCaptureSH1FrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Pro Capture SH1 Frame Count Limiter"),"procapturesh1framelimiter", PTP_DPC_OLYMPUS_ProCaptureSH1FrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Pro Capture SH1 Frame Count Limit"),"procapturesh1framelimit",  PTP_DPC_OLYMPUS_ProCaptureSH1FrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                 _put_INT },
 	{ N_("Pro Capture SH1 Pre-Shutter Frames"),"procapturesh1preshutter", PTP_DPC_OLYMPUS_ProCaptureSH1PreShutterFrames, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,               _put_INT },
 	{ N_("Pro Capture SH2 Max FPS"),        "procapturesh2maxfps",      PTP_DPC_OLYMPUS_ProCaptureSH2MaxFPS,    PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                   _put_INT },
-	{ N_("Pro Capture SH2 Frame Count Limiter"),"procapturesh2framelimiter", PTP_DPC_OLYMPUS_ProCaptureSH2FrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_ReleasePriority,_put_Olympus_ReleasePriority },
+	{ N_("Pro Capture SH2 Frame Count Limiter"),"procapturesh2framelimiter", PTP_DPC_OLYMPUS_ProCaptureSH2FrameCountLimiter, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12,_put_Olympus_OnOff12 },
 	{ N_("Pro Capture SH2 Frame Count Limit"),"procapturesh2framelimit",  PTP_DPC_OLYMPUS_ProCaptureSH2FrameCountLimit, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,                 _put_INT },
 	{ N_("Pro Capture SH2 Pre-Shutter Frames"),"procapturesh2preshutter", PTP_DPC_OLYMPUS_ProCaptureSH2PreShutterFrames, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_INT,               _put_INT },
 	{ N_("Face Detection"),                 "facedetection",            PTP_DPC_NIKON_FaceDetection,            PTP_VENDOR_NIKON,   PTP_DTC_UINT8,  _get_Nikon_FaceDetection,           _put_Nikon_FaceDetection },
