@@ -10174,6 +10174,54 @@ _put_Canon_EOS_MovieModeSw(CONFIG_PUT_ARGS) {
 	return GP_OK;
 }
 
+/* Momentary movie REC button: a complete click toggles recording.
+ * Do not expose this as an absolute movie on/off setting: both actions
+ * produce the same 1/0 sequence in the OM-1 trace.
+ */
+static int
+_get_Olympus_MovieRecButton(CONFIG_GET_ARGS) {
+	int val = 0;
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Olympus_MovieRecButton(CONFIG_PUT_ARGS) {
+	PTPParams *params = &camera->pl->params;
+	GPContext *context = ((PTPData *) params->data)->context;
+	int val;
+
+	CR (gp_widget_get_value (widget, &val));
+	if (!val) return GP_OK;
+	C_PTP_REP (ptp_generic_no_data (params, PTP_OC_OLYMPUS_OMD_MovieRecButton, 1, 1));
+	C_PTP_REP (ptp_generic_no_data (params, PTP_OC_OLYMPUS_OMD_MovieRecButton, 1, 0));
+	return GP_OK;
+}
+
+static int
+_get_Olympus_ShutterHalf(CONFIG_GET_ARGS) {
+	int val = 2; /* No readable button state; allow either action. */
+
+	gp_widget_new (GP_WIDGET_TOGGLE, _(menu->label), widget);
+	gp_widget_set_name (*widget, menu->name);
+	gp_widget_set_value (*widget, &val);
+	return GP_OK;
+}
+
+static int
+_put_Olympus_ShutterHalf(CONFIG_PUT_ARGS) {
+	PTPParams *params = &camera->pl->params;
+	GPContext *context = ((PTPData *) params->data)->context;
+	int val;
+
+	CR (gp_widget_get_value (widget, &val));
+	C_PTP_REP (ptp_generic_no_data (params, PTP_OC_OLYMPUS_OMD_Capture, 1, val ? 1 : 5));
+	return GP_OK;
+}
+
 static int
 _get_Sony_Movie(CONFIG_GET_ARGS) {
 	int val;
@@ -12592,6 +12640,8 @@ static struct submenu camera_actions_menu[] = {
 	{ N_("AF-ON"), "afon", PTP_DPC_OLYMPUS_AFOn, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
 	{ N_("Aperture Preview"), "aperturepreview", PTP_DPC_OLYMPUS_AperturePreview, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
 	{ N_("AE Lock"), "aelock", PTP_DPC_OLYMPUS_AELock, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_DTC_UINT16, _get_Olympus_OnOff12, _put_Olympus_OnOff12 },
+	{ N_("Shutter Half Press"), "shutterhalfpress", 0, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_OC_OLYMPUS_OMD_Capture, _get_Olympus_ShutterHalf, _put_Olympus_ShutterHalf },
+	{ N_("Movie REC Button (Toggle Recording)"), "movierecbutton", 0, PTP_VENDOR_GP_OLYMPUS_OMD, PTP_OC_OLYMPUS_OMD_MovieRecButton, _get_Olympus_MovieRecButton, _put_Olympus_MovieRecButton },
 
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	/*{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },*/
