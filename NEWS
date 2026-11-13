@@ -25,6 +25,12 @@ ptp2:
   autofocus/manual focus, image quality, movie/audio, card/battery status,
   level gauge, live-view controls, USB RAW processing properties,
   device/lens metadata, events, and session handling.
+* Leica Q3 43: added the camera; capture of DNG+JPEG in dual mode no
+  longer hangs; `--list-all-config` no longer hangs on its volatile
+  readouts; renders the identified Leica device properties (ISO,
+  crop focal length, exposure times, WB, AF, drive, self timer, file
+  format, scene mode, looks, aspect ratio), with a reference summary
+  dump in camlibs/ptp2/cameras/leica-q3-43.txt.
 * Canon EOS CapturePreview caches GetViewFinderData type 17 (planar
   YRGB LV histogram) and exposes it as /main/status/eosviewfinderhistogram
   (base64). Same USB transaction as the JPEG; requires live view on
