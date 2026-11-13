@@ -57,6 +57,14 @@
 #define USB_NORMAL_TIMEOUT 20000
 static int normal_timeout = USB_NORMAL_TIMEOUT;
 #define USB_TIMEOUT_CAPTURE 100000
+/* capture event loop state bitmaps: which awaited PTP events have been seen.
+ * Not a PTP concept, just internal bookkeeping: the capture event loop ends
+ * once both conditions have arrived. Magic numbers are replaced by the
+ * named constants below for readability. */
+#define CAPTURE_DONE_CAPTURECOMPLETE	(1 << 0)
+#define CAPTURE_DONE_OBJECTADDED	(1 << 1)
+#define CAPTURE_DONE_ALL		(CAPTURE_DONE_CAPTURECOMPLETE|CAPTURE_DONE_OBJECTADDED)
+
 static int capture_timeout = USB_TIMEOUT_CAPTURE;
 
 #define	SET_CONTEXT(camera, ctx) ((PTPData *) camera->pl->params.data)->context = ctx
@@ -2903,6 +2911,7 @@ static struct {
 	{"Leica:M11 Monochrom",			0x1a98,	0x2083, PTP_CAP},
 	/* https://github.com/gphoto/gphoto2/issues/601 */
 	{"Leica:Q3",				0x1a98,	0x2376, PTP_CAP|PTP_CAP_PREVIEW|PTP_NO_CAPTURE_COMPLETE},
+	{"Leica:Q3 43",				0x1a98,	0x237a, PTP_CAP|PTP_CAP_PREVIEW|PTP_NO_CAPTURE_COMPLETE},
 	/* https://github.com/gphoto/libgphoto2/issues/1203 */
 	{"Leica:SL3",				0x1a98,	0x2382, PTP_CAP|PTP_CAP_PREVIEW|PTP_NO_CAPTURE_COMPLETE},
 
@@ -4440,7 +4449,7 @@ capturetriggered:
 			GP_LOG_D ("event.Code is %x / param %lx", event.Code, (unsigned long)event.Param1);
 			switch (event.Code) {
 			case PTP_EC_Nikon_ObjectAddedInSDRAM:
-				done |= 3;
+				done |= CAPTURE_DONE_ALL;
 				newobject = event.Param1;
 				if (!newobject) newobject = 0xffff0001;
 				break;
@@ -4455,7 +4464,7 @@ capturetriggered:
 				/* e.g. for NEF+RAW capture */
 				if (newobject != 0xffff0001) {
 					array_push_back(&stored_events, event);
-					done = 3;
+					done = CAPTURE_DONE_ALL;
 					break;
 				}
 				/* we register the object in the internal storage, and we also need to
@@ -4472,7 +4481,7 @@ capturetriggered:
 					break;
 				}
 				newobject = event.Param1;
-				done |= 2;
+				done |= CAPTURE_DONE_OBJECTADDED;
 				break;
 			}
 			case PTP_EC_Nikon_CaptureCompleteRecInSdram:
@@ -4481,7 +4490,7 @@ capturetriggered:
 					GP_LOG_D ("Capture complete ... restarting liveview");
 					ret = ptp_nikon_start_liveview (params);
 				}
-				done |= 1;
+				done |= CAPTURE_DONE_CAPTURECOMPLETE;
 				break;
 			default:
 				GP_LOG_D ("UNHANDLED event.Code is %x / param %lx, DEFER", event.Code, (unsigned long)event.Param1);
@@ -4490,16 +4499,16 @@ capturetriggered:
 			}
 		}
 		/* we got both capturecomplete and objectadded ... leave */
-		if (done == 3)
+		if (done == CAPTURE_DONE_ALL)
 			break;
 		/* just got capturecomplete ... wait a bit for a objectadded (Nikon 1) */
-		if (done == 1) {
+		if (done == CAPTURE_DONE_CAPTURECOMPLETE) { /* capturecomplete seen, waiting for objectadded (Nikon 1) */
 			if (!tries--)
 				break;
 		}
 		gp_context_idle (context);
 		/* do not drain all of the DSLRs compute time */
-	} while ((done != 3) && waiting_for_timeout (&back_off_wait, capture_start, 70*1000)); /* 70 seconds */
+	} while ((done != CAPTURE_DONE_ALL) && waiting_for_timeout (&back_off_wait, capture_start, 70*1000)); /* 70 seconds */
 
 	/* add all the queued events back to the event queue */
 	array_append (&params->events, &stored_events);
@@ -6119,14 +6128,14 @@ fallback:
 	 * the CaptureComplete event, while others do it the other way
 	 * round. Handle that case with some bitmask. */
 	done = 0; tries = 20;
-	while (done != 3) {
+	while (done != CAPTURE_DONE_ALL) {
 		uint16_t ret;
 
 		C_PTP_REP (ptp_wait_event (params));
 
 		if (!ptp_get_one_event(params, &event)) {
 			usleep(1000);
-			if (done & 1) /* only wait 20 rounds for objectadded */
+			if (done & CAPTURE_DONE_CAPTURECOMPLETE) /* capturecomplete seen, now only wait 20 rounds for objectadded */
 				if (!tries--)
 					break;
 			continue;
@@ -6143,8 +6152,20 @@ fallback:
 
 			/* add newly created object to internal structures */
 			ret = ptp_object_want (params, event.Param1, PTPOBJECT_OBJECTINFO_LOADED, &ob);
-			if (ret != PTP_RC_OK)
+			if (ret != PTP_RC_OK) {
+				/* The camera might still be busy writing the newly
+				 * captured object, e.g. the Leica Q3 43 reports
+				 * DeviceBusy on GetObjectInfo directly after capture
+				 * and never re-sends the ObjectAdded event.
+				 * Remember the handle here; the object info will be
+				 * loaded by add_object_to_fs_and_path once the
+				 * camera is idle again. */
+				newobject = event.Param1;
+				done |= CAPTURE_DONE_OBJECTADDED;
+				if (NO_CAPTURE_COMPLETE(params))
+					done |= CAPTURE_DONE_CAPTURECOMPLETE;
 				break;
+			}
 
 			/* this might be just the folder add, ignore that. */
 			if (ob->oi.ObjectFormat == PTP_OFC_Association) {
@@ -6152,9 +6173,9 @@ fallback:
 				gp_filesystem_reset (camera->fs);
 			} else {
 				newobject = event.Param1;
-				done |= 2;
+				done |= CAPTURE_DONE_OBJECTADDED;
 				if (NO_CAPTURE_COMPLETE(params))
-					done|=1;
+					done |= CAPTURE_DONE_CAPTURECOMPLETE;
 			}
 			break;
 		}
@@ -6162,7 +6183,7 @@ fallback:
 			gp_context_error (context, _("Camera memorycard ran full during capture."));
 			return GP_ERROR_NO_MEMORY;
 		case PTP_EC_CaptureComplete:
-			done |= 1;
+			done |= CAPTURE_DONE_CAPTURECOMPLETE;
 			break;
 		default:
 			GP_LOG_D ("Received event 0x%04x, ignoring (please report).",event.Code);
@@ -6175,8 +6196,21 @@ out:
 	path->name[0]='\0';
 	path->folder[0]='\0';
 
-	if (newobject != 0) /* FIXME: check association handling */
+	if (newobject != 0) { /* FIXME: check association handling */
+		/* If the object info could not be loaded during the event loop
+		 * because the camera was still busy writing the file (e.g. Leica
+		 * Q3 43), wait a bit and retry it now, so that
+		 * add_object_to_fs_and_path finds it fully loaded. */
+		PTPObject	*ob;
+		int		objtries = 30;
+
+		while (objtries--) {
+			if (PTP_RC_OK == ptp_object_want (params, newobject, PTPOBJECT_OBJECTINFO_LOADED, &ob))
+				break;
+			sleep(1);
+		}
 		return add_object_to_fs_and_path (camera, newobject, path, context);
+	}
 	return GP_ERROR;
 }
 
