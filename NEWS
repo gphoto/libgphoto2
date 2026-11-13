@@ -21,6 +21,10 @@ ptp2:
 * live view: find the end of preview JPEGs by walking their segments, not
   at the first FF D9, which can occur inside the quantization table
   (Panasonic GH5 frames were cut to a 53-byte header)
+* Olympus OM-1: expand support for exposure, ISO, bulb/composite, flash,
+  autofocus/manual focus, image quality, movie/audio, card/battery status,
+  level gauge, live-view controls, USB RAW processing properties,
+  device/lens metadata, events, and session handling.
 * Canon EOS CapturePreview caches GetViewFinderData type 17 (planar
   YRGB LV histogram) and exposes it as /main/status/eosviewfinderhistogram
   (base64). Same USB transaction as the JPEG; requires live view on
