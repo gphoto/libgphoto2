@@ -46,8 +46,8 @@ TESTS              += test-endian
 check_PROGRAMS     += test-endian
 test_endian_SOURCES = test-endian.c
 test_endian_LDADD   = \
-	$(top_builddir)/libgphoto2/libgphoto2.la \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(libgphoto2_la) \
+	$(libgphoto2_port_la) \
 	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
@@ -57,8 +57,8 @@ test_endian_LDADD   = \
 noinst_PROGRAMS                 += print-libgphoto2-version
 print_libgphoto2_version_SOURCES = print-libgphoto2-version.c
 print_libgphoto2_version_LDADD   =
-print_libgphoto2_version_LDADD  += $(top_builddir)/libgphoto2/libgphoto2.la
-print_libgphoto2_version_LDADD  += $(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la
+print_libgphoto2_version_LDADD  += $(libgphoto2_la)
+print_libgphoto2_version_LDADD  += $(libgphoto2_port_la)
 print_libgphoto2_version_LDADD  += $(LIBLTDL)
 print_libgphoto2_version_LDADD  += $(LIBEXIF_LIBS)
 print_libgphoto2_version_LDADD  += $(INTLLIBS)
@@ -68,8 +68,8 @@ print_libgphoto2_version_LDADD  += $(INTLLIBS)
 noinst_PROGRAMS     += test-gphoto2
 test_gphoto2_SOURCES = test-gphoto2.c
 test_gphoto2_LDADD   = \
-	$(top_builddir)/libgphoto2/libgphoto2.la \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(libgphoto2_la) \
+	$(libgphoto2_port_la) \
 	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
@@ -79,8 +79,8 @@ test_gphoto2_LDADD   = \
 noinst_PROGRAMS    += test-filesys
 test_filesys_SOURCES = test-filesys.c
 test_filesys_LDADD   = \
-	$(top_builddir)/libgphoto2/libgphoto2.la \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(libgphoto2_la) \
+	$(libgphoto2_port_la) \
 	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
@@ -92,8 +92,8 @@ INSTALL_TESTS  += test-camera-list
 check_PROGRAMS         += test-camera-list
 test_camera_list_SOURCES = test-camera-list.c
 test_camera_list_LDADD   = \
-	$(top_builddir)/libgphoto2/libgphoto2.la \
-	$(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la \
+	$(libgphoto2_la) \
+	$(libgphoto2_port_la) \
 	$(LIBLTDL) \
 	$(LIBEXIF_LIBS) \
 	$(INTLLIBS)
@@ -102,8 +102,8 @@ test_camera_list_LDADD   = \
 TESTS          += test-init-localedir
 check_PROGRAMS += test-init-localedir
 test_init_localedir_LDADD =
-test_init_localedir_LDADD += $(top_builddir)/libgphoto2/libgphoto2.la
-test_init_localedir_LDADD += $(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la
+test_init_localedir_LDADD += $(libgphoto2_la)
+test_init_localedir_LDADD += $(libgphoto2_port_la)
 test_init_localedir_LDADD += $(LIBLTDL)
 test_init_localedir_LDADD += $(LIBEXIF_LIBS)
 test_init_localedir_LDADD += $(INTLLIBS)
