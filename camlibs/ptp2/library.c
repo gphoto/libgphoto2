@@ -5434,6 +5434,77 @@ camera_sony_qx_capture (Camera *camera, CameraCaptureType type, CameraFilePath *
 	return res;
 }
 
+/* Fujifilm cameras in USB tether mode keep a captured image in a volatile
+ * buffer (e.g. /store_10000001) until the host deletes it. Until then the
+ * camera shows "transferring to PC", refuses to restart liveview
+ * (InitiateOpenCapture) and blocks priority mode changes.
+ *
+ * Like the Nikon SDRAM capture, make sure the image data is in the virtual
+ * filesystem and then release the object on the camera, so applications
+ * can simply gp_camera_file_get() the returned path.
+ *
+ * Objects on removable storage (memory card) are never deleted.
+ */
+static void
+fuji_release_tether_object (Camera *camera, CameraFilePath *path, uint32_t handle, GPContext *context)
+{
+	PTPParams	*params = &camera->pl->params;
+	PTPObject	*ob;
+	PTPStorageInfo	si;
+	CameraFile	*file = NULL;
+	uint32_t	storageid;
+	uint16_t	ofc;
+	uint16_t	ret;
+	int		res;
+
+	if (params->deviceinfo.VendorExtensionID != PTP_VENDOR_FUJI)
+		return;
+	if (!handle || (handle == 0x80000001)) /* 0x80000001 is the liveview image */
+		return;
+	if (!ptp_operation_issupported (params, PTP_OC_DeleteObject))
+		return;
+
+	if (PTP_RC_OK != ptp_object_want (params, handle, PTPOBJECT_OBJECTINFO_LOADED, &ob))
+		return;
+	/* copy what we need, the cache pointer might get invalidated */
+	storageid = ob->oi.StorageID;
+	ofc       = ob->oi.ObjectFormat;
+	if (ofc == PTP_OFC_Association)
+		return;
+
+	memset (&si, 0, sizeof(si));
+	ret = ptp_getstorageinfo (params, storageid, &si);
+	free (si.StorageDescription);
+	free (si.VolumeLabel);
+	if (ret != PTP_RC_OK) {
+		GP_LOG_D ("fuji: no storageinfo for 0x%08x (0x%04x), keeping object 0x%08x", storageid, ret, handle);
+		return;
+	}
+	if ((si.StorageType == PTP_ST_RemovableROM) || (si.StorageType == PTP_ST_RemovableRAM)) {
+		GP_LOG_D ("fuji: object 0x%08x is on removable storage 0x%08x, keeping it", handle, storageid);
+		return;
+	}
+
+	/* Make sure the image is in the virtual filesystem before deleting it on the camera.
+	 * If it was already uploaded during capture this is served from the cache. */
+	if (GP_OK != gp_file_new (&file))
+		return;
+	res = gp_filesystem_get_file (camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+	if (res == GP_OK)
+		res = gp_filesystem_set_file_noop (camera->fs, path->folder, path->name, GP_FILE_TYPE_NORMAL, file, context);
+	gp_file_unref (file);
+	if (res != GP_OK) {
+		GP_LOG_E ("fuji: could not cache %s/%s (%d), keeping object 0x%08x on camera", path->folder, path->name, res, handle);
+		return;
+	}
+
+	GP_LOG_D ("fuji: releasing tether buffer object 0x%08x (%s/%s, storage 0x%08x, type 0x%04x)",
+		  handle, path->folder, path->name, storageid, si.StorageType);
+	ret = ptp_deleteobject (params, handle, 0);
+	if (ret != PTP_RC_OK)
+		GP_LOG_E ("fuji: deleteobject(0x%08x) failed: 0x%04x", handle, ret);
+}
+
 static int
 camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *path, GPContext *context)
 {
@@ -5581,6 +5652,10 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 		}
 		if (gotone)  {
 			free_array (&beforehandles);
+			/* Release the returned image from the tether buffer. Earlier images
+			 * (RAW+JPG) were queued as ObjectAdded events and are released when
+			 * they are reported by camera_wait_for_event(). */
+			fuji_release_tether_object (camera, path, newobject, context);
 			return GP_OK;
 		}
 
@@ -5639,6 +5714,9 @@ camera_fuji_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pat
 
 		if (gotone)  {
 			free_array (&beforehandles);
+			/* see above */
+			if (newobject)
+				fuji_release_tether_object (camera, path, newobject, context);
 			return GP_OK;
 		}
 	}  while (waiting_for_timeout (&back_off_wait, event_start, waittime));
@@ -7642,6 +7720,9 @@ handleregular:
 		} else {
 			*eventtype = GP_EVENT_FILE_ADDED;
 			*eventdata = path;
+			/* Fuji: camera-triggered captures and queued RAW+JPG images also
+			 * sit in the tether buffer until released, see fuji_release_tether_object(). */
+			fuji_release_tether_object (camera, path, event.Param1, context);
 		}
 		break;
 	}
@@ -9435,6 +9516,15 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	uint32_t handle;
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 	handle = find_child(params, filename, storage, handle, NULL);
+
+	/* Fuji: captured images are already released from the tether buffer by
+	 * fuji_release_tether_object(), only the virtual fs copy is left. */
+	if (	(params->deviceinfo.VendorExtensionID == PTP_VENDOR_FUJI) &&
+		(handle == PTP_HANDLER_SPECIAL)
+	) {
+		GP_LOG_D ("fuji: %s/%s no longer on camera (already released), only removing it from the filesystem", folder, filename);
+		return GP_OK;
+	}
 
 	C_PTP (ptp_deleteobject(params, handle, 0));
 
