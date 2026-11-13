@@ -189,10 +189,10 @@ fixup_cached_deviceinfo (Camera *camera, PTPDeviceInfo *di) {
 
 	gp_camera_get_abilities(camera, &a);
 
-	/* Panasonic GH5, GC9 */
+	/* Panasonic GH5, G9, S5M2 */
 	if (    (di->VendorExtensionID == PTP_VENDOR_PANASONIC) &&
 		(camera->port->type == GP_PORT_USB) &&
-		(a.usb_product == 0x2382)
+		((a.usb_product == 0x2382) || (a.usb_product == 0x2384))
 	) {
 		C_MEM (di->Operations = realloc(di->Operations,sizeof(di->Operations[0])*(di->Operations_len + 9)));
 		di->Operations[di->Operations_len+0] = PTP_OC_PANASONIC_GetProperty;
@@ -1919,6 +1919,8 @@ static struct {
 	{"Panasonic:DMC-GF1",             0x04da, 0x2374, 0},
 	/* Matthias <mattjowil@hotmail.com>: The Panasonic Lumix DC-G9 reports the same vendor and product ID (04da:2382) */
 	{"Panasonic:DC-GH5",		  0x04da, 0x2382, PTP_CAP|PTP_CAP_PREVIEW},
+	/* DC-S5M2 (USB mode used by the LUMIX Flow app) */
+	{"Panasonic:DC-S5M2",		  0x04da, 0x2384, PTP_CAP|PTP_CAP_PREVIEW},
 
 
 	/* Søren Krarup Olesen <sko@acoustics.aau.dk> */
@@ -4124,7 +4126,8 @@ ignoreerror:
 			if(tries <= 0)
 				return translate_ptp_result (ret);
 			ret = ptp_panasonic_liveview_image (params, &ximage, &size);
-			if(ret == PTP_RC_DeviceBusy) {
+			/* S5M2 answers NoValidObjectInfo until the first frame is ready */
+			if((ret == PTP_RC_DeviceBusy) || (ret == PTP_RC_NoValidObjectInfo)) {
 				usleep(40000);
 				continue;
 			} else {
@@ -9999,6 +10002,21 @@ camera_init (Camera *camera, GPContext *context)
 	/* We have cameras where a response takes 15 seconds(!), so make
 	 * post init timeouts longer */
 	CR (gp_port_set_timeout (camera->port, normal_timeout));
+
+	/* Panasonic S5M2: the vendor session must be opened as well, otherwise
+	 * GetLiveViewData (0x9706) only ever returns NoValidObjectInfo. The
+	 * LUMIX Flow app sends this right after OpenSession. */
+	if ((camera->port->type == GP_PORT_USB) && (a.usb_vendor == 0x04da) && (a.usb_product == 0x2384)) {
+		ret = ptp_generic_no_data (params, PTP_OC_PANASONIC_OpenSession, 1, 0x00010001);
+		if ((ret != PTP_RC_OK) && (ret != PTP_RC_SessionAlreadyOpened))
+			GP_LOG_E ("Panasonic OpenSession failed: 0x%04x", ret);
+
+		/* FlowState = 1 tells the camera a host may record; without it
+		 * MovieRecControl (0x940C) answers DeviceBusy. */
+		ret = ptp_panasonic_setflowstate (params, 1);
+		if (ret != PTP_RC_OK)
+			GP_LOG_E ("Panasonic FlowState set failed: 0x%04x", ret);
+	}
 
 	if (params->device_flags & DEVICE_FLAG_OLYMPUS_XML_WRAPPED) {
 		unsigned char	*data;

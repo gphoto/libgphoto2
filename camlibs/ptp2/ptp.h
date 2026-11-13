@@ -5416,6 +5416,7 @@ uint16_t ptp_fuji_getdeviceinfo (PTPParams* params, uint16_t **props, unsigned i
 uint16_t ptp_panasonic_liveview_image (PTPParams* params, unsigned char **data, unsigned int *size);
 #define ptp_panasonic_movierec(params,enable) ptp_generic_no_data(params,PTP_OC_PANASONIC_MovieRecControl,1,enable?0x07000011:0x07000012)
 
+uint16_t ptp_panasonic_setflowstate (PTPParams* params, uint16_t state);
 uint16_t ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode, unsigned char *value, uint16_t valuesize);
 uint16_t ptp_panasonic_getdeviceproperty (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
 uint16_t ptp_panasonic_getrecordingstatus (PTPParams *params, uint32_t propcode, uint16_t *valuesize, uint32_t *currentValue);
