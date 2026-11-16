@@ -3346,9 +3346,23 @@ ptp_list_folder_eos (PTPParams *params, uint32_t storage, uint32_t handle, PTPOb
 	return PTP_RC_OK;
 }
 
+/* Mark a directory object as fully listed. Looked up again by handle, since
+ * listing may have grown or re-sorted params->objects. */
+static void
+ptp_list_folder_mark_loaded (PTPParams *params, uint32_t handle)
+{
+	PTPObject	*ob;
+
+	if (!handle)
+		return;
+	if (ptp_find_object_in_cache (params, handle, &ob) == PTP_RC_OK)
+		ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
+}
+
 uint16_t
 ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle, PTPObjectHandles *children) {
 	unsigned int		changed, last;
+	uint32_t		dirhandle;
 	uint16_t		ret;
 	uint32_t		xhandle = handle;
 	PTPObjectHandles	handles = {0};
@@ -3388,17 +3402,22 @@ ptp_list_folder (PTPParams *params, uint32_t storage, uint32_t handle, PTPObject
 			}
 			return PTP_RC_OK;
 		}
-		ob->flags |= PTPOBJECT_DIRECTORY_LOADED;
+		/* PTPOBJECT_DIRECTORY_LOADED is only set once the listing succeeded (see below),
+		 * so a failed query (e.g. camera disconnected) is retried on the next call
+		 * instead of returning a cached empty listing. */
 		/*log_objectinfo(params, handle, &ob->oi);*/
 	}
+	dirhandle = handle;
 
 	/* Canon EOS Fast directory strategy */
 	if ((params->deviceinfo.VendorExtensionID == PTP_VENDOR_CANON) &&
 	    storage != PTP_HANDLER_SPECIAL &&
 	    ptp_operation_issupported(params, PTP_OC_CANON_EOS_GetObjectInfoEx)) {
 		ret = ptp_list_folder_eos (params, storage, handle, children);
-		if (ret == PTP_RC_OK)
+		if (ret == PTP_RC_OK) {
+			ptp_list_folder_mark_loaded (params, dirhandle);
 			return ret;
+		}
 	}
 
 #if 0 /* apple devices report it, but the conrtent they have does not match the standard somehow. Needs further debugging */
@@ -3533,6 +3552,7 @@ fallback:
 	}
 	if (changed)
 		ptp_objects_sort (params);
+	ptp_list_folder_mark_loaded (params, dirhandle);
 	if (children)
 		*children = handles;
 	else
