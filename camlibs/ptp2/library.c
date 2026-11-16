@@ -8390,6 +8390,8 @@ folder_to_handle_rc (PTPParams *params, const char *folder, uint32_t storage, ui
 static int
 find_storage_and_handle_from_path(PTPParams *params, const char *folder, uint32_t *storage_id, uint32_t *handle)
 {
+	const char *path = folder;
+
 	/* Parse the storage prefix, e.g. "/store_xxxxxxxx"*/
 	if (strncmp(folder, "/"STORAGE_FOLDER_PREFIX, strlen("/"STORAGE_FOLDER_PREFIX)) ||
 	    strlen(folder) < strlen("/"STORAGE_FOLDER_PREFIX) + 8
@@ -8402,6 +8404,12 @@ find_storage_and_handle_from_path(PTPParams *params, const char *folder, uint32_
 	folder += strlen("/"STORAGE_FOLDER_PREFIX) + 8;
 
 	C_PTP (folder_to_handle_rc(params, folder, *storage_id, 0, NULL, handle));
+	/* Do not hand out PTP_HANDLER_SPECIAL for a missing folder: callers would
+	 * treat it as "storage root" (e.g. put_file_func, make_dir_func). */
+	if (*handle == PTP_HANDLER_SPECIAL) {
+		GP_LOG_E ("folder '%s' not found on device", path);
+		return GP_ERROR_DIRECTORY_NOT_FOUND;
+	}
 
 	return GP_OK;
 }
@@ -8814,7 +8822,11 @@ mtp_put_playlist(
 		*filename = '\0';filename++;
 
 		ret = find_storage_and_handle_from_path(params, fn, &storage, &handle);
-		if (ret == GP_OK) {
+		if (ret == GP_ERROR_DIRECTORY_NOT_FOUND) {
+			/* skip entries in missing folders, like missing files below */
+			handle = PTP_HANDLER_SPECIAL;
+			ret = GP_OK;
+		} else if (ret == GP_OK) {
 			pret = find_child_rc(params, filename, storage, handle, NULL, &handle);
 			if (pret != PTP_RC_OK)
 				ret = translate_ptp_result (pret);
