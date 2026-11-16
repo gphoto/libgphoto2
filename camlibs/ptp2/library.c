@@ -8407,7 +8407,7 @@ find_storage_and_handle_from_path(PTPParams *params, const char *folder, uint32_
 	/* Do not hand out PTP_HANDLER_SPECIAL for a missing folder: callers would
 	 * treat it as "storage root" (e.g. put_file_func, make_dir_func). */
 	if (*handle == PTP_HANDLER_SPECIAL) {
-		GP_LOG_E ("folder '%s' not found on device", path);
+		GP_LOG_D ("folder '%s' not found on device", path);
 		return GP_ERROR_DIRECTORY_NOT_FOUND;
 	}
 
@@ -8422,8 +8422,18 @@ generic_list_func (PTPParams *params, const char *folder, int is_directory, Came
 	 */
 
 	uint32_t storage, parent;
+	int ret;
 
-	CR (find_storage_and_handle_from_path(params, folder, &storage, &parent));
+	ret = find_storage_and_handle_from_path(params, folder, &storage, &parent);
+	if (ret == GP_ERROR_DIRECTORY_NOT_FOUND) {
+		/* The folder is known to the gphoto2 filesystem (e.g. added via
+		 * gp_filesystem_append() after a capture, from the object's parent
+		 * chain), but cannot be resolved by name. List it as empty, as before,
+		 * so appending captured files to it keeps working. */
+		GP_LOG_D ("folder '%s' not found on device, listing it as empty", folder);
+		return GP_OK;
+	}
+	CR (ret);
 
 	/* list this directory */
 	PTPObjectHandles handles = {0};
