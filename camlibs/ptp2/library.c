@@ -8338,7 +8338,9 @@ find_child_rc (PTPParams *params, const char *path, uint32_t storage, uint32_t h
 
 		if (PTP_RC_OK != ptp_object_want (params, *poid, PTPOBJECT_OBJECTINFO_LOADED, &ob)) // refresh
 			continue; /* object might have been deleted but ObjectRemoved event not handled, yet */
-		if (!strncmp (ob->oi.Filename, path, filename_len)) {
+		/* match the whole path component, not just a prefix ("100" must not match "100CANON") */
+		if (ob->oi.Filename && strlen (ob->oi.Filename) == filename_len &&
+		    !strncmp (ob->oi.Filename, path, filename_len)) {
 			if (retob)
 				*retob = ob;
 			*child = *poid;
