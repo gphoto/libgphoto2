@@ -8351,16 +8351,6 @@ find_child_rc (PTPParams *params, const char *path, uint32_t storage, uint32_t h
 	return PTP_RC_OK;
 }
 
-static uint32_t
-find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t handle, PTPObject **retob)
-{
-	uint32_t child;
-
-	if (find_child_rc (params, path, storage, handle, retob, &child) != PTP_RC_OK)
-		return PTP_HANDLER_SPECIAL;
-	return child;
-}
-
 /* Resolve 'folder' below 'parent' into *handle, PTP_HANDLER_SPECIAL if it does
  * not exist. Returns the PTP error if a folder on the way could not be listed. */
 static uint16_t
@@ -8395,16 +8385,6 @@ folder_to_handle_rc (PTPParams *params, const char *folder, uint32_t storage, ui
 		return folder_to_handle_rc(params, folder + 1, storage, child, retob, handle);
 	*handle = child;
 	return PTP_RC_OK;
-}
-
-static uint32_t
-folder_to_handle(PTPParams *params, const char *folder, uint32_t storage, uint32_t parent, PTPObject **retob)
-{
-	uint32_t handle;
-
-	if (folder_to_handle_rc (params, folder, storage, parent, retob, &handle) != PTP_RC_OK)
-		return PTP_HANDLER_SPECIAL;
-	return handle;
 }
 
 static int
@@ -8810,7 +8790,8 @@ mtp_put_playlist(
 	unsigned char	data[1];
 	uint32_t	storage = 0, handle, playlistid;
 	uint32_t	*oids = NULL;
-	int		nrofoids = 0;
+	int		nrofoids = 0, ret;
+	uint16_t	pret;
 	PTPParams 	*params = &camera->pl->params;
 
 	while (*s) {
@@ -8832,8 +8813,17 @@ mtp_put_playlist(
 		}
 		*filename = '\0';filename++;
 
-		CR (find_storage_and_handle_from_path(params, fn, &storage, &handle));
-		handle = find_child(params, filename, storage, handle, NULL);
+		ret = find_storage_and_handle_from_path(params, fn, &storage, &handle);
+		if (ret == GP_OK) {
+			pret = find_child_rc(params, filename, storage, handle, NULL, &handle);
+			if (pret != PTP_RC_OK)
+				ret = translate_ptp_result (pret);
+		}
+		if (ret < GP_OK) {
+			free (fn);
+			free (oids);
+			return ret;
+		}
 		if (handle != PTP_HANDLER_SPECIAL) {
 			C_MEM (oids = realloc(oids, sizeof(oids[0])*(nrofoids+1)));
 			oids[nrofoids] = handle;
@@ -8964,7 +8954,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, &ob);
+	C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 	if (handle == PTP_HANDLER_SPECIAL) {
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -9085,7 +9075,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, &ob);
+	C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 	if (handle == PTP_HANDLER_SPECIAL) {
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -9363,7 +9353,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			PTPObject	*ob;
 
 			CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-			handle = find_child(params, filename, storage, handle, &ob);
+			C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 			if (handle == PTP_HANDLER_SPECIAL) {
 				gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
 				return (GP_ERROR_BAD_PARAMETERS);
@@ -9382,7 +9372,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
 	/* We don't really want a file to exist with the same name twice. */
-	handle = find_child (params, filename, storage, parent, NULL);
+	C_PTP (find_child_rc(params, filename, storage, parent, NULL, &handle));
 	if (handle != PTP_HANDLER_SPECIAL) {
 		GP_LOG_D ("%s/%s exists.", folder, filename);
 		return GP_ERROR_FILE_EXISTS;
@@ -9471,7 +9461,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	C_PTP_REP (ptp_check_event (params));
 	uint32_t handle;
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, NULL);
+	C_PTP (find_child_rc(params, filename, storage, handle, NULL, &handle));
 	/* never send DeleteObject(0xffffffff): that requests deletion of all objects */
 	if (handle == PTP_HANDLER_SPECIAL) {
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
@@ -9514,7 +9504,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	C_PTP_REP (ptp_check_event (params));
 	uint32_t handle;
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, foldername, storage, handle, NULL);
+	C_PTP (find_child_rc(params, foldername, storage, handle, NULL, &handle));
 	if (handle == PTP_HANDLER_SPECIAL)
 		return GP_ERROR;
 	C_PTP_REP (ptp_deleteobject(params, handle, 0));
@@ -9537,7 +9527,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	camera->pl->checkevents = TRUE;
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, &ob);
+	C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 	if (handle == PTP_HANDLER_SPECIAL)
 		return GP_ERROR;
 
@@ -9578,7 +9568,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	C_PARAMS (strcmp (folder, "/special"));
 
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, &ob);
+	C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 	if (handle == PTP_HANDLER_SPECIAL)
 		return GP_ERROR;
 
@@ -9678,7 +9668,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	 */
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
-	handle = folder_to_handle (params, foldername, storage, parent, NULL);
+	C_PTP (folder_to_handle_rc(params, foldername, storage, parent, NULL, &handle));
 	if (handle != PTP_HANDLER_SPECIAL)
 		return GP_ERROR_DIRECTORY_EXISTS;
 
