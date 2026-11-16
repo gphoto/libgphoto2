@@ -957,18 +957,29 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 
 	/* If the folder is dirty, delete the contents and query the camera */
 	if (f->files_dirty && fs->file_list_func) {
+		int ret;
+
 		GP_LOG_D ("Querying folder %s...", folder);
 		CR (delete_all_files (fs, f));
 
 		/* set it to non-dirty now, so we do not recurse via _append. */
 		f->files_dirty = 0;
-		CR (fs->file_list_func (fs, folder, list,
-					fs->data, context));
-
-		CR (count = gp_list_count (list));
-		for (y = 0; y < count; y++) {
-			CR (gp_list_get_name (list, y, &name));
-			CR (internal_append (fs, f, name, context));
+		ret = fs->file_list_func (fs, folder, list, fs->data, context);
+		if (ret >= GP_OK) {
+			ret = count = gp_list_count (list);
+			for (y = 0; ret >= GP_OK && y < count; y++) {
+				ret = gp_list_get_name (list, y, &name);
+				if (ret >= GP_OK)
+					ret = internal_append (fs, f, name, context);
+			}
+		}
+		if (ret < GP_OK) {
+			/* Do not cache a failed (e.g. camera disconnected) or
+			 * partial listing, so the next call queries again. */
+			delete_all_files (fs, f);
+			f->files_dirty = 1;
+			gp_list_reset (list);
+			return ret;
 		}
 		gp_list_reset (list);
 	}
