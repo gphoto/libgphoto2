@@ -349,11 +349,14 @@ delete_folder (CameraFilesystem *fs, CameraFilesystemFolder **folder)
 	return (GP_OK);
 }
 
+/* Returns NULL if the folder does not exist. If err is given and listing one of
+ * the parent folders failed (e.g. camera disconnected), that error is stored
+ * there, so callers can report it instead of "directory not found". */
 static CameraFilesystemFolder*
 lookup_folder (
 	CameraFilesystem *fs,
 	CameraFilesystemFolder *folder, const char *foldername,
-	GPContext *context
+	int *err, GPContext *context
 ) {
 	CameraFilesystemFolder	*f;
 	const char	*curpt = foldername;
@@ -387,9 +390,13 @@ lookup_folder (
 			if (ret == GP_OK) {
 				ret = gp_filesystem_list_folders (fs, copy, list, context);
 				gp_list_free (list);
-				GP_LOG_D ("Done making folder %s clean...", copy);
-			} else {
+			}
+			if (ret < GP_OK) {
 				GP_LOG_D ("Making folder %s clean failed: %d", copy, ret);
+				if (err)
+					*err = ret;
+			} else {
+				GP_LOG_D ("Done making folder %s clean...", copy);
 			}
 			free (copy);
 		}
@@ -414,6 +421,19 @@ lookup_folder (
 	return NULL;
 }
 
+/* Like lookup_folder(), but returns a gphoto2 error code: GP_OK, the error of a
+ * failed parent folder listing, or GP_ERROR_DIRECTORY_NOT_FOUND. */
+static int
+find_folder (
+	CameraFilesystem *fs, const char *foldername,
+	CameraFilesystemFolder **folder, GPContext *context
+) {
+	int err = GP_ERROR_DIRECTORY_NOT_FOUND;
+
+	*folder = lookup_folder (fs, fs->rootfolder, foldername, &err, context);
+	return *folder ? GP_OK : err;
+}
+
 static int
 lookup_folder_file (
 	CameraFilesystem *fs,
@@ -425,8 +445,7 @@ lookup_folder_file (
 	CameraFilesystemFile*	f;
 
 	GP_LOG_D ("Lookup folder %s file %s", folder, filename);
-	xf = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!xf) return GP_ERROR_DIRECTORY_NOT_FOUND;
+	CR (find_folder (fs, folder, &xf, context));
 	/* Check if we need to load the filelist of the folder ... */
 	if (xf->files_dirty) {
 		CameraList	*list;
@@ -442,8 +461,10 @@ lookup_folder_file (
 			gp_list_free (list);
 			GP_LOG_D ("Done making folder %s clean...", folder);
 		}
-		if (ret != GP_OK)
+		if (ret != GP_OK) {
 			GP_LOG_D ("Making folder %s clean failed: %d", folder, ret);
+			return ret;
+		}
 	}
 
 	f = xf->files;
@@ -485,7 +506,7 @@ delete_all_folders (CameraFilesystem *fs, const char *foldername,
 	CC (context);
 	CA (foldername, context);
 
-	folder = lookup_folder (fs, fs->rootfolder, foldername, context);
+	folder = lookup_folder (fs, fs->rootfolder, foldername, NULL, context);
 	if (!folder) return GP_OK;
 	return recurse_delete_folder (fs, folder);
 }
@@ -742,7 +763,7 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 
 	GP_LOG_D ("Append %s/%s to filesystem", folder, filename);
 	/* Check folder for existence, if not, create it. */
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
+	f = lookup_folder (fs, fs->rootfolder, folder, NULL, context);
 	if (!f)
 		CR (append_folder (fs, folder, &f, context));
 	if (f->files_dirty) { /* Need to load folder from driver first ... capture case */
@@ -886,8 +907,7 @@ gp_filesystem_delete_all (CameraFilesystem *fs, const char *folder,
 
 	GP_LOG_D ("Deleting all from %s", folder);
 	/* Make sure this folder exists */
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	CR (find_folder (fs, folder, &f, context));
 
 	if (!fs->delete_all_func)
 		return gp_filesystem_delete_all_one_by_one (fs, folder, context);
@@ -952,8 +972,7 @@ gp_filesystem_list_files (CameraFilesystem *fs, const char *folder,
 	gp_list_reset (list);
 
 	/* Search the folder */
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	CR (find_folder (fs, folder, &f, context));
 
 	/* If the folder is dirty, delete the contents and query the camera */
 	if (f->files_dirty && fs->file_list_func) {
@@ -1026,8 +1045,7 @@ gp_filesystem_list_folders (CameraFilesystem *fs, const char *folder,
 	gp_list_reset (list);
 
 	/* Search the folder */
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	CR (find_folder (fs, folder, &f, context));
 
 
 	/* If the folder is dirty, query the contents. */
@@ -1079,8 +1097,7 @@ gp_filesystem_count (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	CR (find_folder (fs, folder, &f, context));
 
 	x = 0;
 	file = f->files;
@@ -1188,8 +1205,7 @@ gp_filesystem_make_dir (CameraFilesystem *fs, const char *folder,
 		return (GP_ERROR_NOT_SUPPORTED);
 
 	/* Search the folder */
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	CR (find_folder (fs, folder, &f, context));
 
 	/* Create the directory */
 	CR (fs->make_dir_func (fs, folder, name, fs->data, context));
@@ -1226,8 +1242,7 @@ gp_filesystem_remove_dir (CameraFilesystem *fs, const char *folder,
 	 * Make sure there are neither files nor folders in the folder
 	 * that is to be removed.
 	 */
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	CR (find_folder (fs, folder, &f, context));
 	/* Check if we need to load the folder ... */
 	if (f->folders_dirty) {
 		CameraList	*list;
@@ -1304,8 +1319,7 @@ gp_filesystem_put_file (CameraFilesystem *fs,
 	}
 
 	/* Search the folder */
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	CR (find_folder (fs, folder, &f, context));
 
 	/* Upload the file */
 	CR (fs->put_file_func (fs, folder, filename, type, file, fs->data, context));
@@ -1347,8 +1361,7 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
 	CC (context);
 	CA (folder, context);
 
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	CR (find_folder (fs, folder, &f, context));
 
 	file = f->files;
 	count = 0;
@@ -1395,8 +1408,7 @@ gp_filesystem_number (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
-	f = lookup_folder (fs, fs->rootfolder, folder, context);
-	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
+	CR (find_folder (fs, folder, &f, context));
 
 	file = f->files;
 	num = 0;
