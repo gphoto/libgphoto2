@@ -8310,19 +8310,24 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 #undef SUMMARY_END
 }
 
-static uint32_t
-find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t handle, PTPObject **retob)
+/* Look up the child named by the first component of 'path' in folder 'handle'.
+ * Sets *child to PTP_HANDLER_SPECIAL if there is no such child. Returns the
+ * PTP error if the folder could not be listed (e.g. camera disconnected), so it
+ * is not mistaken for a missing child. */
+static uint16_t
+find_child_rc (PTPParams *params, const char *path, uint32_t storage, uint32_t handle, PTPObject **retob, uint32_t *child)
 {
 	uint16_t ret;
-	uint32_t found_child;
 
 	const char *slash = strchr (path, '/');
 	size_t filename_len = slash ? (size_t)(slash - path) : strlen(path);
 
+	*child = PTP_HANDLER_SPECIAL;
+
 	PTPObjectHandles handles = {0};
 	ret = ptp_list_folder (params, storage, handle, &handles);
 	if (ret != PTP_RC_OK)
-		return PTP_HANDLER_SPECIAL;
+		return ret;
 
 	for_each (uint32_t*, poid, handles) {
 		PTPObject *ob;
@@ -8336,38 +8341,68 @@ find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t hand
 		if (!strncmp (ob->oi.Filename, path, filename_len)) {
 			if (retob)
 				*retob = ob;
-			found_child = *poid;
-			free_array (&handles);
-			return found_child;
+			*child = *poid;
+			break;
 		}
 	}
 	free_array (&handles);
-	/* else not found */
-	return PTP_HANDLER_SPECIAL;
+	return PTP_RC_OK;
+}
+
+static uint32_t
+find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t handle, PTPObject **retob)
+{
+	uint32_t child;
+
+	if (find_child_rc (params, path, storage, handle, retob, &child) != PTP_RC_OK)
+		return PTP_HANDLER_SPECIAL;
+	return child;
+}
+
+/* Resolve 'folder' below 'parent' into *handle, PTP_HANDLER_SPECIAL if it does
+ * not exist. Returns the PTP error if a folder on the way could not be listed. */
+static uint16_t
+folder_to_handle_rc (PTPParams *params, const char *folder, uint32_t storage, uint32_t parent, PTPObject **retob, uint32_t *handle)
+{
+	uint16_t ret;
+	uint32_t child;
+
+	GP_LOG_D("(folder='%s', storage=0x%08x, parent=0x%08x)", folder, storage, parent);
+	if (retob) *retob = NULL;
+	if (!strlen(folder) || !strcmp(folder, "/")) {
+		*handle = PTP_HANDLER_ROOT;
+		return PTP_RC_OK;
+	}
+
+	if (folder[0] == '/')
+		folder++;
+
+	ret = find_child_rc (params, folder, storage, parent, retob, &child);
+	if (ret != PTP_RC_OK) {
+		*handle = PTP_HANDLER_SPECIAL;
+		return ret;
+	}
+	if (child == PTP_HANDLER_SPECIAL) {
+		GP_LOG_D("could not find (sub-)path '%s' below storage=%08x / handle=%08x", folder, storage, parent);
+		*handle = child;
+		return PTP_RC_OK;
+	}
+
+	folder = strchr(folder, '/');
+	if (folder && folder[1] != 0)
+		return folder_to_handle_rc(params, folder + 1, storage, child, retob, handle);
+	*handle = child;
+	return PTP_RC_OK;
 }
 
 static uint32_t
 folder_to_handle(PTPParams *params, const char *folder, uint32_t storage, uint32_t parent, PTPObject **retob)
 {
-	GP_LOG_D("(folder='%s', storage=0x%08x, parent=0x%08x)", folder, storage, parent);
-	if (retob) *retob = NULL;
-	if (!strlen(folder) || !strcmp(folder, "/"))
-		return PTP_HANDLER_ROOT;
+	uint32_t handle;
 
-	if (folder[0] == '/')
-		folder++;
-
-	uint32_t child = find_child (params, folder, storage, parent, retob);
-	if (child == PTP_HANDLER_SPECIAL) {
-		GP_LOG_D("could not find (sub-)path '%s' below storage=%08x / handle=%08x", folder, storage, parent);
-		return child;
-	}
-
-	folder = strchr(folder, '/');
-	if (folder && folder[1] != 0)
-		return folder_to_handle(params, folder + 1, storage, child, retob);
-	else
-		return child;
+	if (folder_to_handle_rc (params, folder, storage, parent, retob, &handle) != PTP_RC_OK)
+		return PTP_HANDLER_SPECIAL;
+	return handle;
 }
 
 static int
@@ -8384,7 +8419,7 @@ find_storage_and_handle_from_path(PTPParams *params, const char *folder, uint32_
 	*storage_id = strtoul(folder + strlen("/"STORAGE_FOLDER_PREFIX), NULL, 16);
 	folder += strlen("/"STORAGE_FOLDER_PREFIX) + 8;
 
-	*handle = folder_to_handle(params, folder, *storage_id, 0, NULL);
+	C_PTP (folder_to_handle_rc(params, folder, *storage_id, 0, NULL, handle));
 
 	return GP_OK;
 }
