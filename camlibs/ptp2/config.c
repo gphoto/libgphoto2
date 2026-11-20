@@ -14207,7 +14207,9 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					else
 						continue;
 				}
-				gp_widget_set_changed (widget, FALSE); /* clear flag */
+				/* only clear the flag on success, so a retry of the same window re-sends a failed value */
+				if (ret == GP_OK)
+					gp_widget_set_changed (widget, FALSE); /* clear flag */
 				if (mode == MODE_SINGLE_SET)
 					return ret;
 			}
@@ -14217,12 +14219,13 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 
 				if ((mode == MODE_SINGLE_SET) && strcmp (confname, cursub->name))
 					continue;
-				gp_widget_set_changed (widget, FALSE); /* clear flag */
 				GP_LOG_D ("Setting property '%s' / 0x%04x", cursub->label, cursub->propid);
 				memset(&dpd,0,sizeof(dpd));
 				ret = cursub->putfunc (camera, widget, &propval, &dpd, &alreadyset);
 				if (ret != GP_OK)
 					gp_context_error (context, _("Parsing the value of widget '%s' / 0x%04x failed with %d."), _(cursub->label), cursub->propid, ret);
+				else
+					gp_widget_set_changed (widget, FALSE); /* clear flag only on success */
 				if (mode == MODE_SINGLE_SET)
 					return ret;
 			}
