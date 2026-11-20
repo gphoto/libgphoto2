@@ -453,7 +453,7 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		uint64_t	xsize = 0;
 		int		ret;
 
-		C_PARAMS (file->handler->read);
+		C_PARAMS (file->handler->size);
 		ret = file->handler->size (file->private, &xsize);
 		if (ret != GP_OK) {
 			GP_LOG_E ("Encountered error %d querying size().", ret);
@@ -462,6 +462,7 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		if (size) *size = xsize;
 		if (!data) /* just the size... */
 			return GP_OK;
+		C_PARAMS (file->handler->read);
 		C_MEM (*data = malloc (xsize));
 		ret = file->handler->read (file->private, (unsigned char*)*data, &xsize);
 		if (ret != GP_OK) {
