@@ -311,6 +311,12 @@ gp_file_slurp (CameraFile *file, char *data,
  * @param size
  * @return a gphoto2 error code.
  *
+ * On success, the #file takes over the ownership of data, which needs
+ * to be allocated with malloc(), and frees it when no longer needed.
+ *
+ * On failure, data is still owned by the caller and needs to be free()d
+ * to avoid memory leaks.
+ *
  **/
 int
 gp_file_set_data_and_size (CameraFile *file, char *data,
