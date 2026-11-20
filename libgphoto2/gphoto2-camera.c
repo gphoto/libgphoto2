@@ -854,7 +854,7 @@ gp_camera_init (Camera *camera, GPContext *context)
 int
 gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 {
-	C_PARAMS (camera);
+	C_PARAMS (camera && window);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->get_config) {
@@ -892,7 +892,7 @@ gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **wi
 	const char		*label;
 	int			ret, ro;
 
-	C_PARAMS (camera);
+	C_PARAMS (camera && name && widget);
 	CHECK_INIT (camera, context);
 
 	if (camera->functions->get_single_config) {
@@ -1048,7 +1048,7 @@ gp_camera_list_config (Camera *camera, CameraList *list, GPContext *context)
 {
 	CameraWidget		*rootwidget;
 	int			ret;
-	C_PARAMS (camera);
+	C_PARAMS (camera && list);
 	CHECK_INIT (camera, context);
 
 	if (camera->functions->list_config) {
@@ -1134,7 +1134,7 @@ gp_camera_set_single_config (Camera *camera, const char *name, CameraWidget *wid
 	CameraWidgetType	type;
 	int			ret;
 
-	C_PARAMS (camera);
+	C_PARAMS (camera && name && widget);
 	CHECK_INIT (camera, context);
 
 	if (camera->functions->set_single_config) {
@@ -1436,7 +1436,7 @@ gp_camera_wait_for_event (Camera *camera, int timeout,
 			  CameraEventType *eventtype, void **eventdata,
 			  GPContext *context)
 {
-	C_PARAMS (camera);
+	C_PARAMS (camera && eventtype && eventdata);
 	CHECK_INIT (camera, context);
 
 	if (!camera->functions->wait_for_event) {
