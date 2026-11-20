@@ -432,6 +432,11 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		if (size) *size = offset;
 		if (!data) /* just the size... */
 			return GP_OK;
+		/* malloc(0) might return NULL, which isn't a lack of memory */
+		if (!offset) {
+			*data = NULL;
+			return GP_OK;
+		}
 		C_MEM (*data = malloc (offset));
 		while (curread < offset) {
 			ssize_t res = read (file->fd, (char*)((*data)+curread), offset-curread);
@@ -462,6 +467,11 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 		if (size) *size = xsize;
 		if (!data) /* just the size... */
 			return GP_OK;
+		/* malloc(0) might return NULL, which isn't a lack of memory */
+		if (!xsize) {
+			*data = NULL;
+			return GP_OK;
+		}
 		C_MEM (*data = malloc (xsize));
 		ret = file->handler->read (file->private, (unsigned char*)*data, &xsize);
 		if (ret != GP_OK) {
