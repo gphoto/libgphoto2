@@ -468,8 +468,12 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 			GP_LOG_E ("Encountered error %d getting data().", ret);
 			free ((char*)*data);
 			*data = NULL;
+			return ret;
 		}
-		return ret;
+		/* The handler might have read less than its size() reported
+		 * (but never report more than the allocated buffer holds) */
+		if (size && (xsize < *size)) *size = xsize;
+		return GP_OK;
 	}
 	default:
 		GP_LOG_E ("Unknown file access type %d", file->accesstype);
