@@ -12510,7 +12510,7 @@ _get_nikon_create_wifi_profile (CONFIG_GET_ARGS)
 static int
 _put_nikon_create_wifi_profile (CONFIG_PUT_ARGS)
 {
-	int submenuno, ret;
+	int submenuno, ret, failed_ret = GP_OK;
 	CameraWidget *subwidget;
 
 	for (submenuno = 0; create_wifi_profile_submenu[submenuno].name ; submenuno++ ) {
@@ -12526,9 +12526,12 @@ _put_nikon_create_wifi_profile (CONFIG_PUT_ARGS)
 		gp_widget_set_changed (subwidget, FALSE);
 
 		ret = cursub->putfunc (camera, subwidget, NULL, NULL, NULL);
+		/* the other submenus are still put, but the (first) failure is reported */
+		if ((ret != GP_OK) && (failed_ret == GP_OK))
+			failed_ret = ret;
 	}
 
-	return GP_OK;
+	return failed_ret;
 }
 
 static struct submenu wifi_profiles_menu[] = {
@@ -12569,7 +12572,7 @@ _get_wifi_profiles_menu (CONFIG_MENU_GET_ARGS)
 static int
 _put_wifi_profiles_menu (CONFIG_MENU_PUT_ARGS)
 {
-	int submenuno, ret;
+	int submenuno, ret, failed_ret = GP_OK;
 	CameraWidget *subwidget;
 
 	for (submenuno = 0; wifi_profiles_menu[submenuno].name ; submenuno++ ) {
@@ -12580,9 +12583,12 @@ _put_wifi_profiles_menu (CONFIG_MENU_PUT_ARGS)
 			continue;
 
 		ret = cursub->putfunc (camera, subwidget, NULL, NULL, NULL);
+		/* the other submenus are still put, but the (first) failure is reported */
+		if ((ret != GP_OK) && (failed_ret == GP_OK))
+			failed_ret = ret;
 	}
 
-	return GP_OK;
+	return failed_ret;
 }
 
 static int
@@ -14098,7 +14104,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 	CameraWidget	*section, *widget = window, *subwindow;
 	uint16_t	ret_ptp;
 	unsigned int	menuno, submenuno;
-	int		ret;
+	int		ret, custom_ret = GP_OK;
 	PTPParams	*params = &camera->pl->params;
 	PTPPropValue	propval;
 	unsigned int	i;
@@ -14134,8 +14140,12 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 		}
 
 		if (!menus[menuno].submenus) { /* Custom menu */
-			if (mode == MODE_SET)
-				menus[menuno].putfunc(camera, section);
+			if (mode == MODE_SET) {
+				ret = menus[menuno].putfunc(camera, section);
+				/* reported at the end, so that it doesn't prevent setting the other properties */
+				if ((ret != GP_OK) && (custom_ret == GP_OK))
+					custom_ret = ret;
+			}
 			continue;
 		}
 		if ((menus[menuno].usb_vendorid != 0) && (ab.port == GP_PORT_USB)) {
@@ -14284,7 +14294,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 		}
 	}
 	if (!params->deviceinfo.DeviceProps_len)
-		return GP_OK;
+		return custom_ret;
 
 	if (mode == MODE_SET)
 		CR (gp_widget_get_child_by_label (subwindow, _("Other PTP Device Properties"), &section));
@@ -14377,7 +14387,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 		gp_context_error (context, _("Property '%s' not found."), confname);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	return GP_OK;
+	return custom_ret;
 }
 
 int
