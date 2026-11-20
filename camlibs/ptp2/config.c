@@ -14096,9 +14096,10 @@ static int
 _set_config (Camera *camera, const char *confname, CameraWidget *window, GPContext *context)
 {
 	CameraWidget	*section, *widget = window, *subwindow;
+	CameraWidget	*failed_widget = NULL;
 	uint16_t	ret_ptp;
 	unsigned int	menuno, submenuno;
-	int		ret;
+	int		ret, failed_ret = GP_OK;
 	PTPParams	*params = &camera->pl->params;
 	PTPPropValue	propval;
 	unsigned int	i;
@@ -14214,6 +14215,12 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 					}
 					ptp_free_devicepropdesc(&dpd);
 					if (ret != GP_OK) {
+						/* remember the failure, unless it's been superseded by
+						 * another match setting the (previously) failed widget */
+						if ((failed_ret == GP_OK) || !gp_widget_changed (failed_widget)) {
+							failed_ret = ret;
+							failed_widget = widget;
+						}
 						continue; /* see if we have another match */
 					}
 				} else {
@@ -14283,8 +14290,17 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				return ret;
 		}
 	}
+	/* report a failed standard property, unless another match set it after all
+	 * (clearing its flag, or returning already in single set mode), but only at
+	 * the end, so that it doesn't prevent setting the other properties */
+	if (failed_ret != GP_OK) {
+		if (mode == MODE_SINGLE_SET)
+			return failed_ret;
+		if (!gp_widget_changed (failed_widget))
+			failed_ret = GP_OK;
+	}
 	if (!params->deviceinfo.DeviceProps_len)
-		return GP_OK;
+		return failed_ret;
 
 	if (mode == MODE_SET)
 		CR (gp_widget_get_child_by_label (subwindow, _("Other PTP Device Properties"), &section));
@@ -14377,7 +14393,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 		gp_context_error (context, _("Property '%s' not found."), confname);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	return GP_OK;
+	return failed_ret;
 }
 
 int
