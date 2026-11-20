@@ -915,7 +915,7 @@ ptp_olympus_omd_capture (PTPParams* params)
 	unsigned int	size = 0;
 	unsigned char	*data = NULL;
 
-/* these two trigger the capture ... one might be "shutter down", the other "shutter up"? */
+	/* OM-1: confirmed full shutter press (3), then release (6). */
 	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_OMD_Capture, 0x3); // initiate capture
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_NODATA, 0, NULL, NULL));
 	PTP_CNT_INIT(ptp, PTP_OC_OLYMPUS_OMD_Capture, 0x6); // initiate capture
