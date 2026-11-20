@@ -760,6 +760,7 @@ gp_widget_get_range (CameraWidget *range, float *min, float *max,
 int
 gp_widget_add_choice (CameraWidget *widget, const char *choice)
 {
+	char **choices;
 	int i;
 
 	C_PARAMS (widget && choice);
@@ -770,7 +771,10 @@ gp_widget_add_choice (CameraWidget *widget, const char *choice)
 		if (!strcmp(widget->choice[i],choice))
 			return GP_OK;
 
-	C_MEM (widget->choice = realloc (widget->choice, sizeof(char*)*(widget->choice_count+1)));
+	/* Assigned only on success, since a failed realloc leaves the
+	 * original memory intact (and still owned by the widget) */
+	C_MEM (choices = realloc (widget->choice, sizeof(char*)*(widget->choice_count+1)));
+	widget->choice = choices;
 	C_MEM (widget->choice[widget->choice_count] = strdup(choice));
 	widget->choice_count += 1;
 	return (GP_OK);
