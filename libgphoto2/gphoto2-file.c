@@ -437,11 +437,13 @@ gp_file_get_data_and_size (CameraFile *file, const char **data,
 			ssize_t res = read (file->fd, (char*)((*data)+curread), offset-curread);
 			if (res == -1) {
 				free ((char*)*data);
+				*data = NULL;
 				GP_LOG_E ("Encountered error %d reading.", errno);
 				return GP_ERROR_IO_READ;
 			}
 			if (res == 0) {
 				free ((char*)*data);
+				*data = NULL;
 				GP_LOG_E ("No progress during reading.");
 				return GP_ERROR_IO_READ;
 			}
