@@ -325,7 +325,7 @@ gp_file_set_data_and_size (CameraFile *file, char *data,
 		file->size = size;
 		break;
 	case GP_FILE_ACCESSTYPE_FD: {
-		unsigned int curwritten = 0;
+		unsigned long int curwritten = 0;
 
 		/* truncate */
 		if (-1 == lseek (file->fd, 0, SEEK_SET)) {
