@@ -9435,6 +9435,11 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	uint32_t handle;
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
 	handle = find_child(params, filename, storage, handle, NULL);
+	/* never send DeleteObject(0xffffffff): that requests deletion of all objects */
+	if (handle == PTP_HANDLER_SPECIAL) {
+		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
+		return GP_ERROR_FILE_NOT_FOUND;
+	}
 
 	C_PTP (ptp_deleteobject(params, handle, 0));
 
