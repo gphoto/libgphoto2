@@ -2666,6 +2666,11 @@ static unsigned int olcsizes[0x15][13] = {
 			break;
 		}
 		case PTP_EC_CANON_EOS_CameraStatusChanged:
+			/* the 32 bit value of the event */
+			if (size < 12) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, 12);
+				break;
+			}
 			e[i].type = PTP_EOSEvent_CameraStatus;
 			e[i].u.status =  dtoh32a(curdata+8);
 			ptp_debug (params, "%s CameraStatusChanged (size %d) = %d", prefix, size, dtoh32a(curdata+8));
@@ -2676,36 +2681,71 @@ static unsigned int olcsizes[0x15][13] = {
 				ptp_debug (params, "%s EOS event list null terminator is expected to have size 8 instead of %d", prefix, size);
 			break;
 		case PTP_EC_CANON_EOS_BulbExposureTime:
+			/* the 32 bit value of the event */
+			if (size < 12) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, 12);
+				break;
+			}
 			e[i].type = PTP_EOSEvent_Unknown;
 			PTP_CANON_SET_INFO(e[i], "BulbExposureTime %u",  dtoh32a(curdata+8));
 			ptp_debug (params, "%s %s", prefix, e[i].u.info);
 			break;
 		case PTP_EC_CANON_EOS_CTGInfoCheckComplete: /* some form of storage catalog ? */
+			/* the 32 bit value of the event */
+			if (size < 12) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, 12);
+				break;
+			}
 			e[i].type = PTP_EOSEvent_Unknown;
 			PTP_CANON_SET_INFO(e[i], "CTGInfoCheckComplete 0x%08x",  dtoh32a(curdata+8));
 			ptp_debug (params, "%s %s", prefix, e[i].u.info);
 			break;
 		case PTP_EC_CANON_EOS_StorageStatusChanged:
+			/* the 32 bit value of the event */
+			if (size < 12) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, 12);
+				break;
+			}
 			e[i].type = PTP_EOSEvent_Unknown;
 			PTP_CANON_SET_INFO(e[i], "StorageStatusChanged 0x%08x",  dtoh32a(curdata+8));
 			ptp_debug (params, "%s %s", prefix, e[i].u.info);
 			break;
 		case PTP_EC_CANON_EOS_StorageInfoChanged:
+			/* the 32 bit value of the event */
+			if (size < 12) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, 12);
+				break;
+			}
 			e[i].type = PTP_EOSEvent_Unknown;
 			PTP_CANON_SET_INFO(e[i], "StorageInfoChanged 0x%08x",  dtoh32a(curdata+8));
 			ptp_debug (params, "%s %s", prefix, e[i].u.info);
 			break;
 		case PTP_EC_CANON_EOS_StoreAdded:
+			/* the 32 bit value of the event */
+			if (size < 12) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, 12);
+				break;
+			}
 			e[i].type = PTP_EOSEvent_Unknown;
 			PTP_CANON_SET_INFO(e[i], "StoreAdded 0x%08x",  dtoh32a(curdata+8));
 			ptp_debug (params, "%s %s", prefix, e[i].u.info);
 			break;
 		case PTP_EC_CANON_EOS_StoreRemoved:
+			/* the 32 bit value of the event */
+			if (size < 12) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, 12);
+				break;
+			}
 			e[i].type = PTP_EOSEvent_Unknown;
 			PTP_CANON_SET_INFO(e[i], "StoreRemoved 0x%08x",  dtoh32a(curdata+8));
 			ptp_debug (params, "%s %s", prefix, e[i].u.info);
 			break;
 		case PTP_EC_CANON_EOS_ObjectRemoved:
+			/* the 32 bit value of the event */
+			if (size < 12) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, 12);
+				break;
+			}
 			e[i].type = PTP_EOSEvent_ObjectRemoved;
 			e[i].u.object.Handle = dtoh32a(curdata+8);
 			ptp_debug (params, "%s object %08x removed", prefix, dtoh32a(curdata+8));
