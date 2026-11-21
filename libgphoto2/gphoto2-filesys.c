@@ -1340,14 +1340,8 @@ gp_filesystem_name (CameraFilesystem *fs, const char *folder, int filenumber,
 	if (!f) return (GP_ERROR_DIRECTORY_NOT_FOUND);
 
 	file = f->files;
-	count = 0;
-	while (file) {
-		if (filenumber == 0)
-			break;
-		filenumber--;
-		count++;
+	for (count = 0; file && (count != filenumber); count++)
 		file = file->next;
-	}
 
 	if (!file) {
 		gp_context_error (context, _("Folder '%s' only contains "
