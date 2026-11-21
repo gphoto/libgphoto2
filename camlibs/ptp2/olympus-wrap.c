@@ -359,11 +359,16 @@ ums_wrap_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *putter)
 		GP_LOG_D ("ums_wrap_getdata *** PTP code %04x during PTP data in size read", dtoh16(usbresp.code));
 		/* break; */
 	}
-	if (dtoh16(usbresp.length) < 16) {
+	if (dtoh32(usbresp.length) < 16) {
 		recvlen = 0;
-		GP_LOG_D ("ums_wrap_getdata *** PTP size %d during PTP data in size read, expected 16", dtoh16(usbresp.length));
+		GP_LOG_D ("ums_wrap_getdata *** PTP size %d during PTP data in size read, expected 16", dtoh32(usbresp.length));
 	} else {
 		recvlen = dtoh32(usbresp.payload.params.param1);
+	}
+	/* the data starts with a container header, which is skipped below */
+	if (recvlen < PTP_USB_BULK_HDR_LEN) {
+		GP_LOG_E ("ums_wrap_getdata *** PTP data size %lu is shorter than its header", recvlen);
+		return PTP_ERROR_IO;
 	}
 	data = malloc (recvlen);
 	if (!data)
