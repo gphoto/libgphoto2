@@ -1745,8 +1745,8 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint3
 	ptp_debug_data(params, *data, datasize);
 #endif
 
-	/* every selected focus_point gets an entry like "{N,N,N,N}," where N can be 5 chars long */
-	maxlen = 1 + focus_points_in_use * 26 + 2;
+	/* every selected focus_point gets an entry like "{N,N,N,N}," where N can be 6 chars long (-32768) */
+	maxlen = 1 + focus_points_in_use * 30 + 2;
 	str = (char*)malloc( maxlen );
 	if (!str)
 		return NULL;
@@ -1763,7 +1763,8 @@ ptp_unpack_EOS_FocusInfoEx (PTPParams* params, const unsigned char** data, uint3
 		int16_t h = dtoh16a((*data) + focus_points_in_struct*0 + 20 + 2*i);
 
 		int n = snprintf(p, maxlen - (p - str), "{%d,%d,%d,%d},", x, y, w, h);
-		if (n < 0 || n > maxlen - (p - str)) {
+		/* n is the length without the terminator, so a truncated entry has n == the remaining size */
+		if (n < 0 || n >= maxlen - (p - str)) {
 			ptp_error(params, "snprintf buffer overflow in %s", __func__);
 			break;
 		}
