@@ -315,11 +315,14 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		return ret;
 
 	if (dtoh32(hdr.type) == PTPIP_CMD_RESPONSE) { /* might happen if we have no data transfer due to error? */
-		GP_LOG_E ("Unexpected ptp response, ptp code %x", dtoh16a(&xdata[0]));
-		return dtoh16a(&xdata[0]);
+		ret = dtoh16a(&xdata[0]);
+		GP_LOG_E ("Unexpected ptp response, ptp code %x", ret);
+		free (xdata);
+		return ret;
 	}
 	if (dtoh32(hdr.type) != PTPIP_START_DATA_PACKET) {
 		GP_LOG_E ("got reply type %d\n", dtoh32(hdr.type));
+		free (xdata);
 		return PTP_RC_GeneralError;
 	}
 	toread = dtoh32a(&xdata[ptpip_data_payload]);
@@ -370,6 +373,8 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		GP_LOG_E ("ret type %d", hdr.type);
 		break;
 	}
+	/* the packet we stopped at, if any */
+	free (xdata);
 	if (curread < toread)
 		return PTP_RC_GeneralError;
 	return PTP_RC_OK;
@@ -615,6 +620,8 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		 * If not PTPIP_EVENT, process it and wait for next PTPIP_EVENT
 		 */
 		GP_LOG_E ("unknown/unhandled event type %d", dtoh32(hdr.type));
+		free (data);
+		data = NULL;
 	}
 
 	event->Code		= dtoh16a(&data[ptpip_event_code]);
