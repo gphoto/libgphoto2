@@ -387,7 +387,8 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *file,
 	if (result < GP_OK)
 		return result;
 
-	if (lstat (path, &st) != 0) {
+	/* Follow symlinks, like the file listing and downloading do */
+	if (stat (path, &st) != 0) {
 		int saved_errno = errno;
 		gp_context_error (context, _("Could not get information "
 					     "about '%s' in '%s' (%s)."),
@@ -507,7 +508,8 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (result < GP_OK)
 		return result;
 
-	if (-1 == lstat(path,&stbuf))
+	/* Follow symlinks, like the file listing does */
+	if (-1 == stat(path,&stbuf))
 		return GP_ERROR_IO_READ;
 
 	gp_file_set_mtime (file, stbuf.st_mtime);
