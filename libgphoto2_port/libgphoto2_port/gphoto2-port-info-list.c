@@ -213,10 +213,14 @@ int
 gp_port_info_list_append (GPPortInfoList *list, GPPortInfo info)
 {
 	unsigned int generic, i;
+	GPPortInfo *new_info;
 
 	C_PARAMS (list);
 
-	C_MEM (list->info = realloc (list->info, sizeof (GPPortInfo) * (list->count + 1)));
+	/* Assigned only on success, since a failed realloc leaves the
+	 * original memory intact (and still owned by the list) */
+	C_MEM (new_info = realloc (list->info, sizeof (GPPortInfo) * (list->count + 1)));
+	list->info = new_info;
 	list->count++;
 	list->info[list->count - 1] = info;
 
