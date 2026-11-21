@@ -14098,7 +14098,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 	CameraWidget	*section, *widget = window, *subwindow;
 	uint16_t	ret_ptp;
 	unsigned int	menuno, submenuno;
-	int		ret;
+	int		ret, standard_ret = GP_OK;
 	PTPParams	*params = &camera->pl->params;
 	PTPPropValue	propval;
 	unsigned int	i;
@@ -14219,7 +14219,9 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				} else {
 					ret = cursub->putfunc (camera, widget, NULL, NULL, NULL);
 				}
-				gp_widget_set_changed (widget, FALSE); /* clear flag */
+				/* only clear the flag on success, so a retry of the same window re-sends a failed value */
+				if (ret == GP_OK)
+					gp_widget_set_changed (widget, FALSE); /* clear flag */
 				if (mode == MODE_SINGLE_SET)
 					return ret;
 			}
@@ -14279,12 +14281,14 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				if (mode == MODE_SINGLE_SET)
 					return ret;
 			}
-			if (ret != GP_OK)
-				return ret;
+			/* reported at the end, so that a failed setting, whose flag is kept,
+			 * doesn't prevent setting the other properties (on a retry too) */
+			if ((ret != GP_OK) && (standard_ret == GP_OK))
+				standard_ret = ret;
 		}
 	}
 	if (!params->deviceinfo.DeviceProps_len)
-		return GP_OK;
+		return standard_ret;
 
 	if (mode == MODE_SET)
 		CR (gp_widget_get_child_by_label (subwindow, _("Other PTP Device Properties"), &section));
@@ -14377,7 +14381,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 		gp_context_error (context, _("Property '%s' not found."), confname);
 		return GP_ERROR_BAD_PARAMETERS;
 	}
-	return GP_OK;
+	return standard_ret;
 }
 
 int
