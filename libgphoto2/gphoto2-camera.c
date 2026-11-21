@@ -166,17 +166,6 @@
 	}								\
 }
 
-#define CRSL(c,res,ctx,list)						\
-{									\
-	int r5 = (res);							\
-									\
-	if (r5 < 0) {							\
-		CAMERA_UNUSED (c,ctx);                              	\
-		gp_list_free (list);					\
-		return (r5);						\
-	}								\
-}
-
 #define CHECK_RESULT_OPEN_CLOSE(c,result,ctx)				\
 {									\
 	int r6;								\
@@ -688,8 +677,8 @@ gp_camera_init (Camera *camera, GPContext *context)
 	 */
 	if (strcasecmp (camera->pc->a.model, "Directory Browse") &&
 	    !strcmp ("", camera->pc->a.model)) {
-		CameraAbilitiesList *al;
-		GPPortInfoList	*il;
+		CameraAbilitiesList *al = NULL;
+		GPPortInfoList	*il = NULL;
 		int		m, p;
 		char		*ppath;
 		GPPortType	ptype;
@@ -702,24 +691,28 @@ gp_camera_init (Camera *camera, GPContext *context)
 
 		GP_LOG_D ("Neither port nor model set. Trying auto-detection...");
 
+/*
+ * Unlike CR(), don't release the camera on errors: gp_camera_init() doesn't
+ * mark it as used, CHECK_INIT() releases it if needed.
+ */
+#define CHECK_DETECT(res) { result = (res); if (result < GP_OK) goto detect_out; }
+
 		/* Call auto-detect and choose the first camera */
-		CRSL (camera, gp_abilities_list_new (&al), context, list);
-		CRSL (camera, gp_abilities_list_load (al, context), context, list);
-		CRSL (camera, gp_port_info_list_new (&il), context, list);
-		CRSL (camera, gp_port_info_list_load (il), context, list);
-		CRSL (camera, gp_abilities_list_detect (al, il, list, context), context, list);
+		CHECK_DETECT (gp_abilities_list_new (&al));
+		CHECK_DETECT (gp_abilities_list_load (al, context));
+		CHECK_DETECT (gp_port_info_list_new (&il));
+		CHECK_DETECT (gp_port_info_list_load (il));
+		CHECK_DETECT (gp_abilities_list_detect (al, il, list, context));
 		if (!gp_list_count (list)) {
-			gp_abilities_list_free (al);
-			gp_port_info_list_free (il);
 			gp_context_error (context, _("Could not detect "
 					     "any camera"));
-			gp_list_free (list);
-			return (GP_ERROR_MODEL_NOT_FOUND);
+			result = GP_ERROR_MODEL_NOT_FOUND;
+			goto detect_out;
 		}
 		p = 0;
-		CRSL (camera, gp_port_get_info (camera->port, &info), context, list);
-		CRSL (camera, gp_port_info_get_path (info, &ppath), context, list);
-		CRSL (camera, gp_port_info_get_type (info, &ptype), context, list);
+		CHECK_DETECT (gp_port_get_info (camera->port, &info));
+		CHECK_DETECT (gp_port_info_get_path (info, &ppath));
+		CHECK_DETECT (gp_port_info_get_type (info, &ptype));
 		/* if the port was set before, then use that entry, but not if it is "usb:" */
 		if ((ptype == GP_PORT_USB) && strlen(ppath) && strcmp(ppath, "usb:")) {
 			for (p = gp_list_count (list);p--;) {
@@ -730,27 +723,31 @@ gp_camera_init (Camera *camera, GPContext *context)
 					break;
 			}
 			if (p<0) {
-				gp_abilities_list_free (al);
-				gp_port_info_list_free (il);
 				gp_context_error (context, _("Could not detect any camera at port %s"), ppath);
-				gp_list_free (list);
-				return (GP_ERROR_FILE_NOT_FOUND);
+				result = GP_ERROR_FILE_NOT_FOUND;
+				goto detect_out;
 			}
 		}
 
-		CRSL (camera, gp_list_get_name  (list, p, &model), context, list);
+		CHECK_DETECT (gp_list_get_name  (list, p, &model));
 		m = gp_abilities_list_lookup_model (al, model);
-		CRSL (camera, m, context, list);
-		CRSL (camera, gp_abilities_list_get_abilities (al, m, &a), context, list);
-		gp_abilities_list_free (al);
-		CRSL (camera, gp_camera_set_abilities (camera, a), context, list);
-		CRSL (camera, gp_list_get_value (list, p, &port), context, list);
+		CHECK_DETECT (m);
+		CHECK_DETECT (gp_abilities_list_get_abilities (al, m, &a));
+		CHECK_DETECT (gp_camera_set_abilities (camera, a));
+		CHECK_DETECT (gp_list_get_value (list, p, &port));
 		p = gp_port_info_list_lookup_path (il, port);
-		CRSL (camera, p, context, list);
-		CRSL (camera, gp_port_info_list_get_info (il, p, &info), context, list);
-		CRSL (camera, gp_camera_set_port_info (camera, info), context, list);
-		gp_port_info_list_free (il);
+		CHECK_DETECT (p);
+		CHECK_DETECT (gp_port_info_list_get_info (il, p, &info));
+		CHECK_DETECT (gp_camera_set_port_info (camera, info));
+#undef CHECK_DETECT
+detect_out:
+		if (al)
+			gp_abilities_list_free (al);
+		if (il)
+			gp_port_info_list_free (il);
 		gp_list_free (list);
+		if (result < GP_OK)
+			return result;
 	}
 
 	if (strcasecmp (camera->pc->a.model, "Directory Browse")) {
@@ -763,12 +760,15 @@ gp_camera_init (Camera *camera, GPContext *context)
 			if (gp_port_usb_find_device (camera->port,
 					camera->pc->a.usb_vendor,
 					camera->pc->a.usb_product) != GP_OK) {
-				CRS (camera, gp_port_usb_find_device_by_class
+				/* don't release the camera, see CHECK_DETECT() above */
+				result = gp_port_usb_find_device_by_class
 					(camera->port,
 					camera->pc->a.usb_class,
 					camera->pc->a.usb_subclass,
-					camera->pc->a.usb_protocol), context);
-					}
+					camera->pc->a.usb_protocol);
+				if (result < GP_OK)
+					return result;
+			}
 			break;
 		default:
 			break;
