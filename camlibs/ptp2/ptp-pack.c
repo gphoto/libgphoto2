@@ -2095,6 +2095,10 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			dpd->FORM.Enum.NumberOfValues = dpd_count;
 			free (dpd->FORM.Enum.SupportedValue);
 			dpd->FORM.Enum.SupportedValue = calloc (dpd_count, sizeof (PTPPropValue));
+			if (!dpd->FORM.Enum.SupportedValue) {
+				dpd->FORM.Enum.NumberOfValues = 0;
+				break;
+			}
 
 			switch (dpc) {
 			case PTP_DPC_CANON_EOS_ImageFormat:
@@ -2785,6 +2789,10 @@ ptp_unpack_Nikon_EC (PTPParams *params, const unsigned char* data, unsigned int 
 		return;
 
 	*ec = calloc((*cnt), sizeof(PTPContainer));
+	if (!*ec) {
+		*cnt = 0;
+		return;
+	}
 
 	for (i=0;i<*cnt;i++) {
 		memset(&(*ec)[i],0,sizeof(PTPContainer));
@@ -2817,6 +2825,10 @@ ptp_unpack_Nikon_EC_EX (PTPParams *params, const unsigned char* data, unsigned i
 		return 1;
 
 	*ec = calloc((*cnt), sizeof(PTPContainer));
+	if (!*ec) {
+		*cnt = 0;
+		return 0;
+	}
 	offset = 4;
 
 	for (i=0;i<*cnt;i++) {
