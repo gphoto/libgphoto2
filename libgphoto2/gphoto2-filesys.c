@@ -114,6 +114,8 @@ get_time_from_exif_tag(ExifEntry *e) {
 	ts.tm_min  = atoi ((char*)(e->data + 14));
 	ts.tm_sec  = atoi ((char*)(e->data + 17));
 
+	/* Let mktime() figure out whether DST was in effect at the time */
+	ts.tm_isdst = -1;
 	return mktime (&ts);
 }
 
