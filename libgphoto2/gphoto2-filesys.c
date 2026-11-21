@@ -1476,7 +1476,10 @@ recursive_folder_scan (
 		char *xfolder;
 		ret = recursive_folder_scan (f, lookforfile, &xfolder);
 		if (ret == GP_OK) {
-			*foldername = aprintf("%s/%s", folder->name, xfolder);
+			/* The root folder is named "/" already */
+			*foldername = aprintf("%s/%s",
+				strcmp (folder->name, "/") ? folder->name : "",
+				xfolder);
 			free (xfolder);
 			return GP_OK;
 		}
