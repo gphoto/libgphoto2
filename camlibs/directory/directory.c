@@ -565,7 +565,9 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			break;
 		}
 		curread += ret;
-		gp_file_append (file, (char *)buf, ret);
+		result = gp_file_append (file, (char *)buf, ret);
+		if (result < GP_OK)
+			break;
 		gp_context_progress_update (context, id, (1.0*curread/BLOCKSIZE));
 		gp_context_idle (context);
 		if (gp_context_cancel (context) == GP_CONTEXT_FEEDBACK_CANCEL) {
@@ -583,7 +585,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	gp_context_progress_stop (context, id);
 	free (buf);
 	close (fd);
-	return (GP_OK);
+	return (result);
 }
 
 static int
