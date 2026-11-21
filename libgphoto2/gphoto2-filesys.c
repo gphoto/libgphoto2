@@ -1297,10 +1297,17 @@ gp_filesystem_put_file (CameraFilesystem *fs,
 	/* Upload the file */
 	CR (fs->put_file_func (fs, folder, filename, type, file, fs->data, context));
 	/* And upload it to internal structure too */
-	ret = append_file (fs, f, filename, file, context);
-	if (type != GP_FILE_TYPE_NORMAL) /* FIXME perhaps check before append_file? */
-		return GP_OK;
-	return ret;
+	if (type != GP_FILE_TYPE_NORMAL) {
+		/*
+		 * Only list the file, append_file() would cache the data as
+		 * the normal file, e.g. serving a preview in its place.
+		 */
+		ret = internal_append (fs, f, filename, context);
+		if (ret == GP_ERROR_FILE_EXISTS)
+			ret = GP_OK;
+		return ret;
+	}
+	return append_file (fs, f, filename, file, context);
 }
 
 /**
