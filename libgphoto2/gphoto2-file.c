@@ -702,7 +702,7 @@ gp_file_open (CameraFile *file, const char *filename)
 			* Note: This should probably use GP_MIME_UNKNOWN instead
 			* of returning a non-standard type.
 			*/
-			sprintf(file->mime_type, "image/%s", dot + 1);
+			snprintf(file->mime_type, sizeof(file->mime_type), "image/%s", dot + 1);
 	} else {
 		/*
 		* Damn, no filename suffix...
