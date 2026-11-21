@@ -5175,7 +5175,8 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 		params->wifi_profiles[profn].valid = dtoh8o(data, pos);
 
 		n = dtoh32o(data, pos);
-		if (pos+n+4 >= size)
+		/* pos+n+4 >= size, without wrapping around for a huge n */
+		if (size - pos <= 4 || n >= size - pos - 4)
 			goto error;
 		tocopy = n;
 		if (tocopy >= sizeof(params->wifi_profiles[profn].profile_name))
@@ -5204,7 +5205,7 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 			goto error;
 
 		n = dtoh32o(data, pos);
-		if (pos+n >= size)
+		if (n >= size - pos)
 			goto error;
 		tocopy = n;
 		if (tocopy >= sizeof(params->wifi_profiles[profn].essid))
