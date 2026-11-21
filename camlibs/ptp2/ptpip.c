@@ -828,11 +828,17 @@ ptp_ptpip_connect (PTPParams* params, const char *address) {
 		return GP_ERROR_IO;
 	} while (1);
 	ret = ptp_ptpip_init_event_request (params);
-	if (ret != PTP_RC_OK)
+	if (ret != PTP_RC_OK) {
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return translate_ptp_result (ret);
+	}
 	ret = ptp_ptpip_init_event_ack (params);
-	if (ret != PTP_RC_OK)
+	if (ret != PTP_RC_OK) {
+		PTPSOCK_CLOSE (params->cmdfd);
+		PTPSOCK_CLOSE (params->evtfd);
 		return translate_ptp_result (ret);
+	}
 	GP_LOG_D ("ptpip connected!");
 	return GP_OK;
 }
