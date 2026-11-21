@@ -525,7 +525,12 @@ gp_file_save (CameraFile *file, const char *filename)
 			unlink (filename);
 			return GP_ERROR;
 		}
-		fclose (fp);
+		/* Writing the buffered data might fail too */
+		if (fclose (fp)) {
+			GP_LOG_E ("Could not finish writing '%s' (error %d).", filename, errno);
+			unlink (filename);
+			return GP_ERROR;
+		}
 		break;
 	case GP_FILE_ACCESSTYPE_FD: {
 		char *data;
@@ -572,7 +577,12 @@ gp_file_save (CameraFile *file, const char *filename)
 			curread += res;
 		}
 		free (data);
-		fclose (fp);
+		/* Writing the buffered data might fail too */
+		if (fclose (fp)) {
+			GP_LOG_E ("Could not finish writing '%s' (error %d).", filename, errno);
+			unlink (filename);
+			return GP_ERROR;
+		}
 		break;
 	}
 	default:
