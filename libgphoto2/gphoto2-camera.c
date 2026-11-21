@@ -70,6 +70,24 @@
 }
 
 /*
+ * Like CR(), but for the functions which don't mark the camera as used
+ * (see CHECK_INIT), and so must not release it on error either.
+ */
+#define CR_PORT(c,result,ctx)						\
+{									\
+	int r7 = (result);						\
+									\
+	if (r7 < 0) {							\
+		/* libgphoto2_port doesn't have a GPContext */		\
+		gp_context_error ((ctx), _("An error occurred "		\
+			"in the io-library ('%s'): %s"),		\
+			gp_port_result_as_string (r7),			\
+			gp_port_get_error ((c)->port));			\
+		return (r7);						\
+	}								\
+}
+
+/*
  * HAVE_MULTI
  * ----------
  *
@@ -396,7 +414,7 @@ gp_camera_get_port_info (Camera *camera, GPPortInfo *info)
 {
 	C_PARAMS (camera && info);
 
-	CR (camera, gp_port_get_info (camera->port, info), NULL);
+	CR_PORT (camera, gp_port_get_info (camera->port, info), NULL);
 
 	return (GP_OK);
 }
@@ -418,7 +436,7 @@ gp_camera_set_port_info (Camera *camera, GPPortInfo info)
 	gp_port_info_get_name (info, &name);
 	gp_port_info_get_path (info, &path);
 	GP_LOG_D ("Setting port info for port '%s' at '%s'...", name, path);
-	CR (camera, gp_port_set_info (camera->port, info), NULL);
+	CR_PORT (camera, gp_port_set_info (camera->port, info), NULL);
 
 	return (GP_OK);
 }
@@ -459,9 +477,9 @@ gp_camera_set_port_speed (Camera *camera, int speed)
 	if (camera->pc->lh)
 		gp_camera_exit (camera, NULL);
 
-	CR (camera, gp_port_get_settings (camera->port, &settings), NULL);
+	CR_PORT (camera, gp_port_get_settings (camera->port, &settings), NULL);
 	settings.serial.speed = speed;
-	CR (camera, gp_port_set_settings (camera->port, settings), NULL);
+	CR_PORT (camera, gp_port_set_settings (camera->port, settings), NULL);
 	camera->pc->speed = speed;
 
 	return (GP_OK);
