@@ -14326,7 +14326,6 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 				continue;
 			if (!gp_widget_changed (widget))
 				continue;
-			gp_widget_set_changed (widget, FALSE);
 		}
 
 		gp_widget_get_type (widget, &type);
@@ -14339,7 +14338,13 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 		if (dpd.GetSet != PTP_DPGS_GetSet) {
 			gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently read-only."), _(label), propid);
 			ptp_free_devicepropdesc (&dpd);
-			return GP_ERROR_NOT_SUPPORTED;
+			if (mode == MODE_SINGLE_SET)
+				return GP_ERROR_NOT_SUPPORTED;
+			/* reported at the end, so that a read-only property, whose flag is kept,
+			 * doesn't prevent setting the other properties (on a retry too) */
+			if (failed_ret == GP_OK)
+				failed_ret = GP_ERROR_NOT_SUPPORTED;
+			continue;
 		}
 
 		switch (dpd.DataType) {
@@ -14382,6 +14387,9 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 			gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)."),
 					  _(label), propid, ret, _(ptp_strerror(ret, params->deviceinfo.VendorExtensionID)));
 			ret = GP_ERROR;
+		} else if (mode == MODE_SET) {
+			/* only clear the flag on success, so a retry of the same window re-sends a failed value */
+			gp_widget_set_changed (widget, FALSE);
 		}
 		ptp_free_propvalue (dpd.DataType, &propval);
 		ptp_free_devicepropdesc (&dpd);
