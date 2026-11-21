@@ -1384,6 +1384,11 @@ ptp_unpack_canon_event (PTPParams *params, const unsigned char* data, PTPContain
 		return;
 	memset(ec,0,sizeof(*ec));
 
+	/* the length, type, code and transaction id */
+	if (len < PTP_ec_Param1) {
+		ptp_debug (params, "canon event container too short (%d bytes)", len);
+		return;
+	}
 	length = dtoh32a(data + PTP_ec_Length);
 	if (length > len) {
 		ptp_debug (params, "length %d in container, but data only %d bytes?!", length, len);
