@@ -77,6 +77,22 @@ struct _CameraFile {
 };
 
 
+/*
+ * Copies the string into the buffer of the given size, truncating and
+ * terminating it if needed. They might overlap (e.g. setting the name
+ * of a file to the one returned by gp_file_get_name()).
+ */
+static void
+copy_string (char *buffer, size_t size, const char *string)
+{
+	size_t len = 0;
+
+	while ((len < size - 1) && string[len])
+		len++;
+	memmove (buffer, string, len);
+	buffer[len] = '\0';
+}
+
 /*! Create new #CameraFile object.
  *
  * \param file a pointer to a #CameraFile
@@ -693,10 +709,8 @@ gp_file_open (CameraFile *file, const char *filename)
 	}
 
 	name = strrchr (filename, '/');
-	if (name)
-		strncpy (file->name, name + 1, sizeof (file->name));
-	else
-		strncpy (file->name, filename, sizeof (file->name));
+	copy_string (file->name, sizeof (file->name),
+		     name ? name + 1 : filename);
 
 	/* MIME lookup */
 	dot = strrchr (filename, '.');
@@ -1046,7 +1060,7 @@ gp_file_set_name (CameraFile *file, const char *name)
 {
 	C_PARAMS (file && name);
 
-	strncpy (file->name, name, sizeof (file->name));
+	copy_string (file->name, sizeof (file->name), name);
 
 	return (GP_OK);
 }
@@ -1063,7 +1077,7 @@ gp_file_set_mime_type (CameraFile *file, const char *mime_type)
 {
 	C_PARAMS (file && mime_type);
 
-	strncpy (file->mime_type, mime_type, sizeof (file->mime_type));
+	copy_string (file->mime_type, sizeof (file->mime_type), mime_type);
 
 	return (GP_OK);
 }
