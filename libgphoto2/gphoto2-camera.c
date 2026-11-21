@@ -1115,6 +1115,28 @@ gp_camera_set_config (Camera *camera, CameraWidget *window, GPContext *context)
 	return (GP_OK);
 }
 
+/*
+ * Returns the kind of value stored by widgets of the given type: widgets of
+ * the same kind accept each other's values (see gp_widget_set_value()).
+ */
+static int
+_widget_value_kind (CameraWidgetType type)
+{
+	switch (type) {
+	case GP_WIDGET_MENU:
+	case GP_WIDGET_RADIO:
+	case GP_WIDGET_TEXT:
+		return 1;	/* char * */
+	case GP_WIDGET_RANGE:
+		return 2;	/* float */
+	case GP_WIDGET_TOGGLE:
+	case GP_WIDGET_DATE:
+		return 3;	/* int */
+	default:
+		return 0;	/* no value */
+	}
+}
+
 /**
  * Set a single configuration \c widget for the \c camera.
  *
@@ -1131,7 +1153,7 @@ int
 gp_camera_set_single_config (Camera *camera, const char *name, CameraWidget *widget, GPContext *context)
 {
 	CameraWidget		*rootwidget, *child;
-	CameraWidgetType	type;
+	CameraWidgetType	type, widget_type;
 	int			ret;
 
 	C_PARAMS (camera && name && widget);
@@ -1168,7 +1190,20 @@ gp_camera_set_single_config (Camera *camera, const char *name, CameraWidget *wid
 	}
 
 	gp_widget_get_type (child, &type);
-	ret = GP_OK;
+	/*
+	 * The value is read as the type of the child expects it, so make sure
+	 * the widget holds that kind of value, not e.g. a string for a float.
+	 */
+	ret = gp_widget_get_type (widget, &widget_type);
+	if ((ret == GP_OK) &&
+	    (_widget_value_kind (widget_type) != _widget_value_kind (type)))
+		ret = GP_ERROR_BAD_PARAMETERS;
+	if (ret != GP_OK) {
+		gp_widget_free (rootwidget);
+		CHECK_CLOSE (camera, context);
+		CAMERA_UNUSED (camera, context);
+		return ret;
+	}
 	switch (type) {
 	case GP_WIDGET_MENU:
 	case GP_WIDGET_RADIO:
