@@ -2530,6 +2530,8 @@ static unsigned int olcsizes[0x15][13] = {
 				if (olcsizes[olcver][j] != cursize) {
 					ptp_debug (params, "%s mask 0x%04x entry truncated (%d bytes), olcsizes table (%d bytes) wrong?",
 					           prefix, curmask, cursize, olcsizes[olcver][j]);
+					/* the entries are decoded assuming the full size, stop here */
+					break;
 				}
 				ptp_debug (params, "event %3d:%04x: (olcmask) %d bytes: %s", i, curmask, cursize,
 				           ptp_bytes2str(curdata + curoff, cursize, "%02x "));
