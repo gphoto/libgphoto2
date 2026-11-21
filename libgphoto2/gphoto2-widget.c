@@ -392,17 +392,20 @@ gp_widget_set_value (CameraWidget *widget, const void *value)
 		return (GP_OK);
 	case GP_WIDGET_MENU:
 	case GP_WIDGET_RADIO:
-	case GP_WIDGET_TEXT:
+	case GP_WIDGET_TEXT: {
+		char *value_string;
+
 		GP_LOG_D ("Setting value of widget '%s' to '%s'...",
 			widget->label, (char*) value);
-		if (widget->value_string) {
-			if (strcmp (widget->value_string, (char*) value))
-				widget->changed = 1;
-			free (widget->value_string);
-		} else
+		/* Copy the new value before freeing the current one, since
+		 * it might point to it (e.g. as returned by gp_widget_get_value) */
+		C_MEM (value_string = strdup ((char*)value));
+		if (!widget->value_string || strcmp (widget->value_string, value_string))
 			widget->changed = 1;
-		C_MEM (widget->value_string = strdup ((char*)value));
+		free (widget->value_string);
+		widget->value_string = value_string;
 		return (GP_OK);
+	}
 	case GP_WIDGET_RANGE:
 		if (widget->value_float != *((float*)value)) {
 			widget->value_float  = *((float*)value);
