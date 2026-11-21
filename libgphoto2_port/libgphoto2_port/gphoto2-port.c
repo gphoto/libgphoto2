@@ -568,7 +568,7 @@ int gp_port_timeout_get (GPPort *port, int *timeout)
 int
 gp_port_get_timeout (GPPort *port, int *timeout)
 {
-	C_PARAMS (port);
+	C_PARAMS (port && timeout);
 
 	GP_LOG_D ("Current port timeout is %i milliseconds.", port->timeout);
 	*timeout = port->timeout;
@@ -632,7 +632,7 @@ int gp_port_settings_set (GPPort *port, GPPortSettings settings)
 int
 gp_port_get_settings (GPPort *port, GPPortSettings *settings)
 {
-	C_PARAMS (port);
+	C_PARAMS (port && settings);
 
 	memcpy (settings, &(port->settings), sizeof (gp_port_settings));
 
