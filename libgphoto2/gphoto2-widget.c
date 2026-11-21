@@ -812,7 +812,7 @@ gp_widget_get_choice (CameraWidget *widget, int choice_number,
 	C_PARAMS (widget && choice);
 	C_PARAMS ((widget->type == GP_WIDGET_RADIO) ||
 		  (widget->type == GP_WIDGET_MENU));
-	C_PARAMS (choice_number < widget->choice_count);
+	C_PARAMS ((choice_number >= 0) && (choice_number < widget->choice_count));
 
 	*choice = widget->choice[choice_number];
 	return (GP_OK);
