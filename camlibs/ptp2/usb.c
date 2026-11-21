@@ -287,6 +287,11 @@ ptp_usb_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler)
 		}
 		goto exit;
 	}
+	if (dtoh32(usbdata.length) < PTP_USB_BULK_HDR_LEN) {
+		GP_LOG_E ("Read broken PTP data container, length %d is shorter than its header", dtoh32(usbdata.length));
+		ret = PTP_ERROR_IO;
+		goto exit;
+	}
 	if (dtoh16(usbdata.code)!=ptp->Code) {
 		/* A creative Zen device breaks down here, by leaving out
 			 * Code and Transaction ID */
