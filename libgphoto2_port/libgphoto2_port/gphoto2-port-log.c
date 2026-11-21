@@ -100,10 +100,14 @@ int
 gp_log_add_func (GPLogLevel level, GPLogFunc func, void *data)
 {
 	static int logfuncid = 0;
+	LogFunc *new_log_funcs;
 
 	C_PARAMS (func);
-	C_MEM (log_funcs = realloc (log_funcs, sizeof (LogFunc) *
+	/* Assigned only on success, since a failed realloc leaves the
+	 * original memory intact (and still in use) */
+	C_MEM (new_log_funcs = realloc (log_funcs, sizeof (LogFunc) *
 				(log_funcs_count + 1)));
+	log_funcs = new_log_funcs;
 	log_funcs_count++;
 
 	log_funcs[log_funcs_count - 1].id = ++logfuncid;
