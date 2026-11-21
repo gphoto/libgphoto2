@@ -772,9 +772,10 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 	    (source->accesstype == GP_FILE_ACCESSTYPE_MEMORY)) {
 		free (destination->data);
 		destination->data = NULL;
-		destination->size = source->size;
+		destination->size = 0;
 		C_MEM (destination->data = malloc (sizeof (char) * source->size));
 		memcpy (destination->data, source->data, source->size);
+		destination->size = source->size;
 		return (GP_OK);
 	}
 	if (	(destination->accesstype == GP_FILE_ACCESSTYPE_MEMORY) &&
@@ -785,6 +786,7 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 
 		free (destination->data);
 		destination->data = NULL;
+		destination->size = 0;
 
 		if (-1 == lseek (source->fd, 0, SEEK_END)) {
 			if (errno == EBADF) return GP_ERROR_IO;
@@ -801,22 +803,24 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 			GP_LOG_E ("Encountered error %d lseekin to CUR.", errno);
 			return GP_ERROR_IO_READ;
 		}
-		destination->size = offset;
 		C_MEM (destination->data = malloc (offset));
 		while (curread < offset) {
 			ssize_t res = read (source->fd, destination->data+curread, offset-curread);
 			if (res == -1) {
 				free (destination->data);
+				destination->data = NULL;
 				GP_LOG_E ("Encountered error %d reading.", errno);
 				return GP_ERROR_IO_READ;
 			}
 			if (res == 0) {
 				free (destination->data);
+				destination->data = NULL;
 				GP_LOG_E ("No progress during reading.");
 				return GP_ERROR_IO_READ;
 			}
 			curread += res;
 		}
+		destination->size = offset;
 		return GP_OK;
 	}
 	if (	(destination->accesstype == GP_FILE_ACCESSTYPE_FD) &&
