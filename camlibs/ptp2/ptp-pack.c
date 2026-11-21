@@ -1612,6 +1612,7 @@ ptp_unpack_EOS_ImageFormat (PTPParams* params, const unsigned char** data, unsig
 		t2 = dtoh32o (d, offset);
 		s2 = dtoh32o (d, offset);
 		c2 = dtoh32o (d, offset);
+		*size -= 3*sizeof(uint32_t);
 	}
 
 	*data += offset;
