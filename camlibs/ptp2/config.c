@@ -14328,6 +14328,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 			continue;
 		if (dpd.GetSet != PTP_DPGS_GetSet) {
 			gp_context_error (context, _("Sorry, the property '%s' / 0x%04x is currently read-only."), _(label), propid);
+			ptp_free_devicepropdesc (&dpd);
 			return GP_ERROR_NOT_SUPPORTED;
 		}
 
