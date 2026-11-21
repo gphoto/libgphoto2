@@ -765,6 +765,7 @@ gp_port_flush (GPPort *port, int direction)
 	GP_LOG_D ("Flushing port...");
 
 	C_PARAMS (port);
+	CHECK_INIT (port);
 
 	CHECK_SUPP (port, "flush", port->pc->ops->flush);
 	CHECK_RESULT (port->pc->ops->flush (port, direction));
