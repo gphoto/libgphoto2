@@ -527,13 +527,14 @@ ptp_unpack_PTPTIME (const char *str) {
 	return mktime (&tm);
 }
 
-static inline void
+static inline int
 ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, unsigned int len)
 {
 	char *capture_date;
 
-	if (!data || len < PTP_oi_filenamelen + 5)
-		return;
+	/* the fixed fields; the strings after them are checked as they are unpacked */
+	if (!data || len < PTP_oi_filenamelen)
+		return 0;
 
 	oi->Filename = oi->Keywords = NULL;
 
@@ -544,7 +545,7 @@ ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, 
 	oi->ObjectSize           = dtoh32a(data + PTP_oi_ObjectSize);
 
 	/* Stupid Samsung Galaxy developers emit a 64bit objectcompressedsize */
-	if ((data[PTP_oi_filenamelen] == 0) && (data[PTP_oi_filenamelen+4] != 0)) {
+	if ((len > PTP_oi_filenamelen + 4) && (data[PTP_oi_filenamelen] == 0) && (data[PTP_oi_filenamelen+4] != 0)) {
 		ptp_debug (params, "objectsize 64bit detected!");
 		params->ocs64 = 1;
 		data += 4;
@@ -573,6 +574,7 @@ ptp_unpack_OI (PTPParams *params, const unsigned char* data, PTPObjectInfo *oi, 
 	ptp_unpack_string(params, data, &offset, len, &capture_date);
 	oi->ModificationDate = ptp_unpack_PTPTIME(capture_date);
 	free(capture_date);
+	return 1;
 }
 
 /* Custom Type Value Assignment (without Length) macro frequently used below */
