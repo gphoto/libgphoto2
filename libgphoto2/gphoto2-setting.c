@@ -277,6 +277,7 @@ load_settings (void)
 {
 	FILE *f;
 	char buf[GP_PATH_MAX], *id, *key, *value;
+	size_t len;
 
 	gp_settings_path (&buf);
 	glob_setting_count = 0;
@@ -296,8 +297,11 @@ load_settings (void)
 		strcpy(buf, "");
 		if (!fgets(buf, 1023, f))
 			break;
-		if (strlen(buf)>2) {
-			buf[strlen(buf)-1] = '\0';
+		/* Strip the newline, which the last line might lack */
+		len = strlen(buf);
+		if (len && (buf[len-1] == '\n'))
+			buf[--len] = '\0';
+		if (len>1) {
 			id = strtok(buf, "=");
 			strcpy(glob_setting[glob_setting_count].id,id);
 			key = strtok(NULL, "=");
