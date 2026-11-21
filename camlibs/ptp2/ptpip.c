@@ -198,6 +198,12 @@ ptp_ptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigned ch
 	return PTP_RC_OK;
 }
 
+/* Whether the packet read by ptp_ptpip_generic_read() carries at least size bytes of data */
+static int
+ptp_ptpip_has_data (PTPIPHeader *hdr, unsigned int size) {
+	return dtoh32 (hdr->length) - sizeof (PTPIPHeader) >= size;
+}
+
 static uint16_t
 ptp_ptpip_cmd_read (PTPParams* params, PTPIPHeader *hdr, unsigned char** data) {
 	ptp_ptpip_check_event (params);
@@ -315,11 +321,21 @@ ptp_ptpip_getdata (PTPParams* params, PTPContainer* ptp, PTPDataHandler *handler
 		return ret;
 
 	if (dtoh32(hdr.type) == PTPIP_CMD_RESPONSE) { /* might happen if we have no data transfer due to error? */
+		if (!ptp_ptpip_has_data (&hdr, 2)) {
+			GP_LOG_E ("Unexpected ptp response, too short");
+			free (xdata);
+			return PTP_RC_GeneralError;
+		}
 		GP_LOG_E ("Unexpected ptp response, ptp code %x", dtoh16a(&xdata[0]));
 		return dtoh16a(&xdata[0]);
 	}
 	if (dtoh32(hdr.type) != PTPIP_START_DATA_PACKET) {
 		GP_LOG_E ("got reply type %d\n", dtoh32(hdr.type));
+		return PTP_RC_GeneralError;
+	}
+	if (!ptp_ptpip_has_data (&hdr, ptpip_data_payload + 4)) {
+		GP_LOG_E ("start data packet too short");
+		free (xdata);
 		return PTP_RC_GeneralError;
 	}
 	toread = dtoh32a(&xdata[ptpip_data_payload]);
@@ -399,12 +415,22 @@ retry:
 
 	switch (dtoh32(hdr.type)) {
 	case PTPIP_END_DATA_PACKET:
+		if (!ptp_ptpip_has_data (&hdr, 4)) {
+			GP_LOG_E ("end data packet too short");
+			free (data);
+			return PTP_RC_GeneralError;
+		}
 		resp->Transaction_ID	= dtoh32a(&data[0]);
 		GP_LOG_D("PTPIP_END_DATA_PACKET (tid = 0x%08x)", resp->Transaction_ID);
 		free (data);
 		data = NULL;
 		goto retry;
 	case PTPIP_CMD_RESPONSE:
+		if (!ptp_ptpip_has_data (&hdr, ptpip_resp_param1)) {
+			GP_LOG_E ("response packet too short");
+			free (data);
+			return PTP_RC_GeneralError;
+		}
 		resp->Code		= dtoh16a(&data[ptpip_resp_code]);
 		resp->Transaction_ID	= dtoh32a(&data[ptpip_resp_transid]);
 		GP_LOG_D("PTPIP_CMD_RESPONSE (result=0x%04x, tid=0x%08x)", resp->Code, resp->Transaction_ID);
@@ -617,6 +643,11 @@ ptp_ptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		GP_LOG_E ("unknown/unhandled event type %d", dtoh32(hdr.type));
 	}
 
+	if (!ptp_ptpip_has_data (&hdr, ptpip_event_param1)) {
+		GP_LOG_E ("event packet too short");
+		free (data);
+		return PTP_RC_GeneralError;
+	}
 	event->Code		= dtoh16a(&data[ptpip_event_code]);
 	event->Transaction_ID	= dtoh32a(&data[ptpip_event_transid]);
 	n = (dtoh32(hdr.length) - sizeof(hdr) - ptpip_event_param1)/sizeof(uint32_t);
