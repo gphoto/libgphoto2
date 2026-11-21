@@ -374,13 +374,17 @@ lookup_folder (
 		if (folder->folders_dirty) {
 			CameraList	*list;
 			char		*copy = strdup (foldername);
+			size_t		len = curpt - foldername;
 			int		ret;
 			/*
 			 * The parent folder is dirty. List the folders in the parent
 			 * folder to make it clean.
 			 */
-			/* the character _before_ curpt is a /, overwrite it temporary with \0 */
-			copy[curpt-foldername] = '\0';
+			/* the characters _before_ curpt are /, cut the path there
+			 * (but keep the one of the root folder) */
+			while ((len > 1) && (copy[len-1] == '/'))
+				len--;
+			copy[len] = '\0';
 			GP_LOG_D ("Folder %s is dirty. "
 				"Listing folders in there to make folder clean...", copy);
 			ret = gp_list_new (&list);
