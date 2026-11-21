@@ -1433,6 +1433,7 @@ sierra_capture (Camera *camera, CameraCaptureType type,
 		CHECK (gp_filesystem_get_folder (camera->fs, filename,
 						 &folder, context));
 		strncpy (filepath->folder, folder, sizeof (filepath->folder));
+		free (folder);
 		strncpy (filepath->name, filename, sizeof (filepath->name));
 	}
 

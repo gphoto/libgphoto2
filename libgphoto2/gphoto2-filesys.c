@@ -1499,8 +1499,8 @@ recursive_folder_scan (
  * gp_filesystem_reset in order to tell the fs that something has
  * changed and then gp_filesystem_get_folder in order to find the file.
  *
- * Note that you get a reference to the string stored in the filesystem structure,
- * so do not free it yourself.
+ * The returned folder is a newly allocated string, which the caller has to
+ * free.
  *
  * \return a gphoto2 error code.
  **/
