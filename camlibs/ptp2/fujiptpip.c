@@ -149,7 +149,7 @@ ptp_fujiptpip_sendreq (PTPParams* params, PTPContainer* req, int dataphase)
 	}
 	if (ret != len) {
 		GP_LOG_E ("ptp_fujiptpip_sendreq() len =%d but ret=%d", len, ret);
-		return PTP_RC_OK;
+		return PTP_RC_GeneralError;
 	}
 	return PTP_RC_OK;
 }
