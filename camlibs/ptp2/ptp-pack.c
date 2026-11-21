@@ -1905,6 +1905,23 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint32_t dpc)
 					MSG, ##__VA_ARGS__);						\
 	} while (0)
 
+/* strdup() of a string of at most maxlen bytes, which might lack its terminator */
+static char *
+_eos_strndup (const unsigned char *s, unsigned int maxlen)
+{
+	unsigned int	len = 0;
+	char		*str;
+
+	while ((len < maxlen) && s[len])
+		len++;
+	str = malloc (len + 1);
+	if (!str)
+		return NULL;
+	memcpy (str, s, len);
+	str[len] = '\0';
+	return str;
+}
+
 static inline int
 ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned int datasize, PTPCanonEOSEvents *events)
 {
@@ -2321,6 +2338,10 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				ptp_debug (params, INDENT "prop %04x is unknown", dpc);
 				ptp_debug_data (params, xdata, xsize);
 				/* custom func entries look like this on the 400D: '5 0 0 0 ?' = 4 bytes size + 1 byte data */
+				if (xsize < 4) {
+					xsize = 0;
+					break;
+				}
 				xdata += 4;
 				xsize -= 4;
 				break;
@@ -2353,6 +2374,13 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				break;
 			default:
 				ptp_debug_data (params, xdata, xsize);
+				break;
+			}
+			/* skip values missing from the event */
+			if ((((dpd->DataType == PTP_DTC_INT32) || (dpd->DataType == PTP_DTC_UINT32)) && (xsize < 4)) ||
+			    (((dpd->DataType == PTP_DTC_INT16) || (dpd->DataType == PTP_DTC_UINT16)) && (xsize < 2)) ||
+			    (((dpd->DataType == PTP_DTC_INT8) || (dpd->DataType == PTP_DTC_UINT8)) && (xsize < 1))) {
+				ptp_debug (params, "%s value of prop %x missing (size %d)", prefix, dpc, xsize);
 				break;
 			}
 			switch (dpd->DataType) {
@@ -2391,11 +2419,12 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 				dpd->DefaultValue.str	= ptp_unpack_string(params, data, 0, &len);
 				dpd->CurrentValue.str		= ptp_unpack_string(params, data, 0, &len);
 #else
+				/* the string might lack its terminator */
 				free (dpd->DefaultValue.str);
-				dpd->DefaultValue.str = strdup( (char*)xdata );
+				dpd->DefaultValue.str = _eos_strndup( xdata, xsize );
 
 				free (dpd->CurrentValue.str);
-				dpd->CurrentValue.str = strdup( (char*)xdata );
+				dpd->CurrentValue.str = _eos_strndup( xdata, xsize );
 #endif
 				ptp_debug (params, INDENT "prop %x value == '%s' (str)", dpc, dpd->CurrentValue.str);
 				break;
