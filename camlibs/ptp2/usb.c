@@ -508,7 +508,8 @@ ptp_usb_getresp (PTPParams* params, PTPContainer* resp)
 		}
 		/* else will be handled by ptp.c as error. */
 	}
-	resp->Nparam=(rlen-12)/4;
+	/* there are only 5 parameters in a response */
+	resp->Nparam=(rlen-12)/4 > 5 ? 5 : (rlen-12)/4;
 	resp->Param1=dtoh32(usbresp.payload.params.param1);
 	resp->Param2=dtoh32(usbresp.payload.params.param2);
 	resp->Param3=dtoh32(usbresp.payload.params.param3);
@@ -597,7 +598,7 @@ ptp_usb_event (PTPParams* params, PTPContainer* event, int wait)
 	}
 	/* if we read anything over interrupt endpoint it must be an event */
 	/* build an appropriate PTPContainer */
-	event->Nparam  = (rlen-12)/4;
+	event->Nparam  = rlen < 12 ? 0 : (rlen-12)/4;
 	event->Code   = dtoh16(usbevent.code);
 	event->SessionID=params->session_id;
 	event->Transaction_ID=dtoh32(usbevent.trans_id);
