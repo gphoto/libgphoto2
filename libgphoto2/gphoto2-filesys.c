@@ -552,12 +552,18 @@ append_to_folder (CameraFilesystemFolder *folder,
 	}
 	/* Not found ... create new folder */
 	if (s) {
+		CameraFilesystemFolder	*created;
 		char *x;
+		int ret;
+
 		C_MEM (x = calloc ((s-foldername)+1,1));
 		memcpy (x, foldername, (s-foldername));
 		x[s-foldername] = 0;
-		CR (append_folder_one (folder, x, newfolder));
+		ret = append_folder_one (folder, x, &created);
 		free (x);
+		CR (ret);
+		/* ... and the rest of the path in there */
+		return append_to_folder (created, s+1, newfolder);
 	} else {
 		CR (append_folder_one (folder, foldername, newfolder));
 	}
