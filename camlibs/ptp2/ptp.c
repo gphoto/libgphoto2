@@ -2247,7 +2247,7 @@ ptp_getfilesystemmanifest (PTPParams* params, uint32_t storage,
 	*numoifs = 0;
 	PTP_CNT_INIT(ptp, PTP_OC_GetFilesystemManifest, storage, objectformatcode, associationOH);
 	CHECK_PTP_RC (ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ret = ptp_unpack_ptp11_manifest (params, data, size, numoifs, oifs);
+	ret = ptp_unpack_ptp11_manifest (params, data, size, numoifs, oifs) ? PTP_RC_OK : PTP_ERROR_IO;
 	free(data);
 	return ret;
 }
