@@ -211,11 +211,17 @@ gp_file_append (CameraFile *file, const char *data,
 	C_PARAMS (file);
 
 	switch (file->accesstype) {
-	case GP_FILE_ACCESSTYPE_MEMORY:
-		C_MEM (file->data = realloc (file->data, sizeof (char) * (file->size + size)));
+	case GP_FILE_ACCESSTYPE_MEMORY: {
+		unsigned char *newdata;
+
+		/* Assigned only on success, since a failed realloc leaves the
+		 * original memory intact (and still owned by the file) */
+		C_MEM (newdata = realloc (file->data, sizeof (char) * (file->size + size)));
+		file->data = newdata;
 		memcpy (&file->data[file->size], data, size);
 		file->size += size;
 		break;
+	}
 	case GP_FILE_ACCESSTYPE_FD: {
 		unsigned long int curwritten = 0;
 		while (curwritten < size) {
