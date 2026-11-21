@@ -564,6 +564,12 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			result = GP_ERROR_IO_READ;
 			break;
 		}
+		if (ret == 0) {
+			/* the file got shorter meanwhile, don't loop forever */
+			GP_DEBUG ("Unexpected end of file after %ld bytes.", (long)curread);
+			result = GP_ERROR_IO_READ;
+			break;
+		}
 		curread += ret;
 		gp_file_append (file, (char *)buf, ret);
 		gp_context_progress_update (context, id, (1.0*curread/BLOCKSIZE));
