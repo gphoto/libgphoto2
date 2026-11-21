@@ -945,11 +945,17 @@ canon_usb_wait_for_event (Camera *camera, int timeout,
 	switch (buf2[4]) {
 	case 0x0e: {
 		CameraFilePath *path;
-		*eventtype = GP_EVENT_FILE_ADDED;
-		*eventdata = path = malloc(sizeof(CameraFilePath));
 		status = canon_usb_list_all_dirs ( camera, &final_state, &final_state_len, context );
 		if (status < GP_OK)
 			return status;
+		/* Allocated only now, since callers don't free the event data on error */
+		path = malloc(sizeof(CameraFilePath));
+		if (!path) {
+			free (final_state);
+			return GP_ERROR_NO_MEMORY;
+		}
+		*eventtype = GP_EVENT_FILE_ADDED;
+		*eventdata = path;
 		/* Find new file name in camera directory */
 		canon_int_find_new_image ( camera, camera->pl->directory_state, camera->pl->directory_state_length, final_state, final_state_len, path );
 		if (path->folder[0] != '/') {
