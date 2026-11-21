@@ -468,8 +468,13 @@ gp_abilities_list_detect (CameraAbilitiesList *list,
 		char *xpath;
 		GPPortType	type;
 
-		CHECK_RESULT (gp_port_info_list_get_info (info_list, i, &info));
-		CHECK_RESULT (gp_port_set_info (port, info));
+		res = gp_port_info_list_get_info (info_list, i, &info);
+		if (res >= GP_OK)
+			res = gp_port_set_info (port, info);
+		if (res < GP_OK) {
+			gp_port_free (port);
+			return res;
+		}
 		gp_port_info_get_type (info, &type);
 		res = gp_port_info_get_path (info, &xpath);
 		if (res <GP_OK)
