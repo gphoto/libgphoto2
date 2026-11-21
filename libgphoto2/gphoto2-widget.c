@@ -473,13 +473,18 @@ gp_widget_get_value (CameraWidget *widget, void *value)
 int
 gp_widget_append (CameraWidget *widget, CameraWidget *child)
 {
+	CameraWidget **children;
+
 	C_PARAMS (widget && child);
 
 	/* Return if they can't have any children */
 	C_PARAMS ((widget->type == GP_WIDGET_WINDOW) ||
 		  (widget->type == GP_WIDGET_SECTION));
 
-	C_MEM (widget->children = realloc(widget->children, sizeof(CameraWidget*)*(widget->children_count+1)));
+	/* Assigned only on success, since a failed realloc leaves the
+	 * original memory intact (and still owned by the widget) */
+	C_MEM (children = realloc(widget->children, sizeof(CameraWidget*)*(widget->children_count+1)));
+	widget->children = children;
 	widget->children[widget->children_count] = child;
 	widget->children_count += 1;
 	child->parent = widget;
@@ -499,6 +504,7 @@ gp_widget_append (CameraWidget *widget, CameraWidget *child)
 int
 gp_widget_prepend (CameraWidget *widget, CameraWidget *child)
 {
+	CameraWidget **children;
 	int x;
 
 	C_PARAMS (widget && child);
@@ -507,7 +513,10 @@ gp_widget_prepend (CameraWidget *widget, CameraWidget *child)
 	C_PARAMS ((widget->type == GP_WIDGET_WINDOW) ||
 		  (widget->type == GP_WIDGET_SECTION));
 
-	C_MEM (widget->children = realloc(widget->children, sizeof(CameraWidget*)*(widget->children_count+1)));
+	/* Assigned only on success, since a failed realloc leaves the
+	 * original memory intact (and still owned by the widget) */
+	C_MEM (children = realloc(widget->children, sizeof(CameraWidget*)*(widget->children_count+1)));
+	widget->children = children;
 
 	/* Shift down 1 */
 	for (x = widget->children_count; x > 0; x--)
