@@ -1082,10 +1082,15 @@ gp_file_detect_mime_type (CameraFile *file)
 		off_t	offset;
 		int	res;
 
-		offset = lseek (file->fd, 0, SEEK_SET);
+		/* Remember the current position to restore it afterwards */
+		offset = lseek (file->fd, 0, SEEK_CUR);
+		lseek (file->fd, 0, SEEK_SET);
 		res = read (file->fd, data, sizeof(data));
-		if (res == -1)
+		if (res == -1) {
+			if (offset != -1)
+				lseek (file->fd, offset, SEEK_SET);
 			return GP_ERROR_IO_READ;
+		}
 		/* image/tiff */
 		if ((res >= 5) && !memcmp (data, TIFF_SOI_MARKER, 5))
 			CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_TIFF))
@@ -1095,7 +1100,8 @@ gp_file_detect_mime_type (CameraFile *file)
 			CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_JPEG))
 		else
 			CHECK_RESULT (gp_file_set_mime_type (file, GP_MIME_RAW));
-		lseek (file->fd, offset, SEEK_SET);
+		if (offset != -1)
+			lseek (file->fd, offset, SEEK_SET);
 		break;
 	}
 	default:
