@@ -1406,10 +1406,10 @@ static int
 gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 		    const char *filename, GPContext *context)
 {
-	int count, x;
+	int count, x, ret;
 	CameraList *list;
 	const char *name;
-	char path[128];
+	char *path;
 
 	GP_LOG_D ("Scanning %s for %s...", folder, filename);
 
@@ -1432,11 +1432,16 @@ gp_filesystem_scan (CameraFilesystem *fs, const char *folder,
 	CL (count = gp_list_count (list), list);
 	for (x = 0; x < count; x++) {
 		CL (gp_list_get_name (list, x, &name), list);
-		strncpy (path, folder, sizeof (path));
-		if (path[strlen (path) - 1] != '/')
-			strncat (path, "/", sizeof (path) - strlen (path) - 1);
-		strncat (path, name, sizeof (path) - strlen (path) - 1);
-		CL (gp_filesystem_scan (fs, path, filename, context), list);
+		path = aprintf ("%s%s%s", folder,
+				(folder[strlen (folder) - 1] == '/') ? "" : "/",
+				name);
+		if (!path) {
+			gp_list_free (list);
+			return GP_ERROR_NO_MEMORY;
+		}
+		ret = gp_filesystem_scan (fs, path, filename, context);
+		free (path);
+		CL (ret, list);
 	}
 	gp_list_free (list);
 	return (GP_OK);
