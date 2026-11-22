@@ -199,6 +199,9 @@ cmp_list (const void *a, const void *b) {
 	const struct _entry *ca = a;
 	const struct _entry *cb = b;
 
+	/* Entries without a name (see gp_list_append()) go first */
+	if (!ca->name || !cb->name)
+		return (ca->name != NULL) - (cb->name != NULL);
 	return strcmp (ca->name, cb->name);
 }
 
@@ -256,7 +259,8 @@ gp_list_find_by_name (CameraList *list, int *index, const char *name)
 	 * camlibs/ptp2/library.c thinks this is faster
 	 */
 	for (i=list->used-1; i >= 0; i--) {
-		if (0==strcmp(list->entry[i].name, name)) {
+		/* Entries without a name (see gp_list_append()) never match */
+		if (list->entry[i].name && !strcmp(list->entry[i].name, name)) {
 			if (index) {
 				(*index) = i;
 			}
