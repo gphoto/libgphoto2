@@ -1546,6 +1546,7 @@ ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
 {
 	PTPContainer	ptp;
 	unsigned char	data[16] = {0};
+	unsigned char	*xdata = data;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetLiveViewParameters, 0x0d800011);
 
@@ -1556,7 +1557,23 @@ ptp_panasonic_9415 (PTPParams* params, PanasonicLiveViewSize *liveviewsize)
 	htod16a(data+12, liveviewsize->x);
 	htod16a(data+14, liveviewsize->freq);
 
-	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), (unsigned char**)&data, 0);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
+}
+
+/* Set "FlowState" (0x51000021) via 0x9415, as the LUMIX Flow app does.
+ * 1 = host may record (MovieRecControl otherwise returns DeviceBusy), 0 = release. */
+uint16_t
+ptp_panasonic_setflowstate (PTPParams* params, uint16_t state)
+{
+	PTPContainer	ptp;
+	unsigned char	data[10];
+	unsigned char	*xdata = data;
+
+	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetLiveViewParameters, 0x51000021);
+	htod32a(data+0, 0x51000021);
+	htod32a(data+4, 2);
+	htod16a(data+8, state);
+	return ptp_transaction(params, &ptp, PTP_DP_SENDDATA, sizeof(data), &xdata, NULL);
 }
 
 uint16_t
@@ -1577,6 +1594,14 @@ ptp_panasonic_setdeviceproperty (PTPParams* params, uint32_t propcode,
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetProperty, propcode);
 	ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	/* Some bodies (e.g. S5M2) reject all SetProperty writes with
+	 * InvalidParameter unless live view is running: start it and retry once. */
+	if ((ret == PTP_RC_InvalidParameter) && !params->inliveview &&
+	    (ptp_panasonic_liveview(params, 1) == PTP_RC_OK)) {
+		params->inliveview = 1;
+		PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_SetProperty, propcode);
+		ret = ptp_transaction(params, &ptp, PTP_DP_SENDDATA, size, &data, NULL);
+	}
 	free(data);
 	return ret;
 }
