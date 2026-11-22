@@ -888,7 +888,10 @@ gp_file_copy (CameraFile *destination, CameraFile *source)
 		uint64_t	xsize = source->size;
 		unsigned long curwritten = 0;
 
-		destination->handler->size (destination->private, &xsize);
+		C_PARAMS (destination->handler->write);
+		/* its result isn't used, and write-only handlers might lack it */
+		if (destination->handler->size)
+			destination->handler->size (destination->private, &xsize);
 		while (curwritten < source->size) {
 			uint64_t	tmpsize = source->size - curwritten;
 			int res = destination->handler->write (destination->private, source->data+curwritten, &tmpsize);
