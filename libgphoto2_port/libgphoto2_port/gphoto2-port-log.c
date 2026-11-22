@@ -133,16 +133,19 @@ gp_log_remove_func (int id)
 	GPLogLevel new_max_log_level = 0;
 	int status = GP_ERROR_BAD_PARAMETERS;
 
-	/* Remove log function from list and recalculate current most detailed log level needed */
+	/* Remove log function from list */
 	for (i=0;i<log_funcs_count;i++) {
 		if (log_funcs[i].id == id) {
 			memmove (log_funcs + i, log_funcs + i + 1, sizeof(LogFunc) * (log_funcs_count - i - 1));
 			log_funcs_count--;
 			status = GP_OK;
+			break;
 		}
+	}
+	/* Recalculate current most detailed log level needed by the remaining ones */
+	for (i=0;i<log_funcs_count;i++)
 		if (new_max_log_level < log_funcs[i].level)
 			new_max_log_level = log_funcs[i].level;
-	}
 	log_max_level = new_max_log_level;
 	return status;
 }
