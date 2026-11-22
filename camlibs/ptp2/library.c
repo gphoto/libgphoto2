@@ -72,6 +72,42 @@ static int capture_timeout = USB_TIMEOUT_CAPTURE;
 
 #define STORAGE_FOLDER_PREFIX		"store_"
 
+/* iOS assigns its single storage a new id each time it adds it, e.g. on the
+ * first connection after plugging the iPhone in (0x00010001, 0x00010002, ...),
+ * so its store_ folder would change between connections. Show it with the id
+ * it has on a fresh connection instead, translating that one back to the
+ * actual id. */
+#define APPLE_STABLE_STORAGEID		0x00010001
+
+static int
+has_apple_single_storage (PTPParams *params)
+{
+	/* 0xfeedface and 0x00000000 are placeholders of untrusted iPhones */
+	return	params->deviceinfo.Manufacturer &&
+		!strcmp (params->deviceinfo.Manufacturer, "Apple Inc.") &&
+		(params->storageids.len == 1) &&
+		(params->storageids.val[0] != 0xfeedface) &&
+		(params->storageids.val[0] != 0x00000000);
+}
+
+/* the storage id to show in the store_ folder name of the given storage */
+static uint32_t
+storage_folder_id (PTPParams *params, uint32_t storage)
+{
+	if (has_apple_single_storage (params) && (storage == params->storageids.val[0]))
+		return APPLE_STABLE_STORAGEID;
+	return storage;
+}
+
+/* the storage with the given id in its store_ folder name */
+static uint32_t
+folder_storage_id (PTPParams *params, uint32_t id)
+{
+	if (has_apple_single_storage (params) && (id == APPLE_STABLE_STORAGEID))
+		return params->storageids.val[0];
+	return id;
+}
+
 typedef int (*getfunc_t)(CameraFilesystem*, const char*, const char *, CameraFileType, CameraFile *, void *, GPContext *);
 typedef int (*putfunc_t)(CameraFilesystem*, const char*, CameraFile*, void*, GPContext*);
 
@@ -3459,7 +3495,7 @@ find_object_path (Camera *camera, PTPObject **ob, CameraFilePath *path)
 
 	uint32_t handle = (*ob)->oi.Handle;
 	strncpy  (path->name,  (*ob)->oi.Filename, sizeof(path->name));
-	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)(*ob)->oi.StorageID);
+	sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)storage_folder_id (&camera->pl->params, (*ob)->oi.StorageID));
 	CR (append_folder_from_handle (camera, (*ob)->oi.StorageID, (*ob)->oi.ParentObject, path->folder));
 	/* re-fetch invalidated ob cache pointer */
 	CR (ptp_find_object_in_cache (&camera->pl->params, handle, ob));
@@ -4541,7 +4577,7 @@ capturetriggered:
 			if (oi.StorageID == 0) {
 				strcpy (path->folder, "/");
 			} else {
-				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+				sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)storage_folder_id (params, oi.StorageID));
 			}
 			if (oi.ObjectFormat != PTP_OFC_EXIF_JPEG) {
 				/* the Nikon Coolpix P2 says "TIFF" and gives us "JPG". weird. */
@@ -5043,7 +5079,7 @@ camera_canon_capture (Camera *camera, CameraCaptureType type, CameraFilePath *pa
 		if (xmode == CANON_TRANSFER_CARD) {
 			fprintf (stderr,"parentobject is 0, but not in memory mode?\n");
 		}
-		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+		sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)storage_folder_id (params, oi.StorageID));
 		sprintf (path->name, "capt%04d.jpg", params->capcnt++);
 		ret = add_objectid_and_upload (camera, path, context, newobject, &oi);
 		ptp_free_objectinfo(&oi);
@@ -7093,7 +7129,7 @@ camera_wait_for_event (Camera *camera, int timeout,
 							return ret;
 						}
 					} else {
-						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)oi.StorageID);
+						sprintf (path->folder,"/"STORAGE_FOLDER_PREFIX"%08lx",(unsigned long)storage_folder_id (params, oi.StorageID));
 						sprintf (path->name, "capt%04d.jpg", params->capcnt++);
 						add_objectid_and_upload (camera, path, context, newobject, &oi);
 					}
@@ -8117,7 +8153,7 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 			char tmpname[20], *s;
 			PTPStorageInfo storageinfo;
 
-			APPEND_TXT ("store_%08x:\n",(unsigned int)*psid);
+			APPEND_TXT (STORAGE_FOLDER_PREFIX"%08x:\n",(unsigned int)storage_folder_id (params, *psid));
 
 			C_PTP_REP (ptp_getstorageinfo(params, *psid, &storageinfo));
 			APPEND_TXT (_("\tStorageDescription: %s\n"),
@@ -8381,7 +8417,7 @@ find_storage_and_handle_from_path(PTPParams *params, const char *folder, uint32_
 		return GP_ERROR;
 	}
 
-	*storage_id = strtoul(folder + strlen("/"STORAGE_FOLDER_PREFIX), NULL, 16);
+	*storage_id = folder_storage_id (params, strtoul(folder + strlen("/"STORAGE_FOLDER_PREFIX), NULL, 16));
 	folder += strlen("/"STORAGE_FOLDER_PREFIX) + 8;
 
 	*handle = folder_to_handle(params, folder, *storage_id, 0, NULL);
@@ -8491,7 +8527,7 @@ folder_list_func (CameraFilesystem *fs, const char *folder, CameraList *list,
 		if (ptp_operation_issupported(params,PTP_OC_GetStorageIDs)) {
 			char fname[PTP_MAXSTRLEN];
 			for_each (uint32_t*, psid, params->storageids) {
-				snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x", *psid);
+				snprintf(fname, sizeof(fname), STORAGE_FOLDER_PREFIX"%08x", storage_folder_id (params, *psid));
 				CR (gp_list_append (list, fname, NULL));
 			}
 		} else {
@@ -9691,7 +9727,7 @@ storage_info_func (CameraFilesystem *fs,
 
 		C_PTP (ptp_getstorageinfo (params, sids.val[i], &si));
 		sif->fields |= GP_STORAGEINFO_BASE;
-		sprintf (sif->basedir, "/"STORAGE_FOLDER_PREFIX"%08x", sids.val[i]);
+		sprintf (sif->basedir, "/"STORAGE_FOLDER_PREFIX"%08x", storage_folder_id (params, sids.val[i]));
 
 		if (si.VolumeLabel && strlen(si.VolumeLabel)) {
 			sif->fields |= GP_STORAGEINFO_LABEL;
