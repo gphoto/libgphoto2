@@ -1985,6 +1985,8 @@ static struct {
 	{"Olympus:OM-1",  	  	  0x07b4, 0x0136, PTP_CAP|PTP_CAP_PREVIEW},
 	/* Louie Lu <git@louie.lu> */
 	{"Olympus:OM-1MarkII",        0x33a2, 0x0136, PTP_CAP|PTP_CAP_PREVIEW},
+	/* doesn't support capture; USB ID reported in issue #949 */
+	{"OM System:OM-5",		  0x33a2, 0x012f, 0},
 
 	/* IRC report */
 	{"Casio:EX-Z120",                 0x07cf, 0x1042, 0},
