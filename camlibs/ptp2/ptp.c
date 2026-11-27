@@ -4389,7 +4389,8 @@ ptp_sony_get_vendorpropcodes (PTPParams* params, uint16_t **props, unsigned int 
 	/* Request new protocol version - cameras that dont support it will return their max supported version */
 	PTP_CNT_INIT(ptp, PTP_OC_SONY_SDIO_GetExtDeviceInfo, SONY_PROTOCOL_3_00, 1);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &xdata, &xsize));
-	if (xsize == 0) {
+	if (xsize < 2) {
+		free (xdata);
 		params->sony_mode_ver = 2;
 		ptp_debug (params, "No special operations sent?");
 		return PTP_RC_OK;
