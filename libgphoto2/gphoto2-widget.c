@@ -644,7 +644,7 @@ gp_widget_get_child_by_name (CameraWidget *widget, const char *name,
 {
 	int x;
 
-	C_PARAMS (widget && child);
+	C_PARAMS (widget && name && child);
 
 	if (!strcmp (widget->name, name)) {
 		*child = widget;
