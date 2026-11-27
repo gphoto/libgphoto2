@@ -8879,17 +8879,15 @@ _get_UINT32_as_localtime(CONFIG_GET_ARGS) {
 	return (GP_OK);
 }
 
+/* The camera keeps its local (wall clock) time: encode the local time of 'utc' as if it were UTC */
 static int
-_put_UINT32_as_localtime(CONFIG_PUT_ARGS) {
-	time_t	camtime,newcamtime;
+_localtime_as_utc(time_t utc, time_t *out) {
 	struct	tm *ptm;
 #if HAVE_SETENV
 	char	*tz;
 #endif
 
-	camtime = 0;
-	CR (gp_widget_get_value (widget, &camtime));
-	ptm = localtime(&camtime);
+	ptm = localtime(&utc);
 
 #if HAVE_SETENV
 	tz = getenv("TZ");
@@ -8898,7 +8896,7 @@ _put_UINT32_as_localtime(CONFIG_PUT_ARGS) {
 	setenv("TZ", "", 1);
 	tzset();
 #endif
-	newcamtime = mktime(ptm);
+	*out = mktime(ptm);
 #if HAVE_SETENV
 	if (tz) {
 		setenv("TZ", tz, 1);
@@ -8907,6 +8905,16 @@ _put_UINT32_as_localtime(CONFIG_PUT_ARGS) {
 		unsetenv("TZ");
 	tzset();
 #endif
+	return (GP_OK);
+}
+
+static int
+_put_UINT32_as_localtime(CONFIG_PUT_ARGS) {
+	time_t	camtime,newcamtime;
+
+	camtime = 0;
+	CR (gp_widget_get_value (widget, &camtime));
+	CR (_localtime_as_utc (camtime, &newcamtime));
 
 	propval->u32 = newcamtime;
 	return (GP_OK);
@@ -8923,6 +8931,17 @@ static int
 _put_Canon_SyncTime(CONFIG_PUT_ARGS) {
 	/* Just set the time if the entry changes. */
 	propval->u32 = time(NULL);
+	return (GP_OK);
+}
+
+static int
+_put_Canon_SyncLocalTime(CONFIG_PUT_ARGS) {
+	time_t	camtime;
+
+	/* EOS CameraTime is the camera wall clock (read with _get_UINT32_as_localtime by
+	 * "datetime"), so it gets the PC local time, not time(NULL) which is UTC. */
+	CR (_localtime_as_utc (time(NULL), &camtime));
+	propval->u32 = camtime;
 	return (GP_OK);
 }
 
@@ -12653,7 +12672,7 @@ static struct submenu camera_actions_menu[] = {
 	/* { N_("Viewfinder Mode"), "viewfinder", PTP_DPC_CANON_ViewFinderMode, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_ViewFinderMode, _put_Canon_ViewFinderMode}, */
 	/*{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_UnixTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },*/
 	{ N_("Synchronize camera date and time with PC (UTC)"),"syncdatetimeutc", PTP_DPC_CANON_EOS_UTCTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
-	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncTime },
+	{ N_("Synchronize camera date and time with PC"),"syncdatetime", PTP_DPC_CANON_EOS_CameraTime, PTP_VENDOR_CANON, PTP_DTC_UINT32, _get_Canon_SyncTime, _put_Canon_SyncLocalTime },
 
 	{ N_("Auto-Focus"),                     "autofocus",        PTP_DPC_SONY_ShutterHalfRelease, PTP_VENDOR_SONY, PTP_DTC_UINT16, _get_Sony_Autofocus,      _put_Sony_Autofocus },
 	{ N_("Manual-Focus"),                   "manualfocus",      PTP_DPC_SONY_ManualFocusAdjust,  PTP_VENDOR_SONY, PTP_DTC_INT16,  _get_Sony_ManualFocus,    _put_Sony_ManualFocus },
@@ -14032,6 +14051,16 @@ camera_get_single_config (Camera *camera, const char *confname, CameraWidget **w
 	return _get_config (camera, confname, widget, NULL, context);
 }
 
+/* by name first: some labels are shared (e.g. "Camera Date and Time" by datetime and
+ * datetimeutc), and a lookup by label alone finds the wrong widget, so the change is lost */
+static int
+_find_submenu_widget (CameraWidget *section, struct submenu *cursub, CameraWidget **widget)
+{
+	if (gp_widget_get_child_by_name (section, cursub->name, widget) == GP_OK)
+		return GP_OK;
+	return gp_widget_get_child_by_label (section, _(cursub->label), widget);
+}
+
 static int
 _has_better_matching_property(unsigned int menuno, unsigned int submenuno, PTPDevicePropDesc* dpd, CameraAbilities* ab,
 	const char* confname, CameraWidget* subwindow)
@@ -14071,7 +14100,7 @@ _has_better_matching_property(unsigned int menuno, unsigned int submenuno, PTPDe
 			struct submenu *cursub = menus[menuno].submenus+submenuno;
 
 			if (mode == MODE_SET) {
-				ret = gp_widget_get_child_by_label (section, _(cursub->label), &widget);
+				ret = _find_submenu_widget (section, cursub, &widget);
 				if (ret != GP_OK)
 					continue;
 
@@ -14166,7 +14195,7 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 
 			ret = GP_OK;
 			if (mode == MODE_SET) {
-				ret = gp_widget_get_child_by_label (section, _(cursub->label), &widget);
+				ret = _find_submenu_widget (section, cursub, &widget);
 				if (ret != GP_OK)
 					continue;
 
