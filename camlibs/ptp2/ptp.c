@@ -5804,10 +5804,15 @@ ptp_chdk_get_live_data(PTPParams* params, unsigned flags, unsigned char **data, 
 {
 	PTPContainer ptp;
 
+	unsigned int size = 0;
+
 	PTP_CNT_INIT(ptp, PTP_OC_CHDK, PTP_CHDK_GetDisplayData, flags);
 	*data_size = 0;
-	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, NULL));
+	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, data, &size));
 	*data_size = ptp.Param1;
+	/* the size reported by the camera, but not beyond the data received */
+	if (*data_size > size)
+		*data_size = size;
 	return PTP_RC_OK;
 }
 
