@@ -887,7 +887,7 @@ gp_camera_get_config (Camera *camera, CameraWidget **window, GPContext *context)
 int
 gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **widget, GPContext *context)
 {
-	CameraWidget		*rootwidget, *child;
+	CameraWidget		*rootwidget, *child, *copy = NULL;
 	CameraWidgetType	type;
 	const char		*label;
 	int			ret, ro;
@@ -930,11 +930,11 @@ gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **wi
 	gp_widget_get_label (child, &label);
 	gp_widget_get_readonly (child, &ro);
 
-	ret = gp_widget_new (type, label, widget);
+	ret = gp_widget_new (type, label, &copy);
 	if (ret != GP_OK)
 		goto out;
-	gp_widget_set_name (*widget, name);
-	gp_widget_set_readonly (*widget, ro);
+	gp_widget_set_name (copy, name);
+	gp_widget_set_readonly (copy, ro);
 
 	switch (type) {
 	case GP_WIDGET_MENU:
@@ -947,26 +947,26 @@ gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **wi
 			const char *choice;
 
 			gp_widget_get_choice (child, i, &choice);
-			gp_widget_add_choice (*widget, choice);
+			gp_widget_add_choice (copy, choice);
 		}
 		gp_widget_get_value (child, &value);
-		gp_widget_set_value (*widget, value);
+		gp_widget_set_value (copy, value);
 		break;
 	}
 	case GP_WIDGET_TEXT: {
 		char *value;
 
 		gp_widget_get_value (child, &value);
-		gp_widget_set_value (*widget, value);
+		gp_widget_set_value (copy, value);
 		break;
 	}
 	case GP_WIDGET_RANGE: {
 		float value, rmin, rmax, rstep;
 
 		gp_widget_get_range (child, &rmin, &rmax, &rstep);
-		gp_widget_set_range (*widget, rmin, rmax, rstep);
+		gp_widget_set_range (copy, rmin, rmax, rstep);
 		gp_widget_get_value (child, &value);
-		gp_widget_set_value (*widget, &value);
+		gp_widget_set_value (copy, &value);
 		break;
 	}
 	case GP_WIDGET_TOGGLE:
@@ -974,7 +974,7 @@ gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **wi
 		int value;
 
 		gp_widget_get_value (child, &value);
-		gp_widget_set_value (*widget, &value);
+		gp_widget_set_value (copy, &value);
 		break;
 	}
 	case GP_WIDGET_BUTTON:
@@ -985,6 +985,11 @@ gp_camera_get_single_config (Camera *camera, const char *name, CameraWidget **wi
 		break;
 	}
 out:
+	/* Hand out the copy only if it's complete */
+	if (ret == GP_OK)
+		*widget = copy;
+	else if (copy)
+		gp_widget_free (copy);
 	gp_widget_free (rootwidget);
 	CHECK_CLOSE (camera, context);
 	CAMERA_UNUSED (camera, context);
