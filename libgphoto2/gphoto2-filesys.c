@@ -696,6 +696,7 @@ gp_filesystem_free (CameraFilesystem *fs)
  * Tells the fs that there is a file called filename in folder
  * called folder. Usually camera drivers will call this function after
  * capturing an image in order to tell the fs about the new file.
+ * If filename is NULL, only the folder gets appended.
  * A front-end should not use this function.
  *
  * \return a gphoto2 error code.
@@ -740,11 +741,14 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
-	GP_LOG_D ("Append %s/%s to filesystem", folder, filename);
+	GP_LOG_D ("Append %s/%s to filesystem", folder, filename ? filename : "");
 	/* Check folder for existence, if not, create it. */
 	f = lookup_folder (fs, fs->rootfolder, folder, context);
 	if (!f)
 		CR (append_folder (fs, folder, &f, context));
+	/* Just the folder was to be appended */
+	if (!filename)
+		return (GP_OK);
 	if (f->files_dirty) { /* Need to load folder from driver first ... capture case */
 		CameraList	*xlist;
 		int ret;
