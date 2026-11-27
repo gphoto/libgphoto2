@@ -36,7 +36,7 @@ if $try_gtkdoc; then
 	fi
 fi
 AM_CONDITIONAL([ENABLE_GTK_DOC], [$have_gtkdoc])
-GP_CONFIG_MSG([build API docs with gtk-doc],[$gtkdoc_msg])
+GP_CONFIG_MSG([build API docs with gtk-doc], [$gtkdoc_msg])
 
 apidocdir="${htmldir}/api"
 AC_SUBST([apidocdir])

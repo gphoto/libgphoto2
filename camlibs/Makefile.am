@@ -73,8 +73,8 @@ camlib_ldflags      += -export-symbols '$(top_srcdir)/camlibs/camlib.sym'
 camlib_ldflags += -rpath '$(camlibdir)'
 
 camlib_libadd =
-camlib_libadd += $(top_builddir)/libgphoto2/libgphoto2.la
-camlib_libadd += $(top_builddir)/libgphoto2_port/libgphoto2_port/libgphoto2_port.la
+camlib_libadd += $(libgphoto2_la)
+camlib_libadd += $(libgphoto2_port_la)
 
 camlib_cflags  =
 
