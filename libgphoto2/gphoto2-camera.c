@@ -1935,10 +1935,10 @@ gp_camera_stop_timeout (Camera *camera, unsigned int id)
 	if (!camera || !camera->pc)
 		return;
 
-	if (!camera->pc->timeout_stop_func)
-		return;
-
-	/* Check if we know this id. If yes, remove it. */
+	/*
+	 * Check if we know this id. If yes, remove it, even without a stop
+	 * function, as gp_camera_exit() keeps calling us until all are gone.
+	 */
 	for (i = 0; i < camera->pc->timeout_ids_len; i++)
 		if (camera->pc->timeout_ids[i] == id)
 			break;
@@ -1950,5 +1950,7 @@ gp_camera_stop_timeout (Camera *camera, unsigned int id)
 	camera->pc->timeout_ids = realloc (camera->pc->timeout_ids,
 				sizeof (int) * camera->pc->timeout_ids_len);
 
-	camera->pc->timeout_stop_func (camera, id, camera->pc->timeout_data);
+	if (camera->pc->timeout_stop_func)
+		camera->pc->timeout_stop_func (camera, id,
+					       camera->pc->timeout_data);
 }
