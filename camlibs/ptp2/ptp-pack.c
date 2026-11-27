@@ -3085,6 +3085,13 @@ ptp_unpack_ptp11_manifest (
 	if (!data || datalen < 8)
 		return 0;
 	numberoifs = dtoh64o(data, offset);
+	/* every entry takes at least 34 bytes plus two (empty) strings, so a
+	 * count the data cannot hold is bogus; checking it before allocating
+	 * also keeps it from being truncated to a smaller size_t */
+	if (numberoifs > (datalen - offset) / (34 + 2)) {
+		ptp_debug (params, "manifest claims %llu entries, but has only %u bytes", (unsigned long long)numberoifs, datalen);
+		return 0;
+	}
 	xoifs = calloc(numberoifs, sizeof(PTPObjectFilesystemInfo));
 	if (!xoifs)
 		return 0;
