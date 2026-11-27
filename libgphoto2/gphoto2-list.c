@@ -173,23 +173,31 @@ gp_list_reset (CameraList *list)
 int
 gp_list_append (CameraList *list, const char *name, const char *value)
 {
+	char *newname = NULL, *newvalue = NULL;
+
 	C_PARAMS (list && list->ref_count);
 
 	if (list->used == list->max) {
-		C_MEM (list->entry = realloc(list->entry,(list->max+100)*sizeof(struct _entry)));
+		struct _entry *entry;
+
+		/* Assigned only on success, since a failed realloc leaves the
+		 * original memory intact (and still owned by the list) */
+		C_MEM (entry = realloc(list->entry,(list->max+100)*sizeof(struct _entry)));
+		list->entry = entry;
 		list->max += 100;
 	}
 
-	if (name) {
-		C_MEM (list->entry[list->used].name = strdup (name));
-	} else {
-		list->entry[list->used].name = NULL;
-	}
+	if (name)
+		C_MEM (newname = strdup (name));
 	if (value) {
-		C_MEM (list->entry[list->used].value = strdup (value));
-	} else {
-		list->entry[list->used].value = NULL;
+		newvalue = strdup (value);
+		if (!newvalue) {
+			free (newname);
+			C_MEM (newvalue);
+		}
 	}
+	list->entry[list->used].name = newname;
+	list->entry[list->used].value = newvalue;
 	list->used++;
 	return (GP_OK);
 }
