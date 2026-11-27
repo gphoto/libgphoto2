@@ -740,11 +740,13 @@ gp_filesystem_append (CameraFilesystem *fs, const char *folder,
 	CC (context);
 	CA (folder, context);
 
-	GP_LOG_D ("Append %s/%s to filesystem", folder, filename);
+	GP_LOG_D ("Append %s/%s to filesystem", folder, filename ? filename : "(directory)");
 	/* Check folder for existence, if not, create it. */
 	f = lookup_folder (fs, fs->rootfolder, folder, context);
 	if (!f)
 		CR (append_folder (fs, folder, &f, context));
+	if (!filename)
+		return GP_OK;
 	if (f->files_dirty) { /* Need to load folder from driver first ... capture case */
 		CameraList	*xlist;
 		int ret;
