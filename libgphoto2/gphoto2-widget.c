@@ -551,7 +551,7 @@ gp_widget_get_child (CameraWidget *widget, int child_number,
 		     CameraWidget **child)
 {
 	C_PARAMS (widget && child);
-	C_PARAMS (child_number < widget->children_count);
+	C_PARAMS ((child_number >= 0) && (child_number < widget->children_count));
 
 	*child = widget->children[child_number];
 	return (GP_OK);
