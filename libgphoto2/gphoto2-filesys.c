@@ -105,14 +105,19 @@ static int gp_filesystem_get_file_impl (CameraFilesystem *, const char *,
 static time_t
 get_time_from_exif_tag(ExifEntry *e) {
 	struct tm ts;
+	char buf[20];
 
-	e->data[4] = e->data[ 7] = e->data[10] = e->data[13] = e->data[16] = 0;
-	ts.tm_year = atoi ((char*)e->data) - 1900;
-	ts.tm_mon  = atoi ((char*)(e->data + 5)) - 1;
-	ts.tm_mday = atoi ((char*)(e->data + 8));
-	ts.tm_hour = atoi ((char*)(e->data + 11));
-	ts.tm_min  = atoi ((char*)(e->data + 14));
-	ts.tm_sec  = atoi ((char*)(e->data + 17));
+	/* "YYYY:MM:DD HH:MM:SS", the entry might be shorter in broken files */
+	if (!e->data || (e->size < sizeof (buf) - 1))
+		return 0;
+	memcpy (buf, e->data, sizeof (buf) - 1);
+	buf[4] = buf[ 7] = buf[10] = buf[13] = buf[16] = buf[19] = 0;
+	ts.tm_year = atoi (buf) - 1900;
+	ts.tm_mon  = atoi (buf + 5) - 1;
+	ts.tm_mday = atoi (buf + 8);
+	ts.tm_hour = atoi (buf + 11);
+	ts.tm_min  = atoi (buf + 14);
+	ts.tm_sec  = atoi (buf + 17);
 
 	/* Let mktime() figure out whether DST was in effect at the time */
 	ts.tm_isdst = -1;
