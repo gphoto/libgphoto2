@@ -275,6 +275,8 @@ ums_wrap_senddata (
 	cmd.length = uw_value(sendlen+12);
 
 	xdata = malloc(sendlen + 12);
+	if (!xdata)
+		return PTP_RC_GeneralError;
 	usbreq.length = htod32(sendlen + 12);
 	usbreq.type   = htod16(PTP_USB_CONTAINER_DATA);
 	usbreq.code   = htod16(ptp->Code);
@@ -283,10 +285,12 @@ ums_wrap_senddata (
 	ret = getter->getfunc(params, getter->priv, sendlen, xdata+12, &gotlen);
 	if (ret != PTP_RC_OK) {
 		GP_LOG_E ("ums_wrap_senddata *** data get from handler FAILED, ret %d", ret);
+		free (xdata);
 		return ret;
 	}
 	if (gotlen != sendlen) {
 		GP_LOG_E ("ums_wrap_senddata *** data get from handler got %ld instead of %ld", gotlen, sendlen);
+		free (xdata);
 		return PTP_ERROR_IO;
 	}
 
