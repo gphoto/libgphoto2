@@ -1858,6 +1858,13 @@ ptp_pack_EOS_CustomFuncEx (PTPParams* params, unsigned char* data, char* str)
 #define PTP_cee_OA64_2ndOID	0x28
 #define PTP_cee_OA64_Name	0x2c	/* OK */
 
+/* for PTP_EC_CANON_EOS_ObjectAddedEx64LFN (seen on the EOS R5 Mark II):
+ * same fields as ObjectAddedEx64 up to 0x2c (with a real 64 bit size),
+ * then a 32 bit date (camera local time) and the filename as a PTP string
+ * (UCS-2, long file names). */
+#define PTP_cee_OA64L_Date	0x2c
+#define PTP_cee_OA64L_Name	0x30
+
 /* for PTP_EC_CANON_EOS_ObjectAddedNew */
 #define PTP_cee_OAN_OFC		0x0c
 #define PTP_cee_OAN_Size	0x14
@@ -2020,6 +2027,37 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			           prefix, e[i].u.object.Handle, e[i].u.object.ParentObject, e[i].u.object.ObjectFormat,
 			           e[i].u.object.ObjectSize, e[i].u.object.Filename);
 			break;
+		case PTP_EC_CANON_EOS_ObjectAddedEx64LFN: {
+/*
+   EOS R5 Mark II, JPEG "_K8A0597.JPG" on the SD card (75 bytes):
+   0x00: 4b 00 00 00  b6 c1 00 00  a2 4a 38 a3  01 00 02 00   size, code, handle, storage
+   0x10: 01 38 00 00  00 00 00 00  20 00 00 00  63 68 2d 01   ofc, ?, ?, size (64 bit) ...
+   0x20: 00 00 00 00  00 00 38 a3  a0 4a 38 a3  ae af 05 6b   ... size, parent, 2nd oid, date
+   0x30: 0d 5f 00 4b  00 38 00 ...  4a 00 50 00  47 00 00 00  name as PTP string
+*/
+			uint32_t	offset = PTP_cee_OA64L_Name;
+			char		*name = NULL;
+
+			if (size < PTP_cee_OA64L_Name+1) {
+				ptp_debug (params, "%s size %d is smaller than %d", prefix, size, PTP_cee_OA64L_Name+1);
+				break;
+			}
+			if (!ptp_unpack_string(params, curdata, &offset, size, &name)) {
+				ptp_debug (params, "%s objectinfo added 64lfn: filename does not fit in size %d", prefix, size);
+				break;
+			}
+			e[i].type = PTP_EOSEvent_ObjectAdded;
+			e[i].u.object.Handle        = dtoh32a(curdata + PTP_cee_OA64_Handle);
+			e[i].u.object.StorageID     = dtoh32a(curdata + PTP_cee_OA64_StorageID);
+			e[i].u.object.ParentObject  = dtoh32a(curdata + PTP_cee_OA64_Parent);
+			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA64_OFC);
+			e[i].u.object.ObjectSize    = dtoh64a(curdata + PTP_cee_OA64_Size);
+			e[i].u.object.Filename      = name;
+			ptp_debug (params, "%s objectinfo added 64lfn: handle %08x, parent %08x, ofc %04x, size %lu, filename %s",
+			           prefix, e[i].u.object.Handle, e[i].u.object.ParentObject, e[i].u.object.ObjectFormat,
+			           (unsigned long)e[i].u.object.ObjectSize, e[i].u.object.Filename);
+			break;
+		}
 		case PTP_EC_CANON_EOS_RequestObjectTransfer:
 		case PTP_EC_CANON_EOS_RequestObjectTransfer64:
 			if (size < PTP_cee_OI_Name+1) {
