@@ -14410,20 +14410,24 @@ _set_config (Camera *camera, const char *confname, CameraWidget *window, GPConte
 			break;
 		}
 
-		/* TODO: ret is ignored here, this is inconsistent with the code above */
 		ret = LOG_ON_PTP_E (ptp_generic_setdevicepropvalue (params, propid, &propval, dpd.DataType));
 		if (ret != PTP_RC_OK) {
 			gp_context_error (context, _("The property '%s' / 0x%04x was not set (0x%04x: %s)."),
 					  _(label), propid, ret, _(ptp_strerror(ret, params->deviceinfo.VendorExtensionID)));
-			ret = GP_ERROR;
-		} else if (mode == MODE_SET) {
+			ret = translate_ptp_result (ret);
+		} else {
+			ret = GP_OK;
 			/* only clear the flag on success, so a retry of the same window re-sends a failed value */
-			gp_widget_set_changed (widget, FALSE);
+			if (mode == MODE_SET)
+				gp_widget_set_changed (widget, FALSE);
 		}
 		ptp_free_propvalue (dpd.DataType, &propval);
 		ptp_free_devicepropdesc (&dpd);
 		if (mode == MODE_SINGLE_SET)
-			return GP_OK;
+			return ret;
+		/* report the (first) failure at the end, so that it doesn't prevent setting the other properties */
+		if ((ret != GP_OK) && (failed_ret == GP_OK))
+			failed_ret = ret;
 	}
 	if (mode == MODE_SINGLE_SET) {
 		/* if we get here, we have not found anything */
