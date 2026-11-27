@@ -10243,8 +10243,12 @@ camera_init (Camera *camera, GPContext *context)
 	if ((!params->storageids.len) && (ptp_operation_issupported(params, PTP_OC_GetStorageIDs)))
 		ptp_getstorageids(params, &params->storageids);
 
-	if (a.usb_vendor == 0x05ac) {	/* Apple iOS 10.2 hack */
-		int 		timeout;
+	/* 0xfeedface and 0x00000000 seem bad storageid values for iPhones */
+#define APPLE_VALID_STORAGEID(id) (((id) != 0xfeedface) && ((id) != 0x00000000))
+#define APPLE_VALID_STORAGEIDS(params) ((params)->storageids.len && APPLE_VALID_STORAGEID ((params)->storageids.val[0]))
+	if ((a.usb_vendor == 0x05ac) && !APPLE_VALID_STORAGEIDS (params)) {	/* Apple iOS 10.2 hack */
+		int 		timeout, storeadded = 0;
+		time_t		start = time (NULL);
 		PTPContainer	event;
 
 		/* Background:
@@ -10252,32 +10256,35 @@ camera_init (Camera *camera, GPContext *context)
 		 * Once the ipad user allows / trusts the computer in a popup dialog,
 		 * this storage removed and the actual storage is being addded
 		 * StoreRemoved 0xfeedface and StoreAdded 0x.... events are seen.
+		 *
+		 * Wait for the StoreAdded event of the actual storage, not just for a
+		 * valid storage id: the storage ids refetched on the StoreRemoved event
+		 * might already include it, while its content is only available once
+		 * it's been added, so listing it right away finds it empty.
 		 */
 
-		/* Wait for a valid storage id , starting with 0x0001???? */
-		/* wait for 3 events or 9 seconds at most */
-		tries = 3;
+		/* wait for 20 seconds at most: even when the computer is trusted already,
+		 * the actual storage has been seen to be added only after 11.5 seconds
+		 * (shortly after a 0xc001 vendor event) on the first connection after
+		 * plugging the iPhone in */
 		gp_port_get_timeout (camera->port, &timeout);
 		gp_port_set_timeout (camera->port, 3000);
-		while (tries--) {
-			/* 0xfeedface and 0x00000000 seem bad storageid values for iPhones */
+		while (!(storeadded && APPLE_VALID_STORAGEIDS (params)) && (time (NULL) - start < 20)) {
 			/* The event handling code in ptp.c will refresh the storage list if
 			 * it sees the correct events */
-			if (params->storageids.len && (
-				(params->storageids.val[0] != 0xfeedface) &&
-				(params->storageids.val[0] != 0x00000000)
-			))
-				break;
 			C_PTP_REP (ptp_wait_event (params));
 			while (ptp_get_one_event (params, &event)) {
 				GP_LOG_D ("Initial ptp event 0x%x (param1=%x)", event.Code, event.Param1);
-				/* the ptp stack should refresh the storage array */
-				if (event.Code == PTP_EC_StoreAdded)
+				if ((event.Code == PTP_EC_StoreAdded) && APPLE_VALID_STORAGEID (event.Param1)) {
+					storeadded = 1;
 					break;
+				}
 			}
 		}
 		gp_port_set_timeout (camera->port, timeout);
 	}
+#undef APPLE_VALID_STORAGEIDS
+#undef APPLE_VALID_STORAGEID
 
 	/* initial reading of the root directory of each storage, which serves 2 purposes:
 	 * a) the ptp_list_folder caching of root queries depends on this being done once
