@@ -322,7 +322,13 @@ ums_wrap_getresp (PTPParams* params, PTPContainer* resp)
 
 	memcpy (&usbresp, buf, sizeof(buf));
 	resp->Code = dtoh16(usbresp.code);
-	resp->Nparam = (dtoh32(usbresp.length)-PTP_USB_BULK_REQ_LEN)/sizeof(uint32_t);
+	/* the parameters follow the header, up to 5 of them */
+	if (dtoh32(usbresp.length) < PTP_USB_BULK_HDR_LEN)
+		resp->Nparam = 0;
+	else if (dtoh32(usbresp.length) > PTP_USB_BULK_REQ_LEN)
+		resp->Nparam = 5;
+	else
+		resp->Nparam = (dtoh32(usbresp.length)-PTP_USB_BULK_HDR_LEN)/sizeof(uint32_t);
 	resp->Param1 = dtoh32(usbresp.payload.params.param1);
 	resp->Param2 = dtoh32(usbresp.payload.params.param2);
 	resp->Param3 = dtoh32(usbresp.payload.params.param3);
