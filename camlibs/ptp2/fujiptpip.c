@@ -1015,7 +1015,7 @@ ptp_fujiptpip_connect (PTPParams* params, const char *address) {
 			PTPSOCK_CLOSE (params->jpgfd);
 			return translate_ptp_result (ret);
 		}
-	} while(connect_tries < 2);
+	} while ((ret != PTP_RC_OK) && (connect_tries < 2)); /* retry only after the camera denied access */
 	GP_LOG_D ("fujiptpip connected!");
 	return GP_OK;
 }
