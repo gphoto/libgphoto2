@@ -1342,6 +1342,7 @@ chdk_camera_capture_preview (Camera *camera, CameraFile *file, GPContext *contex
 			_("CHDK get live data failed"));
 	if (ptp_chdk_parse_live_data (params, data, size, &header, &vpd, &bmd) != PTP_RC_OK) {
 		gp_context_error (context, _("CHDK get live data failed: incomplete data (%d bytes) returned"), size);
+		free (data);
 		return GP_ERROR;
 	}
 #ifdef HAVE_LIBJPEG
