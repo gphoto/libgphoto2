@@ -5931,7 +5931,9 @@ ptp_fuji_getevents (PTPParams* params, uint16_t** events, uint16_t* count)
 		*count = dtoh16a(data);
 		ptp_debug(params, "event count: %d", *count);
 		*events = calloc(*count, sizeof(uint16_t));
-		if(size >= 2u + *count * 6)
+		if (!*events)
+			*count = 0;
+		else if(size >= 2u + *count * 6)
 		{
 			uint16_t	param;
 			uint32_t	value;
