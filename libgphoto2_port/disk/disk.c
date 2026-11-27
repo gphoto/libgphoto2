@@ -133,19 +133,20 @@ gp_port_library_list (GPPortInfoList *list)
 				if (-1 == stat(path, &stbuf))
 					continue;
 			}
-			s = aprintf (_("Media '%s'"), mntent->mnt_fsname);
-			gp_port_info_new (&info);
-			gp_port_info_set_type (info, GP_PORT_DISK);
-			gp_port_info_set_name (info, s);
-			free (s);
-
+			/* Skip mounts listed already, before creating their entry */
 			s = aprintf ("disk:%s", mntent->mnt_dir);
-			gp_port_info_set_path (info, s);
 			if (gp_port_info_list_lookup_path (list, s) >= GP_OK) {
 				free (s);
 				continue;
 			}
+			gp_port_info_new (&info);
+			gp_port_info_set_type (info, GP_PORT_DISK);
+			gp_port_info_set_path (info, s);
 			free(s);
+
+			s = aprintf (_("Media '%s'"), mntent->mnt_fsname);
+			gp_port_info_set_name (info, s);
+			free (s);
 			CHECK (gp_port_info_list_append (list, info));
 		}
 		endmntent(mnt);
@@ -211,18 +212,19 @@ gp_port_library_list (GPPortInfoList *list)
 			if (NULL != strstr(mntent->mnt_fsname, "automount")) {
 				continue;
 			}
-			gp_port_info_new (&info);
-			gp_port_info_set_type (info, GP_PORT_DISK);
-			s = aprintf (_("Media '%s'"),  mntent->mnt_fsname);
-			gp_port_info_set_name (info, s);
-			free (s);
-
+			/* Skip mounts listed already, before creating their entry */
 			s = aprintf ("disk:%s", mntent->mnt_dir);
-			gp_port_info_set_path (info, s);
 			if (gp_port_info_list_lookup_path (list, s) >= GP_OK) {
 				free (s);
 				continue;
 			}
+			gp_port_info_new (&info);
+			gp_port_info_set_type (info, GP_PORT_DISK);
+			gp_port_info_set_path (info, s);
+			free (s);
+
+			s = aprintf (_("Media '%s'"),  mntent->mnt_fsname);
+			gp_port_info_set_name (info, s);
 			free (s);
 			CHECK (gp_port_info_list_append (list, info));
 		}
