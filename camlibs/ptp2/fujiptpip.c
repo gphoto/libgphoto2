@@ -214,6 +214,12 @@ ptp_fujiptpip_generic_read (PTPParams *params, int fd, PTPIPHeader *hdr, unsigne
 	return PTP_RC_OK;
 }
 
+/* Whether the packet read by ptp_fujiptpip_generic_read() without a type carries at least size bytes of data */
+static int
+ptp_fujiptpip_has_data (PTPIPHeader *hdr, unsigned int size) {
+	return dtoh32 (hdr->length) - sizeof (uint32_t) >= size;
+}
+
 static uint16_t
 ptp_fujiptpip_cmd_read (PTPParams* params, PTPIPHeader *hdr, unsigned char** data) {
 	ptp_fujiptpip_check_event (params);
@@ -544,6 +550,12 @@ ptp_fujiptpip_getresp (PTPParams* params, PTPContainer* resp)
 	if (ret != PTP_RC_OK)
 		return GP_ERROR;
 
+	/* the packet type, response code and transaction id */
+	if (!ptp_fujiptpip_has_data (&hdr, fujiptpip_resp_param1)) {
+		GP_LOG_E ("response packet too short");
+		free (data);
+		return PTP_RC_GeneralError;
+	}
 	switch (dtoh16a(data)) {
 	case 3:
 		GP_LOG_D("PTPIP_CMD_RESPONSE");
@@ -819,6 +831,11 @@ ptp_fujiptpip_event (PTPParams* params, PTPContainer* event, int wait)
 		break;
 	}
 
+	if (!ptp_fujiptpip_has_data (&hdr, ptpip_event_param1)) {
+		GP_LOG_E ("event packet too short");
+		free (data);
+		return PTP_RC_GeneralError;
+	}
 	event->Code		= dtoh16a(&data[ptpip_event_code]);
 	event->Transaction_ID	= dtoh32a(&data[ptpip_event_transid]);
 	n = (dtoh32(hdr.length) - sizeof(uint32_t) - ptpip_event_param1)/sizeof(uint32_t);
