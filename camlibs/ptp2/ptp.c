@@ -1476,8 +1476,9 @@ c0 03 00 05 bc 02 1e 00
 		ptp_debug (params, "structsize expected 8, but is %d", structsize);
 		goto error;
 	}
-	if (count * structsize > blobsize) {
-		ptp_debug (params, "%d * %d = %d is larger than %d", count, structsize, count * structsize, blobsize);
+	/* the blob starts with the 4 bytes of count and structsize */
+	if (count * structsize > blobsize - 4) {
+		ptp_debug (params, "%d * %d = %d is larger than %d", count, structsize, count * structsize, blobsize - 4);
 		goto error;
 	}
 
