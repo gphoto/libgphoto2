@@ -726,6 +726,7 @@ storage_info_func (CameraFilesystem *fs,
 
 #if defined(HAVE_STATVFS)
 	struct	statvfs		stfs;
+	unsigned long		frsize;
 	char *xpath;
 	int ret;
 
@@ -754,13 +755,13 @@ storage_info_func (CameraFilesystem *fs,
 	sfs->type		= GP_STORAGEINFO_ST_REMOVABLE_RAM;
 	sfs->fstype		= GP_STORAGEINFO_FST_GENERICHIERARCHICAL;
 	sfs->access		= GP_STORAGEINFO_AC_READWRITE;
-	if (stfs.f_bsize >= 1024) {
-		sfs->capacitykbytes	= stfs.f_blocks*(stfs.f_bsize/1024);
-		sfs->freekbytes		= stfs.f_bavail*(stfs.f_bsize/1024);
-	} else {
-		sfs->capacitykbytes	= stfs.f_blocks/(1024/stfs.f_bsize);
-		sfs->freekbytes		= stfs.f_bavail/(1024/stfs.f_bsize);
-	}
+	/*
+	 * The block counts are in units of f_frsize, which differs from the
+	 * preferred I/O size in f_bsize on e.g. macOS (4 KiB vs 1 MiB).
+	 */
+	frsize = stfs.f_frsize ? stfs.f_frsize : stfs.f_bsize;
+	sfs->capacitykbytes	= (uint64_t)stfs.f_blocks * frsize / 1024;
+	sfs->freekbytes		= (uint64_t)stfs.f_bavail * frsize / 1024;
 	return GP_OK;
 #endif
 
