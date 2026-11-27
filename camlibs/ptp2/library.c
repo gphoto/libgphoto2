@@ -8312,19 +8312,24 @@ camera_summary (Camera* camera, CameraText* summary, GPContext *context)
 #undef SUMMARY_END
 }
 
-static uint32_t
-find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t handle, PTPObject **retob)
+/* Look up the child named by the first component of 'path' in folder 'handle'.
+ * Sets *child to PTP_HANDLER_SPECIAL if there is no such child. Returns the
+ * PTP error if the folder could not be listed (e.g. camera disconnected), so it
+ * is not mistaken for a missing child. */
+static uint16_t
+find_child_rc (PTPParams *params, const char *path, uint32_t storage, uint32_t handle, PTPObject **retob, uint32_t *child)
 {
 	uint16_t ret;
-	uint32_t found_child;
 
 	const char *slash = strchr (path, '/');
 	size_t filename_len = slash ? (size_t)(slash - path) : strlen(path);
 
+	*child = PTP_HANDLER_SPECIAL;
+
 	PTPObjectHandles handles = {0};
 	ret = ptp_list_folder (params, storage, handle, &handles);
 	if (ret != PTP_RC_OK)
-		return PTP_HANDLER_SPECIAL;
+		return ret;
 
 	for_each (uint32_t*, poid, handles) {
 		PTPObject *ob;
@@ -8335,46 +8340,60 @@ find_child (PTPParams *params, const char *path, uint32_t storage, uint32_t hand
 
 		if (PTP_RC_OK != ptp_object_want (params, *poid, PTPOBJECT_OBJECTINFO_LOADED, &ob)) // refresh
 			continue; /* object might have been deleted but ObjectRemoved event not handled, yet */
-		if (!strncmp (ob->oi.Filename, path, filename_len)) {
+		/* match the whole path component, not just a prefix ("100" must not match "100CANON") */
+		if (ob->oi.Filename && strlen (ob->oi.Filename) == filename_len &&
+		    !strncmp (ob->oi.Filename, path, filename_len)) {
 			if (retob)
 				*retob = ob;
-			found_child = *poid;
-			free_array (&handles);
-			return found_child;
+			*child = *poid;
+			break;
 		}
 	}
 	free_array (&handles);
-	/* else not found */
-	return PTP_HANDLER_SPECIAL;
+	return PTP_RC_OK;
 }
 
-static uint32_t
-folder_to_handle(PTPParams *params, const char *folder, uint32_t storage, uint32_t parent, PTPObject **retob)
+/* Resolve 'folder' below 'parent' into *handle, PTP_HANDLER_SPECIAL if it does
+ * not exist. Returns the PTP error if a folder on the way could not be listed. */
+static uint16_t
+folder_to_handle_rc (PTPParams *params, const char *folder, uint32_t storage, uint32_t parent, PTPObject **retob, uint32_t *handle)
 {
+	uint16_t ret;
+	uint32_t child;
+
 	GP_LOG_D("(folder='%s', storage=0x%08x, parent=0x%08x)", folder, storage, parent);
 	if (retob) *retob = NULL;
-	if (!strlen(folder) || !strcmp(folder, "/"))
-		return PTP_HANDLER_ROOT;
+	if (!strlen(folder) || !strcmp(folder, "/")) {
+		*handle = PTP_HANDLER_ROOT;
+		return PTP_RC_OK;
+	}
 
 	if (folder[0] == '/')
 		folder++;
 
-	uint32_t child = find_child (params, folder, storage, parent, retob);
+	ret = find_child_rc (params, folder, storage, parent, retob, &child);
+	if (ret != PTP_RC_OK) {
+		*handle = PTP_HANDLER_SPECIAL;
+		return ret;
+	}
 	if (child == PTP_HANDLER_SPECIAL) {
 		GP_LOG_D("could not find (sub-)path '%s' below storage=%08x / handle=%08x", folder, storage, parent);
-		return child;
+		*handle = child;
+		return PTP_RC_OK;
 	}
 
 	folder = strchr(folder, '/');
 	if (folder && folder[1] != 0)
-		return folder_to_handle(params, folder + 1, storage, child, retob);
-	else
-		return child;
+		return folder_to_handle_rc(params, folder + 1, storage, child, retob, handle);
+	*handle = child;
+	return PTP_RC_OK;
 }
 
 static int
 find_storage_and_handle_from_path(PTPParams *params, const char *folder, uint32_t *storage_id, uint32_t *handle)
 {
+	const char *path = folder;
+
 	/* Parse the storage prefix, e.g. "/store_xxxxxxxx"*/
 	if (strncmp(folder, "/"STORAGE_FOLDER_PREFIX, strlen("/"STORAGE_FOLDER_PREFIX)) ||
 	    strlen(folder) < strlen("/"STORAGE_FOLDER_PREFIX) + 8
@@ -8386,7 +8405,13 @@ find_storage_and_handle_from_path(PTPParams *params, const char *folder, uint32_
 	*storage_id = strtoul(folder + strlen("/"STORAGE_FOLDER_PREFIX), NULL, 16);
 	folder += strlen("/"STORAGE_FOLDER_PREFIX) + 8;
 
-	*handle = folder_to_handle(params, folder, *storage_id, 0, NULL);
+	C_PTP (folder_to_handle_rc(params, folder, *storage_id, 0, NULL, handle));
+	/* Do not hand out PTP_HANDLER_SPECIAL for a missing folder: callers would
+	 * treat it as "storage root" (e.g. put_file_func, make_dir_func). */
+	if (*handle == PTP_HANDLER_SPECIAL) {
+		GP_LOG_D ("folder '%s' not found on device", path);
+		return GP_ERROR_DIRECTORY_NOT_FOUND;
+	}
 
 	return GP_OK;
 }
@@ -8399,8 +8424,18 @@ generic_list_func (PTPParams *params, const char *folder, int is_directory, Came
 	 */
 
 	uint32_t storage, parent;
+	int ret;
 
-	CR (find_storage_and_handle_from_path(params, folder, &storage, &parent));
+	ret = find_storage_and_handle_from_path(params, folder, &storage, &parent);
+	if (ret == GP_ERROR_DIRECTORY_NOT_FOUND) {
+		/* The folder is known to the gphoto2 filesystem (e.g. added via
+		 * gp_filesystem_append() after a capture, from the object's parent
+		 * chain), but cannot be resolved by name. List it as empty, as before,
+		 * so appending captured files to it keeps working. */
+		GP_LOG_D ("folder '%s' not found on device, listing it as empty", folder);
+		return GP_OK;
+	}
+	CR (ret);
 
 	/* list this directory */
 	PTPObjectHandles handles = {0};
@@ -8775,7 +8810,8 @@ mtp_put_playlist(
 	unsigned char	data[1];
 	uint32_t	storage = 0, handle, playlistid;
 	uint32_t	*oids = NULL;
-	int		nrofoids = 0;
+	int		nrofoids = 0, ret;
+	uint16_t	pret;
 	PTPParams 	*params = &camera->pl->params;
 
 	while (*s) {
@@ -8797,8 +8833,21 @@ mtp_put_playlist(
 		}
 		*filename = '\0';filename++;
 
-		CR (find_storage_and_handle_from_path(params, fn, &storage, &handle));
-		handle = find_child(params, filename, storage, handle, NULL);
+		ret = find_storage_and_handle_from_path(params, fn, &storage, &handle);
+		if (ret == GP_ERROR_DIRECTORY_NOT_FOUND) {
+			/* skip entries in missing folders, like missing files below */
+			handle = PTP_HANDLER_SPECIAL;
+			ret = GP_OK;
+		} else if (ret == GP_OK) {
+			pret = find_child_rc(params, filename, storage, handle, NULL, &handle);
+			if (pret != PTP_RC_OK)
+				ret = translate_ptp_result (pret);
+		}
+		if (ret < GP_OK) {
+			free (fn);
+			free (oids);
+			return ret;
+		}
 		if (handle != PTP_HANDLER_SPECIAL) {
 			C_MEM (oids = realloc(oids, sizeof(oids[0])*(nrofoids+1)));
 			oids[nrofoids] = handle;
@@ -8929,7 +8978,7 @@ read_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, &ob);
+	C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 	if (handle == PTP_HANDLER_SPECIAL) {
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -9050,7 +9099,7 @@ get_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	}
 
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, &ob);
+	C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 	if (handle == PTP_HANDLER_SPECIAL) {
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
 		return GP_ERROR_BAD_PARAMETERS;
@@ -9328,7 +9377,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 			PTPObject	*ob;
 
 			CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-			handle = find_child(params, filename, storage, handle, &ob);
+			C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 			if (handle == PTP_HANDLER_SPECIAL) {
 				gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
 				return (GP_ERROR_BAD_PARAMETERS);
@@ -9347,7 +9396,7 @@ put_file_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
 	/* We don't really want a file to exist with the same name twice. */
-	handle = find_child (params, filename, storage, parent, NULL);
+	C_PTP (find_child_rc(params, filename, storage, parent, NULL, &handle));
 	if (handle != PTP_HANDLER_SPECIAL) {
 		GP_LOG_D ("%s/%s exists.", folder, filename);
 		return GP_ERROR_FILE_EXISTS;
@@ -9436,7 +9485,7 @@ delete_file_func (CameraFilesystem *fs, const char *folder,
 	C_PTP_REP (ptp_check_event (params));
 	uint32_t handle;
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, NULL);
+	C_PTP (find_child_rc(params, filename, storage, handle, NULL, &handle));
 	/* never send DeleteObject(0xffffffff): that requests deletion of all objects */
 	if (handle == PTP_HANDLER_SPECIAL) {
 		gp_context_error (context, _("File '%s/%s' does not exist."), folder, filename);
@@ -9479,7 +9528,7 @@ remove_dir_func (CameraFilesystem *fs, const char *folder,
 	C_PTP_REP (ptp_check_event (params));
 	uint32_t handle;
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, foldername, storage, handle, NULL);
+	C_PTP (find_child_rc(params, foldername, storage, handle, NULL, &handle));
 	if (handle == PTP_HANDLER_SPECIAL)
 		return GP_ERROR;
 	C_PTP_REP (ptp_deleteobject(params, handle, 0));
@@ -9502,7 +9551,7 @@ set_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 
 	camera->pl->checkevents = TRUE;
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, &ob);
+	C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 	if (handle == PTP_HANDLER_SPECIAL)
 		return GP_ERROR;
 
@@ -9543,7 +9592,7 @@ get_info_func (CameraFilesystem *fs, const char *folder, const char *filename,
 	C_PARAMS (strcmp (folder, "/special"));
 
 	CR (find_storage_and_handle_from_path(params, folder, &storage, &handle));
-	handle = find_child(params, filename, storage, handle, &ob);
+	C_PTP (find_child_rc(params, filename, storage, handle, &ob, &handle));
 	if (handle == PTP_HANDLER_SPECIAL)
 		return GP_ERROR;
 
@@ -9643,7 +9692,7 @@ make_dir_func (CameraFilesystem *fs, const char *folder, const char *foldername,
 	 */
 	if (parent==PTP_HANDLER_ROOT) parent=PTP_HANDLER_SPECIAL;
 
-	handle = folder_to_handle (params, foldername, storage, parent, NULL);
+	C_PTP (folder_to_handle_rc(params, foldername, storage, parent, NULL, &handle));
 	if (handle != PTP_HANDLER_SPECIAL)
 		return GP_ERROR_DIRECTORY_EXISTS;
 
