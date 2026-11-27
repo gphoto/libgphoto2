@@ -645,7 +645,7 @@ ptp_fujiptpip_init_command_ack (PTPParams* params)
 	PTPIPHeader	hdr;
 	unsigned char	*data = NULL;
 	uint16_t 	ret;
-	unsigned int	i;
+	unsigned int	i, len, namelen;
 	unsigned short	*name;
 
 	ret = ptp_fujiptpip_generic_read (params, params->cmdfd, &hdr, &data, 1);
@@ -658,13 +658,25 @@ ptp_fujiptpip_init_command_ack (PTPParams* params)
 			return PTP_RC_AccessDenied;
 		return PTP_RC_GeneralError;
 	}
+	/* the size of the data read, see ptp_fujiptpip_generic_read() */
+	len = dtoh32(hdr.length) - sizeof(PTPIPHeader);
+	if (len < ptpip_cmdack_name) {
+		GP_LOG_E ("init command ack too short (%u bytes)", len);
+		free (data);
+		return PTP_RC_GeneralError;
+	}
 	params->eventpipeid = dtoh32a(&data[ptpip_cmdack_idx]);
 	memcpy (params->cameraguid, &data[ptpip_cmdack_guid], 16);
+	/* the UCS-2 name, which might lack its terminator */
 	name = (unsigned short*)&data[ptpip_cmdack_name];
-	for (i=0;name[i] && (i + ptpip_cmdack_name <= dtoh32(hdr.length));i++) /* EMPTY */
+	namelen = (len - ptpip_cmdack_name) / sizeof(unsigned short);
+	for (i=0;(i < namelen) && name[i];i++) /* EMPTY */;
 	params->cameraname = calloc((i+1),sizeof(uint16_t));
-	for (i=0;name[i] && (i + ptpip_cmdack_name <= dtoh32(hdr.length));i++)
-	for (i=0;name[i];i++)
+	if (!params->cameraname) {
+		free (data);
+		return PTP_RC_GeneralError;
+	}
+	for (i=0;(i < namelen) && name[i];i++)
 		params->cameraname[i] = name[i];
 	free (data);
 	return PTP_RC_OK;
