@@ -101,7 +101,8 @@ gp_widget_new (CameraWidgetType type, const char *label,
 	C_MEM (*widget = calloc (1, sizeof (CameraWidget)));
 
 	(*widget)->type = type;
-	strcpy ((*widget)->label, label);
+	/* the widget is zeroed, so the label stays terminated */
+	strncpy ((*widget)->label, label, sizeof ((*widget)->label) - 1);
 
 	/* set the value to nothing */
 	(*widget)->value_int    	= 0;
@@ -218,7 +219,11 @@ gp_widget_set_info (CameraWidget *widget, const char *info)
 {
 	C_PARAMS (widget && info);
 
-	strcpy (widget->info, info);
+	/* strncpy() can't copy the string onto itself, as returned by gp_widget_get_info() */
+	if (info != widget->info) {
+		strncpy (widget->info, info, sizeof (widget->info) - 1);
+		widget->info[sizeof (widget->info) - 1] = '\0';
+	}
 	return (GP_OK);
 }
 
@@ -252,7 +257,11 @@ gp_widget_set_name (CameraWidget *widget, const char *name)
 {
 	C_PARAMS (widget && name);
 
-	strcpy (widget->name, name);
+	/* strncpy() can't copy the string onto itself, as returned by gp_widget_get_name() */
+	if (name != widget->name) {
+		strncpy (widget->name, name, sizeof (widget->name) - 1);
+		widget->name[sizeof (widget->name) - 1] = '\0';
+	}
 	return (GP_OK);
 }
 
