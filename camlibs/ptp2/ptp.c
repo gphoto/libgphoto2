@@ -1703,16 +1703,17 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 	PTPContainer	ptp;
 	unsigned char	*data = NULL;
 	unsigned int 	size = 0;
-	uint16_t	ret = PTP_RC_OK;
 	uint32_t	headerLength;
 	uint32_t	propertyCode;
+	uint32_t	count;
+	uint64_t	valueoff, listoff;
 	unsigned int	off = 0;
 	unsigned int	i;
 
 	PTP_CNT_INIT(ptp, PTP_OC_PANASONIC_ListProperty, propcode, 0, 0);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
 	if (size < 8)
-		return PTP_RC_GeneralError;
+		goto error;
 
 	ptp_debug (params, "ptp_panasonic_getdevicepropertydesc 0x%08x", propcode);
 	while (off < size) {
@@ -1723,44 +1724,56 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 
 	headerLength = dtoh32a( (data) + 4 );
 	if (size < 4 + 6 * 4)
-		return PTP_RC_GeneralError;
+		goto error;
+	/* only used for the debug output below, and a reply with a short
+	 * header can end before it */
+	propertyCode = (size >= 4 + 7 * 4) ? dtoh32a( (data) + 4 + 6 * 4 ) : 0;
 
-	propertyCode = dtoh32a( (data) + 4 + 6 * 4 );
-	if (size < headerLength * 4 + 2 * 4)
-		return PTP_RC_GeneralError;
-
-	if(valuesize == 2) {
-		*currentValue 		= (uint32_t) dtoh16a( (data) + headerLength * 4 + 2 * 4 );
-	} else if(valuesize == 4) {
-		*currentValue 		= dtoh32a( (data) + headerLength * 4 + 2 * 4 );
-	} else {
+	if (valuesize != 2 && valuesize != 4) {
 		ptp_debug (params, "unexpected valuesize %d", valuesize);
-		return PTP_RC_GeneralError;
+		goto error;
 	}
 	/* Marcus: where is 4*headerLenght coming from ? */
-	if (size < headerLength * 4 + 2 * 4 + valuesize) return PTP_RC_GeneralError;
-	*propertyValueListLength 		= dtoh32a( (data) + headerLength * 4 + 2 * 4 + valuesize);
+	/* the current value, then the number of values in the list, then the list.
+	 * 64 bit, as a large headerLength must not wrap around */
+	valueoff = (uint64_t)headerLength * 4 + 2 * 4;
+	if (size < valueoff + valuesize + 4) {
+		ptp_debug (params, "size %d vs expected size %llu", size, (unsigned long long)(valueoff + valuesize + 4));
+		goto error;
+	}
+	if (valuesize == 2)
+		*currentValue = (uint32_t) dtoh16a( (data) + valueoff );
+	else
+		*currentValue = dtoh32a( (data) + valueoff );
+	count = dtoh32a( (data) + valueoff + valuesize );
 
-	ptp_debug(params, "header: %u, code: 0x%x, value: %u, count: %u", headerLength, propertyCode, *currentValue, *propertyValueListLength);
+	ptp_debug(params, "header: %u, code: 0x%x, value: %u, count: %u", headerLength, propertyCode, *currentValue, count);
 
-	if (size < headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize) {
-		ptp_debug (params, "size %d vs expected size %d", size, headerLength * 4 + 3 * 4 + valuesize + (*propertyValueListLength) * valuesize);
-		return PTP_RC_GeneralError;
+	listoff = valueoff + valuesize + 4;
+	if ((size - listoff) / valuesize < count) {
+		ptp_debug (params, "size %d vs expected size %llu", size, (unsigned long long)(listoff + (uint64_t)count * valuesize));
+		goto error;
 	}
 
-	*propertyValueList = calloc(*propertyValueListLength, sizeof(uint32_t));
+	*propertyValueList = calloc(count, sizeof(uint32_t));
+	if (count && !*propertyValueList)
+		goto error;
 
-	for(i = 0; i < *propertyValueListLength; i++) {
+	for(i = 0; i < count; i++) {
 		if(valuesize == 2) {
-			(*propertyValueList)[i] = (uint32_t) dtoh16a( (data) + headerLength * 4 + 3 * 4 + valuesize + i * valuesize);
-		} else if(valuesize == 4) {
-			(*propertyValueList)[i] = dtoh32a( (data) + headerLength * 4 + 3 * 4 + valuesize + i * valuesize);
+			(*propertyValueList)[i] = (uint32_t) dtoh16a( (data) + listoff + i * valuesize);
+		} else {
+			(*propertyValueList)[i] = dtoh32a( (data) + listoff + i * valuesize);
 		}
 		//printf("Property: %lu\n", (*propertyValueList)[i]);
 	}
+	*propertyValueListLength = count;
 
 	free (data);
-	return ret;
+	return PTP_RC_OK;
+error:
+	free (data);
+	return PTP_RC_GeneralError;
 }
 
 uint16_t
