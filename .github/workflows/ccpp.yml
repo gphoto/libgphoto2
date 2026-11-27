@@ -88,3 +88,63 @@ jobs:
           meson install -C _build
           ${{ matrix.ldd }} __pref/bin/ambs-lgp2-frontend
           __pref/bin/ambs-lgp2-frontend
+
+  build-freebsd:
+
+    # GitHub has no FreeBSD runners, so build in a FreeBSD VM on a Linux runner
+    runs-on: ubuntu-latest
+
+    name: 'freebsd-${{ matrix.release }}'
+
+    strategy:
+      fail-fast: true
+      matrix:
+        # the newest minor release of each supported major release
+        release: ['14', '15']
+        include:
+           # libusb is part of the base system
+           - iolibs: 'disk,vusb,ptpip,serial,libusb1,usb'
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6.0.0
+
+      - name: 'Start the VM and install build requirements (FreeBSD)'
+        uses: vmactions/freebsd-vm@811efaaac0668df8bfb8308c3ec997b5ab50037b # v1.6.0
+        with:
+          release: ${{ matrix.release }}
+          envs: 'LC_ALL'
+          prepare: |
+            pkg install -y meson ninja pkgconf gettext-tools gettext-runtime libltdl libexif libgd curl libxml2
+
+      - name: 'Setup'
+        shell: freebsd {0}
+        # the packages go to /usr/local
+        run: |
+          export CPPFLAGS="-I/usr/local/include"
+          export LDFLAGS="-L/usr/local/lib"
+          meson setup _build -Diolibs=${{ matrix.iolibs }} --prefix=$PWD/__prefix -Dlibdir=$PWD/__prefix/lib
+
+      - name: 'Compile'
+        shell: freebsd {0}
+        run: meson compile -C _build
+
+      - name: 'Test'
+        shell: freebsd {0}
+        run: meson test --print-errorlogs --no-suite=no-ci -C _build
+
+      - name: 'Install'
+        shell: freebsd {0}
+        run: meson install -C _build
+
+      - name: 'Build and run example libgphoto2 frontend (ambs-lgp2-frontend)'
+        shell: freebsd {0}
+        run: |
+          set -e
+          # meson installs the pkg-config files to libdata/pkgconfig on FreeBSD
+          export PKG_CONFIG_PATH="$PWD/__prefix/libdata/pkgconfig"
+          export LD_LIBRARY_PATH="$PWD/__prefix/lib"
+          cd examples/ambs-lgp2-frontend
+          meson setup _build --prefix="$PWD/__pref"
+          meson install -C _build
+          ldd __pref/bin/ambs-lgp2-frontend
+          __pref/bin/ambs-lgp2-frontend
