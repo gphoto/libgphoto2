@@ -8535,6 +8535,8 @@ ptp_render_property_value(PTPParams* params, uint16_t dpc,
 		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 2, N_("Person (Eyes/Face)")},
 		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 3, N_("Animal (Body)")},
 		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 4, N_("Animal (Eyes/Body)")},
+		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 5, N_("Car")},	/* firmware 5.0.0 */
+		{PTP_DPC_LEICA_AFSubjectDetection, PTP_VENDOR_GP_LEICA, 6, N_("Car Part")},
 		{PTP_DPC_LEICA_SceneMode, PTP_VENDOR_GP_LEICA, 0, N_("Auto")},	/* d09c, value 12 = PASM */
 		{PTP_DPC_LEICA_SceneMode, PTP_VENDOR_GP_LEICA, 12, N_("PASM")},
 		{PTP_DPC_LEICA_SelfTimerDuration, PTP_VENDOR_GP_LEICA, 3, "2 s"},	/* d097, all four values flip verified */
