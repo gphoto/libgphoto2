@@ -1172,6 +1172,8 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 			suffix = strrchr (file->name, '.');
 			if (suffix++)
 				*suffix = '\0';
+			else
+				strcat (file->name, ".");
 			strcat (file->name, table[x + 1]);
 			break;
 		}
