@@ -1805,6 +1805,7 @@ ptp_unpack_EOS_CustomFuncEx (PTPParams* params, const unsigned char** data, unsi
 		return strdup("malloc failed");
 
 	p = str;
+	*p = '\0'; /* in case there are no values */
 	for (i=0; i < n; ++i)
 		p += sprintf(p, "%x,", dtoh32a( *data + 4*i ));
 	return str;
