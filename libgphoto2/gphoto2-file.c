@@ -1167,11 +1167,20 @@ gp_file_adjust_name_for_mime_type (CameraFile *file)
 	GP_LOG_D ("Adjusting file name for mime type '%s'...", file->mime_type);
 	for (x = 0; table[x]; x += 2)
 		if (!strcmp (file->mime_type, table[x])) {
+			size_t len, suffix_len = strlen (table[x + 1]);
 
 			/* Search the current suffix and erase it */
 			suffix = strrchr (file->name, '.');
-			if (suffix++)
-				*suffix = '\0';
+			if (suffix)
+				suffix[1] = '\0';
+			/* Make room for the new suffix, keeping the dot */
+			len = strlen (file->name);
+			if (len + suffix_len >= sizeof (file->name)) {
+				len = sizeof (file->name) - suffix_len - 1;
+				file->name[len] = '\0';
+				if (suffix)
+					file->name[len - 1] = '.';
+			}
 			strcat (file->name, table[x + 1]);
 			break;
 		}
