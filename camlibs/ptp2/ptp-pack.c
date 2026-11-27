@@ -1306,7 +1306,10 @@ _compare_func(const void* x, const void *y) {
 	const MTPObjectProp *px = x;
 	const MTPObjectProp *py = y;
 
-	return px->ObjectHandle - py->ObjectHandle;
+	/* not just the difference, it doesn't fit into an int */
+	if (px->ObjectHandle < py->ObjectHandle)
+		return -1;
+	return px->ObjectHandle > py->ObjectHandle;
 }
 
 static inline int
