@@ -64,6 +64,7 @@ extern "C" {
 #define GP_MIME_ARW       "image/x-sony-arw"
 #define GP_MIME_RAF       "image/x-fuji-raf"
 #define GP_MIME_DNG       "image/x-adobe-dng"
+#define GP_MIME_WEBP      "image/webp"
 
 /**
  * \brief The type of view on the specified file.

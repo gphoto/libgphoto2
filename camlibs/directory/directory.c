@@ -109,6 +109,7 @@ static const struct {
 	{"srw",  GP_MIME_RAW},
 	{"nrw",  GP_MIME_RAW},
 	{"png",  GP_MIME_PNG},
+	{"webp", GP_MIME_WEBP},
 	{"wav",  GP_MIME_WAV},
 	{"3gp",  "video/3gpp"},
 	{"3g2",  "video/x-3gpp2"},
