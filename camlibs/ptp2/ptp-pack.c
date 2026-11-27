@@ -1918,6 +1918,23 @@ _lookup_or_allocate_canon_prop(PTPParams *params, uint32_t dpc)
 					MSG, ##__VA_ARGS__);						\
 	} while (0)
 
+/* strdup() of a string of at most maxlen bytes, which might lack its terminator */
+static char *
+_eos_strndup (const unsigned char *s, unsigned int maxlen)
+{
+	unsigned int	len = 0;
+	char		*str;
+
+	while ((len < maxlen) && s[len])
+		len++;
+	str = malloc (len + 1);
+	if (!str)
+		return NULL;
+	memcpy (str, s, len);
+	str[len] = '\0';
+	return str;
+}
+
 static inline int
 ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned int datasize, PTPCanonEOSEvents *events)
 {
@@ -2010,7 +2027,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			e[i].u.object.ParentObject  = dtoh32a(curdata + PTP_cee_OA_Parent);
 			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA_OFC);
 			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OA_Size);
-			e[i].u.object.Filename      = strdup(((char*)curdata + PTP_cee_OA_Name));
+			e[i].u.object.Filename      = _eos_strndup(curdata + PTP_cee_OA_Name, size - PTP_cee_OA_Name);
 
 			ptp_debug (params, "%s objectinfo %s: handle %08x, parent %08x, ofc %04x, size %ld, filename %s",
 			           prefix, ec == PTP_EC_CANON_EOS_ObjectAddedEx ? "added" : "changed",
@@ -2028,7 +2045,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			e[i].u.object.ParentObject  = dtoh32a(curdata + PTP_cee_OA64_Parent);
 			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OA64_OFC);
 			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OA64_Size);	/* FIXME: might be 64bit now */
-			e[i].u.object.Filename      = strdup(((char*)curdata + PTP_cee_OA64_Name));
+			e[i].u.object.Filename      = _eos_strndup(curdata + PTP_cee_OA64_Name, size - PTP_cee_OA64_Name);
 			ptp_debug (params, "%s objectinfo added: handle %08x, parent %08x, ofc %04x, size %ld, filename %s",
 			           prefix, e[i].u.object.Handle, e[i].u.object.ParentObject, e[i].u.object.ObjectFormat,
 			           e[i].u.object.ObjectSize, e[i].u.object.Filename);
@@ -2076,7 +2093,7 @@ ptp_unpack_EOS_events (PTPParams *params, const unsigned char* data, unsigned in
 			e[i].u.object.ObjectFormat  = dtoh16a(curdata + PTP_cee_OI_OFC);
 			e[i].u.object.ParentObject  = 0; /* check, but use as marker */
 			e[i].u.object.ObjectSize    = dtoh32a(curdata + PTP_cee_OI_Size);
-			e[i].u.object.Filename      = strdup(((char*)curdata + PTP_cee_OI_Name));
+			e[i].u.object.Filename      = _eos_strndup(curdata + PTP_cee_OI_Name, size - PTP_cee_OI_Name);
 
 			ptp_debug (params, "%s request object transfer: handle %08x, ofc %04x, size %ld, filename %s",
 			           prefix, e[i].u.object.Handle, e[i].u.object.ObjectFormat,
