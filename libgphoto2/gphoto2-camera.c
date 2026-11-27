@@ -1550,7 +1550,7 @@ gp_camera_folder_put_file (Camera *camera,
 	GP_LOG_D ("Uploading file into '%s'...",
 		folder);
 
-	C_PARAMS (camera && folder && file);
+	C_PARAMS (camera && folder && filename && file);
 	CHECK_INIT (camera, context);
 
 	CHECK_RESULT_OPEN_CLOSE (camera, gp_filesystem_put_file (camera->fs,

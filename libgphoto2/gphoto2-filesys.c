@@ -1281,7 +1281,7 @@ gp_filesystem_put_file (CameraFilesystem *fs,
 	CameraFilesystemFolder	*f;
 	int ret;
 
-	C_PARAMS (fs && folder && file);
+	C_PARAMS (fs && folder && filename && file);
 	CC (context);
 	CA (folder, context);
 
