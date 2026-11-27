@@ -55,6 +55,14 @@ typedef struct {
 static int             glob_setting_count = 0;
 static Setting         glob_setting[512];
 
+#define MAX_SETTINGS (int)(sizeof (glob_setting) / sizeof (glob_setting[0]))
+
+/* Whether the strings fit into the fields of a Setting */
+#define SETTING_FITS(id,key,value)				\
+	((strlen (id) < sizeof (glob_setting[0].id)) &&		\
+	 (strlen (key) < sizeof (glob_setting[0].key)) &&	\
+	 (strlen (value) < sizeof (glob_setting[0].value)))
+
 static int save_settings (void);
 
 #define CHECK_RESULT(result)       {int r = (result); if (r < 0) return (r);}
@@ -112,7 +120,7 @@ gp_setting_get (char *id, char *key, char *value)
 
 	int x;
 
-	C_PARAMS (id && key);
+	C_PARAMS (id && key && value);
 
 	if (!glob_setting_count)
 		load_settings ();
@@ -147,7 +155,8 @@ gp_setting_set (char *id, char *key, char *value)
 
 	int x;
 
-	C_PARAMS (id && key);
+	C_PARAMS (id && key && value);
+	C_PARAMS (SETTING_FITS (id, key, value));
 
 	if (!glob_setting_count)
 		load_settings ();
@@ -161,6 +170,10 @@ gp_setting_set (char *id, char *key, char *value)
 			save_settings ();
 			return (GP_OK);
 		}
+	}
+	if (glob_setting_count >= MAX_SETTINGS) {
+		GP_LOG_E ("Too many settings, can't add key '%s' (%s).", key, id);
+		return (GP_ERROR_NO_MEMORY);
 	}
 	strcpy(glob_setting[glob_setting_count].id, id);
 	strcpy(glob_setting[glob_setting_count].key, key);
@@ -299,14 +312,21 @@ load_settings (void)
 		if (strlen(buf)>2) {
 			buf[strlen(buf)-1] = '\0';
 			id = strtok(buf, "=");
-			strcpy(glob_setting[glob_setting_count].id,id);
 			key = strtok(NULL, "=");
-			strcpy(glob_setting[glob_setting_count].key,key);
 			value = strtok(NULL, "\0");
-			if (value)
-				strcpy(glob_setting[glob_setting_count++].value, value);
-			else
-				strcpy(glob_setting[glob_setting_count++].value, "");
+			if (!value)
+				value = "";
+			if (!id || !key || !SETTING_FITS (id, key, value)) {
+				GP_LOG_E ("Ignoring invalid line in settings file.");
+				continue;
+			}
+			if (glob_setting_count >= MAX_SETTINGS) {
+				GP_LOG_E ("Too many settings, ignoring the rest.");
+				break;
+			}
+			strcpy(glob_setting[glob_setting_count].id,id);
+			strcpy(glob_setting[glob_setting_count].key,key);
+			strcpy(glob_setting[glob_setting_count++].value, value);
 		}
 	}
 	fclose (f);
