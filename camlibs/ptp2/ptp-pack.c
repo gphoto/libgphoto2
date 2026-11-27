@@ -3163,8 +3163,8 @@ static inline int
 ptp_unpack_StreamInfo (PTPParams *params, const unsigned char *data, PTPStreamInfo *si, unsigned int size)
 {
 	uint32_t offset = 0;
-	if (!data) return PTP_RC_GeneralError;
-	if (size < 36) return PTP_RC_GeneralError;
+	if (!data) return 0;
+	if (size < 36) return 0;
 
 	si->DatasetSize      = dtoh64o(data, offset);
 	si->TimeResolution   = dtoh64o(data, offset);
@@ -3173,5 +3173,5 @@ ptp_unpack_StreamInfo (PTPParams *params, const unsigned char *data, PTPStreamIn
 	si->PacketHeaderSize = dtoh32o(data, offset);
 	si->PacketMaxSize    = dtoh32o(data, offset);
 	si->PacketAlignment  = dtoh32o(data, offset);
-	return PTP_RC_OK;
+	return 1;
 }
