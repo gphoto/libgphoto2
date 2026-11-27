@@ -1716,9 +1716,14 @@ ptp_panasonic_getdevicepropertydesc (PTPParams *params, uint32_t propcode, uint1
 
 	ptp_debug (params, "ptp_panasonic_getdevicepropertydesc 0x%08x", propcode);
 	while (off < size) {
+		uint32_t len;
+
 		if (off >= size-8) break;
-		ptp_debug (params, "propcode 0x%08x, size %d", dtoh32a(data+off), dtoh32a(data+off+4));
-		off += dtoh32a(data+off+4)+8;
+		len = dtoh32a(data+off+4);
+		ptp_debug (params, "propcode 0x%08x, size %d", dtoh32a(data+off), len);
+		/* stop at a length past the end, before off wraps around */
+		if (len > size - off - 8) break;
+		off += len+8;
 	}
 
 	headerLength = dtoh32a( (data) + 4 );
