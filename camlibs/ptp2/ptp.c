@@ -5198,7 +5198,8 @@ ptp_nikon_getwifiprofilelist (PTPParams* params)
 		/* FIXME: check if it is really last usage date */
 		if (!ptp_unpack_string(params, data, &pos, size, &buffer))
 			goto error;
-		strncpy(params->wifi_profiles[profn].lastusage_date, buffer, sizeof(params->wifi_profiles[profn].lastusage_date));
+		strncpy(params->wifi_profiles[profn].lastusage_date, buffer, sizeof(params->wifi_profiles[profn].lastusage_date)-1);
+		params->wifi_profiles[profn].lastusage_date[sizeof(params->wifi_profiles[profn].lastusage_date)-1] = '\0';
 		free (buffer);
 		if (pos+5 >= size)
 			goto error;
