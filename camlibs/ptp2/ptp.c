@@ -2366,7 +2366,11 @@ ptp_getobjectinfo (PTPParams* params, uint32_t handle,
 
 	PTP_CNT_INIT(ptp, PTP_OC_GetObjectInfo, handle);
 	CHECK_PTP_RC(ptp_transaction(params, &ptp, PTP_DP_GETDATA, 0, &data, &size));
-	ptp_unpack_OI(params, data, objectinfo, size);
+	if (!ptp_unpack_OI(params, data, objectinfo, size)) {
+		ptp_debug (params, "ObjectInfo of 0x%08x is too short (%u bytes)", handle, size);
+		free(data);
+		return PTP_ERROR_IO;
+	}
 	objectinfo->Handle = handle;
 	free(data);
 	return PTP_RC_OK;
