@@ -109,7 +109,7 @@ if cc.has_function('setenv', prefix: '#include <stdlib.h>')
 endif
 
 if cc.has_member('struct tm', 'tm_gmtoff', prefix : '#include <time.h>')
-  add_project_arguments('-DHAVE_RM_GMTOFF=1', language: 'c')
+  add_project_arguments('-DHAVE_TM_GMTOFF=1', language: 'c')
 endif
 
 if (libcurl_dep.found())
